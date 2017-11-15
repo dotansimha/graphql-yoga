@@ -85,10 +85,10 @@ As mentioned above, `graphql-yoga` is built on top of a variety of other package
 
 Using these packages individually incurs overhead in the setup process and requires you to write a lot of boilerplate. `graphql-yoga` abstracts away the initial complexity and required boilerplate and let's you get started quickly with a set of sensible defaults for your server configuration.
 
-> **`graphql-yoga` is the [`create-react-app`](https://github.com/facebookincubator/create-react-app) for building GraphQL servers.**
+`graphql-yoga` is the **[`create-react-app`](https://github.com/facebookincubator/create-react-app)** for building GraphQL servers.
 
 ### Can't I just setup my own GraphQL server using `express` and `graphql.js`?
 
-* 80:20 rule
-* create-react-app
-* just "eject" when you need to
+`graphql-yoga` is all about convenience and a great "Getting Started"-experience by abstracting away the complexity that comes when you're building your own GraphQL from scratch. It's a pragmatic approach to bootstrap a GraphQL server, much like [`create-react-app`](https://github.com/facebookincubator/create-react-app) removes friction when first starting out with React.
+
+Whenever the defaults of `graphql-yoga` are too tight of a corset for you, you can simply _eject_ from it and use the tooling it's build upon - there's no lock-in or any other kind of magic going on preventing you from this.
