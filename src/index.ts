@@ -65,7 +65,11 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    app.post(endpoint, bodyParser.json(), graphqlExpress({ schema: this.schema, context: this.context }))
+    if (typeof this.context === 'function') {
+      app.post(endpoint, bodyParser.json(), graphqlExpress(req => ({ schema: this.schema, context: this.context(req) })))
+    } else {
+      app.post(endpoint, bodyParser.json(), graphqlExpress({ schema: this.schema, context: this.context }))
+    }
 
     if (!disablePlayground) {
       app.get(playgroundEndpoint, expressPlayground({

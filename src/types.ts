@@ -35,5 +35,5 @@ export interface Props {
   resolvers?: IResolvers
   schema?: GraphQLSchema
   context?: Context | ContextCallback
-  options: Options
+  options?: Options
 }
