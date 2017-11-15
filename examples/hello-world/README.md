@@ -20,7 +20,7 @@ yarn start   # or npm start
 
 ## Testing
 
-Open your browser at [http://localhost:3000](http://localhost:3000) and start sending queries.
+Open your browser at [http://localhost:4000](http://localhost:4000) and start sending queries.
 
 **Query without `name` argument:**
 
@@ -80,5 +80,5 @@ const resolvers = {
 }
 
 const server = new GraphQLServer({ typeDefs, resolvers })
-server.start(3000, () => console.log('Server is running on localhost:3000'))
+server.start(4000, () => console.log('Server is running on localhost:4000'))
 ```

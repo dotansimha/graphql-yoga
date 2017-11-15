@@ -1,10 +1,10 @@
 const { GraphQLServer } = require('graphql-yoga')
 
 const sampleItems = [
-  {name: 'asd'},
-  {name: 'fgh'},
-  {name: 'mhv'},
-  {name: 'uiy'},
+  {name: 'Apple'},
+  {name: 'Banana'},
+  {name: 'Orange'},
+  {name: 'Melon'},
 ]
 
 const typeDefs = `
@@ -24,5 +24,5 @@ const resolvers = {
 }
 
 const server = new GraphQLServer({ typeDefs, resolvers })
-
-server.start(() => console.log('Server is running on localhost:3000'))
+console.log('start server')
+server.start(() => console.log('Server is running on localhost:4000'))

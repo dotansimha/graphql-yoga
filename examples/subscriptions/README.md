@@ -20,7 +20,7 @@ yarn start   # or npm start
 
 ## Testing
 
-Open your browser at [http://localhost:3000](http://localhost:3000) and start a subscription.
+Open your browser at [http://localhost:4000](http://localhost:4000) and start a subscription.
 
 Paste the following subscription in the editor (left side) of the Playground:
 
@@ -109,5 +109,5 @@ const resolvers = {
 const pubsub = new PubSub()
 const server = new GraphQLServer({ typeDefs, resolvers, context: { pubsub } })
 
-server.start(3000, () => console.log('Server is running on localhost:3000'))
+server.start(4000, () => console.log('Server is running on localhost:4000'))
 ```

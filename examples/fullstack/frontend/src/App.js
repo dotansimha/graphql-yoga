@@ -1,26 +1,27 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
+import yoga from './yoga.png'
 import './App.css'
 import Item from './Item'
-
-const items = [
-  {name: 'asd'},
-  {name: 'fgh'},
-  {name: 'mhv'},
-  {name: 'uiy'},
-]
+import gql from 'graphql-tag'
+import { graphql } from 'react-apollo'
 
 class App extends Component {
   render() {
+    console.log(this.props)
+
+    if (this.props.data.loading) {
+      return <div>Loading</div>
+    }
+
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={yoga} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to <code>graphql-yoga</code></h1>
         </header>
         <div className="App-intro">
           <ul>
-            {items.map(item => {
+            {this.props.data.items.map(item => {
               return <li><Item name={item.name} /></li>
             })}
           </ul>
@@ -30,4 +31,13 @@ class App extends Component {
   }
 }
 
-export default App
+const ITEMS_QUERY = gql`
+  query ItemsQuery {
+    items {
+      name
+    }
+  }
+`
+
+export default graphql(ITEMS_QUERY)(App)
+// export default App
