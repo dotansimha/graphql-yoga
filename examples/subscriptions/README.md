@@ -67,7 +67,7 @@ The counter will increment every two seconds and the corresponding data is recei
 
 ## Implementation
 
-This is what the implementation looks like:
+This is what the [implementation](./index.js) looks like:
 
 ```js
 const { GraphQLServer, PubSub } = require('graphql-yoga')

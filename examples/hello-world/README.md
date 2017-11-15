@@ -60,7 +60,7 @@ The server returns the following response:
 
 ## Implementation
 
-This is what the implementation looks like:
+This is what the [implementation](./index.js) looks like:
 
 ```js
 import { GraphQLServer } from './graphql-yoga'
