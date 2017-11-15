@@ -50,6 +50,8 @@ const server = new GraphQLServer({ typeDefs, resolvers })
 server.start(3000, () => console.log('Server is running on localhost:3000'))
 ```
 
+> To get started with `graphql-yoga`, follow the  instructions in the READMEs of the [examples](./examples). 
+
 ### API
 
 #### `GraphQLServer`
