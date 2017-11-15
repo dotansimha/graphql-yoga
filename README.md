@@ -85,7 +85,7 @@ As mentioned above, `graphql-yoga` is built on top of a variety of other package
 
 Using these packages individually incurs overhead in the setup process and requires you to write a lot of boilerplate. `graphql-yoga` abstracts away the initial complexity and required boilerplate and let's you get started quickly with a set of sensible defaults for your server configuration.
 
-`graphql-yoga` is the **[`create-react-app`](https://github.com/facebookincubator/create-react-app)** for building GraphQL servers.
+`graphql-yoga` is like [`create-react-app`](https://github.com/facebookincubator/create-react-app) for building GraphQL servers.
 
 ### Can't I just setup my own GraphQL server using `express` and `graphql.js`?
 
