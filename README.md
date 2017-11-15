@@ -50,7 +50,7 @@ const server = new GraphQLServer({ typeDefs, resolvers })
 server.start(3000, () => console.log('Server is running on localhost:3000'))
 ```
 
-> To get started with `graphql-yoga`, follow the  instructions in the READMEs of the [examples](./examples). 
+> To get started with `graphql-yoga`, follow the instructions in the READMEs of the [examples](./examples). 
 
 ### API
 
@@ -80,6 +80,8 @@ server.start(3000, () => console.log('Server is running on localhost:3000'))
 ## FAQ
 
 ### How does `graphql-yoga` compare to `apollo-server` and other tools?
+
+As mentioned above, `graphql-yoga` is built on top of a variety of other packages that each provide a certain piece of functionality required for building a GraphQL server. Instead of needing to install and configure each of these packages, `graphql-yoga` configures provides a sensible default configuration for them under the hood. **`graphql-yoga` is the [`create-react-app`](https://github.com/facebookincubator/create-react-app) for building GraphQL servers.**
 
 ### Can't I just setup my own GraphQL server using `express`?
 
