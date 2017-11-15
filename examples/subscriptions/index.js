@@ -2,7 +2,7 @@ const { GraphQLServer, PubSub } = require('graphql-yoga')
 
 const typeDefs = `
   type Query {
-    hello(name: String): String!
+    hello: String!
   }
 
   type Counter {
@@ -17,10 +17,10 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    hello: (_, { name }) => `Hello ${name || 'World'}`,
+    hello: () => `Hello`,
   },
   Counter: {
-    countStr: (counter) => `Current count: ${counter.count}`,
+    countStr: counter => `Current count: ${counter.count}`,
   },
   Subscription: {
     counter: {
