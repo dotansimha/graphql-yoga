@@ -30,7 +30,7 @@ yarn add graphql-yoga
 ### Quickstart ([Hosted demo](https://hello-world-myitqprcqm.now.sh))
 
 ```ts
-import { GraphQLServer } from './graphql-yoga'
+import { GraphQLServer } from 'graphql-yoga'
 // ... or using `require()`
 // const { GraphQLServer } = require('graphql-yoga')
 
