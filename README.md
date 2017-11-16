@@ -62,14 +62,14 @@ The `props` argument accepts the following fields:
 
 - `typeDefs`*: A **string** containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51)
 - `resolvers`*: An **object** containing resolvers for the fields specified in `typeDefs`
-- `schema`*: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)**
+- `schema`*: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided)
 - `context`: An **object** containing custom data being passed through your resolver chain 
 - `options`: See below
 
 *Note that you have two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:
 
-- Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance for you under the hood. 
-- Provide `schema` and omit `typeDefs` and `resolvers`.
+- Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance using [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
+- Provide the `schema` directly and omit `typeDefs` and `resolvers`.
 
 The `options` object has the following fields:
 
