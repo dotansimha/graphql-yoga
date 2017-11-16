@@ -2,7 +2,6 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import expressPlayground from 'graphql-playground-middleware-express'
-import { Application } from 'express'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
 import { execute, subscribe, GraphQLSchema } from 'graphql'
@@ -15,7 +14,7 @@ export { Options }
 
 export class GraphQLServer {
 
-  expressApp: Application
+  app: express.Application
   subscriptionServer: SubscriptionServer | null
 
   private schema: GraphQLSchema
@@ -34,7 +33,7 @@ export class GraphQLServer {
     }
     this.options = { ...defaultOptions, ...props.options }
 
-    this.expressApp = express()
+    this.app = express()
     this.subscriptionServer = null
     this.context = props.context
 
@@ -47,7 +46,7 @@ export class GraphQLServer {
   }
 
   start(callback: (() => void) = (() => null)): Promise<void> {
-    const app = this.expressApp
+    const app = this.app
 
     const {
       port,
