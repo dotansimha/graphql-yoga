@@ -26,7 +26,7 @@ export class GraphQLServer {
 
     const defaultOptions = {
       disableSubscriptions: false,
-      port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
+      port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
       endpoint: '/',
       subscriptionsEndpoint: '/',
       playgroundEndpoint: '/',
