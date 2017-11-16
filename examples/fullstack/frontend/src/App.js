@@ -21,7 +21,7 @@ class App extends Component {
         </header>
         <div className="App-intro">
           <ul>
-            {this.props.data.items.map(item => {
+            {this.props.data.items && this.props.data.items.map(item => {
               return <li><Item name={item.name} /></li>
             })}
           </ul>
@@ -40,4 +40,3 @@ const ITEMS_QUERY = gql`
 `
 
 export default graphql(ITEMS_QUERY)(App)
-// export default App

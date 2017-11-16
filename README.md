@@ -168,6 +168,16 @@ Using these packages individually incurs overhead in the setup process and requi
 
 Whenever the defaults of `graphql-yoga` are too tight of a corset for you, you can simply _eject_ from it and use the tooling it's build upon - there's no lock-in or any other kind of magic going on preventing you from this.
 
+### How to eject from the standard express setup?
+
+The core value of `graphql-yoga` is that you don't have to write the boilerplate required to configure your [express.js](https://github.com/expressjs/) application. However, once you need to add more customized behaviour to your server, the default configuration provided by `graphql-yoga` might not suit your use case any more. For example, it might be the case that you want to add more custom _middleware_ to your server, like for logging or error reporting.
+
+For these cases, `GraphQLServer` exposes the `express.Application` directly via its [`app`](./src/index.ts#L17) property:
+
+```js
+server.app.use(myMiddleware())
+```
+
 
 ## Help & Community [![Slack Status](https://slack.graph.cool/badge.svg)](https://slack.graph.cool)
 
