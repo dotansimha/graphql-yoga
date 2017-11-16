@@ -56,7 +56,7 @@ server.start(() => console.log('Server is running on localhost:3000'))
 
 #### `GraphQLServer`
 
-##### `constructor(props: Props) -> GraphQLServer`
+##### `constructor(props: Props): GraphQLServer`
 
 The `prop` argument accepts the following fields:
 
@@ -76,12 +76,45 @@ The `options` object has the following fields:
 - `cors`: An **object** containing [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors) **(default: `undefined`)**
 - `disableSubscriptions`: A **boolean** indicating where subscriptions should be en- or disabled for your server **(default: `false`)**
 - `port`: An **integer** determining the port your server will be listening on **(default: `4000`)**; note that you can also specify the port by setting the `PORT` environment variable
-- `endpoint`: A **string** that defines the HTTP endpoint of your server **(default: `/`)**
-- `subscriptionsEndpoint`: A **string** that defines the subscriptions (websocket) endpoint for your server **(default: `/`)**
-- `playgroundEndpoint`: A **string** that defines the endpoint where you can invoke the Playground **(default: `/`)**
+- `endpoint`: A **string** that defines the HTTP endpoint of your server **(default: `'/'`)**
+- `subscriptionsEndpoint`: A **string** that defines the subscriptions (websocket) endpoint for your server **(default: `'/'`)**
+- `playgroundEndpoint`: A **string** that defines the endpoint where you can invoke the Playground **(default: `'/'`)**
 - `disablePlayground`: A **boolean** indicating whether the Playground should be enabled **(default: `false`)**
 
+Here is example of creating a new server:
+
+```js
+const options = {
+  disableSubscriptions: false,  // same as default value
+  port: 8000,
+  endoint: '/graphql',
+  subscriptionsEndpoint: '/subscriptions',
+  playgroundEndpoint: '/playground',
+  disablePlayground: false      // same as default value
+}
+
+const typeDefs = `
+  type Query {
+    hello(name: String): String!
+  }
+`
+
+const resolvers = {
+  Query: {
+    hello: (_, { name }) => `Hello ${name || 'World'}`,
+  },
+}
+
+const server = new GraphQLServer({ typeDefs, resolvers, options })
+```
+
+#### `start(callback: (() => void) = (() => null)): Promise<void>`
+
+Once your `GraphQLServer` is instantiated, you can call the `start` method on it. It takes one argument `callback`, a function that's invoked right before the function returns.
+
 #### `PubSub`
+
+See the original documentation in [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions).
 
 ### Endpoints
 
@@ -109,17 +142,11 @@ To deploy your `graphql-yoga` server with [`now`](https://zeit.co/now), follow t
 2. Navigate to the root directory of your `graphql-yoga` server
 3. Run `now` in your terminal
 
-### `up` 
+### `up` (Coming soon 🔜 )
 
-Coming soon 🔜 
+### Heroku (Coming soon 🔜 )
 
-### Heroku 
-
-Coming soon 🔜 
-
-### AWS Lambda 
-
-Coming soon 🔜 
+### AWS Lambda (Coming soon 🔜 )
 
 ## FAQ
 
