@@ -62,8 +62,15 @@ server.start(() => console.log('Server is running on localhost:3000'))
 
 ## Examples
 
+There are three examples demonstrating how to quickly get started with `graphql-yoga`:
+
+- [hello-world](./examples/hello-world): Basic setup for building a schema and allowing for a `hello` query.
+- [subscriptions](./examples/subscriptions): Basic setup for using subscriptions with a counter that increments every 2 seconds and triggers a subscriptions.
+- [fullstack](./examples/fullstack): Fullstack example based on `create-react-app` demonstrating how to query data from `graphql-yoga` with [Apollo Client 2.0](https://www.apollographql.com/client/).
+
 ## Workflow
 
+Once your `graphql-yoga` server is running, you can test it with a [GraphQL Playground](https://github.com/graphcool/graphql-playground):
 
 [![](https://imgur.com/6IC6Huj.png)](https://www.graphqlbin.com/RVIn)
 
@@ -71,11 +78,23 @@ server.start(() => console.log('Server is running on localhost:3000'))
 
 ### `now`
 
-### `up`
+To deploy your `graphql-yoga` server with [`now`](https://zeit.co/now), follow these instructions:
 
-### Heroku
+1. Download [**Now Desktop**](https://zeit.co/download) 
+2. Navigate to the root directory of your `graphql-yoga` server
+3. Run `now` in the terminal
 
-### AWS Lambda
+### `up` 🔜
+
+Coming soon 
+
+### Heroku 🔜
+
+Coming soon
+
+### AWS Lambda 🔜
+
+Coming soon
 
 ## FAQ
 
