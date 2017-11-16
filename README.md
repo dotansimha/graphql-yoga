@@ -58,7 +58,7 @@ server.start(() => console.log('Server is running on localhost:3000'))
 
 ##### `constructor(props: Props): GraphQLServer`
 
-The `prop` argument accepts the following fields:
+The `props` argument accepts the following fields:
 
 - `typeDefs`: A **string** containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51)
 - `resolvers`: An **object** containing resolvers for the fields specified in `typeDefs`
