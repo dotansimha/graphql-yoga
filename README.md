@@ -66,7 +66,7 @@ There are three examples demonstrating how to quickly get started with `graphql-
 
 - [hello-world](./examples/hello-world): Basic setup for building a schema and allowing for a `hello` query.
 - [subscriptions](./examples/subscriptions): Basic setup for using subscriptions with a counter that increments every 2 seconds and triggers a subscriptions.
-- [fullstack](./examples/fullstack): Fullstack example based on `create-react-app` demonstrating how to query data from `graphql-yoga` with [Apollo Client 2.0](https://www.apollographql.com/client/).
+- [fullstack](./examples/fullstack): Fullstack example based on [`create-react-app`](https://github.com/facebookincubator/create-react-app) demonstrating how to query data from `graphql-yoga` with [Apollo Client 2.0](https://www.apollographql.com/client/).
 
 ## Workflow
 
@@ -84,17 +84,17 @@ To deploy your `graphql-yoga` server with [`now`](https://zeit.co/now), follow t
 2. Navigate to the root directory of your `graphql-yoga` server
 3. Run `now` in the terminal
 
-### `up` 🔜
+### `up` 
 
-Coming soon 
+Coming soon 🔜 
 
-### Heroku 🔜
+### Heroku 
 
-Coming soon
+Coming soon 🔜 
 
-### AWS Lambda 🔜
+### AWS Lambda 
 
-Coming soon
+Coming soon 🔜 
 
 ## FAQ
 
