@@ -60,16 +60,16 @@ server.start(() => console.log('Server is running on localhost:3000'))
 
 The `props` argument accepts the following fields:
 
-- `typeDefs`: A **string** containing GraphQL type definitions in [SDL] (required if `schema` is not provided*).(https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51)
-- `resolvers`: An **object** containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided*).
-- `schema`: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided*).
-- `context`: An **object** containing custom data being passed through your resolver chain.
-- `options`: See below.
+- `typeDefs`: A **string** containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided *)
+- `resolvers`: An **object** containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided *)
+- `schema`: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided *)
+- `context`: An **object** containing custom data being passed through your resolver chain
+- `options`: See below
 
-*There are two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:
-
-- Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance using [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
-- Provide the `schema` directly and omit `typeDefs` and `resolvers`.
+> (*) There are two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:
+> 
+> 1. Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance using [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
+> 2. Provide the `schema` directly and omit `typeDefs` and `resolvers`.
 
 The `options` object has the following fields:
 
@@ -132,7 +132,7 @@ There are three examples demonstrating how to quickly get started with `graphql-
 
 ## Workflow
 
-Once your `graphql-yoga` server is running, you can test it with a [GraphQL Playground](https://github.com/graphcool/graphql-playground):
+Once your `graphql-yoga` server is running, you can use [GraphQL Playground](https://github.com/graphcool/graphql-playground) out of the box – typically running on `localhost:4000`. (Read [here](https://blog.graph.cool/introducing-graphql-playground-f1e0a018f05d) for more information.)
 
 [![](https://imgur.com/6IC6Huj.png)](https://www.graphqlbin.com/RVIn)
 
@@ -167,3 +167,10 @@ Using these packages individually incurs overhead in the setup process and requi
 `graphql-yoga` is all about convenience and a great "Getting Started"-experience by abstracting away the complexity that comes when you're building your own GraphQL from scratch. It's a pragmatic approach to bootstrap a GraphQL server, much like [`create-react-app`](https://github.com/facebookincubator/create-react-app) removes friction when first starting out with React.
 
 Whenever the defaults of `graphql-yoga` are too tight of a corset for you, you can simply _eject_ from it and use the tooling it's build upon - there's no lock-in or any other kind of magic going on preventing you from this.
+
+
+## Help & Community [![Slack Status](https://slack.graph.cool/badge.svg)](https://slack.graph.cool)
+
+Join our [Slack community](http://slack.graph.cool/) if you run into issues or have questions. We love talking to you!
+
+[![](http://i.imgur.com/5RHR6Ku.png)](https://www.graph.cool/)
