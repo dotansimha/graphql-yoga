@@ -110,7 +110,11 @@ const server = new GraphQLServer({ typeDefs, resolvers, options })
 
 #### `start(callback: (() => void) = (() => null)): Promise<void>`
 
-Once your `GraphQLServer` is instantiated, you can call the `start` method on it. It takes one argument `callback`, a function that's invoked right before the function returns.
+Once your `GraphQLServer` is instantiated, you can call the `start` method on it. It takes one argument `callback`, a function that's invoked right before the server is started. As an example, the `callback` can be used to print information that the server was now started:
+
+```js
+server.start(() => console.log(`Server started, listening on port 8000 for incoming requests.`))
+```
 
 #### `PubSub`
 
