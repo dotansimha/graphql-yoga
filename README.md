@@ -62,7 +62,7 @@ The `props` argument accepts the following fields:
 
 - `typeDefs`: A **string** containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51)
 - `resolvers`: An **object** containing resolvers for the fields specified in `typeDefs`
-- `schema`: An **instance of `GraphQLSchema`**
+- `schema`: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)**
 - `context`: An **object** containing custom data being passed through your resolver chain 
 - `options`: See below
 
