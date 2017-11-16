@@ -68,18 +68,18 @@ The `prop` argument accepts the following fields:
 
 Note that you have two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:
 
-1. Provide `typeDefs` and `resolvers` and omit the `schema` - In this case `graphql-yoga` will construct the `GraphQLSchema` instance for you under the hood. 
-2. Provide `schema` and omit `typeDefs` and `resolvers`
+- Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance for you under the hood. 
+- Provide `schema` and omit `typeDefs` and `resolvers`.
 
 The `options` object has the following fields:
 
-- `cors`: An **object** containing [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors) (default: `undefined`)
-- `disableSubscriptions`: A **boolean** indicating where subscriptions should be en- or disabled for your server (default: `false`)
-- `port`: An **integer** determining the port your server will be listening on (default: `4000`); note that you can also specify the port by setting the `PORT` environment variable
-- `endpoint`: A **string** that defines the HTTP endpoint of your server (default: `/`)
-- `subscriptionsEndpoint`: A **string** that defines the subscriptions (websocket) endpoint for your server (default: `/`)
-- `playgroundEndpoint`: A **string** that defines the endpoint where you can invoke the Playground (default: `/`)
-- `disablePlayground`: A **boolean** indicating whether the Playground should be enabled (default: `false`)
+- `cors`: An **object** containing [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors) **(default: `undefined`)**
+- `disableSubscriptions`: A **boolean** indicating where subscriptions should be en- or disabled for your server **(default: `false`)**
+- `port`: An **integer** determining the port your server will be listening on **(default: `4000`)**; note that you can also specify the port by setting the `PORT` environment variable
+- `endpoint`: A **string** that defines the HTTP endpoint of your server **(default: `/`)**
+- `subscriptionsEndpoint`: A **string** that defines the subscriptions (websocket) endpoint for your server **(default: `/`)**
+- `playgroundEndpoint`: A **string** that defines the endpoint where you can invoke the Playground **(default: `/`)**
+- `disablePlayground`: A **boolean** indicating whether the Playground should be enabled **(default: `false`)**
 
 #### `PubSub`
 
