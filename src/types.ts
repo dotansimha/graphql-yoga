@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import { CorsOptions } from 'cors'
 import { GraphQLSchema, GraphQLFieldResolver, GraphQLScalarType, GraphQLIsTypeOfFn, GraphQLTypeResolver } from 'graphql'
+import { SubscriptionOptions } from 'graphql-subscriptions/dist/subscriptions-manager'
 
 export interface IResolvers {
   [key: string]: (() => any) | IResolverObject | GraphQLScalarType
@@ -18,7 +19,13 @@ export interface IResolverOptions {
 }
 
 export type Context = { [key: string]: any }
-export type ContextCallback = (req: Request) => Context
+
+export interface ContextParameters {
+  request: Request
+  connection: SubscriptionOptions
+}
+
+export type ContextCallback = (params: ContextParameters) => Context
 
 export interface Options {
   cors?: CorsOptions | false

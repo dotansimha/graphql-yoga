@@ -63,7 +63,12 @@ The `props` argument accepts the following fields:
 - `typeDefs`: A **string** containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided *)
 - `resolvers`: An **object** containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided *)
 - `schema`: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided *)
-- `context`: An **object** containing custom data being passed through your resolver chain
+- `context`: An **object** or **function** containing custom data being passed through your resolver chain
+> The function has the following signature:
+> `({request?: Request, connection?: SubscriptionOptions}) => any`
+> `connection` is the [connection information](https://github.com/apollographql/subscriptions-transport-ws/blob/master/src/client.ts#L31) for subscriptions
+> `request` is the HTTP Request for normal HTTP requests
+
 - `options`: See below
 
 > (*) There are two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:

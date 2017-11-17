@@ -65,7 +65,7 @@ export class GraphQLServer {
     }
 
     if (typeof this.context === 'function') {
-      app.post(endpoint, bodyParser.json(), graphqlExpress(req => ({ schema: this.schema, context: this.context(req) })))
+      app.post(endpoint, bodyParser.json(), graphqlExpress(request => ({ schema: this.schema, context: this.context({ request }) })))
     } else {
       app.post(endpoint, bodyParser.json(), graphqlExpress({ schema: this.schema, context: this.context }))
     }
@@ -96,8 +96,8 @@ export class GraphQLServer {
             schema: this.schema,
             execute,
             subscribe,
-            onOperation: (message, params, webSocket) => {
-              return { ...params, context: this.context }
+            onOperation: (message, connection, webSocket) => {
+              return { ...connection, context: typeof this.context === 'function' ? this.context({ connection }) : this.context }
             },
           },
           {
