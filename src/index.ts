@@ -14,7 +14,7 @@ export { Options }
 
 export class GraphQLServer {
 
-  app: express.Application
+  express: express.Application
   subscriptionServer: SubscriptionServer | null
 
   private schema: GraphQLSchema
@@ -33,7 +33,7 @@ export class GraphQLServer {
     }
     this.options = { ...defaultOptions, ...props.options }
 
-    this.app = express()
+    this.express = express()
     this.subscriptionServer = null
     this.context = props.context
 
@@ -46,7 +46,7 @@ export class GraphQLServer {
   }
 
   start(callback: (() => void) = (() => null)): Promise<void> {
-    const app = this.app
+    const app = this.express
 
     const {
       port,
