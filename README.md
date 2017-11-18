@@ -75,13 +75,13 @@ Here is a list of all argument fields:
 #### `typeDefs`
 A string containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided)
 
-#### `resolvers`:
+#### `resolvers`
 An object containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided). Uses [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
 
-#### `schema`:
+#### `schema`
 An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided)
 
-#### `context`:
+#### `context`
 An **object** or **function** containing custom data being passed through your resolver chain
 
 The function has the following signature: `({ request?: Request, connection?: SubscriptionOptions }) => any`
@@ -92,7 +92,7 @@ The function has the following signature: `({ request?: Request, connection?: Su
 > Note that there is always either the `request` *or* the `connection` argument provided.
 
 
-#### `options`:
+#### `options`
 The `options` object has the following fields:
 
 - `cors`: An **object** containing [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors). Provide `false` to disable. **(default: `undefined`)**.
