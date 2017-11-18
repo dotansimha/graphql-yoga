@@ -80,14 +80,13 @@ Here is a list of all argument fields:
 
 **`context`**: An **object** or **function** containing custom data being passed through your resolver chain
 
-The function has the following signature:
+The function has the following signature: `({ request?: Request, connection?: SubscriptionOptions }) => any`
 
-```
-({request?: Request, connection?: SubscriptionOptions}) => any
-```
+- `request` is the HTTP request object which is provided for normal HTTP requests (queries/mutations)
+- `connection` is the [connection object](https://github.com/apollographql/subscriptions-transport-ws/blob/master/src/client.ts#L31) provided for new subscriptions
 
-- `connection` is the [connection information](https://github.com/apollographql/subscriptions-transport-ws/blob/master/src/client.ts#L31) for subscriptions
-- `request` is the HTTP Request for normal HTTP requests
+> Note that there is always either the `request` *or* the `connection` argument provided.
+
 
 **`options`**: The `options` object has the following fields:
 
