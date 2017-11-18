@@ -72,13 +72,17 @@ const server = new GraphQLServer({
 
 Here is a list of all argument fields:
 
-**`typeDefs`**: A string containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided)
+#### `typeDefs`
+A string containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided)
 
-**`resolvers`**: An object containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided). Uses [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
+#### `resolvers`:
+An object containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided). Uses [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
 
-**`schema`**: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided)
+#### `schema`:
+An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided)
 
-**`context`**: An **object** or **function** containing custom data being passed through your resolver chain
+#### `context`:
+An **object** or **function** containing custom data being passed through your resolver chain
 
 The function has the following signature: `({ request?: Request, connection?: SubscriptionOptions }) => any`
 
@@ -88,7 +92,8 @@ The function has the following signature: `({ request?: Request, connection?: Su
 > Note that there is always either the `request` *or* the `connection` argument provided.
 
 
-**`options`**: The `options` object has the following fields:
+#### `options`:
+The `options` object has the following fields:
 
 - `cors`: An **object** containing [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors). Provide `false` to disable. **(default: `undefined`)**.
 - `disableSubscriptions`: A **boolean** indicating where subscriptions should be en- or disabled for your server **(default: `false`)**.
