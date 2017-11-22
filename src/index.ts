@@ -43,8 +43,11 @@ export class GraphQLServer {
     } else {
       const { typeDefs, resolvers } = props
       this.schema = makeExecutableSchema({
-        typeDefs: [GraphQLUpload, typeDefs],
-        resolvers
+        typeDefs,
+        resolvers: {
+          Upload: typeDefs.includes('scalar Upload') ? GraphQLUpload : undefined,
+          ...resolvers,
+        },
       })
     }
   }
