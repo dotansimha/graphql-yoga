@@ -27,6 +27,12 @@ export interface ContextParameters {
 
 export type ContextCallback = (params: ContextParameters) => Context
 
+export interface UploadOptions {
+  maxFieldSize?: number
+  maxFileSize?: number
+  maxFiles?: number
+}
+
 export interface Options {
   cors?: CorsOptions | false
   disableSubscriptions?: boolean
@@ -35,6 +41,7 @@ export interface Options {
   subscriptionsEndpoint?: string
   playgroundEndpoint?: string
   disablePlayground?: boolean
+  uploads?: UploadOptions
 }
 
 export interface Props {
