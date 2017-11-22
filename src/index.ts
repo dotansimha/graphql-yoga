@@ -24,6 +24,7 @@ export class GraphQLServer {
   constructor(props: Props) {
     const defaultOptions = {
       disableSubscriptions: false,
+      tracing: false,
       port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
       endpoint: '/',
       subscriptionsEndpoint: '/',
@@ -40,12 +41,13 @@ export class GraphQLServer {
       this.schema = props.schema
     } else {
       const { typeDefs, resolvers } = props
+      const uploadMixin = typeDefs.includes('scalar Upload')
+        ? { Upload: GraphQLUpload }
+        : {}
       this.schema = makeExecutableSchema({
         typeDefs,
         resolvers: {
-          Upload: typeDefs.includes('scalar Upload')
-            ? GraphQLUpload
-            : undefined,
+          ...uploadMixin,
           ...resolvers,
         },
       })
@@ -72,12 +74,29 @@ export class GraphQLServer {
       app.use(cors())
     }
 
+    if (typeof this.context === 'function') {
+      app.post(
+        endpoint,
+        bodyParser.json(),
+        graphqlExpress(request => ({
+          schema: this.schema,
+          context: this.context({ request }),
+        })),
+      )
+    } else {
+      app.post(
+        endpoint,
+        bodyParser.json(),
+        graphqlExpress({ schema: this.schema, context: this.context }),
+      )
+    }
     app.post(
       endpoint,
       bodyParser.json(),
       apolloUploadExpress(uploads),
       graphqlExpress(request => ({
         schema: this.schema,
+        tracing: this.options.tracing,
         context:
           typeof this.context === 'function'
             ? this.context({ request })

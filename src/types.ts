@@ -36,6 +36,7 @@ export interface UploadOptions {
 export interface Options {
   cors?: CorsOptions | false
   disableSubscriptions?: boolean
+  tracing: boolean
   port?: number
   endpoint?: string
   subscriptionsEndpoint?: string
