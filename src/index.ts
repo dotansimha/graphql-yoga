@@ -14,7 +14,6 @@ import { Props, Options } from './types'
 export { Options }
 
 export class GraphQLServer {
-
   express: express.Application
   subscriptionServer: SubscriptionServer | null
 
@@ -23,7 +22,6 @@ export class GraphQLServer {
   private options: Options
 
   constructor(props: Props) {
-
     const defaultOptions = {
       disableSubscriptions: false,
       port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
@@ -45,14 +43,16 @@ export class GraphQLServer {
       this.schema = makeExecutableSchema({
         typeDefs,
         resolvers: {
-          Upload: typeDefs.includes('scalar Upload') ? GraphQLUpload : undefined,
+          Upload: typeDefs.includes('scalar Upload')
+            ? GraphQLUpload
+            : undefined,
           ...resolvers,
         },
       })
     }
   }
 
-  start(callback: (() => void) = (() => null)): Promise<void> {
+  start(callback: (() => void) = () => null): Promise<void> {
     const app = this.express
 
     const {
@@ -62,7 +62,7 @@ export class GraphQLServer {
       disableSubscriptions,
       playgroundEndpoint,
       subscriptionsEndpoint,
-      uploads
+      uploads,
     } = this.options
 
     // CORS support
@@ -81,15 +81,20 @@ export class GraphQLServer {
         context:
           typeof this.context === 'function'
             ? this.context({ request })
-            : this.context
-      }))
+            : this.context,
+      })),
     )
 
     if (!disablePlayground) {
-      app.get(playgroundEndpoint, expressPlayground({
-        endpoint,
-        subscriptionEndpoint: disableSubscriptions ? undefined : subscriptionsEndpoint,
-      }))
+      app.get(
+        playgroundEndpoint,
+        expressPlayground({
+          endpoint,
+          subscriptionEndpoint: disableSubscriptions
+            ? undefined
+            : subscriptionsEndpoint,
+        }),
+      )
     }
 
     return new Promise((resolve, reject) => {
@@ -112,7 +117,13 @@ export class GraphQLServer {
             execute,
             subscribe,
             onOperation: (message, connection, webSocket) => {
-              return { ...connection, context: typeof this.context === 'function' ? this.context({ connection }) : this.context }
+              return {
+                ...connection,
+                context:
+                  typeof this.context === 'function'
+                    ? this.context({ connection })
+                    : this.context,
+              }
             },
           },
           {
