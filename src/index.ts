@@ -5,6 +5,7 @@ import expressPlayground from 'graphql-playground-middleware-express'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
 import { execute, subscribe, GraphQLSchema } from 'graphql'
+import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
 import { graphqlExpress } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
 export { PubSub } from 'graphql-subscriptions'
@@ -13,7 +14,6 @@ import { Props, Options } from './types'
 export { Options }
 
 export class GraphQLServer {
-
   express: express.Application
   subscriptionServer: SubscriptionServer | null
 
@@ -22,7 +22,6 @@ export class GraphQLServer {
   private options: Options
 
   constructor(props: Props) {
-
     const defaultOptions = {
       disableSubscriptions: false,
       port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
@@ -41,11 +40,19 @@ export class GraphQLServer {
       this.schema = props.schema
     } else {
       const { typeDefs, resolvers } = props
-      this.schema = makeExecutableSchema({ typeDefs, resolvers })
+      this.schema = makeExecutableSchema({
+        typeDefs,
+        resolvers: {
+          Upload: typeDefs.includes('scalar Upload')
+            ? GraphQLUpload
+            : undefined,
+          ...resolvers,
+        },
+      })
     }
   }
 
-  start(callback: (() => void) = (() => null)): Promise<void> {
+  start(callback: (() => void) = () => null): Promise<void> {
     const app = this.express
 
     const {
@@ -55,6 +62,7 @@ export class GraphQLServer {
       disableSubscriptions,
       playgroundEndpoint,
       subscriptionsEndpoint,
+      uploads,
     } = this.options
 
     // CORS support
@@ -64,17 +72,29 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    if (typeof this.context === 'function') {
-      app.post(endpoint, bodyParser.json(), graphqlExpress(request => ({ schema: this.schema, context: this.context({ request }) })))
-    } else {
-      app.post(endpoint, bodyParser.json(), graphqlExpress({ schema: this.schema, context: this.context }))
-    }
+    app.post(
+      endpoint,
+      bodyParser.json(),
+      apolloUploadExpress(uploads),
+      graphqlExpress(request => ({
+        schema: this.schema,
+        context:
+          typeof this.context === 'function'
+            ? this.context({ request })
+            : this.context,
+      })),
+    )
 
     if (!disablePlayground) {
-      app.get(playgroundEndpoint, expressPlayground({
-        endpoint,
-        subscriptionEndpoint: disableSubscriptions ? undefined : subscriptionsEndpoint,
-      }))
+      app.get(
+        playgroundEndpoint,
+        expressPlayground({
+          endpoint,
+          subscriptionEndpoint: disableSubscriptions
+            ? undefined
+            : subscriptionsEndpoint,
+        }),
+      )
     }
 
     return new Promise((resolve, reject) => {
@@ -97,7 +117,13 @@ export class GraphQLServer {
             execute,
             subscribe,
             onOperation: (message, connection, webSocket) => {
-              return { ...connection, context: typeof this.context === 'function' ? this.context({ connection }) : this.context }
+              return {
+                ...connection,
+                context:
+                  typeof this.context === 'function'
+                    ? this.context({ connection })
+                    : this.context,
+              }
             },
           },
           {

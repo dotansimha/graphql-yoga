@@ -15,6 +15,7 @@ Fully-featured GraphQL Server with focus on easy setup, performance &amp; great 
 `graphql-yoga` is based on the following libraries & tools:
 
   * [`express`](https://github.com/expressjs/express)/[`apollo-server`](https://github.com/apollographql/apollo-server): Performant, extensible web server framework
+  * [`apollo-upload-server`](https://github.com/jaydenseric/apollo-upload-server): File uploads via queries or mutations
   * [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
   * [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
   * [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
@@ -102,6 +103,7 @@ The `options` object has the following fields:
 - `subscriptionsEndpoint`: A **string** that defines the subscriptions (websocket) endpoint for your server **(default: `'/'`)**.
 - `playgroundEndpoint`: A **string** that defines the endpoint where you can invoke the Playground **(default: `'/'`)**.
 - `disablePlayground`: A **boolean** indicating whether the Playground should be enabled **(default: `false`)**.
+- `uploads`: An **object** containing [configuration options](https://github.com/jaydenseric/apollo-upload-server#options) for [apollo-upload-server](https://github.com/jaydenseric/apollo-upload-server).
 
 ### `GraphQLServer.start()`
 
