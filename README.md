@@ -90,7 +90,7 @@ The `options` object has the following fields:
 | `port`  | Number |  `4000 `  | Determines the port your server will be listening on (note that you can also specify the port by setting the `PORT` environment variable) |
 | `endpoint`  | String  |  `'/'`  | Defines the HTTP endpoint of your server |
 | `subscriptionsEndpoint` | String  |  `'/'`  | Defines the subscriptions (websocket) endpoint for your server |
-| `playgroundEndpoint` | String  |  `'/'`  | Defines the endpoint where you can invoke the Playground |
+| `playgroundEndpoint` | String  |  `'/'`  | Defines the endpoint where you can invoke the [Playground](https://github.com/graphcool/graphql-playground) |
 | `disablePlayground` | Boolean  |  `false`  | Indicates whether the Playground should be enabled |
 
 <!--
