@@ -15,7 +15,6 @@ Fully-featured GraphQL Server with focus on easy setup, performance &amp; great 
 `graphql-yoga` is based on the following libraries & tools:
 
   * [`express`](https://github.com/expressjs/express)/[`apollo-server`](https://github.com/apollographql/apollo-server): Performant, extensible web server framework
-  * [`apollo-upload-server`](https://github.com/jaydenseric/apollo-upload-server): File uploads via queries or mutations
   * [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
   * [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
   * [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
@@ -48,125 +47,103 @@ const resolvers = {
 }
 
 const server = new GraphQLServer({ typeDefs, resolvers })
-server.start(() => console.log('Server is running on localhost:4000'))
+server.start(() => console.log('Server is running on localhost:3000'))
 ```
 
 > To get started with `graphql-yoga`, follow the instructions in the READMEs of the [examples](./examples). 
 
-## API
+### API
 
-### `new GraphQLServer()`
+#### `GraphQLServer`
 
-> Type Signature: `constructor(props: Props): GraphQLServer`
+##### `constructor(props: Props): GraphQLServer`
 
-```ts
-import { GraphQLServer } from 'graphql-yoga'
+The `props` argument accepts the following fields:
 
-const server = new GraphQLServer({
-  typeDefs,
-  resolvers,
-  options: {
-    port: 4000,
-  },
-})
-```
+| Key | Type | Default | Note |
+| ---  | --- | --- | --- |
+| `typeDefs` | String  |  `null` | Contains GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided \*)  |
+| `resolvers`  | Object  |  `null`  | Contains resolvers for the fields specified in `typeDefs` (required if `schema` is not provided \*) |
+| `schema`  | Object |  `null`  | An instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema) (required if `typeDefs` and `resolvers` are not provided \*) |
+| `context`  | Object  |  `{}`  | Contains custom data being passed through your resolver chain  |
+| `options`  | Object  |  `{}`  | See below |
 
-Here is a list of all argument fields:
+<!--
+- `typeDefs`: A **string** containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided *)
+- `resolvers`: An **object** containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided *)
+- `schema`: An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided *)
+- `context`: An **object** containing custom data being passed through your resolver chain
+- `options`: See below
+-->
 
-#### `typeDefs`
-A string containing GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided)
+> (*) There are two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:
+> 
+> 1. Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance using [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
+> 2. Provide the `schema` directly and omit `typeDefs` and `resolvers`.
 
-#### `resolvers`
-An object containing resolvers for the fields specified in `typeDefs` (required if `schema` is not provided). Uses [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
-
-#### `schema`
-An **instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema)** (required if `typeDefs` and `resolvers` are not provided)
-
-#### `context`
-An **object** or **function** containing custom data being passed through your resolver chain
-
-The function has the following signature: `({ request?: Request, connection?: SubscriptionOptions }) => any`
-
-- `request` is the HTTP request object which is provided for normal HTTP requests (queries/mutations)
-- `connection` is the [connection object](https://github.com/apollographql/subscriptions-transport-ws/blob/master/src/client.ts#L31) provided for new subscriptions
-
-> Note that there is always either the `request` *or* the `connection` argument provided.
-
-
-#### `options`
 The `options` object has the following fields:
 
-- `cors`: An **object** containing [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors). Provide `false` to disable. **(default: `undefined`)**.
+| Key | Type | Default | Note |
+| ---  | --- | --- | --- |
+| `cors` | Object |  `null` | Contains [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors) |
+| `disableSubscriptions`  | Boolean  |  `false`  | Indicates whether subscriptions should be en- or disabled for your server |
+| `port`  | Number |  `4000 `  | Determines the port your server will be listening on (note that you can also specify the port by setting the `PORT` environment variable) |
+| `endpoint`  | String  |  `'/'`  | Defines the HTTP endpoint of your server |
+| `subscriptionsEndpoint` | String  |  `'/'`  | Defines the subscriptions (websocket) endpoint for your server |
+| `playgroundEndpoint` | String  |  `'/'`  | Defines the endpoint where you can invoke the Playground |
+| `disablePlayground` | Boolean  |  `false`  | Indicates whether the Playground should be enabled |
+
+<!--
+- `cors`: An **object** containing [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors) **(default: `undefined`)**.
 - `disableSubscriptions`: A **boolean** indicating where subscriptions should be en- or disabled for your server **(default: `false`)**.
 - `port`: An **integer** determining the port your server will be listening on **(default: `4000`)**; note that you can also specify the port by setting the `PORT` environment variable.
 - `endpoint`: A **string** that defines the HTTP endpoint of your server **(default: `'/'`)**.
 - `subscriptionsEndpoint`: A **string** that defines the subscriptions (websocket) endpoint for your server **(default: `'/'`)**.
 - `playgroundEndpoint`: A **string** that defines the endpoint where you can invoke the Playground **(default: `'/'`)**.
 - `disablePlayground`: A **boolean** indicating whether the Playground should be enabled **(default: `false`)**.
-- `uploads`: An **object** containing [configuration options](https://github.com/jaydenseric/apollo-upload-server#options) for [apollo-upload-server](https://github.com/jaydenseric/apollo-upload-server).
-- `tracing`: A **boolean** or **object** (`{ mode: 'enabled' | 'disabled' | 'http-header' }`) to enable or disable [tracing](https://github.com/apollographql/apollo-tracing) responses **(default: `{ mode: 'http-header' }`)**.
-
-  When using `tracing` with `{ mode: 'http-header' }` you can enable tracing results on a per-request basis by setting the `X-Apollo-Tracing: 1` in your client (automatically set by GraphQL Playground).
-
-### `GraphQLServer.start()`
-
-> Type Signature: `start(callback?: (() => void)): Promise<void>`
-
-```ts
-// this starts the HTTP and WebSocket server
-server.start()
-
-// you can also provide a callback (e.g. for logging)
-server.start(() => console.log('Server is running on localhost:4000'))
-```
-
-### `GraphQLServer.express`
-
-> Type Signature: `express: express.Application`
-
-You can easily access (and modify) the underlying Express application using the exposed `express` property. Here is a simple example:
-
-```ts
-server.express.use(myMiddleware())
-```
+-->
 
 
-### `PubSub`
+Here is example of creating a new server:
 
-`PubSub` can be used to implement subscriptions and has a simple publish-subscribe API:
+```js
+const options = {
+  disableSubscriptions: false,  // same as default value
+  port: 8000,
+  endoint: '/graphql',
+  subscriptionsEndpoint: '/subscriptions',
+  playgroundEndpoint: '/playground',
+  disablePlayground: false      // same as default value
+}
 
-```ts
-import { PubSub } from 'graphql-yoga'
-
-// simply instantiate a new PubSub object ...
-const pubsub = new PubSub()
-const SOMETHING_CHANGED_TOPIC = 'something_changed';
+const typeDefs = `
+  type Query {
+    hello(name: String): String!
+  }
+`
 
 const resolvers = {
-  Subscription: {
-    somethingChanged: {
-      // ... implement the `subscribe` method in your subscription resolvers ...
-      subscribe: () => pubsub.asyncIterator(SOMETHING_CHANGED_TOPIC),
-    },
+  Query: {
+    hello: (_, { name }) => `Hello ${name || 'World'}`,
   },
 }
 
-// ... and from somewhere publish events
-setInterval(
-  () => pubsub.publish(SOMETHING_CHANGED_TOPIC, { somethingChanged: { id: "123" }}),
-  2000
-)
+const server = new GraphQLServer({ typeDefs, resolvers, options })
 ```
 
-For more information see the original documentation in [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions).
+#### `start(callback: (() => void) = (() => null)): Promise<void>`
 
-## Endpoints
+Once your `GraphQLServer` is instantiated, you can call the `start` method on it. It takes one argument `callback`, a function that's invoked right before the server is started. As an example, the `callback` can be used to print information that the server was now started:
 
-`graphql-yoga` by default exposes an HTTP and WebSocket endpoint on `localhost:4000/`. (Can be adjusted in the constructor options.)
+```js
+server.start(() => console.log(`Server started, listening on port 8000 for incoming requests.`))
+```
 
-Once your `graphql-yoga` server is running, you can use [GraphQL Playground](https://github.com/graphcool/graphql-playground) out of the box. (Read [here](https://blog.graph.cool/introducing-graphql-playground-f1e0a018f05d) for more information.)
+#### `PubSub`
 
-[![](https://imgur.com/6IC6Huj.png)](https://www.graphqlbin.com/RVIn)
+See the original documentation in [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions).
+
+### Endpoints
 
 ## Examples
 
@@ -176,6 +153,11 @@ There are three examples demonstrating how to quickly get started with `graphql-
 - [subscriptions](./examples/subscriptions): Basic setup for using subscriptions with a counter that increments every 2 seconds and triggers a subscriptions.
 - [fullstack](./examples/fullstack): Fullstack example based on [`create-react-app`](https://github.com/facebookincubator/create-react-app) demonstrating how to query data from `graphql-yoga` with [Apollo Client 2.0](https://www.apollographql.com/client/).
 
+## Workflow
+
+Once your `graphql-yoga` server is running, you can use [GraphQL Playground](https://github.com/graphcool/graphql-playground) out of the box – typically running on `localhost:4000`. (Read [here](https://blog.graph.cool/introducing-graphql-playground-f1e0a018f05d) for more information.)
+
+[![](https://imgur.com/6IC6Huj.png)](https://www.graphqlbin.com/RVIn)
 
 ## Deployment
 
@@ -213,10 +195,10 @@ Whenever the defaults of `graphql-yoga` are too tight of a corset for you, you c
 
 The core value of `graphql-yoga` is that you don't have to write the boilerplate required to configure your [express.js](https://github.com/expressjs/) application. However, once you need to add more customized behaviour to your server, the default configuration provided by `graphql-yoga` might not suit your use case any more. For example, it might be the case that you want to add more custom _middleware_ to your server, like for logging or error reporting.
 
-For these cases, `GraphQLServer` exposes the `express.Application` directly via its [`express`](./src/index.ts#L17) property:
+For these cases, `GraphQLServer` exposes the `express.Application` directly via its [`app`](./src/index.ts#L17) property:
 
 ```js
-server.express.use(myMiddleware())
+server.app.use(myMiddleware())
 ```
 
 
