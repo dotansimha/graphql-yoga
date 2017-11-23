@@ -87,7 +87,7 @@ The `options` object has the following fields:
 | ---  | --- | --- | --- |
 | `cors` | Object |  `null` | Contains [configuration options](https://github.com/expressjs/cors#configuration-options) for [cors](https://github.com/expressjs/cors) |
 | `disableSubscriptions`  | Boolean  |  `false`  | Indicates whether subscriptions should be en- or disabled for your server |
-| `tracing`  | Boolean or String  |  `false`  | Indicates whether tracing should be en- or disabled for your server (if a string is provided, accepted values are: `'enabled'`, `'disabled'`, `'http-header'`) |
+| `tracing`  | Boolean or String  |  `false`  | Indicates whether [Apollo Tracing](https://github.com/apollographql/apollo-tracing) should be en- or disabled for your server (if a string is provided, accepted values are: `'enabled'`, `'disabled'`, `'http-header'`) |
 | `port`  | Number |  `4000 `  | Determines the port your server will be listening on (note that you can also specify the port by setting the `PORT` environment variable) |
 | `endpoint`  | String  |  `'/'`  | Defines the HTTP endpoint of your server |
 | `subscriptionsEndpoint` | String  |  `'/'`  | Defines the subscriptions (websocket) endpoint for your server |
