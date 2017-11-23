@@ -33,10 +33,14 @@ export interface UploadOptions {
   maxFiles?: number
 }
 
+export interface TracingOptions {
+  mode: 'enabled' | 'disabled' | 'http-header'
+}
+
 export interface Options {
   cors?: CorsOptions | false
   disableSubscriptions?: boolean
-  tracing: boolean
+  tracing: boolean | TracingOptions
   port?: number
   endpoint?: string
   subscriptionsEndpoint?: string

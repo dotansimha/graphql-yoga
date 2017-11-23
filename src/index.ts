@@ -22,9 +22,9 @@ export class GraphQLServer {
   private options: Options
 
   constructor(props: Props) {
-    const defaultOptions = {
+    const defaultOptions: Options = {
       disableSubscriptions: false,
-      tracing: false,
+      tracing: { mode: 'http-header' },
       port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
       endpoint: '/',
       subscriptionsEndpoint: '/',
@@ -74,29 +74,24 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    if (typeof this.context === 'function') {
-      app.post(
-        endpoint,
-        bodyParser.json(),
-        graphqlExpress(request => ({
-          schema: this.schema,
-          context: this.context({ request }),
-        })),
-      )
-    } else {
-      app.post(
-        endpoint,
-        bodyParser.json(),
-        graphqlExpress({ schema: this.schema, context: this.context }),
-      )
+    const tracing = (req: express.Request) => {
+      const t = this.options.tracing
+      if (typeof t === 'boolean') {
+        return t
+      } else if (t.mode === 'http-header') {
+        return req.get('x-apollo-tracing') !== undefined
+      } else {
+        return t.mode === 'enabled'
+      }
     }
+
     app.post(
       endpoint,
       bodyParser.json(),
       apolloUploadExpress(uploads),
       graphqlExpress(request => ({
         schema: this.schema,
-        tracing: this.options.tracing,
+        tracing: tracing(request),
         context:
           typeof this.context === 'function'
             ? this.context({ request })
