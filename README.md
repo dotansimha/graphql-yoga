@@ -198,10 +198,10 @@ Whenever the defaults of `graphql-yoga` are too tight of a corset for you, you c
 
 The core value of `graphql-yoga` is that you don't have to write the boilerplate required to configure your [express.js](https://github.com/expressjs/) application. However, once you need to add more customized behaviour to your server, the default configuration provided by `graphql-yoga` might not suit your use case any more. For example, it might be the case that you want to add more custom _middleware_ to your server, like for logging or error reporting.
 
-For these cases, `GraphQLServer` exposes the `express.Application` directly via its [`app`](./src/index.ts#L17) property:
+For these cases, `GraphQLServer` exposes the `express.Application` directly via its [`express`](./src/index.ts#L17) property:
 
 ```js
-server.app.use(myMiddleware())
+server.express.use(myMiddleware())
 ```
 
 
