@@ -13,6 +13,7 @@ export { PubSub } from 'graphql-subscriptions'
 import { Props, Options } from './types'
 
 export { Options }
+export { express }
 
 export class GraphQLServer {
   express: express.Application
