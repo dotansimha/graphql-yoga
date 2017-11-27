@@ -2,6 +2,7 @@ import { Request } from 'express'
 import { CorsOptions } from 'cors'
 import { GraphQLSchema, GraphQLFieldResolver, GraphQLScalarType, GraphQLIsTypeOfFn, GraphQLTypeResolver } from 'graphql'
 import { SubscriptionOptions } from 'graphql-subscriptions/dist/subscriptions-manager'
+import { LogFunction } from 'apollo-server-core'
 
 export interface IResolvers {
   [key: string]: (() => any) | IResolverObject | GraphQLScalarType
@@ -55,4 +56,9 @@ export interface Props {
   schema?: GraphQLSchema
   context?: Context | ContextCallback
   options?: Options
+  formatError?: Function
+  formatParams?: Function
+  formatResponse?: Function
+  logFunction?: LogFunction
+  debug?: boolean
 }
