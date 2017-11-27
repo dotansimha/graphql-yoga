@@ -17,7 +17,7 @@ export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
 
-  private schema: GraphQLSchema
+  schema: GraphQLSchema
   private context: any
   private options: Options
 
