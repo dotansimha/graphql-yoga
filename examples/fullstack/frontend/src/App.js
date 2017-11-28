@@ -21,8 +21,8 @@ class App extends Component {
         </header>
         <div className="App-intro">
           <ul>
-            {this.props.data.items && this.props.data.items.map(item => {
-              return <li><Item name={item.name} /></li>
+            {this.props.data.items && this.props.data.items.map((item, index) => {
+              return <li key={index}><Item name={item.name} /></li>
             })}
           </ul>
         </div>
