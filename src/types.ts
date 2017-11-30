@@ -60,5 +60,4 @@ export interface Props {
   formatParams?: Function
   formatResponse?: Function
   logFunction?: LogFunction
-  debug?: boolean
 }
