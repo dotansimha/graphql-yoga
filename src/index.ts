@@ -12,7 +12,7 @@ import { makeExecutableSchema } from 'graphql-tools'
 export { PubSub } from 'graphql-subscriptions'
 import { Props, Options } from './types'
 
-export { Options }
+export { Options, express }
 
 export class GraphQLServer {
   express: express.Application
