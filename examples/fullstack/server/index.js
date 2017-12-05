@@ -23,5 +23,6 @@ const resolvers = {
   },
 }
 
-const server = new GraphQLServer({ typeDefs, resolvers })
-server.start(() => console.log('Server is running on localhost:4000'))
+const options = { port: 4000 }
+const server = new GraphQLServer({ typeDefs, resolvers, options })
+server.start(() => console.log('Server is running on localhost:' + options.port))
