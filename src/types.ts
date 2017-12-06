@@ -40,7 +40,7 @@ export interface TracingOptions {
 export interface Options {
   cors?: CorsOptions | false
   disableSubscriptions?: boolean
-  tracing: boolean | TracingOptions
+  tracing?: boolean | TracingOptions
   port?: number
   endpoint?: string
   subscriptionsEndpoint?: string
