@@ -113,7 +113,7 @@ Here is example of creating a new server:
 const options = {
   disableSubscriptions: false,  // same as default value
   port: 8000,
-  endoint: '/graphql',
+  endpoint: '/graphql',
   subscriptionsEndpoint: '/subscriptions',
   playgroundEndpoint: '/playground',
   disablePlayground: false      // same as default value
