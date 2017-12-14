@@ -33,6 +33,10 @@ export class GraphQLServer {
     }
     this.options = { ...defaultOptions, ...props.options }
 
+    if (!this.options.disableSubscriptions) {
+      this.options.subscriptionsEndpoint = undefined
+    }
+
     this.express = express()
     this.subscriptionServer = null
     this.context = props.context
@@ -100,15 +104,13 @@ export class GraphQLServer {
     )
 
     if (!disablePlayground) {
-      app.get(
-        playgroundEndpoint,
-        expressPlayground({
-          endpoint,
-          subscriptionEndpoint: disableSubscriptions
-            ? undefined
-            : subscriptionsEndpoint,
-        }),
-      )
+      const isDev =
+        process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development'
+      const playgroundOptions = isDev
+        ? { useGraphQLConfig: true, env: process.env }
+        : { endpoint, subscriptionsEndpoint }
+
+      app.get(playgroundEndpoint, expressPlayground(playgroundOptions))
     }
 
     return new Promise((resolve, reject) => {
