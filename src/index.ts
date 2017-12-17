@@ -37,16 +37,16 @@ export class GraphQLServer {
     }
 
     this.express = express()
-    
+
     // CORS support
     if (this.options.cors) {
       this.express.use(cors(this.options.cors))
     } else if (this.options.cors !== false) {
       this.express.use(cors())
     }
-    
+
     this.express.post(this.options.endpoint, express.json(), apolloUploadExpress(this.options.uploads))
-    
+
     this.subscriptionServer = null
     this.context = props.context
 
@@ -111,7 +111,7 @@ export class GraphQLServer {
 
       app.get(playgroundEndpoint, expressPlayground(playgroundOptions))
     }
-     
+
     if (!this.executableSchema) {
       throw new Error('No schema defined')
     }
