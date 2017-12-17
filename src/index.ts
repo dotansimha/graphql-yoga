@@ -1,5 +1,4 @@
 import * as express from 'express'
-import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
@@ -17,9 +16,9 @@ export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
 
-  schema: GraphQLSchema
-  private context: any
-  private options: Options
+  protected executableSchema: GraphQLSchema
+  protected context: any
+  protected options: Options
 
   constructor(props: Props) {
     const defaultOptions: Options = {
@@ -38,17 +37,27 @@ export class GraphQLServer {
     }
 
     this.express = express()
+    
+    // CORS support
+    if (this.options.cors) {
+      this.express.use(cors(this.options.cors))
+    } else if (this.options.cors !== false) {
+      this.express.use(cors())
+    }
+    
+    this.express.post(this.options.endpoint, express.json(), apolloUploadExpress(this.options.uploads))
+    
     this.subscriptionServer = null
     this.context = props.context
 
     if (props.schema) {
-      this.schema = props.schema
-    } else {
+      this.executableSchema = props.schema
+    } else if (props.typeDefs && props.resolvers) {
       const { typeDefs, resolvers } = props
       const uploadMixin = typeDefs.includes('scalar Upload')
         ? { Upload: GraphQLUpload }
         : {}
-      this.schema = makeExecutableSchema({
+      this.executableSchema = makeExecutableSchema({
         typeDefs,
         resolvers: {
           ...uploadMixin,
@@ -68,15 +77,7 @@ export class GraphQLServer {
       disableSubscriptions,
       playgroundEndpoint,
       subscriptionsEndpoint,
-      uploads,
     } = this.options
-
-    // CORS support
-    if (this.options.cors) {
-      app.use(cors(this.options.cors))
-    } else if (this.options.cors !== false) {
-      app.use(cors())
-    }
 
     const tracing = (req: express.Request) => {
       const t = this.options.tracing
@@ -91,10 +92,8 @@ export class GraphQLServer {
 
     app.post(
       endpoint,
-      bodyParser.json(),
-      apolloUploadExpress(uploads),
       graphqlExpress(request => ({
-        schema: this.schema,
+        schema: this.executableSchema,
         tracing: tracing(request),
         context:
           typeof this.context === 'function'
@@ -111,6 +110,10 @@ export class GraphQLServer {
         : { endpoint, subscriptionsEndpoint }
 
       app.get(playgroundEndpoint, expressPlayground(playgroundOptions))
+    }
+     
+    if (!this.executableSchema) {
+      throw new Error('No schema defined')
     }
 
     return new Promise((resolve, reject) => {
@@ -129,7 +132,7 @@ export class GraphQLServer {
 
         this.subscriptionServer = SubscriptionServer.create(
           {
-            schema: this.schema,
+            schema: this.executableSchema,
             execute,
             subscribe,
             onOperation: (message, connection, webSocket) => {
