@@ -15,10 +15,10 @@ export { Options }
 export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
+  options: Options
 
   protected executableSchema: GraphQLSchema
   protected context: any
-  public options: Options
 
   constructor(props: Props) {
     const defaultOptions: Options = {
