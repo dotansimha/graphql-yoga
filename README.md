@@ -113,7 +113,7 @@ Here is example of creating a new server:
 const options = {
   disableSubscriptions: false,  // same as default value
   port: 8000,
-  endoint: '/graphql',
+  endpoint: '/graphql',
   subscriptionsEndpoint: '/subscriptions',
   playgroundEndpoint: '/playground',
   disablePlayground: false      // same as default value
@@ -172,9 +172,17 @@ To deploy your `graphql-yoga` server with [`now`](https://zeit.co/now), follow t
 2. Navigate to the root directory of your `graphql-yoga` server
 3. Run `now` in your terminal
 
-### `up` (Coming soon 🔜 )
+### Heroku
 
-### Heroku (Coming soon 🔜 )
+To deploy your `graphql-yoga` server with [Heroku](https://heroku.com), follow these instructions:
+
+1. Download and install the [Heroku Command Line Interface](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) (previously Heroku Toolbelt)
+2. Log In to the Heroku CLI with `heroku login`
+3. Navigate to the root directory of your `graphql-yoga` server
+4. Create the Heroku instance by executing `heroku create`
+5. Deploy your GraphQL server by executing `git push heroku master`
+
+### `up` (Coming soon 🔜 )
 
 ### AWS Lambda (Coming soon 🔜 )
 
