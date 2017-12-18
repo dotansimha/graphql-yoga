@@ -16,8 +16,8 @@ export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
   options: Options
+  executableSchema: GraphQLSchema
 
-  protected executableSchema: GraphQLSchema
   protected context: any
 
   constructor(props: Props) {
