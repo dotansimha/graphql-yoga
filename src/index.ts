@@ -18,7 +18,7 @@ export class GraphQLServer {
 
   protected executableSchema: GraphQLSchema
   protected context: any
-  protected options: Options
+  public options: Options
 
   constructor(props: Props) {
     const defaultOptions: Options = {
