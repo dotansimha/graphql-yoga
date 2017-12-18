@@ -92,12 +92,12 @@ export class GraphQLServer {
 
     app.post(
       endpoint,
-      graphqlExpress(request => ({
+      graphqlExpress(async request => ({
         schema: this.executableSchema,
         tracing: tracing(request),
         context:
           typeof this.context === 'function'
-            ? this.context({ request })
+            ? await this.context({ request })
             : this.context,
       })),
     )
