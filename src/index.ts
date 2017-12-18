@@ -7,11 +7,12 @@ import { createServer } from 'http'
 import { execute, subscribe, GraphQLSchema } from 'graphql'
 import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
 import { graphqlExpress } from 'apollo-server-express'
+import { LogFunction } from 'apollo-server-core'
 import { makeExecutableSchema } from 'graphql-tools'
 export { PubSub } from 'graphql-subscriptions'
 import { Props, Options } from './types'
 
-export { Options }
+export { Options, express }
 
 export class GraphQLServer {
   express: express.Application
@@ -19,6 +20,10 @@ export class GraphQLServer {
 
   schema: GraphQLSchema
   private context: any
+  private formatError: Function
+  private formatParams: Function
+  private formatResponse: Function
+  private logFunction: LogFunction
   private options: Options
 
   constructor(props: Props) {
@@ -40,6 +45,10 @@ export class GraphQLServer {
     this.express = express()
     this.subscriptionServer = null
     this.context = props.context
+    this.formatError = props.formatError
+    this.formatParams = props.formatParams
+    this.formatResponse = props.formatResponse
+    this.logFunction = props.logFunction
 
     if (props.schema) {
       this.schema = props.schema
@@ -100,6 +109,10 @@ export class GraphQLServer {
           typeof this.context === 'function'
             ? await this.context({ request })
             : this.context,
+        formatError: this.formatError,
+        formatParams: this.formatParams,
+        formatResponse: this.formatResponse,
+        logFunction: this.logFunction,
       })),
     )
 
