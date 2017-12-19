@@ -93,12 +93,12 @@ export class GraphQLServer {
       endpoint,
       bodyParser.json(),
       apolloUploadExpress(uploads),
-      graphqlExpress(request => ({
+      graphqlExpress(async request => ({
         schema: this.schema,
         tracing: tracing(request),
         context:
           typeof this.context === 'function'
-            ? this.context({ request })
+            ? await this.context({ request })
             : this.context,
       })),
     )
