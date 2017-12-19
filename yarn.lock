@@ -92,27 +92,27 @@ apollo-cache-control@^0.0.x:
   dependencies:
     graphql-extensions "^0.0.x"
 
-apollo-link@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.0.6.tgz#ed5e975b4582b2471fd8eebf9efbd6691188dc0a"
+apollo-link@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.0.7.tgz#42cd38a7378332fc3e41a214ff6a6e5e703a556f"
   dependencies:
     "@types/zen-observable" "0.5.3"
     apollo-utilities "^1.0.0"
     zen-observable "^0.6.0"
 
-apollo-server-core@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-1.3.0.tgz#a79d29a70e8150aa8a0143234e11594ba41ccc8d"
+apollo-server-core@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-1.3.1.tgz#fd25daf66b26f923a814f72d5d269c967e40aa1d"
   dependencies:
     apollo-cache-control "^0.0.x"
     apollo-tracing "^0.1.0"
     graphql-extensions "^0.0.x"
 
-apollo-server-express@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-1.3.0.tgz#c5249e941ec2d5c6e018e7ffd47efa8c53850f74"
+apollo-server-express@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-1.3.1.tgz#2427eb3b27ab34aa5f266628885e30bbf9f1ab5d"
   dependencies:
-    apollo-server-core "^1.3.0"
+    apollo-server-core "^1.3.1"
     apollo-server-module-graphiql "^1.3.0"
 
 apollo-server-module-graphiql@^1.3.0:
@@ -585,16 +585,16 @@ graphql-request@^1.4.0:
   dependencies:
     cross-fetch "0.0.8"
 
-graphql-subscriptions@^0.5.5:
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.5.5.tgz#f8ad3e094a23128d5065725f9b60020d3293999d"
+graphql-subscriptions@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.5.6.tgz#0d8e960fbaaf9ecbe7900366e86da2fc143fc5b2"
   dependencies:
     es6-promise "^4.1.1"
     iterall "^1.1.3"
 
-graphql-tools@^2.13.0:
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-2.13.0.tgz#3c7aad3bb1284a651dd80b385e06b3d13ac2a6f2"
+graphql-tools@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-2.14.0.tgz#9a8e6d89724f68f8c5aea220ee634a690b62f670"
   dependencies:
     apollo-utilities "^1.0.1"
     deprecated-decorator "^0.1.6"
@@ -603,6 +603,12 @@ graphql-tools@^2.13.0:
 graphql@^0.11.7:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.11.7.tgz#e5abaa9cb7b7cccb84e9f0836bf4370d268750c6"
+  dependencies:
+    iterall "1.1.3"
+
+graphql@^0.12.0:
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.12.3.tgz#11668458bbe28261c0dcb6e265f515ba79f6ce07"
   dependencies:
     iterall "1.1.3"
 
