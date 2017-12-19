@@ -135,12 +135,12 @@ export class GraphQLServer {
             schema: this.executableSchema,
             execute,
             subscribe,
-            onOperation: (message, connection, webSocket) => {
+            onOperation: async (message, connection, webSocket) => {
               return {
                 ...connection,
                 context:
                   typeof this.context === 'function'
-                    ? this.context({ connection })
+                    ? await this.context({ connection })
                     : this.context,
               }
             },
