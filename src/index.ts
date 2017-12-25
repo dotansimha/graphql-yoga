@@ -7,7 +7,7 @@ import { execute, subscribe, GraphQLSchema } from 'graphql'
 import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
 import { graphqlExpress } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
-export { PubSub } from 'graphql-subscriptions'
+export { PubSub, withFilter } from 'graphql-subscriptions'
 import { Props, Options } from './types'
 
 export { Options }
