@@ -62,7 +62,7 @@ The `props` argument accepts the following fields:
 
 | Key | Type | Default | Note |
 | ---  | --- | --- | --- |
-| `typeDefs` | String  |  `null` | Contains GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided \*)  |
+| `typeDefs` | String  |  `null` | Contains GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) or file path to type definitions (required if `schema` is not provided \*)  |
 | `resolvers`  | Object  |  `null`  | Contains resolvers for the fields specified in `typeDefs` (required if `schema` is not provided \*) |
 | `schema`  | Object |  `null`  | An instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema) (required if `typeDefs` and `resolvers` are not provided \*) |
 | `context`  | Object  |  `{}`  | Contains custom data being passed through your resolver chain  |
