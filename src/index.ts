@@ -1,7 +1,7 @@
 import * as express from 'express'
 import * as cors from 'cors'
 import * as fs from 'fs'
-import {importSchema} from 'graphql-import'
+import { importSchema } from 'graphql-import'
 import * as path from 'path'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
