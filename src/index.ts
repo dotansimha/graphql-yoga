@@ -1,6 +1,7 @@
 import * as express from 'express'
 import * as cors from 'cors'
 import * as fs from 'fs'
+import {importSchema} from 'graphql-import'
 import * as path from 'path'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
@@ -71,7 +72,7 @@ export class GraphQLServer {
           throw new Error(`No schema found for path: ${schemaPath}`)
         }
 
-        typeDefs = fs.readFileSync(schemaPath, 'utf8')
+        typeDefs = importSchema(schemaPath)
       }
 
       const uploadMixin = typeDefs.includes('scalar Upload')
