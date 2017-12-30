@@ -113,14 +113,24 @@ export class GraphQLServer {
 
     app.post(
       endpoint,
-      graphqlExpress(async request => ({
-        schema: this.executableSchema,
-        tracing: tracing(request),
-        context:
-          typeof this.context === 'function'
-            ? await this.context({ request })
-            : this.context,
-      })),
+      graphqlExpress(async request => {
+        let context
+        try {
+          context =
+            typeof this.context === 'function'
+              ? await this.context({ request })
+              : this.context
+        } catch (e) {
+          console.error(e)
+          throw e
+        }
+
+        return {
+          schema: this.executableSchema,
+          tracing: tracing(request),
+          context,
+        }
+      }),
     )
 
     if (!disablePlayground) {
@@ -157,13 +167,17 @@ export class GraphQLServer {
             execute,
             subscribe,
             onOperation: async (message, connection, webSocket) => {
-              return {
-                ...connection,
-                context:
+              let context
+              try {
+                context =
                   typeof this.context === 'function'
                     ? await this.context({ connection })
-                    : this.context,
+                    : this.context
+              } catch (e) {
+                console.error(e)
+                throw e
               }
+              return { ...connection, context }
             },
           },
           {
