@@ -1,5 +1,8 @@
 import * as express from 'express'
 import * as cors from 'cors'
+import * as fs from 'fs'
+import { importSchema } from 'graphql-import'
+import * as path from 'path'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
@@ -45,7 +48,11 @@ export class GraphQLServer {
       this.express.use(cors())
     }
 
-    this.express.post(this.options.endpoint, express.json(), apolloUploadExpress(this.options.uploads))
+    this.express.post(
+      this.options.endpoint,
+      express.json(),
+      apolloUploadExpress(this.options.uploads),
+    )
 
     this.subscriptionServer = null
     this.context = props.context
@@ -53,7 +60,21 @@ export class GraphQLServer {
     if (props.schema) {
       this.executableSchema = props.schema
     } else if (props.typeDefs && props.resolvers) {
-      const { typeDefs, resolvers } = props
+      let { typeDefs, resolvers } = props
+
+      // read from .graphql file if path provided
+      if (typeDefs.endsWith('graphql')) {
+        const schemaPath = path.isAbsolute(typeDefs)
+          ? path.resolve(typeDefs)
+          : path.resolve(typeDefs)
+
+        if (!fs.existsSync(schemaPath)) {
+          throw new Error(`No schema found for path: ${schemaPath}`)
+        }
+
+        typeDefs = importSchema(schemaPath)
+      }
+
       const uploadMixin = typeDefs.includes('scalar Upload')
         ? { Upload: GraphQLUpload }
         : {}
