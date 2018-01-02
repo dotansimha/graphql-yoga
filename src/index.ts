@@ -1,4 +1,5 @@
 import * as express from 'express'
+import * as bodyParser from 'body-parser-graphql'
 import * as cors from 'cors'
 import * as fs from 'fs'
 import { importSchema } from 'graphql-import'
@@ -50,7 +51,7 @@ export class GraphQLServer {
 
     this.express.post(
       this.options.endpoint,
-      express.json(),
+      bodyParser.graphql(),
       apolloUploadExpress(this.options.uploads),
     )
 
