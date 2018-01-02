@@ -6,7 +6,7 @@
 
 Fully-featured GraphQL Server with focus on easy setup, performance &amp; great developer experience
 
-## Features
+## Overview
 
 * **Easiest way to run a GraphQL server:** Good defaults & includes everything you need with minimal setup.
 * **Includes Subscriptions:** Built-in support for GraphQL Subscriptions using WebSockets.
@@ -18,6 +18,17 @@ Fully-featured GraphQL Server with focus on easy setup, performance &amp; great 
   * [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
   * [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
   * [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
+
+## Features
+
+* GraphQL spec-compliant
+* File upload
+* GraphQL Subscriptions
+* TypeScript typings
+* GraphQL Playground
+* Extensible via Express middlewares
+* Apollo Tracing
+* Accepts both `application/json` and `application/graphql` content-type
 
 ## Install
 
