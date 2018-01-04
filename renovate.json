@@ -3,7 +3,7 @@
   "pathRules": [
     {
       "paths": ["examples/**"],
-      "extends": [":semanticCommitTypeAll(chore)", ":automergeMajor"],
+      "extends": [":semanticCommitTypeAll(chore)", ":automergeMinor"],
       "branchName": "{{branchPrefix}}examples-{{depNameSanitized}}-{{newVersionMajor}}.x"
     }
   ]
