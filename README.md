@@ -2,11 +2,11 @@
 
 # graphql-yoga
 
-[![Build Status](https://travis-ci.org/graphcool/graphql-yoga.svg?branch=master)](https://travis-ci.org/graphcool/graphql-yoga) [![npm version](https://badge.fury.io/js/graphql-yoga.svg)](https://badge.fury.io/js/graphql-yoga) [![Greenkeeper badge](https://badges.greenkeeper.io/graphcool/graphql-yoga.svg)](https://greenkeeper.io/)
+[![CircleCI](https://circleci.com/gh/graphcool/graphql-yoga.svg?style=shield)](https://circleci.com/gh/graphcool/graphql-yoga) [![npm version](https://badge.fury.io/js/graphql-yoga.svg)](https://badge.fury.io/js/graphql-yoga)
 
 Fully-featured GraphQL Server with focus on easy setup, performance &amp; great developer experience
 
-## Features
+## Overview
 
 * **Easiest way to run a GraphQL server:** Good defaults & includes everything you need with minimal setup.
 * **Includes Subscriptions:** Built-in support for GraphQL Subscriptions using WebSockets.
@@ -18,6 +18,17 @@ Fully-featured GraphQL Server with focus on easy setup, performance &amp; great 
   * [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
   * [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
   * [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
+
+## Features
+
+* GraphQL spec-compliant
+* File upload
+* GraphQL Subscriptions
+* TypeScript typings
+* GraphQL Playground
+* Extensible via Express middlewares
+* Apollo Tracing
+* Accepts both `application/json` and `application/graphql` content-type
 
 ## Install
 
@@ -62,7 +73,7 @@ The `props` argument accepts the following fields:
 
 | Key | Type | Default | Note |
 | ---  | --- | --- | --- |
-| `typeDefs` | String  |  `null` | Contains GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) (required if `schema` is not provided \*)  |
+| `typeDefs` | String  |  `null` | Contains GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) or file path to type definitions (required if `schema` is not provided \*)  |
 | `resolvers`  | Object  |  `null`  | Contains resolvers for the fields specified in `typeDefs` (required if `schema` is not provided \*) |
 | `schema`  | Object |  `null`  | An instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema) (required if `typeDefs` and `resolvers` are not provided \*) |
 | `context`  | Object  |  `{}`  | Contains custom data being passed through your resolver chain  |
@@ -207,14 +218,18 @@ Whenever the defaults of `graphql-yoga` are too tight of a corset for you, you c
 The core value of `graphql-yoga` is that you don't have to write the boilerplate required to configure your [express.js](https://github.com/expressjs/) application. However, once you need to add more customized behaviour to your server, the default configuration provided by `graphql-yoga` might not suit your use case any more. For example, it might be the case that you want to add more custom _middleware_ to your server, like for logging or error reporting.
 
 For these cases, `GraphQLServer` exposes the `express.Application` directly via its [`express`](./src/index.ts#L17) property:
-
 ```js
 server.express.use(myMiddleware())
 ```
-
+Middlewares can also be added specifically to the GraphQL endpoint route, by using:
+```js
+server.express.post(server.options.endpoint, myMiddleware())
+```
+Any middlewares you add to that route, will be added right before the `apollo-server-express` middleware.
 
 ## Help & Community [![Slack Status](https://slack.graph.cool/badge.svg)](https://slack.graph.cool)
 
 Join our [Slack community](http://slack.graph.cool/) if you run into issues or have questions. We love talking to you!
 
 [![](http://i.imgur.com/5RHR6Ku.png)](https://www.graph.cool/)
+

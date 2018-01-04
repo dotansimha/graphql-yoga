@@ -1,6 +1,9 @@
 import * as express from 'express'
-import * as bodyParser from 'body-parser'
+import * as bodyParser from 'body-parser-graphql'
 import * as cors from 'cors'
+import * as fs from 'fs'
+import { importSchema } from 'graphql-import'
+import * as path from 'path'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createServer } from 'http'
@@ -9,7 +12,7 @@ import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
 import { graphqlExpress } from 'apollo-server-express'
 import { LogFunction } from 'apollo-server-core'
 import { makeExecutableSchema } from 'graphql-tools'
-export { PubSub } from 'graphql-subscriptions'
+export { PubSub, withFilter } from 'graphql-subscriptions'
 import { Props, Options } from './types'
 
 export { Options, express }
@@ -17,14 +20,14 @@ export { Options, express }
 export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
+  options: Options
+  executableSchema: GraphQLSchema
 
-  schema: GraphQLSchema
   private context: any
   private formatError: Function
   private formatParams: Function
   private formatResponse: Function
   private logFunction: LogFunction
-  private options: Options
 
   constructor(props: Props) {
     const defaultOptions: Options = {
@@ -43,6 +46,20 @@ export class GraphQLServer {
     }
 
     this.express = express()
+
+    // CORS support
+    if (this.options.cors) {
+      this.express.use(cors(this.options.cors))
+    } else if (this.options.cors !== false) {
+      this.express.use(cors())
+    }
+
+    this.express.post(
+      this.options.endpoint,
+      bodyParser.graphql(),
+      apolloUploadExpress(this.options.uploads),
+    )
+
     this.subscriptionServer = null
     this.context = props.context
     this.formatError = props.formatError
@@ -51,13 +68,27 @@ export class GraphQLServer {
     this.logFunction = props.logFunction
 
     if (props.schema) {
-      this.schema = props.schema
-    } else {
-      const { typeDefs, resolvers } = props
+      this.executableSchema = props.schema
+    } else if (props.typeDefs && props.resolvers) {
+      let { typeDefs, resolvers } = props
+
+      // read from .graphql file if path provided
+      if (typeDefs.endsWith('graphql')) {
+        const schemaPath = path.isAbsolute(typeDefs)
+          ? path.resolve(typeDefs)
+          : path.resolve(typeDefs)
+
+        if (!fs.existsSync(schemaPath)) {
+          throw new Error(`No schema found for path: ${schemaPath}`)
+        }
+
+        typeDefs = importSchema(schemaPath)
+      }
+
       const uploadMixin = typeDefs.includes('scalar Upload')
         ? { Upload: GraphQLUpload }
         : {}
-      this.schema = makeExecutableSchema({
+      this.executableSchema = makeExecutableSchema({
         typeDefs,
         resolvers: {
           ...uploadMixin,
@@ -77,15 +108,7 @@ export class GraphQLServer {
       disableSubscriptions,
       playgroundEndpoint,
       subscriptionsEndpoint,
-      uploads,
     } = this.options
-
-    // CORS support
-    if (this.options.cors) {
-      app.use(cors(this.options.cors))
-    } else if (this.options.cors !== false) {
-      app.use(cors())
-    }
 
     const tracing = (req: express.Request) => {
       const t = this.options.tracing
@@ -100,20 +123,24 @@ export class GraphQLServer {
 
     app.post(
       endpoint,
-      bodyParser.json(),
-      apolloUploadExpress(uploads),
-      graphqlExpress(async request => ({
-        schema: this.schema,
-        tracing: tracing(request),
-        context:
-          typeof this.context === 'function'
-            ? await this.context({ request })
-            : this.context,
-        formatError: this.formatError,
-        formatParams: this.formatParams,
-        formatResponse: this.formatResponse,
-        logFunction: this.logFunction,
-      })),
+      graphqlExpress(async request => {
+        let context
+        try {
+          context =
+            typeof this.context === 'function'
+              ? await this.context({ request })
+              : this.context
+        } catch (e) {
+          console.error(e)
+          throw e
+        }
+
+        return {
+          schema: this.executableSchema,
+          tracing: tracing(request),
+          context,
+        }
+      }),
     )
 
     if (!disablePlayground) {
@@ -124,6 +151,10 @@ export class GraphQLServer {
         : { endpoint, subscriptionsEndpoint }
 
       app.get(playgroundEndpoint, expressPlayground(playgroundOptions))
+    }
+
+    if (!this.executableSchema) {
+      throw new Error('No schema defined')
     }
 
     return new Promise((resolve, reject) => {
@@ -142,17 +173,21 @@ export class GraphQLServer {
 
         this.subscriptionServer = SubscriptionServer.create(
           {
-            schema: this.schema,
+            schema: this.executableSchema,
             execute,
             subscribe,
-            onOperation: (message, connection, webSocket) => {
-              return {
-                ...connection,
-                context:
+            onOperation: async (message, connection, webSocket) => {
+              let context
+              try {
+                context =
                   typeof this.context === 'function'
-                    ? this.context({ connection })
-                    : this.context,
+                    ? await this.context({ connection })
+                    : this.context
+              } catch (e) {
+                console.error(e)
+                throw e
               }
+              return { ...connection, context }
             },
           },
           {
