@@ -1,6 +1,10 @@
 {
-  "extends": [
-    "config:base",
-    ":pathSemanticCommitType(examples/**,chore)"
+  "extends": ["config:base"],
+  "pathRules": [
+    {
+      "paths": ["examples/**"],
+      "extends": [":semanticCommitTypeAll(chore)", ":automergeMinor"],
+      "branchName": "{{branchPrefix}}examples-{{depNameSanitized}}-{{newVersionMajor}}.x"
+    }
   ]
 }
