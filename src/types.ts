@@ -82,8 +82,6 @@ export interface LambdaProps {
   options?: LambdaOptions
 }
 
-export interface LambdaOptions {
-  tracing?: boolean | TracingOptions
-  uploads?: UploadOptions
+export interface LambdaOptions extends ApolloServerOptions {
   endpoint?: string
 }

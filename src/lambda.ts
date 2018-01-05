@@ -83,6 +83,15 @@ export class GraphQLServerLambda {
         schema: this.executableSchema,
         tracing: tracing(event),
         context: apolloContext,
+        cacheControl: this.options.cacheControl,
+        formatError: this.options.formatError,
+        logFunction: this.options.logFunction,
+        rootValue: this.options.rootValue,
+        validationRules: this.options.validationRules,
+        fieldResolver: this.options.fieldResolver,
+        formatParams: this.options.formatParams,
+        formatResponse: this.options.formatResponse,
+        debug: this.options.debug,
       }
     })
     return handler(event, context, callbackFilter)
