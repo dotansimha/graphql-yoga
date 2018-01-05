@@ -68,4 +68,5 @@ export interface LambdaProps {
 export interface LambdaOptions {
   tracing?: boolean | TracingOptions
   uploads?: UploadOptions
+  endpoint?: string
 }

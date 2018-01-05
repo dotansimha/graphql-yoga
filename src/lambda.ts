@@ -12,14 +12,12 @@ export class GraphQLServerLambda {
   options: LambdaOptions
   executableSchema: GraphQLSchema
 
-  // TODO: Get endpoint from a variable?
-  playgroundHandler = lambdaPlayground({ endpoint: '/dev/graphql' })
-
   protected context: any
 
   constructor(props: LambdaProps) {
     const defaultOptions: LambdaOptions = {
       tracing: { mode: 'http-header' },
+      endpoint: '/',
     }
     this.options = { ...defaultOptions, ...props.options }
 
@@ -32,7 +30,9 @@ export class GraphQLServerLambda {
 
       // read from .graphql file if path provided
       if (typeDefs.endsWith('graphql')) {
-        const schemaPath = path.isAbsolute(typeDefs) ? path.resolve(typeDefs) : path.resolve(typeDefs)
+        const schemaPath = path.isAbsolute(typeDefs)
+          ? path.resolve(typeDefs)
+          : path.resolve(typeDefs)
 
         if (!fs.existsSync(schemaPath)) {
           throw new Error(`No schema found for path: ${schemaPath}`)
@@ -48,7 +48,7 @@ export class GraphQLServerLambda {
     }
   }
 
-  graphqlHandler(event, context, callback) {
+  graphqlHandler = (event, context, callback) => {
     function callbackFilter(error, output) {
       // eslint-disable-next-line no-param-reassign
       output.headers['Access-Control-Allow-Origin'] = '*'
@@ -67,11 +67,13 @@ export class GraphQLServerLambda {
       }
     }
 
-    const handler = graphqlLambda(async (event, context) => {
+    const handler = graphqlLambda(async (event, lambdaContext) => {
       let apolloContext
       try {
         apolloContext =
-          typeof this.context === 'function' ? await this.context({ event, context }) : this.context
+          typeof this.context === 'function'
+            ? await this.context({ event, context: lambdaContext })
+            : this.context
       } catch (e) {
         console.error(e)
         throw e
@@ -84,5 +86,11 @@ export class GraphQLServerLambda {
       }
     })
     return handler(event, context, callbackFilter)
+  }
+
+  playgroundHandler = (event, lambdaContext, callback) => {
+    return lambdaPlayground({
+      endpoint: this.options.endpoint,
+    })(event, lambdaContext, callback)
   }
 }

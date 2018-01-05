@@ -1,5 +1,4 @@
-'use strict';
-import { GraphQLServerLambda } from 'graphql-yoga'
+const { GraphQLServerLambda } = require('graphql-yoga')
 
 const typeDefs = `
   type Query {
@@ -9,7 +8,7 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    hello: (_,{ name }) => `Hello ${name}`
+    hello: (_,{ name }) => `Hello ${name || 'world'}`
   }
 }
 
