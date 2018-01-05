@@ -29,6 +29,7 @@ Fully-featured GraphQL Server with focus on easy setup, performance &amp; great 
 * Extensible via Express middlewares
 * Apollo Tracing
 * Accepts both `application/json` and `application/graphql` content-type
+* Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc
 
 ## Install
 
