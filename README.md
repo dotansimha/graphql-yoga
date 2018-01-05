@@ -122,7 +122,6 @@ Additionally, the `options` object exposes these `apollo-server` options:
 
 | Key | Type | Note |
 | ---  | --- | --- |
-| `tracing` | Boolean | Collect and expose trace data in the Apollo Tracing format |
 | `cacheControl`  | Boolean  | Enable extension that returns Cache Control data in the response |
 | `formatError`  | Number | A function to apply to every error before sending the response to clients |
 | `logFunction`  | LogFunction  | A function called for logging events such as execution times |
