@@ -15,6 +15,7 @@ export { PubSub, withFilter } from 'graphql-subscriptions'
 import { Props, Options } from './types'
 
 export { Options }
+export { GraphQLServerLambda } from './lambda'
 
 export class GraphQLServer {
   express: express.Application

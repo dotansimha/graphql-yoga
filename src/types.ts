@@ -56,3 +56,16 @@ export interface Props {
   context?: Context | ContextCallback
   options?: Options
 }
+
+export interface LambdaProps {
+  typeDefs?: string
+  resolvers?: IResolvers
+  schema?: GraphQLSchema
+  context?: Context | ContextCallback
+  options?: LambdaOptions
+}
+
+export interface LambdaOptions {
+  tracing?: boolean | TracingOptions
+  uploads?: UploadOptions
+}

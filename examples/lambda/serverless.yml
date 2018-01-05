@@ -1,0 +1,21 @@
+service: yoga-example 
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+
+functions:
+  graphql:
+    handler: handler.server
+    events:
+    - http:
+        path: graphql
+        method: post
+        cors: true
+  playground:
+    handler: handler.playground
+    events:
+    - http:
+        path: playground
+        method: get
+        cors: true
