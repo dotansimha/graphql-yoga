@@ -69,6 +69,9 @@ export class GraphQLServer {
     }
   }
 
+  // use, get and post mimic the methods on express.Application
+  // because middleware cannot be inserted, they are stored here
+  // in start(), they are added in the right place in the middleware stack
   use(...handlers: RequestHandlerParams[]): this
   use(path: PathParams, ...handlers: RequestHandlerParams[]): this
   use(path?, ...handlers): this {
@@ -115,6 +118,9 @@ export class GraphQLServer {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
     }
 
+    // All middlewares added before start() was called are applied to
+    // the express application here, in the order they were provided
+    // (following Queue pattern)
     while (this.middlewares.use.length > 0) {
       const middleware = this.middlewares.use.shift()
       if (middleware.path) {
