@@ -12,10 +12,10 @@ const resolvers = {
   }
 }
 
-const server = new GraphQLServerLambda({ 
+const lambda = new GraphQLServerLambda({ 
   typeDefs,
   resolvers
 })
 
-exports.server = server.graphqlHandler
-exports.playground = server.playgroundHandler
+exports.server = lambda.graphqlHandler
+exports.playground = lambda.playgroundHandler
