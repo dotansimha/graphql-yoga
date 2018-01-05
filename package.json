@@ -29,6 +29,9 @@
     "lint": "tslint --project tsconfig.json {src,test}/**/*.ts",
     "test": "npm run lint && npm run build"
   },
+  "release": {
+    "branch": "master"
+  },
   "dependencies": {
     "@types/cors": "^2.8.3",
     "@types/express": "^4.0.39",
