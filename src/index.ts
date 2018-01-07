@@ -89,7 +89,12 @@ export class GraphQLServer {
     return this
   }
 
-  start(options?: Options, callback: ((options: Options) => void) = () => null): Promise<void> {
+  start(options: Options, callback?: ((options: Options) => void)): Promise<void>
+  start(callback?: ((options: Options) => void)): Promise<void>
+  start(optionsOrCallback?: Options | ((options: Options) => void), callback?: ((options: Options) => void)): Promise<void> {
+    const options = (optionsOrCallback && typeof optionsOrCallback === 'function') ? {} : optionsOrCallback
+    const callbackFunc = callback ? callback : (optionsOrCallback && typeof optionsOrCallback === 'function') ? optionsOrCallback : () => null
+
     const app = this.express
 
     this.options = { ...this.options, ...options }
@@ -190,14 +195,14 @@ export class GraphQLServer {
     return new Promise((resolve, reject) => {
       if (!this.options.subscriptions) {
         app.listen(this.options.port, () => {
-          callback(this.options)
+          callbackFunc(this.options)
           resolve()
         })
       } else {
         const combinedServer = createServer(app)
 
         combinedServer.listen(this.options.port, () => {
-          callback(this.options)
+          callbackFunc(this.options)
           resolve()
         })
 
