@@ -4,11 +4,11 @@
 
 [![CircleCI](https://circleci.com/gh/graphcool/graphql-yoga.svg?style=shield)](https://circleci.com/gh/graphcool/graphql-yoga) [![npm version](https://badge.fury.io/js/graphql-yoga.svg)](https://badge.fury.io/js/graphql-yoga)
 
-Fully-featured GraphQL Server with focus on easy setup, performance &amp; great developer experience
+Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
 ## Overview
 
-* **Easiest way to run a GraphQL server:** Good defaults & includes everything you need with minimal setup.
+* **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup.
 * **Includes Subscriptions:** Built-in support for GraphQL Subscriptions using WebSockets.
 * **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
 
