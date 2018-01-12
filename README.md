@@ -9,7 +9,7 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 ## Overview
 
 * **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup.
-* **Includes Subscriptions:** Built-in support for GraphQL Subscriptions using WebSockets.
+* **Includes Subscriptions:** Built-in support for GraphQL subscriptions using WebSockets.
 * **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
 
 `graphql-yoga` is based on the following libraries & tools:
