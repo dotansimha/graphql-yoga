@@ -77,12 +77,14 @@ The `props` argument accepts the following fields:
 | `typeDefs` | String  |  `null` | Contains GraphQL type definitions in [SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51) or file path to type definitions (required if `schema` is not provided \*)  |
 | `resolvers`  | Object  |  `null`  | Contains resolvers for the fields specified in `typeDefs` (required if `schema` is not provided \*) |
 | `schema`  | Object |  `null`  | An instance of [`GraphQLSchema`](http://graphql.org/graphql-js/type/#graphqlschema) (required if `typeDefs` and `resolvers` are not provided \*) |
-| `context`  | Object or Function  |  `{}`  | Contains custom data being passed through your resolver chain. This can be passed in as an object, or as a Function with the signature `(req: Request) => any`  |
+| `context`  | Object or Function  |  `{}`  | Contains custom data being passed through your resolver chain. This can be passed in as an object, or as a Function with the signature `(req: ContextParameters) => any` \*\* |
 
 > (*) There are two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:
 > 
 > 1. Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance using [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
 > 2. Provide the `schema` directly and omit `typeDefs` and `resolvers`.
+
+> (\*\*) Notice that the `req` argument is an object of the shape `{ request, connection }` which either carries a `request: Request` property (in case it's a `Query`/`Mutation` resolver) or a `connection: SubscriptionOptions` property (in case it's a `Subscription` resolver). [`Request`](http://expressjs.com/en/api.html#req) is imported from Express.js. `SubscriptionOptions` is from the [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions) package.
 
 Here is example of creating a new server:
 

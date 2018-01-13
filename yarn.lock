@@ -246,7 +246,7 @@ chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chalk@^2.1.0:
+chalk@^2.1.0, chalk@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.3.0.tgz#b5ea48efc9c1793dccc9b4767c93914d3f2d52ba"
   dependencies:
@@ -507,9 +507,9 @@ graphcool-json-schema@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/graphcool-json-schema/-/graphcool-json-schema-1.2.0.tgz#6c7a9de36a130c5048fa8d9817dff2b5a88bc226"
 
-graphcool-yml@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/graphcool-yml/-/graphcool-yml-0.2.1.tgz#3f5b53c64e917550830a62d3a87bb64ee3ce3e66"
+graphcool-yml@0.4.8:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/graphcool-yml/-/graphcool-yml-0.4.8.tgz#c1e70a88ccc8b8eea81fb80b7c369a2b734240b9"
   dependencies:
     ajv "^5.5.1"
     bluebird "^3.5.1"
@@ -526,12 +526,19 @@ graphcool-yml@0.2.1:
     scuid "^1.0.2"
     yaml-ast-parser "^0.0.40"
 
-graphql-config-extension-graphcool@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-config-extension-graphcool/-/graphql-config-extension-graphcool-1.0.0.tgz#aeac68bc54126f17f263058893b556529ec46f94"
+graphql-config-extension-graphcool@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/graphql-config-extension-graphcool/-/graphql-config-extension-graphcool-1.0.4.tgz#9346aace7e42688e35e4bd44039117608916aad0"
   dependencies:
-    graphcool-yml "0.2.1"
+    graphcool-yml "0.4.8"
     graphql-config "^1.1.4"
+
+graphql-config-extension-prisma@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/graphql-config-extension-prisma/-/graphql-config-extension-prisma-0.0.3.tgz#2fea0a34ef128e1763cb3ebfa6becd99549fe1ef"
+  dependencies:
+    graphql-config "^1.1.4"
+    prisma-yml "0.0.4"
 
 graphql-config@^1.1.1, graphql-config@^1.1.4:
   version "1.1.4"
@@ -567,25 +574,26 @@ graphql-import@^0.3.0:
     graphql "^0.12.3"
     lodash "^4.17.4"
 
-graphql-playground-html@1.4.2, graphql-playground-html@^1.3.6:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.4.2.tgz#af97a84ea6cf6ba18e8ff148a6a8b17eef40aa46"
+graphql-playground-html@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.4.4.tgz#3870bba04b160b81a84692bcda4f5c8fabd904a8"
   dependencies:
     dotenv "^4.0.0"
     graphql-config "^1.1.1"
-    graphql-config-extension-graphcool "^1.0.0"
+    graphql-config-extension-graphcool "1.0.4"
+    graphql-config-extension-prisma "0.0.3"
 
-graphql-playground-middleware-express@1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-express/-/graphql-playground-middleware-express-1.4.7.tgz#d6a8c11def09d36cd613bce996df3adc286b364a"
+graphql-playground-middleware-express@1.4.9:
+  version "1.4.9"
+  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-express/-/graphql-playground-middleware-express-1.4.9.tgz#fa7f0f629955e8a6b729704afcd8c5f2e2916d74"
   dependencies:
-    graphql-playground-html "1.4.2"
+    graphql-playground-html "1.4.4"
 
-graphql-playground-middleware-lambda@1.3.9:
-  version "1.3.9"
-  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-lambda/-/graphql-playground-middleware-lambda-1.3.9.tgz#29109890f396b71161f79d5c83c8a0af8dc4f8b6"
+graphql-playground-middleware-lambda@1.3.10:
+  version "1.3.10"
+  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-lambda/-/graphql-playground-middleware-lambda-1.3.10.tgz#652195453c1bd9039d7d12e975c74b7a38e337e6"
   dependencies:
-    graphql-playground-html "^1.3.6"
+    graphql-playground-html "1.4.4"
 
 graphql-request@^1.4.0:
   version "1.4.1"
@@ -884,6 +892,30 @@ portfinder@^1.0.13:
     async "^1.5.2"
     debug "^2.2.0"
     mkdirp "0.5.x"
+
+prisma-json-schema@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/prisma-json-schema/-/prisma-json-schema-0.0.1.tgz#0802e156a293faefdf21e5e41beb8d3681f45cb1"
+
+prisma-yml@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/prisma-yml/-/prisma-yml-0.0.4.tgz#66b54f5056f087ff548719bb62e5251ca49fe4b1"
+  dependencies:
+    ajv "^5.5.1"
+    bluebird "^3.5.1"
+    chalk "^2.3.0"
+    debug "^3.1.0"
+    dotenv "^4.0.0"
+    fs-extra "^4.0.3"
+    isomorphic-fetch "^2.2.1"
+    js-yaml "^3.10.0"
+    json-stable-stringify "^1.0.1"
+    jsonwebtoken "^8.1.0"
+    lodash "^4.17.4"
+    prisma-json-schema "^0.0.1"
+    replaceall "^0.1.6"
+    scuid "^1.0.2"
+    yaml-ast-parser "^0.0.40"
 
 proxy-addr@~2.0.2:
   version "2.0.2"
