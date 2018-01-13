@@ -84,7 +84,7 @@ The `props` argument accepts the following fields:
 > 1. Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance using [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
 > 2. Provide the `schema` directly and omit `typeDefs` and `resolvers`.
 
-> (\*\*) Notice that the `req` instance either carries a `request: Request` property (in case it's a `Query`/`Mutation` resolver) or a `connection: SubscriptionOptions` property (in case it's a `Subscription` resolver). [`Request`](http://expressjs.com/en/api.html#req) is imported from Express.js. `SubscriptionOptions` is from the [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions) package.
+> (\*\*) Notice that the `req` argument is an object of the shape `{ request, connection }` which either carries a `request: Request` property (in case it's a `Query`/`Mutation` resolver) or a `connection: SubscriptionOptions` property (in case it's a `Subscription` resolver). [`Request`](http://expressjs.com/en/api.html#req) is imported from Express.js. `SubscriptionOptions` is from the [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions) package.
 
 Here is example of creating a new server:
 
