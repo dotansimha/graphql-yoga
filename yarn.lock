@@ -246,7 +246,7 @@ chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chalk@^2.1.0, chalk@^2.3.0:
+chalk@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.3.0.tgz#b5ea48efc9c1793dccc9b4767c93914d3f2d52ba"
   dependencies:
@@ -268,9 +268,9 @@ color-name@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
-commander@^2.9.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
+commander@^2.12.1:
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -689,7 +689,7 @@ js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
-js-yaml@^3.10.0:
+js-yaml@^3.10.0, js-yaml@^3.7.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.10.0.tgz#2e78441646bd4682e963f22b6e92823c309c62dc"
   dependencies:
@@ -1081,6 +1081,10 @@ tslib@^1.0.0, tslib@^1.7.1:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.8.0.tgz#dc604ebad64bcbf696d613da6c954aa0e7ea1eb6"
 
+tslib@^1.8.0:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.8.1.tgz#6946af2d1d651a7b1863b531d6e5afa41aa44eac"
+
 tslint-config-standard@7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/tslint-config-standard/-/tslint-config-standard-7.0.0.tgz#47bbf25578ed2212456f892d51e1abe884a29f15"
@@ -1095,20 +1099,21 @@ tslint-eslint-rules@^4.1.1:
     tslib "^1.0.0"
     tsutils "^1.4.0"
 
-tslint@5.8.0:
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.8.0.tgz#1f49ad5b2e77c76c3af4ddcae552ae4e3612eb13"
+tslint@5.9.1:
+  version "5.9.1"
+  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.9.1.tgz#1255f87a3ff57eb0b0e1f0e610a8b4748046c9ae"
   dependencies:
     babel-code-frame "^6.22.0"
     builtin-modules "^1.1.1"
-    chalk "^2.1.0"
-    commander "^2.9.0"
+    chalk "^2.3.0"
+    commander "^2.12.1"
     diff "^3.2.0"
     glob "^7.1.1"
+    js-yaml "^3.7.0"
     minimatch "^3.0.4"
     resolve "^1.3.2"
     semver "^5.3.0"
-    tslib "^1.7.1"
+    tslib "^1.8.0"
     tsutils "^2.12.1"
 
 tsutils@^1.4.0:
