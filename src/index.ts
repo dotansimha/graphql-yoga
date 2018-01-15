@@ -39,8 +39,8 @@ export class GraphQLServer {
   private middlewares: {
     [key: string]: {
       path?: PathParams
-      handlers: RequestHandler[] | RequestHandlerParams[]
-    }[]
+      handlers: RequestHandler[] | RequestHandlerParams[],
+    }[],
   } = { use: [], get: [], post: [] }
 
   constructor(props: Props) {
