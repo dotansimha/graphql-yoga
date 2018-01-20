@@ -3,7 +3,11 @@ import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
 import * as bodyParser from 'body-parser-graphql'
 import * as cors from 'cors'
 import * as express from 'express'
-import { PathParams, RequestHandler, RequestHandlerParams } from 'express-serve-static-core'
+import {
+  PathParams,
+  RequestHandler,
+  RequestHandlerParams,
+} from 'express-serve-static-core'
 import * as fs from 'fs'
 import { execute, GraphQLSchema, subscribe } from 'graphql'
 import { importSchema } from 'graphql-import'
@@ -33,7 +37,10 @@ export class GraphQLServer {
   context: any
 
   private middlewares: {
-    [key: string]: { path?: PathParams; handlers: RequestHandler[] | RequestHandlerParams[] }[],
+    [key: string]: {
+      path?: PathParams
+      handlers: RequestHandler[] | RequestHandlerParams[],
+    }[],
   } = { use: [], get: [], post: [] }
 
   constructor(props: Props) {
@@ -49,7 +56,9 @@ export class GraphQLServer {
 
       // read from .graphql file if path provided
       if (typeDefs.endsWith('graphql')) {
-        const schemaPath = path.isAbsolute(typeDefs) ? path.resolve(typeDefs) : path.resolve(typeDefs)
+        const schemaPath = path.isAbsolute(typeDefs)
+          ? path.resolve(typeDefs)
+          : path.resolve(typeDefs)
 
         if (!fs.existsSync(schemaPath)) {
           throw new Error(`No schema found for path: ${schemaPath}`)
@@ -58,7 +67,9 @@ export class GraphQLServer {
         typeDefs = importSchema(schemaPath)
       }
 
-      const uploadMixin = typeDefs.includes('scalar Upload') ? { Upload: GraphQLUpload } : {}
+      const uploadMixin = typeDefs.includes('scalar Upload')
+        ? { Upload: GraphQLUpload }
+        : {}
       this.executableSchema = makeExecutableSchema({
         typeDefs,
         resolvers: {
@@ -89,11 +100,24 @@ export class GraphQLServer {
     return this
   }
 
-  start(options: Options, callback?: ((options: Options) => void)): Promise<void>
+  start(
+    options: Options,
+    callback?: ((options: Options) => void),
+  ): Promise<void>
   start(callback?: ((options: Options) => void)): Promise<void>
-  start(optionsOrCallback?: Options | ((options: Options) => void), callback?: ((options: Options) => void)): Promise<void> {
-    const options = (optionsOrCallback && typeof optionsOrCallback === 'function') ? {} : optionsOrCallback
-    const callbackFunc = callback ? callback : (optionsOrCallback && typeof optionsOrCallback === 'function') ? optionsOrCallback : () => null
+  start(
+    optionsOrCallback?: Options | ((options: Options) => void),
+    callback?: ((options: Options) => void),
+  ): Promise<void> {
+    const options =
+      optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? {}
+        : optionsOrCallback
+    const callbackFunc = callback
+      ? callback
+      : optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? optionsOrCallback
+        : () => null
 
     const app = this.express
 
@@ -117,7 +141,11 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    app.post(this.options.endpoint, bodyParser.graphql(), apolloUploadExpress(this.options.uploads))
+    app.post(
+      this.options.endpoint,
+      bodyParser.graphql(),
+      apolloUploadExpress(this.options.uploads),
+    )
 
     if (this.options.uploads) {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
@@ -154,7 +182,10 @@ export class GraphQLServer {
       graphqlExpress(async request => {
         let context
         try {
-          context = typeof this.context === 'function' ? await this.context({ request }) : this.context
+          context =
+            typeof this.context === 'function'
+              ? await this.context({ request })
+              : this.context
         } catch (e) {
           console.error(e)
           throw e
@@ -178,12 +209,9 @@ export class GraphQLServer {
     )
 
     if (this.options.playground) {
-      const isDev = process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development'
-      const playgroundOptions = isDev
-        ? { useGraphQLConfig: true, env: process.env }
-        : this.options.subscriptions
-          ? { endpoint: this.options.endpoint, subscriptionsEndpoint: this.options.subscriptions }
-          : { endpoint: this.options.endpoint }
+      const playgroundOptions = this.options.subscriptions
+        ? { endpoint: this.options.endpoint, subscriptionsEndpoint: this.options.subscriptions }
+        : { endpoint: this.options.endpoint }
 
       app.get(this.options.playground, expressPlayground(playgroundOptions))
     }
@@ -215,7 +243,9 @@ export class GraphQLServer {
               let context
               try {
                 context =
-                  typeof this.context === 'function' ? await this.context({ connection }) : this.context
+                  typeof this.context === 'function'
+                    ? await this.context({ connection })
+                    : this.context
               } catch (e) {
                 console.error(e)
                 throw e
