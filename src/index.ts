@@ -13,7 +13,7 @@ import { execute, GraphQLSchema, subscribe } from 'graphql'
 import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
-import { createServer } from 'http'
+import { createServer, Server } from 'http'
 import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
@@ -39,8 +39,8 @@ export class GraphQLServer {
   private middlewares: {
     [key: string]: {
       path?: PathParams
-      handlers: RequestHandler[] | RequestHandlerParams[],
-    }[],
+      handlers: RequestHandler[] | RequestHandlerParams[]
+    }[]
   } = { use: [], get: [], post: [] }
 
   constructor(props: Props) {
@@ -101,12 +101,12 @@ export class GraphQLServer {
   start(
     options: Options,
     callback?: ((options: Options) => void),
-  ): Promise<void>
-  start(callback?: ((options: Options) => void)): Promise<void>
+  ): Promise<Server>
+  start(callback?: ((options: Options) => void)): Promise<Server>
   start(
     optionsOrCallback?: Options | ((options: Options) => void),
     callback?: ((options: Options) => void),
-  ): Promise<void> {
+  ): Promise<Server> {
     const options =
       optionsOrCallback && typeof optionsOrCallback === 'function'
         ? {}
@@ -208,7 +208,10 @@ export class GraphQLServer {
 
     if (this.options.playground) {
       const playgroundOptions = this.options.subscriptions
-        ? { endpoint: this.options.endpoint, subscriptionsEndpoint: this.options.subscriptions }
+        ? {
+            endpoint: this.options.endpoint,
+            subscriptionsEndpoint: this.options.subscriptions,
+          }
         : { endpoint: this.options.endpoint }
 
       app.get(this.options.playground, expressPlayground(playgroundOptions))
@@ -229,7 +232,7 @@ export class GraphQLServer {
 
         combinedServer.listen(this.options.port, () => {
           callbackFunc(this.options)
-          resolve()
+          resolve(combinedServer)
         })
 
         this.subscriptionServer = SubscriptionServer.create(
