@@ -1,13 +1,6 @@
 {
-  "extends": ["tslint-config-standard"],
+  "extends": ["tslint-config-standard", "tslint-config-prettier"],
   "rules": {
-    "trailing-comma": [
-      true,
-      {
-        "multiline": "always",
-        "singleline": "never"
-      }
-    ],
     "no-use-before-declare": false,
     "space-before-function-paren": false
   }
