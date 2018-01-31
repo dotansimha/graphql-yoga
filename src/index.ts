@@ -1,50 +1,74 @@
-import * as express from 'express'
-import * as bodyParser from 'body-parser'
-import * as cors from 'cors'
-import expressPlayground from 'graphql-playground-middleware-express'
-import { SubscriptionServer } from 'subscriptions-transport-ws'
-import { createServer } from 'http'
-import { execute, subscribe, GraphQLSchema } from 'graphql'
-import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
 import { graphqlExpress } from 'apollo-server-express'
+import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
+import * as bodyParser from 'body-parser-graphql'
+import * as cors from 'cors'
+import * as express from 'express'
+import {
+  PathParams,
+  RequestHandler,
+  RequestHandlerParams,
+} from 'express-serve-static-core'
+import * as fs from 'fs'
+import { execute, GraphQLSchema, subscribe } from 'graphql'
+import { importSchema } from 'graphql-import'
+import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
-export { PubSub } from 'graphql-subscriptions'
-import { Props, Options } from './types'
+import { createServer, Server } from 'http'
+import * as path from 'path'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
 
+import { Options, Props } from './types'
+
+export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options }
+export { GraphQLServerLambda } from './lambda'
 
 export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
+  options: Options = {
+    tracing: { mode: 'http-header' },
+    port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
+    endpoint: '/',
+    subscriptions: '/',
+    playground: '/',
+  }
+  executableSchema: GraphQLSchema
+  context: any
 
-  private schema: GraphQLSchema
-  private context: any
-  private options: Options
+  private middlewares: {
+    [key: string]: {
+      path?: PathParams
+      handlers: RequestHandler[] | RequestHandlerParams[]
+    }[]
+  } = { use: [], get: [], post: [] }
 
   constructor(props: Props) {
-    const defaultOptions: Options = {
-      disableSubscriptions: false,
-      tracing: { mode: 'http-header' },
-      port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
-      endpoint: '/',
-      subscriptionsEndpoint: '/',
-      playgroundEndpoint: '/',
-      disablePlayground: false,
-    }
-    this.options = { ...defaultOptions, ...props.options }
-
     this.express = express()
+
     this.subscriptionServer = null
     this.context = props.context
 
     if (props.schema) {
-      this.schema = props.schema
-    } else {
-      const { typeDefs, resolvers } = props
+      this.executableSchema = props.schema
+    } else if (props.typeDefs && props.resolvers) {
+      let { typeDefs, resolvers } = props
+
+      // read from .graphql file if path provided
+      if (typeDefs.endsWith('graphql')) {
+        const schemaPath = path.resolve(typeDefs)
+
+        if (!fs.existsSync(schemaPath)) {
+          throw new Error(`No schema found for path: ${schemaPath}`)
+        }
+
+        typeDefs = importSchema(schemaPath)
+      }
+
       const uploadMixin = typeDefs.includes('scalar Upload')
         ? { Upload: GraphQLUpload }
         : {}
-      this.schema = makeExecutableSchema({
+      this.executableSchema = makeExecutableSchema({
         typeDefs,
         resolvers: {
           ...uploadMixin,
@@ -54,25 +78,48 @@ export class GraphQLServer {
     }
   }
 
-  start(callback: (() => void) = () => null): Promise<void> {
+  // use, get and post mimic the methods on express.Application
+  // because middleware cannot be inserted, they are stored here
+  // in start(), they are added in the right place in the middleware stack
+  use(...handlers: RequestHandlerParams[]): this
+  use(path: PathParams, ...handlers: RequestHandlerParams[]): this
+  use(path?, ...handlers): this {
+    this.middlewares.use.push({ path, handlers })
+    return this
+  }
+
+  get(path: PathParams, ...handlers: RequestHandlerParams[]): this {
+    this.middlewares.get.push({ path, handlers })
+    return this
+  }
+
+  post(path: PathParams, ...handlers: RequestHandlerParams[]): this {
+    this.middlewares.post.push({ path, handlers })
+    return this
+  }
+
+  start(
+    options: Options,
+    callback?: ((options: Options) => void),
+  ): Promise<Server>
+  start(callback?: ((options: Options) => void)): Promise<Server>
+  start(
+    optionsOrCallback?: Options | ((options: Options) => void),
+    callback?: ((options: Options) => void),
+  ): Promise<Server> {
+    const options =
+      optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? {}
+        : optionsOrCallback
+    const callbackFunc = callback
+      ? callback
+      : optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? optionsOrCallback
+        : () => null
+
     const app = this.express
 
-    const {
-      port,
-      endpoint,
-      disablePlayground,
-      disableSubscriptions,
-      playgroundEndpoint,
-      subscriptionsEndpoint,
-      uploads,
-    } = this.options
-
-    // CORS support
-    if (this.options.cors) {
-      app.use(cors(this.options.cors))
-    } else if (this.options.cors !== false) {
-      app.use(cors())
-    }
+    this.options = { ...this.options, ...options }
 
     const tracing = (req: express.Request) => {
       const t = this.options.tracing
@@ -85,64 +132,134 @@ export class GraphQLServer {
       }
     }
 
+    // CORS support
+    if (this.options.cors) {
+      app.use(cors(this.options.cors))
+    } else if (this.options.cors !== false) {
+      app.use(cors())
+    }
+
     app.post(
-      endpoint,
-      bodyParser.json(),
-      apolloUploadExpress(uploads),
-      graphqlExpress(request => ({
-        schema: this.schema,
-        tracing: tracing(request),
-        context:
-          typeof this.context === 'function'
-            ? this.context({ request })
-            : this.context,
-      })),
+      this.options.endpoint,
+      bodyParser.graphql(),
+      apolloUploadExpress(this.options.uploads),
     )
 
-    if (!disablePlayground) {
-      app.get(
-        playgroundEndpoint,
-        expressPlayground({
-          endpoint,
-          subscriptionEndpoint: disableSubscriptions
-            ? undefined
-            : subscriptionsEndpoint,
-        }),
-      )
+    if (this.options.uploads) {
+      app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
+    }
+
+    // All middlewares added before start() was called are applied to
+    // the express application here, in the order they were provided
+    // (following Queue pattern)
+    while (this.middlewares.use.length > 0) {
+      const middleware = this.middlewares.use.shift()
+      if (middleware.path) {
+        app.use(middleware.path, ...middleware.handlers)
+      } else {
+        app.use(...middleware.handlers)
+      }
+    }
+
+    while (this.middlewares.get.length > 0) {
+      const middleware = this.middlewares.get.shift()
+      if (middleware.path) {
+        app.get(middleware.path, ...middleware.handlers)
+      }
+    }
+
+    while (this.middlewares.post.length > 0) {
+      const middleware = this.middlewares.post.shift()
+      if (middleware.path) {
+        app.post(middleware.path, ...middleware.handlers)
+      }
+    }
+
+    app.post(
+      this.options.endpoint,
+      graphqlExpress(async request => {
+        let context
+        try {
+          context =
+            typeof this.context === 'function'
+              ? await this.context({ request })
+              : this.context
+        } catch (e) {
+          console.error(e)
+          throw e
+        }
+
+        return {
+          schema: this.executableSchema,
+          tracing: tracing(request),
+          cacheControl: this.options.cacheControl,
+          formatError: this.options.formatError,
+          logFunction: this.options.logFunction,
+          rootValue: this.options.rootValue,
+          validationRules: this.options.validationRules,
+          fieldResolver: this.options.fieldResolver,
+          formatParams: this.options.formatParams,
+          formatResponse: this.options.formatResponse,
+          debug: this.options.debug,
+          context,
+        }
+      }),
+    )
+
+    if (this.options.playground) {
+      const playgroundOptions = this.options.subscriptions
+        ? {
+            endpoint: this.options.endpoint,
+            subscriptionsEndpoint: this.options.subscriptions,
+          }
+        : { endpoint: this.options.endpoint }
+
+      app.get(this.options.playground, expressPlayground(playgroundOptions))
+    }
+
+    if (!this.executableSchema) {
+      throw new Error('No schema defined')
     }
 
     return new Promise((resolve, reject) => {
-      if (disableSubscriptions) {
-        app.listen(port, () => {
-          callback()
+      if (!this.options.subscriptions) {
+        app.listen(this.options.port, () => {
+          callbackFunc(this.options)
           resolve()
         })
       } else {
         const combinedServer = createServer(app)
 
-        combinedServer.listen(port, () => {
-          callback()
-          resolve()
+        combinedServer.listen(this.options.port, () => {
+          callbackFunc(this.options)
+          resolve(combinedServer)
         })
 
         this.subscriptionServer = SubscriptionServer.create(
           {
-            schema: this.schema,
+            schema: this.executableSchema,
             execute,
             subscribe,
-            onOperation: (message, connection, webSocket) => {
-              return {
-                ...connection,
-                context:
+            onConnect: async (connectionParams, webSocket) => {
+              return { ...connectionParams }
+            },
+            onOperation: async (message, connection, webSocket) => {
+              let context
+              try {
+                context =
                   typeof this.context === 'function'
-                    ? this.context({ connection })
-                    : this.context,
+                    ? await this.context({ connection })
+                    : this.context
+              } catch (e) {
+                console.error(e)
+                throw e
               }
+              return { ...connection, context }
             },
           },
           {
             server: combinedServer,
-            path: subscriptionsEndpoint,
+            path: this.options.subscriptions,
           },
         )
       }
