@@ -98,27 +98,7 @@ export class GraphQLServer {
     return this
   }
 
-  start(
-    options: Options,
-    callback?: ((options: Options) => void),
-  ): Promise<Server>
-  start(callback?: ((options: Options) => void)): Promise<Server>
-  start(
-    optionsOrCallback?: Options | ((options: Options) => void),
-    callback?: ((options: Options) => void),
-  ): Promise<Server> {
-    const options =
-      optionsOrCallback && typeof optionsOrCallback === 'function'
-        ? {}
-        : optionsOrCallback
-    const callbackFunc = callback
-      ? callback
-      : optionsOrCallback && typeof optionsOrCallback === 'function'
-        ? optionsOrCallback
-        : () => null
-
-    const app = this.express
-
+  prepareStart(app, options) {
     this.options = { ...this.options, ...options }
 
     const tracing = (req: express.Request) => {
@@ -220,6 +200,29 @@ export class GraphQLServer {
     if (!this.executableSchema) {
       throw new Error('No schema defined')
     }
+  }
+
+  start(
+    options: Options,
+    callback?: ((options: Options) => void),
+  ): Promise<Server>
+  start(callback?: ((options: Options) => void)): Promise<Server>
+  start(
+    optionsOrCallback?: Options | ((options: Options) => void),
+    callback?: ((options: Options) => void),
+  ): Promise<Server> {
+    const options =
+      optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? {}
+        : optionsOrCallback
+    const callbackFunc = callback
+      ? callback
+      : optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? optionsOrCallback
+        : () => null
+
+    const app = this.express
+    this.prepareStart(app, options)
 
     return new Promise((resolve, reject) => {
       if (!this.options.subscriptions) {
