@@ -77,6 +77,7 @@ export interface Props {
 }
 
 export interface LambdaProps {
+  directiveResolvers?: IDirectiveResolvers<any, any>
   typeDefs?: string
   resolvers?: IResolvers
   schema?: GraphQLSchema
