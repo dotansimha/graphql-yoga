@@ -142,7 +142,6 @@ export class GraphQLServer {
     app.post(
       this.options.endpoint,
       bodyParser.graphql(),
-      apolloUploadExpress(this.options.uploads),
     )
 
     if (this.options.uploads) {
