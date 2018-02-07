@@ -50,8 +50,11 @@ export class GraphQLServerLambda {
 
   graphqlHandler = (event, context, callback) => {
     function callbackFilter(error, output) {
+      const headers = output.headers || {}
+      headers['Access-Control-Allow-Origin'] = '*'
+
       // eslint-disable-next-line no-param-reassign
-      output.headers['Access-Control-Allow-Origin'] = '*'
+      output.headers = headers
 
       callback(error, output)
     }
@@ -61,7 +64,7 @@ export class GraphQLServerLambda {
       if (typeof t === 'boolean') {
         return t
       } else if (t.mode === 'http-header') {
-        return event.headers['x-apollo-tracing'] !== undefined
+        return event.headers && event.headers['x-apollo-tracing'] !== undefined
       } else {
         return t.mode === 'enabled'
       }
