@@ -53,7 +53,7 @@ export class GraphQLServer {
     if (props.schema) {
       this.executableSchema = props.schema
     } else if (props.typeDefs && props.resolvers) {
-      let { typeDefs, resolvers } = props
+      let { directiveResolvers, typeDefs, resolvers } = props
 
       // read from .graphql file if path provided
       if (typeDefs.endsWith('graphql')) {
@@ -70,6 +70,7 @@ export class GraphQLServer {
         ? { Upload: GraphQLUpload }
         : {}
       this.executableSchema = makeExecutableSchema({
+        directiveResolvers,
         typeDefs,
         resolvers: {
           ...uploadMixin,
