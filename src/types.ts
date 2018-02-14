@@ -8,7 +8,7 @@ import {
   GraphQLTypeResolver,
   ValidationContext,
 } from 'graphql'
-import { IDirectiveResolvers } from 'graphql-tools'
+import { IDirectiveResolvers } from 'graphql-tools/dist/Interfaces'
 import { SubscriptionOptions } from 'graphql-subscriptions/dist/subscriptions-manager'
 import { LogFunction } from 'apollo-server-core'
 
