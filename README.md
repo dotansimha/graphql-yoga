@@ -129,7 +129,7 @@ Additionally, the `options` object exposes these `apollo-server` options:
 | `logFunction`  | LogFunction  | A function called for logging events such as execution times |
 | `rootValue` | any  | RootValue passed to GraphQL execution |
 | `validationRules` | Array of functions | DAdditional GraphQL validation rules to be applied to client-specified queries |
-| `fieldResolver` | GraphQLFieldResolver  | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading |
+| `fieldResolver` | GraphQLFieldResolver  | Specifify a custom default field resolver function
 | `formatParams` | Function  | A function applied for each query in a batch to format parameters before execution |
 | `formatResponse` | Function | A function applied to each response after execution |
 | `debug` | boolean  | Print additional debug logging if execution errors occur |
