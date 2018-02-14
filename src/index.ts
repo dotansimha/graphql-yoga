@@ -18,6 +18,7 @@ import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { Options, Props } from './types'
+import { defaultErrorFormatter } from './defaultErrorFormatter';
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options }
@@ -142,7 +143,6 @@ export class GraphQLServer {
     app.post(
       this.options.endpoint,
       bodyParser.graphql(),
-      apolloUploadExpress(this.options.uploads),
     )
 
     if (this.options.uploads) {
@@ -193,7 +193,7 @@ export class GraphQLServer {
           schema: this.executableSchema,
           tracing: tracing(request),
           cacheControl: this.options.cacheControl,
-          formatError: this.options.formatError,
+          formatError: this.options.formatError || defaultErrorFormatter,
           logFunction: this.options.logFunction,
           rootValue: this.options.rootValue,
           validationRules: this.options.validationRules,
