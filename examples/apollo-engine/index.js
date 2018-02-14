@@ -22,6 +22,8 @@ const engine = new Engine({
 })
 engine.start()
 
+// Enable gzip compression
+// ref: https://www.apollographql.com/docs/engine/setup-node.html#enabling-compression
 server.express.use(compression())
 server.express.use(engine.expressMiddleware())
 
