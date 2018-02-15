@@ -1,5 +1,6 @@
 const { GraphQLServer } = require('graphql-yoga')
 const { Engine } = require('apollo-engine')
+const compression = require('compression')
 
 const typeDefs = `
   type Query {
@@ -19,8 +20,14 @@ const engine = new Engine({
   endpoint: '/',
   graphqlPort: parseInt(process.env.Port, 10) || 4000,
 })
-engine.start();
+engine.start()
 
+// Enable gzip compression
+// ref: https://www.apollographql.com/docs/engine/setup-node.html#enabling-compression
+server.express.use(compression())
 server.express.use(engine.expressMiddleware())
 
-server.start(() => console.log('Server is running on localhost:4000'))
+server.start({
+  tracing: true,
+  cacheControl: true
+}, () => console.log('Server is running on localhost:4000'))
