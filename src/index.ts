@@ -148,6 +148,8 @@ export class GraphQLServer {
 
     if (this.options.uploads) {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
+    } else if (this.options.uploads !== false) {
+      app.post(this.options.endpoint, apolloUploadExpress())
     }
 
     // All middlewares added before start() was called are applied to
