@@ -7,7 +7,7 @@ This directory contains a simple "Hello World" example based on `graphql-yoga`.
 **Clone the repository:**
 
 ```sh
-git clone https://github.com/graphcool/graphql-yoga/
+git clone https://github.com/graphcool/graphql-yoga.git
 cd graphql-yoga/examples/hello-world
 ```
 

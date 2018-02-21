@@ -7,7 +7,7 @@ This directory contains a simple GraphQL subscriptions example based on `graphql
 **Clone the repository:**
 
 ```sh
-git clone https://github.com/graphcool/graphql-yoga/
+git clone https://github.com/graphcool/graphql-yoga.git
 cd graphql-yoga/examples/subscriptions
 ```
 
