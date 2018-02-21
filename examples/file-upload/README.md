@@ -7,7 +7,7 @@ This directory contains an example of a graphql-yoga server supporting file uplo
 **Clone the repository:**
 
 ```sh
-git clone https://github.com/graphcool/graphql-yoga/
+git clone https://github.com/graphcool/graphql-yoga.git
 cd graphql-yoga/examples/file-upload
 ```
 
