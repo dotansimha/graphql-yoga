@@ -17,7 +17,7 @@ import { createServer, Server } from 'http'
 import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
-import { Options, Props } from './types'
+import { SubscriptionServerOptions, Options, Props } from './types'
 import { defaultErrorFormatter } from './defaultErrorFormatter';
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
@@ -123,6 +123,13 @@ export class GraphQLServer {
 
     this.options = { ...this.options, ...options }
 
+    let subscriptionServerOptions: SubscriptionServerOptions | null = null;
+    if (this.options.subscriptions) {
+        subscriptionServerOptions = typeof this.options.subscriptions === 'string'
+          ? { path: this.options.subscriptions }
+          : { path: '/', ...this.options.subscriptions }
+    }
+
     const tracing = (req: express.Request) => {
       const t = this.options.tracing
       if (typeof t === 'boolean') {
@@ -210,10 +217,10 @@ export class GraphQLServer {
     )
 
     if (this.options.playground) {
-      const playgroundOptions = this.options.subscriptions
+      const playgroundOptions = subscriptionServerOptions
         ? {
             endpoint: this.options.endpoint,
-            subscriptionsEndpoint: this.options.subscriptions,
+            subscriptionsEndpoint: subscriptionServerOptions.path,
           }
         : { endpoint: this.options.endpoint }
 
@@ -225,7 +232,7 @@ export class GraphQLServer {
     }
 
     return new Promise((resolve, reject) => {
-      if (!this.options.subscriptions) {
+      if (!subscriptionServerOptions) {
         app.listen(this.options.port, () => {
           callbackFunc(this.options)
           resolve()
@@ -259,10 +266,11 @@ export class GraphQLServer {
               }
               return { ...connection, context }
             },
+            keepAlive: subscriptionServerOptions.keepAlive,
           },
           {
             server: combinedServer,
-            path: this.options.subscriptions,
+            path: subscriptionServerOptions.path,
           },
         )
       }

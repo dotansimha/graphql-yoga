@@ -64,8 +64,13 @@ export interface Options extends ApolloServerOptions {
   cors?: CorsOptions | false
   uploads?: UploadOptions | false
   endpoint?: string
-  subscriptions?: string | false
+  subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
+}
+
+export interface SubscriptionServerOptions {
+  path?: string
+  keepAlive?: number
 }
 
 export interface Props {
