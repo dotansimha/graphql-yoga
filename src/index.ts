@@ -18,6 +18,8 @@ import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { SubscriptionServerOptions, Options, Props } from './types'
+import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
+
 import { defaultErrorFormatter } from './defaultErrorFormatter';
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
@@ -53,22 +55,37 @@ export class GraphQLServer {
     if (props.schema) {
       this.executableSchema = props.schema
     } else if (props.typeDefs && props.resolvers) {
-      let { directiveResolvers, typeDefs, resolvers } = props
+      let uploadMixin = {}
+      let { directiveResolvers, resolvers, typeDefs } = props
 
-      // read from .graphql file if path provided
-      if (typeDefs.endsWith('graphql')) {
-        const schemaPath = path.resolve(typeDefs)
+      if (Array.isArray(typeDefs)) {
+        const toSingleTypedef = (previousValue: string, typeDef: ITypeDefinitions ): string => {
+          let currentValue = typeof typeDef === 'function' ? typeDef() : typeDef
+          let accumulator = Array.isArray(currentValue)
+            ? currentValue.reduce(toSingleTypedef, '')
+            : currentValue
 
-        if (!fs.existsSync(schemaPath)) {
-          throw new Error(`No schema found for path: ${schemaPath}`)
+          return previousValue + accumulator
         }
 
-        typeDefs = importSchema(schemaPath)
+        typeDefs = typeDefs.reduce(toSingleTypedef, '')
       }
 
-      const uploadMixin = typeDefs.includes('scalar Upload')
-        ? { Upload: GraphQLUpload }
-        : {}
+      if (typeof typeDefs === 'string') {
+        // read from .graphql file if path provided
+        if (typeDefs.endsWith('graphql')) {
+          const schemaPath = path.resolve(typeDefs)
+
+          if (!fs.existsSync(schemaPath)) {
+            throw new Error(`No schema found for path: ${schemaPath}`)
+          }
+
+          typeDefs = importSchema(schemaPath)
+        }
+
+        uploadMixin = typeDefs.includes('scalar Upload') && { Upload: GraphQLUpload }
+      }
+
       this.executableSchema = makeExecutableSchema({
         directiveResolvers,
         typeDefs,
