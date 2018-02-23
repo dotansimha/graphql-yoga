@@ -8,8 +8,11 @@ import {
   GraphQLTypeResolver,
   ValidationContext,
 } from 'graphql'
+
 import { IDirectiveResolvers, ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { SubscriptionOptions } from 'graphql-subscriptions/dist/subscriptions-manager'
+import { ExecutionParams } from 'subscriptions-transport-ws'
+
 import { LogFunction } from 'apollo-server-core'
 
 export interface IResolvers {
@@ -31,7 +34,7 @@ export type Context = { [key: string]: any }
 
 export interface ContextParameters {
   request: Request
-  connection: SubscriptionOptions
+  connection: ExecutionParams
 }
 
 export type ContextCallback = (params: ContextParameters) => Context
