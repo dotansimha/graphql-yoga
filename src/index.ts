@@ -18,7 +18,6 @@ import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { SubscriptionServerOptions, Options, Props } from './types'
-import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 
 import { defaultErrorFormatter } from './defaultErrorFormatter';
 
@@ -57,19 +56,6 @@ export class GraphQLServer {
     } else if (props.typeDefs && props.resolvers) {
       let uploadMixin = {}
       let { directiveResolvers, resolvers, typeDefs } = props
-
-      if (Array.isArray(typeDefs)) {
-        const toSingleTypedef = (previousValue: string, typeDef: ITypeDefinitions ): string => {
-          let currentValue = typeof typeDef === 'function' ? typeDef() : typeDef
-          let accumulator = Array.isArray(currentValue)
-            ? currentValue.reduce(toSingleTypedef, '')
-            : currentValue
-
-          return previousValue + accumulator
-        }
-
-        typeDefs = typeDefs.reduce(toSingleTypedef, '')
-      }
 
       if (typeof typeDefs === 'string') {
         // read from .graphql file if path provided

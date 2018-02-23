@@ -83,7 +83,7 @@ export interface Props {
 
 export interface LambdaProps {
   directiveResolvers?: IDirectiveResolvers<any, any>
-  typeDefs?: string
+  typeDefs?: ITypeDefinitions
   resolvers?: IResolvers
   schema?: GraphQLSchema
   context?: Context | ContextCallback
