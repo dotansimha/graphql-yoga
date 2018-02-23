@@ -233,9 +233,11 @@ export class GraphQLServer {
 
     return new Promise((resolve, reject) => {
       if (!subscriptionServerOptions) {
-        app.listen(this.options.port, () => {
+        const server = createServer(app)
+
+        server.listen(this.options.port, () => {
           callbackFunc(this.options)
-          resolve()
+          resolve(server)
         })
       } else {
         const combinedServer = createServer(app)
