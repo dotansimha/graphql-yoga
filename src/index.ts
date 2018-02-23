@@ -54,38 +54,33 @@ export class GraphQLServer {
     if (props.schema) {
       this.executableSchema = props.schema
     } else if (props.typeDefs && props.resolvers) {
-      let { typeDefs } = props
-      const { directiveResolvers, resolvers } = props
+      const { directiveResolvers, resolvers, typeDefs } = props
 
-      if (Array.isArray(typeDefs)) {
-        typeDefs = mergeTypeDefs(typeDefs)
-      }
+      let typeDefinitions: string = Array.isArray(typeDefs) ? mergeTypeDefs(typeDefs) : typeDefs as string
 
-      if (typeof typeDefs === 'string') {
-        // read from .graphql file if path provided
-        if (typeDefs.endsWith('graphql')) {
-          const schemaPath = path.resolve(typeDefs)
+      // read from .graphql file if path provided
+      if (typeDefinitions.endsWith('graphql')) {
+        const schemaPath = path.resolve(typeDefinitions)
 
-          if (!fs.existsSync(schemaPath)) {
-            throw new Error(`No schema found for path: ${schemaPath}`)
-          }
-
-          typeDefs = importSchema(schemaPath)
+        if (!fs.existsSync(schemaPath)) {
+          throw new Error(`No schema found for path: ${schemaPath}`)
         }
 
-        const uploadMixin = typeDefs.includes('scalar Upload')
-          ? { Upload: GraphQLUpload }
-          : {}
-
-        this.executableSchema = makeExecutableSchema({
-          directiveResolvers,
-          typeDefs,
-          resolvers: {
-            ...uploadMixin,
-            ...resolvers,
-          },
-        })
+        typeDefinitions = importSchema(schemaPath)
       }
+
+      const uploadMixin = typeDefinitions.includes('scalar Upload')
+        ? { Upload: GraphQLUpload }
+        : {}
+
+      this.executableSchema = makeExecutableSchema({
+        directiveResolvers,
+        typeDefs: typeDefinitions,
+        resolvers: {
+          ...uploadMixin,
+          ...resolvers,
+        },
+      })
     }
   }
 
@@ -287,7 +282,7 @@ export class GraphQLServer {
   }
 }
 
-const mergeTypeDefs = typeDefs => {
+const mergeTypeDefs = (typeDefs: ITypeDefinitions): string => {
   const toSingleTypedef = (previousValue: string, typeDef: ITypeDefinitions ): string => {
     let currentValue = typeof typeDef === 'function' ? typeDef() : typeDef
     let accumulator = Array.isArray(currentValue)
