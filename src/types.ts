@@ -8,11 +8,8 @@ import {
   GraphQLTypeResolver,
   ValidationContext,
 } from 'graphql'
-
 import { IDirectiveResolvers, ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
-import { SubscriptionOptions } from 'graphql-subscriptions/dist/subscriptions-manager'
 import { ExecutionParams } from 'subscriptions-transport-ws'
-
 import { LogFunction } from 'apollo-server-core'
 
 export interface IResolvers {
@@ -86,7 +83,7 @@ export interface Props {
 
 export interface LambdaProps {
   directiveResolvers?: IDirectiveResolvers<any, any>
-  typeDefs?: ITypeDefinitions
+  typeDefs?: string
   resolvers?: IResolvers
   schema?: GraphQLSchema
   context?: Context | ContextCallback

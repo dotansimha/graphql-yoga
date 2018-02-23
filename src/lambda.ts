@@ -28,19 +28,17 @@ export class GraphQLServerLambda {
     } else if (props.typeDefs && props.resolvers) {
       let { directiveResolvers, typeDefs, resolvers } = props
 
-      if (typeof typeDefs === 'string') {
-        // read from .graphql file if path provided
-        if (typeDefs.endsWith('graphql')) {
-            const schemaPath = path.isAbsolute(typeDefs)
-                ? path.resolve(typeDefs)
-                : path.resolve(typeDefs)
+      // read from .graphql file if path provided
+      if (typeDefs.endsWith('graphql')) {
+        const schemaPath = path.isAbsolute(typeDefs)
+          ? path.resolve(typeDefs)
+          : path.resolve(typeDefs)
 
-            if (!fs.existsSync(schemaPath)) {
-                throw new Error(`No schema found for path: ${schemaPath}`)
-            }
-
-            typeDefs = importSchema(schemaPath)
+        if (!fs.existsSync(schemaPath)) {
+          throw new Error(`No schema found for path: ${schemaPath}`)
         }
+
+        typeDefs = importSchema(schemaPath)
       }
 
       this.executableSchema = makeExecutableSchema({
