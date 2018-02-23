@@ -118,7 +118,7 @@ The `options` object has the following fields:
 | `endpoint`  | String  |  `'/'`  | Defines the HTTP endpoint of your server |
 | `subscriptions` | Object or String or `false`  |  `'/'`  | Defines the subscriptions (websocket) endpoint for your server; accepts an object with subscription server options `path` and `keepAlive`; setting to `false` disables subscriptions completely |
 | `playground` | String or `false` |  `'/'`  | Defines the endpoint where you can invoke the [Playground](https://github.com/graphcool/graphql-playground); setting to `false` disables the playground endpoint |
-| `uploads` | Object or `false`  | `null`  | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading |
+| `uploads` | [UploadOptions](/src/types.ts#L39-L43) or `false` or `undefined`  | `null`  | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading |
 
 Additionally, the `options` object exposes these `apollo-server` options:
 
