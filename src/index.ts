@@ -18,6 +18,7 @@ import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { SubscriptionServerOptions, Options, Props } from './types'
+import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter';
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
@@ -53,25 +54,28 @@ export class GraphQLServer {
     if (props.schema) {
       this.executableSchema = props.schema
     } else if (props.typeDefs && props.resolvers) {
-      let { directiveResolvers, typeDefs, resolvers } = props
+      const { directiveResolvers, resolvers, typeDefs } = props
+
+      let typeDefinitions: string = Array.isArray(typeDefs) ? mergeTypeDefs(typeDefs) : typeDefs as string
 
       // read from .graphql file if path provided
-      if (typeDefs.endsWith('graphql')) {
-        const schemaPath = path.resolve(typeDefs)
+      if (typeDefinitions.endsWith('graphql')) {
+        const schemaPath = path.resolve(typeDefinitions)
 
         if (!fs.existsSync(schemaPath)) {
           throw new Error(`No schema found for path: ${schemaPath}`)
         }
 
-        typeDefs = importSchema(schemaPath)
+        typeDefinitions = importSchema(schemaPath)
       }
 
-      const uploadMixin = typeDefs.includes('scalar Upload')
+      const uploadMixin = typeDefinitions.includes('scalar Upload')
         ? { Upload: GraphQLUpload }
         : {}
+
       this.executableSchema = makeExecutableSchema({
         directiveResolvers,
-        typeDefs,
+        typeDefs: typeDefinitions,
         resolvers: {
           ...uploadMixin,
           ...resolvers,
@@ -278,4 +282,17 @@ export class GraphQLServer {
       }
     })
   }
+}
+
+const mergeTypeDefs = (typeDefs: ITypeDefinitions): string => {
+  const toSingleTypedef = (previousValue: string, typeDef: ITypeDefinitions ): string => {
+    let currentValue = typeof typeDef === 'function' ? typeDef() : typeDef
+    let accumulator = Array.isArray(currentValue)
+      ? currentValue.reduce(toSingleTypedef, '')
+      : currentValue
+
+    return previousValue + accumulator
+  }
+
+  return typeDefs.reduce(toSingleTypedef, '')
 }
