@@ -9,7 +9,7 @@ import {
   RequestHandlerParams,
 } from 'express-serve-static-core'
 import * as fs from 'fs'
-import { execute, GraphQLSchema, subscribe } from 'graphql'
+import { execute, GraphQLSchema, subscribe, DocumentNode, print } from 'graphql'
 import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
@@ -18,8 +18,8 @@ import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { SubscriptionServerOptions, Options, Props } from './types'
-import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
-import { defaultErrorFormatter } from './defaultErrorFormatter';
+import { ITypeDefinitions, ITypedef } from 'graphql-tools/dist/Interfaces'
+import { defaultErrorFormatter } from './defaultErrorFormatter'
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options }
@@ -56,26 +56,15 @@ export class GraphQLServer {
     } else if (props.typeDefs && props.resolvers) {
       const { directiveResolvers, resolvers, typeDefs } = props
 
-      let typeDefinitions: string = Array.isArray(typeDefs) ? mergeTypeDefs(typeDefs) : typeDefs as string
+      const typeDefsString = buildTypeDefsString(typeDefs)
 
-      // read from .graphql file if path provided
-      if (typeDefinitions.endsWith('graphql')) {
-        const schemaPath = path.resolve(typeDefinitions)
-
-        if (!fs.existsSync(schemaPath)) {
-          throw new Error(`No schema found for path: ${schemaPath}`)
-        }
-
-        typeDefinitions = importSchema(schemaPath)
-      }
-
-      const uploadMixin = typeDefinitions.includes('scalar Upload')
+      const uploadMixin = typeDefsString.includes('scalar Upload')
         ? { Upload: GraphQLUpload }
         : {}
 
       this.executableSchema = makeExecutableSchema({
         directiveResolvers,
-        typeDefs: typeDefinitions,
+        typeDefs: typeDefsString,
         resolvers: {
           ...uploadMixin,
           ...resolvers,
@@ -127,9 +116,10 @@ export class GraphQLServer {
 
     this.options = { ...this.options, ...options }
 
-    let subscriptionServerOptions: SubscriptionServerOptions | null = null;
+    let subscriptionServerOptions: SubscriptionServerOptions | null = null
     if (this.options.subscriptions) {
-        subscriptionServerOptions = typeof this.options.subscriptions === 'string'
+      subscriptionServerOptions =
+        typeof this.options.subscriptions === 'string'
           ? { path: this.options.subscriptions }
           : { path: '/', ...this.options.subscriptions }
     }
@@ -152,10 +142,7 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    app.post(
-      this.options.endpoint,
-      bodyParser.graphql(),
-    )
+    app.post(this.options.endpoint, bodyParser.graphql())
 
     if (this.options.uploads) {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
@@ -284,15 +271,39 @@ export class GraphQLServer {
   }
 }
 
-const mergeTypeDefs = (typeDefs: ITypeDefinitions): string => {
-  const toSingleTypedef = (previousValue: string, typeDef: ITypeDefinitions ): string => {
-    let currentValue = typeof typeDef === 'function' ? typeDef() : typeDef
-    let accumulator = Array.isArray(currentValue)
-      ? currentValue.reduce(toSingleTypedef, '')
-      : currentValue
+function buildTypeDefsString(typeDefs: ITypeDefinitions): string {
+  let typeDefinitions = mergeTypeDefs(typeDefs)
 
-    return previousValue + accumulator
+  // read from .graphql file if path provided
+  if (typeDefinitions.endsWith('graphql')) {
+    const schemaPath = path.resolve(typeDefinitions)
+
+    if (!fs.existsSync(schemaPath)) {
+      throw new Error(`No schema found for path: ${schemaPath}`)
+    }
+
+    typeDefinitions = importSchema(schemaPath)
   }
 
-  return typeDefs.reduce(toSingleTypedef, '')
+  return typeDefinitions
+}
+
+function mergeTypeDefs(typeDefs: ITypeDefinitions): string {
+  if (typeof typeDefs === 'string') {
+    return typeDefs
+  }
+
+  if (typeof typeDefs === 'function') {
+    typeDefs = typeDefs()
+  }
+
+  if (isDocumentNode(typeDefs)) {
+    return print(typeDefs)
+  }
+
+  return typeDefs.reduce<string>((acc, t) => acc + '\n' + mergeTypeDefs(t), '')
+}
+
+function isDocumentNode(node: any): node is DocumentNode {
+  return node.kind === 'Document'
 }
