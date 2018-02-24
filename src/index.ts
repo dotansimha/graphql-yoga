@@ -18,7 +18,7 @@ import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { SubscriptionServerOptions, Options, Props } from './types'
-import { ITypeDefinitions, ITypedef } from 'graphql-tools/dist/Interfaces'
+import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
