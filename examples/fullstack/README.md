@@ -7,7 +7,7 @@ This directory contains a simple fullstack example based on `graphql-yoga` and `
 **Clone the repository:**
 
 ```sh
-git clone https://github.com/graphcool/graphql-yoga/
+git clone https://github.com/graphcool/graphql-yoga.git
 cd graphql-yoga/examples/fullstack
 ```
 

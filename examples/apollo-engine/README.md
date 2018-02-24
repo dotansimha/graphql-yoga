@@ -7,7 +7,7 @@ This directory contains the "Hello World" example based on `graphql-yoga`, exten
 **Clone the repository:**
 
 ```sh
-git clone https://github.com/graphcool/graphql-yoga/
+git clone https://github.com/graphcool/graphql-yoga.git
 cd graphql-yoga/examples/apollo-engine
 ```
 
