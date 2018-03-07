@@ -105,7 +105,7 @@ export class GraphQLServer {
     return this
   }
 
-  createSubscription(server: Server|HttpsServer, subscriptionServerOptions: SubscriptionServerOptions) {
+  createSubscription(server: Server | HttpsServer, subscriptionServerOptions: SubscriptionServerOptions) {
     return SubscriptionServer.create(
       {
         schema: this.executableSchema,
@@ -117,6 +117,7 @@ export class GraphQLServer {
               ...connectionParams,
             }),
         onDisconnect: subscriptionServerOptions.onDisconnect,
+        onOperationComplete: subscriptionServerOptions.onOperationComplete,
         onOperation: async (message, connection, webSocket) => {
           // The following should be replaced when SubscriptionServer accepts a formatError
           // parameter for custom error formatting.
