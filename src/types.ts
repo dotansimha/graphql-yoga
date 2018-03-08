@@ -70,6 +70,8 @@ export interface Options extends ApolloServerOptions {
 
 export interface SubscriptionServerOptions {
   path?: string
+  onConnect?: Function
+  onDisconnect?: Function
   keepAlive?: number
 }
 

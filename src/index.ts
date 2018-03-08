@@ -243,9 +243,10 @@ export class GraphQLServer {
             schema: this.executableSchema,
             execute,
             subscribe,
-            onConnect: async (connectionParams, webSocket) => {
-              return { ...connectionParams }
-            },
+            onConnect: subscriptionServerOptions.onConnect
+              ? subscriptionServerOptions.onConnect
+              : async (connectionParams, webSocket) => ({ ...connectionParams }),
+            onDisconnect: subscriptionServerOptions.onDisconnect,
             onOperation: async (message, connection, webSocket) => {
               let context
               try {
