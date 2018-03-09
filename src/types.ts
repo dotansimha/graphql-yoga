@@ -11,6 +11,7 @@ import {
 import { IDirectiveResolvers, ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
+import { EngineConfig } from 'apollo-engine/lib/types'
 
 export interface IResolvers {
   [key: string]: (() => any) | IResolverObject | GraphQLScalarType
@@ -49,6 +50,7 @@ export interface TracingOptions {
 export interface ApolloServerOptions {
   tracing?: boolean | TracingOptions
   cacheControl?: boolean
+  apolloEngine?: EngineConfig,
   formatError?: Function
   logFunction?: LogFunction
   rootValue?: any

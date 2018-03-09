@@ -16,6 +16,7 @@ import { makeExecutableSchema } from 'graphql-tools'
 import { createServer, Server } from 'http'
 import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { ApolloEngine } from 'apollo-engine';
 
 import { SubscriptionServerOptions, Options, Props } from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
@@ -28,6 +29,7 @@ export { GraphQLServerLambda } from './lambda'
 export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
+  apolloEngine: ApolloEngine | null
   options: Options = {
     tracing: { mode: 'http-header' },
     port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
@@ -223,21 +225,26 @@ export class GraphQLServer {
     }
 
     return new Promise((resolve, reject) => {
-      if (!subscriptionServerOptions) {
-        const server = createServer(app)
+      const server = createServer(app)
 
-        server.listen(this.options.port, () => {
+      if (this.options.apolloEngine) {
+        this.apolloEngine = new ApolloEngine(this.options.apolloEngine)
+        this.apolloEngine.listen({
+          port: this.options.port,
+          httpServer: server,
+          graphqlPaths: [this.options.endpoint],
+        }, () => {
           callbackFunc(this.options)
           resolve(server)
         })
       } else {
-        const combinedServer = createServer(app)
-
-        combinedServer.listen(this.options.port, () => {
+        server.listen(this.options.port, () => {
           callbackFunc(this.options)
-          resolve(combinedServer)
+          resolve(server)
         })
+      }
 
+      if (subscriptionServerOptions) {
         this.subscriptionServer = SubscriptionServer.create(
           {
             schema: this.executableSchema,
@@ -263,7 +270,7 @@ export class GraphQLServer {
             keepAlive: subscriptionServerOptions.keepAlive,
           },
           {
-            server: combinedServer,
+            server,
             path: subscriptionServerOptions.path,
           },
         )
