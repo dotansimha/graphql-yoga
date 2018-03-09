@@ -18,6 +18,7 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
   * [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
   * [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
   * [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
+  * [`apollo-engine`](https://github.com/apollographql/apollo-engine-js): Delivers essential capabilities like query caching, error tracking, automatic persisted queries, and execution tracing.
 
 ## Features
 
@@ -28,6 +29,7 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 * GraphQL Playground
 * Extensible via Express middlewares
 * Apollo Tracing
+* Apollo Engine integration
 * Accepts both `application/json` and `application/graphql` content-type
 * Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc
 
@@ -119,6 +121,7 @@ The `options` object has the following fields:
 | `subscriptions` | Object or String or `false`  |  `'/'`  | Defines the subscriptions (websocket) endpoint for your server; accepts an object with [subscription server options](https://github.com/apollographql/subscriptions-transport-ws#constructoroptions-socketoptions) `path`, `keepAlive`, `onConnect` and `onDisconnect`; setting to `false` disables subscriptions completely |
 | `playground` | String or `false` |  `'/'`  | Defines the endpoint where you can invoke the [Playground](https://github.com/graphcool/graphql-playground); setting to `false` disables the playground endpoint |
 | `uploads` | [UploadOptions](/src/types.ts#L39-L43) or `false` or `undefined`  | `null`  | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading |
+| `apolloEngine` | `string` or `object` | `null` | A string API key for Apollo Engine, or an object of Apollo Engine options, including `apiKey`, for proxying through Apollo Engine. You should also set `tracing` and `cacheControl` options accordingly. |
 
 Additionally, the `options` object exposes these `apollo-server` options:
 
@@ -153,11 +156,12 @@ See the original documentation in [`graphql-subscriptions`](https://github.com/a
 
 ## Examples
 
-There are three examples demonstrating how to quickly get started with `graphql-yoga`:
+There are four examples demonstrating how to quickly get started with `graphql-yoga`:
 
 - [hello-world](./examples/hello-world): Basic setup for building a schema and allowing for a `hello` query.
 - [subscriptions](./examples/subscriptions): Basic setup for using subscriptions with a counter that increments every 2 seconds and triggers a subscriptions.
 - [fullstack](./examples/fullstack): Fullstack example based on [`create-react-app`](https://github.com/facebookincubator/create-react-app) demonstrating how to query data from `graphql-yoga` with [Apollo Client 2.0](https://www.apollographql.com/client/).
+- [apollo-engine](./examples/apollo-engine): Basic setup for integrating with Apollo Engine.
 
 ## Workflow
 
