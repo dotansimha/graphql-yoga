@@ -248,6 +248,14 @@ export class GraphQLServer {
               : async (connectionParams, webSocket) => ({ ...connectionParams }),
             onDisconnect: subscriptionServerOptions.onDisconnect,
             onOperation: async (message, connection, webSocket) => {
+              // The following should be replaced when SubscriptionServer accepts a formatError
+              // parameter for custom error formatting.
+              // See https://github.com/apollographql/subscriptions-transport-ws/issues/182
+              connection.formatResponse = value => ({
+                  ...value,
+                  errors: value.errors && value.errors.map(this.options.formatError || defaultErrorFormatter),
+              })
+
               let context
               try {
                 context =
