@@ -14,6 +14,7 @@ import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
 import { createServer, Server } from 'http'
+import { createServer as createHttpsServer, Server as HttpsServer} from 'https';
 import * as path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
@@ -96,12 +97,12 @@ export class GraphQLServer {
   start(
     options: Options,
     callback?: ((options: Options) => void),
-  ): Promise<Server>
-  start(callback?: ((options: Options) => void)): Promise<Server>
+  ): Promise<Server|HttpsServer>
+  start(callback?: ((options: Options) => void)): Promise<Server|HttpsServer>
   start(
     optionsOrCallback?: Options | ((options: Options) => void),
     callback?: ((options: Options) => void),
-  ): Promise<Server> {
+  ): Promise<Server|HttpsServer> {
     const options =
       optionsOrCallback && typeof optionsOrCallback === 'function'
         ? {}
@@ -223,16 +224,16 @@ export class GraphQLServer {
     }
 
     return new Promise((resolve, reject) => {
-      if (!subscriptionServerOptions) {
-        const server = createServer(app)
+      const server: Server|HttpsServer = this.options.https ? 
+        createHttpsServer(this.options.https, app) : createServer(app);
 
+      if (!subscriptionServerOptions) {
         server.listen(this.options.port, () => {
           callbackFunc(this.options)
           resolve(server)
         })
       } else {
-        const combinedServer = createServer(app)
-
+        const combinedServer = server;
         combinedServer.listen(this.options.port, () => {
           callbackFunc(this.options)
           resolve(combinedServer)

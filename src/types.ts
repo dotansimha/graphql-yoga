@@ -59,6 +59,11 @@ export interface ApolloServerOptions {
   debug?: boolean
 }
 
+export interface HttpsOptions {
+  cert: string
+  key: string
+}
+
 export interface Options extends ApolloServerOptions {
   port?: number
   cors?: CorsOptions | false
@@ -66,6 +71,7 @@ export interface Options extends ApolloServerOptions {
   endpoint?: string
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
+  https?: HttpsOptions
 }
 
 export interface SubscriptionServerOptions {
