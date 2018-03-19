@@ -16,6 +16,7 @@ import { makeExecutableSchema } from 'graphql-tools'
 import { createServer, Server } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer} from 'https';
 import * as path from 'path'
+import customFieldResolver from './customFieldResolver'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { SubscriptionServerOptions, Options, Props } from './types'
@@ -199,7 +200,7 @@ export class GraphQLServer {
           logFunction: this.options.logFunction,
           rootValue: this.options.rootValue,
           validationRules: this.options.validationRules,
-          fieldResolver: this.options.fieldResolver,
+          fieldResolver: this.options.fieldResolver || customFieldResolver,
           formatParams: this.options.formatParams,
           formatResponse: this.options.formatResponse,
           debug: this.options.debug,

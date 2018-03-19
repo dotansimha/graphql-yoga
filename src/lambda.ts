@@ -5,6 +5,7 @@ import { importSchema } from 'graphql-import'
 import lambdaPlayground from 'graphql-playground-middleware-lambda'
 import { makeExecutableSchema } from 'graphql-tools'
 import * as path from 'path'
+import customFieldResolver from './customFieldResolver'
 
 import { LambdaOptions, LambdaProps } from './types'
 
@@ -92,7 +93,7 @@ export class GraphQLServerLambda {
         logFunction: this.options.logFunction,
         rootValue: this.options.rootValue,
         validationRules: this.options.validationRules,
-        fieldResolver: this.options.fieldResolver,
+        fieldResolver: this.options.fieldResolver || customFieldResolver,
         formatParams: this.options.formatParams,
         formatResponse: this.options.formatResponse,
         debug: this.options.debug,
