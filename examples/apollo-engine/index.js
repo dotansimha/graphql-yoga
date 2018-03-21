@@ -1,6 +1,5 @@
 const { GraphQLServer, PubSub } = require("graphql-yoga");
 const { ApolloEngine } = require("apollo-engine");
-const compression = require("compression");
 
 const typeDefs = `
   type Query {
@@ -51,10 +50,6 @@ const start = async () => {
   const engine = new ApolloEngine({
     apiKey: process.env.APOLLO_ENGINE_KEY
   });
-
-  // Enable gzip compression
-  // ref: https://www.apollographql.com/docs/engine/setup-node.html#enabling-compression
-  // server.express.use(compression())
 
   const httpServer = await server.configure({
     tracing: true,
