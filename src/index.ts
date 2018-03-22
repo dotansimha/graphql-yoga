@@ -304,7 +304,11 @@ function mergeTypeDefs(typeDefs: ITypeDefinitions): string {
     return print(typeDefs)
   }
 
-  return typeDefs.reduce<string>((acc, t) => acc + '\n' + mergeTypeDefs(t), '')
+  if (Array.isArray(typeDefs)) {
+    return typeDefs.reduce<string>((acc, t) => acc + '\n' + mergeTypeDefs(t), '')
+  }
+
+  throw new Error('Typedef is not string, function, DocumentNode or array of previous')
 }
 
 function isDocumentNode(node: any): node is DocumentNode {
