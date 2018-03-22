@@ -57,7 +57,7 @@ export class GraphQLServer {
     } else if (props.typeDefs && props.resolvers) {
       const { directiveResolvers, resolvers, typeDefs } = props
 
-      const typeDefsString = buildTypeDefsString(typeDefs)
+      const typeDefsString = mergeTypeDefs(typeDefs)
 
       const uploadMixin = typeDefsString.includes('scalar Upload')
         ? { Upload: GraphQLUpload }
@@ -281,26 +281,19 @@ export class GraphQLServer {
   }
 }
 
-function buildTypeDefsString(typeDefs: ITypeDefinitions): string {
-  let typeDefinitions = mergeTypeDefs(typeDefs)
-
-  // read from .graphql file if path provided
-  if (typeDefinitions.endsWith('graphql')) {
-    const schemaPath = path.resolve(typeDefinitions)
-
-    if (!fs.existsSync(schemaPath)) {
-      throw new Error(`No schema found for path: ${schemaPath}`)
-    }
-
-    typeDefinitions = importSchema(schemaPath)
-  }
-
-  return typeDefinitions
-}
-
 function mergeTypeDefs(typeDefs: ITypeDefinitions): string {
   if (typeof typeDefs === 'string') {
-    return typeDefs
+    if (typeDefs.endsWith('graphql')) {
+      const schemaPath = path.resolve(typeDefs)
+  
+      if (!fs.existsSync(schemaPath)) {
+        throw new Error(`No schema found for path: ${schemaPath}`)
+      }
+  
+      return importSchema(schemaPath)
+    } else {
+      return typeDefs
+    }
   }
 
   if (typeof typeDefs === 'function') {
