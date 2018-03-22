@@ -38,35 +38,31 @@ const resolvers = {
   }
 };
 
-const start = async () => {
-  const pubsub = new PubSub();
-  const port = parseInt(process.env.PORT, 10) || 4000;
-  const server = new GraphQLServer({
-    typeDefs,
-    resolvers,
-    context: { pubsub }
-  });
+const pubsub = new PubSub();
+const port = parseInt(process.env.PORT, 10) || 4000;
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+  context: { pubsub }
+});
 
-  const engine = new ApolloEngine({
-    apiKey: process.env.APOLLO_ENGINE_KEY
-  });
+const engine = new ApolloEngine({
+  apiKey: process.env.APOLLO_ENGINE_KEY
+});
 
-  const httpServer = await server.configure({
-    tracing: true,
-    cacheControl: true
-  });
+const httpServer = server.configure({
+  tracing: true,
+  cacheControl: true
+});
 
-  engine.listen(
-    {
-      port,
-      httpServer,
-      graphqlPaths: ["/"]
-    },
-    () =>
-      console.log(`Server is running on http://localhost:${port} (with engine)`)
-  );
+engine.listen(
+  {
+    port,
+    httpServer,
+    graphqlPaths: ["/"]
+  },
+  () =>
+    console.log(`Server is running on http://localhost:${port}`)
+);
 
-  server.createSubscriptionServer(httpServer);
-};
-
-start();
+server.createSubscriptionServer(httpServer);
