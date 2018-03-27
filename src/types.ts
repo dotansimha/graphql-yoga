@@ -8,7 +8,11 @@ import {
   GraphQLTypeResolver,
   ValidationContext,
 } from 'graphql'
-import { IDirectiveResolvers, ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
+import {
+  IDirectiveResolvers,
+  ITypeDefinitions,
+} from 'graphql-tools/dist/Interfaces'
+import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
 
@@ -17,7 +21,7 @@ export interface IResolvers {
 }
 
 export type IResolverObject = {
-  [key: string]: GraphQLFieldResolver<any, any> | IResolverOptions,
+  [key: string]: GraphQLFieldResolver<any, any> | IResolverOptions
 }
 
 export interface IResolverOptions {
@@ -83,6 +87,9 @@ export interface SubscriptionServerOptions {
 
 export interface Props {
   directiveResolvers?: IDirectiveResolvers<any, any>
+  schemaDirectives?: {
+    [name: string]: typeof SchemaDirectiveVisitor
+  }
   typeDefs?: ITypeDefinitions
   resolvers?: IResolvers
   schema?: GraphQLSchema
@@ -91,6 +98,9 @@ export interface Props {
 
 export interface LambdaProps {
   directiveResolvers?: IDirectiveResolvers<any, any>
+  schemaDirectives?: {
+    [name: string]: typeof SchemaDirectiveVisitor
+  }
   typeDefs?: string
   resolvers?: IResolvers
   schema?: GraphQLSchema
