@@ -131,9 +131,7 @@ export class GraphQLServer {
     return this
   }
 
-  configure(
-    options: Options,
-  ): Server | HttpsServer {
+  configure(options: Options): Server | HttpsServer {
     const app = this.express
 
     this.options = { ...this.options, ...options }
@@ -231,9 +229,9 @@ export class GraphQLServer {
     if (this.options.playground) {
       const playgroundOptions = this.subscriptionServerOptions
         ? {
-          endpoint: this.options.endpoint,
-          subscriptionsEndpoint: this.subscriptionServerOptions.path,
-        }
+            endpoint: this.options.endpoint,
+            subscriptionsEndpoint: this.subscriptionServerOptions.path,
+          }
         : { endpoint: this.options.endpoint }
 
       app.get(this.options.playground, expressPlayground(playgroundOptions))
@@ -243,8 +241,9 @@ export class GraphQLServer {
       throw new Error('No schema defined')
     }
 
-    const server: Server | HttpsServer = this.options.https ?
-      createHttpsServer(this.options.https, app) : createServer(app);
+    const server: Server | HttpsServer = this.options.https
+      ? createHttpsServer(this.options.https, app)
+      : createServer(app)
 
     return server
   }
@@ -271,19 +270,19 @@ export class GraphQLServer {
     const server = this.configure(options as Options)
 
     return new Promise((resolve, reject) => {
-      const combinedServer = server;
+      const combinedServer = server
       combinedServer.listen(this.options.port, () => {
         callbackFunc(this.options)
         resolve(combinedServer)
       })
 
       if (this.subscriptionServerOptions) {
-        this.createSubscriptionServer(combinedServer);
+        this.createSubscriptionServer(combinedServer)
       }
     })
   }
 
-  createSubscriptionServer(combinedServer: Server | HttpsServer ) {
+  createSubscriptionServer(combinedServer: Server | HttpsServer) {
     this.subscriptionServer = SubscriptionServer.create(
       {
         schema: this.executableSchema,
@@ -300,7 +299,11 @@ export class GraphQLServer {
           // See https://github.com/apollographql/subscriptions-transport-ws/issues/182
           connection.formatResponse = value => ({
             ...value,
-            errors: value.errors && value.errors.map(this.options.formatError || defaultErrorFormatter),
+            errors:
+              value.errors &&
+              value.errors.map(
+                this.options.formatError || defaultErrorFormatter,
+              ),
           })
 
           let context
