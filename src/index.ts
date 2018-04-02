@@ -31,7 +31,7 @@ export class GraphQLServer {
   subscriptionServer: SubscriptionServer | null
   options: Options = {
     tracing: { mode: 'http-header' },
-    port: process.env.PORT ? parseInt(process.env.PORT, 10) : 4000,
+    port: process.env.PORT || 4000,
     endpoint: '/',
     subscriptions: '/',
     playground: '/',
@@ -298,11 +298,11 @@ function mergeTypeDefs(typeDefs: ITypeDefinitions): string {
   if (typeof typeDefs === 'string') {
     if (typeDefs.endsWith('graphql')) {
       const schemaPath = path.resolve(typeDefs)
-  
+
       if (!fs.existsSync(schemaPath)) {
         throw new Error(`No schema found for path: ${schemaPath}`)
       }
-  
+
       return importSchema(schemaPath)
     } else {
       return typeDefs
@@ -318,10 +318,15 @@ function mergeTypeDefs(typeDefs: ITypeDefinitions): string {
   }
 
   if (Array.isArray(typeDefs)) {
-    return typeDefs.reduce<string>((acc, t) => acc + '\n' + mergeTypeDefs(t), '')
+    return typeDefs.reduce<string>(
+      (acc, t) => acc + '\n' + mergeTypeDefs(t),
+      '',
+    )
   }
 
-  throw new Error('Typedef is not string, function, DocumentNode or array of previous')
+  throw new Error(
+    'Typedef is not string, function, DocumentNode or array of previous',
+  )
 }
 
 function isDocumentNode(node: any): node is DocumentNode {
