@@ -69,7 +69,7 @@ export interface HttpsOptions {
 }
 
 export interface Options extends ApolloServerOptions {
-  port?: number
+  port?: number | string
   cors?: CorsOptions | false
   uploads?: UploadOptions | false
   endpoint?: string
