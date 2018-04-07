@@ -1,6 +1,6 @@
 # custom-directive
 
-This directory contains a simple GraphQL with custom directives example based on `graphql-yoga`.
+This directory contains a simple GraphQL with [schema directives](https://www.apollographql.com/docs/graphql-tools/schema-directives.html) example based on `graphql-yoga`.
 
 ## Get started
 
@@ -8,7 +8,7 @@ This directory contains a simple GraphQL with custom directives example based on
 
 ```sh
 git clone https://github.com/graphcool/graphql-yoga.git
-cd graphql-yoga/examples/custom-directives
+cd graphql-yoga/examples/schema-directives
 ```
 
 **Install dependencies and run the app:**
@@ -43,6 +43,7 @@ The server returns the following response:
 Note that the original `Hello Word` output from the resolver is now in upper case due to our custom `@upper` directive.
 
 **Query `secret` (with role set as `admin`):**
+
 ```graphql
 query {
   secret
@@ -59,10 +60,9 @@ The server returns the following response:
 }
 ```
 
-
 **Query `secret` (with role set as `user`):**
 
-Go to `index.js:45`, change `admin` by `user` and reload the server.
+Go to `index.js:64`, change `admin` by `user` and reload the server.
 
 ```graphql
 query {
@@ -82,13 +82,11 @@ The server returns the following response:
       "message": "You are not authorized. Expected roles: admin",
       "locations": [
         {
-          "line": 1,
-          "column": 2
+          "line": 2,
+          "column": 3
         }
       ],
-      "path": [
-        "secret"
-      ]
+      "path": ["secret"]
     }
   ]
 }
