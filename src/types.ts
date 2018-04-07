@@ -1,4 +1,4 @@
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import { CorsOptions } from 'cors'
 import {
   GraphQLSchema,
@@ -35,6 +35,7 @@ export type Context = { [key: string]: any }
 
 export interface ContextParameters {
   request: Request
+  response: Response
   connection: ExecutionParams
 }
 
