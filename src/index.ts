@@ -191,7 +191,7 @@ export class GraphQLServer {
         try {
           context =
             typeof this.context === 'function'
-              ? await this.context({ request }, { response })
+              ? await this.context({ request, response })
               : this.context
         } catch (e) {
           console.error(e)
