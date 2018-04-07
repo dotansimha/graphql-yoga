@@ -186,12 +186,12 @@ export class GraphQLServer {
 
     app.post(
       this.options.endpoint,
-      graphqlExpress(async request => {
+      graphqlExpress(async (request, response) => {
         let context
         try {
           context =
             typeof this.context === 'function'
-              ? await this.context({ request })
+              ? await this.context({ request }, { response })
               : this.context
         } catch (e) {
           console.error(e)
