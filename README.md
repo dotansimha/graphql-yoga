@@ -129,7 +129,7 @@ Additionally, the `options` object exposes these `apollo-server` options:
 | Key | Type | Note |
 | ---  | --- | --- |
 | `cacheControl`  | Boolean  | Enable extension that returns Cache Control data in the response |
-| `formatError`  | Number | A function to apply to every error before sending the response to clients |
+| `formatError`  | Number | A function to apply to every error before sending the response to clients. Defaults to [defaultErrorFormatter](https://github.com/graphcool/graphql-yoga/blob/master/src/defaultErrorFormatter.ts). Please beware, that if you override this, `requestId` and `code` on errors won't automatically be propagated to your yoga server |
 | `logFunction`  | LogFunction  | A function called for logging events such as execution times |
 | `rootValue` | any  | RootValue passed to GraphQL execution |
 | `validationRules` | Array of functions | Additional GraphQL validation rules to be applied to client-specified queries |
