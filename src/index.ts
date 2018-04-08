@@ -28,7 +28,9 @@ export { Options }
 export { GraphQLServerLambda } from './lambda'
 
 export class GraphQLServer {
+  server: Server | HttpsServer
   express: express.Application
+  subscriptionServerOptions: SubscriptionServerOptions | null
   subscriptionServer: SubscriptionServer | null
   options: Options = {
     tracing: { mode: 'http-header' },
@@ -52,9 +54,12 @@ export class GraphQLServer {
 
     this.subscriptionServer = null
     this.context = props.context
+    this.executableSchema = this.createSchema(props)
+  }
 
+  createSchema(props: Props): GraphQLSchema {
     if (props.schema) {
-      this.executableSchema = props.schema
+      return props.schema
     } else if (props.typeDefs && props.resolvers) {
       const {
         directiveResolvers,
@@ -69,7 +74,7 @@ export class GraphQLServer {
         ? { Upload: GraphQLUpload }
         : {}
 
-      this.executableSchema = makeExecutableSchema({
+      return makeExecutableSchema({
         directiveResolvers,
         schemaDirectives,
         typeDefs: typeDefsString,
@@ -101,6 +106,86 @@ export class GraphQLServer {
     return this
   }
 
+  createSubscription(server: Server | HttpsServer, subscriptionServerOptions: SubscriptionServerOptions) {
+    return SubscriptionServer.create(
+      {
+        schema: this.executableSchema,
+        execute,
+        subscribe,
+        onConnect: subscriptionServerOptions.onConnect
+          ? subscriptionServerOptions.onConnect
+          : async (connectionParams, webSocket) => ({
+              ...connectionParams,
+            }),
+        onDisconnect: subscriptionServerOptions.onDisconnect,
+        onOperationComplete: subscriptionServerOptions.onOperationComplete,
+        onOperation: async (message, connection, webSocket) => {
+          // The following should be replaced when SubscriptionServer accepts a formatError
+          // parameter for custom error formatting.
+          // See https://github.com/apollographql/subscriptions-transport-ws/issues/182
+          connection.formatResponse = value => ({
+            ...value,
+            errors:
+              value.errors &&
+              value.errors.map(
+                this.options.formatError || defaultErrorFormatter,
+              ),
+          })
+
+          let context
+          try {
+            context =
+              typeof this.context === 'function'
+                ? await this.context({ connection })
+                : this.context
+          } catch (e) {
+            console.error(e)
+            throw e
+          }
+          return { ...connection, context }
+        },
+        keepAlive: subscriptionServerOptions.keepAlive,
+      },
+      {
+        server,
+        path: subscriptionServerOptions.path,
+      },
+    )
+  }
+
+  reload(handler: (
+    (server: Server | HttpsServer) => Props),
+    callback?: ((options: Options) => void)
+  ): Promise<Server | HttpsServer> {
+    if (this.subscriptionServer) {
+      this.subscriptionServer.close()
+    }
+
+    this.server.removeListener('request', this.express)
+    this.express = express()
+
+    const props = handler(this.server)
+
+    this.subscriptionServer = null
+    this.context = props.context
+    this.executableSchema = this.createSchema(props)
+
+    this.subscriptionServerOptions = null;
+    if (this.subscriptionServerOptions) {
+      this.subscriptionServer = this.createSubscription(
+        this.server,
+        this.subscriptionServerOptions
+      )
+    }
+
+    return this
+      .start(this.options, callback)
+      .then(() => {
+        this.server.on('request', this.express)
+        return this.server
+      })
+  }
+
   start(
     options: Options,
     callback?: ((options: Options) => void),
@@ -124,9 +209,9 @@ export class GraphQLServer {
 
     this.options = { ...this.options, ...options }
 
-    let subscriptionServerOptions: SubscriptionServerOptions | null = null
+    this.subscriptionServerOptions = null
     if (this.options.subscriptions) {
-      subscriptionServerOptions =
+      this.subscriptionServerOptions =
         typeof this.options.subscriptions === 'string'
           ? { path: this.options.subscriptions }
           : { path: '/', ...this.options.subscriptions }
@@ -216,10 +301,10 @@ export class GraphQLServer {
     )
 
     if (this.options.playground) {
-      const playgroundOptions = subscriptionServerOptions
+      const playgroundOptions = this.subscriptionServerOptions
         ? {
             endpoint: this.options.endpoint,
-            subscriptionsEndpoint: subscriptionServerOptions.path,
+            subscriptionsEndpoint: this.subscriptionServerOptions.path,
           }
         : { endpoint: this.options.endpoint }
 
@@ -231,64 +316,23 @@ export class GraphQLServer {
     }
 
     return new Promise((resolve, reject) => {
-      const server: Server | HttpsServer = this.options.https
-        ? createHttpsServer(this.options.https, app)
-        : createServer(app)
+      if (this.server) {
+        return resolve(this.server)
+      }
 
-      if (!subscriptionServerOptions) {
-        server.listen(this.options.port, () => {
-          callbackFunc(this.options)
-          resolve(server)
-        })
-      } else {
-        const combinedServer = server
-        combinedServer.listen(this.options.port, () => {
-          callbackFunc(this.options)
-          resolve(combinedServer)
-        })
+      const server: Server|HttpsServer = this.options.https ?
+        createHttpsServer(this.options.https, app) : createServer(app);
 
-        this.subscriptionServer = SubscriptionServer.create(
-          {
-            schema: this.executableSchema,
-            execute,
-            subscribe,
-            onConnect: subscriptionServerOptions.onConnect
-              ? subscriptionServerOptions.onConnect
-              : async (connectionParams, webSocket) => ({
-                  ...connectionParams,
-                }),
-            onDisconnect: subscriptionServerOptions.onDisconnect,
-            onOperation: async (message, connection, webSocket) => {
-              // The following should be replaced when SubscriptionServer accepts a formatError
-              // parameter for custom error formatting.
-              // See https://github.com/apollographql/subscriptions-transport-ws/issues/182
-              connection.formatResponse = value => ({
-                ...value,
-                errors:
-                  value.errors &&
-                  value.errors.map(
-                    this.options.formatError || defaultErrorFormatter,
-                  ),
-              })
+      this.server = server
+      server.listen(this.options.port, () => {
+        callbackFunc(this.options)
+        resolve(server)
+      })
 
-              let context
-              try {
-                context =
-                  typeof this.context === 'function'
-                    ? await this.context({ connection })
-                    : this.context
-              } catch (e) {
-                console.error(e)
-                throw e
-              }
-              return { ...connection, context }
-            },
-            keepAlive: subscriptionServerOptions.keepAlive,
-          },
-          {
-            server: combinedServer,
-            path: subscriptionServerOptions.path,
-          },
+      if (this.subscriptionServerOptions) {
+        this.subscriptionServer = this.createSubscription(
+          server,
+          this.subscriptionServerOptions
         )
       }
     })

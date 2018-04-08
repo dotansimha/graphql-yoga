@@ -83,6 +83,7 @@ export interface SubscriptionServerOptions {
   path?: string
   onConnect?: Function
   onDisconnect?: Function
+  onOperationComplete?: Function
   keepAlive?: number
 }
 
