@@ -15,6 +15,7 @@ import {
 import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
+import { IMocks } from 'graphql-tools'
 
 export interface IResolvers {
   [key: string]: (() => any) | IResolverObject | GraphQLScalarType
@@ -95,6 +96,7 @@ export interface Props {
   resolvers?: IResolvers
   schema?: GraphQLSchema
   context?: Context | ContextCallback
+  mocks?: IMocks
 }
 
 export interface LambdaProps {

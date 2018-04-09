@@ -12,7 +12,7 @@ import * as fs from 'fs'
 import { execute, GraphQLSchema, subscribe, DocumentNode, print } from 'graphql'
 import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools'
 import { createServer, Server } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
 import * as path from 'path'
@@ -23,6 +23,7 @@ import { SubscriptionServerOptions, Options, Props } from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
+export { MockList } from 'graphql-tools'
 export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options }
 export { GraphQLServerLambda } from './lambda'
@@ -61,6 +62,7 @@ export class GraphQLServer {
         schemaDirectives,
         resolvers,
         typeDefs,
+        mocks,
       } = props
 
       const typeDefsString = mergeTypeDefs(typeDefs)
@@ -78,6 +80,15 @@ export class GraphQLServer {
           ...resolvers,
         },
       })
+
+      if (mocks) {
+        addMockFunctionsToSchema({
+          schema: this.executableSchema,
+          mocks,
+          preserveResolvers: false,
+        })
+      }
+
     }
   }
 
