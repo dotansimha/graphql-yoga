@@ -9,7 +9,15 @@ import {
   RequestHandlerParams,
 } from 'express-serve-static-core'
 import * as fs from 'fs'
-import { execute, GraphQLSchema, subscribe, DocumentNode, print } from 'graphql'
+import {
+  execute,
+  GraphQLSchema,
+  subscribe,
+  DocumentNode,
+  print,
+  GraphQLFieldResolver,
+  ExecutionResult,
+} from 'graphql'
 import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
@@ -26,6 +34,19 @@ import { defaultErrorFormatter } from './defaultErrorFormatter'
 export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options }
 export { GraphQLServerLambda } from './lambda'
+
+// TODO remove once `@types/graphql` is fixed for `execute`
+type ExecuteFunction = (
+  schema: GraphQLSchema,
+  document: DocumentNode,
+  rootValue?: any,
+  contextValue?: any,
+  variableValues?: {
+    [key: string]: any
+  },
+  operationName?: string,
+  fieldResolver?: GraphQLFieldResolver<any, any>,
+) => Promise<ExecutionResult> | AsyncIterator<ExecutionResult>
 
 export class GraphQLServer {
   express: express.Application
@@ -250,7 +271,8 @@ export class GraphQLServer {
         this.subscriptionServer = SubscriptionServer.create(
           {
             schema: this.executableSchema,
-            execute,
+            // TODO remove once `@types/graphql` is fixed for `execute`
+            execute: execute as ExecuteFunction,
             subscribe,
             onConnect: subscriptionServerOptions.onConnect
               ? subscriptionServerOptions.onConnect
