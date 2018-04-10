@@ -2,10 +2,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node
+      - image: circleci/node:latest
     steps:
       - checkout
-      - run: sudo npm install -g yarn semantic-release@12.0.0
+      - run: sudo npm install -g semantic-release
       - run: yarn install
       - run: yarn test
       - run: semantic-release
