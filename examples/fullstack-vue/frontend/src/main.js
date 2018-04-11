@@ -18,11 +18,17 @@ const apolloClient = new ApolloClient({
 });
 
 
+Vue.use(VueApollo);
 
 Vue.config.productionTip = false;
+
+const apolloProvider = new VueApollo({
+  defaultClient: apolloClient,
+});
 
 new Vue({
   router,
   store,
+  provide: apolloProvider.provide(),
   render: h => h(App),
 }).$mount('#app');
