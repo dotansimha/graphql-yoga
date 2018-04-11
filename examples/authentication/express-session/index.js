@@ -53,6 +53,10 @@ const resolvers = {
 // opts
 const opts = {
   port: 4000,
+  cors: {
+    credentials: true,
+    origin: ['http://localhost:8080'] // your frontend url.
+  }
 };
 
 // context
