@@ -7,6 +7,18 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
+const link = createHttpLink({
+  uri: 'http://localhost:4000',
+});
+
+const apolloClient = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
+});
+
+
+
 Vue.config.productionTip = false;
 
 new Vue({
