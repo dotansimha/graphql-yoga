@@ -57,6 +57,7 @@ export class GraphQLServer {
     endpoint: '/',
     subscriptions: '/',
     playground: '/',
+    listen: true,
   }
   executableSchema: GraphQLSchema
   context: any
@@ -249,6 +250,11 @@ export class GraphQLServer {
 
     if (!this.executableSchema) {
       throw new Error('No schema defined')
+    }
+
+    if (!this.options.listen) {
+      callbackFunc(this.options)
+      return Promise.resolve(null)
     }
 
     return new Promise((resolve, reject) => {
