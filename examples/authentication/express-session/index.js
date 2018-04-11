@@ -1,6 +1,7 @@
 const { GraphQLServer } = require('graphql-yoga');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
+const ms = require('ms');
 
 const typeDefs = `
   type Query {
@@ -49,3 +50,34 @@ const resolvers = {
   }
 }
 
+// opts
+const opts = {
+  port: 4000,
+};
+
+// context
+const context = (req) => ({
+  req: req.request,
+});
+
+// server
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+  context,
+});
+
+// session middleware
+server.express.use(session({
+  name: 'qid',
+  secret: `some-random-secret-here`,
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: ms('1d'),
+  },
+}))
+
+// start server
+server.start(opts, () => console.log(`Server is running on http://localhost:${opts.port}`));
