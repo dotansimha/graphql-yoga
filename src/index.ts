@@ -22,7 +22,7 @@ import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
 import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
-import { createServer, Server } from 'http'
+import { createServer, Server as HttpServer } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
 import * as path from 'path'
 import customFieldResolver from './customFieldResolver'
@@ -131,7 +131,7 @@ export class GraphQLServer {
     return this
   }
 
-  configure(options: Options): Server | HttpsServer {
+  configure(options: Options): HttpServer | HttpsServer {
     const app = this.express
 
     this.options = { ...this.options, ...options }
@@ -241,7 +241,7 @@ export class GraphQLServer {
       throw new Error('No schema defined')
     }
 
-    const server: Server | HttpsServer = this.options.https
+    const server: HttpServer | HttpsServer = this.options.https
       ? createHttpsServer(this.options.https, app)
       : createServer(app)
 
@@ -251,12 +251,12 @@ export class GraphQLServer {
   start(
     options: Options,
     callback?: ((options: Options) => void),
-  ): Promise<Server | HttpsServer>
-  start(callback?: ((options: Options) => void)): Promise<Server | HttpsServer>
+  ): Promise<HttpServer | HttpsServer>
+  start(callback?: ((options: Options) => void)): Promise<HttpServer | HttpsServer>
   start(
     optionsOrCallback?: Options | ((options: Options) => void),
     callback?: ((options: Options) => void),
-  ): Promise<Server | HttpsServer> {
+  ): Promise<HttpServer | HttpsServer> {
     const options =
       optionsOrCallback && typeof optionsOrCallback === 'function'
         ? {}
@@ -282,7 +282,7 @@ export class GraphQLServer {
     })
   }
 
-  createSubscriptionServer(combinedServer: Server | HttpsServer) {
+  createSubscriptionServer(combinedServer: HttpServer | HttpsServer) {
     this.subscriptionServer = SubscriptionServer.create(
       {
         schema: this.executableSchema,
