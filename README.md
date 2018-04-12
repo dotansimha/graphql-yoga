@@ -123,6 +123,7 @@ The `options` object has the following fields:
 | `playground` | String or `false` |  `'/'`  | Defines the endpoint where you can invoke the [Playground](https://github.com/graphcool/graphql-playground); setting to `false` disables the playground endpoint |
 | `uploads` | [UploadOptions](/src/types.ts#L39-L43) or `false` or `undefined`  | `null`  | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading |
 | `https` | [HttpsOptions](/src/types.ts#L62-L65) or `undefined` | `undefined` | Enables HTTPS support with a key/cert |
+| `listen` | [boolean](/src/types.ts#L62-L65) or `undefined` | `true` | Whether or not to start listening on `port` when calling `start()` |
 
 Additionally, the `options` object exposes these `apollo-server` options:
 
