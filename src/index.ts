@@ -84,7 +84,7 @@ export class GraphQLServer {
       if (mocks) {
         addMockFunctionsToSchema({
           schema: this.executableSchema,
-          mocks,
+          mocks: typeof mocks === "object" ? mocks : undefined,
           preserveResolvers: false,
         })
       }
