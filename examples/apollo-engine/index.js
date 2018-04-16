@@ -65,4 +65,3 @@ engine.listen(
     console.log(`Server is running on http://localhost:${port}`)
 );
 
-graphQLServer.createSubscriptionServer(httpServer);

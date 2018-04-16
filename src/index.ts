@@ -245,6 +245,10 @@ export class GraphQLServer {
       ? createHttpsServer(this.options.https, app)
       : createServer(app)
 
+    if (this.subscriptionServerOptions) {
+      this.createSubscriptionServer(server)
+    }
+
     return server
   }
 
@@ -275,14 +279,10 @@ export class GraphQLServer {
         callbackFunc(this.options)
         resolve(combinedServer)
       })
-
-      if (this.subscriptionServerOptions) {
-        this.createSubscriptionServer(combinedServer)
-      }
     })
   }
 
-  createSubscriptionServer(combinedServer: HttpServer | HttpsServer) {
+  private createSubscriptionServer(combinedServer: HttpServer | HttpsServer) {
     this.subscriptionServer = SubscriptionServer.create(
       {
         schema: this.executableSchema,
