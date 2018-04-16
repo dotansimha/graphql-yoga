@@ -131,7 +131,7 @@ export class GraphQLServer {
     return this
   }
 
-  configure(options: Options): HttpServer | HttpsServer {
+  createHttpServer(options: Options): HttpServer | HttpsServer {
     const app = this.express
 
     this.options = { ...this.options, ...options }
@@ -267,7 +267,7 @@ export class GraphQLServer {
         ? optionsOrCallback
         : () => null
 
-    const server = this.configure(options as Options)
+    const server = this.createHttpServer(options as Options)
 
     return new Promise((resolve, reject) => {
       const combinedServer = server

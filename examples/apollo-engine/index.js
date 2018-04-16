@@ -40,7 +40,7 @@ const resolvers = {
 
 const pubsub = new PubSub();
 const port = parseInt(process.env.PORT, 10) || 4000;
-const server = new GraphQLServer({
+const graphQLServer = new GraphQLServer({
   typeDefs,
   resolvers,
   context: { pubsub }
@@ -50,7 +50,7 @@ const engine = new ApolloEngine({
   apiKey: process.env.APOLLO_ENGINE_KEY
 });
 
-const httpServer = server.configure({
+const httpServer = graphQLServer.createHttpServer({
   tracing: true,
   cacheControl: true
 });
@@ -65,4 +65,4 @@ engine.listen(
     console.log(`Server is running on http://localhost:${port}`)
 );
 
-server.createSubscriptionServer(httpServer);
+graphQLServer.createSubscriptionServer(httpServer);
