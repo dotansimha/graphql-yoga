@@ -76,7 +76,8 @@ export interface Options extends ApolloServerOptions {
   endpoint?: string
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
-  https?: HttpsOptions
+  https?: HttpsOptions,
+  bodyParserOptions?: BodyParserJSONOptions
 }
 
 export interface SubscriptionServerOptions {
@@ -111,4 +112,13 @@ export interface LambdaProps {
 
 export interface LambdaOptions extends ApolloServerOptions {
   endpoint?: string
+}
+
+export interface BodyParserJSONOptions {
+  limit?: number | string,
+  inflate?: boolean,
+  reviver?: any,
+  strict?: boolean,
+  type?: string,
+  verify?: any,
 }

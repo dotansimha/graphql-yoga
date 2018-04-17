@@ -27,7 +27,7 @@ import * as path from 'path'
 import customFieldResolver from './customFieldResolver'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
-import { SubscriptionServerOptions, Options, Props } from './types'
+import { SubscriptionServerOptions, Options, Props, BodyParserJSONOptions } from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
@@ -171,7 +171,7 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    app.post(this.options.endpoint, bodyParser.graphql())
+    app.post(this.options.endpoint, bodyParser.graphql(this.options.bodyParserOptions))
 
     if (this.options.uploads) {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
