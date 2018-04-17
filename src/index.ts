@@ -20,11 +20,10 @@ import {
 } from 'graphql'
 import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema, defaultMergedResolver } from 'graphql-tools'
 import { createServer, Server } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
 import * as path from 'path'
-import customFieldResolver from './customFieldResolver'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { SubscriptionServerOptions, Options, Props } from './types'
@@ -227,7 +226,7 @@ export class GraphQLServer {
           logFunction: this.options.logFunction,
           rootValue: this.options.rootValue,
           validationRules: this.options.validationRules,
-          fieldResolver: this.options.fieldResolver || customFieldResolver,
+          fieldResolver: this.options.fieldResolver || defaultMergedResolver,
           formatParams: this.options.formatParams,
           formatResponse: this.options.formatResponse,
           debug: this.options.debug,
