@@ -17,6 +17,7 @@ import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
 import { IMiddleware as IFieldMiddleware } from 'graphql-middleware'
 
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 export interface IResolvers {
   [key: string]: (() => any) | IResolverObject | GraphQLScalarType
 }
@@ -79,6 +80,12 @@ export interface Options extends ApolloServerOptions {
   playground?: string | false
   https?: HttpsOptions
 }
+
+export interface OptionsWithHttps extends Options {
+  https: HttpsOptions
+}
+
+export type OptionsWithoutHttps = Omit<Options, "https">
 
 export interface SubscriptionServerOptions {
   path?: string

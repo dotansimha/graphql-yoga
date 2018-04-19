@@ -28,12 +28,12 @@ import * as path from 'path'
 import customFieldResolver from './customFieldResolver'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
-import { SubscriptionServerOptions, Options, Props } from './types'
+import { SubscriptionServerOptions, Options, OptionsWithHttps, OptionsWithoutHttps, Props } from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
-export { Options }
+export { Options, OptionsWithHttps, OptionsWithoutHttps }
 export { GraphQLServerLambda } from './lambda'
 
 // TODO remove once `@types/graphql` is fixed for `execute`
@@ -131,6 +131,8 @@ export class GraphQLServer {
     return this
   }
 
+  createHttpServer(options: OptionsWithoutHttps): HttpServer
+  createHttpServer(options: OptionsWithHttps): HttpsServer
   createHttpServer(options: Options): HttpServer | HttpsServer {
     const app = this.express
 
@@ -241,7 +243,7 @@ export class GraphQLServer {
       throw new Error('No schema defined')
     }
 
-    const server: HttpServer | HttpsServer = this.options.https
+    const server = this.options.https
       ? createHttpsServer(this.options.https, app)
       : createServer(app)
 
