@@ -77,6 +77,7 @@ export interface Options extends ApolloServerOptions {
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
   https?: HttpsOptions
+  deduplicator?: boolean
 }
 
 export interface SubscriptionServerOptions {
