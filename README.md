@@ -63,7 +63,7 @@ const server = new GraphQLServer({ typeDefs, resolvers })
 server.start(() => console.log('Server is running on localhost:4000'))
 ```
 
-> To get started with `graphql-yoga`, follow the instructions in the READMEs of the [examples](./examples). 
+> To get started with `graphql-yoga`, follow the instructions in the READMEs of the [examples](./examples).
 
 ### API
 
@@ -82,7 +82,7 @@ The `props` argument accepts the following fields:
 | `schemaDirectives`  | Object  |  `null`  | [`Apollo Server schema directives`](https://www.apollographql.com/docs/graphql-tools/schema-directives.html) that allow for transforming schema types, fields, and arguments |
 
 > (*) There are two major ways of providing the [schema](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) information to the `constructor`:
-> 
+>
 > 1. Provide `typeDefs` and `resolvers` and omit the `schema`, in this case `graphql-yoga` will construct the `GraphQLSchema` instance using [`makeExecutableSchema`](https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema) from [`graphql-tools`](https://github.com/apollographql/graphql-tools).
 > 2. Provide the `schema` directly and omit `typeDefs` and `resolvers`.
 
@@ -123,6 +123,7 @@ The `options` object has the following fields:
 | `playground` | String or `false` |  `'/'`  | Defines the endpoint where you can invoke the [Playground](https://github.com/graphcool/graphql-playground); setting to `false` disables the playground endpoint |
 | `uploads` | [UploadOptions](/src/types.ts#L39-L43) or `false` or `undefined`  | `null`  | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading |
 | `https` | [HttpsOptions](/src/types.ts#L62-L65) or `undefined` | `undefined` | Enables HTTPS support with a key/cert |
+| `deduplicator` | Boolean | `true` | Enables [graphql-deduplicator](https://github.com/gajus/graphql-deduplicator). Once enabled sending the header `X-GraphQL-Deduplicate` will deduplicate the data.  |
 
 Additionally, the `options` object exposes these `apollo-server` options:
 
@@ -175,7 +176,7 @@ Once your `graphql-yoga` server is running, you can use [GraphQL Playground](htt
 
 To deploy your `graphql-yoga` server with [`now`](https://zeit.co/now), follow these instructions:
 
-1. Download [**Now Desktop**](https://zeit.co/download) 
+1. Download [**Now Desktop**](https://zeit.co/download)
 2. Navigate to the root directory of your `graphql-yoga` server
 3. Run `now` in your terminal
 
