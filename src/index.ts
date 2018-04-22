@@ -83,7 +83,6 @@ export class GraphQLServer {
         schemaDirectives,
         resolvers,
         typeDefs,
-        fieldMiddleware,
       } = props
 
       const typeDefsString = mergeTypeDefs(typeDefs)
