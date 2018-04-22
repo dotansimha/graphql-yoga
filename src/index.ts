@@ -235,6 +235,40 @@ export class GraphQLServer {
         }
       }),
     )
+    
+    // Only add GET endpoint if opted in
+    if (this.options.getEndpoint) {
+      app.get(
+        this.options.getEndpoint === true ? this.options.endpoint : this.options.getEndpoint,
+        graphqlExpress(async (request, response) => {
+          let context
+          try {
+            context =
+              typeof this.context === 'function'
+                ? await this.context({ request, response })
+                : this.context
+          } catch (e) {
+            console.error(e)
+            throw e
+          }
+
+          return {
+            schema: this.executableSchema,
+            tracing: tracing(request),
+            cacheControl: this.options.cacheControl,
+            formatError: this.options.formatError || defaultErrorFormatter,
+            logFunction: this.options.logFunction,
+            rootValue: this.options.rootValue,
+            validationRules: this.options.validationRules,
+            fieldResolver: this.options.fieldResolver || customFieldResolver,
+            formatParams: this.options.formatParams,
+            formatResponse: this.options.formatResponse,
+            debug: this.options.debug,
+            context,
+          }
+        }),
+      )
+    }
 
     if (this.options.playground) {
       const playgroundOptions = subscriptionServerOptions
