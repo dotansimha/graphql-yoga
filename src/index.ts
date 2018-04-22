@@ -102,10 +102,10 @@ export class GraphQLServer {
       })
     }
 
-    if (props.fieldMiddleware) {
+    if (props.middleware) {
       this.executableSchema = applyFieldMiddleware(
         this.executableSchema,
-        ...props.fieldMiddleware,
+        ...props.middleware,
       )
     }
   }
