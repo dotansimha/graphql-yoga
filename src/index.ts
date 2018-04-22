@@ -21,6 +21,7 @@ import {
 import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
+import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
 import { createServer, Server } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
 import * as path from 'path'
@@ -82,6 +83,7 @@ export class GraphQLServer {
         schemaDirectives,
         resolvers,
         typeDefs,
+        fieldMiddleware,
       } = props
 
       const typeDefsString = mergeTypeDefs(typeDefs)
@@ -99,6 +101,13 @@ export class GraphQLServer {
           ...resolvers,
         },
       })
+    }
+
+    if (props.fieldMiddleware) {
+      this.executableSchema = applyFieldMiddleware(
+        this.executableSchema,
+        ...props.fieldMiddleware,
+      )
     }
   }
 
