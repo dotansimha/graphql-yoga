@@ -96,7 +96,7 @@ export interface Props {
   resolvers?: IResolvers
   schema?: GraphQLSchema
   context?: Context | ContextCallback
-  middleware?: IFieldMiddleware[]
+  middlewares?: IFieldMiddleware[]
 }
 
 export interface LambdaProps {
