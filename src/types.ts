@@ -112,4 +112,5 @@ export interface LambdaProps {
 
 export interface LambdaOptions extends ApolloServerOptions {
   endpoint?: string
+  deduplicator?: boolean
 }

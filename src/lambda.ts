@@ -4,6 +4,7 @@ import { GraphQLSchema } from 'graphql'
 import { importSchema } from 'graphql-import'
 import lambdaPlayground from 'graphql-playground-middleware-lambda'
 import { makeExecutableSchema } from 'graphql-tools'
+import { deflate } from 'graphql-deduplicator'
 import * as path from 'path'
 import customFieldResolver from './customFieldResolver'
 
@@ -19,6 +20,7 @@ export class GraphQLServerLambda {
     const defaultOptions: LambdaOptions = {
       tracing: { mode: 'http-header' },
       endpoint: '/',
+      deduplicator: true,
     }
     this.options = { ...defaultOptions, ...props.options }
 
@@ -73,6 +75,26 @@ export class GraphQLServerLambda {
       }
     }
 
+    const formatResponse = event => {
+      if (!this.options.deduplicator) {
+        return this.options.formatResponse
+      }
+      return (response, ...args) => {
+        if (
+          event.headers &&
+          event.headers['X-GraphQL-Deduplicate'] &&
+          response.data &&
+          !response.data.__schema
+        ) {
+          response.data = deflate(response.data)
+        }
+
+        return this.options.formatResponse
+          ? this.options.formatResponse(response, ...args)
+          : response
+      }
+    }
+
     const handler = graphqlLambda(async (event, lambdaContext) => {
       let apolloContext
       try {
@@ -96,7 +118,7 @@ export class GraphQLServerLambda {
         validationRules: this.options.validationRules,
         fieldResolver: this.options.fieldResolver || customFieldResolver,
         formatParams: this.options.formatParams,
-        formatResponse: this.options.formatResponse,
+        formatResponse: formatResponse(event),
         debug: this.options.debug,
       }
     })
