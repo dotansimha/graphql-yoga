@@ -52,13 +52,20 @@ export interface TracingOptions {
   mode: 'enabled' | 'disabled' | 'http-header'
 }
 
+export type ValidationRules = Array<(context: ValidationContext) => any>
+
+export type ValidationRulesExpressCallback = (
+  request: Request,
+  response: Response,
+) => ValidationRules
+
 export interface ApolloServerOptions {
   tracing?: boolean | TracingOptions
   cacheControl?: boolean
   formatError?: Function
   logFunction?: LogFunction
   rootValue?: any
-  validationRules?: Array<(context: ValidationContext) => any>
+  validationRules?: ValidationRules | ValidationRulesExpressCallback
   fieldResolver?: GraphQLFieldResolver<any, any>
   formatParams?: Function
   formatResponse?: Function

@@ -234,7 +234,10 @@ export class GraphQLServer {
           formatError: this.options.formatError || defaultErrorFormatter,
           logFunction: this.options.logFunction,
           rootValue: this.options.rootValue,
-          validationRules: this.options.validationRules,
+          validationRules:
+            typeof this.options.validationRules === 'function'
+              ? this.options.validationRules(request, response)
+              : this.options.validationRules,
           fieldResolver: this.options.fieldResolver || customFieldResolver,
           formatParams: this.options.formatParams,
           formatResponse: this.options.formatResponse,

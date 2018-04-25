@@ -7,7 +7,7 @@ import { makeExecutableSchema } from 'graphql-tools'
 import * as path from 'path'
 import customFieldResolver from './customFieldResolver'
 
-import { LambdaOptions, LambdaProps } from './types'
+import { LambdaOptions, LambdaProps, ValidationRules } from './types'
 
 export class GraphQLServerLambda {
   options: LambdaOptions
@@ -85,6 +85,12 @@ export class GraphQLServerLambda {
         throw e
       }
 
+      if (typeof this.options.validationRules === 'function') {
+        throw new Error(
+          'validationRules as callback is only compatible with Express',
+        )
+      }
+
       return {
         schema: this.executableSchema,
         tracing: tracing(event),
@@ -93,7 +99,7 @@ export class GraphQLServerLambda {
         formatError: this.options.formatError,
         logFunction: this.options.logFunction,
         rootValue: this.options.rootValue,
-        validationRules: this.options.validationRules,
+        validationRules: this.options.validationRules as ValidationRules,
         fieldResolver: this.options.fieldResolver || customFieldResolver,
         formatParams: this.options.formatParams,
         formatResponse: this.options.formatResponse,
