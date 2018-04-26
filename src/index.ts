@@ -28,7 +28,13 @@ import * as path from 'path'
 import customFieldResolver from './customFieldResolver'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
-import { SubscriptionServerOptions, Options, OptionsWithHttps, OptionsWithoutHttps, Props } from './types'
+import {
+  SubscriptionServerOptions,
+  Options,
+  OptionsWithHttps,
+  OptionsWithoutHttps,
+  Props,
+} from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
@@ -261,7 +267,9 @@ export class GraphQLServer {
     options: Options,
     callback?: ((options: Options) => void),
   ): Promise<HttpServer | HttpsServer>
-  start(callback?: ((options: Options) => void)): Promise<HttpServer | HttpsServer>
+  start(
+    callback?: ((options: Options) => void),
+  ): Promise<HttpServer | HttpsServer>
   start(
     optionsOrCallback?: Options | ((options: Options) => void),
     callback?: ((options: Options) => void),
