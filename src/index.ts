@@ -187,6 +187,17 @@ export class GraphQLServer {
       app.post(this.options.endpoint, apolloUploadExpress())
     }
 
+    if (this.options.playground) {
+      const playgroundOptions = subscriptionServerOptions
+        ? {
+            endpoint: this.options.endpoint,
+            subscriptionsEndpoint: subscriptionServerOptions.path,
+          }
+        : { endpoint: this.options.endpoint }
+
+      app.get(this.options.playground, expressPlayground(playgroundOptions))
+    }
+
     // All middlewares added before start() was called are applied to
     // the express application here, in the order they were provided
     // (following Queue pattern)
@@ -243,17 +254,6 @@ export class GraphQLServer {
         }
       }),
     )
-
-    if (this.options.playground) {
-      const playgroundOptions = subscriptionServerOptions
-        ? {
-            endpoint: this.options.endpoint,
-            subscriptionsEndpoint: subscriptionServerOptions.path,
-          }
-        : { endpoint: this.options.endpoint }
-
-      app.get(this.options.playground, expressPlayground(playgroundOptions))
-    }
 
     if (!this.executableSchema) {
       throw new Error('No schema defined')
