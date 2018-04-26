@@ -21,18 +21,25 @@ import {
 import { importSchema } from 'graphql-import'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
-import { createServer, Server } from 'http'
+import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
+import { createServer, Server as HttpServer } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
 import * as path from 'path'
 import customFieldResolver from './customFieldResolver'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
-import { SubscriptionServerOptions, Options, Props } from './types'
+import {
+  SubscriptionServerOptions,
+  Options,
+  OptionsWithHttps,
+  OptionsWithoutHttps,
+  Props,
+} from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
 export { PubSub, withFilter } from 'graphql-subscriptions'
-export { Options }
+export { Options, OptionsWithHttps, OptionsWithoutHttps }
 export { GraphQLServerLambda } from './lambda'
 
 // TODO remove once `@types/graphql` is fixed for `execute`
@@ -51,6 +58,7 @@ type ExecuteFunction = (
 export class GraphQLServer {
   express: express.Application
   subscriptionServer: SubscriptionServer | null
+  subscriptionServerOptions: SubscriptionServerOptions | null = null
   options: Options = {
     tracing: { mode: 'http-header' },
     port: process.env.PORT || 4000,
@@ -100,6 +108,13 @@ export class GraphQLServer {
         },
       })
     }
+
+    if (props.middlewares) {
+      this.executableSchema = applyFieldMiddleware(
+        this.executableSchema,
+        ...props.middlewares,
+      )
+    }
   }
 
   // use, get and post mimic the methods on express.Application
@@ -122,32 +137,15 @@ export class GraphQLServer {
     return this
   }
 
-  start(
-    options: Options,
-    callback?: ((options: Options) => void),
-  ): Promise<Server | HttpsServer>
-  start(callback?: ((options: Options) => void)): Promise<Server | HttpsServer>
-  start(
-    optionsOrCallback?: Options | ((options: Options) => void),
-    callback?: ((options: Options) => void),
-  ): Promise<Server | HttpsServer> {
-    const options =
-      optionsOrCallback && typeof optionsOrCallback === 'function'
-        ? {}
-        : optionsOrCallback
-    const callbackFunc = callback
-      ? callback
-      : optionsOrCallback && typeof optionsOrCallback === 'function'
-        ? optionsOrCallback
-        : () => null
-
+  createHttpServer(options: OptionsWithoutHttps): HttpServer
+  createHttpServer(options: OptionsWithHttps): HttpsServer
+  createHttpServer(options: Options): HttpServer | HttpsServer {
     const app = this.express
 
     this.options = { ...this.options, ...options }
 
-    let subscriptionServerOptions: SubscriptionServerOptions | null = null
     if (this.options.subscriptions) {
-      subscriptionServerOptions =
+      this.subscriptionServerOptions =
         typeof this.options.subscriptions === 'string'
           ? { path: this.options.subscriptions }
           : { path: '/', ...this.options.subscriptions }
@@ -226,7 +224,10 @@ export class GraphQLServer {
           formatError: this.options.formatError || defaultErrorFormatter,
           logFunction: this.options.logFunction,
           rootValue: this.options.rootValue,
-          validationRules: this.options.validationRules,
+          validationRules:
+            typeof this.options.validationRules === 'function'
+              ? this.options.validationRules(request, response)
+              : this.options.validationRules,
           fieldResolver: this.options.fieldResolver || customFieldResolver,
           formatParams: this.options.formatParams,
           formatResponse: this.options.formatResponse,
@@ -235,12 +236,46 @@ export class GraphQLServer {
         }
       }),
     )
+    
+    // Only add GET endpoint if opted in
+    if (this.options.getEndpoint) {
+      app.get(
+        this.options.getEndpoint === true ? this.options.endpoint : this.options.getEndpoint,
+        graphqlExpress(async (request, response) => {
+          let context
+          try {
+            context =
+              typeof this.context === 'function'
+                ? await this.context({ request, response })
+                : this.context
+          } catch (e) {
+            console.error(e)
+            throw e
+          }
+
+          return {
+            schema: this.executableSchema,
+            tracing: tracing(request),
+            cacheControl: this.options.cacheControl,
+            formatError: this.options.formatError || defaultErrorFormatter,
+            logFunction: this.options.logFunction,
+            rootValue: this.options.rootValue,
+            validationRules: this.options.validationRules,
+            fieldResolver: this.options.fieldResolver || customFieldResolver,
+            formatParams: this.options.formatParams,
+            formatResponse: this.options.formatResponse,
+            debug: this.options.debug,
+            context,
+          }
+        }),
+      )
+    }
 
     if (this.options.playground) {
-      const playgroundOptions = subscriptionServerOptions
+      const playgroundOptions = this.subscriptionServerOptions
         ? {
             endpoint: this.options.endpoint,
-            subscriptionsEndpoint: subscriptionServerOptions.path,
+            subscriptionsEndpoint: this.subscriptionServerOptions.path,
           }
         : { endpoint: this.options.endpoint }
 
@@ -251,69 +286,92 @@ export class GraphQLServer {
       throw new Error('No schema defined')
     }
 
+    const server = this.options.https
+      ? createHttpsServer(this.options.https, app)
+      : createServer(app)
+
+    if (this.subscriptionServerOptions) {
+      this.createSubscriptionServer(server)
+    }
+
+    return server
+  }
+
+  start(
+    options: Options,
+    callback?: ((options: Options) => void),
+  ): Promise<HttpServer | HttpsServer>
+  start(
+    callback?: ((options: Options) => void),
+  ): Promise<HttpServer | HttpsServer>
+  start(
+    optionsOrCallback?: Options | ((options: Options) => void),
+    callback?: ((options: Options) => void),
+  ): Promise<HttpServer | HttpsServer> {
+    const options =
+      optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? {}
+        : optionsOrCallback
+    const callbackFunc = callback
+      ? callback
+      : optionsOrCallback && typeof optionsOrCallback === 'function'
+        ? optionsOrCallback
+        : () => null
+
+    const server = this.createHttpServer(options as Options)
+
     return new Promise((resolve, reject) => {
-      const server: Server | HttpsServer = this.options.https
-        ? createHttpsServer(this.options.https, app)
-        : createServer(app)
-
-      if (!subscriptionServerOptions) {
-        server.listen(this.options.port, () => {
-          callbackFunc(this.options)
-          resolve(server)
-        })
-      } else {
-        const combinedServer = server
-        combinedServer.listen(this.options.port, () => {
-          callbackFunc(this.options)
-          resolve(combinedServer)
-        })
-
-        this.subscriptionServer = SubscriptionServer.create(
-          {
-            schema: this.executableSchema,
-            // TODO remove once `@types/graphql` is fixed for `execute`
-            execute: execute as ExecuteFunction,
-            subscribe,
-            onConnect: subscriptionServerOptions.onConnect
-              ? subscriptionServerOptions.onConnect
-              : async (connectionParams, webSocket) => ({
-                  ...connectionParams,
-                }),
-            onDisconnect: subscriptionServerOptions.onDisconnect,
-            onOperation: async (message, connection, webSocket) => {
-              // The following should be replaced when SubscriptionServer accepts a formatError
-              // parameter for custom error formatting.
-              // See https://github.com/apollographql/subscriptions-transport-ws/issues/182
-              connection.formatResponse = value => ({
-                ...value,
-                errors:
-                  value.errors &&
-                  value.errors.map(
-                    this.options.formatError || defaultErrorFormatter,
-                  ),
-              })
-
-              let context
-              try {
-                context =
-                  typeof this.context === 'function'
-                    ? await this.context({ connection })
-                    : this.context
-              } catch (e) {
-                console.error(e)
-                throw e
-              }
-              return { ...connection, context }
-            },
-            keepAlive: subscriptionServerOptions.keepAlive,
-          },
-          {
-            server: combinedServer,
-            path: subscriptionServerOptions.path,
-          },
-        )
-      }
+      const combinedServer = server
+      combinedServer.listen(this.options.port, () => {
+        callbackFunc(this.options)
+        resolve(combinedServer)
+      })
     })
+  }
+
+  private createSubscriptionServer(combinedServer: HttpServer | HttpsServer) {
+    this.subscriptionServer = SubscriptionServer.create(
+      {
+        schema: this.executableSchema,
+        // TODO remove once `@types/graphql` is fixed for `execute`
+        execute: execute as ExecuteFunction,
+        subscribe,
+        onConnect: this.subscriptionServerOptions.onConnect
+          ? this.subscriptionServerOptions.onConnect
+          : async (connectionParams, webSocket) => ({ ...connectionParams }),
+        onDisconnect: this.subscriptionServerOptions.onDisconnect,
+        onOperation: async (message, connection, webSocket) => {
+          // The following should be replaced when SubscriptionServer accepts a formatError
+          // parameter for custom error formatting.
+          // See https://github.com/apollographql/subscriptions-transport-ws/issues/182
+          connection.formatResponse = value => ({
+            ...value,
+            errors:
+              value.errors &&
+              value.errors.map(
+                this.options.formatError || defaultErrorFormatter,
+              ),
+          })
+
+          let context
+          try {
+            context =
+              typeof this.context === 'function'
+                ? await this.context({ connection })
+                : this.context
+          } catch (e) {
+            console.error(e)
+            throw e
+          }
+          return { ...connection, context }
+        },
+        keepAlive: this.subscriptionServerOptions.keepAlive,
+      },
+      {
+        server: combinedServer,
+        path: this.subscriptionServerOptions.path,
+      },
+    )
   }
 }
 

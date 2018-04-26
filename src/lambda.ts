@@ -85,6 +85,12 @@ export class GraphQLServerLambda {
         throw e
       }
 
+      if (typeof this.options.validationRules === 'function') {
+        throw new Error(
+          'validationRules as callback is only compatible with Express',
+        )
+      }
+
       return {
         schema: this.executableSchema,
         tracing: tracing(event),
