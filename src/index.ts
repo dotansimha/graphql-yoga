@@ -34,6 +34,7 @@ import {
   OptionsWithHttps,
   OptionsWithoutHttps,
   Props,
+  ValidationRules,
 } from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
@@ -65,6 +66,7 @@ export class GraphQLServer {
     endpoint: '/',
     subscriptions: '/',
     playground: '/',
+    getEndpoint: false,
   }
   executableSchema: GraphQLSchema
   context: any
@@ -236,11 +238,13 @@ export class GraphQLServer {
         }
       }),
     )
-    
+
     // Only add GET endpoint if opted in
     if (this.options.getEndpoint) {
       app.get(
-        this.options.getEndpoint === true ? this.options.endpoint : this.options.getEndpoint,
+        this.options.getEndpoint === true
+          ? this.options.endpoint
+          : this.options.getEndpoint,
         graphqlExpress(async (request, response) => {
           let context
           try {
@@ -260,7 +264,7 @@ export class GraphQLServer {
             formatError: this.options.formatError || defaultErrorFormatter,
             logFunction: this.options.logFunction,
             rootValue: this.options.rootValue,
-            validationRules: this.options.validationRules,
+            validationRules: this.options.validationRules as ValidationRules,
             fieldResolver: this.options.fieldResolver || customFieldResolver,
             formatParams: this.options.formatParams,
             formatResponse: this.options.formatResponse,
