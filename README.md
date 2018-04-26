@@ -41,7 +41,7 @@ yarn add graphql-yoga
 
 ## Usage
 
-### Quickstart ([Hosted demo](https://hello-world-myitqprcqm.now.sh))
+### Quickstart ([Hosted demo](https://demo-graphql-yoga.glitch.me))
 
 ```ts
 import { GraphQLServer } from 'graphql-yoga'
