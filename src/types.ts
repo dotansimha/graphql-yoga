@@ -87,7 +87,7 @@ export interface Options extends ApolloServerOptions {
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
   https?: HttpsOptions
-  getEndpoint: string | boolean
+  getEndpoint?: string | boolean
 }
 
 export interface OptionsWithHttps extends Options {
