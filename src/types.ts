@@ -10,6 +10,7 @@ import {
 } from 'graphql'
 import {
   IDirectiveResolvers,
+  IResolverValidationOptions,
   ITypeDefinitions,
 } from 'graphql-tools/dist/Interfaces'
 import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
@@ -109,6 +110,7 @@ export interface Props {
   }
   typeDefs?: ITypeDefinitions
   resolvers?: IResolvers
+  resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
   middlewares?: IFieldMiddleware[]

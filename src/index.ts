@@ -91,6 +91,7 @@ export class GraphQLServer {
         directiveResolvers,
         schemaDirectives,
         resolvers,
+        resolverValidationOptions,
         typeDefs,
       } = props
 
@@ -108,6 +109,7 @@ export class GraphQLServer {
           ...uploadMixin,
           ...resolvers,
         },
+        resolverValidationOptions,
       })
     }
 
