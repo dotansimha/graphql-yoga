@@ -87,6 +87,7 @@ export interface Options extends ApolloServerOptions {
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
   https?: HttpsOptions
+  deduplicator?: boolean
   getEndpoint?: string | boolean
 }
 
@@ -130,4 +131,5 @@ export interface LambdaProps {
 
 export interface LambdaOptions extends ApolloServerOptions {
   endpoint?: string
+  deduplicator?: boolean
 }

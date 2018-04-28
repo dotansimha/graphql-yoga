@@ -19,6 +19,7 @@ import {
   ExecutionResult,
 } from 'graphql'
 import { importSchema } from 'graphql-import'
+import { deflate } from 'graphql-deduplicator'
 import expressPlayground from 'graphql-playground-middleware-express'
 import { makeExecutableSchema } from 'graphql-tools'
 import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
@@ -63,6 +64,7 @@ export class GraphQLServer {
   options: Options = {
     tracing: { mode: 'http-header' },
     port: process.env.PORT || 4000,
+    deduplicator: true,
     endpoint: '/',
     subscriptions: '/',
     playground: '/',
@@ -166,6 +168,25 @@ export class GraphQLServer {
       }
     }
 
+    const formatResponse = (req: express.Request) => {
+      if (!this.options.deduplicator) {
+        return this.options.formatResponse
+      }
+      return (response, ...args) => {
+        if (
+          req.get('X-GraphQL-Deduplicate') &&
+          response.data &&
+          !response.data.__schema
+        ) {
+          response.data = deflate(response.data)
+        }
+
+        return this.options.formatResponse
+          ? this.options.formatResponse(response, ...args)
+          : response
+      }
+    }
+
     // CORS support
     if (this.options.cors) {
       app.use(cors(this.options.cors))
@@ -234,7 +255,7 @@ export class GraphQLServer {
               : this.options.validationRules,
           fieldResolver: this.options.fieldResolver || customFieldResolver,
           formatParams: this.options.formatParams,
-          formatResponse: this.options.formatResponse,
+          formatResponse: formatResponse(request),
           debug: this.options.debug,
           context,
         }
