@@ -89,6 +89,7 @@ export interface Options extends ApolloServerOptions {
   https?: HttpsOptions
   deduplicator?: boolean
   getEndpoint?: string | boolean
+  bodyParserOptions?: BodyParserJSONOptions
 }
 
 export interface OptionsWithHttps extends Options {
@@ -132,4 +133,13 @@ export interface LambdaProps {
 export interface LambdaOptions extends ApolloServerOptions {
   endpoint?: string
   deduplicator?: boolean
+}
+
+export interface BodyParserJSONOptions {
+  limit?: number | string,
+  inflate?: boolean,
+  reviver?: any,
+  strict?: boolean,
+  type?: string,
+  verify?: any,
 }
