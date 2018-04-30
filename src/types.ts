@@ -44,6 +44,7 @@ export interface ContextParameters {
 
 export type ContextCallback = (params: ContextParameters) => Context
 
+// check https://github.com/jaydenseric/apollo-upload-server#options for documentation
 export interface UploadOptions {
   maxFieldSize?: number
   maxFileSize?: number
