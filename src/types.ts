@@ -10,12 +10,15 @@ import {
 } from 'graphql'
 import {
   IDirectiveResolvers,
+  IResolverValidationOptions,
   ITypeDefinitions,
 } from 'graphql-tools/dist/Interfaces'
 import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
+import { IMiddleware as IFieldMiddleware } from 'graphql-middleware'
 
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 export interface IResolvers {
   [key: string]: (() => any) | IResolverObject | GraphQLScalarType
 }
@@ -41,6 +44,7 @@ export interface ContextParameters {
 
 export type ContextCallback = (params: ContextParameters) => Context
 
+// check https://github.com/jaydenseric/apollo-upload-server#options for documentation
 export interface UploadOptions {
   maxFieldSize?: number
   maxFileSize?: number
@@ -51,13 +55,20 @@ export interface TracingOptions {
   mode: 'enabled' | 'disabled' | 'http-header'
 }
 
+export type ValidationRules = Array<(context: ValidationContext) => any>
+
+export type ValidationRulesExpressCallback = (
+  request: Request,
+  response: Response,
+) => ValidationRules
+
 export interface ApolloServerOptions {
   tracing?: boolean | TracingOptions
   cacheControl?: boolean
   formatError?: Function
   logFunction?: LogFunction
   rootValue?: any
-  validationRules?: Array<(context: ValidationContext) => any>
+  validationRules?: ValidationRules | ValidationRulesExpressCallback
   fieldResolver?: GraphQLFieldResolver<any, any>
   formatParams?: Function
   formatResponse?: Function
@@ -65,8 +76,8 @@ export interface ApolloServerOptions {
 }
 
 export interface HttpsOptions {
-  cert: string
-  key: string
+  cert: string | Buffer
+  key: string | Buffer
 }
 
 export interface Options extends ApolloServerOptions {
@@ -77,7 +88,16 @@ export interface Options extends ApolloServerOptions {
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
   https?: HttpsOptions
+  deduplicator?: boolean
+  getEndpoint?: string | boolean
+  bodyParserOptions?: BodyParserJSONOptions
 }
+
+export interface OptionsWithHttps extends Options {
+  https: HttpsOptions
+}
+
+export type OptionsWithoutHttps = Omit<Options, 'https'>
 
 export interface SubscriptionServerOptions {
   path?: string
@@ -93,8 +113,10 @@ export interface Props {
   }
   typeDefs?: ITypeDefinitions
   resolvers?: IResolvers
+  resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
+  middlewares?: IFieldMiddleware[]
 }
 
 export interface LambdaProps {
@@ -111,4 +133,14 @@ export interface LambdaProps {
 
 export interface LambdaOptions extends ApolloServerOptions {
   endpoint?: string
+  deduplicator?: boolean
+}
+
+export interface BodyParserJSONOptions {
+  limit?: number | string,
+  inflate?: boolean,
+  reviver?: any,
+  strict?: boolean,
+  type?: string,
+  verify?: any,
 }
