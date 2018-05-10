@@ -21,7 +21,7 @@ import {
 import { importSchema } from 'graphql-import'
 import { deflate } from 'graphql-deduplicator'
 import expressPlayground from 'graphql-playground-middleware-express'
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools'
 import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
 import { createServer, Server as HttpServer } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
@@ -40,6 +40,7 @@ import {
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
+export { MockList } from 'graphql-tools'
 export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options, OptionsWithHttps, OptionsWithoutHttps }
 export { GraphQLServerLambda } from './lambda'
@@ -95,6 +96,7 @@ export class GraphQLServer {
         resolvers,
         resolverValidationOptions,
         typeDefs,
+        mocks,
       } = props
 
       const typeDefsString = mergeTypeDefs(typeDefs)
@@ -113,6 +115,15 @@ export class GraphQLServer {
         },
         resolverValidationOptions,
       })
+
+      if (mocks) {
+        addMockFunctionsToSchema({
+          schema: this.executableSchema,
+          mocks: typeof mocks === "object" ? mocks : undefined,
+          preserveResolvers: false,
+        })
+      }
+
     }
 
     if (props.middlewares) {
