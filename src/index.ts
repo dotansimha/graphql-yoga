@@ -36,7 +36,6 @@ import {
   OptionsWithoutHttps,
   Props,
   ValidationRules,
-  BodyParserJSONOptions,
 } from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
