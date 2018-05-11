@@ -126,7 +126,7 @@ The `options` object has the following fields:
 | `uploads`       | [UploadOptions](/src/types.ts#L39-L43) or `false` or `undefined` | `null`          | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading                                                                                   |
 | `https`         | [HttpsOptions](/src/types.ts#L62-L65) or `undefined`             | `undefined`     | Enables HTTPS support with a key/cert
 | `getEndpoint`  | String or Boolean |  `false`  | Adds a graphql HTTP GET endpoint to your server (defaults to `endpoint` if `true`).  Used for leveraging CDN level caching. |
-| `deduplicator` | Boolean | `true` | Enables [graphql-deduplicator](https://github.com/gajus/graphql-deduplicator). Once enabled sending the header `X-GraphQL-Deduplicate` will deduplicate the data.  |
+| `deduplicator` | Boolean | `true` | Enables [graphql-deduplicator](https://github.com/gajus/graphql-deduplicator). Once enabled sending the query param `?deduplicate` will deduplicate the data.  |
 | `bodyParserOptions` | BodyParserJSONOptions | [BodyParserJSONOptions Defaults](https://github.com/expressjs/body-parser#bodyparserjsonoptions) | Allows pass through of [body-parser options](https://github.com/expressjs/body-parser#bodyparserjsonoptions)  |
 
 Additionally, the `options` object exposes these `apollo-server` options:
