@@ -119,11 +119,10 @@ export class GraphQLServer {
       if (mocks) {
         addMockFunctionsToSchema({
           schema: this.executableSchema,
-          mocks: typeof mocks === "object" ? mocks : undefined,
+          mocks: typeof mocks === 'object' ? mocks : undefined,
           preserveResolvers: false,
         })
       }
-
     }
 
     if (props.middlewares) {
@@ -184,9 +183,11 @@ export class GraphQLServer {
         return this.options.formatResponse
       }
       return (response, ...args) => {
+        const truthyValues = ['', '1', 'true']
+
         if (
-          (req.get('X-GraphQL-Deduplicate') ||
-            req.query.deduplicate !== undefined) &&
+          (truthyValues.includes(req.query.deduplicate) ||
+            req.get('X-GraphQL-Deduplicate')) &&
           response.data &&
           !response.data.__schema
         ) {

@@ -134,6 +134,7 @@ test('Response data can be deduplicated with graphql-deduplicator', async t => {
     body: { query },
   }).promise()
 
+  // The use of a header is deprecated but should work
   const deduplicatedWithHeader = await request({
     uri,
     method: 'POST',
