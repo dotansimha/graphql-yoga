@@ -175,7 +175,8 @@ export class GraphQLServer {
       }
       return (response, ...args) => {
         if (
-          req.get('X-GraphQL-Deduplicate') &&
+          (req.get('X-GraphQL-Deduplicate') ||
+            req.query.deduplicate !== undefined) &&
           response.data &&
           !response.data.__schema
         ) {
@@ -195,7 +196,10 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    app.post(this.options.endpoint, bodyParser.graphql(this.options.bodyParserOptions))
+    app.post(
+      this.options.endpoint,
+      bodyParser.graphql(this.options.bodyParserOptions),
+    )
 
     if (this.options.uploads) {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
