@@ -183,10 +183,8 @@ export class GraphQLServer {
         return this.options.formatResponse
       }
       return (response, ...args) => {
-        const truthyValues = ['', '1', 'true']
-
         if (
-          (truthyValues.includes(req.query.deduplicate) ||
+          (isTrulyQueryParam(req.query.deduplicate) ||
             req.get('X-GraphQL-Deduplicate')) &&
           response.data &&
           !response.data.__schema
@@ -458,4 +456,13 @@ function mergeTypeDefs(typeDefs: ITypeDefinitions): string {
 
 function isDocumentNode(node: any): node is DocumentNode {
   return node.kind === 'Document'
+}
+
+/**
+ * Normalises GET parameter values into a boolean.
+ * Returns true in the following cases:
+ * ?value ?value= ?value=1 ?value=true
+ */
+function isTrulyQueryParam(value: string) {
+  return value === '' || value === '1' || value === 'true'
 }
