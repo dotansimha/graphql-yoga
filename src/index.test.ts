@@ -4,11 +4,11 @@ import { GraphQLServer, Options } from './index'
 import { promisify } from 'util'
 import * as request from 'request-promise-native'
 
-async function startServer(
-  t: TestContext & Context<any>,
-  options?: Options
-) {
-  const randomId = () => Math.random().toString(36).substr(2, 5)
+async function startServer(t: TestContext & Context<any>, options?: Options) {
+  const randomId = () =>
+    Math.random()
+      .toString(36)
+      .substr(2, 5)
 
   const typeDefs = `
     type Author {
@@ -33,18 +33,18 @@ async function startServer(
     __typename: 'Author',
     id: randomId(),
     name: 'Jhon',
-    lastName: 'Doe'
+    lastName: 'Doe',
   }
   const book = {
     __typename: 'Book',
     id: randomId(),
     name: 'Awesome',
-    author
+    author,
   }
   const resolvers = {
     Query: {
       hello: (_, { name }) => `Hello ${name || 'World'}`,
-      books: () => Array(5).fill(book)
+      books: () => Array(5).fill(book),
     },
   }
 
@@ -70,7 +70,7 @@ test.afterEach.always('stop graphql servers', async t => {
 
   if (httpServers && httpServers.length) {
     await Promise.all(
-      httpServers.map(server => promisify(server.close).call(server))
+      httpServers.map(server => promisify(server.close).call(server)),
     )
   }
 })
@@ -99,7 +99,10 @@ test('works with simple hello world server', async t => {
 })
 
 test('Response data can be deduplicated with graphql-deduplicator', async t => {
-  const { uri, data: { book } } = await startServer(t)
+  const {
+    uri,
+    data: { book },
+  } = await startServer(t)
 
   const query = `
     query {
@@ -130,14 +133,14 @@ test('Response data can be deduplicated with graphql-deduplicator', async t => {
     json: true,
     body: { query },
     headers: {
-      'X-GraphQL-Deduplicate': true
-    }
+      'X-GraphQL-Deduplicate': true,
+    },
   }).promise()
 
   t.deepEqual(body, {
     data: {
-      books: Array(5).fill(book)
-    }
+      books: Array(5).fill(book),
+    },
   })
 
   t.deepEqual(deduplicated, {
@@ -146,18 +149,21 @@ test('Response data can be deduplicated with graphql-deduplicator', async t => {
         book,
         ...Array(4).fill({
           __typename: book.__typename,
-          id: book.id
-        })
-      ]
-    }
+          id: book.id,
+        }),
+      ],
+    },
   })
 
   t.deepEqual(body.data, inflate(deduplicated.data))
 })
 
 test('graphql-deduplicated can be completely disabled', async t => {
-  const { uri, data: { book } } = await startServer(t, {
-    deduplicator: false
+  const {
+    uri,
+    data: { book },
+  } = await startServer(t, {
+    deduplicator: false,
   })
 
   const query = `
@@ -182,13 +188,13 @@ test('graphql-deduplicated can be completely disabled', async t => {
     json: true,
     body: { query },
     headers: {
-      'X-GraphQL-Deduplicate': true
-    }
+      'X-GraphQL-Deduplicate': true,
+    },
   }).promise()
 
   t.deepEqual(body, {
     data: {
-      books: Array(5).fill(book)
-    }
+      books: Array(5).fill(book),
+    },
   })
 })

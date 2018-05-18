@@ -119,11 +119,10 @@ export class GraphQLServer {
       if (mocks) {
         addMockFunctionsToSchema({
           schema: this.executableSchema,
-          mocks: typeof mocks === "object" ? mocks : undefined,
+          mocks: typeof mocks === 'object' ? mocks : undefined,
           preserveResolvers: false,
         })
       }
-
     }
 
     if (props.middlewares) {
@@ -205,7 +204,10 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    app.post(this.options.endpoint, bodyParser.graphql(this.options.bodyParserOptions))
+    app.post(
+      this.options.endpoint,
+      bodyParser.graphql(this.options.bodyParserOptions),
+    )
 
     if (this.options.uploads) {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))

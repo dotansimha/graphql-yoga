@@ -139,10 +139,10 @@ export interface LambdaOptions extends ApolloServerOptions {
 }
 
 export interface BodyParserJSONOptions {
-  limit?: number | string,
-  inflate?: boolean,
-  reviver?: any,
-  strict?: boolean,
-  type?: string,
-  verify?: any,
+  limit?: number | string
+  inflate?: boolean
+  reviver?: any
+  strict?: boolean
+  type?: string
+  verify?: any
 }
