@@ -16,6 +16,7 @@ import {
 import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
+import { IMocks } from 'graphql-tools'
 import { IMiddleware as IFieldMiddleware } from 'graphql-middleware'
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
@@ -116,6 +117,7 @@ export interface Props {
   resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
+  mocks?: IMocks
   middlewares?: IFieldMiddleware[]
 }
 
@@ -137,10 +139,10 @@ export interface LambdaOptions extends ApolloServerOptions {
 }
 
 export interface BodyParserJSONOptions {
-  limit?: number | string,
-  inflate?: boolean,
-  reviver?: any,
-  strict?: boolean,
-  type?: string,
-  verify?: any,
+  limit?: number | string
+  inflate?: boolean
+  reviver?: any
+  strict?: boolean
+  type?: string
+  verify?: any
 }

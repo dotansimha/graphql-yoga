@@ -21,7 +21,7 @@ import {
 import { importSchema } from 'graphql-import'
 import { deflate } from 'graphql-deduplicator'
 import expressPlayground from 'graphql-playground-middleware-express'
-import { makeExecutableSchema, defaultMergedResolver } from 'graphql-tools'
+import { makeExecutableSchema, addMockFunctionsToSchema, defaultMergedResolver } from 'graphql-tools'
 import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
 import { createServer, Server as HttpServer } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
@@ -35,11 +35,11 @@ import {
   OptionsWithoutHttps,
   Props,
   ValidationRules,
-  BodyParserJSONOptions,
 } from './types'
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
+export { MockList } from 'graphql-tools'
 export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options, OptionsWithHttps, OptionsWithoutHttps }
 export { GraphQLServerLambda } from './lambda'
@@ -95,6 +95,7 @@ export class GraphQLServer {
         resolvers,
         resolverValidationOptions,
         typeDefs,
+        mocks,
       } = props
 
       const typeDefsString = mergeTypeDefs(typeDefs)
@@ -113,6 +114,14 @@ export class GraphQLServer {
         },
         resolverValidationOptions,
       })
+
+      if (mocks) {
+        addMockFunctionsToSchema({
+          schema: this.executableSchema,
+          mocks: typeof mocks === 'object' ? mocks : undefined,
+          preserveResolvers: false,
+        })
+      }
     }
 
     if (props.middlewares) {
@@ -194,7 +203,10 @@ export class GraphQLServer {
       app.use(cors())
     }
 
-    app.post(this.options.endpoint, bodyParser.graphql(this.options.bodyParserOptions))
+    app.post(
+      this.options.endpoint,
+      bodyParser.graphql(this.options.bodyParserOptions),
+    )
 
     if (this.options.uploads) {
       app.post(this.options.endpoint, apolloUploadExpress(this.options.uploads))
