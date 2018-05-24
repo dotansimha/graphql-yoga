@@ -19,7 +19,6 @@ export class GraphQLServerLambda {
   constructor(props: LambdaProps) {
     const defaultOptions: LambdaOptions = {
       tracing: { mode: 'http-header' },
-      endpoint: '/',
       deduplicator: true,
     }
     this.options = { ...defaultOptions, ...props.options }
