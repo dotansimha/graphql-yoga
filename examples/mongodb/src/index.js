@@ -4,7 +4,7 @@ import resolvers from './graphql/resolvers';
 
 const db = startDB({ 
   user: 'graphql', 
-  password: 'yoga123', 
+  pwd: 'yoga123', 
   db: 'graphqlYoga', 
   url: 'localhost:27017' 
 })
