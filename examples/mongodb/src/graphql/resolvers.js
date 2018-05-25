@@ -7,7 +7,7 @@ export default {
     },
   },
   Mutation: {
-    createPost: (parent, { title, desc, author }, { models }) => {
+    createPost: async (parent, { title, desc, author }, { models }) => {
       const Post = await models.Post.findOne({ title });
 
       if (Post) {
