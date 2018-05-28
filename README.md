@@ -166,7 +166,7 @@ See the original documentation in [`graphql-subscriptions`](https://github.com/a
 
 #### `mocking`
 
-Mocking the schema is straight forward, along wit
+Mocking the schema is straight forward, along with
 ```javascript
 import { GraphqlServer, MockList } from 'graphql-yoga';
 
@@ -185,7 +185,7 @@ const mocks = {
 
 }
 
-const server = new GraphQLServer({ typeDefs, mocks })
+const server = new GraphQLServer({ typeDefs, resolvers: () => true, mocks })
 ```
 
 ### Endpoints
