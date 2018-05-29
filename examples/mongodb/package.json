@@ -1,0 +1,30 @@
+{
+  "name": "yoga-mongodb",
+  "version": "0.0.0",
+  "description": "GraphQL-YOGA Example with mongodb",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm run test",
+    "dev": "nodemon --exec babel-node src/index.js",
+    "build": "NODE_ENV=PRODUCTION babel src -d dist --copy-files",
+    "serve": "NODE_ENV=production node dist/index.js"
+  },
+  "keywords": [
+    "gql",
+    "yoga",
+    "mongodb"
+  ],
+  "author": "Daksh Miglani <hello@dak.sh>",
+  "license": "MIT",
+  "dependencies": {
+    "graphql-yoga": "^1.14.4",
+    "mongoose": "^5.1.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "nodemon": "^1.17.5"
+  }
+}
