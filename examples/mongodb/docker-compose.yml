@@ -1,0 +1,16 @@
+version: "3"
+services:
+  db:
+    image: "bitnami/mongodb:latest"
+    ports:
+      - '27017:27017'
+    networks:
+      - net
+    environment:
+      MONGODB_USERNAME: graphql
+      MONGODB_PASSWORD: yoga123
+      MONGODB_DATABASE: graphqlYoga
+    volumes:
+      - './containers/mongo:/data/db'
+networks:
+  net:
