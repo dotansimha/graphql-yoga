@@ -10,24 +10,7 @@ async function startServer(t: TestContext & Context<any>, options?: Options) {
       .toString(36)
       .substr(2, 5)
 
-  const typeDefs = `
-    type Author {
-      id: ID!
-      name: String!
-      lastName: String!
-    }
-
-    type Book {
-      id: ID!
-      name: String!
-      author: Author!
-    }
-
-    type Query {
-      hello(name: String): String!
-      books: [Book!]!
-    }
-    `
+  const typeDefs = __dirname + '/__fixtures__/schema.graphql'
 
   const author = {
     __typename: 'Author',

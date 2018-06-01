@@ -28,10 +28,12 @@
     "build": "rm -rf dist && tsc -d",
     "lint": "tslint --project tsconfig.json {src,test}/**/*.ts && prettier-check --ignore-path .gitignore {src,.}/{*.ts,*.js}",
     "format": "prettier --write --ignore-path .gitignore {src,.}/{*.ts,*.js}",
-    "test": "yarn lint && yarn build && ava",
+    "test": "yarn lint && yarn build && yarn cpx-fixtures && ava",
+    "cpx-fixtures": "cpx \"src/**/*.graphql\" dist",
+    "watch:schema": "yarn cpx-fixtures -- --watch",
     "watch:tsc": "tsc --watch",
     "watch:ava": "ava --watch",
-    "watch": "yarn build && npm-run-all --parallel watch:*"
+    "watch": "yarn test && npm-run-all --parallel watch:*"
   },
   "release": {
     "branch": "master"
@@ -68,6 +70,7 @@
     "@types/aws-lambda": "8.10.3",
     "@types/request-promise-native": "1.0.14",
     "ava": "0.25.0",
+    "cpx": "^1.5.0",
     "npm-run-all": "4.1.3",
     "prettier": "1.12.1",
     "prettier-check": "2.0.0",
