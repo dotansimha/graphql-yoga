@@ -127,20 +127,20 @@ export class GraphQLServerLambda {
         debug: this.options.debug,
       }
     })
-    return handler(event, context, callbackFilter)
+    handler(event, context, callbackFilter)
   }
 
   playgroundHandler = (event, lambdaContext, callback) => {
-    return lambdaPlayground({
+    lambdaPlayground({
       endpoint: this.options.endpoint,
     })(event, lambdaContext, callback)
   }
 
   handler = (event, lambdaContext, callback) => {
     if (event.httpMethod === 'GET') {
-      return this.playgroundHandler(event, lambdaContext, callback)
+      this.playgroundHandler(event, lambdaContext, callback)
     } else {
-      return this.graphqlHandler(event, lambdaContext, callback)
+      this.graphqlHandler(event, lambdaContext, callback)
     }
   }
 }
