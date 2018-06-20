@@ -25,12 +25,12 @@ export interface IResolvers {
 }
 
 export type IResolverObject = {
-  [key: string]: GraphQLFieldResolver<any, any> | IResolverOptions
+  [key: string]: GraphQLFieldResolver<any, any, any> | IResolverOptions
 }
 
 export interface IResolverOptions {
-  resolve?: GraphQLFieldResolver<any, any>
-  subscribe?: GraphQLFieldResolver<any, any>
+  resolve?: GraphQLFieldResolver<any, any, any>
+  subscribe?: GraphQLFieldResolver<any, any, any>
   __resolveType?: GraphQLTypeResolver<any, any>
   __isTypeOf?: GraphQLIsTypeOfFn<any, any>
 }
@@ -70,7 +70,7 @@ export interface ApolloServerOptions {
   logFunction?: LogFunction
   rootValue?: any
   validationRules?: ValidationRules | ValidationRulesExpressCallback
-  fieldResolver?: GraphQLFieldResolver<any, any>
+  fieldResolver?: GraphQLFieldResolver<any, any, any>
   formatParams?: Function
   formatResponse?: Function
   debug?: boolean
