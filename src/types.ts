@@ -107,7 +107,11 @@ export interface SubscriptionServerOptions {
   keepAlive?: number
 }
 
-export interface Props {
+export interface Props<
+  TMiddlewareSource = any,
+  TMiddlewareContext = any,
+  TMiddlewareArgs = any
+> {
   directiveResolvers?: IDirectiveResolvers<any, any>
   schemaDirectives?: {
     [name: string]: typeof SchemaDirectiveVisitor
@@ -118,7 +122,11 @@ export interface Props {
   schema?: GraphQLSchema
   context?: Context | ContextCallback
   mocks?: IMocks
-  middlewares?: IFieldMiddleware[]
+  middlewares?: IFieldMiddleware<
+    TMiddlewareSource,
+    TMiddlewareContext,
+    TMiddlewareArgs
+  >[]
 }
 
 export interface LambdaProps {
