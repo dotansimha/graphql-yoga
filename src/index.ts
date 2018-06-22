@@ -1,3 +1,4 @@
+import { AddressInfo } from 'net'
 import { graphqlExpress } from 'apollo-server-express'
 import { apolloUploadExpress, GraphQLUpload } from 'apollo-upload-server'
 import * as bodyParser from 'body-parser-graphql'
@@ -240,7 +241,7 @@ export class GraphQLServer {
         app.post(middleware.path, ...middleware.handlers)
       }
     }
-
+    let self = this
     app.post(
       this.options.endpoint,
       graphqlExpress(async (request, response) => {
@@ -273,6 +274,14 @@ export class GraphQLServer {
           context,
         }
       }),
+      (err, req, res, next) => {
+        if (self.options.debug) {
+          return next(err)
+        }
+        console.error('uncaught graphql yoga error', err)
+        res.status(500)
+        res.send('server error')
+      },
     )
 
     // Only add GET endpoint if opted in
@@ -308,6 +317,14 @@ export class GraphQLServer {
             context,
           }
         }),
+        (err, req, res, next) => {
+          if (self.options.debug) {
+            return next(err)
+          }
+          console.error('uncaught graphql yoga error', err)
+          res.status(500)
+          res.send('server error')
+        },
       )
     }
 
@@ -365,7 +382,7 @@ export class GraphQLServer {
       combinedServer.listen(this.options.port, () => {
         callbackFunc({
           ...this.options,
-          port: combinedServer.address().port,
+          port: (combinedServer.address() as AddressInfo).port,
         })
         resolve(combinedServer)
       })

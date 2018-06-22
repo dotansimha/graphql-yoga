@@ -1,3 +1,4 @@
+import { AddressInfo } from 'net'
 import test, { TestContext, Context } from 'ava'
 import { inflate } from 'graphql-deduplicator'
 import { GraphQLServer, Options } from './index'
@@ -50,7 +51,7 @@ async function startServer(t: TestContext & Context<any>, options?: Options) {
 
   const server = new GraphQLServer({ typeDefs, resolvers })
   const http = await server.start({ port: 0, ...options })
-  const { port } = http.address()
+  const { port } = http.address() as AddressInfo
   const uri = `http://localhost:${port}/`
 
   if (t.context.httpServers) {
