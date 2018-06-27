@@ -164,7 +164,7 @@ export class GraphQLServer {
       this.subscriptionServerOptions =
         typeof this.options.subscriptions === 'string'
           ? { path: this.options.subscriptions }
-          : { path: '/', ...this.options.subscriptions }
+          : { path: '/', clientTracking: false, ...this.options.subscriptions }
     }
 
     const tracing = (req: express.Request) => {
@@ -413,6 +413,7 @@ export class GraphQLServer {
       {
         server: combinedServer,
         path: this.subscriptionServerOptions.path,
+        clientTracking: this.subscriptionServerOptions.clientTracking,
       },
     )
   }

@@ -105,6 +105,7 @@ export interface SubscriptionServerOptions {
   onConnect?: Function
   onDisconnect?: Function
   keepAlive?: number
+  clientTracking?: boolean
 }
 
 export interface Props<
