@@ -3,10 +3,9 @@ import * as fs from 'fs'
 import { GraphQLSchema } from 'graphql'
 import { importSchema } from 'graphql-import'
 import lambdaPlayground from 'graphql-playground-middleware-lambda'
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema, defaultMergedResolver } from 'graphql-tools'
 import { deflate } from 'graphql-deduplicator'
 import * as path from 'path'
-import customFieldResolver from './customFieldResolver'
 
 import { LambdaOptions, LambdaProps } from './types'
 
@@ -121,7 +120,7 @@ export class GraphQLServerLambda {
         logFunction: this.options.logFunction,
         rootValue: this.options.rootValue,
         validationRules: this.options.validationRules,
-        fieldResolver: this.options.fieldResolver || customFieldResolver,
+        fieldResolver: this.options.fieldResolver || defaultMergedResolver,
         formatParams: this.options.formatParams,
         formatResponse: formatResponse(event),
         debug: this.options.debug,
