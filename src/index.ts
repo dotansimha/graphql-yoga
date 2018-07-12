@@ -399,7 +399,7 @@ export class GraphQLServer {
           try {
             context =
               typeof this.context === 'function'
-                ? await this.context({ connection })
+                ? await this.context({ connection, webSocket })
                 : this.context
           } catch (e) {
             console.error(e)
