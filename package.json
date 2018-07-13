@@ -3,20 +3,12 @@
   "version": "0.0.0-semantic-release",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/graphcool/graphql-yoga.git"
   },
-  "keywords": [
-    "graphql",
-    "server",
-    "api",
-    "graphql-server",
-    "apollo"
-  ],
+  "keywords": ["graphql", "server", "api", "graphql-server", "apollo"],
   "author": "Johannes Schickling <johannes@graph.cool>",
   "license": "MIT",
   "bugs": {
@@ -26,7 +18,8 @@
   "scripts": {
     "prepublish": "yarn build",
     "build": "rm -rf dist && tsc -d",
-    "lint": "tslint --project tsconfig.json {src,test}/**/*.ts && prettier-check --ignore-path .gitignore {src,.}/{*.ts,*.js}",
+    "lint":
+      "tslint --project tsconfig.json {src,test}/**/*.ts && prettier-check --ignore-path .gitignore {src,.}/{*.ts,*.js}",
     "format": "prettier --write --ignore-path .gitignore {src,.}/{*.ts,*.js}",
     "test": "yarn lint && yarn build && ava",
     "watch:tsc": "tsc --watch",
@@ -37,9 +30,7 @@
     "branch": "master"
   },
   "ava": {
-    "files": [
-      "dist/**/*.test.js"
-    ]
+    "files": ["dist/**/*.test.js"]
   },
   "dependencies": {
     "@types/cors": "^2.8.4",
@@ -57,7 +48,7 @@
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0",
     "graphql-deduplicator": "^2.0.1",
     "graphql-import": "^0.6.0",
-    "graphql-middleware": "1.3.3",
+    "graphql-middleware": "1.5.0",
     "graphql-playground-middleware-express": "1.6.3",
     "graphql-playground-middleware-lambda": "1.6.1",
     "graphql-subscriptions": "^0.5.8",
