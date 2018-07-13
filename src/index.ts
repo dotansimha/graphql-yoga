@@ -21,7 +21,11 @@ import {
 import { importSchema } from 'graphql-import'
 import { deflate } from 'graphql-deduplicator'
 import expressPlayground from 'graphql-playground-middleware-express'
-import { makeExecutableSchema, addMockFunctionsToSchema, defaultMergedResolver } from 'graphql-tools'
+import {
+  makeExecutableSchema,
+  addMockFunctionsToSchema,
+  defaultMergedResolver,
+} from 'graphql-tools'
 import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
 import { createServer, Server as HttpServer } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
@@ -261,7 +265,7 @@ export class GraphQLServer {
           formatError: this.options.formatError || defaultErrorFormatter,
           logFunction: this.options.logFunction,
           rootValue: this.options.rootValue,
-          validationRules: this.options.validationRules,
+          validationRules:
             typeof this.options.validationRules === 'function'
               ? this.options.validationRules(request, response)
               : this.options.validationRules,
@@ -300,7 +304,7 @@ export class GraphQLServer {
             logFunction: this.options.logFunction,
             rootValue: this.options.rootValue,
             validationRules: this.options.validationRules as ValidationRules,
-            fieldResolver: this.options.fieldResolver || customFieldResolver,
+            fieldResolver: this.options.fieldResolver || defaultMergedResolver,
             formatParams: this.options.formatParams,
             formatResponse: this.options.formatResponse,
             debug: this.options.debug,
