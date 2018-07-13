@@ -108,9 +108,9 @@ export interface SubscriptionServerOptions {
 }
 
 export interface Props<
-  TMiddlewareSource = any,
-  TMiddlewareContext = any,
-  TMiddlewareArgs = any
+  TFieldMiddlewareSource = any,
+  TFieldMiddlewareContext = any,
+  TFieldMiddlewareArgs = any
 > {
   directiveResolvers?: IDirectiveResolvers<any, any>
   schemaDirectives?: {
@@ -123,9 +123,9 @@ export interface Props<
   context?: Context | ContextCallback
   mocks?: IMocks
   middlewares?: IFieldMiddleware<
-    TMiddlewareSource,
-    TMiddlewareContext,
-    TMiddlewareArgs
+    TFieldMiddlewareSource,
+    TFieldMiddlewareContext,
+    TFieldMiddlewareArgs
   >[]
 }
 
