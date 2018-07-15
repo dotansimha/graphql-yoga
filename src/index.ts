@@ -68,6 +68,7 @@ export class GraphQLServer {
   options: Options = {
     tracing: { mode: 'http-header' },
     port: process.env.PORT || 4000,
+    host: process.env.HOST,
     deduplicator: true,
     endpoint: '/',
     subscriptions: '/',
@@ -365,13 +366,16 @@ export class GraphQLServer {
 
     return new Promise((resolve, reject) => {
       const combinedServer = server
-      combinedServer.listen(this.options.port, () => {
-        callbackFunc({
-          ...this.options,
-          port: combinedServer.address().port,
-        })
-        resolve(combinedServer)
-      })
+      combinedServer.listen(
+        { port: this.options.port, host: this.options.host },
+        () => {
+          callbackFunc({
+            ...this.options,
+            port: combinedServer.address().port,
+          })
+          resolve(combinedServer)
+        },
+      )
     })
   }
 
