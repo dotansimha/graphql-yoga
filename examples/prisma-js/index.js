@@ -33,7 +33,7 @@ const server = new GraphQLServer({
     ...req,
     prisma: new Prisma({
       typeDefs: './prisma.graphql',
-      endpoint: 'https://eu1.prisma.sh/public-prisma-yoga-example/prisma/dev',
+      endpoint: 'https://eu1.prisma.sh/public-prisma-yoga-example-js/prisma/dev',
       debug: true,
     }),
   }),
