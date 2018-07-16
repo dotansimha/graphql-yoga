@@ -1,0 +1,12 @@
+projects:
+  db:
+    schemaPath: prisma.graphql
+    extensions:
+      endpoints:
+        default: 'https://eu1.prisma.sh/public-prisma-yoga-example-ts/prisma/dev'
+      codegen:
+        - generator: prisma-binding
+          language: typescript
+          input: prisma.graphql
+          output:
+            binding: prisma.ts
