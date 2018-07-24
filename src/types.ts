@@ -136,6 +136,7 @@ export interface LambdaProps {
   }
   typeDefs?: string
   resolvers?: IResolvers
+  resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
   options?: LambdaOptions
