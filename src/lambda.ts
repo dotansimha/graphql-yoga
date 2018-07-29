@@ -4,6 +4,7 @@ import { GraphQLSchema } from 'graphql'
 import { importSchema } from 'graphql-import'
 import lambdaPlayground from 'graphql-playground-middleware-lambda'
 import { makeExecutableSchema, defaultMergedResolver } from 'graphql-tools'
+import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
 import { deflate } from 'graphql-deduplicator'
 import * as path from 'path'
 
@@ -55,6 +56,13 @@ export class GraphQLServerLambda {
         typeDefs,
         resolvers,
       })
+    }
+
+    if (props.middlewares) {
+      this.executableSchema = applyFieldMiddleware(
+        this.executableSchema,
+        ...props.middlewares,
+      )
     }
   }
 
