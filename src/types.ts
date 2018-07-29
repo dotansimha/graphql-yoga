@@ -129,7 +129,11 @@ export interface Props<
   >[]
 }
 
-export interface LambdaProps {
+export interface LambdaProps<
+  TFieldMiddlewareSource = any,
+  TFieldMiddlewareContext = any,
+  TFieldMiddlewareArgs = any
+> {
   directiveResolvers?: IDirectiveResolvers<any, any>
   schemaDirectives?: {
     [name: string]: typeof SchemaDirectiveVisitor
@@ -140,6 +144,11 @@ export interface LambdaProps {
   schema?: GraphQLSchema
   context?: Context | ContextCallback
   options?: LambdaOptions
+  middlewares?: IFieldMiddleware<
+    TFieldMiddlewareSource,
+    TFieldMiddlewareContext,
+    TFieldMiddlewareArgs
+  >[]
 }
 
 export interface LambdaOptions extends ApolloServerOptions {
