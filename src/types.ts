@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response, Express } from 'express'
 import { CorsOptions } from 'cors'
 import {
   GraphQLSchema,
@@ -127,6 +127,7 @@ export interface Props<
     TFieldMiddlewareContext,
     TFieldMiddlewareArgs
   >[]
+  expressApp?: Express
 }
 
 export interface LambdaProps<
