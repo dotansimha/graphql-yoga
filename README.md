@@ -230,6 +230,17 @@ To deploy your `graphql-yoga` server with [Heroku](https://heroku.com), follow t
 
 ## FAQ
 
+### How does `graphql-yoga` compare to `apollo-server` V2?
+
+GraphQL Yoga inspired the external API of apollo-server V2. The following features are still unique to GraphQL Yoga:- 
+
+- Express middleware (using [graphql-middleware](https://github.com/prismagraphql/graphql-middleware))
+
+- GraphQL imports (using [graphql-import](https://github.com/prismagraphql/graphql-import))
+
+- Optional smaller GraphQL responses (using [graphql-deduplicator](https://github.com/gajus/graphql-deduplicator))
+
+
 ### How does `graphql-yoga` compare to `apollo-server` and other tools?
 
 As mentioned above, `graphql-yoga` is built on top of a variety of other packages, such as `graphql.js`, `express` and `apollo-server`. Each of these provides a certain piece of functionality required for building a GraphQL server.
