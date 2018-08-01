@@ -20,19 +20,30 @@ import { IMocks } from 'graphql-tools'
 import { IMiddleware as IFieldMiddleware } from 'graphql-middleware'
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-export interface IResolvers {
-  [key: string]: (() => any) | IResolverObject | GraphQLScalarType
+
+export type IEnumResolver = { [key: string]: string | number };
+export interface IResolvers<TSource = any, TContext = any> {
+  [key: string]:
+    | (() => any)
+    | IResolverObject<TSource, TContext>
+    | IResolverOptions<TSource, TContext>
+    | GraphQLScalarType
+    | IEnumResolver;
 }
 
-export type IResolverObject = {
-  [key: string]: GraphQLFieldResolver<any, any> | IResolverOptions
+export type IResolverObject<TSource = any, TContext = any> = {
+  [key: string]:
+    | GraphQLFieldResolver<TSource, TContext>
+    | IResolverOptions<TSource, TContext>
+    | IResolverObject<TSource, TContext>;
 }
 
-export interface IResolverOptions {
-  resolve?: GraphQLFieldResolver<any, any>
-  subscribe?: GraphQLFieldResolver<any, any>
-  __resolveType?: GraphQLTypeResolver<any, any>
-  __isTypeOf?: GraphQLIsTypeOfFn<any, any>
+export interface IResolverOptions<TSource = any, TContext = any> {
+  fragment?: string;
+  resolve?: GraphQLFieldResolver<TSource, TContext>;
+  subscribe?: GraphQLFieldResolver<TSource, TContext>;
+  __resolveType?: GraphQLTypeResolver<TSource, TContext>;
+  __isTypeOf?: GraphQLIsTypeOfFn<TSource, TContext>;
 }
 
 export type Context = { [key: string]: any }
