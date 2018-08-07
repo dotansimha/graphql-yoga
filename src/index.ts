@@ -43,6 +43,17 @@ import {
 import { ITypeDefinitions } from 'graphql-tools/dist/Interfaces'
 import { defaultErrorFormatter } from './defaultErrorFormatter'
 
+// Re-export Apollo Server errors
+export {
+  ApolloError,
+  toApolloError,
+  SyntaxError,
+  ValidationError,
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError,
+} from 'apollo-server-express'
+
 export { MockList } from 'graphql-tools'
 export { PubSub, withFilter } from 'graphql-subscriptions'
 export { Options, OptionsWithHttps, OptionsWithoutHttps }
