@@ -26,7 +26,10 @@ import {
   addMockFunctionsToSchema,
   defaultMergedResolver,
 } from 'graphql-tools'
-import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
+import {
+  applyMiddleware as applyFieldMiddleware,
+  FragmentReplacement,
+} from 'graphql-middleware'
 import { createServer, Server as HttpServer } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
 import * as path from 'path'
@@ -76,6 +79,8 @@ export class GraphQLServer {
   }
   executableSchema: GraphQLSchema
   context: any
+
+  private middlewareFragmentReplacements: FragmentReplacement[] = []
 
   private middlewares: {
     [key: string]: {
@@ -129,10 +134,13 @@ export class GraphQLServer {
     }
 
     if (props.middlewares) {
-      this.executableSchema = applyFieldMiddleware(
+      const { schema, fragmentReplacements } = applyFieldMiddleware(
         this.executableSchema,
         ...props.middlewares,
       )
+
+      this.executableSchema = schema
+      this.middlewareFragmentReplacements = fragmentReplacements
     }
   }
 
@@ -251,7 +259,11 @@ export class GraphQLServer {
         try {
           context =
             typeof this.context === 'function'
-              ? await this.context({ request, response })
+              ? await this.context({
+                  request,
+                  response,
+                  fragmentReplacements: this.middlewareFragmentReplacements,
+                })
               : this.context
         } catch (e) {
           console.error(e)

@@ -4,7 +4,10 @@ import { GraphQLSchema } from 'graphql'
 import { importSchema } from 'graphql-import'
 import lambdaPlayground from 'graphql-playground-middleware-lambda'
 import { makeExecutableSchema, defaultMergedResolver } from 'graphql-tools'
-import { applyMiddleware as applyFieldMiddleware } from 'graphql-middleware'
+import {
+  applyMiddleware as applyFieldMiddleware,
+  FragmentReplacement,
+} from 'graphql-middleware'
 import { deflate } from 'graphql-deduplicator'
 import * as path from 'path'
 
@@ -15,6 +18,8 @@ export class GraphQLServerLambda {
   executableSchema: GraphQLSchema
 
   protected context: any
+
+  private middlewareFragmentReplacements: FragmentReplacement[] = []
 
   constructor(props: LambdaProps) {
     const defaultOptions: LambdaOptions = {
@@ -59,10 +64,13 @@ export class GraphQLServerLambda {
     }
 
     if (props.middlewares) {
-      this.executableSchema = applyFieldMiddleware(
+      const { schema, fragmentReplacements } = applyFieldMiddleware(
         this.executableSchema,
         ...props.middlewares,
       )
+
+      this.executableSchema = schema
+      this.middlewareFragmentReplacements = fragmentReplacements
     }
   }
 
@@ -113,7 +121,11 @@ export class GraphQLServerLambda {
       try {
         apolloContext =
           typeof this.context === 'function'
-            ? await this.context({ event, context: lambdaContext })
+            ? await this.context({
+                event,
+                context: lambdaContext,
+                fragmentReplacements: this.middlewareFragmentReplacements,
+              })
             : this.context
       } catch (e) {
         console.error(e)
