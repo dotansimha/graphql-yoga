@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response, Application } from 'express'
 import { CorsOptions } from 'cors'
 import {
   GraphQLSchema,
@@ -112,6 +112,7 @@ export interface Props<
   TFieldMiddlewareContext = any,
   TFieldMiddlewareArgs = any
 > {
+  express?: Application
   directiveResolvers?: IDirectiveResolvers<any, any>
   schemaDirectives?: {
     [name: string]: typeof SchemaDirectiveVisitor
