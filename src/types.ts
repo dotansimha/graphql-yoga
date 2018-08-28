@@ -17,7 +17,11 @@ import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
 import { IMocks } from 'graphql-tools'
-import { IMiddleware as IFieldMiddleware } from 'graphql-middleware'
+import {
+  IMiddleware as IFieldMiddleware,
+  IMiddlewareGenerator as IFieldMiddlewareGenerator,
+  FragmentReplacement,
+} from 'graphql-middleware'
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 export interface IResolvers {
@@ -41,6 +45,7 @@ export interface ContextParameters {
   request: Request
   response: Response
   connection: ExecutionParams
+  fragmentReplacements: FragmentReplacement[]
 }
 
 export type ContextCallback = (params: ContextParameters) => Context
@@ -122,11 +127,17 @@ export interface Props<
   schema?: GraphQLSchema
   context?: Context | ContextCallback
   mocks?: IMocks
-  middlewares?: IFieldMiddleware<
-    TFieldMiddlewareSource,
-    TFieldMiddlewareContext,
-    TFieldMiddlewareArgs
-  >[]
+  middlewares?: (
+    | IFieldMiddleware<
+        TFieldMiddlewareSource,
+        TFieldMiddlewareContext,
+        TFieldMiddlewareArgs
+      >
+    | IFieldMiddlewareGenerator<
+        TFieldMiddlewareSource,
+        TFieldMiddlewareContext,
+        TFieldMiddlewareArgs
+      >)[]
 }
 
 export interface LambdaProps<
@@ -144,11 +155,17 @@ export interface LambdaProps<
   schema?: GraphQLSchema
   context?: Context | ContextCallback
   options?: LambdaOptions
-  middlewares?: IFieldMiddleware<
-    TFieldMiddlewareSource,
-    TFieldMiddlewareContext,
-    TFieldMiddlewareArgs
-  >[]
+  middlewares?: (
+    | IFieldMiddleware<
+        TFieldMiddlewareSource,
+        TFieldMiddlewareContext,
+        TFieldMiddlewareArgs
+      >
+    | IFieldMiddlewareGenerator<
+        TFieldMiddlewareSource,
+        TFieldMiddlewareContext,
+        TFieldMiddlewareArgs
+      >)[]
 }
 
 export interface LambdaOptions extends ApolloServerOptions {
