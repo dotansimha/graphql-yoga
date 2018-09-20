@@ -1,4 +1,4 @@
-# typescript-graphql
+# typescript-prisma-client
 
 This example demonstrates how to implement a **GraphQL Yoga server with TypeScript**
 
