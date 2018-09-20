@@ -15,7 +15,7 @@
     "prisma-client-lib": "0.2.58"
   },
   "scripts": {
-    "prisma": "prisma",
+    "prisma": "cd prisma && prisma",
     "start": "ts-node src/index.ts",
     "scaffold-resolvers": "graphql-resolver-codegen scaffold -s src/schema.graphql",
     "generate-resolvers": "graphql-resolver-codegen interfaces -s src/schema.graphql -o src/generated/resolvers.ts"
