@@ -329,3 +329,75 @@ test('Works with graphql-middleware generator.', async t => {
     },
   })
 })
+
+test('Works with array of resolvers', async t => {
+  const typeDefs = `
+    type Book {
+      id: ID!
+      name: String!
+      author: String!
+    }
+
+    type Query {
+      book: Book!
+    }
+  `
+
+  const queryResolver = {
+    Query: {
+      book: () => ({
+        id: 'id',
+        name: 'name',
+        author: 'author',
+      }),
+    },
+  }
+
+  const bookIdResolver = {
+    Book: {
+      id: root => `book-${root.id}`,
+    },
+  }
+
+  const bookNameResolver = {
+    Book: {
+      name: root => `book-${root.name}`,
+    },
+  }
+
+  const server = new GraphQLServer({
+    typeDefs,
+    resolvers: [queryResolver, bookIdResolver, bookNameResolver],
+    middlewares: [],
+  })
+  const http = await server.start({ port: 0 })
+  const { port } = http.address()
+  const uri = `http://localhost:${port}/`
+
+  const query = `
+    query {
+      book {
+        id
+        name
+        author
+      }
+    }
+  `
+
+  const body = await request({
+    uri,
+    method: 'POST',
+    json: true,
+    body: { query },
+  }).promise()
+
+  t.deepEqual(body, {
+    data: {
+      book: {
+        id: 'book-id',
+        name: 'book-name',
+        author: 'author',
+      },
+    },
+  })
+})
