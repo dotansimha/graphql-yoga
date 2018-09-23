@@ -122,7 +122,7 @@ export interface Props<
     [name: string]: typeof SchemaDirectiveVisitor
   }
   typeDefs?: ITypeDefinitions
-  resolvers?: IResolvers
+  resolvers?: IResolvers | IResolvers[]
   resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
