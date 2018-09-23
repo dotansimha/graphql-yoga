@@ -1,13 +1,6 @@
 import { Request, Response } from 'express'
 import { CorsOptions } from 'cors'
-import {
-  GraphQLSchema,
-  GraphQLFieldResolver,
-  GraphQLScalarType,
-  GraphQLIsTypeOfFn,
-  GraphQLTypeResolver,
-  ValidationContext,
-} from 'graphql'
+import { GraphQLSchema, GraphQLFieldResolver, ValidationContext } from 'graphql'
 import {
   IDirectiveResolvers,
   IResolverValidationOptions,
@@ -16,7 +9,7 @@ import {
 import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
 import { LogFunction } from 'apollo-server-core'
-import { IMocks } from 'graphql-tools'
+import { IMocks, IResolvers } from 'graphql-tools'
 import {
   IMiddleware as IFieldMiddleware,
   IMiddlewareGenerator as IFieldMiddlewareGenerator,
@@ -24,20 +17,6 @@ import {
 } from 'graphql-middleware'
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-export interface IResolvers {
-  [key: string]: (() => any) | IResolverObject | GraphQLScalarType
-}
-
-export type IResolverObject = {
-  [key: string]: GraphQLFieldResolver<any, any> | IResolverOptions
-}
-
-export interface IResolverOptions {
-  resolve?: GraphQLFieldResolver<any, any>
-  subscribe?: GraphQLFieldResolver<any, any>
-  __resolveType?: GraphQLTypeResolver<any, any>
-  __isTypeOf?: GraphQLIsTypeOfFn<any, any>
-}
 
 export type Context = { [key: string]: any }
 
