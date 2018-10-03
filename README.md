@@ -2,7 +2,7 @@
 
 # graphql-yoga
 
-[![CircleCI](https://circleci.com/gh/prismagraphql/graphql-yoga.svg?style=shield)](https://circleci.com/gh/prismagraphql/graphql-yoga) [![npm version](https://badge.fury.io/js/graphql-yoga.svg)](https://badge.fury.io/js/graphql-yoga)
+[![CircleCI](https://circleci.com/gh/prisma/graphql-yoga.svg?style=shield)](https://circleci.com/gh/prisma/graphql-yoga) [![npm version](https://badge.fury.io/js/graphql-yoga.svg)](https://badge.fury.io/js/graphql-yoga)
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
