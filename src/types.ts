@@ -15,7 +15,6 @@ import {
 } from 'graphql-tools/dist/Interfaces'
 import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
-import { LogFunction } from 'apollo-server-core'
 import { IMocks } from 'graphql-tools'
 import {
   IMiddleware as IFieldMiddleware,
@@ -72,7 +71,6 @@ export interface ApolloServerOptions {
   tracing?: boolean | TracingOptions
   cacheControl?: boolean
   formatError?: Function
-  logFunction?: LogFunction
   rootValue?: any
   validationRules?: ValidationRules | ValidationRulesExpressCallback
   fieldResolver?: GraphQLFieldResolver<any, any>
