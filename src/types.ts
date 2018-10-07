@@ -126,7 +126,7 @@ export interface Props<
   resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
-  mocks?: IMocks
+  mocks?: IMocks | boolean
   middlewares?: (
     | IFieldMiddleware<
         TFieldMiddlewareSource,
