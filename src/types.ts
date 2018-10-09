@@ -37,7 +37,7 @@ export type ContextCallback = (params: ContextParameters) => Context
 
 export type LambdaContextCallback = (params: LambdaContextParameters) => Context
 
-// check https://github.com/jaydenseric/apollo-upload-server#options for documentation
+// check https://github.com/jaydenseric/graphql-upload#type-uploadoptions for documentation
 export interface UploadOptions {
   maxFieldSize?: number
   maxFileSize?: number

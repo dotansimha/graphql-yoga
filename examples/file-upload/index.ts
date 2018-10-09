@@ -34,7 +34,8 @@ const recordFile = file =>
     .write()
 
 const processUpload = async upload => {
-  const { stream, filename, mimetype, encoding } = await upload
+  const { createReadStream, filename, mimetype, encoding } = await upload
+  const stream = createReadStream()
   const { id, path } = await storeUpload({ stream, filename })
   return recordFile({ id, filename, mimetype, encoding, path })
 }
