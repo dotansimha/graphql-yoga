@@ -1191,12 +1191,12 @@ create-error-class@^3.0.0:
   dependencies:
     capture-stack-trace "^1.0.0"
 
-cross-fetch@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-1.1.1.tgz#dede6865ae30f37eae62ac90ebb7bdac002b05a0"
+cross-fetch@2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-2.2.2.tgz#a47ff4f7fc712daba8f6a695a11c948440d45723"
   dependencies:
-    node-fetch "1.7.3"
-    whatwg-fetch "2.0.3"
+    node-fetch "2.1.2"
+    whatwg-fetch "2.0.4"
 
 cross-spawn@^5.0.1:
   version "5.1.0"
@@ -1373,12 +1373,6 @@ empower-core@^0.6.1:
 encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
-
-encoding@^0.1.11:
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
-  dependencies:
-    iconv-lite "~0.4.13"
 
 equal-length@^1.0.0:
   version "1.0.1"
@@ -1791,12 +1785,12 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-config@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-2.0.0.tgz#daf69091055c6f675d63893a2d14c48f3fec3327"
+graphql-config@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-2.2.1.tgz#5fd0ec77ac7428ca5fb2026cf131be10151a0cb2"
   dependencies:
-    graphql-import "^0.4.0"
-    graphql-request "^1.4.0"
+    graphql-import "^0.7.1"
+    graphql-request "^1.5.0"
     js-yaml "^3.10.0"
     lodash "^4.17.4"
     minimatch "^3.0.4"
@@ -1812,18 +1806,18 @@ graphql-extensions@^0.0.x:
     core-js "^2.5.1"
     source-map-support "^0.5.0"
 
-graphql-import@^0.4.0:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.4.1.tgz#ef1c047d6250bc8c009b12b64c26924ac4f4716c"
-  dependencies:
-    graphql "^0.12.3"
-    lodash "^4.17.4"
-
 graphql-import@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.6.0.tgz#c00cb8a269ceea263e062922c8c81a2272d1ffcb"
   dependencies:
     lodash "^4.17.4"
+
+graphql-import@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.7.1.tgz#4add8d91a5f752d764b0a4a7a461fcd93136f223"
+  dependencies:
+    lodash "^4.17.4"
+    resolve-from "^4.0.0"
 
 graphql-middleware@1.6.6:
   version "1.6.6"
@@ -1831,35 +1825,29 @@ graphql-middleware@1.6.6:
   dependencies:
     graphql-tools "^3.0.5"
 
-graphql-playground-html@1.5.5:
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.5.5.tgz#e2aca543eb66b435ead495b45244b2604d6b2d48"
+graphql-playground-html@1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.6.4.tgz#be7c5a6213d67aeedf03d90b7e7d55fec4d42212"
   dependencies:
-    graphql-config "2.0.0"
+    graphql-config "2.2.1"
 
-graphql-playground-html@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.6.0.tgz#6ec4d54325ab2e5352506fdb89eb37c3fc718bf8"
+graphql-playground-middleware-express@1.7.6:
+  version "1.7.6"
+  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-express/-/graphql-playground-middleware-express-1.7.6.tgz#aca38d2b8e5147914fc8fa613d151edd4ed0bc44"
   dependencies:
-    graphql-config "2.0.0"
+    graphql-playground-html "1.6.4"
 
-graphql-playground-middleware-express@1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-express/-/graphql-playground-middleware-express-1.7.2.tgz#5f7bf3683494fe17893d1b54bbecee5e222c2e78"
+graphql-playground-middleware-lambda@1.7.6:
+  version "1.7.6"
+  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-lambda/-/graphql-playground-middleware-lambda-1.7.6.tgz#03aa4e3592144f4eb390a216f09b39f6b29f12d2"
   dependencies:
-    graphql-playground-html "1.6.0"
+    graphql-playground-html "1.6.4"
 
-graphql-playground-middleware-lambda@1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-lambda/-/graphql-playground-middleware-lambda-1.6.1.tgz#e0f1944558136dd3975570c92c702d6009cc779c"
+graphql-request@^1.5.0:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.8.2.tgz#398d10ae15c585676741bde3fc01d5ca948f8fbe"
   dependencies:
-    graphql-playground-html "1.5.5"
-
-graphql-request@^1.4.0:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.4.1.tgz#0772743cfac8dfdd4d69d36106a96c9bdd191ce8"
-  dependencies:
-    cross-fetch "1.1.1"
+    cross-fetch "2.2.2"
 
 graphql-subscriptions@^0.5.8:
   version "0.5.8"
@@ -1887,17 +1875,11 @@ graphql-tools@^3.0.5:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-"graphql@^0.11.0 || ^0.12.0 || ^0.13.0":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.13.2.tgz#4c740ae3c222823e7004096f832e7b93b2108270"
+"graphql@^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0":
+  version "14.0.2"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.0.2.tgz#7dded337a4c3fd2d075692323384034b357f5650"
   dependencies:
-    iterall "^1.2.1"
-
-graphql@^0.12.3:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.12.3.tgz#11668458bbe28261c0dcb6e265f515ba79f6ce07"
-  dependencies:
-    iterall "1.1.3"
+    iterall "^1.2.2"
 
 har-schema@^2.0.0:
   version "2.0.0"
@@ -2002,7 +1984,7 @@ hullabaloo-config-manager@^1.1.0:
     resolve-from "^3.0.0"
     safe-buffer "^5.0.1"
 
-iconv-lite@0.4.19, iconv-lite@~0.4.13:
+iconv-lite@0.4.19:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
 
@@ -2237,7 +2219,7 @@ is-retry-allowed@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-retry-allowed/-/is-retry-allowed-1.1.0.tgz#11a060568b67339444033d0125a61a20d564fb34"
 
-is-stream@^1.0.0, is-stream@^1.0.1, is-stream@^1.1.0:
+is-stream@^1.0.0, is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
 
@@ -2279,11 +2261,7 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-iterall@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
-
-iterall@^1.1.3:
+iterall@^1.1.3, iterall@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.2.2.tgz#92d70deb8028e0c39ff3164fdbf4d8b088130cd7"
 
@@ -2677,12 +2655,9 @@ nice-try@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.4.tgz#d93962f6c52f2c1558c0fbda6d512819f1efe1c4"
 
-node-fetch@1.7.3:
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
-  dependencies:
-    encoding "^0.1.11"
-    is-stream "^1.0.1"
+node-fetch@2.1.2:
+  version "2.1.2"
+  resolved "http://registry.npmjs.org/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
 
 node-pre-gyp@^0.9.0:
   version "0.9.1"
@@ -3317,6 +3292,10 @@ resolve-from@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-3.0.0.tgz#b22c7af7d9d6881bc8b6e653335eebcb0a188748"
 
+resolve-from@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
+
 resolve@^1.3.2:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.5.0.tgz#1f09acce796c9a762579f31b2c1cc4c3cddf9f36"
@@ -3929,9 +3908,9 @@ well-known-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/well-known-symbols/-/well-known-symbols-1.0.0.tgz#73c78ae81a7726a8fa598e2880801c8b16225518"
 
-whatwg-fetch@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
+whatwg-fetch@2.0.4:
+  version "2.0.4"
+  resolved "http://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
 
 which@^1.2.9:
   version "1.3.0"
