@@ -1,0 +1,23 @@
+{
+  "name": "typescript-prisma-client",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "graphql-resolver-codegen": "0.2.2",
+    "prisma": "1.17.1",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "graphql": "^0.13.2",
+    "graphql-yoga": "^1.16.1",
+    "prisma-client-lib": "^1.17.1"
+  },
+  "scripts": {
+    "prisma": "cd prisma && prisma",
+    "start": "ts-node src/index.ts",
+    "scaffold-resolvers": "graphql-resolver-codegen scaffold -s src/schema.graphql",
+    "generate-resolvers": "graphql-resolver-codegen interfaces -s src/schema.graphql -o src/generated/resolvers.ts"
+  }
+}

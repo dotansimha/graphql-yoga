@@ -1,0 +1,9 @@
+mutation {
+  # Create first user
+  createUser(data: {
+    email: "alice@prisma.io"
+    name: "Alice"
+  }) {
+    id
+  }
+}
