@@ -1,13 +1,6 @@
 import { Request, Response } from 'express'
 import { CorsOptions } from 'cors'
-import {
-  GraphQLSchema,
-  GraphQLFieldResolver,
-  GraphQLScalarType,
-  GraphQLIsTypeOfFn,
-  GraphQLTypeResolver,
-  ValidationContext,
-} from 'graphql'
+import { GraphQLSchema, GraphQLFieldResolver, ValidationContext } from 'graphql'
 import {
   IDirectiveResolvers,
   IResolverValidationOptions,
@@ -15,28 +8,15 @@ import {
 } from 'graphql-tools/dist/Interfaces'
 import { SchemaDirectiveVisitor } from 'graphql-tools/dist/schemaVisitor'
 import { ExecutionParams } from 'subscriptions-transport-ws'
-import { IMocks } from 'graphql-tools'
+import { IMocks, IResolvers } from 'graphql-tools'
 import {
   IMiddleware as IFieldMiddleware,
   IMiddlewareGenerator as IFieldMiddlewareGenerator,
   FragmentReplacement,
 } from 'graphql-middleware'
+import { APIGatewayProxyEvent, Context as LambdaContext } from 'aws-lambda'
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-export interface IResolvers {
-  [key: string]: (() => any) | IResolverObject | GraphQLScalarType
-}
-
-export type IResolverObject = {
-  [key: string]: GraphQLFieldResolver<any, any> | IResolverOptions
-}
-
-export interface IResolverOptions {
-  resolve?: GraphQLFieldResolver<any, any>
-  subscribe?: GraphQLFieldResolver<any, any>
-  __resolveType?: GraphQLTypeResolver<any, any>
-  __isTypeOf?: GraphQLIsTypeOfFn<any, any>
-}
 
 export type Context = { [key: string]: any }
 
@@ -47,7 +27,14 @@ export interface ContextParameters {
   fragmentReplacements: FragmentReplacement[]
 }
 
+export interface LambdaContextParameters {
+  event: APIGatewayProxyEvent
+  context: LambdaContext
+}
+
 export type ContextCallback = (params: ContextParameters) => Context
+
+export type LambdaContextCallback = (params: LambdaContextParameters) => Context
 
 // check https://github.com/jaydenseric/apollo-upload-server#options for documentation
 export interface UploadOptions {
@@ -120,11 +107,11 @@ export interface Props<
     [name: string]: typeof SchemaDirectiveVisitor
   }
   typeDefs?: ITypeDefinitions
-  resolvers?: IResolvers
+  resolvers?: IResolvers | IResolvers[]
   resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
-  mocks?: IMocks
+  mocks?: IMocks | boolean
   middlewares?: (
     | IFieldMiddleware<
         TFieldMiddlewareSource,
@@ -151,7 +138,7 @@ export interface LambdaProps<
   resolvers?: IResolvers
   resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
-  context?: Context | ContextCallback
+  context?: Context | LambdaContextCallback
   options?: LambdaOptions
   middlewares?: (
     | IFieldMiddleware<

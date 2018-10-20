@@ -117,10 +117,10 @@ export class GraphQLServer {
         directiveResolvers,
         schemaDirectives,
         typeDefs: typeDefsString,
-        resolvers: {
-          ...uploadMixin,
-          ...resolvers,
-        },
+        resolvers: Array.isArray(resolvers)
+          ? [uploadMixin, ...resolvers]
+          : [uploadMixin, resolvers],
+
         resolverValidationOptions,
       })
 

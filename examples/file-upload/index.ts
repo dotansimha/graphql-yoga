@@ -1,7 +1,7 @@
 import { GraphQLServer } from 'graphql-yoga'
 import { createWriteStream } from 'fs'
 import * as mkdirp from 'mkdirp'
-import shortid from 'shortid'
+import * as shortid from 'shortid'
 import lowdb = require('lowdb')
 import FileSync = require('lowdb/adapters/FileSync')
 
