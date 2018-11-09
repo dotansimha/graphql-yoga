@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import { CorsOptions } from 'cors'
 import { GraphQLSchema, GraphQLFieldResolver, ValidationContext } from 'graphql'
 import {
@@ -84,6 +84,7 @@ export interface Options extends ApolloServerOptions {
   deduplicator?: boolean
   getEndpoint?: string | boolean
   bodyParserOptions?: BodyParserJSONOptions
+  express?: express.Application
 }
 
 export interface OptionsWithHttps extends Options {
