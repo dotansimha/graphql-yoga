@@ -26,7 +26,7 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 * GraphQL Subscriptions
 * TypeScript typings
 * GraphQL Playground
-* Extensible via Express middlewares
+* Extensible via Express middleware
 * Schema directives
 * Apollo Tracing
 * Accepts both `application/json` and `application/graphql` content-types
@@ -254,13 +254,13 @@ For these cases, `GraphQLServer` exposes the `express.Application` directly via 
 server.express.use(myMiddleware())
 ```
 
-Middlewares can also be added specifically to the GraphQL endpoint route, by using:
+Middleware can also be added specifically to the GraphQL endpoint route, by using:
 
 ```js
 server.express.post(server.options.endpoint, myMiddleware())
 ```
 
-Any middlewares you add to that route, will be added right before the `apollo-server-express` middleware.
+Any middleware you add to that route, will be added right before the `apollo-server-express` middleware.
 
 ## Help & Community [![Slack Status](https://slack.graph.cool/badge.svg)](https://slack.graph.cool)
 
