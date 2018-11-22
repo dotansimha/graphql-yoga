@@ -1,0 +1,21 @@
+# Number of days of inactivity before an issue becomes stale
+daysUntilStale: 60
+# Number of days of inactivity before a stale issue is closed
+daysUntilClose: 7
+# Issues with these labels will never be considered stale
+exemptLabels:
+  - pinned
+  - security
+  - discussion
+# Label to use when marking an issue as stale
+staleLabel: stale
+# Comment to post when marking an issue as stale. Set to `false` to disable
+markComment: >
+  Due to inactivity of this issue we have marked it `stale`. It will be closed if no 
+  further activity occurs.
+closeComment: >
+  Hey :wave:,
+  It seems like this issue has been inactive for some time. In need for maintaining clear overview of the issues
+  concerning the latest version of `graphql-yoga` we'll close it.
+
+  Feel free to reopen it at any time if you believe we should futher discuss its content. :slightly_smiling_face: 
