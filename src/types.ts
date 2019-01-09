@@ -1,6 +1,8 @@
-import { Request, Response } from 'express'
+import { Request, Response, Application } from 'express'
 import { CorsOptions } from 'cors'
 import { GraphQLSchema, GraphQLFieldResolver, ValidationContext } from 'graphql'
+import {  Server as HttpServer } from 'http'
+import {  Server as HttpsServer } from 'https'
 import {
   IDirectiveResolvers,
   IResolverValidationOptions,
@@ -84,6 +86,8 @@ export interface Options extends ApolloServerOptions {
   deduplicator?: boolean
   getEndpoint?: string | boolean
   bodyParserOptions?: BodyParserJSONOptions
+  // defining possible http/https server instance we could get to reuse
+  serverInstance?: HttpServer | HttpsServer | false
 }
 
 export interface OptionsWithHttps extends Options {
@@ -125,6 +129,8 @@ export interface Props<
         TFieldMiddlewareContext,
         TFieldMiddlewareArgs
       >)[]
+  // defining possible express instance we could get
+  expressInstance?: Application | false
 }
 
 export interface LambdaProps<

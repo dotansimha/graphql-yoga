@@ -76,6 +76,7 @@ export class GraphQLServer {
     subscriptions: '/',
     playground: '/',
     getEndpoint: false,
+	serverInstance: false
   }
   executableSchema: GraphQLSchema
   context: any
@@ -90,7 +91,8 @@ export class GraphQLServer {
   } = { use: [], get: [], post: [] }
 
   constructor(props: Props) {
-    this.express = express()
+    //reusing already taken express instance passed by the props
+	this.express = props.expressInstance || express()
 
     this.subscriptionServer = null
     this.context = props.context
@@ -164,9 +166,9 @@ export class GraphQLServer {
     return this
   }
 
-  createHttpServer(options: OptionsWithoutHttps): HttpServer
-  createHttpServer(options: OptionsWithHttps): HttpsServer
-  createHttpServer(options: Options): HttpServer | HttpsServer {
+  createHttpServer(options: OptionsWithoutHttps): HttpServer 
+  createHttpServer(options: OptionsWithHttps): HttpsServer 
+  createHttpServer(options: Options): HttpServer | HttpsServer  {
     const app = this.express
 
     this.options = { ...this.options, ...options }
@@ -341,9 +343,12 @@ export class GraphQLServer {
       throw new Error('No schema defined')
     }
 
-    const server = this.options.https
-      ? createHttpsServer(this.options.https, app)
-      : createServer(app)
+	// if we have server instance created outside to reuse
+    const server = this.options.serverInstance ? this.options.serverInstance : ( 
+		this.options.https
+			? createHttpsServer(this.options.https, app)
+			: createServer(app)
+	  )
 
     if (this.subscriptionServerOptions) {
       this.createSubscriptionServer(server)
@@ -374,17 +379,28 @@ export class GraphQLServer {
         : () => null
 
     const server = this.createHttpServer(options as Options)
-
-    return new Promise((resolve, reject) => {
-      const combinedServer = server
-      combinedServer.listen(this.options.port, () => {
-        callbackFunc({
-          ...this.options,
-          port: combinedServer.address().port,
-        })
-        resolve(combinedServer)
+	// if we have server instance ro use, we just resolve and callback
+	if(this.options.serverInstance) { 
+	  return new Promise((resolve, reject) => {
+        const combinedServer = server
+		callbackFunc({
+		  ...this.options,
+		  port: combinedServer.address().port,
+		})
+		resolve(combinedServer)
       })
-    })
+	} else {
+      return new Promise((resolve, reject) => {
+        const combinedServer = server
+	    combinedServer.listen(this.options.port, () => {
+		  callbackFunc({
+		  ...this.options,
+		  port: combinedServer.address().port,
+		  })
+		  resolve(combinedServer)
+	    })
+      })
+	}
   }
 
   private createSubscriptionServer(combinedServer: HttpServer | HttpsServer) {
