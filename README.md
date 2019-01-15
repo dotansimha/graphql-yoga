@@ -262,7 +262,7 @@ server.express.post(server.options.endpoint, myMiddleware())
 
 Any middleware you add to that route, will be added right before the `apollo-server-express` middleware.
 
-## Help & Community [![Slack Status](https://slack.graph.cool/badge.svg)](https://slack.graph.cool)
+## Help & Community [![Slack Status](https://slack.prisma.io/badge.svg)](https://slack.prisma.io)
 
 Join our [Slack community](http://slack.graph.cool/) if you run into issues or have questions. We love talking to you!
 
