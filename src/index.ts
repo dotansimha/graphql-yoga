@@ -327,12 +327,20 @@ export class GraphQLServer {
     }
 
     if (this.options.playground) {
-      const playgroundOptions = this.subscriptionServerOptions
-        ? {
-            endpoint: this.options.endpoint,
-            subscriptionsEndpoint: this.subscriptionServerOptions.path,
-          }
-        : { endpoint: this.options.endpoint }
+      const playgroundOptions = {
+        endpoint: this.options.endpoint,
+        subscriptionsEndpoint: this.subscriptionServerOptions
+          ? this.subscriptionServerOptions.path
+          : undefined,
+        tabs: this.options.defaultPlaygroundQuery
+          ? [
+              {
+                endpoint: this.options.endpoint,
+                query: this.options.defaultPlaygroundQuery,
+              },
+            ]
+          : undefined,
+      }
 
       app.get(this.options.playground, expressPlayground(playgroundOptions))
     }

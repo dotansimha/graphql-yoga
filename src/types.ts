@@ -80,6 +80,7 @@ export interface Options extends ApolloServerOptions {
   endpoint?: string
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
+  defaultPlaygroundQuery?: string
   https?: HttpsOptions
   deduplicator?: boolean
   getEndpoint?: string | boolean
