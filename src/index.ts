@@ -164,9 +164,7 @@ export class GraphQLServer {
     return this
   }
 
-  createHttpServer(options: OptionsWithoutHttps): HttpServer
-  createHttpServer(options: OptionsWithHttps): HttpsServer
-  createHttpServer(options: Options): HttpServer | HttpsServer {
+  createExpressApplication(options: Options): express.Application {
     const app = this.express
 
     this.options = { ...this.options, ...options }
@@ -349,6 +347,13 @@ export class GraphQLServer {
       throw new Error('No schema defined')
     }
 
+    return app
+  }
+
+  createHttpServer(options: OptionsWithoutHttps): HttpServer
+  createHttpServer(options: OptionsWithHttps): HttpsServer
+  createHttpServer(options: Options): HttpServer | HttpsServer {
+    const app = this.createExpressApplication(options)
     const server = this.options.https
       ? createHttpsServer(this.options.https, app)
       : createServer(app)
