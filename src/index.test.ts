@@ -1,4 +1,5 @@
 import test, { TestContext, Context } from 'ava'
+import { Express } from 'express'
 import { inflate } from 'graphql-deduplicator'
 import { GraphQLServer, Options } from './index'
 import { promisify } from 'util'
@@ -400,4 +401,12 @@ test('Works with array of resolvers', async t => {
       },
     },
   })
+})
+
+test('Allows passing in an express app function', t => {
+  const fakeExpressApp: Express = {} as any
+  const server = new GraphQLServer({
+    getExpressApp: () => fakeExpressApp,
+  })
+  t.is(server.express, fakeExpressApp)
 })

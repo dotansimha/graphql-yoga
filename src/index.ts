@@ -90,7 +90,8 @@ export class GraphQLServer {
   } = { use: [], get: [], post: [] }
 
   constructor(props: Props) {
-    this.express = express()
+    const getExpressApp = props.getExpressApp || express
+    this.express = getExpressApp()
 
     this.subscriptionServer = null
     this.context = props.context

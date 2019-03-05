@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Express, Request, Response } from 'express'
 import { CorsOptions } from 'cors'
 import { GraphQLSchema, GraphQLFieldResolver, ValidationContext } from 'graphql'
 import {
@@ -114,6 +114,7 @@ export interface Props<
   resolverValidationOptions?: IResolverValidationOptions
   schema?: GraphQLSchema
   context?: Context | ContextCallback
+  getExpressApp?: () => Express
   mocks?: IMocks | boolean
   middlewares?: (
     | IFieldMiddleware<
