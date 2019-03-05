@@ -262,6 +262,12 @@ server.express.post(server.options.endpoint, myMiddleware())
 
 Any middleware you add to that route, will be added right before the `apollo-server-express` middleware.
 
+If you already have an express app that was created somewhere else, you can pass it to the GraphQLServer constructor:
+
+```js
+const server = new GraphQLServer({ getExpressApp: () => myPreExistingExpressApp })
+```
+
 ## Help & Community [![Slack Status](https://slack.prisma.io/badge.svg)](https://slack.prisma.io)
 
 Join our [Slack community](http://slack.graph.cool/) if you run into issues or have questions. We love talking to you!
