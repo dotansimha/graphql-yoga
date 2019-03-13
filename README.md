@@ -224,6 +224,8 @@ To deploy your `graphql-yoga` server with [Heroku](https://heroku.com), follow t
 4.  Create the Heroku instance by executing `heroku create`
 5.  Deploy your GraphQL server by executing `git push heroku master`
 
+To deploy your `graphql-yoga` server using Prisma on [Heroku](https://heroku.com), follow this [guide](https://www.prisma.io/blog/heroku-integration-homihof6eifi)
+
 ### `up` (Coming soon 🔜 )
 
 ### AWS Lambda (Coming soon 🔜 )
