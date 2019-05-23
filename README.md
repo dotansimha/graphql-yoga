@@ -169,7 +169,7 @@ See the original documentation in [`graphql-subscriptions`](https://github.com/a
 Mocking the schema is straight forward, along wit
 
 ```javascript
-import { GraphqlServer, MockList } from 'graphql-yoga'
+import { GraphQLServer, MockList } from 'graphql-yoga'
 
 const typeDefs = `
   type Query {
