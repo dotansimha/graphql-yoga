@@ -79,7 +79,9 @@ export interface Options extends ApolloServerOptions {
   uploads?: UploadOptions | false
   endpoint?: string
   subscriptions?: SubscriptionServerOptions | string | false
+  subscriptionsExternalEndpoint?: string | false // alternative endpoint to access subscriptions from outside the infrastructure
   playground?: string | false
+  playgroundExternalEndpoint?: string | false // alternative endpoint to access api from outside the infrastructure
   defaultPlaygroundQuery?: string
   https?: HttpsOptions
   deduplicator?: boolean

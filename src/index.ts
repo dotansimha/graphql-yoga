@@ -74,7 +74,9 @@ export class GraphQLServer {
     deduplicator: true,
     endpoint: '/',
     subscriptions: '/',
+    subscriptionsExternalEndpoint: false,
     playground: '/',
+    playgroundExternalEndpoint: false,
     getEndpoint: false,
   }
   executableSchema: GraphQLSchema
@@ -327,15 +329,23 @@ export class GraphQLServer {
     }
 
     if (this.options.playground) {
-      const playgroundOptions = {
-        endpoint: this.options.endpoint,
-        subscriptionsEndpoint: this.subscriptionServerOptions
+
+      // Provide the playground with an api endpoint. In priority the external endpoint if provided. 
+      const endpoint = this.options.playgroundExternalEndpoint || this.options.endpoint;
+
+      // Provide the playground with an subscriptions endpoint. In priority the external endpoint if provided.
+      const subscriptionsEndpoint = this.options.subscriptionsExternalEndpoint || (
+        this.subscriptionServerOptions
           ? this.subscriptionServerOptions.path
-          : undefined,
+          : undefined)
+
+      const playgroundOptions = {
+        endpoint,
+        subscriptionsEndpoint,
         tabs: this.options.defaultPlaygroundQuery
           ? [
               {
-                endpoint: this.options.endpoint,
+                endpoint,
                 query: this.options.defaultPlaygroundQuery,
               },
             ]
