@@ -335,7 +335,9 @@ export class GraphQLServer {
         subscriptionsEndpoint: this.subscriptionServerOptions
           ? this.subscriptionServerOptions.path
           : undefined,
-        tabs: this.options.defaultPlaygroundQuery
+        tabs: this.options.defaultPlaygroundTabs 
+        ? this.options.defaultPlaygroundTabs 
+        : this.options.defaultPlaygroundQuery
           ? [
               {
                 endpoint: this.options.endpoint,

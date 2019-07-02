@@ -81,6 +81,7 @@ export interface Options extends ApolloServerOptions {
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
   defaultPlaygroundQuery?: string
+  defaultPlaygroundTabs?: PlaygroundTab[]
   https?: HttpsOptions
   deduplicator?: boolean
   getEndpoint?: string | boolean
@@ -168,4 +169,15 @@ export interface BodyParserJSONOptions {
   strict?: boolean
   type?: string
   verify?: any
+}
+
+export interface PlaygroundTab {
+  endpoint: string;
+  query: string;
+  name?: string;
+  variables?: string;
+  responses?: string[];
+  headers?: {
+      [key: string]: string;
+  };
 }
