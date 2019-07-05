@@ -206,13 +206,15 @@ Once your `graphql-yoga` server is running, you can use [GraphQL Playground](htt
 
 ## Deployment
 
-### `now`
+### `now v1`
 
 To deploy your `graphql-yoga` server with [`now`](https://zeit.co/now), follow these instructions:
 
 1.  Download [**Now Desktop**](https://zeit.co/download)
 2.  Navigate to the root directory of your `graphql-yoga` server
 3.  Run `now` in your terminal
+
+Now v2 is [currently not supported](https://github.com/prisma/graphql-yoga/issues/537).
 
 ### Heroku
 
