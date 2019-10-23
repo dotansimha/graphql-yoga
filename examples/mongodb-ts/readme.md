@@ -9,7 +9,7 @@
 - Use `docker-compose up -d` to setup and start MongoDB
 - Use `npm run dev` to start the server in Developer Mode. this will run the index.js in "dist"-directory
 
-## Building it and Serving it for Production
+## Serving it for Production
 
 - Use `docker-compose up -d` to setup and start MongoDB
 - Use `npm run prod` to start the server in Prod Mode. this will run the index.js in "dist"-directory
