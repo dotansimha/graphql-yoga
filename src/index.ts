@@ -388,6 +388,9 @@ export class GraphQLServer {
 
     return new Promise((resolve, reject) => {
       const combinedServer = server
+      const port = typeof this.options.port !== "number" 
+        ? parseInt(this.options.port) 
+        : this.options.port
       combinedServer.listen(this.options.port, this.options.host, () => {
         callbackFunc({
           ...this.options,
