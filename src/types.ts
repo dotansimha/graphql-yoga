@@ -71,7 +71,7 @@ export interface ApolloServerOptions {
 export interface HttpsOptions {
   cert: string | Buffer
   key: string | Buffer
-  ca: string | Buffer
+  ca?: string | Buffer | Array<string | Buffer>
 }
 
 export interface Options extends ApolloServerOptions {
