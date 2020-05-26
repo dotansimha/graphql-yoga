@@ -30,7 +30,6 @@
     "lint": "tslint --project tsconfig.json {src,test}/**/*.ts && prettier-check --ignore-path .gitignore {src,.}/{*.ts,*.js}",
     "format": "prettier --write --ignore-path .gitignore {src,.}/{*.ts,*.js}",
     "test": "yarn lint && yarn build && ava",
-    "t": "ava",
     "watch:tsc": "tsc --watch",
     "watch:ava": "ava --watch",
     "watch": "yarn build && npm-run-all --parallel watch:*"
