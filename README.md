@@ -10,11 +10,11 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 
 * **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup.
 * **Includes Subscriptions:** Built-in support for GraphQL subscriptions using WebSockets.
-* **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
+* **Compatible:** Works with all GraphQL clients (Apollo, Relay, ...) and fits seamlessly in your GraphQL workflow.
 
 `graphql-yoga` is based on the following libraries & tools:
 
-* [`express`](https://github.com/expressjs/express)/[`apollo-server`](https://github.com/apollographql/apollo-server): Performant, extensible web server framework
+* [`express`](https://github.com/expressjs/express)/[`apollo-server@1.x.x`](https://github.com/apollographql/apollo-server): Performant, extensible web server framework
 * [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
 * [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
 * [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
@@ -126,7 +126,7 @@ The `options` object has the following fields:
 | `playground`             | String or `false`                                                | `'/'`                                                                                            | Defines the endpoint where you can invoke the [Playground](https://github.com/graphcool/graphql-playground); setting to `false` disables the playground endpoint                                                                                                                                                             |
 | `defaultPlaygroundQuery` | String                                                           | `undefined`                                                                                      | Defines default query displayed in Playground.                                                                                                                                                                                                                                                                               |
 | `uploads`                | [UploadOptions](/src/types.ts#L39-L43) or `false` or `undefined` | `null`                                                                                           | Provides information about upload limits; the object can have any combination of the following three keys: `maxFieldSize`, `maxFileSize`, `maxFiles`; each of these have values of type Number; setting to `false` disables file uploading                                                                                   |
-| `https`                  | [HttpsOptions](/src/types.ts#L62-L65) or `undefined`             | `undefined`                                                                                      | Enables HTTPS support with a key/cert                                                                                                                                                                                                                                                                                        |
+| `https`                  | [HttpsOptions](/src/types.ts#L71-L74) or `undefined`             | `undefined`                                                                                      | Enables HTTPS support with a key/cert                                                                                                                                                                                                                                                                                        |
 | `getEndpoint`            | String or Boolean                                                | `false`                                                                                          | Adds a graphql HTTP GET endpoint to your server (defaults to `endpoint` if `true`). Used for leveraging CDN level caching.                                                                                                                                                                                                   |
 | `deduplicator`           | Boolean                                                          | `true`                                                                                           | Enables [graphql-deduplicator](https://github.com/gajus/graphql-deduplicator). Once enabled sending the header `X-GraphQL-Deduplicate` will deduplicate the data.                                                                                                                                                            |
 | `bodyParserOptions`      | BodyParserJSONOptions                                            | [BodyParserJSONOptions Defaults](https://github.com/expressjs/body-parser#bodyparserjsonoptions) | Allows pass through of [body-parser options](https://github.com/expressjs/body-parser#bodyparserjsonoptions)                                                                                                                                                                                                                 |
@@ -166,10 +166,10 @@ See the original documentation in [`graphql-subscriptions`](https://github.com/a
 
 #### `mocking`
 
-Mocking the schema is straight forward, along wit
+Mocking the schema is straight forward, along with
 
 ```javascript
-import { GraphqlServer, MockList } from 'graphql-yoga'
+import { GraphQLServer, MockList } from 'graphql-yoga'
 
 const typeDefs = `
   type Query {
@@ -206,13 +206,15 @@ Once your `graphql-yoga` server is running, you can use [GraphQL Playground](htt
 
 ## Deployment
 
-### `now`
+### `now v1`
 
 To deploy your `graphql-yoga` server with [`now`](https://zeit.co/now), follow these instructions:
 
 1.  Download [**Now Desktop**](https://zeit.co/download)
 2.  Navigate to the root directory of your `graphql-yoga` server
 3.  Run `now` in your terminal
+
+> Now v2 is [currently not supported (Coming soon 🔜)](https://github.com/prisma/graphql-yoga/issues/537).
 
 ### Heroku
 
@@ -224,9 +226,11 @@ To deploy your `graphql-yoga` server with [Heroku](https://heroku.com), follow t
 4.  Create the Heroku instance by executing `heroku create`
 5.  Deploy your GraphQL server by executing `git push heroku master`
 
-### `up` (Coming soon 🔜 )
+For more details, follow this [guide](https://www.prisma.io/blog/heroku-integration-homihof6eifi).
 
-### AWS Lambda (Coming soon 🔜 )
+### `up` (Coming soon 🔜)
+
+### AWS Lambda (Coming soon 🔜)
 
 ## FAQ
 
