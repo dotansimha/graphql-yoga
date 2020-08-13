@@ -1,4 +1,4 @@
-import test, { TestContext, Context } from 'ava'
+import test from 'ava'
 import { inflate } from 'graphql-deduplicator'
 import { GraphQLServer, Options } from './index'
 import { promisify } from 'util'
@@ -6,7 +6,7 @@ import { middleware } from 'graphql-middleware'
 import { AddressInfo } from 'net'
 import * as request from 'request-promise-native'
 
-async function startServer(t: TestContext & Context<any>, options?: Options) {
+async function startServer(t, options?: Options) {
   const randomId = () => Math.random().toString(36).substr(2, 5)
 
   const typeDefs = `
@@ -65,7 +65,7 @@ async function startServer(t: TestContext & Context<any>, options?: Options) {
 }
 
 test.afterEach.always('stop graphql servers', async (t) => {
-  const { httpServers } = t.context
+  const httpServers = (t.context as any).httpServers;
 
   if (httpServers && httpServers.length) {
     await Promise.all(
