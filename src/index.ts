@@ -417,8 +417,7 @@ export class GraphQLServer {
 
     // subscriptions-transport-ws
     if (subProto === 'both' || subProto === 'legacy') {
-      legacyServer = new ws.Server({ noServer: true })
-      SubscriptionServer.create(
+      legacyServer = SubscriptionServer.create(
         {
           schema: this.executableSchema,
           // TODO remove once `@types/graphql` is fixed for `execute`
@@ -455,8 +454,8 @@ export class GraphQLServer {
           },
           keepAlive: this.subscriptionServerOptions.keepAlive,
         },
-        legacyServer,
-      )
+        { noServer: true },
+      ).server
     }
 
     // graphql-ws
