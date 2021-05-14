@@ -511,8 +511,9 @@ export class GraphQLServer {
 
       // decide which websocket server to use
       const wss =
-        protocols.includes(GRAPHQL_WS) && // subscriptions-transport-ws subprotocol
-        !protocols.includes(GRAPHQL_TRANSPORT_WS_PROTOCOL) // graphql-ws subprotocol
+        !currentServer ||
+        (protocols.includes(GRAPHQL_WS) && // subscriptions-transport-ws subprotocol
+          !protocols.includes(GRAPHQL_TRANSPORT_WS_PROTOCOL)) // graphql-ws subprotocol
           ? legacyServer
           : // graphql-ws will welcome its own subprotocol and
             // gracefully reject invalid ones. if the client supports
