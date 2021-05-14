@@ -75,7 +75,7 @@ export class GraphQLServer {
     port: process.env.PORT || 4000,
     deduplicator: true,
     endpoint: '/',
-    subscriptionsServer: 'both',
+    subscriptionsProtocol: 'both',
     subscriptions: '/',
     playground: '/',
     getEndpoint: false,
@@ -359,7 +359,7 @@ export class GraphQLServer {
       : createServer(app)
 
     if (this.subscriptionServerOptions) {
-      this.createSubscriptionServer(server, this.options.subscriptionsServer)
+      this.createSubscriptionServer(server, this.options.subscriptionsProtocol)
     }
 
     return server
@@ -406,17 +406,17 @@ export class GraphQLServer {
 
   private createSubscriptionServer(
     combinedServer: HttpServer | HttpsServer,
-    serverVer: Options['subscriptionsServer'],
+    subProto: Options['subscriptionsProtocol'],
   ) {
-    if (!['both', 'v0', 'v1'].includes(serverVer)) {
-      throw new Error(`Unsupported subscriptions server version "${serverVer}"`)
+    if (!['both', 'legacy', 'current'].includes(subProto)) {
+      throw new Error(`Unsupported subscriptions server version "${subProto}"`)
     }
 
     let v0Server: ws.Server | undefined
     let v1Server: ws.Server | undefined
 
-    // graphql-ws
-    if (serverVer === 'both' || serverVer === 'v0') {
+    // subscriptions-transport-ws
+    if (subProto === 'both' || subProto === 'legacy') {
       v0Server = new ws.Server({ noServer: true })
       SubscriptionServer.create(
         {
@@ -459,8 +459,8 @@ export class GraphQLServer {
       )
     }
 
-    // subscriptions-transport-ws
-    if (serverVer === 'both' || serverVer === 'v1') {
+    // graphql-ws
+    if (subProto === 'both' || subProto === 'current') {
       v1Server = new ws.Server({ noServer: true })
       useWSServer(
         {
