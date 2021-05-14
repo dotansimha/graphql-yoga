@@ -412,12 +412,12 @@ export class GraphQLServer {
       throw new Error(`Unsupported subscriptions server version "${subProto}"`)
     }
 
-    let v0Server: ws.Server | undefined
-    let v1Server: ws.Server | undefined
+    let legacyServer: ws.Server | undefined
+    let currentServer: ws.Server | undefined
 
     // subscriptions-transport-ws
     if (subProto === 'both' || subProto === 'legacy') {
-      v0Server = new ws.Server({ noServer: true })
+      legacyServer = new ws.Server({ noServer: true })
       SubscriptionServer.create(
         {
           schema: this.executableSchema,
@@ -455,13 +455,13 @@ export class GraphQLServer {
           },
           keepAlive: this.subscriptionServerOptions.keepAlive,
         },
-        v0Server,
+        legacyServer,
       )
     }
 
     // graphql-ws
     if (subProto === 'both' || subProto === 'current') {
-      v1Server = new ws.Server({ noServer: true })
+      currentServer = new ws.Server({ noServer: true })
       useWSServer(
         {
           schema: this.executableSchema,
@@ -491,7 +491,7 @@ export class GraphQLServer {
             ? () => this.subscriptionServerOptions.onDisconnect()
             : undefined,
         },
-        v0Server,
+        currentServer,
         this.subscriptionServerOptions.keepAlive,
       )
     }
@@ -514,11 +514,11 @@ export class GraphQLServer {
       const wss =
         protocols.includes(GRAPHQL_WS) && // subscriptions-transport-ws subprotocol
         !protocols.includes(GRAPHQL_TRANSPORT_WS_PROTOCOL) // graphql-ws subprotocol
-          ? v0Server
+          ? legacyServer
           : // graphql-ws will welcome its own subprotocol and
             // gracefully reject invalid ones. if the client supports
             // both transports, graphql-ws will prevail
-            v1Server
+            currentServer
       wss.handleUpgrade(req, socket, head, ws => {
         wss.emit('connection', ws, req)
       })
