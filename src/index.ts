@@ -408,10 +408,12 @@ export class GraphQLServer {
     combinedServer: HttpServer | HttpsServer,
     serverVer: Options['subscriptionsServer'],
   ) {
-    if (!['both', 'v0', 'v1'].includes(serverVer))
+    if (!['both', 'v0', 'v1'].includes(serverVer)) {
       throw new Error(`Unsupported subscriptions server version "${serverVer}"`)
+    }
 
-    let v0Server: ws.Server | undefined, v1Server: ws.Server | undefined
+    let v0Server: ws.Server | undefined
+    let v1Server: ws.Server | undefined
 
     // graphql-ws
     if (serverVer === 'both' || serverVer === 'v0') {
@@ -466,9 +468,9 @@ export class GraphQLServer {
           onConnect: this.subscriptionServerOptions
             ? () => this.subscriptionServerOptions.onConnect()
             : undefined,
-          context: async (ctx, msg, args) =>
+          context: (ctx, msg, args) =>
             typeof this.context === 'function'
-              ? await this.context({ ctx, msg, args })
+              ? this.context({ ctx, msg, args })
               : this.context,
           // operation execution errors
           onNext: (ctx, _msg, _args, result) => {
