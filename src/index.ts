@@ -473,7 +473,7 @@ export class GraphQLServer {
               ? this.context({ ctx, msg, args })
               : this.context,
           // operation execution errors
-          onNext: (ctx, _msg, _args, result) => {
+          onNext: (_ctx, _msg, _args, result) => {
             if (result.errors) {
               result.errors = result.errors.map(
                 (this.options.formatError || defaultErrorFormatter) as any, // format your errors however you wish, hence 'as any'
