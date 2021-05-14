@@ -494,14 +494,14 @@ export class GraphQLServer {
       }
 
       // extract websocket subprotocol from header
-      const protocol = req.headers['sec-websocket-protocol'];
+      const protocol = req.headers['sec-websocket-protocol'] || '';
       const protocols = Array.isArray(protocol)
         ? protocol
-        : protocol?.split(',').map((p) => p.trim());
+        : protocol.split(',').map((p) => p.trim());
 
       // decide which websocket server to use
       const wss =
-        protocols?.includes(GRAPHQL_WS) && // subscriptions-transport-ws subprotocol
+        protocols.includes(GRAPHQL_WS) && // subscriptions-transport-ws subprotocol
         !protocols.includes(GRAPHQL_TRANSPORT_WS_PROTOCOL) // graphql-ws subprotocol
           ? v0Server
           : // graphql-ws will welcome its own subprotocol and
