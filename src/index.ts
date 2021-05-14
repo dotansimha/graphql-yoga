@@ -34,7 +34,7 @@ import { createServer, Server as HttpServer } from 'http'
 import { createServer as createHttpsServer, Server as HttpsServer } from 'https'
 import * as path from 'path'
 import { SubscriptionServer, GRAPHQL_WS } from 'subscriptions-transport-ws'
-import * as ws from 'ws';
+import * as ws from 'ws'
 import { GRAPHQL_TRANSPORT_WS_PROTOCOL } from 'graphql-ws'
 import { useServer as useWSServer } from 'graphql-ws/lib/use/ws'
 
@@ -390,9 +390,10 @@ export class GraphQLServer {
 
     return new Promise((resolve, reject) => {
       const combinedServer = server
-      const port = typeof this.options.port !== "number" 
-        ? parseInt(this.options.port) 
-        : this.options.port
+      const port =
+        typeof this.options.port !== 'number'
+          ? parseInt(this.options.port)
+          : this.options.port
       combinedServer.listen(port, this.options.host, () => {
         callbackFunc({
           ...this.options,
@@ -403,15 +404,18 @@ export class GraphQLServer {
     })
   }
 
-  private createSubscriptionServer(combinedServer: HttpServer | HttpsServer, serverVer: Options['subscriptionsServer']) {
+  private createSubscriptionServer(
+    combinedServer: HttpServer | HttpsServer,
+    serverVer: Options['subscriptionsServer'],
+  ) {
     if (!['both', 'v0', 'v1'].includes(serverVer))
-      throw new Error(`Unsupported subscriptions server version "${serverVer}"`);
+      throw new Error(`Unsupported subscriptions server version "${serverVer}"`)
 
-    let v0Server: ws.Server | undefined, v1Server: ws.Server | undefined;
+    let v0Server: ws.Server | undefined, v1Server: ws.Server | undefined
 
     // graphql-ws
     if (serverVer === 'both' || serverVer === 'v0') {
-      v0Server = new ws.Server({ noServer: true });
+      v0Server = new ws.Server({ noServer: true })
       SubscriptionServer.create(
         {
           schema: this.executableSchema,
@@ -434,7 +438,7 @@ export class GraphQLServer {
                   this.options.formatError || defaultErrorFormatter,
                 ),
             })
-  
+
             let context
             try {
               context =
@@ -454,26 +458,31 @@ export class GraphQLServer {
     }
 
     // subscriptions-transport-ws
-    if (serverVer ==='both' || serverVer === 'v1') {
-      v1Server = new ws.Server({ noServer: true });
+    if (serverVer === 'both' || serverVer === 'v1') {
+      v1Server = new ws.Server({ noServer: true })
       useWSServer(
         {
           schema: this.executableSchema,
           onConnect: this.subscriptionServerOptions
             ? () => this.subscriptionServerOptions.onConnect()
             : undefined,
-          context: async (ctx, msg, args) => typeof this.context === 'function'
-            ? await this.context({ ctx, msg, args })
-            : this.context,
+          context: async (ctx, msg, args) =>
+            typeof this.context === 'function'
+              ? await this.context({ ctx, msg, args })
+              : this.context,
           // operation execution errors
           onNext: (ctx, _msg, _args, result) => {
             if (result.errors) {
-              result.errors = result.errors.map(this.options.formatError || defaultErrorFormatter as any) // format your errors however you wish, hence 'as any'
+              result.errors = result.errors.map(
+                this.options.formatError || (defaultErrorFormatter as any),
+              ) // format your errors however you wish, hence 'as any'
             }
           },
           // validation errors
           onError: (_ctx, _msg, errors) =>
-            errors.map(this.options.formatError || defaultErrorFormatter as any), // format your errors however you wish, hence 'as any'
+            errors.map(
+              this.options.formatError || (defaultErrorFormatter as any),
+            ), // format your errors however you wish, hence 'as any'
           // NOTE: we use the `onClose` here because it is synonymous to `onDisconnect` in 'subscriptions-transport-ws'.
           // Read about the differences here: https://github.com/enisdenjo/graphql-ws/issues/91#issuecomment-759363519
           onClose: this.subscriptionServerOptions
@@ -489,15 +498,15 @@ export class GraphQLServer {
     combinedServer.on('upgrade', (req, socket, head) => {
       if (req.url !== this.subscriptionServerOptions.path) {
         // TODO-db-210515 gracefully handle upgrade request on wrong subscriptions path?
-        socket.destroy();
-        return;
+        socket.destroy()
+        return
       }
 
       // extract websocket subprotocol from header
-      const protocol = req.headers['sec-websocket-protocol'] || '';
+      const protocol = req.headers['sec-websocket-protocol'] || ''
       const protocols = Array.isArray(protocol)
         ? protocol
-        : protocol.split(',').map((p) => p.trim());
+        : protocol.split(',').map(p => p.trim())
 
       // decide which websocket server to use
       const wss =
@@ -507,11 +516,11 @@ export class GraphQLServer {
           : // graphql-ws will welcome its own subprotocol and
             // gracefully reject invalid ones. if the client supports
             // both transports, graphql-ws will prevail
-            v1Server;
-      wss.handleUpgrade(req, socket, head, (ws) => {
-        wss.emit('connection', ws, req);
-      });
-    });
+            v1Server
+      wss.handleUpgrade(req, socket, head, ws => {
+        wss.emit('connection', ws, req)
+      })
+    })
   }
 }
 
