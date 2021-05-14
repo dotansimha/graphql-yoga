@@ -476,15 +476,15 @@ export class GraphQLServer {
           onNext: (ctx, _msg, _args, result) => {
             if (result.errors) {
               result.errors = result.errors.map(
-                this.options.formatError || (defaultErrorFormatter as any),
-              ) // format your errors however you wish, hence 'as any'
+                (this.options.formatError || defaultErrorFormatter) as any, // format your errors however you wish, hence 'as any'
+              )
             }
           },
           // validation errors
           onError: (_ctx, _msg, errors) =>
             errors.map(
-              this.options.formatError || (defaultErrorFormatter as any),
-            ), // format your errors however you wish, hence 'as any'
+              (this.options.formatError || defaultErrorFormatter) as any, // format your errors however you wish, hence 'as any'
+            ),
           // NOTE: we use the `onClose` here because it is synonymous to `onDisconnect` in 'subscriptions-transport-ws'.
           // Read about the differences here: https://github.com/enisdenjo/graphql-ws/issues/91#issuecomment-759363519
           onClose: this.subscriptionServerOptions
