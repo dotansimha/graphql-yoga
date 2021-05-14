@@ -464,7 +464,7 @@ export class GraphQLServer {
       useWSServer(
         {
           schema: this.executableSchema,
-          onConnect: this.subscriptionServerOptions
+          onConnect: this.subscriptionServerOptions.onConnect
             ? () => this.subscriptionServerOptions.onConnect()
             : undefined,
           context: (ctx, msg, args) =>
@@ -486,7 +486,7 @@ export class GraphQLServer {
             ),
           // NOTE: we use the `onClose` here because it is synonymous to `onDisconnect` in 'subscriptions-transport-ws'.
           // Read about the differences here: https://github.com/enisdenjo/graphql-ws/issues/91#issuecomment-759363519
-          onClose: this.subscriptionServerOptions
+          onClose: this.subscriptionServerOptions.onDisconnect
             ? () => this.subscriptionServerOptions.onDisconnect()
             : undefined,
         },
