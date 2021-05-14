@@ -79,6 +79,7 @@ export interface Options extends ApolloServerOptions {
   cors?: CorsOptions | false
   uploads?: UploadOptions | false
   endpoint?: string
+  subscriptionsServer?: 'both' | 'v0' | 'v1' // default: 'both'
   subscriptions?: SubscriptionServerOptions | string | false
   playground?: string | false
   defaultPlaygroundQuery?: string
