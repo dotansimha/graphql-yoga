@@ -1,6 +1,7 @@
 {
-  "private": "true",
-  "scripts": {},
+  "scripts": {
+    "format": "prettier . --write"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dotansimha/graphql-yoga.git"
@@ -20,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-yoga/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-yoga#readme"
+  "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
+  "packageManager": "yarn@3.0.2",
+  "devDependencies": {
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
+  }
 }
