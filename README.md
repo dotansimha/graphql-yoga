@@ -8,30 +8,30 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 
 ## Overview
 
-* **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup.
-* **Includes Subscriptions:** Built-in support for GraphQL subscriptions using WebSockets.
-* **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
+- **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup.
+- **Includes Subscriptions:** Built-in support for GraphQL subscriptions using WebSockets.
+- **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
 
 `graphql-yoga` is based on the following libraries & tools:
 
-* [`express`](https://github.com/expressjs/express)/[`apollo-server`](https://github.com/apollographql/apollo-server): Performant, extensible web server framework
-* [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
-* [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
-* [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
+- [`express`](https://github.com/expressjs/express)/[`apollo-server`](https://github.com/apollographql/apollo-server): Performant, extensible web server framework
+- [`graphql-subscriptions`](https://github.com/apollographql/graphql-subscriptions)/[`subscriptions-transport-ws`](https://github.com/apollographql/subscriptions-transport-ws): GraphQL subscriptions server
+- [`graphql.js`](https://github.com/graphql/graphql-js)/[`graphql-tools`](https://github.com/apollographql/graphql-tools): GraphQL engine & schema helpers
+- [`graphql-playground`](https://github.com/graphcool/graphql-playground): Interactive GraphQL IDE
 
 ## Features
 
-* GraphQL spec-compliant
-* File upload
-* GraphQL Subscriptions
-* TypeScript typings
-* GraphQL Playground
-* Extensible via Express middleware
-* Schema directives
-* Apollo Tracing
-* Accepts both `application/json` and `application/graphql` content-types
-* Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
-* Supports middleware out of the box.
+- GraphQL spec-compliant
+- File upload
+- GraphQL Subscriptions
+- TypeScript typings
+- GraphQL Playground
+- Extensible via Express middleware
+- Schema directives
+- Apollo Tracing
+- Accepts both `application/json` and `application/graphql` content-types
+- Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
+- Supports middleware out of the box.
 
 ## Install
 
@@ -194,9 +194,9 @@ const server = new GraphQLServer({ typeDefs, mocks })
 
 There are three examples demonstrating how to quickly get started with `graphql-yoga`:
 
-* [hello-world](./examples/hello-world): Basic setup for building a schema and allowing for a `hello` query.
-* [subscriptions](./examples/subscriptions): Basic setup for using subscriptions with a counter that increments every 2 seconds and triggers a subscription.
-* [fullstack](./examples/fullstack): Fullstack example based on [`create-react-app`](https://github.com/facebookincubator/create-react-app) demonstrating how to query data from `graphql-yoga` with [Apollo Client 2.0](https://www.apollographql.com/client/).
+- [hello-world](./examples/hello-world): Basic setup for building a schema and allowing for a `hello` query.
+- [subscriptions](./examples/subscriptions): Basic setup for using subscriptions with a counter that increments every 2 seconds and triggers a subscription.
+- [fullstack](./examples/fullstack): Fullstack example based on [`create-react-app`](https://github.com/facebookincubator/create-react-app) demonstrating how to query data from `graphql-yoga` with [Apollo Client 2.0](https://www.apollographql.com/client/).
 
 ## Workflow
 
