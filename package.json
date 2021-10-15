@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "prebuild": "rimraf packages/**/dist",
+    "build": "tsc --project tsconfig.json && bob build"
   },
   "repository": {
     "type": "git",
@@ -21,10 +23,15 @@
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-yoga/issues"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
   "packageManager": "yarn@3.0.2",
   "devDependencies": {
+    "bob-the-bundler": "^1.5.1",
     "prettier": "^2.4.1",
-    "typescript": "^4.4.3"
+    "rimraf": "^3.0.2",
+    "typescript": "^4.4.4"
   }
 }
