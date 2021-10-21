@@ -32,6 +32,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@envelop/core@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@envelop/core@npm:1.3.0"
+  dependencies:
+    "@envelop/types": 1.2.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 5294ac278b0a4e88312c70d1b6a7deea498c0af003f753ed6f546f8939f194b379fb78e39032088cd7ba7947d6e48080ffb1c32d02441c8bceaecfaf05fc44eb
+  languageName: node
+  linkType: hard
+
+"@envelop/types@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@envelop/types@npm:1.2.0"
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 6977c32964b746f35bbe710d73fab98ca9c302feff247089ba55059b22d7362f7a450edc6511d666b9d0aea11ff86274f8f644169cd6a1938ce86aa4bdd14be9
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.0.1":
   version: 1.1.2
   resolution: "@gar/promisify@npm:1.1.2"
@@ -43,8 +63,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
+    "@envelop/core": ^1.3.0
     "@types/node": ^16.11.1
     bob-the-bundler: ^1.5.1
+    graphql: ^15.6.1
+    graphql-helix: ^1.8.3
     typescript: ^4.4.4
   languageName: unknown
   linkType: soft
@@ -841,6 +864,22 @@ fsevents@~2.1.2:
   version: 4.2.8
   resolution: "graceful-fs@npm:4.2.8"
   checksum: 5d224c8969ad0581d551dfabdb06882706b31af2561bd5e2034b4097e67cc27d05232849b8643866585fd0a41c7af152950f8776f4dd5579e9853733f31461c6
+  languageName: node
+  linkType: hard
+
+"graphql-helix@npm:^1.8.3":
+  version: 1.8.3
+  resolution: "graphql-helix@npm:1.8.3"
+  peerDependencies:
+    graphql: ^15.3.0
+  checksum: ab64d55074e6b73d6126033c75f40828071bd8772764265488b77e687d7dfc7fb163045113f33878ca4e3bcde02ab1d2d1d998bbd062a35754df39ee5bf7c1ed
+  languageName: node
+  linkType: hard
+
+"graphql@npm:^15.6.1":
+  version: 15.6.1
+  resolution: "graphql@npm:15.6.1"
+  checksum: 4c6dcf385f7a87a5103fcb7640394244ae8d1d4ede521085192a1cf1e60115c4f6285d783961575d908709f7ee3e4cdd16b3f7c54eb37499c0420c6301e98968
   languageName: node
   linkType: hard
 
