@@ -1,25 +1,25 @@
 {
-  "name": "@graphql-yoga/handler",
-  "version": "0.1.0",
-  "description": "Normalize requests and response",
+  "name": "graphql-yoga",
+  "version": "2.0.0",
+  "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
-    "directory": "packages/handler"
+    "directory": "packages/core"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
     "prepack": "bob prepack"
   },
-  "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://github.com/saihaj)",
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://saihaj.dev/)",
   "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^16.11.1",
-    "bob-the-bundler": "^1.5.1",
-    "fastify": "^3.22.1",
-    "typescript": "^4.4.4"
-  },
   "buildOptions": {
     "input": "./src/index.ts"
   },
@@ -43,7 +43,13 @@
   },
   "dependencies": {
     "@envelop/core": "^1.3.0",
-    "graphql": "^15.6.1",
-    "graphql-helix": "^1.8.3"
+    "@envelop/disable-introspection": "^1.0.0",
+    "@graphql-yoga/handler": "workspace:packages/handler",
+    "fastify": "^3.22.1",
+    "graphql": "^15.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.1",
+    "bob-the-bundler": "^1.5.1"
   }
 }

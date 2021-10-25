@@ -1,13 +1,15 @@
 import http from 'http'
 import http2 from 'http2'
-import { GraphQLSchema } from 'graphql'
+import type { FastifyRequest } from 'fastify'
+import type { GraphQLSchema } from 'graphql'
 import {
   processRequest,
-  Request,
-  RawResponse,
   sendResult,
   getGraphQLParameters,
+  shouldRenderGraphiQL,
+  renderGraphiQL,
 } from 'graphql-helix'
+import type { RawResponse, Request } from 'graphql-helix'
 import {
   GetEnvelopedFn,
   useEnvelop,
@@ -39,28 +41,42 @@ const getParams = (req: RawRequest): object => {
   return Object.fromEntries(searchParams)
 }
 
-/**
- * Helper function to create a GraphQL Helix request object from an incoming request.
- */
-const getHelixRequest = async (req: RawRequest): Promise<Request> => {
-  const body = await getBody(req)
-  const query = getParams(req)
+const isHttpRequest = (req: FastifyRequest | RawRequest): req is RawRequest =>
+  // @ts-expect-error - Yes body will not be defined for node http request
+  req?.body === undefined
 
+/**
+ * Helper function to create a GraphQL Helix request object.
+ */
+export async function getHttpRequest(req: RawRequest): Promise<Request>
+export async function getHttpRequest(req: FastifyRequest): Promise<Request>
+export async function getHttpRequest(
+  req: RawRequest | FastifyRequest,
+): Promise<Request> {
+  if (!isHttpRequest(req)) {
+    return {
+      body: req.body,
+      headers: req.headers,
+      method: req.method,
+      query: req.query,
+    }
+  }
+  const body = await getBody(req)
+  const params = getParams(req)
   return {
     body,
     headers: req.headers,
     method: req.method!,
-    query,
+    query: params,
   }
 }
 
 export const handleRequest = async (
-  req: RawRequest,
-  res: RawResponse,
+  request: Request,
+  response: RawResponse,
   schema: GraphQLSchema,
   customEnvelop?: GetEnvelopedFn<any>,
 ) => {
-  const request = await getHelixRequest(req)
   const graphqlParams = getGraphQLParameters(request)
 
   const getEnvelop = envelop({
@@ -72,11 +88,14 @@ export const handleRequest = async (
   })
   const proxy = getEnvelop({ request })
 
-  const response = await processRequest({
-    request,
-    ...graphqlParams,
-    ...proxy,
-  })
-
-  sendResult(response, res)
+  if (shouldRenderGraphiQL(request)) {
+    response.end(renderGraphiQL())
+  } else {
+    const result = await processRequest({
+      request,
+      ...graphqlParams,
+      ...proxy,
+    })
+    sendResult(result, response)
+  }
 }
