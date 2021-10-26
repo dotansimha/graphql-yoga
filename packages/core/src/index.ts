@@ -33,7 +33,7 @@ export class GraphQLServer extends BaseGraphQLServer {
 
   start() {
     this._server.listen(this.port, () => {
-      console.log(
+      this.logger.info(
         `GraphQL server running at http://localhost:${this.port}${this.endpoint}.`,
       )
     })
@@ -42,11 +42,11 @@ export class GraphQLServer extends BaseGraphQLServer {
   stop() {
     this._server.close().then(
       () => {
-        console.log('Shutting down GraphQL server.')
+        this.logger.info('Shutting down GraphQL server.')
         process.exit(0)
       },
       (err) => {
-        console.log(
+        this.logger.error(
           'Something went wrong :( trying to shutdown the server.',
           err,
         )

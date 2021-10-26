@@ -18,7 +18,10 @@ const schema = new GraphQLSchema({
           fields: () => ({
             firstVerse: {
               type: GraphQLString,
-              resolve: () => "Now I know my ABC's.",
+              resolve: (_, __, { logger }) => {
+                logger.info('I can even use the same logger!')
+                return "Now I know my ABC's."
+              },
             },
             secondVerse: {
               type: GraphQLString,
