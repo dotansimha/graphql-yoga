@@ -1,68 +1,126 @@
-import fastify, { FastifyInstance } from 'fastify'
-import { getHttpRequest } from '@graphql-yoga/handler'
-import { BaseGraphQLServer, GraphQLServerOptions } from './base'
+import { handleRequest } from '@graphql-yoga/handler'
+import type { GraphQLSchema } from 'graphql'
+import {
+  Plugin,
+  GetEnvelopedFn,
+  envelop,
+  useMaskedErrors,
+  useExtendContext,
+  enableIf,
+  useLogger,
+  useSchema,
+} from '@envelop/core'
+import { useDisableIntrospection } from '@envelop/disable-introspection'
+import { useValidationCache } from '@envelop/validation-cache'
+import { useParserCache } from '@envelop/parser-cache'
+import { Logger, dummyLogger } from 'ts-log'
 
-export class GraphQLServer extends BaseGraphQLServer {
-  private _server: FastifyInstance
-  private _getHttpRequest = getHttpRequest
+/**
+ * Configuration options for the server
+ */
+export type BaseGraphQLServerOptions = {
+  schema: GraphQLSchema
+  /**
+   * GraphQL endpoint
+   * Default: /graphql
+   */
+  endpoint?: string
+  /**
+   * Port to run server
+   */
+  port?: number
+  /**
+   * Envelop Plugins
+   * @see https://envelop.dev/plugins
+   */
+  plugins?: Array<Plugin>
+}
 
-  constructor(options: GraphQLServerOptions) {
-    super(options)
-    this._server = fastify()
-    this.setup()
+/**
+ * Base class that can be extended to create a GraphQL server with any HTTP server framework.
+ */
+export abstract class BaseGraphQLServer {
+  /**
+   * Request handler for helix
+   */
+  protected handleRequest = handleRequest
+  /**
+   * Port for server
+   */
+  protected port: number
+  /**
+   * GraphQL Endpoint
+   */
+  protected endpoint: string
+  protected schema: GraphQLSchema
+  /**
+   * Instance of envelop
+   */
+  protected envelop: GetEnvelopedFn<any>
+  /**
+   * Detect server environment
+   */
+  protected isProd: boolean
+  protected logger: Logger
+
+  constructor(options: BaseGraphQLServerOptions) {
+    this.port = options.port || parseInt(process.env.PORT || '4000')
+    this.endpoint = options.endpoint || '/graphql'
+    this.schema = options.schema
+    this.logger = dummyLogger
+    this.isProd = process.env.NODE_ENV === 'production'
+
+    this.envelop = envelop({
+      plugins: [
+        // Use the schema provided by the user
+        useSchema(this.schema),
+        // Performance things
+        useParserCache(),
+        useValidationCache(),
+        // Inject logger instance to context. Useful to use logger in resolvers.
+        useExtendContext(() => ({ logger: this.logger })),
+        // Log events - useful for debugging purposes
+        enableIf(
+          !this.isProd,
+          useLogger({
+            logFn: (eventName, events) => {
+              const logger = this.logger
+              if (eventName === 'execute-start') {
+                const context = events.args.contextValue
+                const query = context.request?.body?.query
+                const variables = context.request?.body?.variables
+                const headers = context.request?.headers
+                logger.debug(eventName)
+                logger.debug(query, 'query')
+                // there can be no variables
+                if (variables && Object.keys(variables).length > 0) {
+                  logger.debug(variables, 'variables')
+                }
+                logger.debug(headers, 'headers')
+              }
+              if (eventName === 'execute-end') {
+                logger.debug(eventName)
+                logger.debug(events.result, 'response')
+              }
+            },
+          }),
+        ),
+        // Disable introspection in production
+        enableIf(this.isProd, useDisableIntrospection()),
+        // Mask errors in production
+        enableIf(this.isProd, useMaskedErrors()),
+        ...(options.plugins || []),
+      ],
+    })
   }
 
   /**
-   * Setup endpoint and handlers for server
+   * Start the server
    */
-  private setup() {
-    const schema = this.schema
-    const handler = this.handleRequest
-    const getRequest = this._getHttpRequest
-    const envelop = this.envelop
+  abstract start(): void
 
-    this._server.route({
-      method: ['GET', 'POST'],
-      url: this.endpoint,
-      async handler(req, res) {
-        const request = await getRequest(req)
-        handler(request, res.raw, schema, envelop)
-      },
-    })
-  }
-
-  start() {
-    this._server.listen(this.port, () => {
-      this.logger.info(
-        `GraphQL server running at http://localhost:${this.port}${this.endpoint}.`,
-      )
-    })
-  }
-
-  stop() {
-    this._server.close().then(
-      () => {
-        this.logger.info('Shutting down GraphQL server.')
-        process.exit(0)
-      },
-      (err) => {
-        this.logger.error(
-          'Something went wrong :( trying to shutdown the server.',
-          err,
-        )
-        process.exit(-1)
-      },
-    )
-  }
+  /**
+   * Stop the server
+   */
+  abstract stop(): void
 }
-
-export * from 'graphql'
-export {
-  Plugin,
-  enableIf,
-  envelop,
-  useEnvelop,
-  usePayloadFormatter,
-  useExtendContext,
-  useTiming,
-} from '@envelop/core'
