@@ -34,6 +34,10 @@ export type BaseGraphQLServerOptions = {
    * @see https://envelop.dev/plugins
    */
   plugins?: Array<Plugin>
+  /**
+   * Detect server environment
+   */
+  isProd: boolean
 }
 
 /**
@@ -57,9 +61,6 @@ export abstract class BaseGraphQLServer {
    * Instance of envelop
    */
   protected envelop: GetEnvelopedFn<any>
-  /**
-   * Detect server environment
-   */
   protected isProd: boolean
   protected logger: Logger
 
@@ -68,7 +69,7 @@ export abstract class BaseGraphQLServer {
     this.endpoint = options.endpoint || '/graphql'
     this.schema = options.schema
     this.logger = dummyLogger
-    this.isProd = process.env.NODE_ENV === 'production'
+    this.isProd = options.isProd
 
     this.envelop = envelop({
       plugins: [

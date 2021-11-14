@@ -5,12 +5,14 @@ import { BaseGraphQLServer, BaseGraphQLServerOptions } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import { getHttpRequest } from './request'
 
+export type GraphQLServerOptions = Omit<BaseGraphQLServerOptions, 'isProd'> & {}
+
 export class GraphQLServer extends BaseGraphQLServer {
   private _server: FastifyInstance
   private _getHttpRequest = getHttpRequest
 
-  constructor(options: BaseGraphQLServerOptions) {
-    super(options)
+  constructor(options: GraphQLServerOptions) {
+    super({ ...options, isProd: process.env.NODE_ENV === 'production' })
     this._server = fastify()
     this.logger = pino({
       prettyPrint: {
