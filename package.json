@@ -2,7 +2,8 @@
   "scripts": {
     "format": "prettier . --write",
     "prebuild": "rimraf packages/**/dist",
-    "build": "tsc --project tsconfig.json && bob build"
+    "build": "tsc --project tsconfig.json && bob build",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,15 @@
   "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
   "packageManager": "yarn@3.0.2",
   "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/babel__core": "^7",
+    "@types/babel__preset-env": "^7",
+    "@types/jest": "^27.0.2",
+    "babel-jest": "^27.3.1",
     "bob-the-bundler": "^1.5.1",
+    "jest": "^27.3.1",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.4.4"
