@@ -21,15 +21,6 @@ import { Logger, dummyLogger } from 'ts-log'
 export type BaseGraphQLServerOptions = {
   schema: GraphQLSchema
   /**
-   * GraphQL endpoint
-   * Default: /graphql
-   */
-  endpoint?: string
-  /**
-   * Port to run server
-   */
-  port?: number
-  /**
    * Envelop Plugins
    * @see https://envelop.dev/plugins
    */
@@ -49,14 +40,6 @@ export abstract class BaseGraphQLServer {
    * Request handler for helix
    */
   protected handleRequest = handleRequest
-  /**
-   * Port for server
-   */
-  protected port: number
-  /**
-   * GraphQL Endpoint
-   */
-  protected endpoint: string
   protected schema: GraphQLSchema
   /**
    * Instance of envelop
@@ -66,8 +49,6 @@ export abstract class BaseGraphQLServer {
   protected logger: Logger
 
   constructor(options: BaseGraphQLServerOptions) {
-    this.port = options.port || parseInt(process.env.PORT || '4000')
-    this.endpoint = options.endpoint || '/graphql'
     this.schema = options.schema
     this.logger = dummyLogger
     this.isDev = options.isDev ?? false
@@ -114,6 +95,41 @@ export abstract class BaseGraphQLServer {
         ...(options.plugins || []),
       ],
     })
+  }
+}
+
+/**
+ * Configuration options for the server
+ */
+export type BaseNodeGraphQLServerOptions = {
+  /**
+   * GraphQL endpoint
+   * Default: `/graphql`
+   */
+  endpoint?: string
+  /**
+   * Port to run server
+   */
+  port?: number
+} & BaseGraphQLServerOptions
+
+/**
+ * Base class that can be extended to use any Node.js HTTP server framework.
+ */
+export abstract class BaseNodeGraphQLServer extends BaseGraphQLServer {
+  /**
+   * Port for server
+   */
+  protected port: number
+  /**
+   * GraphQL Endpoint
+   */
+  protected endpoint: string
+
+  constructor(options: BaseNodeGraphQLServerOptions) {
+    super(options)
+    this.port = options.port || parseInt(process.env.PORT || '4000')
+    this.endpoint = options.endpoint || '/graphql'
   }
 
   /**

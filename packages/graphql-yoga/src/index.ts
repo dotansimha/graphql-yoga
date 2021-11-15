@@ -1,13 +1,40 @@
 import fastify, { FastifyInstance } from 'fastify'
 import pino from 'pino'
 import { renderGraphiQL, sendResult, shouldRenderGraphiQL } from 'graphql-helix'
-import { BaseGraphQLServer, BaseGraphQLServerOptions } from '@graphql-yoga/core'
+import {
+  BaseNodeGraphQLServer,
+  BaseNodeGraphQLServerOptions,
+} from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import { getHttpRequest } from './request'
 
-export type GraphQLServerOptions = BaseGraphQLServerOptions & {}
+/**
+ * Configuration options for the server
+ */
+export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {}
 
-export class GraphQLServer extends BaseGraphQLServer {
+/**
+ * Create a simple yet powerful GraphQL server ready for production workloads.
+ * Spec compliant server that supports bleeding edge GraphQL features without any vendor lock-ins.
+ *
+ * Comes baked in with:
+ *
+ * - Fastify - Fast an low overhead framework for Node.js
+ * - Envelop - Plugin system for GraphQL
+ * - GraphQL Helix - Extensible and Framework agnostic GraphQL server
+ * - GraphiQL - GraphQL IDE for your browser
+ * - Pino - Super fast, low overhead Node.js logger
+ *
+ * Example:
+ * ```ts
+ *  import { schema } from './schema'
+ *   // Provide a GraphQL schema
+ *  const server = new GraphQLServer({ schema })
+ *  // Start the server. Defaults to http://localhost:4000/graphql
+ *  server.start()
+ * ```
+ */
+export class GraphQLServer extends BaseNodeGraphQLServer {
   private _server: FastifyInstance
   private _getHttpRequest = getHttpRequest
 
