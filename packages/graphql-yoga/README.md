@@ -1,12 +1,8 @@
 # `@graphql-yoga`
 
 ```js
-const {
-  GraphQLServer,
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString,
-} = require('../core/dist')
+const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
+const { GraphQLServer } = require('../core/dist')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

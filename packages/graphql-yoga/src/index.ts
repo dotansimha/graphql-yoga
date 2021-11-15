@@ -104,7 +104,6 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
   }
 }
 
-export * from 'graphql'
 export {
   Plugin,
   enableIf,
