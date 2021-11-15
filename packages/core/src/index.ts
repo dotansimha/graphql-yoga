@@ -36,8 +36,9 @@ export type BaseGraphQLServerOptions = {
   plugins?: Array<Plugin>
   /**
    * Detect server environment
+   * Default: `false`
    */
-  isProd: boolean
+  isDev?: boolean
 }
 
 /**
@@ -61,7 +62,7 @@ export abstract class BaseGraphQLServer {
    * Instance of envelop
    */
   protected envelop: GetEnvelopedFn<any>
-  protected isProd: boolean
+  protected isDev: boolean
   protected logger: Logger
 
   constructor(options: BaseGraphQLServerOptions) {
@@ -69,7 +70,7 @@ export abstract class BaseGraphQLServer {
     this.endpoint = options.endpoint || '/graphql'
     this.schema = options.schema
     this.logger = dummyLogger
-    this.isProd = options.isProd
+    this.isDev = options.isDev ?? false
 
     this.envelop = envelop({
       plugins: [
@@ -82,7 +83,7 @@ export abstract class BaseGraphQLServer {
         useExtendContext(() => ({ logger: this.logger })),
         // Log events - useful for debugging purposes
         enableIf(
-          !this.isProd,
+          this.isDev,
           useLogger({
             logFn: (eventName, events) => {
               const logger = this.logger
@@ -107,9 +108,9 @@ export abstract class BaseGraphQLServer {
           }),
         ),
         // Disable introspection in production
-        enableIf(this.isProd, useDisableIntrospection()),
+        enableIf(!this.isDev, useDisableIntrospection()),
         // Mask errors in production
-        enableIf(this.isProd, useMaskedErrors()),
+        enableIf(!this.isDev, useMaskedErrors()),
         ...(options.plugins || []),
       ],
     })

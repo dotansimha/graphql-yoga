@@ -5,20 +5,24 @@ import { BaseGraphQLServer, BaseGraphQLServerOptions } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import { getHttpRequest } from './request'
 
-export type GraphQLServerOptions = Omit<BaseGraphQLServerOptions, 'isProd'> & {}
+export type GraphQLServerOptions = BaseGraphQLServerOptions & {}
 
 export class GraphQLServer extends BaseGraphQLServer {
   private _server: FastifyInstance
   private _getHttpRequest = getHttpRequest
 
   constructor(options: GraphQLServerOptions) {
-    super({ ...options, isProd: process.env.NODE_ENV === 'production' })
+    super({
+      ...options,
+      // This should make default to dev mode base on environment variable
+      isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
+    })
     this._server = fastify()
     this.logger = pino({
       prettyPrint: {
         colorize: true,
       },
-      level: this.isProd ? 'info' : 'debug',
+      level: this.isDev ? 'info' : 'debug',
     })
     this.setup()
   }
