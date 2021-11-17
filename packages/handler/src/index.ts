@@ -1,16 +1,13 @@
-import { processRequest, getGraphQLParameters } from 'graphql-helix'
+import { processRequest, getGraphQLParameters } from '@ardatan/graphql-helix'
 import type { GraphQLSchema } from 'graphql'
-import type { Request as HelixRequest } from 'graphql-helix'
 import type { GetEnvelopedFn } from '@envelop/core'
-
-export type Request = HelixRequest
 
 export const handleRequest = async (
   request: Request,
   schema: GraphQLSchema,
   customEnvelop?: GetEnvelopedFn<any>,
 ) => {
-  const graphqlParams = getGraphQLParameters(request)
+  const graphqlParams = await getGraphQLParameters(request)
 
   if (customEnvelop) {
     const proxy = customEnvelop({ request })

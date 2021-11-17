@@ -5,6 +5,17 @@ __metadata:
   version: 4
   cacheKey: 8
 
+"@ardatan/graphql-helix@npm:^0.0.2":
+  version: 0.0.2
+  resolution: "@ardatan/graphql-helix@npm:0.0.2"
+  dependencies:
+    cross-undici-fetch: 0.0.26
+  peerDependencies:
+    graphql: ^15.3.0 || ^16.0.0
+  checksum: 5ae00eb1b1b9b8618c3ee2e517b9deb72d8929aa92a7a464dcbeba55f155a8033eb2ba41d648ad317e37128a501fca188c8f76d4c170998b390d3f18a4775854
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0":
   version: 7.15.8
   resolution: "@babel/code-frame@npm:7.15.8"
@@ -1412,11 +1423,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
+    "@ardatan/graphql-helix": ^0.0.2
     "@envelop/core": ^1.6.1
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
     graphql: ^16.0.1
-    graphql-helix: ^1.9.1
     typescript: ^4.4.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
@@ -1943,6 +1954,15 @@ __metadata:
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
   checksum: a4a97ec07d7ea112c517036882b2ac22f3109b7b19077dc656316d07d308438aac28e4d9746dc4d84bf6b1e75b4a7b0a5f3cb30592419f128ca9a8cee3bcfa17
+  languageName: node
+  linkType: hard
+
+"abort-controller@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "abort-controller@npm:3.0.0"
+  dependencies:
+    event-target-shim: ^5.0.0
+  checksum: 170bdba9b47b7e65906a28c8ce4f38a7a369d78e2271706f020849c1bfe0ee2067d4261df8bbb66eb84f79208fd5b710df759d64191db58cfba7ce8ef9c54b75
   languageName: node
   linkType: hard
 
@@ -2737,6 +2757,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-undici-fetch@npm:0.0.26":
+  version: 0.0.26
+  resolution: "cross-undici-fetch@npm:0.0.26"
+  dependencies:
+    abort-controller: ^3.0.0
+    form-data: ^4.0.0
+    node-fetch: ^2.6.5
+    undici: ^4.9.3
+  checksum: ef53622870f82eb35a1e78a331a432e09379a7b6842d3707c42438b910bfea3b52073b15a74a7b854bbcb79cc4defbfbbe36b1292a569a7977a023395d7efd2f
+  languageName: node
+  linkType: hard
+
 "cssom@npm:^0.4.4":
   version: 0.4.4
   resolution: "cssom@npm:0.4.4"
@@ -3049,6 +3081,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"event-target-shim@npm:^5.0.0":
+  version: 5.0.1
+  resolution: "event-target-shim@npm:5.0.1"
+  checksum: 1ffe3bb22a6d51bdeb6bf6f7cf97d2ff4a74b017ad12284cc9e6a279e727dc30a5de6bb613e5596ff4dc3e517841339ad09a7eec44266eccb1aa201a30448166
+  languageName: node
+  linkType: hard
+
 "execa@npm:^5.0.0":
   version: 5.1.1
   resolution: "execa@npm:5.1.1"
@@ -3269,6 +3308,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"form-data@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "form-data@npm:4.0.0"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
+  languageName: node
+  linkType: hard
+
 "forwarded@npm:0.2.0":
   version: 0.2.0
   resolution: "forwarded@npm:0.2.0"
@@ -3464,19 +3514,11 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-helix@npm:^1.9.1":
-  version: 1.9.1
-  resolution: "graphql-helix@npm:1.9.1"
-  peerDependencies:
-    graphql: ^15.3.0 || ^16.0.0
-  checksum: cd1638ad72758b26be0e4d0337026adc4c8dec07ed501b6003957ccf0b0d8ac8ae7a43fbe286093d2726f681ba8895b6e2057395dbb4698ca2ba37d113f75314
-  languageName: node
-  linkType: hard
-
 "graphql-yoga@workspace:packages/graphql-yoga":
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
+    "@ardatan/graphql-helix": ^0.0.2
     "@envelop/core": ^1.6.1
     "@graphql-yoga/core": 0.1.0
     "@graphql-yoga/handler": 0.1.0
@@ -3484,7 +3526,6 @@ fsevents@~2.1.2:
     bob-the-bundler: ^1.5.1
     fastify: ^3.23.1
     graphql: ^16.0.1
-    graphql-helix: ^1.9.1
     pino: ^7.2.0
     pino-pretty: ^7.2.0
   peerDependencies:
@@ -4852,6 +4893,15 @@ fsevents@~2.1.2:
     lower-case: ^2.0.2
     tslib: ^2.0.3
   checksum: 0b2ebc113dfcf737d48dde49cfebf3ad2d82a8c3188e7100c6f375e30eafbef9e9124aadc3becef237b042fd5eb0aad2fd78669c20972d045bbe7fea8ba0be5c
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^2.6.5":
+  version: 2.6.6
+  resolution: "node-fetch@npm:2.6.6"
+  dependencies:
+    whatwg-url: ^5.0.0
+  checksum: ee8290626bdb73629c59722b75dcf4b9b6a67c1ed7eb9102e368479c4a13b56a48c2bb3ad71571e378e98c8b2c64c820e11f9cd39e4b8557dd138ad571ef9a42
   languageName: node
   linkType: hard
 
@@ -6258,6 +6308,13 @@ resolve@1.15.1:
   languageName: node
   linkType: hard
 
+"tr46@npm:~0.0.3":
+  version: 0.0.3
+  resolution: "tr46@npm:0.0.3"
+  checksum: 726321c5eaf41b5002e17ffbd1fb7245999a073e8979085dacd47c4b4e8068ff5777142fc6726d6ca1fd2ff16921b48788b87225cbc57c72636f6efa8efbffe3
+  languageName: node
+  linkType: hard
+
 "ts-log@npm:^2.2.3":
   version: 2.2.3
   resolution: "ts-log@npm:2.2.3"
@@ -6349,6 +6406,13 @@ typescript@^4.4.4:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: c97c33903f1eb4f9e178649befdfc859d93157db1eccd1e521e84976ec6861db53412d8018e5e4c5d09268771c65498d42caa64bd881878346c3644f6b7cd202
+  languageName: node
+  linkType: hard
+
+"undici@npm:^4.9.3":
+  version: 4.10.0
+  resolution: "undici@npm:4.10.0"
+  checksum: 531ba4764561eb1cea758a476e642c962858e91ac48b34bd8b2fb255212452ed7374630e801cd1edb687fb0e8feed08f2db3c63c87150c512e26dfdda1e1ef0f
   languageName: node
   linkType: hard
 
@@ -6486,6 +6550,13 @@ typescript@^4.4.4:
   languageName: node
   linkType: hard
 
+"webidl-conversions@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "webidl-conversions@npm:3.0.1"
+  checksum: c92a0a6ab95314bde9c32e1d0a6dfac83b578f8fa5f21e675bc2706ed6981bc26b7eb7e6a1fab158e5ce4adf9caa4a0aee49a52505d4d13c7be545f15021b17c
+  languageName: node
+  linkType: hard
+
 "webidl-conversions@npm:^5.0.0":
   version: 5.0.0
   resolution: "webidl-conversions@npm:5.0.0"
@@ -6513,6 +6584,16 @@ typescript@^4.4.4:
   version: 2.3.0
   resolution: "whatwg-mimetype@npm:2.3.0"
   checksum: 23eb885940bcbcca4ff841c40a78e9cbb893ec42743993a42bf7aed16085b048b44b06f3402018931687153550f9a32d259dfa524e4f03577ab898b6965e5383
+  languageName: node
+  linkType: hard
+
+"whatwg-url@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "whatwg-url@npm:5.0.0"
+  dependencies:
+    tr46: ~0.0.3
+    webidl-conversions: ^3.0.0
+  checksum: b8daed4ad3356cc4899048a15b2c143a9aed0dfae1f611ebd55073310c7b910f522ad75d727346ad64203d7e6c79ef25eafd465f4d12775ca44b90fa82ed9e2c
   languageName: node
   linkType: hard
 

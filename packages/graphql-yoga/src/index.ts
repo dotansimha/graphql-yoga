@@ -1,12 +1,16 @@
 import fastify, { FastifyInstance } from 'fastify'
 import pino from 'pino'
-import { renderGraphiQL, sendResult, shouldRenderGraphiQL } from 'graphql-helix'
+import {
+  getNodeRequest,
+  renderGraphiQL,
+  sendNodeResponse,
+  shouldRenderGraphiQL,
+} from '@ardatan/graphql-helix'
 import {
   BaseNodeGraphQLServer,
   BaseNodeGraphQLServerOptions,
 } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
-import { getHttpRequest } from './request'
 
 /**
  * Configuration options for the server
@@ -36,7 +40,6 @@ export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {}
  */
 export class GraphQLServer extends BaseNodeGraphQLServer {
   private _server: FastifyInstance
-  private _getHttpRequest = getHttpRequest
 
   constructor(options: GraphQLServerOptions) {
     super({
@@ -73,7 +76,6 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
   private setup() {
     const schema = this.schema
     const handler = this.handleRequest
-    const getRequest = this._getHttpRequest
     const envelop = this.envelop
     this.logger.debug('Setting up server.')
 
@@ -81,12 +83,13 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       method: ['GET', 'POST'],
       url: this.endpoint,
       async handler(req, res) {
-        const request = await getRequest(req)
+        const request = getNodeRequest(req)
+
         if (shouldRenderGraphiQL(request)) {
           res.raw.end(renderGraphiQL())
         } else {
           const result = await handler(request, schema, envelop)
-          return sendResult(result, res.raw)
+          return sendNodeResponse(result, res.raw)
         }
       },
     })
