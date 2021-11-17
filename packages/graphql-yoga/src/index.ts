@@ -45,12 +45,25 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
     })
     this._server = fastify()
+
+    // Pretty printing only in dev
+    const prettyPrintOptions = this.isDev
+      ? {
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              translateTime: true,
+              colorize: true,
+            },
+          },
+        }
+      : {}
+
     this.logger = pino({
-      prettyPrint: {
-        colorize: true,
-      },
+      ...prettyPrintOptions,
       level: this.isDev ? 'info' : 'debug',
     })
+
     this.setup()
   }
 
