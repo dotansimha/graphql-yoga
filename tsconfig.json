@@ -22,7 +22,11 @@
     "noImplicitReturns": true,
     "noUnusedLocals": false,
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@graphql-yoga/handler": ["packages/handler/src/index.ts"],
+      "@graphql-yoga/core": ["packages/core/src/index.ts"]
+    }
   },
   "include": ["packages"],
   "exclude": ["**/dist", "**/temp"]
