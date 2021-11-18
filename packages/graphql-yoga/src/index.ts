@@ -5,7 +5,7 @@ import {
   renderGraphiQL,
   sendNodeResponse,
   shouldRenderGraphiQL,
-} from '@ardatan/graphql-helix'
+} from 'graphql-helix'
 import {
   BaseNodeGraphQLServer,
   BaseNodeGraphQLServerOptions,
@@ -83,7 +83,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       method: ['GET', 'POST'],
       url: this.endpoint,
       async handler(req, res) {
-        const request = getNodeRequest(req)
+        const request = await getNodeRequest(req)
 
         if (shouldRenderGraphiQL(request)) {
           res.raw.end(renderGraphiQL())
