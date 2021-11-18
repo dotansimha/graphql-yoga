@@ -1519,17 +1519,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/core@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@envelop/core@npm:1.3.0"
-  dependencies:
-    "@envelop/types": 1.2.0
-  peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0
-  checksum: 5294ac278b0a4e88312c70d1b6a7deea498c0af003f753ed6f546f8939f194b379fb78e39032088cd7ba7947d6e48080ffb1c32d02441c8bceaecfaf05fc44eb
-  languageName: node
-  linkType: hard
-
 "@envelop/core@npm:^1.6.1":
   version: 1.6.1
   resolution: "@envelop/core@npm:1.6.1"
@@ -1541,32 +1530,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/disable-introspection@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@envelop/disable-introspection@npm:1.0.0"
+"@envelop/core@npm:^1.6.2":
+  version: 1.6.2
+  resolution: "@envelop/core@npm:1.6.2"
+  dependencies:
+    "@envelop/types": 1.5.1
   peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0
-  checksum: 0f24f6aeec0676161b6863c189d570f08eb039292304aa7ccf35689185969cdbf7a25f7b3a8a60131f5a161651a5e0a2156389793f4619c459da79363e473d41
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 88bc0018b5154a6465142379c0a5b1562664045ffb29db111bd77503acca782aee1ac41b14b2dc815a7f84758fab2dd9e7c0c7717322f874f9edead739d41d85
   languageName: node
   linkType: hard
 
-"@envelop/parser-cache@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@envelop/parser-cache@npm:2.0.0"
+"@envelop/disable-introspection@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@envelop/disable-introspection@npm:1.2.1"
+  peerDependencies:
+    "@envelop/core": ^1.6.1
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 99964dce52c65e3a224ed150bc48f2175dffb73c210804b5a1a2bc5a881a3cda6a18813a26955865b99e142e674454897fd3f6c7ac30780bd02c9af70d7ef254
+  languageName: node
+  linkType: hard
+
+"@envelop/parser-cache@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "@envelop/parser-cache@npm:2.2.1"
   dependencies:
     tiny-lru: 7.0.6
   peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0
-  checksum: d43a730f9e5dc722133ee43b9a2d1fa34df24823fc4fb09cf35eca4d533c7edd1c49f9a4337c7e2927998e6c4a2299d86fc6cb1ca7b6c8599e65818eaf00450f
-  languageName: node
-  linkType: hard
-
-"@envelop/types@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@envelop/types@npm:1.2.0"
-  peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0
-  checksum: 6977c32964b746f35bbe710d73fab98ca9c302feff247089ba55059b22d7362f7a450edc6511d666b9d0aea11ff86274f8f644169cd6a1938ce86aa4bdd14be9
+    "@envelop/core": ^1.6.1
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: d39630ee673d7f7c4bf8fda0aaa07dd654710154795da2a294756d631bb7e2c467b8ecf3bdca7285270f95cac023ba9d9bfa868dc5119021ec2d1ae7de04e197
   languageName: node
   linkType: hard
 
@@ -1579,14 +1572,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/validation-cache@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@envelop/validation-cache@npm:2.0.0"
+"@envelop/validation-cache@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "@envelop/validation-cache@npm:2.2.1"
   dependencies:
     tiny-lru: 7.0.6
   peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0
-  checksum: 267317985a89f86a9e39a45b3bf212a223a3e5b87a16912853da057f8690ea620ad6fd528ec6e08681a681d1534e8dc6269616d55cb7dda5fbd89a2da7f0d969
+    "@envelop/core": ^1.6.1
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 7f768d149d58636e979ca79734342f94dbaa18e63069e7462d7dd4dbd53443dd2855364a8713aa373022c5be5f963aa9dd188f2f27f2bb4a2902cb7fb082542b
   languageName: node
   linkType: hard
 
@@ -1610,15 +1604,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/core@workspace:packages/core"
   dependencies:
-    "@envelop/core": ^1.3.0
-    "@envelop/disable-introspection": ^1.0.0
-    "@envelop/parser-cache": ^2.0.0
-    "@envelop/validation-cache": ^2.0.0
+    "@envelop/core": ^1.6.2
+    "@envelop/disable-introspection": ^1.2.1
+    "@envelop/parser-cache": ^2.2.1
+    "@envelop/validation-cache": ^2.2.1
     "@graphql-yoga/handler": "workspace:*"
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
     graphql: ^16.0.1
-    ts-log: ^2.2.3
+    ts-log: ^2.2.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
   languageName: unknown
@@ -3655,9 +3649,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^3.23.1":
-  version: 3.23.1
-  resolution: "fastify@npm:3.23.1"
+"fastify@npm:^3.24.0":
+  version: 3.24.0
+  resolution: "fastify@npm:3.24.0"
   dependencies:
     "@fastify/ajv-compiler": ^1.0.0
     abstract-logging: ^2.0.0
@@ -3674,7 +3668,7 @@ __metadata:
     secure-json-parse: ^2.0.0
     semver: ^7.3.2
     tiny-lru: ^7.0.0
-  checksum: c1110085c9aacbc8734b3c570e14276c94d406361c1280a8a9345266eaf8218e420eaab742de171581e9d9f5195fff3d0206d582da1ab7ea4ba0f455ab9efbba
+  checksum: 206e7b74068b7a3a39d1144bd2c453141216527fd9face960d3f20d33edb86a71421afb5d1ee15633712e8b50886db625c6f2d8dfca2b97739c01fa128cb7e8d
   languageName: node
   linkType: hard
 
@@ -4023,12 +4017,12 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@envelop/core": ^1.6.1
+    "@envelop/core": ^1.6.2
     "@graphql-yoga/core": "workspace:*"
     "@graphql-yoga/handler": "workspace:*"
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
-    fastify: ^3.23.1
+    fastify: ^3.24.0
     graphql: ^16.0.1
     graphql-helix: 2.0.0-canary-e8a1707.0
     pino: ^7.2.0
@@ -7200,10 +7194,10 @@ resolve@1.15.1:
   languageName: node
   linkType: hard
 
-"ts-log@npm:^2.2.3":
-  version: 2.2.3
-  resolution: "ts-log@npm:2.2.3"
-  checksum: 8aa34a2724d7915ddc6de8d0c27eb48f67206b52c42656f1ea2a7ffb080fa664db5fb22b42bd3c72b5b95cc6eb4612196b7d1e28f4bc146191ebc2a9683af548
+"ts-log@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "ts-log@npm:2.2.4"
+  checksum: 489393cf0d46c3c86a837a589af8b0ec464cb7aa7a75ce9cdf19bf831308f5dda4dc24329359efc920bfb252d3bc5e0c109dcbcc8cb5025348c630f2e3028e24
   languageName: node
   linkType: hard
 
