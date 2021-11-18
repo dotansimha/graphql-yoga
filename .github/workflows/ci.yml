@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12, 17]
+        node-version: [12, 16]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node ${{ matrix.node-version }}
