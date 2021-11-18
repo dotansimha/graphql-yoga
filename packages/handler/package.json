@@ -1,0 +1,51 @@
+{
+  "name": "@graphql-yoga/handler",
+  "version": "0.1.0",
+  "description": "Normalize requests and response",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/handler"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "prepack": "bob prepack"
+  },
+  "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://github.com/saihaj)",
+  "license": "MIT",
+  "devDependencies": {
+    "@envelop/core": "^1.6.1",
+    "@types/node": "^16.11.7",
+    "bob-the-bundler": "^1.5.1",
+    "graphql": "^16.0.1",
+    "typescript": "^4.4.4"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "dependencies": {
+    "graphql-helix": "2.0.0-canary-e8a1707.0"
+  },
+  "peerDependencies": {
+    "graphql": "^15.2.0 || ^16.0.0"
+  }
+}
