@@ -40,3 +40,5 @@ const schema = new GraphQLSchema({
 const server = new GraphQLServer({ schema })
 server.start()
 ```
+
+More docs coming soon
