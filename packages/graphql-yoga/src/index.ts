@@ -13,6 +13,7 @@ import {
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import { FastifyCorsOptions } from 'fastify-cors'
 import type { BusboyConfig } from 'busboy'
+import type { FastifyCorsOptions } from 'fastify-cors'
 
 /**
  * Configuration options for the server
@@ -20,6 +21,7 @@ import type { BusboyConfig } from 'busboy'
 export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
   cors?: FastifyCorsOptions
   uploads?: boolean | BusboyConfig
+  cors?: FastifyCorsOptions
 }
 
 const isBoolean = (value: unknown): value is boolean => {
@@ -57,6 +59,10 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
     })
     this._server = fastify()
+
+    if (options.cors) {
+      this._server.register(require('fastify-cors'), options.cors)
+    }
 
     // Enable Fastify multipart for file uploads
     if (options.uploads) {
