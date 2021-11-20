@@ -12,12 +12,18 @@ import {
 } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import { FastifyCorsOptions } from 'fastify-cors'
+import type { BusboyConfig } from 'busboy'
 
 /**
  * Configuration options for the server
  */
 export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
   cors?: FastifyCorsOptions
+  uploads?: boolean | BusboyConfig
+}
+
+const isBoolean = (value: unknown): value is boolean => {
+  return typeof value === 'boolean'
 }
 
 /**
@@ -51,6 +57,13 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
     })
     this._server = fastify()
+
+    // Enable Fastify multipart for file uploads
+    if (options.uploads) {
+      isBoolean(options.uploads)
+        ? this._server.register(require('fastify-multipart'))
+        : this._server.register(require('fastify-multipart'), options.uploads)
+    }
 
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
