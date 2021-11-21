@@ -53,14 +53,6 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     })
     this._server = fastify()
 
-    if (options.cors) {
-      this._server.register(require('fastify-cors'), options.cors)
-    }
-
-    if (options.uploads) {
-      this._server.register(require('fastify-gql-upload-ts'))
-    }
-
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
       ? {
@@ -81,6 +73,11 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
 
     this.logger.debug('Registering CORS plugin.')
     this._server.register(require('fastify-cors'), options.cors)
+
+    if (options.uploads) {
+      this.logger.debug('Registering GraphQL Upload plugin.')
+      this._server.register(require('fastify-gql-upload-ts'))
+    }
 
     this.setup()
   }
