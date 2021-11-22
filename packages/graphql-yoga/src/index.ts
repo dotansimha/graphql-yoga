@@ -64,7 +64,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
 
     this.logger = pino({
       ...prettyPrintOptions,
-      level: this.isDev ? 'info' : 'debug',
+      level: this.isDev ? 'debug' : 'info',
     })
 
     this.setup()
