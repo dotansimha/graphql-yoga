@@ -11,11 +11,14 @@ import {
   BaseNodeGraphQLServerOptions,
 } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
+import { FastifyCorsOptions } from 'fastify-cors'
 
 /**
  * Configuration options for the server
  */
-export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {}
+export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
+  cors?: FastifyCorsOptions
+}
 
 /**
  * Create a simple yet powerful GraphQL server ready for production workloads.
@@ -66,6 +69,9 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       ...prettyPrintOptions,
       level: this.isDev ? 'debug' : 'info',
     })
+
+    this.logger.debug('Registering CORS plugin.')
+    this._server.register(require('fastify-cors'))
 
     this.setup()
   }
