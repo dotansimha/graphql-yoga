@@ -95,6 +95,10 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
           res.raw.end(renderGraphiQL())
         } else {
           const result = await handler(request, schema, envelop)
+
+          for (const [key, value] of Object.entries(res.getHeaders())) {
+            res.raw.setHeader(key, String(value || ''))
+          }
           return sendNodeResponse(result, res.raw)
         }
       },
