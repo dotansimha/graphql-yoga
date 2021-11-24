@@ -2134,7 +2134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/graphql-upload@npm:^8.0.3":
+"@types/graphql-upload@npm:^8.0.7":
   version: 8.0.7
   resolution: "@types/graphql-upload@npm:8.0.7"
   dependencies:
@@ -3838,26 +3838,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify-gql-upload-ts@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "fastify-gql-upload-ts@npm:1.1.0"
-  dependencies:
-    "@types/graphql-upload": ^8.0.3
-    fastify-plugin: ^2.0.1
-    graphql-upload: ^11.0.0
-  checksum: 4e7ab8a844435a4f63cd9de150bc8ec89aae638dcdceda02d180c8de3da5b24994f0a9bc9bda94240bd8634d642bc48ec7e9dbf837a7273ee8435896916a91be
-  languageName: node
-  linkType: hard
-
-"fastify-plugin@npm:^2.0.1":
-  version: 2.3.4
-  resolution: "fastify-plugin@npm:2.3.4"
-  dependencies:
-    semver: ^7.3.2
-  checksum: 19ce9ec783c2c59c56a8a4854bba15367c447fc74ff300ccaefa99276f2d009854626425df2346aa4cbe9f09617b88bfd080f922056771ccec2d0bca505afed1
-  languageName: node
-  linkType: hard
-
 "fastify-plugin@npm:^3.0.0":
   version: 3.0.0
   resolution: "fastify-plugin@npm:3.0.0"
@@ -4000,7 +3980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-capacitor@npm:^6.1.0":
+"fs-capacitor@npm:^6.2.0":
   version: 6.2.0
   resolution: "fs-capacitor@npm:6.2.0"
   checksum: acdbeb92eedb1d7094f623e7be518c4d73075cb45ea97cc80ae23fc31adb066853723be824caf3e3c8f40944548c8cdc9bf0f0735eabb9413e734fe045b303b1
@@ -4243,18 +4223,18 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-upload@npm:^11.0.0":
-  version: 11.0.0
-  resolution: "graphql-upload@npm:11.0.0"
+"graphql-upload@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "graphql-upload@npm:12.0.0"
   dependencies:
     busboy: ^0.3.1
-    fs-capacitor: ^6.1.0
-    http-errors: ^1.7.3
+    fs-capacitor: ^6.2.0
+    http-errors: ^1.8.0
     isobject: ^4.0.0
-    object-path: ^0.11.4
+    object-path: ^0.11.5
   peerDependencies:
     graphql: 0.13.1 - 15
-  checksum: 4d17cf4a16cfba940ca73487710093bc0013b06550168c1b84cb1f915c2df26e172faf9ed873ae4fc1cb547cd0d4d6e8ee607a35634355f128b3f161f64f0e1f
+  checksum: 2cbd0e073f6f18e271886456b823954367b1c57e92c49f131e8e09a1e48b1b94d7b9fa9157938c7f20f810550658c66729d20e587dab05add91b842a397439dd
   languageName: node
   linkType: hard
 
@@ -4265,13 +4245,14 @@ fsevents@~2.1.2:
     "@envelop/core": ^1.6.2
     "@graphql-yoga/core": "workspace:*"
     "@graphql-yoga/handler": "workspace:*"
+    "@types/graphql-upload": ^8.0.7
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
     fastify: ^3.24.0
     fastify-cors: ^6.0.2
-    fastify-gql-upload-ts: ^1.1.0
     graphql: ^16.0.1
     graphql-helix: 2.0.0-canary-e8a1707.0
+    graphql-upload: ^12.0.0
     pino: ^7.2.0
     pino-pretty: ^7.2.0
   peerDependencies:
@@ -4367,7 +4348,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"http-errors@npm:^1.7.3":
+"http-errors@npm:^1.8.0":
   version: 1.8.1
   resolution: "http-errors@npm:1.8.1"
   dependencies:
@@ -5949,7 +5930,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"object-path@npm:^0.11.4":
+"object-path@npm:^0.11.5":
   version: 0.11.8
   resolution: "object-path@npm:0.11.8"
   checksum: 684ccf0fb6b82f067dc81e2763481606692b8485bec03eb2a64e086a44dbea122b2b9ef44423a08e09041348fe4b4b67bd59985598f1652f67df95f0618f5968

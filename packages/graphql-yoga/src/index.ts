@@ -12,13 +12,14 @@ import {
 } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import type { FastifyCorsOptions } from 'fastify-cors'
+import { processRequest } from 'graphql-upload'
 
 /**
  * Configuration options for the server
  */
 export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
   cors?: FastifyCorsOptions
-  uploads?: boolean | BusboyConfig
+  uploads?: boolean
 }
 
 /**
@@ -76,7 +77,25 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
 
     if (options.uploads) {
       this.logger.debug('Registering GraphQL Upload plugin.')
-      this._server.register(require('fastify-gql-upload-ts'))
+
+      this._server.addContentTypeParser('multipart', (req, _, done) => {
+        // @ts-expect-error - we add this custom property to the request
+        req.isMultipart = true
+        done(null)
+      })
+
+      this._server.addHook('preValidation', async (req, reply) => {
+        // TODO: improve typings for this
+        // @ts-expect-error - we added this custom property to the request
+        if (!req.isMultipart) return
+        this.logger.debug(req.body)
+        try {
+          req.body = await processRequest(req.raw, reply.raw)
+          this.logger.info(req.body)
+        } catch (e) {
+          this.logger.error(e)
+        }
+      })
     }
 
     this.setup()
@@ -152,3 +171,4 @@ export {
   useTiming,
   EnvelopError as GraphQLServerError,
 } from '@envelop/core'
+export { GraphQLUpload } from 'graphql-upload'
