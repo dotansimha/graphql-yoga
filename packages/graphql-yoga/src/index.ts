@@ -71,7 +71,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     })
 
     this.logger.debug('Registering CORS plugin.')
-    this._server.register(require('fastify-cors'))
+    this._server.register(require('fastify-cors'), options.cors)
 
     this.setup()
   }
@@ -96,9 +96,15 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
         } else {
           const result = await handler(request, schema, envelop)
 
+          /**
+           * Get headers from Fastify response to raw response
+           * Workaround for helix to use fastify middleware
+           * @see https://github.com/contra/graphql-helix/issues/75#issuecomment-976499958
+           */
           for (const [key, value] of Object.entries(res.getHeaders())) {
             res.raw.setHeader(key, String(value || ''))
           }
+
           return sendNodeResponse(result, res.raw)
         }
       },
