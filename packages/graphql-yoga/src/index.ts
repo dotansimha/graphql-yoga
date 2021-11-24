@@ -11,11 +11,14 @@ import {
   BaseNodeGraphQLServerOptions,
 } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
+import { FastifyCorsOptions } from 'fastify-cors'
 
 /**
  * Configuration options for the server
  */
-export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {}
+export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
+  cors?: FastifyCorsOptions
+}
 
 /**
  * Create a simple yet powerful GraphQL server ready for production workloads.
@@ -64,8 +67,11 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
 
     this.logger = pino({
       ...prettyPrintOptions,
-      level: this.isDev ? 'info' : 'debug',
+      level: this.isDev ? 'debug' : 'info',
     })
+
+    this.logger.debug('Registering CORS plugin.')
+    this._server.register(require('fastify-cors'), options.cors)
 
     this.setup()
   }
@@ -89,6 +95,16 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
           res.raw.end(renderGraphiQL())
         } else {
           const result = await handler(request, schema, envelop)
+
+          /**
+           * Get headers from Fastify response to raw response
+           * Workaround for helix to use fastify middleware
+           * @see https://github.com/contra/graphql-helix/issues/75#issuecomment-976499958
+           */
+          for (const [key, value] of Object.entries(res.getHeaders())) {
+            res.raw.setHeader(key, String(value || ''))
+          }
+
           return sendNodeResponse(result, res.raw)
         }
       },
