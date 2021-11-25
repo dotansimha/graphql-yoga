@@ -5,6 +5,15 @@ __metadata:
   version: 4
   cacheKey: 8
 
+"@ardatan/graphql-helix@npm:0.0.4":
+  version: 0.0.4
+  resolution: "@ardatan/graphql-helix@npm:0.0.4"
+  peerDependencies:
+    graphql: ^15.3.0 || ^16.0.0
+  checksum: 7ef1dd10286b3aa78b778d2db32e8541f3825bbae2e69d5e05d87bae009873edeeea396abe9a2f6603492026e15ea7b18388b26da83507273a73212ca101b850
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0":
   version: 7.15.8
   resolution: "@babel/code-frame@npm:7.15.8"
@@ -1604,6 +1613,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/core@workspace:packages/core"
   dependencies:
+    "@ardatan/graphql-helix": 0.0.4
     "@envelop/core": ^1.6.2
     "@envelop/disable-introspection": ^1.2.1
     "@envelop/parser-cache": ^2.2.1
@@ -1622,11 +1632,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
+    "@ardatan/graphql-helix": 0.0.4
     "@envelop/core": ^1.6.1
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
     graphql: ^16.0.1
-    graphql-helix: 2.0.0-canary-e8a1707.0
     typescript: ^4.4.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
@@ -4214,15 +4224,6 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-helix@npm:2.0.0-canary-e8a1707.0":
-  version: 2.0.0-canary-e8a1707.0
-  resolution: "graphql-helix@npm:2.0.0-canary-e8a1707.0"
-  peerDependencies:
-    graphql: ^15.3.0 || ^16.0.0
-  checksum: 331e1616a0fd65eb24bfa3abdadcdcd20dcac11175c4af7cb8899082b3b38109a8e6a02ec655ecaab807ecbcb806bf3cb66e244f9f8e6f028af8a6bb8929956c
-  languageName: node
-  linkType: hard
-
 "graphql-upload@npm:^12.0.0":
   version: 12.0.0
   resolution: "graphql-upload@npm:12.0.0"
@@ -4242,6 +4243,7 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
+    "@ardatan/graphql-helix": 0.0.4
     "@envelop/core": ^1.6.2
     "@graphql-yoga/core": "workspace:*"
     "@graphql-yoga/handler": "workspace:*"
@@ -4251,7 +4253,6 @@ fsevents@~2.1.2:
     fastify: ^3.24.0
     fastify-cors: ^6.0.2
     graphql: ^16.0.1
-    graphql-helix: 2.0.0-canary-e8a1707.0
     graphql-upload: ^12.0.0
     pino: ^7.2.0
     pino-pretty: ^7.2.0

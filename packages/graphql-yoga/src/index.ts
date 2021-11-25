@@ -5,7 +5,7 @@ import {
   renderGraphiQL,
   sendNodeResponse,
   shouldRenderGraphiQL,
-} from 'graphql-helix'
+} from '@ardatan/graphql-helix'
 import {
   BaseNodeGraphQLServer,
   BaseNodeGraphQLServerOptions,
@@ -88,10 +88,9 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
         // TODO: improve typings for this
         // @ts-expect-error - we added this custom property to the request
         if (!req.isMultipart) return
-        this.logger.debug(req.body)
+
         try {
           req.body = await processRequest(req.raw, reply.raw)
-          this.logger.info(req.body)
         } catch (e) {
           this.logger.error(e)
         }
