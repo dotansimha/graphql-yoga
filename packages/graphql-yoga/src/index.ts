@@ -5,19 +5,21 @@ import {
   renderGraphiQL,
   sendNodeResponse,
   shouldRenderGraphiQL,
-} from 'graphql-helix'
+} from '@ardatan/graphql-helix'
 import {
   BaseNodeGraphQLServer,
   BaseNodeGraphQLServerOptions,
 } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
-import { FastifyCorsOptions } from 'fastify-cors'
+import type { FastifyCorsOptions } from 'fastify-cors'
+import { processRequest } from 'graphql-upload'
 
 /**
  * Configuration options for the server
  */
 export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
   cors?: FastifyCorsOptions
+  uploads?: boolean
 }
 
 /**
@@ -72,6 +74,28 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
 
     this.logger.debug('Registering CORS plugin.')
     this._server.register(require('fastify-cors'), options.cors)
+
+    if (options.uploads) {
+      this.logger.debug('Registering GraphQL Upload plugin.')
+
+      this._server.addContentTypeParser('multipart', (req, _, done) => {
+        // @ts-expect-error - we add this custom property to the request
+        req.isMultipart = true
+        done(null)
+      })
+
+      this._server.addHook('preValidation', async (req, reply) => {
+        // TODO: improve typings for this
+        // @ts-expect-error - we added this custom property to the request
+        if (!req.isMultipart) return
+
+        try {
+          req.body = await processRequest(req.raw, reply.raw)
+        } catch (e) {
+          this.logger.error(e)
+        }
+      })
+    }
 
     this.setup()
   }
@@ -146,3 +170,4 @@ export {
   useTiming,
   EnvelopError as GraphQLServerError,
 } from '@envelop/core'
+export { GraphQLUpload } from 'graphql-upload'

@@ -1,4 +1,4 @@
-import { processRequest, getGraphQLParameters } from 'graphql-helix'
+import { processRequest, getGraphQLParameters } from '@ardatan/graphql-helix'
 import type { GraphQLSchema } from 'graphql'
 import type { GetEnvelopedFn } from '@envelop/core'
 
