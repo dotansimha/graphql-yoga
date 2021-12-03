@@ -20,6 +20,11 @@ import { processRequest } from 'graphql-upload'
 export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
   cors?: FastifyCorsOptions
   uploads?: boolean
+  /**
+   * Enable pino logging
+   * @default true
+   */
+  enableLogging?: boolean
 }
 
 /**
@@ -70,6 +75,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     this.logger = pino({
       ...prettyPrintOptions,
       level: this.isDev ? 'debug' : 'info',
+      enabled: options.enableLogging ?? true,
     })
 
     this.logger.debug('Registering CORS plugin.')
@@ -147,7 +153,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     this._server.close().then(
       () => {
         this.logger.info('Shutting down GraphQL server.')
-        process.exit(0)
+        // process.exit(0)
       },
       (err) => {
         this.logger.error(
