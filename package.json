@@ -5,7 +5,8 @@
     "build": "tsc --project tsconfig.build.json && bob build",
     "test": "jest --passWithNoTests",
     "release": "yarn build && changeset publish",
-    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary..."
+    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
+    "start:docs": "yarn workspace website dev"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,8 @@
     "url": "https://github.com/dotansimha/graphql-yoga/issues"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "website"
   ],
   "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
   "packageManager": "yarn@3.0.2",
