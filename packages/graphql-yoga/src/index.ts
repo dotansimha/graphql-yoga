@@ -78,8 +78,9 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       enabled: options.enableLogging ?? true,
     })
 
-    this.logger.debug('Registering CORS plugin.')
-    this._server.register(require('fastify-cors'), options.cors)
+    // TODO: Fix CORS plugin
+    // this.logger.debug('Registering CORS plugin.')
+    // this._server.register(require('fastify-cors'), options.cors)
 
     if (options.uploads) {
       this.logger.debug('Registering GraphQL Upload plugin.')
@@ -162,6 +163,10 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
         throw new GraphQLServerError(err)
       },
     )
+  }
+
+  get fastify() {
+    return this._server
   }
 }
 
