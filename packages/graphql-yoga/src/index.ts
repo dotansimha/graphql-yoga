@@ -153,7 +153,6 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     this._server.close().then(
       () => {
         this.logger.info('Shutting down GraphQL server.')
-        // process.exit(0)
       },
       (err) => {
         this.logger.error(
