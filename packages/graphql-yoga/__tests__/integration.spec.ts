@@ -4,67 +4,63 @@ import request from 'supertest'
 import { schema } from '../test-utils/schema'
 
 const yoga = new GraphQLServer({ schema, enableLogging: false, uploads: true })
+const fastify = yoga.fastify
 
 describe('Requests', () => {
-  const fastify = yoga.fastify
-
-  beforeAll(async () => {
-    await fastify.ready()
-  })
-
-  afterAll(async () => {
-    await fastify.close()
-  })
-
   it('should send introspection query', async () => {
-    const response = await request(fastify.server)
-      .post('/graphql')
-      .set('content-type', 'application/json')
-      .send({
+    const response = await fastify.inject({
+      method: 'POST',
+      url: '/graphql',
+      payload: {
         query: getIntrospectionQuery(),
-      })
+      },
+    })
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data.__schema.queryType.name).toBe('Query')
+    expect(response.statusCode).toBe(200)
+    expect(response.json().errors).toBeUndefined()
+    expect(response.json().data.__schema.queryType.name).toBe('Query')
   })
 
   it('should send basic query', async () => {
-    const response = await request(fastify.server)
-      .post('/graphql')
-      .send({
+    const response = await fastify.inject({
+      method: 'POST',
+      url: '/graphql',
+      payload: {
         query: /* GraphQL */ `
           query {
             ping
           }
         `,
-      })
+      },
+    })
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data.ping).toBe('pong')
+    expect(response.statusCode).toBe(200)
+    expect(response.json().data.ping).toBe('pong')
   })
 
   it('should send basic mutation', async () => {
-    const response = await request(fastify.server)
-      .post('/graphql')
-      .send({
+    const response = await fastify.inject({
+      method: 'POST',
+      url: '/graphql',
+      payload: {
         query: /* GraphQL */ `
           mutation {
             echo(message: "hello")
           }
         `,
-      })
+      },
+    })
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data.echo).toBe('hello')
+    expect(response.statusCode).toBe(200)
+    expect(response.json().errors).toBeUndefined()
+    expect(response.json().data.echo).toBe('hello')
   })
 
   it('should send variables', async () => {
-    const response = await request(fastify.server)
-      .post('/graphql')
-      .send({
+    const response = await fastify.inject({
+      method: 'POST',
+      url: '/graphql',
+      payload: {
         query: /* GraphQL */ `
           mutation ($text: String) {
             echo(message: $text)
@@ -73,37 +69,52 @@ describe('Requests', () => {
         variables: {
           text: 'hello',
         },
-      })
+      },
+    })
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data.echo).toBe('hello')
+    expect(response.statusCode).toBe(200)
+    expect(response.json().errors).toBeUndefined()
+    expect(response.json().data.echo).toBe('hello')
   })
 
   it('should error on malformed query', async () => {
-    const response = await request(fastify.server)
-      .post('/graphql')
-      .send({
+    const response = await fastify.inject({
+      method: 'POST',
+      url: '/graphql',
+      payload: {
         query: '{ query { ping }',
-      })
-      .then((res) => JSON.parse(res.text))
+      },
+    })
 
-    expect(response.errors).toBeDefined()
-    expect(response.data).toBeUndefined()
+    //  For some reason doing response.json() throws an error
+    const body = JSON.parse(response.body)
+    expect(body.errors).toBeDefined()
+    expect(body.data).toBeUndefined()
   })
 
   it('should error missing query', async () => {
-    const response = await request(fastify.server)
-      .post('/graphql')
-      .send({
-        body: '',
-      })
-      .then((res) => JSON.parse(res.text))
+    const response = await fastify.inject({
+      method: 'POST',
+      url: '/graphql',
+      payload: { body: '' },
+    })
 
-    expect(response.data).toBeUndefined()
-    expect(response.errors[0].message).toBe('Must provide query string.')
+    //  For some reason doing response.json() throws an error
+    const body = JSON.parse(response.body)
+    expect(body.data).toBeUndefined()
+    expect(body.errors[0].message).toBe('Must provide query string.')
+  })
+})
+
+describe('Uploads', () => {
+  // TODO: Need to find a way to test using fastify inject
+  beforeAll(async () => {
+    await fastify.ready()
   })
 
+  afterAll(async () => {
+    await fastify.close()
+  })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
       mutation upload($file: Upload!) {
