@@ -4,109 +4,83 @@ import request from 'supertest'
 import { schema } from '../test-utils/schema'
 
 const yoga = new GraphQLServer({ schema, enableLogging: false, uploads: true })
-const fastify = yoga.fastify
 
 describe('Requests', () => {
   it('should send introspection query', async () => {
-    const response = await fastify.inject({
-      method: 'POST',
-      url: '/graphql',
-      payload: {
-        query: getIntrospectionQuery(),
-      },
+    const response = await yoga.inject({
+      query: getIntrospectionQuery(),
     })
 
     expect(response.statusCode).toBe(200)
-    expect(response.json().errors).toBeUndefined()
-    expect(response.json().data.__schema.queryType.name).toBe('Query')
+    expect(response.errors).toBeUndefined()
+    expect(response.data.__schema.queryType.name).toBe('Query')
   })
 
   it('should send basic query', async () => {
-    const response = await fastify.inject({
-      method: 'POST',
-      url: '/graphql',
-      payload: {
-        query: /* GraphQL */ `
-          query {
-            ping
-          }
-        `,
-      },
+    const response = await yoga.inject({
+      query: /* GraphQL */ `
+        query {
+          ping
+        }
+      `,
     })
 
     expect(response.statusCode).toBe(200)
-    expect(response.json().data.ping).toBe('pong')
+    expect(response.data.ping).toBe('pong')
   })
 
   it('should send basic mutation', async () => {
-    const response = await fastify.inject({
-      method: 'POST',
-      url: '/graphql',
-      payload: {
-        query: /* GraphQL */ `
-          mutation {
-            echo(message: "hello")
-          }
-        `,
-      },
+    const response = await yoga.inject({
+      query: /* GraphQL */ `
+        mutation {
+          echo(message: "hello")
+        }
+      `,
     })
 
     expect(response.statusCode).toBe(200)
-    expect(response.json().errors).toBeUndefined()
-    expect(response.json().data.echo).toBe('hello')
+    expect(response.errors).toBeUndefined()
+    expect(response.data.echo).toBe('hello')
   })
 
   it('should send variables', async () => {
-    const response = await fastify.inject({
-      method: 'POST',
-      url: '/graphql',
-      payload: {
-        query: /* GraphQL */ `
-          mutation ($text: String) {
-            echo(message: $text)
-          }
-        `,
-        variables: {
-          text: 'hello',
-        },
+    const response = await yoga.inject({
+      query: /* GraphQL */ `
+        mutation ($text: String) {
+          echo(message: $text)
+        }
+      `,
+      variables: {
+        text: 'hello',
       },
     })
 
     expect(response.statusCode).toBe(200)
-    expect(response.json().errors).toBeUndefined()
-    expect(response.json().data.echo).toBe('hello')
+    expect(response.errors).toBeUndefined()
+    expect(response.data.echo).toBe('hello')
   })
 
   it('should error on malformed query', async () => {
-    const response = await fastify.inject({
-      method: 'POST',
-      url: '/graphql',
-      payload: {
-        query: '{ query { ping }',
-      },
+    const response = await yoga.inject({
+      query: '{ query { ping }',
     })
 
-    //  For some reason doing response.json() throws an error
-    const body = JSON.parse(response.body)
-    expect(body.errors).toBeDefined()
-    expect(body.data).toBeUndefined()
+    expect(response.errors).toBeDefined()
+    expect(response.data).toBeUndefined()
   })
 
   it('should error missing query', async () => {
-    const response = await fastify.inject({
-      method: 'POST',
-      url: '/graphql',
-      payload: { body: '' },
-    })
+    // @ts-expect-error
+    const response = await yoga.inject({ query: null })
 
-    //  For some reason doing response.json() throws an error
-    const body = JSON.parse(response.body)
-    expect(body.data).toBeUndefined()
-    expect(body.errors[0].message).toBe('Must provide query string.')
+    expect(response.data).toBeUndefined()
+    expect(response.errors[0].message).toBe('Must provide query string.')
   })
 })
 
 describe('Uploads', () => {
+  const fastify = yoga.fastify
+
   // TODO: Need to find a way to test using fastify inject
   beforeAll(async () => {
     await fastify.ready()

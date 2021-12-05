@@ -13,6 +13,8 @@ import {
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import type { FastifyCorsOptions } from 'fastify-cors'
 import { processRequest } from 'graphql-upload'
+import { IncomingHttpHeaders } from 'http'
+import { OutgoingHttpHeaders } from 'http2'
 
 /**
  * Configuration options for the server
@@ -25,6 +27,17 @@ export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
    * @default true
    */
   enableLogging?: boolean
+}
+
+type GraphQLServerInject = {
+  /** GraphQL Operation to execute */
+  query: string
+  /** Variables for GraphQL Operation */
+  variables?: Record<string, any>
+  /** Name for GraphQL Operation */
+  operationName?: string
+  /** Set any headers for the GraphQL request */
+  headers?: IncomingHttpHeaders | OutgoingHttpHeaders
 }
 
 /**
@@ -166,6 +179,49 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
 
   get fastify() {
     return this._server
+  }
+
+  /**
+   * Testing utility to mock http request for GraphQL endpoint
+   * This is a thin wrapper around the `fastify.inject()` to help simplify testing.
+   *
+   *
+   * Example - Test a simple query
+   * ```ts
+   * const response = await yoga.inject({
+   *  query: "query { ping }",
+   * })
+   * expect(response.statusCode).toBe(200)
+   * expect(response.data.ping).toBe('pong')
+   * ```
+   */
+  async inject({
+    query,
+    headers,
+    variables,
+    operationName,
+  }: GraphQLServerInject) {
+    const res = await this._server.inject({
+      method: 'POST',
+      url: this.endpoint,
+      payload: {
+        query,
+        variables,
+        operationName,
+      },
+      headers,
+    })
+
+    // In failed requests res.json() will throw an error
+    // So we just parse the body ourselves
+    const body = JSON.parse(res.body)
+
+    return {
+      statusCode: res.statusCode,
+      headers: res.headers,
+      data: body?.data,
+      errors: body?.errors,
+    }
   }
 }
 
