@@ -160,14 +160,14 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
    * Example - Test a simple query
    * ```ts
    * const response = await yoga.inject({
-   *  query: "query { ping }",
+   *  operation: "query { ping }",
    * })
    * expect(response.statusCode).toBe(200)
    * expect(response.data.ping).toBe('pong')
    * ```
    */
   async inject({
-    query,
+    operation,
     headers,
     variables,
     operationName,
@@ -176,7 +176,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       method: 'POST',
       url: this.endpoint,
       payload: {
-        query,
+        query: operation,
         variables,
         operationName,
       },

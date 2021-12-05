@@ -1,7 +1,8 @@
-import { BaseNodeGraphQLServerOptions } from '@graphql-yoga/core'
+import type { BaseNodeGraphQLServerOptions } from '@graphql-yoga/core'
 import type { FastifyCorsOptions } from 'fastify-cors'
-import { IncomingHttpHeaders } from 'http'
-import { OutgoingHttpHeaders } from 'http2'
+import type { DocumentNode } from 'graphql'
+import type { IncomingHttpHeaders } from 'http'
+import type { OutgoingHttpHeaders } from 'http2'
 
 /**
  * Configuration options for the server
@@ -18,7 +19,7 @@ export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
 
 export type GraphQLServerInject = {
   /** GraphQL Operation to execute */
-  query: string
+  operation: string | DocumentNode
   /** Variables for GraphQL Operation */
   variables?: Record<string, any>
   /** Name for GraphQL Operation */
