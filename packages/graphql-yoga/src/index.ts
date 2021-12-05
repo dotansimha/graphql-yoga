@@ -6,26 +6,10 @@ import {
   sendNodeResponse,
   shouldRenderGraphiQL,
 } from '@ardatan/graphql-helix'
-import {
-  BaseNodeGraphQLServer,
-  BaseNodeGraphQLServerOptions,
-} from '@graphql-yoga/core'
+import { BaseNodeGraphQLServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
-import type { FastifyCorsOptions } from 'fastify-cors'
 import { processRequest } from 'graphql-upload'
-
-/**
- * Configuration options for the server
- */
-export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
-  cors?: FastifyCorsOptions
-  uploads?: boolean
-  /**
-   * Enable pino logging
-   * @default true
-   */
-  enableLogging?: boolean
-}
+import type { GraphQLServerInject, GraphQLServerOptions } from './types'
 
 /**
  * Create a simple yet powerful GraphQL server ready for production workloads.
@@ -167,8 +151,52 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
   get fastify() {
     return this._server
   }
+
+  /**
+   * Testing utility to mock http request for GraphQL endpoint
+   * This is a thin wrapper around the `fastify.inject()` to help simplify testing.
+   *
+   *
+   * Example - Test a simple query
+   * ```ts
+   * const response = await yoga.inject({
+   *  operation: "query { ping }",
+   * })
+   * expect(response.statusCode).toBe(200)
+   * expect(response.data.ping).toBe('pong')
+   * ```
+   */
+  async inject<TData = any, TVariables = any>({
+    operation,
+    headers,
+    variables,
+    operationName,
+  }: GraphQLServerInject<TData, TVariables>) {
+    const res = await this._server.inject({
+      method: 'POST',
+      url: this.endpoint,
+      payload: {
+        query: operation,
+        variables,
+        operationName,
+      },
+      headers,
+    })
+
+    // In failed requests res.json() will throw an error
+    // So we just parse the body ourselves
+    const body = JSON.parse(res.body)
+
+    return {
+      statusCode: res.statusCode,
+      headers: res.headers,
+      data: body?.data as TData,
+      errors: body?.errors as Error[],
+    }
+  }
 }
 
+export type { GraphQLServerOptions } from './types'
 export {
   Plugin,
   enableIf,
