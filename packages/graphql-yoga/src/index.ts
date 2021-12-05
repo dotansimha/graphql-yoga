@@ -6,39 +6,10 @@ import {
   sendNodeResponse,
   shouldRenderGraphiQL,
 } from '@ardatan/graphql-helix'
-import {
-  BaseNodeGraphQLServer,
-  BaseNodeGraphQLServerOptions,
-} from '@graphql-yoga/core'
+import { BaseNodeGraphQLServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
-import type { FastifyCorsOptions } from 'fastify-cors'
 import { processRequest } from 'graphql-upload'
-import { IncomingHttpHeaders } from 'http'
-import { OutgoingHttpHeaders } from 'http2'
-
-/**
- * Configuration options for the server
- */
-export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
-  cors?: FastifyCorsOptions
-  uploads?: boolean
-  /**
-   * Enable pino logging
-   * @default true
-   */
-  enableLogging?: boolean
-}
-
-type GraphQLServerInject = {
-  /** GraphQL Operation to execute */
-  query: string
-  /** Variables for GraphQL Operation */
-  variables?: Record<string, any>
-  /** Name for GraphQL Operation */
-  operationName?: string
-  /** Set any headers for the GraphQL request */
-  headers?: IncomingHttpHeaders | OutgoingHttpHeaders
-}
+import type { GraphQLServerInject, GraphQLServerOptions } from './types'
 
 /**
  * Create a simple yet powerful GraphQL server ready for production workloads.
@@ -225,6 +196,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
   }
 }
 
+export type { GraphQLServerOptions } from './types'
 export {
   Plugin,
   enableIf,
