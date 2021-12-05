@@ -166,12 +166,12 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
    * expect(response.data.ping).toBe('pong')
    * ```
    */
-  async inject({
+  async inject<TData = any, TVariables = any>({
     operation,
     headers,
     variables,
     operationName,
-  }: GraphQLServerInject) {
+  }: GraphQLServerInject<TData, TVariables>) {
     const res = await this._server.inject({
       method: 'POST',
       url: this.endpoint,
@@ -190,8 +190,8 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     return {
       statusCode: res.statusCode,
       headers: res.headers,
-      data: body?.data,
-      errors: body?.errors,
+      data: body?.data as TData,
+      errors: body?.errors as Error[],
     }
   }
 }
