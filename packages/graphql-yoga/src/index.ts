@@ -98,7 +98,6 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
 
           reply.status(response.status);
           reply.send(response.body);
-          reply.sent = true;
         }
       },
     })
