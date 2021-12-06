@@ -18,7 +18,6 @@ export const schema = new GraphQLSchema({
   }),
   mutation: new GraphQLObjectType({
     name: 'Mutation',
-    // @ts-expect-error: GraphQLUpload types are a mess
     fields: () => ({
       echo: {
         type: GraphQLString,

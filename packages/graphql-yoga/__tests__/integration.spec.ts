@@ -101,12 +101,12 @@ describe('Uploads', () => {
         'operations',
         JSON.stringify({ query: UPLOAD_MUTATION, variables: { file: null } }),
       )
-      .field('map', JSON.stringify({ 1: ['variables.file'] }))
-      .attach('1', Buffer.from('test'), {
+      .field('map', JSON.stringify({ 0: ['variables.file'] }))
+      .attach('0', Buffer.from('test'), {
         filename: 'test.txt',
         contentType: 'text/plain',
       })
-      .then((res) => JSON.parse(res.text))
+      .then((res) => res.body)
 
     expect(response.errors).toBeUndefined()
     expect(response.data.singleUpload).toBe(true)
