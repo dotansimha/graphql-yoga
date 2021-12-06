@@ -167,7 +167,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
    * ```
    */
   async inject<TData = any, TVariables = any>({
-    operation,
+    document,
     headers,
     variables,
     operationName,
@@ -176,7 +176,7 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       method: 'POST',
       url: this.endpoint,
       payload: {
-        query: operation,
+        query: document,
         variables,
         operationName,
       },

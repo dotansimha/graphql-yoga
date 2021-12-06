@@ -23,7 +23,7 @@ export type GraphQLServerInject<
   TVariables = Record<string, any>,
 > = {
   /** GraphQL Operation to execute */
-  operation: string | DocumentNode | TypedDocumentNode<TData, TVariables>
+  document: string | DocumentNode | TypedDocumentNode<TData, TVariables>
   /** Variables for GraphQL Operation */
   variables?: TVariables
   /** Name for GraphQL Operation */

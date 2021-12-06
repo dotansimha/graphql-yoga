@@ -8,7 +8,7 @@ const yoga = new GraphQLServer({ schema, enableLogging: false, uploads: true })
 describe('Requests', () => {
   it('should send introspection query', async () => {
     const response = await yoga.inject({
-      operation: getIntrospectionQuery(),
+      document: getIntrospectionQuery(),
     })
 
     expect(response.statusCode).toBe(200)
@@ -18,7 +18,7 @@ describe('Requests', () => {
 
   it('should send basic query', async () => {
     const response = await yoga.inject({
-      operation: /* GraphQL */ `
+      document: /* GraphQL */ `
         query {
           ping
         }
@@ -31,7 +31,7 @@ describe('Requests', () => {
 
   it('should send basic mutation', async () => {
     const response = await yoga.inject({
-      operation: /* GraphQL */ `
+      document: /* GraphQL */ `
         mutation {
           echo(message: "hello")
         }
@@ -45,7 +45,7 @@ describe('Requests', () => {
 
   it('should send variables', async () => {
     const response = await yoga.inject({
-      operation: /* GraphQL */ `
+      document: /* GraphQL */ `
         mutation ($text: String) {
           echo(message: $text)
         }
@@ -62,7 +62,7 @@ describe('Requests', () => {
 
   it('should error on malformed query', async () => {
     const response = await yoga.inject({
-      operation: '{ query { ping }',
+      document: '{ query { ping }',
     })
 
     expect(response.errors).toBeDefined()
