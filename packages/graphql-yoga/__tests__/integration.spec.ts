@@ -7,20 +7,17 @@ const yoga = new GraphQLServer({ schema, enableLogging: false })
 
 describe('Requests', () => {
   it('should send introspection query', async () => {
-    const response = await yoga.inject<IntrospectionQuery>({
+    const { response, executionResult } = await yoga.inject<IntrospectionQuery>({
       document: getIntrospectionQuery(),
     })
 
-    expect(response.status).toBe(200)
-
-    const responseBody = await response.json()
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.__schema.queryType.name).toBe('Query')
+    expect(response.statusCode).toBe(200)
+    expect(executionResult.errors).toBeUndefined()
+    expect(executionResult.data?.__schema.queryType.name).toBe('Query')
   })
 
   it('should send basic query', async () => {
-    const response = await yoga.inject({
+    const { response, executionResult } = await yoga.inject({
       document: /* GraphQL */ `
         query {
           ping
@@ -28,15 +25,13 @@ describe('Requests', () => {
       `,
     })
 
-    expect(response.status).toBe(200)
-
-    const responseBody = await response.json()
-
-    expect(responseBody.data.ping).toBe('pong')
+    expect(response.statusCode).toBe(200)
+    expect(executionResult.errors).toBeUndefined()
+    expect(executionResult.data.ping).toBe('pong')
   })
 
   it('should send basic mutation', async () => {
-    const response = await yoga.inject({
+    const { response, executionResult } = await yoga.inject({
       document: /* GraphQL */ `
         mutation {
           echo(message: "hello")
@@ -44,14 +39,13 @@ describe('Requests', () => {
       `,
     })
 
-    const responseBody = await response.json()
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.echo).toBe('hello')
+    expect(response.statusCode).toBe(200)
+    expect(executionResult.errors).toBeUndefined()
+    expect(executionResult.data.echo).toBe('hello')
   })
 
   it('should send variables', async () => {
-    const response = await yoga.inject({
+    const { response, executionResult } = await yoga.inject({
       document: /* GraphQL */ `
         mutation ($text: String) {
           echo(message: $text)
@@ -62,44 +56,37 @@ describe('Requests', () => {
       },
     })
 
-    expect(response.status).toBe(200)
-
-    const responseBody = await response.json()
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.echo).toBe('hello')
+    expect(response.statusCode).toBe(200)
+    expect(executionResult.errors).toBeUndefined()
+    expect(executionResult.data.echo).toBe('hello')
   })
 
   it('should error on malformed query', async () => {
-    const response = await yoga.inject({
+    const { executionResult } = await yoga.inject({
       document: '{ query { ping }',
     })
 
-    const responseBody = await response.json()
-    expect(responseBody.errors).toBeDefined()
-    expect(responseBody.data).toBeUndefined()
+    expect(executionResult.errors).toBeDefined()
+    expect(executionResult.data).toBeUndefined()
   })
 
   it('should error missing query', async () => {
-    // @ts-expect-error
-    const response = await yoga.inject({ query: null })
+    const { executionResult } = await yoga.inject({ document: null } as any)
 
-    const responseBody = await response.json()
-    expect(responseBody.data).toBeUndefined()
-    expect(responseBody.errors[0].message).toBe('Must provide query string.')
+    expect(executionResult.data).toBeUndefined()
+    expect(executionResult.errors?.[0].message).toBe('Must provide query string.')
   })
 })
 
 describe('Uploads', () => {
-  const fastify = yoga.fastify
 
   // TODO: Need to find a way to test using fastify inject
   beforeAll(async () => {
-    await fastify.ready()
+    await yoga.start()
   })
 
   afterAll(async () => {
-    await fastify.close()
+    await yoga.stop()
   })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
@@ -107,7 +94,7 @@ describe('Uploads', () => {
         singleUpload(image: $file)
       }
     `
-    const { body } = await request(fastify.server)
+    const { body } = await request(yoga.server)
       .post('/graphql')
       .field(
         'operations',
