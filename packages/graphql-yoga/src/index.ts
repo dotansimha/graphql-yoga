@@ -8,7 +8,8 @@ import {
 import { BaseNodeGraphQLServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import { GraphQLScalarType } from 'graphql'
-import type { GraphQLServerInject, GraphQLServerOptions } from './types'
+import type { GraphQLServerInject, GraphQLServerOptions, TypedResponse } from './types'
+import { Response, ReadableStream } from 'cross-undici-fetch'
 
 /**
  * Create a simple yet powerful GraphQL server ready for production workloads.
@@ -45,14 +46,14 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
       ? {
-          transport: {
-            target: 'pino-pretty',
-            options: {
-              translateTime: true,
-              colorize: true,
-            },
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            translateTime: true,
+            colorize: true,
           },
-        }
+        },
+      }
       : {}
 
     this.logger = pino({
@@ -152,7 +153,10 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     headers,
     variables,
     operationName,
-  }: GraphQLServerInject<TData, TVariables>) {
+  }: GraphQLServerInject<TData, TVariables>): Promise<TypedResponse<{
+    data: TData
+    errors: Error[]
+  }>> {
     const res = await this._server.inject({
       method: 'POST',
       url: this.endpoint,
@@ -164,16 +168,25 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       headers,
     })
 
-    // In failed requests res.json() will throw an error
-    // So we just parse the body ourselves
-    const body = JSON.parse(res.body)
-
-    return {
-      statusCode: res.statusCode,
-      headers: res.headers,
-      data: body?.data as TData,
-      errors: body?.errors as Error[],
-    }
+    return new Response(
+      new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of res.body) {
+              controller.enqueue(chunk)
+            }
+            controller.close()
+          } catch (err) {
+            controller.error(err)
+          }
+        }
+      }),
+      {
+        status: res.statusCode,
+        statusText: res.statusMessage,
+        headers: res.headers as HeadersInit,
+      }
+    )
   }
 }
 
@@ -189,8 +202,8 @@ export {
   EnvelopError as GraphQLServerError,
 } from '@envelop/core'
 
-export const GraphQLUpload = new GraphQLScalarType({
-  name: 'Upload',
+export const GraphQLBlob = new GraphQLScalarType({
+  name: 'Blob',
   serialize: (value) => value,
   parseValue: (value) => value,
 })
