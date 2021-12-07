@@ -3,12 +3,11 @@ import pino from 'pino'
 import {
   getNodeRequest,
   renderGraphiQL,
-  sendNodeResponse,
   shouldRenderGraphiQL,
 } from '@ardatan/graphql-helix'
 import { BaseNodeGraphQLServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
-import { processRequest } from 'graphql-upload'
+import { GraphQLScalarType } from 'graphql'
 import type { GraphQLServerInject, GraphQLServerOptions } from './types'
 
 /**
@@ -65,28 +64,6 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     this.logger.debug('Registering CORS plugin.')
     this._server.register(require('fastify-cors'), options.cors)
 
-    if (options.uploads) {
-      this.logger.debug('Registering GraphQL Upload plugin.')
-
-      this._server.addContentTypeParser('multipart', (req, _, done) => {
-        // @ts-expect-error - we add this custom property to the request
-        req.isMultipart = true
-        done(null)
-      })
-
-      this._server.addHook('preValidation', async (req, reply) => {
-        // TODO: improve typings for this
-        // @ts-expect-error - we added this custom property to the request
-        if (!req.isMultipart) return
-
-        try {
-          req.body = await processRequest(req.raw, reply.raw)
-        } catch (e) {
-          this.logger.error(e)
-        }
-      })
-    }
-
     this.setup()
   }
 
@@ -99,27 +76,31 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     const envelop = this.envelop
     this.logger.debug('Setting up server.')
 
+    this._server.addContentTypeParser(
+      'multipart/form-data',
+      (request, body, done) => {
+        done(null)
+      },
+    )
+
     this._server.route({
       method: ['GET', 'POST'],
       url: this.endpoint,
-      async handler(req, res) {
+      async handler(req, reply) {
         const request = await getNodeRequest(req)
 
         if (shouldRenderGraphiQL(request)) {
-          res.raw.end(renderGraphiQL())
+          reply.type('text/html')
+          reply.send(renderGraphiQL({}))
         } else {
-          const result = await handler(request, schema, envelop)
+          const response = await handler(request, schema, envelop)
 
-          /**
-           * Get headers from Fastify response to raw response
-           * Workaround for helix to use fastify middleware
-           * @see https://github.com/contra/graphql-helix/issues/75#issuecomment-976499958
-           */
-          for (const [key, value] of Object.entries(res.getHeaders())) {
-            res.raw.setHeader(key, String(value || ''))
-          }
+          response.headers.forEach((value, key) => {
+            reply.header(key, value)
+          })
 
-          return sendNodeResponse(result, res.raw)
+          reply.status(response.status)
+          reply.send(response.body)
         }
       },
     })
@@ -207,4 +188,9 @@ export {
   useTiming,
   EnvelopError as GraphQLServerError,
 } from '@envelop/core'
-export { GraphQLUpload } from 'graphql-upload'
+
+export const GraphQLUpload = new GraphQLScalarType({
+  name: 'Upload',
+  serialize: (value) => value,
+  parseValue: (value) => value,
+})

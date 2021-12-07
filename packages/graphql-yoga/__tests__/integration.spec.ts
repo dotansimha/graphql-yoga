@@ -3,7 +3,7 @@ import { GraphQLServer } from 'graphql-yoga'
 import request from 'supertest'
 import { schema } from '../test-utils/schema'
 
-const yoga = new GraphQLServer({ schema, enableLogging: false, uploads: true })
+const yoga = new GraphQLServer({ schema, enableLogging: false })
 
 describe('Requests', () => {
   it('should send introspection query', async () => {
@@ -101,12 +101,12 @@ describe('Uploads', () => {
         'operations',
         JSON.stringify({ query: UPLOAD_MUTATION, variables: { file: null } }),
       )
-      .field('map', JSON.stringify({ 1: ['variables.file'] }))
-      .attach('1', Buffer.from('test'), {
+      .field('map', JSON.stringify({ 0: ['variables.file'] }))
+      .attach('0', Buffer.from('test'), {
         filename: 'test.txt',
         contentType: 'text/plain',
       })
-      .then((res) => JSON.parse(res.text))
+      .then((res) => res.body)
 
     expect(response.errors).toBeUndefined()
     expect(response.data.singleUpload).toBe(true)
