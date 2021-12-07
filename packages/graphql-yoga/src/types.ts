@@ -20,13 +20,17 @@ export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
 export type GraphQLServerInject<
   TData = any,
   TVariables = Record<string, any>,
-> = {
-  /** GraphQL Operation to execute */
-  document: string | DocumentNode | TypedDocumentNode<TData, TVariables>
-  /** Variables for GraphQL Operation */
-  variables?: TVariables
-  /** Name for GraphQL Operation */
-  operationName?: string
-  /** Set any headers for the GraphQL request */
-  headers?: IncomingHttpHeaders | OutgoingHttpHeaders
+  > = {
+    /** GraphQL Operation to execute */
+    document: string | TypedDocumentNode<TData, TVariables>
+    /** Variables for GraphQL Operation */
+    variables?: TVariables
+    /** Name for GraphQL Operation */
+    operationName?: string
+    /** Set any headers for the GraphQL request */
+    headers?: IncomingHttpHeaders | OutgoingHttpHeaders
+  }
+
+export type TypedResponse<TBody = any> = Omit<Response, 'json'> & {
+  json: () => Promise<TBody>
 }

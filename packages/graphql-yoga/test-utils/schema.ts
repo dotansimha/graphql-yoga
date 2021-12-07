@@ -4,7 +4,7 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
-import { GraphQLUpload } from 'graphql-yoga'
+import { GraphQLBlob } from 'graphql-yoga'
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -32,13 +32,12 @@ export const schema = new GraphQLSchema({
         args: {
           image: {
             description: 'Image file to upload',
-            type: GraphQLUpload,
+            type: GraphQLBlob,
           },
         },
-        resolve: async (_, { image }, { logger }) => {
-          const img = await image
-          logger.debug(img)
-          return !!img.filename
+        resolve: async (_, { image }: { image: File }, { logger }) => {
+          logger.debug(image)
+          return !!image.name
         },
       },
     }),

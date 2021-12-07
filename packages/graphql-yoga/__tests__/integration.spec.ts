@@ -1,4 +1,4 @@
-import { getIntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 import { GraphQLServer } from 'graphql-yoga'
 import request from 'supertest'
 import { schema } from '../test-utils/schema'
@@ -7,13 +7,16 @@ const yoga = new GraphQLServer({ schema, enableLogging: false })
 
 describe('Requests', () => {
   it('should send introspection query', async () => {
-    const response = await yoga.inject({
+    const response = await yoga.inject<IntrospectionQuery>({
       document: getIntrospectionQuery(),
     })
 
-    expect(response.statusCode).toBe(200)
-    expect(response.errors).toBeUndefined()
-    expect(response.data.__schema.queryType.name).toBe('Query')
+    expect(response.status).toBe(200)
+
+    const responseBody = await response.json();
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.__schema.queryType.name).toBe('Query')
   })
 
   it('should send basic query', async () => {
@@ -25,8 +28,11 @@ describe('Requests', () => {
       `,
     })
 
-    expect(response.statusCode).toBe(200)
-    expect(response.data.ping).toBe('pong')
+    expect(response.status).toBe(200)
+
+    const responseBody = await response.json();
+
+    expect(responseBody.data.ping).toBe('pong')
   })
 
   it('should send basic mutation', async () => {
@@ -38,9 +44,10 @@ describe('Requests', () => {
       `,
     })
 
-    expect(response.statusCode).toBe(200)
-    expect(response.errors).toBeUndefined()
-    expect(response.data.echo).toBe('hello')
+    const responseBody = await response.json();
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.echo).toBe('hello')
   })
 
   it('should send variables', async () => {
@@ -55,9 +62,12 @@ describe('Requests', () => {
       },
     })
 
-    expect(response.statusCode).toBe(200)
-    expect(response.errors).toBeUndefined()
-    expect(response.data.echo).toBe('hello')
+    expect(response.status).toBe(200)
+
+    const responseBody = await response.json();
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.echo).toBe('hello')
   })
 
   it('should error on malformed query', async () => {
@@ -65,16 +75,18 @@ describe('Requests', () => {
       document: '{ query { ping }',
     })
 
-    expect(response.errors).toBeDefined()
-    expect(response.data).toBeUndefined()
+    const responseBody = await response.json();
+    expect(responseBody.errors).toBeDefined()
+    expect(responseBody.data).toBeUndefined()
   })
 
   it('should error missing query', async () => {
     // @ts-expect-error
     const response = await yoga.inject({ query: null })
 
-    expect(response.data).toBeUndefined()
-    expect(response.errors[0].message).toBe('Must provide query string.')
+    const responseBody = await response.json();
+    expect(responseBody.data).toBeUndefined()
+    expect(responseBody.errors[0].message).toBe('Must provide query string.')
   })
 })
 
@@ -91,11 +103,11 @@ describe('Uploads', () => {
   })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
-      mutation upload($file: Upload!) {
+      mutation upload($file: Blob!) {
         singleUpload(image: $file)
       }
     `
-    const response = await request(fastify.server)
+    const { body } = await request(fastify.server)
       .post('/graphql')
       .field(
         'operations',
@@ -106,9 +118,8 @@ describe('Uploads', () => {
         filename: 'test.txt',
         contentType: 'text/plain',
       })
-      .then((res) => res.body)
 
-    expect(response.errors).toBeUndefined()
-    expect(response.data.singleUpload).toBe(true)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.singleUpload).toBe(true)
   })
 })
