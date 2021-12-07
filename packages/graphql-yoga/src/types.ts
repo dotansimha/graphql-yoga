@@ -10,7 +10,6 @@ import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
  */
 export type GraphQLServerOptions = BaseNodeGraphQLServerOptions & {
   cors?: FastifyCorsOptions
-  uploads?: boolean
   /**
    * Enable pino logging
    * @default true

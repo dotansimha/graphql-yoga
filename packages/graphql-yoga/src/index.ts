@@ -45,14 +45,14 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
       ? {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            translateTime: true,
-            colorize: true,
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              translateTime: true,
+              colorize: true,
+            },
           },
-        },
-      }
+        }
       : {}
 
     this.logger = pino({
@@ -76,9 +76,12 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     const envelop = this.envelop
     this.logger.debug('Setting up server.')
 
-    this._server.addContentTypeParser('multipart/form-data', (request, body, done) => {
-      done(null)
-    })
+    this._server.addContentTypeParser(
+      'multipart/form-data',
+      (request, body, done) => {
+        done(null)
+      },
+    )
 
     this._server.route({
       method: ['GET', 'POST'],
@@ -87,17 +90,17 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
         const request = await getNodeRequest(req)
 
         if (shouldRenderGraphiQL(request)) {
-          reply.type("text/html");
-          reply.send(renderGraphiQL({}));
+          reply.type('text/html')
+          reply.send(renderGraphiQL({}))
         } else {
           const response = await handler(request, schema, envelop)
 
           response.headers.forEach((value, key) => {
-            reply.header(key, value);
-          });
+            reply.header(key, value)
+          })
 
-          reply.status(response.status);
-          reply.send(response.body);
+          reply.status(response.status)
+          reply.send(response.body)
         }
       },
     })

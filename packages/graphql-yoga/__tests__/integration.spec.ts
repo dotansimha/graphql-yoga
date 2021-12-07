@@ -3,7 +3,7 @@ import { GraphQLServer } from 'graphql-yoga'
 import request from 'supertest'
 import { schema } from '../test-utils/schema'
 
-const yoga = new GraphQLServer({ schema, enableLogging: false, uploads: true })
+const yoga = new GraphQLServer({ schema, enableLogging: false })
 
 describe('Requests', () => {
   it('should send introspection query', async () => {
