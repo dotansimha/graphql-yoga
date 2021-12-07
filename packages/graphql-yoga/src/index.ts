@@ -1,15 +1,12 @@
-import fastify, { FastifyInstance } from 'fastify'
+import { createServer, IncomingMessage, Server, ServerResponse } from 'http'
 import pino from 'pino'
 import {
   getNodeRequest,
-  renderGraphiQL,
-  shouldRenderGraphiQL,
+  sendNodeResponse,
 } from '@ardatan/graphql-helix'
 import { BaseNodeGraphQLServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
-import { GraphQLScalarType } from 'graphql'
-import type { GraphQLServerInject, GraphQLServerOptions, TypedResponse } from './types'
-import { Response, ReadableStream } from 'cross-undici-fetch'
+import type { GraphQLServerOptions } from './types'
 
 /**
  * Create a simple yet powerful GraphQL server ready for production workloads.
@@ -17,7 +14,6 @@ import { Response, ReadableStream } from 'cross-undici-fetch'
  *
  * Comes baked in with:
  *
- * - Fastify - Fast an low overhead framework for Node.js
  * - Envelop - Plugin system for GraphQL
  * - GraphQL Helix - Extensible and Framework agnostic GraphQL server
  * - GraphiQL - GraphQL IDE for your browser
@@ -33,7 +29,7 @@ import { Response, ReadableStream } from 'cross-undici-fetch'
  * ```
  */
 export class GraphQLServer extends BaseNodeGraphQLServer {
-  private _server: FastifyInstance
+  private _server: Server
 
   constructor(options: GraphQLServerOptions) {
     super({
@@ -41,7 +37,6 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       // This should make default to dev mode base on environment variable
       isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
     })
-    this._server = fastify()
 
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
@@ -62,131 +57,53 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
       enabled: options.enableLogging ?? true,
     })
 
-    this.logger.debug('Registering CORS plugin.')
-    this._server.register(require('fastify-cors'), options.cors)
-
-    this.setup()
-  }
-
-  /**
-   * Setup endpoint and handlers for server
-   */
-  private setup() {
-    const schema = this.schema
-    const handler = this.handleRequest
-    const envelop = this.envelop
     this.logger.debug('Setting up server.')
 
-    this._server.addContentTypeParser(
-      'multipart/form-data',
-      (request, body, done) => {
-        done(null)
-      },
-    )
+    this._server = createServer(this.requestListener.bind(this))
+  }
 
-    this._server.route({
-      method: ['GET', 'POST'],
-      url: this.endpoint,
-      async handler(req, reply) {
-        const request = await getNodeRequest(req)
+  private async requestListener(req: IncomingMessage, res: ServerResponse) {
+    try {
+      const request = await getNodeRequest(req)
+      const response = await this.handleRequest(request)
+      await sendNodeResponse(response, res)
+    } catch (err: any) {
+      this.logger.error(err.message, err)
+      res.statusCode = 500
+      res.end(err.message)
+    }
+  }
 
-        if (shouldRenderGraphiQL(request)) {
-          reply.type('text/html')
-          reply.send(renderGraphiQL({}))
-        } else {
-          const response = await handler(request, schema, envelop)
-
-          response.headers.forEach((value, key) => {
-            reply.header(key, value)
-          })
-
-          reply.status(response.status)
-          reply.send(response.body)
-        }
-      },
-    })
+  get server() {
+    return this._server
   }
 
   start() {
-    this._server.listen(this.port, () => {
-      this.logger.info(
-        `GraphQL server running at http://localhost:${this.port}${this.endpoint}.`,
-      )
+    return new Promise<void>((resolve) => {
+      this._server.listen(this.port, this.hostname, () => {
+        this.logger.info(
+          `GraphQL server running at http://${this.hostname}:${this.port}${this.endpoint}.`,
+        )
+        resolve()
+      })
     })
   }
 
   stop() {
-    this._server.close().then(
-      () => {
-        this.logger.info('Shutting down GraphQL server.')
-      },
-      (err) => {
-        this.logger.error(
-          'Something went wrong :( trying to shutdown the server.',
-          err,
-        )
-        throw new GraphQLServerError(err)
-      },
-    )
-  }
-
-  get fastify() {
-    return this._server
-  }
-
-  /**
-   * Testing utility to mock http request for GraphQL endpoint
-   * This is a thin wrapper around the `fastify.inject()` to help simplify testing.
-   *
-   *
-   * Example - Test a simple query
-   * ```ts
-   * const response = await yoga.inject({
-   *  operation: "query { ping }",
-   * })
-   * expect(response.statusCode).toBe(200)
-   * expect(response.data.ping).toBe('pong')
-   * ```
-   */
-  async inject<TData = any, TVariables = any>({
-    document,
-    headers,
-    variables,
-    operationName,
-  }: GraphQLServerInject<TData, TVariables>): Promise<TypedResponse<{
-    data: TData
-    errors: Error[]
-  }>> {
-    const res = await this._server.inject({
-      method: 'POST',
-      url: this.endpoint,
-      payload: {
-        query: document,
-        variables,
-        operationName,
-      },
-      headers,
-    })
-
-    return new Response(
-      new ReadableStream({
-        async start(controller) {
-          try {
-            for await (const chunk of res.body) {
-              controller.enqueue(chunk)
-            }
-            controller.close()
-          } catch (err) {
-            controller.error(err)
-          }
+    return new Promise<void>((resolve, reject) => {
+      this._server.close((err) => {
+        if (err != null) {
+          this.logger.error(
+            'Something went wrong :( trying to shutdown the server.',
+            err,
+          )
+          reject(new GraphQLServerError(err.message))
+        } else {
+          this.logger.info('Shutting down GraphQL server.')
+          resolve()
         }
-      }),
-      {
-        status: res.statusCode,
-        statusText: res.statusMessage,
-        headers: res.headers as HeadersInit,
-      }
-    )
+      })
+    })
   }
 }
 
@@ -201,9 +118,3 @@ export {
   useTiming,
   EnvelopError as GraphQLServerError,
 } from '@envelop/core'
-
-export const GraphQLBlob = new GraphQLScalarType({
-  name: 'Blob',
-  serialize: (value) => value,
-  parseValue: (value) => value,
-})
