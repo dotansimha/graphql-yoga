@@ -7679,7 +7679,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-yoga@workspace:packages/graphql-yoga":
+"graphql-yoga@2.0.0-alpha.0, graphql-yoga@workspace:packages/graphql-yoga":
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
@@ -7700,6 +7700,13 @@ fsevents@~2.1.2:
     graphql: ^15.2.0 || ^16.0.0
   languageName: unknown
   linkType: soft
+
+"graphql@npm:16.1.0":
+  version: 16.1.0
+  resolution: "graphql@npm:16.1.0"
+  checksum: fa393f0e3d284a681606a3296aaa902e730036af89ae0142f91d72f7053c59627df65fc5fdac48f46d6c1f07f4406411ac4948b317621de729e3ccc8980dec1f
+  languageName: node
+  linkType: hard
 
 "graphql@npm:^16.0.1":
   version: 16.0.1
@@ -7948,6 +7955,15 @@ fsevents@~2.1.2:
   checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
   languageName: node
   linkType: hard
+
+"hello-world@workspace:examples/hello-world":
+  version: 0.0.0-use.local
+  resolution: "hello-world@workspace:examples/hello-world"
+  dependencies:
+    graphql: 16.1.0
+    graphql-yoga: 2.0.0-alpha.0
+  languageName: unknown
+  linkType: soft
 
 "hex-color-regex@npm:^1.1.0":
   version: 1.1.0
