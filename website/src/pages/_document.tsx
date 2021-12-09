@@ -13,6 +13,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap"
             rel="stylesheet"
           />
+          <script async src="https://the-guild.dev/static/crisp.js" />
         </head>
         <body>
           <ColorModeScript initialColorMode="system" />
