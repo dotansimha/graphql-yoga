@@ -5,7 +5,6 @@ export function getRoutes(): IRoutes {
     _: {
       docs: {
         $name: 'Getting Started',
-        $routes: ['introduction'],
       },
     },
   }
