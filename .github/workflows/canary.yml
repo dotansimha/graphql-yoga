@@ -2,8 +2,6 @@ name: Canary Release
 
 on:
   pull_request:
-    branches:
-      - next
 
 jobs:
   publish-canary:
@@ -19,11 +17,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-      - uses: bahmutov/npm-install@v1
+
+      - name: Get yarn cache
+        uses: c-hive/gha-yarn-cache@v2
+
+      - name: Install Dependencies using Yarn
+        run: yarn
+
       - name: Setup NPM credentials
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
       - name: Release Canary
         id: canary
         uses: 'kamilkisiela/release-canary@master'
@@ -34,6 +39,7 @@ jobs:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'yarn release:canary'
           changesets: true
+
       - name: Publish a message
         if: steps.canary.outputs.released == 'true'
         uses: 'kamilkisiela/pr-comment@master'
@@ -48,6 +54,7 @@ jobs:
           bot-token: ${{ secrets.GITHUB_TOKEN }}
           bot: 'github-actions[bot]'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish a empty message
         if: steps.canary.outputs.released == 'false'
         uses: 'kamilkisiela/pr-comment@master'

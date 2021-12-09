@@ -1,11 +1,10 @@
 {
   "scripts": {
     "format": "prettier . --write",
-    "prebuild": "rimraf packages/**/dist",
-    "build": "tsc --project tsconfig.json && bob build",
+    "prebuild": "rimraf packages/*/dist",
+    "build": "tsc --project tsconfig.build.json && bob build",
     "test": "jest --passWithNoTests",
-    "prerelease": "yarn build",
-    "release": "changeset publish",
+    "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary..."
   },
   "repository": {

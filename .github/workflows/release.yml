@@ -21,8 +21,19 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Install Dependencies
+      - name: Setup NPM credentials
+        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Get yarn cache
+        uses: c-hive/gha-yarn-cache@v2
+
+      - name: Install Dependencies using Yarn
         run: yarn
+
+      - name: Build Packages
+        run: yarn build
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
