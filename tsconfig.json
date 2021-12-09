@@ -1,19 +1,34 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "rootDir": "src",
+    "incremental": true,
+    "baseUrl": ".",
     "outDir": "dist",
+    "rootDir": "packages",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "target": "es2018",
+    "lib": ["es6", "esnext", "es2015", "dom"],
+    "suppressImplicitAnyIndexErrors": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "lib": [
-      "dom",
-      "es2017",
-      "esnext.asynciterable"
-    ]
+    "declaration": true,
+    "noImplicitThis": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@graphql-yoga/handler": ["packages/handler/src/index.ts"],
+      "@graphql-yoga/core": ["packages/core/src/index.ts"],
+      "graphql-yoga": ["packages/graphql-yoga/src/index.ts"]
+    }
   },
-  "exclude": [
-    "node_modules",
-    "examples"
-  ]
+  "include": ["packages"],
+  "exclude": ["**/dist", "**/temp"]
 }

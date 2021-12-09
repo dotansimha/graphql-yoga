@@ -1,75 +1,51 @@
 {
-  "name": "graphql-yoga",
-  "description": "Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience",
-  "version": "0.0.0-semantic-release",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": ["dist"],
+  "scripts": {
+    "format": "prettier . --write",
+    "prebuild": "rimraf packages/**/dist",
+    "build": "tsc --project tsconfig.json && bob build",
+    "test": "jest --passWithNoTests",
+    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary..."
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/prisma/graphql-yoga.git"
+    "url": "git+https://github.com/dotansimha/graphql-yoga.git"
   },
-  "keywords": ["graphql", "server", "api", "graphql-server", "apollo"],
-  "author": "Johannes Schickling <johannes@graph.cool>",
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server",
+    "apollo"
+  ],
+  "contributors": [
+    "Johannes Schickling <johannes@graph.cool>",
+    "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://github.com/saihaj)",
+    "Dotan Simha <dotansimha@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/prisma/graphql-yoga/issues"
+    "url": "https://github.com/dotansimha/graphql-yoga/issues"
   },
-  "homepage": "https://github.com/prisma/graphql-yoga",
-  "scripts": {
-    "prepublish": "yarn build",
-    "build": "rm -rf dist && tsc -d",
-    "lint":
-      "tslint --project tsconfig.json {src,test}/**/*.ts && prettier-check --ignore-path .gitignore {src,.}/{*.ts,*.js}",
-    "format": "prettier --write --ignore-path .gitignore {src,.}/{*.ts,*.js}",
-    "test": "yarn lint && yarn build && ava",
-    "watch:tsc": "tsc --watch",
-    "watch:ava": "ava --watch",
-    "watch": "yarn build && npm-run-all --parallel watch:*"
-  },
-  "release": {
-    "branch": "master"
-  },
-  "ava": {
-    "files": ["dist/**/*.test.js"]
-  },
-  "dependencies": {
-    "@types/aws-lambda": "8.10.13",
-    "@types/cors": "^2.8.4",
-    "@types/express": "^4.11.1",
-    "@types/graphql": "^14.0.0",
-    "@types/graphql-deduplicator": "^2.0.0",
-    "@types/zen-observable": "^0.5.3",
-    "apollo-server-express": "^1.3.6",
-    "apollo-server-lambda": "1.3.6",
-    "apollo-upload-server": "^7.0.0",
-    "body-parser-graphql": "1.1.0",
-    "cors": "^2.8.4",
-    "express": "^4.16.3",
-    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
-    "graphql-deduplicator": "^2.0.1",
-    "graphql-import": "^0.7.0",
-    "graphql-middleware": "4.0.1",
-    "graphql-playground-middleware-express": "1.7.11",
-    "graphql-playground-middleware-lambda": "1.7.12",
-    "graphql-subscriptions": "^0.5.8",
-    "graphql-tools": "^4.0.0",
-    "graphql-upload": "^8.0.0",
-    "subscriptions-transport-ws": "^0.9.8"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
+  "packageManager": "yarn@3.0.2",
   "devDependencies": {
-    "@types/request-promise-native": "1.0.15",
-    "ava": "0.25.0",
-    "aws-lambda": "^0.1.2",
-    "npm-run-all": "4.1.3",
-    "prettier": "1.12.1",
-    "prettier-check": "2.0.0",
-    "request": "2.88.0",
-    "request-promise-native": "1.0.5",
-    "tslint": "5.11.0",
-    "tslint-config-prettier": "1.12.0",
-    "tslint-config-standard": "7.1.0",
-    "typescript": "3.1.3",
-    "yarn": "1.10.1"
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@changesets/cli": "2.18.0",
+    "@types/babel__core": "^7",
+    "@types/babel__preset-env": "^7",
+    "@types/jest": "^27.0.2",
+    "@types/supertest": "^2.0.11",
+    "babel-jest": "^27.3.1",
+    "bob-the-bundler": "^1.5.1",
+    "jest": "^27.3.1",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "supertest": "^6.1.6",
+    "typescript": "^4.4.4"
   }
 }
