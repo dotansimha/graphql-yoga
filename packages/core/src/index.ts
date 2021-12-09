@@ -14,12 +14,13 @@ import { useDisableIntrospection } from '@envelop/disable-introspection'
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
 import { Logger, dummyLogger } from 'ts-log'
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { IResolvers, TypeSource } from '@graphql-tools/utils'
 
 /**
  * Configuration options for the server
  */
-export type BaseGraphQLServerOptions = {
-  schema: GraphQLSchema
+export type BaseGraphQLServerOptions<TContext = any> = {
   /**
    * Envelop Plugins
    * @see https://envelop.dev/plugins
@@ -30,7 +31,16 @@ export type BaseGraphQLServerOptions = {
    * Default: `false`
    */
   isDev?: boolean
-}
+  /**
+   * Context
+   */
+  context?: (req: Request) => Promise<TContext> | Promise<TContext>,
+} & ({
+  schema: GraphQLSchema
+} | {
+  typeDefs: TypeSource
+  resolvers?: IResolvers<any, TContext>
+})
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -49,7 +59,11 @@ export abstract class BaseGraphQLServer {
   protected logger: Logger
 
   constructor(options: BaseGraphQLServerOptions) {
-    this.schema = options.schema
+    this.schema = 'schema' in options ? options.schema : makeExecutableSchema({
+      typeDefs: options.typeDefs,
+      resolvers: options.resolvers
+    });
+
     this.logger = dummyLogger
     this.isDev = options.isDev ?? false
 
@@ -92,6 +106,7 @@ export abstract class BaseGraphQLServer {
         enableIf(!this.isDev, useDisableIntrospection()),
         // Mask errors in production
         enableIf(!this.isDev, useMaskedErrors()),
+        ...(options.context != null ? [useExtendContext(typeof options.context === 'function' ? options.context : () => options.context)] : []),
         ...(options.plugins || []),
       ],
     })
