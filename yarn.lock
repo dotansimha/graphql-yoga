@@ -1949,10 +1949,17 @@ __metadata:
   version: 1.7.1
   resolution: "@chakra-ui/pin-input@npm:1.7.1"
   dependencies:
-    "@chakra-ui/descendant": 2.1.1
-    "@chakra-ui/hooks": 1.7.1
-    "@chakra-ui/react-utils": 1.2.1
-    "@chakra-ui/utils": 1.9.1
+    "@ardatan/graphql-helix": 0.0.6
+    "@envelop/core": ^1.6.2
+    "@envelop/disable-introspection": ^1.2.1
+    "@envelop/parser-cache": ^2.2.1
+    "@envelop/validation-cache": ^2.2.1
+    "@graphql-tools/schema": 8.3.1
+    "@graphql-yoga/handler": 0.1.0
+    "@types/node": ^16.11.7
+    bob-the-bundler: ^1.5.1
+    graphql: ^16.0.1
+    ts-log: ^2.2.4
   peerDependencies:
     "@chakra-ui/system": ">=1.0.0"
     react: ">=16.8.6"
@@ -2867,6 +2874,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-tools/merge@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "@graphql-tools/merge@npm:8.2.1"
+  dependencies:
+    "@graphql-tools/utils": ^8.5.1
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: b2c126fc697ad1cf0fb2c09d3766d791ba6243a318edfa24932b558628244f822b9454bd47cd98f5a7eee90caca264573695c582e10730b7a67785fea21c346c
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/schema@npm:8.3.1":
+  version: 8.3.1
+  resolution: "@graphql-tools/schema@npm:8.3.1"
+  dependencies:
+    "@graphql-tools/merge": ^8.2.1
+    "@graphql-tools/utils": ^8.5.1
+    tslib: ~2.3.0
+    value-or-promise: 1.0.11
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 5fd6dbd3f4e92fd1b9a627e04b339bf2a4564768299e45576f79df70e167c3ec6c822576c37b3ba6537e2dd561b3b445b322bc90b205389260b7084fe777f5d4
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/utils@npm:^8.5.1":
+  version: 8.5.4
+  resolution: "@graphql-tools/utils@npm:8.5.4"
+  dependencies:
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 9d20be6fb50ce723bd9cff79462bbb82cb490a18f04619b8e1e5e82ad92f9a5fa0365933f0b2fcef95fcd124ff204858858aa2ff49e68a4cede57c79892bc2dd
+  languageName: node
+  linkType: hard
+
 "@graphql-typed-document-node/core@npm:^3.1.1":
   version: 3.1.1
   resolution: "@graphql-typed-document-node/core@npm:3.1.1"
@@ -2885,6 +2929,7 @@ __metadata:
     "@envelop/disable-introspection": ^1.2.1
     "@envelop/parser-cache": ^2.2.1
     "@envelop/validation-cache": ^2.2.1
+    "@graphql-tools/schema": 8.3.1
     "@graphql-yoga/handler": 0.1.0
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
@@ -7634,7 +7679,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-yoga@workspace:packages/graphql-yoga":
+"graphql-yoga@2.0.0-alpha.0, graphql-yoga@workspace:packages/graphql-yoga":
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
@@ -7656,10 +7701,10 @@ fsevents@~2.1.2:
   languageName: unknown
   linkType: soft
 
-"graphql@npm:^16.0.1":
-  version: 16.0.1
-  resolution: "graphql@npm:16.0.1"
-  checksum: e2fbddc78ac93b84af5b1871cdced5ce796102373b91f888983e8bae26856788833aa641f5da15b9e4da05cef2edcc82b744a86a27e7e1ef6c9ce422571ab16c
+"graphql@npm:16.1.0":
+  version: 16.1.0
+  resolution: "graphql@npm:16.1.0"
+  checksum: fa393f0e3d284a681606a3296aaa902e730036af89ae0142f91d72f7053c59627df65fc5fdac48f46d6c1f07f4406411ac4948b317621de729e3ccc8980dec1f
   languageName: node
   linkType: hard
 
@@ -7903,6 +7948,15 @@ fsevents@~2.1.2:
   checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
   languageName: node
   linkType: hard
+
+"hello-world@workspace:examples/hello-world":
+  version: 0.0.0-use.local
+  resolution: "hello-world@workspace:examples/hello-world"
+  dependencies:
+    graphql: 16.1.0
+    graphql-yoga: 2.0.0-alpha.0
+  languageName: unknown
+  linkType: soft
 
 "hex-color-regex@npm:^1.1.0":
   version: 1.1.0
@@ -12311,6 +12365,7 @@ resolve@1.15.1:
     "@types/supertest": ^2.0.11
     babel-jest: ^27.3.1
     bob-the-bundler: ^1.5.1
+    graphql: 16.1.0
     jest: ^27.3.1
     prettier: ^2.4.1
     rimraf: ^3.0.2
@@ -13682,7 +13737,7 @@ resolve@1.15.1:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.1":
+"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.1, tslib@npm:~2.3.0":
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
@@ -14251,6 +14306,13 @@ typescript@^4.4.4:
   version: 13.7.0
   resolution: "validator@npm:13.7.0"
   checksum: 2b83283de1222ca549a7ef57f46e8d49c6669213348db78b7045bce36a3b5843ff1e9f709ebf74574e06223461ee1f264f8cc9a26a0060a79a27de079d8286ef
+  languageName: node
+  linkType: hard
+
+"value-or-promise@npm:1.0.11":
+  version: 1.0.11
+  resolution: "value-or-promise@npm:1.0.11"
+  checksum: 13f8f2ef620118c73b4d1beee8ce6045d7182bbf15090ecfbcafb677ec43698506a5e9ace6bea5ea35c32bc612c9b1f824bb59b6581cdfb5c919052745c277d5
   languageName: node
   linkType: hard
 
