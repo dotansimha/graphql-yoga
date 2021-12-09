@@ -6,7 +6,7 @@
     "test": "jest --passWithNoTests",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
-    "start:docs": "yarn workspace website dev"
+    "start:docs": "yarn workspace @graphql-yoga/website dev"
   },
   "repository": {
     "type": "git",

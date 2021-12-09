@@ -6,6 +6,8 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 
 You can try out the `alpha` release today and give us [feedback](https://github.com/dotansimha/graphql-yoga/issues/704)!.
 
+We are working on documentation and examples for the `alpha` release. You can check them out https://graphql-yoga.vercel.app
+
 ### Installation
 
 ```shell

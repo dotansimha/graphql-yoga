@@ -1,6 +1,6 @@
 {
-  "name": "website",
-  "private": "true",
+  "name": "@graphql-yoga/website",
+  "private": true,
   "scripts": {
     "build": "next build",
     "dev": "concurrently -r \"next-remote-watch ./docs ./routes.ts ./src/pages/_app.tsx ./src/pages/_document.tsx\" \"wait-on -s 1 http://localhost:3000 && open-cli http://localhost:3000\"",
@@ -12,6 +12,7 @@
     "@next/bundle-analyzer": "^12.0.6",
     "@types/concurrently": "^6.4.0",
     "@types/mdx-js__react": "^1.5.5",
+    "@types/node": "^16.11.7",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "bob-tsm": "^0.3.6",
