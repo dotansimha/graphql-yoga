@@ -2,9 +2,43 @@
 
 # graphql-yoga
 
-[![npm version](https://badge.fury.io/js/graphql-yoga.svg)](https://badge.fury.io/js/graphql-yoga)
-
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
+
+You can try out the `alpha` release today and give us [feedback](https://github.com/dotansimha/graphql-yoga/issues/704)!.
+
+### Installation
+
+```shell
+npm i graphql-yoga@alpha graphql
+```
+
+### Basic Usage
+
+We are actively working on API for the library. This is a very simple example of how to use it:
+
+```js
+const { GraphQLServer } = require('graphql-yoga')
+const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
+
+const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'Query',
+    fields: () => ({
+      ping: {
+        type: GraphQLString,
+        resolve: () => 'pong',
+      },
+    }),
+  }),
+})
+// Provide your schema
+const server = new GraphQLServer({
+  schema,
+  isDev: process.env.NODE_ENV !== 'production',
+})
+// Start the server and explore http://localhost:4000/graphql
+server.start()
+```
 
 ## Overview
 
