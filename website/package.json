@@ -1,6 +1,6 @@
 {
-  "name": "website",
-  "private": "true",
+  "name": "@graphql-yoga/website",
+  "private": true,
   "scripts": {
     "build": "next build",
     "dev": "concurrently -r \"next-remote-watch ./docs ./routes.ts ./src/pages/_app.tsx ./src/pages/_document.tsx\" \"wait-on -s 1 http://localhost:3000 && open-cli http://localhost:3000\"",
