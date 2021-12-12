@@ -8,7 +8,11 @@ import {
 import { BaseNodeGraphQLServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import { GraphQLScalarType } from 'graphql'
-import type { GraphQLServerInject, GraphQLServerOptions, TypedResponse } from './types'
+import type {
+  GraphQLServerInject,
+  GraphQLServerOptions,
+  TypedResponse,
+} from './types'
 import { Response, ReadableStream } from 'cross-undici-fetch'
 
 /**
@@ -46,14 +50,14 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
       ? {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            translateTime: true,
-            colorize: true,
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              translateTime: true,
+              colorize: true,
+            },
           },
-        },
-      }
+        }
       : {}
 
     this.logger = pino({
@@ -153,10 +157,12 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
     headers,
     variables,
     operationName,
-  }: GraphQLServerInject<TData, TVariables>): Promise<TypedResponse<{
-    data: TData
-    errors: Error[]
-  }>> {
+  }: GraphQLServerInject<TData, TVariables>): Promise<
+    TypedResponse<{
+      data: TData
+      errors: Error[]
+    }>
+  > {
     const res = await this._server.inject({
       method: 'POST',
       url: this.endpoint,
@@ -179,13 +185,13 @@ export class GraphQLServer extends BaseNodeGraphQLServer {
           } catch (err) {
             controller.error(err)
           }
-        }
+        },
       }),
       {
         status: res.statusCode,
         statusText: res.statusMessage,
         headers: res.headers as HeadersInit,
-      }
+      },
     )
   }
 }

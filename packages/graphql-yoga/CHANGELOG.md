@@ -1,10 +1,11 @@
 # graphql-yoga
 
 ## 2.0.0-alpha.0
+
 ### Major Changes
 
 - b6dd3f1: The goal is to provide a fully-featured, simple to set up, performant and extendable server. Some key features:
-  
+
   - [GraphQL-over-HTTP](https://github.com/graphql/graphql-over-http) spec compliant
   - Extend the GraphQL request flow using [`envelop`](https://www.envelop.dev/)
   - File uploads (via GraphQL multipart request specification)
