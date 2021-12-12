@@ -44,9 +44,11 @@ server.start()
 
 ## Overview
 
-- **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup.
-- **Includes Subscriptions:** Built-in support for GraphQL subscriptions using SSE.
+- **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup (we also export a platform/env-agnostic handler so you can build your own wrappers easily).
+- **Includes Subscriptions:** Built-in support for GraphQL subscriptions using **S**erver-**S**ent **E**vents.
 - **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
+- **W3C Compatible:** - the core package can run and deploy on any environment (Serverless, Workers, Deno, Node).  
+- **Easily Extendable:** New GraphQL-Yoga support all `envelop`[https://www.envelop.dev] plugins. 
 
 ## Features
 
@@ -67,7 +69,7 @@ Feel free to open issues and pull requests. We're always welcome support from th
 
 ### Code of Conduct
 
-Help us keep Envelop open and inclusive. Please read and follow our [
+Help us keep Yoga open and inclusive. Please read and follow our [
 of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/)
 
 ### License
