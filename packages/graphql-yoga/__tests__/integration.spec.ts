@@ -13,7 +13,7 @@ describe('Requests', () => {
 
     expect(response.status).toBe(200)
 
-    const responseBody = await response.json();
+    const responseBody = await response.json()
 
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.__schema.queryType.name).toBe('Query')
@@ -30,7 +30,7 @@ describe('Requests', () => {
 
     expect(response.status).toBe(200)
 
-    const responseBody = await response.json();
+    const responseBody = await response.json()
 
     expect(responseBody.data.ping).toBe('pong')
   })
@@ -44,7 +44,7 @@ describe('Requests', () => {
       `,
     })
 
-    const responseBody = await response.json();
+    const responseBody = await response.json()
 
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.echo).toBe('hello')
@@ -64,7 +64,7 @@ describe('Requests', () => {
 
     expect(response.status).toBe(200)
 
-    const responseBody = await response.json();
+    const responseBody = await response.json()
 
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.echo).toBe('hello')
@@ -75,7 +75,7 @@ describe('Requests', () => {
       document: '{ query { ping }',
     })
 
-    const responseBody = await response.json();
+    const responseBody = await response.json()
     expect(responseBody.errors).toBeDefined()
     expect(responseBody.data).toBeUndefined()
   })
@@ -84,7 +84,7 @@ describe('Requests', () => {
     // @ts-expect-error
     const response = await yoga.inject({ query: null })
 
-    const responseBody = await response.json();
+    const responseBody = await response.json()
     expect(responseBody.data).toBeUndefined()
     expect(responseBody.errors[0].message).toBe('Must provide query string.')
   })

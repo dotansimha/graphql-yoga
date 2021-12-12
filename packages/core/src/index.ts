@@ -34,13 +34,16 @@ export type BaseGraphQLServerOptions<TContext = any> = {
   /**
    * Context
    */
-  context?: (req: Request) => Promise<TContext> | Promise<TContext>,
-} & ({
-  schema: GraphQLSchema
-} | {
-  typeDefs: TypeSource
-  resolvers?: IResolvers<any, TContext>
-})
+  context?: (req: Request) => Promise<TContext> | Promise<TContext>
+} & (
+  | {
+      schema: GraphQLSchema
+    }
+  | {
+      typeDefs: TypeSource
+      resolvers?: IResolvers<any, TContext>
+    }
+)
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -59,10 +62,13 @@ export abstract class BaseGraphQLServer {
   protected logger: Logger
 
   constructor(options: BaseGraphQLServerOptions) {
-    this.schema = 'schema' in options ? options.schema : makeExecutableSchema({
-      typeDefs: options.typeDefs,
-      resolvers: options.resolvers
-    });
+    this.schema =
+      'schema' in options
+        ? options.schema
+        : makeExecutableSchema({
+            typeDefs: options.typeDefs,
+            resolvers: options.resolvers,
+          })
 
     this.logger = dummyLogger
     this.isDev = options.isDev ?? false
@@ -106,7 +112,15 @@ export abstract class BaseGraphQLServer {
         enableIf(!this.isDev, useDisableIntrospection()),
         // Mask errors in production
         enableIf(!this.isDev, useMaskedErrors()),
-        ...(options.context != null ? [useExtendContext(typeof options.context === 'function' ? options.context : () => options.context)] : []),
+        ...(options.context != null
+          ? [
+              useExtendContext(
+                typeof options.context === 'function'
+                  ? options.context
+                  : () => options.context,
+              ),
+            ]
+          : []),
         ...(options.plugins || []),
       ],
     })
