@@ -32,7 +32,7 @@ describe('fastify', () => {
     it('should handle SSE', async () => {
         const response = await app.inject({
             method: 'GET',
-            url: '/graphql?query=' + encodeURIComponent('subscription { countdown }'),
+            url: '/graphql?query=' + encodeURIComponent('subscription { countdown(from: 10) }'),
             headers: {
                 'accept': 'text/event-stream',
             },
