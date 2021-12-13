@@ -6,24 +6,22 @@ export function buildApp() {
 
     const graphQLServer = new GraphQLServer({
         typeDefs: /* GraphQL */ `
-        type Query {
-            hello: String
-        }
-        type Subscription {
-            count: Int
-        }
-    `,
+            type Query {
+                hello: String
+            }
+            type Subscription {
+                countdown(from: Int!): Int!
+            }
+        `,
         resolvers: {
             Query: {
                 hello: () => 'world'
             },
             Subscription: {
-                count: {
-                    subscribe: async function* () {
-                        let count = 0;
-                        while (true) {
-                            yield { count };
-                            count++;
+                countdown: {
+                    subscribe: async function* (_, { from }) {
+                        for (let i = from; i >= 0; i--) {
+                            yield { count: i };
                         }
                     },
                 },

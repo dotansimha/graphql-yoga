@@ -51,7 +51,7 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
     })
     this.port = options.port || parseInt(process.env.PORT || '4000')
     this.endpoint = options.endpoint || '/graphql'
-    this.hostname = options.hostname || 'localhost'
+    this.hostname = options.hostname || '0.0.0.0'
 
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
@@ -77,9 +77,11 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
     this._server = createServer(this.requestListener.bind(this))
   }
 
-  async handleIncomingMessage(req: any): Promise<Response> {
-    this.logger.debug('Request received', req.url)
-    const request = await getNodeRequest(req)
+  async handleIncomingMessage(
+    ...args: Parameters<typeof getNodeRequest>
+  ): Promise<Response> {
+    this.logger.debug('Node Request received', ...args)
+    const request = await getNodeRequest(...args)
     const response = await this.handleRequest(request)
     return response
   }
