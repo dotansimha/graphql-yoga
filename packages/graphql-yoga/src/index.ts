@@ -1,7 +1,7 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from 'http'
 import pino from 'pino'
 import { getNodeRequest, sendNodeResponse } from '@ardatan/graphql-helix'
-import { BaseNodeGraphQLServer } from '@graphql-yoga/core'
+import { BaseGraphQLServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import type { GraphQLServerInject, GraphQLServerOptions } from './types'
 import LightMyRequest from 'light-my-request'
@@ -27,27 +27,43 @@ import { ExecutionResult, print } from 'graphql'
  *  server.start()
  * ```
  */
-export class GraphQLServer extends BaseNodeGraphQLServer {
+export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
+  /**
+   * Port for server
+   */
+  private port: number
+  /**
+   * GraphQL Endpoint
+   */
+  private endpoint: string
+  /**
+   * Hostname for server
+   */
+  private hostname: string
+
   private _server: Server
 
-  constructor(options: GraphQLServerOptions) {
+  constructor(options: GraphQLServerOptions<TContext>) {
     super({
       ...options,
       // This should make default to dev mode base on environment variable
       isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
     })
+    this.port = options.port || parseInt(process.env.PORT || '4000')
+    this.endpoint = options.endpoint || '/graphql'
+    this.hostname = options.hostname || 'localhost'
 
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
       ? {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            translateTime: true,
-            colorize: true,
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              translateTime: true,
+              colorize: true,
+            },
           },
-        },
-      }
+        }
       : {}
 
     this.logger = pino({
@@ -171,3 +187,4 @@ export {
   useTiming,
   EnvelopError as GraphQLServerError,
 } from '@envelop/core'
+export { GraphQLBlob } from '@graphql-yoga/core'

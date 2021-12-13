@@ -30,12 +30,12 @@ export type GraphQLServerCORSOptions = {
 /**
  * Configuration options for the server
  */
-export type BaseGraphQLServerOptions<TContext = any> = {
+export type BaseGraphQLServerOptions<TContext> = {
   /**
    * Envelop Plugins
    * @see https://envelop.dev/plugins
    */
-  plugins?: Array<Plugin>
+  plugins?: Array<Plugin<TContext>>
   /**
    * Detect server environment
    * Default: `false`
@@ -45,39 +45,47 @@ export type BaseGraphQLServerOptions<TContext = any> = {
    * Context
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
-  cors?: ((request: Request) => GraphQLServerCORSOptions) | GraphQLServerCORSOptions | boolean
-} & ({
-  schema: GraphQLSchema
-} | {
-  typeDefs: TypeSource
-  resolvers?: IResolvers<any, TContext>
-})
+  cors?:
+    | ((request: Request) => GraphQLServerCORSOptions)
+    | GraphQLServerCORSOptions
+    | boolean
+} & (
+  | {
+      schema: GraphQLSchema
+    }
+  | {
+      typeDefs: TypeSource
+      resolvers?: IResolvers<any, TContext>
+    }
+)
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  */
-export abstract class BaseGraphQLServer {
+export abstract class BaseGraphQLServer<TContext> {
   /**
    * Request handler for helix
    */
-  public readonly handleRequest = (req: Request) => handleRequest(req, this)
+  public readonly handleRequest = handleRequest
   public readonly schema: GraphQLSchema
   /**
    * Instance of envelop
    */
-  public readonly getEnveloped: GetEnvelopedFn<any>
+  public readonly getEnveloped: GetEnvelopedFn<TContext>
   protected isDev: boolean
   public logger: Logger
-  public readonly corsOptionsFactory?: (request: Request) => GraphQLServerCORSOptions
+  public readonly corsOptionsFactory?: (
+    request: Request,
+  ) => GraphQLServerCORSOptions
 
-  constructor(options: BaseGraphQLServerOptions) {
+  constructor(options: BaseGraphQLServerOptions<TContext>) {
     this.schema =
       'schema' in options
         ? options.schema
         : makeExecutableSchema({
-          typeDefs: options.typeDefs,
-          resolvers: options.resolvers,
-        })
+            typeDefs: options.typeDefs,
+            resolvers: options.resolvers,
+          })
 
     this.logger = dummyLogger
     this.isDev = options.isDev ?? false
@@ -122,12 +130,12 @@ export abstract class BaseGraphQLServer {
         enableIf(!this.isDev, useMaskedErrors()),
         ...(options.context != null
           ? [
-            useExtendContext(
-              typeof options.context === 'function'
-                ? options.context
-                : () => options.context,
-            ),
-          ]
+              useExtendContext(
+                typeof options.context === 'function'
+                  ? options.context
+                  : () => options.context,
+              ),
+            ]
           : []),
         ...(options.plugins || []),
       ],
@@ -140,68 +148,13 @@ export abstract class BaseGraphQLServer {
         this.corsOptionsFactory = () => options.cors as GraphQLServerCORSOptions
       } else if (typeof options.cors === 'boolean') {
         this.corsOptionsFactory = () => ({
-          "origin": ["*"],
-          "methods": ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-          "optionsSuccessStatus": 204
+          origin: ['*'],
+          methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+          optionsSuccessStatus: 204,
         })
       }
     }
   }
-}
-
-/**
- * Configuration options for the server
- */
-export type BaseNodeGraphQLServerOptions = {
-  /**
-   * GraphQL endpoint
-   * Default: `/graphql`
-   */
-  endpoint?: string
-  /**
-   * Port to run server
-   */
-  port?: number
-  /**
-   * Hostname
-   * Default: `localhost`
-   */
-  hostname?: string
-} & BaseGraphQLServerOptions
-
-/**
- * Base class that can be extended to use any Node.js HTTP server framework.
- */
-export abstract class BaseNodeGraphQLServer extends BaseGraphQLServer {
-  /**
-   * Port for server
-   */
-  protected port: number
-  /**
-   * GraphQL Endpoint
-   */
-  protected endpoint: string
-  /**
-   * Hostname for server
-   */
-  protected hostname: string
-
-  constructor(options: BaseNodeGraphQLServerOptions) {
-    super(options)
-    this.port = options.port || parseInt(process.env.PORT || '4000')
-    this.endpoint = options.endpoint || '/graphql'
-    this.hostname = options.hostname || 'localhost'
-  }
-
-  /**
-   * Start the server
-   */
-  abstract start(): Promise<void> | void
-
-  /**
-   * Stop the server
-   */
-  abstract stop(): Promise<void> | void
 }
 
 export const GraphQLBlob = new GraphQLScalarType({

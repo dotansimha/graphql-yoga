@@ -3,6 +3,7 @@ import {
   getGraphQLParameters,
   shouldRenderGraphiQL,
   renderGraphiQL,
+  ProcessRequestOptions,
 } from '@ardatan/graphql-helix'
 import { BaseGraphQLServer, GraphQLServerCORSOptions } from '@graphql-yoga/core'
 import { Request, Response } from 'cross-undici-fetch'
@@ -45,13 +46,13 @@ export function handleOptions(
   })
 }
 
-export const handleRequest = async (
+export async function handleRequest<TContext>(
+  this: BaseGraphQLServer<TContext>,
   request: Request,
-  { getEnveloped, schema, corsOptionsFactory, logger }: BaseGraphQLServer,
-) => {
+) {
   try {
-    if (corsOptionsFactory != null && request.method === 'OPTIONS') {
-      return handleOptions(request, corsOptionsFactory)
+    if (this.corsOptionsFactory != null && request.method === 'OPTIONS') {
+      return handleOptions(request, this.corsOptionsFactory)
     }
 
     if (shouldRenderGraphiQL(request)) {
@@ -66,22 +67,23 @@ export const handleRequest = async (
 
     const graphqlParams = await getGraphQLParameters(request)
 
-    if (getEnveloped) {
-      const proxy = getEnveloped({ request })
-      return processRequest({
+    if (this.getEnveloped) {
+      const proxy = this.getEnveloped({ request })
+      const processRequestOptions: ProcessRequestOptions<any, any> = {
         request,
         ...graphqlParams,
         ...proxy,
-      })
+      }
+      return processRequest(processRequestOptions)
     }
 
     return processRequest({
       request,
-      schema,
+      schema: this.schema,
       ...graphqlParams,
     })
   } catch (err: any) {
-    logger.error(err.message, err)
+    this.logger.error(err.message, err)
     const response = new Response(err.message, {
       status: 500,
       statusText: 'Internal Server Error',
