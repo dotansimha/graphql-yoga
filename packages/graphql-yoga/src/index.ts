@@ -1,4 +1,5 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from 'http'
+import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
 import { getNodeRequest, sendNodeResponse } from '@ardatan/graphql-helix'
 import { BaseGraphQLServer } from '@graphql-yoga/core'
@@ -74,7 +75,14 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
 
     this.logger.debug('Setting up server.')
 
-    this._server = createServer(this.requestListener.bind(this))
+    if (options.https) {
+      this._server =
+        typeof options.https === 'object'
+          ? createHttpsServer(options.https, this.requestListener.bind(this))
+          : createHttpsServer(this.requestListener.bind(this))
+    } else {
+      this._server = createServer(this.requestListener.bind(this))
+    }
   }
 
   async handleIncomingMessage(

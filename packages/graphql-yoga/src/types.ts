@@ -3,6 +3,7 @@ import type { DocumentNode } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { IncomingHttpHeaders } from 'http'
 import { OutgoingHttpHeaders } from 'http2'
+import { ServerOptions } from 'https'
 
 /**
  * Configuration options for the server
@@ -28,6 +29,10 @@ export type GraphQLServerOptions<TContext> =
      * @default true
      */
     enableLogging?: boolean
+    /**
+     * Enable HTTPS
+     */
+    https?: ServerOptions | boolean
   }
 
 export type GraphQLServerInject<

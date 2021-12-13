@@ -6,7 +6,7 @@ import {
   ProcessRequestOptions,
 } from '@ardatan/graphql-helix'
 import { BaseGraphQLServer, GraphQLServerCORSOptions } from '@graphql-yoga/core'
-import { Request, Response } from 'cross-undici-fetch'
+import { Response } from 'cross-undici-fetch'
 
 export function handleOptions(
   request: Request,

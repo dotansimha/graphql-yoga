@@ -27,6 +27,12 @@ export type GraphQLServerCORSOptions = {
   optionsSuccessStatus?: number
 }
 
+const DEFAULT_CORS_OPTIONS: GraphQLServerCORSOptions = {
+  origin: ['*'],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  optionsSuccessStatus: 204,
+}
+
 /**
  * Configuration options for the server
  */
@@ -143,15 +149,22 @@ export abstract class BaseGraphQLServer<TContext> {
 
     if (options.cors != null) {
       if (typeof options.cors === 'function') {
-        this.corsOptionsFactory = options.cors
+        const userProvidedCorsOptionsFactory = options.cors
+        this.corsOptionsFactory = (...args) => {
+          const corsOptions = userProvidedCorsOptionsFactory(...args)
+          return {
+            ...DEFAULT_CORS_OPTIONS,
+            ...corsOptions,
+          }
+        }
       } else if (typeof options.cors === 'object') {
-        this.corsOptionsFactory = () => options.cors as GraphQLServerCORSOptions
+        const corsOptions = {
+          ...DEFAULT_CORS_OPTIONS,
+          ...options.cors,
+        }
+        this.corsOptionsFactory = () => corsOptions
       } else if (typeof options.cors === 'boolean') {
-        this.corsOptionsFactory = () => ({
-          origin: ['*'],
-          methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-          optionsSuccessStatus: 204,
-        })
+        this.corsOptionsFactory = () => DEFAULT_CORS_OPTIONS
       }
     }
   }
