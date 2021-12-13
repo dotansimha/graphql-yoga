@@ -1,5 +1,5 @@
 import { handleRequest } from '@graphql-yoga/handler'
-import type { GraphQLSchema } from 'graphql'
+import { GraphQLScalarType, GraphQLSchema } from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
@@ -17,15 +17,31 @@ import { Logger, dummyLogger } from 'ts-log'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
 
+export type GraphQLServerCORSOptions = {
+  origin: string[]
+  methods?: string[]
+  allowedHeaders?: string[]
+  exposedHeaders?: string[]
+  credentials?: boolean
+  maxAge?: number
+  optionsSuccessStatus?: number
+}
+
+const DEFAULT_CORS_OPTIONS: GraphQLServerCORSOptions = {
+  origin: ['*'],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  optionsSuccessStatus: 204,
+}
+
 /**
  * Configuration options for the server
  */
-export type BaseGraphQLServerOptions<TContext = any> = {
+export type BaseGraphQLServerOptions<TContext> = {
   /**
    * Envelop Plugins
    * @see https://envelop.dev/plugins
    */
-  plugins?: Array<Plugin>
+  plugins?: Array<Plugin<TContext>>
   /**
    * Detect server environment
    * Default: `false`
@@ -35,6 +51,10 @@ export type BaseGraphQLServerOptions<TContext = any> = {
    * Context
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
+  cors?:
+    | ((request: Request) => GraphQLServerCORSOptions)
+    | GraphQLServerCORSOptions
+    | boolean
 } & (
   | {
       schema: GraphQLSchema
@@ -48,20 +68,23 @@ export type BaseGraphQLServerOptions<TContext = any> = {
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  */
-export abstract class BaseGraphQLServer {
+export abstract class BaseGraphQLServer<TContext> {
   /**
    * Request handler for helix
    */
-  protected handleRequest = handleRequest
-  protected schema: GraphQLSchema
+  public readonly handleRequest = handleRequest
+  public readonly schema: GraphQLSchema
   /**
    * Instance of envelop
    */
-  protected envelop: GetEnvelopedFn<any>
+  public readonly getEnveloped: GetEnvelopedFn<TContext>
   protected isDev: boolean
-  protected logger: Logger
+  public logger: Logger
+  public readonly corsOptionsFactory?: (
+    request: Request,
+  ) => GraphQLServerCORSOptions
 
-  constructor(options: BaseGraphQLServerOptions) {
+  constructor(options: BaseGraphQLServerOptions<TContext>) {
     this.schema =
       'schema' in options
         ? options.schema
@@ -73,7 +96,7 @@ export abstract class BaseGraphQLServer {
     this.logger = dummyLogger
     this.isDev = options.isDev ?? false
 
-    this.envelop = envelop({
+    this.getEnveloped = envelop({
       plugins: [
         // Use the schema provided by the user
         useSchema(this.schema),
@@ -87,23 +110,22 @@ export abstract class BaseGraphQLServer {
           this.isDev,
           useLogger({
             logFn: (eventName, events) => {
-              const logger = this.logger
               if (eventName === 'execute-start') {
                 const context = events.args.contextValue
                 const query = context.request?.body?.query
                 const variables = context.request?.body?.variables
                 const headers = context.request?.headers
-                logger.debug(eventName)
-                logger.debug(query, 'query')
+                this.logger.debug(eventName)
+                this.logger.debug(query, 'query')
                 // there can be no variables
                 if (variables && Object.keys(variables).length > 0) {
-                  logger.debug(variables, 'variables')
+                  this.logger.debug(variables, 'variables')
                 }
-                logger.debug(headers, 'headers')
+                this.logger.debug(headers, 'headers')
               }
               if (eventName === 'execute-end') {
-                logger.debug(eventName)
-                logger.debug(events.result, 'response')
+                this.logger.debug(eventName)
+                this.logger.debug(events.result, 'response')
               }
             },
           }),
@@ -124,50 +146,32 @@ export abstract class BaseGraphQLServer {
         ...(options.plugins || []),
       ],
     })
+
+    if (options.cors != null) {
+      if (typeof options.cors === 'function') {
+        const userProvidedCorsOptionsFactory = options.cors
+        this.corsOptionsFactory = (...args) => {
+          const corsOptions = userProvidedCorsOptionsFactory(...args)
+          return {
+            ...DEFAULT_CORS_OPTIONS,
+            ...corsOptions,
+          }
+        }
+      } else if (typeof options.cors === 'object') {
+        const corsOptions = {
+          ...DEFAULT_CORS_OPTIONS,
+          ...options.cors,
+        }
+        this.corsOptionsFactory = () => corsOptions
+      } else if (typeof options.cors === 'boolean') {
+        this.corsOptionsFactory = () => DEFAULT_CORS_OPTIONS
+      }
+    }
   }
 }
 
-/**
- * Configuration options for the server
- */
-export type BaseNodeGraphQLServerOptions = {
-  /**
-   * GraphQL endpoint
-   * Default: `/graphql`
-   */
-  endpoint?: string
-  /**
-   * Port to run server
-   */
-  port?: number
-} & BaseGraphQLServerOptions
-
-/**
- * Base class that can be extended to use any Node.js HTTP server framework.
- */
-export abstract class BaseNodeGraphQLServer extends BaseGraphQLServer {
-  /**
-   * Port for server
-   */
-  protected port: number
-  /**
-   * GraphQL Endpoint
-   */
-  protected endpoint: string
-
-  constructor(options: BaseNodeGraphQLServerOptions) {
-    super(options)
-    this.port = options.port || parseInt(process.env.PORT || '4000')
-    this.endpoint = options.endpoint || '/graphql'
-  }
-
-  /**
-   * Start the server
-   */
-  abstract start(): void
-
-  /**
-   * Stop the server
-   */
-  abstract stop(): void
-}
+export const GraphQLBlob = new GraphQLScalarType({
+  name: 'Blob',
+  serialize: (value) => value,
+  parseValue: (value) => value,
+})

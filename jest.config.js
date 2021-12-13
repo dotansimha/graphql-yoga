@@ -11,7 +11,7 @@ module.exports = {
   restoreMocks: true,
   reporters: ['default'],
   // TODO: get tests for `examples`
-  modulePathIgnorePatterns: ['dist', 'examples'],
+  modulePathIgnorePatterns: ['dist'],
   moduleNameMapper: {
     '@graphql-yoga/core': '<rootDir>/packages/core/src/index.ts',
     '@graphql-yoga/handler': '<rootDir>/packages/handler/src/index.ts',

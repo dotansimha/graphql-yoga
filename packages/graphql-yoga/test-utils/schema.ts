@@ -4,7 +4,7 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql'
-import { GraphQLBlob } from 'graphql-yoga'
+import { GraphQLBlob } from '@graphql-yoga/core'
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

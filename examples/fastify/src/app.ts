@@ -1,0 +1,48 @@
+import { GraphQLServer } from 'graphql-yoga';
+import fastify from 'fastify';
+
+export function buildApp() {
+    const app = fastify({ logger: true });
+
+    const graphQLServer = new GraphQLServer({
+        typeDefs: /* GraphQL */ `
+            type Query {
+                hello: String
+            }
+            type Subscription {
+                countdown(from: Int!): Int!
+            }
+        `,
+        resolvers: {
+            Query: {
+                hello: () => 'world'
+            },
+            Subscription: {
+                countdown: {
+                    subscribe: async function* (_, { from }) {
+                        for (let i = from; i >= 0; i--) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            yield { countdown: i };
+                        }
+                    },
+                },
+            }
+        }
+    });
+
+    app.route({
+        url: '/graphql',
+        method: ['GET', 'POST', 'OPTIONS'],
+        handler: async (req, reply) => {
+            const response = await graphQLServer.handleIncomingMessage(req)
+            response.headers.forEach((value, key) => {
+                reply.header(key, value);
+            });
+
+            reply.status(response.status);
+            reply.send(response.body);
+        }
+    })
+
+    return app
+}
