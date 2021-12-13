@@ -55,7 +55,8 @@ export const handleRequest = async (
     }
 
     if (shouldRenderGraphiQL(request)) {
-      return new Response(renderGraphiQL(), {
+      const graphiQLBody = renderGraphiQL()
+      return new Response(graphiQLBody, {
         headers: {
           'Content-Type': 'text/html',
         },
@@ -83,7 +84,7 @@ export const handleRequest = async (
     logger.error(err.message, err)
     const response = new Response(err.message, {
       status: 500,
-      statusText: 'Internal Server Error'
+      statusText: 'Internal Server Error',
     })
     return response
   }
