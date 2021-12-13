@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - name: Checkout next
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
