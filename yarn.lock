@@ -7978,7 +7978,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-yoga@2.0.0-alpha.2, graphql-yoga@workspace:packages/graphql-yoga":
+"graphql-yoga@2.0.0-alpha.2, graphql-yoga@workspace:*, graphql-yoga@workspace:packages/graphql-yoga":
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
@@ -13776,6 +13776,17 @@ resolve@1.15.1:
   checksum: 0fecaf5c234ec3ffcb0afc21478742a815a21cb964365259789be9c1692e72e13d8c081c1150fd76ed2146633a3251cdecd6e0c120b158f44bd74c38f81cafb3
   languageName: node
   linkType: hard
+
+"subscriptions-example@workspace:examples/subscriptions":
+  version: 0.0.0-use.local
+  resolution: "subscriptions-example@workspace:examples/subscriptions"
+  dependencies:
+    graphql: ^16.1.0
+    graphql-yoga: "workspace:*"
+    ts-node: 10.4.0
+    typescript: ^4.4.4
+  languageName: unknown
+  linkType: soft
 
 "superagent@npm:^6.1.0":
   version: 6.1.0
