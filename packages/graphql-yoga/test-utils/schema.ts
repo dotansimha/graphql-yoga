@@ -42,4 +42,15 @@ export const schema = new GraphQLSchema({
       },
     }),
   }),
+  subscription: new GraphQLObjectType({
+    name: 'Subscription',
+    fields: () => ({
+      ping: {
+        type: GraphQLString,
+        subscribe: async function* () {
+          yield { ping: 'pong' }
+        },
+      },
+    }),
+  }),
 })
