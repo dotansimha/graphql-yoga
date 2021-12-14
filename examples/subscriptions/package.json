@@ -1,8 +1,12 @@
 {
+  "name": "subscriptions-example",
   "scripts": {
-    "start": "node ."
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "graphql-yoga": "1.2.0"
+    "graphql": "^16.1.0",
+    "graphql-yoga": "workspace:*",
+    "ts-node": "10.4.0",
+    "typescript": "^4.4.4"
   }
 }
