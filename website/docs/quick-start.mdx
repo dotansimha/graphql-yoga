@@ -1,0 +1,52 @@
+---
+id: quick-start
+title: Quick Start
+sidebar_label: Quick Start
+---
+
+GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-compliant](https://github.com/graphql/graphql-over-http) GraphQL Server.
+It builds a GraphQL Server using [GraphQL Helix](https://www.graphql-helix.com/), [Envelop](https://envelop.dev) and [GraphQL Tools](https://graphql-tools.com).
+
+# Installation
+
+<PackageInstall packages={['graphql', 'graphql-yoga@alpha']} />
+
+## Create a Hello World GraphQL API
+
+The following example shows how to create a simple GraphQL Yoga server that responds to a simple query, and it uses `typeDefs` and `resolvers` pattern of GraphQL Tools.
+You can [learn more on GraphQL Tools documentation](https://www.graphql-tools.com/docs/generate-schema) how to create a schema using this pattern.
+
+```ts
+import { GraphQLServer } from 'graphql-yoga'
+
+// Provide your schema
+const server = new GraphQLServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      greetings: String!
+    }
+  `,
+  resolvers: {
+    Query: {
+      greetings: () => 'Hello World!',
+    },
+  },
+})
+// Start the server and explore http://localhost:4000/graphql
+server.start()
+```
+
+## Passing an executable schema created by other tools
+
+You can pass existing `GraphQLSchema` instance to `GraphQLServer` constructor like the following example;
+
+```ts
+import { schema } from './schema'
+import { GraphQLYoga } from 'graphql-yoga'
+
+const server = new GraphQLYoga({
+  schema,
+})
+
+server.start()
+```

@@ -68,7 +68,7 @@ export type BaseGraphQLServerOptions<TContext> = {
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  */
-export abstract class BaseGraphQLServer<TContext> {
+export class BaseGraphQLServer<TContext> {
   /**
    * Request handler for helix
    */

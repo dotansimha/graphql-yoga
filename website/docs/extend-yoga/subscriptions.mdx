@@ -1,0 +1,158 @@
+---
+id: subscriptions
+title: Subscriptions
+sidebar_label: Subscriptions
+---
+
+GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for subscriptions.
+You don't need any extra packages to use subscriptions.
+
+```ts
+import { GraphQLServer } from 'graphql-yoga'
+
+// Provide your schema
+const server = new GraphQLServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+    type Subscription {
+      countdown(from: Int!): Int!
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+    Subscription: {
+      countdown: {
+        // This will return the value on every 1 sec until it reaches 0
+        subscribe: async function* (_, { from }) {
+          for (let i = from; i >= 0; i--) {
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+            yield { countdown: i }
+          }
+        },
+      },
+    },
+  },
+})
+// Start the server and explore http://localhost:4000/graphql
+server.start()
+```
+
+## Handling subscriptions on the client
+
+```ts
+const url = new URL('http://localhost:4000/graphql')
+url.searchParams.append(
+  'query',
+  /* GraphQL */ `
+    subscription Countdown($from: Int!) {
+      countdown(from: $from)
+    }
+  `,
+)
+url.searchParams.append('variables', JSON.stringify({ from: 10 }))
+
+const eventsource = new EventSource(url.toString(), {
+  withCredentials: true, // This is required for cookies
+})
+
+eventsource.onmessage = function (event) {
+  const data = JSON.parse(event.data)
+  console.log(data) // This will result something like `{ "data": { "countdown": 0 } }`
+}
+```
+
+## Client usage with Apollo
+
+We can create an `SSELink` to use with Apollo Client.
+
+```ts
+import {
+  ApolloLink,
+  Operation,
+  FetchResult,
+  Observable,
+} from '@apollo/client/core'
+import { print } from 'graphql'
+
+interface SSELinkOptions {}
+
+class SSELink extends ApolloLink {
+  constructor(private options: EventSourceInit & { url: string }) {
+    super()
+  }
+
+  public request(operation: Operation): Observable<FetchResult> {
+    const url = new URL(this.options.url)
+    url.searchParams.append('query', print(operation.query))
+    url.searchParams.append('variables', JSON.stringify(operation.variables))
+
+    return new Observable((sink) => {
+      const eventsource = new EventSource(url.toString(), this.options)
+      eventsource.onmessage = function (event) {
+        const data = JSON.parse(event.data)
+        sink.next(data)
+        if (eventsource.readyState === 2) {
+          sink.complete()
+        }
+      }
+      eventsource.onerror = function (error) {
+        sink.error(error)
+      }
+      return () => eventsource.close()
+    })
+  }
+}
+
+const link = new SSELink({
+  url: 'http://localhost:4000/graphql',
+})
+```
+
+## Client usage with Urql
+
+Here is an example with Urql's `subscriptionExchange`
+
+```ts
+import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
+
+const client = createClient({
+  url: '/graphql',
+  exchanges: [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription(operation) {
+        const url = new URL('http://localhost:4000/graphql')
+        url.searchParams.append('query', operation.query)
+        url.searchParams.append(
+          'variables',
+          JSON.stringify(operation.variables),
+        )
+        return {
+          subscribe: (sink) => {
+            const eventsource = new EventSource(url.toString(), {
+              withCredentials: true, // This is required for cookies
+            })
+            eventsource.onmessage = function (event) {
+              const data = JSON.parse(event.data)
+              sink.next(data)
+              if (eventsource.readyState === 2) {
+                sink.complete()
+              }
+            }
+            eventsource.onerror = function (error) {
+              sink.error(error)
+            }
+            return {
+              unsubscribe: () => eventsource.close(),
+            }
+          },
+        }
+      },
+    }),
+  ],
+})
+```
