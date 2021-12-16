@@ -1,5 +1,11 @@
 # @graphql-yoga/core
 
+## 0.2.0-alpha.1
+
+### Minor Changes
+
+- 5de1acf: feat(core): add File and Blob scalars automatically
+
 ## 0.2.0-alpha.0
 
 ### Minor Changes
