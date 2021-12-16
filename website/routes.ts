@@ -3,47 +3,29 @@ import { IRoutes, GenerateRoutes } from '@guild-docs/server'
 export function getRoutes(): IRoutes {
   const Routes: IRoutes = {
     _: {
-      docs: {
+      'quick-start': {
         $name: 'Quick Start',
-        _: {
-          integration: {
-            $name: 'Integration',
-            $routes: [
-              'integration-with-fastify',
-              'integration-with-express',
-              'integration-with-koa',
-              'integration-with-deno',
-              'integration-with-cf',
-            ],
-          },
-          'extend-yoga': {
-            $name: 'Extend Yoga',
-            $routes: [
-              'envelop-plugins',
-              'graphiql',
-              'subscriptions',
-              'defer-stream',
-              'file-uploads',
-              'federation',
-            ],
-          },
-          migration: {
-            $name: 'Migration from',
-            $routes: [
-              'apollo-server',
-              'express-graphql',
-              'fastify-gql',
-              'helix-envelop',
-            ],
-          },
-        },
+      },
+      integrations: {
+        $name: 'Integrations',
+      },
+      'extend-yoga': {
+        $name: 'Extend Yoga',
       },
     },
   }
   GenerateRoutes({
     Routes,
-    basePath: 'docs',
+    ignorePaths: ['quick-start'],
+    folderPattern: 'docs',
   })
 
-  return Routes
+  return {
+    ...Routes,
+    _: Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      Object.entries(Routes._).map(([key, value]) => [`docs/${key}`, value]),
+    ),
+  }
 }
