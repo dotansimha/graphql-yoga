@@ -20,7 +20,7 @@ jobs:
   publish-canary:
     name: Publish Canary
     runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event.pull_request.head.repo.full_name == github.repository || github.event.inputs.onDemand == 'yes'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
