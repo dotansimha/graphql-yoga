@@ -1,5 +1,12 @@
 # graphql-yoga
 
+## 2.0.0-alpha.2
+
+### Patch Changes
+
+- Updated dependencies [5de1acf]
+  - @graphql-yoga/core@0.2.0-alpha.1
+
 ## 2.0.0-alpha.1
 
 ### Minor Changes
