@@ -27,7 +27,7 @@ const server = new GraphQLServer({
       greetings: String!
     }
     type Mutation {
-      uploadFile(file: Upload!): String!
+      readTextFile(file: Upload!): String!
     }
   `,
   resolvers: {
@@ -50,7 +50,7 @@ server.start()
 
 ```sh
 curl localhost:4000/graphql \
-  -F operations='{ "query": "mutation ($file: File!) { uploadFile(image: $file) }", "variables": { "file": null } }' \
+  -F operations='{ "query": "mutation ($file: File!) { readTextFile(file: $file) }", "variables": { "file": null } }' \
   -F map='{ "0": ["variables.file"] }' \
   -F 0=@mytext.txt
 ```
