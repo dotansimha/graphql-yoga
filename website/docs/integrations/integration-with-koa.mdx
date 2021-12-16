@@ -34,7 +34,7 @@ const graphQLServer = new GraphQLServer({
 
 // Bind GraphQL Yoga to `/graphql` endpoint
 // Here it takes the request and response objects and handles them internally
-app.use(async (ctx) => {
+app.use('/graphql', async (ctx) => {
   ctx.req.socket.setTimeout(0)
   ctx.req.socket.setNoDelay(true)
   ctx.req.socket.setKeepAlive(true)
