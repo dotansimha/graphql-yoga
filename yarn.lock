@@ -7137,7 +7137,7 @@ __metadata:
   dependencies:
     "@types/express": ^4.17.13
     express: ^4.17.1
-    graphql-yoga: 2.0.0-alpha.0
+    graphql-yoga: 1.18.3
     supertest: ^6.1.6
     ts-node: 10.4.0
     typescript: 4.5.2
@@ -7297,16 +7297,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify-cors@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "fastify-cors@npm:6.0.2"
-  dependencies:
-    fastify-plugin: ^3.0.0
-    vary: ^1.1.2
-  checksum: f600eb30d2259bf0277c3df72c73f09f6891f3984c62e1c9a7489f0d6b2ffb1749dbe9a79a05ad74b08a660c1a707c9fb7636c20b87d07eae0e6efd9c951fd03
-  languageName: node
-  linkType: hard
-
 "fastify-error@npm:^0.3.0":
   version: 0.3.1
   resolution: "fastify-error@npm:0.3.1"
@@ -7319,18 +7309,11 @@ __metadata:
   resolution: "fastify-example@workspace:examples/fastify"
   dependencies:
     fastify: 3.24.1
-    graphql-yoga: 2.0.0-alpha.0
+    graphql-yoga: 1.18.3
     ts-node: 10.4.0
     typescript: 4.5.2
   languageName: unknown
   linkType: soft
-
-"fastify-plugin@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "fastify-plugin@npm:3.0.0"
-  checksum: 00324690789ee02f977ab58ba70d937e2e420a6813a6aa7ae3ba47e34022dc8ac40e15a36ab14a67d94474de984398b1c8b30279fb51d92966f5d3d3ebd1b6fa
-  languageName: node
-  linkType: hard
 
 "fastify-warning@npm:^0.2.0":
   version: 0.2.0
@@ -7359,29 +7342,6 @@ __metadata:
     semver: ^7.3.2
     tiny-lru: ^7.0.0
   checksum: d73cd0398989d51df53c892ce5eac3a9e2c194aff7df8b557e8efa95093afca3cf7c9b9cc926249554272d94ff764722272ee0d37dd3f858b728106612a83fe7
-  languageName: node
-  linkType: hard
-
-"fastify@npm:^3.24.0":
-  version: 3.25.0
-  resolution: "fastify@npm:3.25.0"
-  dependencies:
-    "@fastify/ajv-compiler": ^1.0.0
-    abstract-logging: ^2.0.0
-    avvio: ^7.1.2
-    fast-json-stringify: ^2.5.2
-    fastify-error: ^0.3.0
-    fastify-warning: ^0.2.0
-    find-my-way: ^4.1.0
-    flatstr: ^1.0.12
-    light-my-request: ^4.2.0
-    pino: ^6.13.0
-    proxy-addr: ^2.0.7
-    rfdc: ^1.1.4
-    secure-json-parse: ^2.0.0
-    semver: ^7.3.2
-    tiny-lru: ^7.0.0
-  checksum: 472b720b841dd4dd0ca745782687515f144c8610184cd658d099b2a5cbb69125c196d10fc7ad6c93f9c488300ecddc669b24b2278c3f5fe9a3add60028f7df02
   languageName: node
   linkType: hard
 
@@ -7981,27 +7941,36 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql-yoga@npm:2.0.0-alpha.0":
-  version: 2.0.0-alpha.0
-  resolution: "graphql-yoga@npm:2.0.0-alpha.0"
+"graphql-yoga-monorepo@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "graphql-yoga-monorepo@workspace:."
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
-    "@envelop/core": ^1.6.2
-    "@graphql-typed-document-node/core": ^3.1.1
-    "@graphql-yoga/core": 0.1.0
-    "@graphql-yoga/handler": 0.1.0
-    cross-undici-fetch: ^0.1.4
-    fastify: ^3.24.0
-    fastify-cors: ^6.0.2
-    pino: ^7.2.0
-    pino-pretty: ^7.2.0
-  peerDependencies:
-    graphql: ^15.2.0 || ^16.0.0
-  checksum: 5f6d2ddbd40dd3e83bbdc4441b7c5a12f89df9aa75d1c3bc50e14e98b208de8b7cc11d052ae4170190e4a96fa57de8d6d78aa413a032773d55eb573f479666dc
-  languageName: node
-  linkType: hard
+    "@babel/core": ^7.16.0
+    "@babel/preset-env": ^7.16.0
+    "@babel/preset-typescript": ^7.16.0
+    "@changesets/cli": 2.17.0
+    "@manypkg/get-packages": ^1.1.3
+    "@types/babel__core": ^7
+    "@types/babel__preset-env": ^7
+    "@types/jest": ^27.0.2
+    "@types/semver": ^7
+    "@types/supertest": ^2.0.11
+    babel-jest: ^27.3.1
+    bob-the-bundler: ^1.5.1
+    graphql: ^16.1.0
+    husky: ^7.0.4
+    jest: ^27.3.1
+    patch-package: ^6.4.7
+    prettier: ^2.4.1
+    pretty-quick: ^3.1.2
+    rimraf: ^3.0.2
+    semver: ^7.3.5
+    supertest: ^6.1.6
+    typescript: ^4.4.4
+  languageName: unknown
+  linkType: soft
 
-"graphql-yoga@workspace:packages/graphql-yoga":
+"graphql-yoga@1.18.3, graphql-yoga@workspace:packages/graphql-yoga":
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
@@ -8274,7 +8243,7 @@ fsevents@~2.1.2:
   resolution: "hello-world@workspace:examples/hello-world"
   dependencies:
     graphql: 16.1.0
-    graphql-yoga: 2.0.0-alpha.0
+    graphql-yoga: 1.18.3
   languageName: unknown
   linkType: soft
 
@@ -12816,35 +12785,6 @@ resolve@1.15.1:
   languageName: node
   linkType: hard
 
-"root-workspace-0b6124@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "root-workspace-0b6124@workspace:."
-  dependencies:
-    "@babel/core": ^7.16.0
-    "@babel/preset-env": ^7.16.0
-    "@babel/preset-typescript": ^7.16.0
-    "@changesets/cli": 2.17.0
-    "@manypkg/get-packages": ^1.1.3
-    "@types/babel__core": ^7
-    "@types/babel__preset-env": ^7
-    "@types/jest": ^27.0.2
-    "@types/semver": ^7
-    "@types/supertest": ^2.0.11
-    babel-jest: ^27.3.1
-    bob-the-bundler: ^1.5.1
-    graphql: ^16.1.0
-    husky: ^7.0.4
-    jest: ^27.3.1
-    patch-package: ^6.4.7
-    prettier: ^2.4.1
-    pretty-quick: ^3.1.2
-    rimraf: ^3.0.2
-    semver: ^7.3.5
-    supertest: ^6.1.6
-    typescript: ^4.4.4
-  languageName: unknown
-  linkType: soft
-
 "rtl-css-js@npm:^1.14.0":
   version: 1.14.5
   resolution: "rtl-css-js@npm:1.14.5"
@@ -14850,7 +14790,7 @@ typescript@^4.4.4:
   languageName: node
   linkType: hard
 
-"vary@npm:^1.1.2, vary@npm:~1.1.2":
+"vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b
