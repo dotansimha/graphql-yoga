@@ -48,7 +48,7 @@ server.start()
 - **Includes Subscriptions:** Built-in support for GraphQL subscriptions using **S**erver-**S**ent **E**vents.
 - **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
 - **W3C Fetch API:** the core package depends on W3C Fetch API so it can run and deploy on any environment (Serverless, Workers, Deno, Node).  
-- **Easily Extendable:** New GraphQL-Yoga support all `envelop`[https://www.envelop.dev] plugins. 
+- **Easily Extendable:** New GraphQL-Yoga support all [`envelop`](https://www.envelop.dev) plugins. 
 
 ## Features
 
