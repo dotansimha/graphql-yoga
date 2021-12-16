@@ -8,10 +8,10 @@ export default function Index() {
         title="GraphQL Yoga"
         description="Fully-featured GraphQL Server with focus on easy setup, performance and great developer experience"
         link={{
-          href: '/docs',
+          href: '/docs/quick-start',
           children: 'Get Started',
           title: 'Get started with The Guild Docs',
-          onClick: (e) => handlePushRoute('/docs', e),
+          onClick: (e) => handlePushRoute('/docs/quick-start', e),
         }}
         // TODO: add it back in when v2 is stable
         // version={<NPMBadge name="graphql-yoga" />}

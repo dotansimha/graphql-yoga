@@ -1,0 +1,42 @@
+---
+id: integration-with-cf
+title: Integration with Cloudflare Workers
+sidebar_label: Cloudflare Workers
+---
+
+GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
+[Cloudflare Workers provides a serverless execution environment that allows you to create entirely new applications or augment existing ones without configuring or maintaining infrastructure.](https://developers.cloudflare.com/workers/).
+But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/core` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects.
+
+## Installation
+
+<PackageInstall
+  packages={['@cloudflare/worker', 'graphql', '@graphql-yoga/core']}
+/>
+
+## Example
+
+`cf-example.ts`
+
+```ts
+import { BaseGraphQLServer } from '@graphql-yoga/core'
+
+const graphQLServer = new BaseGraphQLServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+  },
+})
+
+addEventListener('fetch', (event) => {
+  event.respondWith(graphQLServer.handleRequest(event.request))
+})
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/cf)

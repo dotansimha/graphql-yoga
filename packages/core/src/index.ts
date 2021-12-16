@@ -68,7 +68,7 @@ export type BaseGraphQLServerOptions<TContext> = {
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  */
-export abstract class BaseGraphQLServer<TContext> {
+export class BaseGraphQLServer<TContext> {
   /**
    * Request handler for helix
    */
@@ -89,8 +89,12 @@ export abstract class BaseGraphQLServer<TContext> {
       'schema' in options
         ? options.schema
         : makeExecutableSchema({
-            typeDefs: options.typeDefs,
-            resolvers: options.resolvers,
+            typeDefs: [options.typeDefs, 'scalar File', 'scalar Blob'],
+            resolvers: {
+              File: GraphQLFile,
+              Blob: GraphQLBlob,
+              ...options.resolvers,
+            },
           })
 
     this.logger = dummyLogger
@@ -174,4 +178,16 @@ export const GraphQLBlob = new GraphQLScalarType({
   name: 'Blob',
   serialize: (value) => value,
   parseValue: (value) => value,
+  extensions: {
+    codegenScalarType: 'Blob',
+  },
+})
+
+export const GraphQLFile = new GraphQLScalarType({
+  name: 'File',
+  serialize: (value) => value,
+  parseValue: (value) => value,
+  extensions: {
+    codegenScalarType: 'File',
+  },
 })

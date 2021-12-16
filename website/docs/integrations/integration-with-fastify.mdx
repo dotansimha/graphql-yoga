@@ -1,0 +1,61 @@
+---
+id: integration-with-fastify
+title: Integration with Fastify
+sidebar_label: Fastify
+---
+
+[Fastify is one of the popular HTTP server frameworks for Node.js.](https://www.fastify.io/) It is a very simple, yet powerful framework that is easy to learn and use.
+You can easily integrate GraphQL Yoga with Fastify.
+
+So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Yoga.
+[See the ecosystem](https://www.fastify.io/docs/latest/Guides/Ecosystem/)
+
+## Installation
+
+<PackageInstall packages={['fastify', 'graphql', 'graphql-yoga@alpha']} />
+
+## Example
+
+```ts
+import { GraphQLServer } from 'graphql-yoga'
+import fastify from 'fastify'
+
+// This is the fastify instance you have created
+const app = fastify({ logger: true })
+
+const graphQLServer = new GraphQLServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+  },
+})
+
+/**
+ * We pass the incoming HTTP request to GraphQL Yoga
+ * and handle the response using Fastify's `reply` API
+ * Learn more about `reply` https://www.fastify.io/docs/latest/Reply/
+ **/
+app.route({
+  url: '/graphql',
+  method: ['GET', 'POST', 'OPTIONS'],
+  handler: async (req, reply) => {
+    const response = await graphQLServer.handleIncomingMessage(req)
+    response.headers.forEach((value, key) => {
+      reply.header(key, value)
+    })
+
+    reply.status(response.status)
+    reply.send(response.body)
+  },
+})
+
+app.listen(4000)
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/fastify)

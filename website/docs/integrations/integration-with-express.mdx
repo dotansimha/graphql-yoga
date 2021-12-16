@@ -1,0 +1,44 @@
+---
+id: integration-with-express
+title: Integration with Express
+sidebar_label: Express
+---
+
+[Express is the most popular web framework for Node.js.](https://expressjs.com/) It is a minimalist framework that provides a robust set of features to handle HTTP on Node.js applications.
+You can easily integrate GraphQL Yoga into your Express application with a few lines of code.
+
+## Installation
+
+<PackageInstall packages={['express', 'graphql', 'graphql-yoga@alpha']} />
+
+## Example
+
+```ts
+import express from 'express'
+import { GraphQLServer } from 'graphql-yoga'
+
+const app = express()
+
+const graphQLServer = new GraphQLServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+  },
+})
+
+// Bind GraphQL Yoga to `/graphql` endpoint
+// Here it takes the request and response objects and handles them internally
+app.use('/graphql', (req, res) => graphQLServer.requestListener(req, res))
+
+app.listen(4000, () => {
+  console.log('Running a GraphQL API server at http://localhost:4000/graphql')
+})
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/express)
