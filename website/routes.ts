@@ -9,10 +9,10 @@ export function getRoutes(): IRoutes {
       'extend-yoga': {
         $name: 'Extend Yoga',
         $routes: [
-          ['envelop-plugins', 'Envelop Plugins'],
           ['subscriptions', 'Subscriptions'],
           ['graphiql', 'GraphiQL'],
           ['file-uploads', 'File Uploads'],
+          ['envelop-plugins', 'Envelop Plugins'],
         ],
       },
       integrations: {
