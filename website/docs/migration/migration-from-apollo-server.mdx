@@ -1,0 +1,65 @@
+---
+id: migration-from-apollo-server
+title: Migration from Apollo Server
+sidebar_label: Apollo Server
+---
+
+## Installation
+
+You can start with installing `graphql-yoga` package.
+
+<PackageInstall packages={['graphql-yoga@alpha']} />
+
+### Install equivalent **Envelop** plugins of the Apollo Server
+
+- `introspection: false` flag
+  - If you are using this flag, [install `@envelop/disable-introspection`](https://www.envelop.dev/plugins/use-disable-introspection)
+- Apollo Federation
+  - If you are using Apollo Server errors, [install `@envelop/use-apollo-federation`](https://www.envelop.dev/plugins/use-apollo-federation)
+- Apollo Server Errors
+  - If you are using Apollo Server errors, [install `@envelop/use-apollo-server-errors`](https://www.envelop.dev/plugins/use-apollo-server-errors)
+- Apollo Tracing
+  - If you are using Apollo Tracing, [install `@envelop/use-apollo-tracing`](https://www.envelop.dev/plugins/use-apollo-tracing)
+- Response Cache
+  - If you are using Response Cache, [you should set up `@envelop/use-response-cache`](https://www.envelop.dev/plugins/use-response-cache) for the same functionality
+
+[Check more plugins on Envelop Plugin Hub](https://www.envelop.dev/plugins)
+
+## Example initial usage of GraphQL Yoga
+
+For example if you are using Apollo Server Errors;
+
+`apollo-server-errors-example.ts`
+
+```diff
+import { schema } from './schema'
+- import { ApolloServer } from 'apollo-server'
++ import { GraphQLYoga } from 'graphql-yoga'
+
++ import { useApolloServerErrors } from '@envelop/apollo-server-errors'
+
+- const server = new ApolloServer({
++ const server = new GraphQLYoga({
+  // You can also pass `typeDefs` and `resolvers` here directly if you previously use `ApolloServer` constructor to build your `GraphQLSchema`
+  schema,
++  // Add here the plugins you installed above
++  plugins: [useApolloServerErrors()],
+})
+
+server.start()
+```
+
+## Migration from standalone `apollo-server`
+
+You don't need anything special. You can just use GraphQL Yoga as in the example above;
+
+## Migration from `apollo-server-*`
+
+Check the integration section to choose the server framework you are using with Apollo Server.
+
+For example, if you are using **Express**, you should remove `server.start()` from the code above and replace `server.applyMiddleware({ app })` with the route as in [Express Integration section](/docs/integrations/integration-with-express)
+
+```diff
+- server.applyMiddleware({ app })
++ app.use('/graphql', (req, res) => graphQLServer.requestListener(req, res))
+```

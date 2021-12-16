@@ -6,11 +6,20 @@ export function getRoutes(): IRoutes {
       'quick-start': {
         $name: 'Quick Start',
       },
+      'extend-yoga': {
+        $name: 'Extend Yoga',
+        $routes: [
+          ['envelop-plugins', 'Envelop Plugins'],
+          ['subscriptions', 'Subscriptions'],
+          ['graphiql', 'GraphiQL'],
+          ['file-uploads', 'File Uploads'],
+        ],
+      },
       integrations: {
         $name: 'Integrations',
       },
-      'extend-yoga': {
-        $name: 'Extend Yoga',
+      migration: {
+        $name: 'Migration from',
       },
     },
   }

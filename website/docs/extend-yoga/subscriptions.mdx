@@ -7,6 +7,12 @@ sidebar_label: Subscriptions
 GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for subscriptions.
 You don't need any extra packages to use subscriptions.
 
+## Server Implementation
+
+You can basically extend you schema with `Subscription` fields
+
+`server.ts`
+
 ```ts
 import { GraphQLServer } from 'graphql-yoga'
 
@@ -43,6 +49,10 @@ server.start()
 
 ## Handling subscriptions on the client
 
+W3 standard [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) can be used without any extra packages to handle SSE.
+
+`eventsource.ts`
+
 ```ts
 const url = new URL('http://localhost:4000/graphql')
 url.searchParams.append(
@@ -65,9 +75,11 @@ eventsource.onmessage = function (event) {
 }
 ```
 
-## Client usage with Apollo
+### Client usage with Apollo
 
 We can create an `SSELink` to use with Apollo Client.
+
+`sse-link.ts`
 
 ```ts
 import {
@@ -112,9 +124,11 @@ const link = new SSELink({
 })
 ```
 
-## Client usage with Urql
+### Client usage with Urql
 
 Here is an example with Urql's `subscriptionExchange`
+
+`urql-sse.ts`
 
 ```ts
 import { createClient, defaultExchanges, subscriptionExchange } from 'urql'

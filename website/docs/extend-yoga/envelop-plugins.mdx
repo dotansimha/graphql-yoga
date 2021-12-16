@@ -27,16 +27,7 @@ const server = new GraphQLServer({
       greetings: () => 'Hello World!',
     },
   },
-  plugins: [
-    useGraphQlJit(
-      {
-        // your compiler options here. See https://github.com/zalando-incubator/graphql-jit#compiledquery--compilequeryschema-document-operationname-compileroptions
-      },
-      {
-        enableIf: (executionArgs) => executionArgs.contextValue.shouldUseJit,
-      },
-    ),
-  ],
+  plugins: [useGraphQlJit()],
 })
 
 // Start the server and explore http://localhost:4000/graphql
