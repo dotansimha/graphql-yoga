@@ -9,7 +9,7 @@
     "build": "tsc --project tsconfig.build.json && bob build",
     "test": "jest --passWithNoTests",
     "release": "yarn build && changeset publish",
-    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
+    "release:canary": "node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary",
     "start:docs": "yarn workspace @graphql-yoga/website dev",
     "postinstall": "patch-package && husky install"
   },

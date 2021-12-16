@@ -39,7 +39,9 @@ function getRelevantChangesets(baseBranch) {
 
 async function updateVersions() {
   const cwd = process.cwd()
-  const packages = await getPackages(cwd)
+  const packages = (await getPackages(cwd)).filter(
+    (p) => p?.packageJson?.version,
+  )
   const config = await readConfig(cwd, packages)
   const modifiedChangesets = getRelevantChangesets(config.baseBranch)
   const allChangesets = await readChangesets(cwd)
