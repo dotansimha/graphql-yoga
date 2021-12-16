@@ -11,7 +11,7 @@ export default function Index() {
           href: '/docs/quick-start',
           children: 'Get Started',
           title: 'Get started with The Guild Docs',
-          onClick: (e) => handlePushRoute('/docs', e),
+          onClick: (e) => handlePushRoute('/docs/quick-start', e),
         }}
         // TODO: add it back in when v2 is stable
         // version={<NPMBadge name="graphql-yoga" />}
