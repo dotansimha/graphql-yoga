@@ -2,6 +2,19 @@ name: Canary Release
 
 on:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      onDemand:
+        description: 'Are you sure?'
+        required: true
+        default: 'yes'
+      npmTag:
+        description: 'NPM Tag'
+        required: true
+        default: 'alpha'
+      npmVersionSuffix:
+        description: 'Custom NPM Version Suffix'
+        required: false
 
 jobs:
   publish-canary:
@@ -35,6 +48,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          ON_DEMAND: ${{github.event.inputs.onDemand}}
+          NPM_TAG: ${{github.event.inputs.npmTag || 'alpha'}}
+          NPM_VERSION_SUFFIX: ${{github.event.inputs.npmVersionSuffix}}
         with:
           npm-token: ${{ secrets.NODE_AUTH_TOKEN }}
           npm-script: 'yarn release:canary'
