@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 const semver = require('semver')
 const cp = require('child_process')
 const { basename } = require('path')
@@ -10,15 +10,12 @@ const applyReleasePlan = require('@changesets/apply-release-plan').default
 const { getPackages } = require('@manypkg/get-packages')
 
 function getNewVersion(version, type) {
-  let npmVersionSuffix = process.env.NPM_VERSION_SUFFIX
-  if (!npmVersionSuffix) {
-    const gitHash = cp
-      .spawnSync('git', ['rev-parse', '--short', 'HEAD'])
-      .stdout.toString()
-      .trim()
-    npmVersionSuffix = `alpha-${gitHash}`
-  }
-  return semver.inc(version, `pre${type}`, true, npmVersionSuffix)
+  const gitHash = cp
+    .spawnSync('git', ['rev-parse', '--short', 'HEAD'])
+    .stdout.toString()
+    .trim()
+
+  return semver.inc(version, `pre${type}`, true, 'canary-' + gitHash)
 }
 
 function getRelevantChangesets(baseBranch) {
@@ -32,9 +29,11 @@ function getRelevantChangesets(baseBranch) {
     .trim()
     .split('\n')
 
-  return listModifiedFiles
+  const items = listModifiedFiles
     .filter((f) => f.startsWith('.changeset'))
     .map((f) => basename(f, '.md'))
+
+  return items
 }
 
 async function updateVersions() {
@@ -42,11 +41,9 @@ async function updateVersions() {
   const packages = await getPackages(cwd)
   const config = await readConfig(cwd, packages)
   const modifiedChangesets = getRelevantChangesets(config.baseBranch)
-  const allChangesets = await readChangesets(cwd)
-  const changesets =
-    process.env.ON_DEMAND === 'yes'
-      ? allChangesets
-      : allChangesets.filter((change) => modifiedChangesets.includes(change.id))
+  const changesets = (await readChangesets(cwd)).filter((change) =>
+    modifiedChangesets.includes(change.id),
+  )
 
   if (changesets.length === 0) {
     console.warn(
