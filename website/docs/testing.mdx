@@ -1,0 +1,23 @@
+---
+id: testing
+title: Testing
+sidebar_label: Testing
+---
+
+GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection thanks to [`light-my-request`](https://github.com/fastify/light-my-request).
+
+## Hello world test
+
+Let's write test for our [Hello World GraphQL API](/docs/quick-start#create-a-hello-world-graphql-api). You can use any testing framework of your choice. For this example we will use [`assert`](https://nodejs.org/api/assert.html#assert) from Node.js
+
+```ts
+import server from './server'
+import { deepEqual } from 'assert'
+
+const { executionResult, response } = await server.inject({
+  document: '{ hello }',
+})
+
+deepEqual(response.statusCode, 200)
+deepEqual(executionResult.data.hello, 'Hello World')
+```

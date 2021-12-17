@@ -21,6 +21,9 @@ export function getRoutes(): IRoutes {
       migration: {
         $name: 'Migration from',
       },
+      testing: {
+        $name: 'Testing',
+      },
     },
   }
   GenerateRoutes({
