@@ -3,8 +3,8 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLBoolean,
+  GraphQLScalarType,
 } from 'graphql'
-import { GraphQLBlob } from '@graphql-yoga/core'
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -32,7 +32,9 @@ export const schema = new GraphQLSchema({
         args: {
           image: {
             description: 'Image file to upload',
-            type: GraphQLBlob,
+            type: new GraphQLScalarType({
+              name: 'Upload',
+            }),
           },
         },
         resolve: async (_, { image }: { image: File }, { logger }) => {

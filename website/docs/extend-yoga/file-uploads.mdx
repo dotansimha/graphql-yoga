@@ -15,6 +15,8 @@ You can use any kind of client supports GraphQL Upload specification.
 
 ## Example
 
+You only need to add a scalar type definition for `Upload` in your schema.
+
 `file-upload-example.ts`
 
 ```ts
@@ -23,6 +25,8 @@ import { createGraphQLServer } from 'graphql-yoga'
 // Provide your schema
 const server = createGraphQLServer({
   typeDefs: /* GraphQL */ `
+    scalar Upload
+
     type Query {
       greetings: String!
     }
@@ -50,23 +54,7 @@ server.start()
 
 ```sh
 curl localhost:4000/graphql \
-  -F operations='{ "query": "mutation ($file: File!) { readTextFile(file: $file) }", "variables": { "file": null } }' \
+  -F operations='{ "query": "mutation ($file: Upload!) { readTextFile(file: $file) }", "variables": { "file": null } }' \
   -F map='{ "0": ["variables.file"] }' \
   -F 0=@mytext.txt
-```
-
-### Want to use `Upload` as scalar type name for File Uploads?
-
-Usually `graphql-upload` compliant servers use `Upload` name but GraphQL Yoga has two different scalar types `File` for uploaded files with a mimetype and/or name and `Blob` for unnamed binary data.
-
-You can keep the same behavior by adding `scalar Upload` and add `GraphQLFile` as a resolver for that scalar like below;
-
-```ts
-{
-    typeDefs: [...otherTypeDefs, `scalar Upload`],
-    resolvers: {
-      Upload: GraphQLFile,
-      ...otherResolvers,
-    },
-}
 ```
