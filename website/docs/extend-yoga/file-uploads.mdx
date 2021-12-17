@@ -30,6 +30,7 @@ const server = new GraphQLServer({
       readTextFile(file: Upload!): String!
     }
   `,
+  enableUploads: true,
   resolvers: {
     Query: {
       greetings: () => 'Hello World!',

@@ -7,9 +7,11 @@ const yoga = new GraphQLServer({ schema, enableLogging: false })
 
 describe('Requests', () => {
   it('should send introspection query', async () => {
-    const { response, executionResult } = await yoga.inject<IntrospectionQuery>({
-      document: getIntrospectionQuery(),
-    })
+    const { response, executionResult } = await yoga.inject<IntrospectionQuery>(
+      {
+        document: getIntrospectionQuery(),
+      },
+    )
 
     expect(response.statusCode).toBe(200)
     expect(executionResult.errors).toBeUndefined()
@@ -74,12 +76,13 @@ describe('Requests', () => {
     const { executionResult } = await yoga.inject({ document: null } as any)
 
     expect(executionResult.data).toBeUndefined()
-    expect(executionResult.errors?.[0].message).toBe('Must provide query string.')
+    expect(executionResult.errors?.[0].message).toBe(
+      'Must provide query string.',
+    )
   })
 })
 
 describe('Uploads', () => {
-
   // TODO: Need to find a way to test using fastify inject
   beforeAll(async () => {
     await yoga.start()

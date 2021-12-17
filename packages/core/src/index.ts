@@ -14,7 +14,7 @@ import { useDisableIntrospection } from '@envelop/disable-introspection'
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
 import { Logger, dummyLogger } from 'ts-log'
-import { makeExecutableSchema } from '@graphql-tools/schema'
+import { makeExecutableSchema, mergeSchemas } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
 
 export type GraphQLServerCORSOptions = {
@@ -51,6 +51,10 @@ export type BaseGraphQLServerOptions<TContext> = {
    * Context
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
+  /**
+   * Provide scalar for File and Blob
+   */
+  enableUploads?: boolean
   cors?:
     | ((request: Request) => GraphQLServerCORSOptions)
     | GraphQLServerCORSOptions
@@ -89,13 +93,21 @@ export class BaseGraphQLServer<TContext> {
       'schema' in options
         ? options.schema
         : makeExecutableSchema({
-            typeDefs: [options.typeDefs, 'scalar File', 'scalar Blob'],
-            resolvers: {
-              File: GraphQLFile,
-              Blob: GraphQLBlob,
-              ...options.resolvers,
-            },
+            typeDefs: options.typeDefs,
+            resolvers: options.resolvers,
           })
+
+    if (options.enableUploads) {
+      const uploadsSchema = makeExecutableSchema({
+        typeDefs: ['scalar File', 'scalar Blob'],
+        resolvers: {
+          File: GraphQLFile,
+          Blob: GraphQLBlob,
+        },
+      })
+
+      this.schema = mergeSchemas({ schemas: [this.schema, uploadsSchema] })
+    }
 
     this.logger = dummyLogger
     this.isDev = options.isDev ?? false
