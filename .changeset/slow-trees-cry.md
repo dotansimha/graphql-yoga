@@ -2,4 +2,4 @@
 'graphql-yoga': minor
 ---
 
-Add utility for pubsub
+Add PubSub utility.
