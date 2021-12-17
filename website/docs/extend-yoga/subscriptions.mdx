@@ -58,6 +58,23 @@ subscription {
 
 Then press the Play (Execute Query) button.
 
+Alternatively, you can also send the subscription operation via curl.
+
+```bash
+$ curl -N -H "accept:text/event-stream" http://localhost:4000/graphql?query=subscription%20%7B%0A%20%20countdown%28from%3A%205%29%0A%7D
+data: {"data":{"countdown":5}}
+
+data: {"data":{"countdown":4}}
+
+data: {"data":{"countdown":3}}
+
+data: {"data":{"countdown":2}}
+
+data: {"data":{"countdown":1}}
+
+data: {"data":{"countdown":0}}
+```
+
 ## PubSub
 
 ### Getting Started
