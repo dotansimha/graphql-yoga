@@ -20,17 +20,17 @@ type ChannelPubSubConfig = {
 const resolveGlobalConfig = (api: EventAPI = globalThis): EventAPI => {
   if (!api.Event || !api.EventTarget) {
     throw new Error(`
-[graphql-yoga] 'createChannelPubSub' uses the Event and EventTarget APIs.
+[graphql-yoga] 'createPubSub' uses the Event and EventTarget APIs.
 
 In modern JavaScript environments those are part of the global scope. However, if you are using an older version of Node.js (<= 16.x.x), those APIs must be polyfilled.
-You can provide polyfills to the 'createChannelPubSub' function:
+You can provide polyfills to the 'createPubSub' function:
 
 \`\`\`
 // yarn install @ungap/event @ungap/event-target
 import Event from '@ungap/event'
 import EventTarget from '@ungap/event-target'
 
-const pubSub = createChannelPubSub({
+const pubSub = createPubSub({
   event: {
     Event,
     EventTarget,
@@ -46,7 +46,7 @@ const pubSub = createChannelPubSub({
 /**
  * Utility for publishing and subscribing to events.
  */
-export const createChannelPubSub = <
+export const createPubSub = <
   TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
 >(
   config?: ChannelPubSubConfig,
@@ -56,10 +56,10 @@ export const createChannelPubSub = <
   const target = new EventTarget()
 
   return {
-    publish: <TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
+    publish<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
       routingKey: TKey,
       ...args: TPubSubPublishArgsByKey[TKey]
-    ) => {
+    ) {
       const event = new Event(routingKey)
       ;(event as any).data = args[0]
       target.dispatchEvent(event)
