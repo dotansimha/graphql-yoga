@@ -148,6 +148,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ardatan/graphql-helix@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "@ardatan/graphql-helix@npm:0.0.7"
+  dependencies:
+    cross-undici-fetch: ^0.1.4
+  peerDependencies:
+    graphql: ^15.3.0 || ^16.0.0
+  checksum: d1a712523f7b20f0098d8714b92157cf853d58bc1e2b6733371e7583be5f63b4c0448de6afeed5ac79ded039e423db2e8fbb809d745075b88bb9455693460e51
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:7.12.11":
   version: 7.12.11
   resolution: "@babel/code-frame@npm:7.12.11"
@@ -3860,7 +3871,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": ^0.0.7
     "@envelop/core": ^1.6.1
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
@@ -9571,7 +9582,7 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": ^0.0.7
     "@envelop/core": ^1.6.2
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/core": 0.2.0-alpha.1
