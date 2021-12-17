@@ -28,7 +28,7 @@ export function getRoutes(): IRoutes {
   }
   GenerateRoutes({
     Routes,
-    ignorePaths: ['quick-start'],
+    ignorePaths: ['quick-start', 'testing'],
     folderPattern: 'docs',
   })
 
