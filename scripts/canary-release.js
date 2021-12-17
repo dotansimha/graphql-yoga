@@ -1,7 +1,7 @@
 /* eslint-disable */
 const semver = require('semver')
 const cp = require('child_process')
-const { basename } = require('path')
+const { basename, join } = require('path')
 
 const { read: readConfig } = require('@changesets/config')
 const readChangesets = require('@changesets/read').default
