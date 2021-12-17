@@ -48,9 +48,21 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
     super({
       ...options,
       // This should make default to dev mode base on environment variable
-      isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
+      isDev:
+        options.isDev ??
+        (typeof process !== 'undefined' &&
+          typeof process.env !== 'undefined' &&
+          process.env.NODE_ENV !== 'production'),
     })
-    this.port = options.port || parseInt(process.env.PORT || '4000')
+    this.port =
+      options.port ||
+      parseInt(
+        (typeof process !== 'undefined' &&
+          typeof process.env !== 'undefined' &&
+          process.env.PORT) ||
+          '4000',
+        10,
+      )
     this.endpoint = options.endpoint || '/graphql'
     this.hostname = options.hostname || '0.0.0.0'
 
