@@ -19,7 +19,7 @@ npm i graphql-yoga@alpha graphql
 We are actively working on API for the library. This is a very simple example of how to use it:
 
 ```js
-const { createGraphQLServer } = require('graphql-yoga')
+const { createServer } = require('graphql-yoga')
 const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
 
 const schema = new GraphQLSchema({
@@ -34,7 +34,7 @@ const schema = new GraphQLSchema({
   }),
 })
 // Provide your schema
-const server = createGraphQLServer({
+const server = createServer({
   schema,
   isDev: process.env.NODE_ENV !== 'production',
 })

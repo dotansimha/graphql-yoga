@@ -17,7 +17,7 @@ You should replace Express GraphQL's middleware with GraphQL Yoga's;
 ```diff
 const express = require('express');
 - const { graphqlHTTP } = require('express-graphql');
-+ const { createGraphQLServer } = require('graphql-yoga');
++ const { createServer } = require('graphql-yoga');
 const { schema } = require('./schema');
 
 const app = express();
@@ -30,7 +30,7 @@ const app = express();
 -  graphiql: true,
 -})));
 
-+const yoga = createGraphQLServer({
++const yoga = createServer({
 +   schema,
 +   context: (req) => ({ // Context factory gets called for every request
 +      myToken: req.headers.get('authorization'),

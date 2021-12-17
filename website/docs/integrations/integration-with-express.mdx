@@ -15,11 +15,11 @@ You can easily integrate GraphQL Yoga into your Express application with a few l
 
 ```ts
 import express from 'express'
-import { createGraphQLServer } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
 
 const app = express()
 
-const graphQLServer = createGraphQLServer({
+const graphQLServer = createServer({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String

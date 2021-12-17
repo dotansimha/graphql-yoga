@@ -1,4 +1,4 @@
-import { createGraphQLServer, useExtendContext, createPubSub } from "graphql-yoga";
+import { createServer, useExtendContext, createPubSub } from "graphql-yoga";
 
 const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
@@ -72,7 +72,7 @@ const pubSub = createPubSub<{
 }>()
 
 
-const server = createGraphQLServer({
+const server = createServer({
   typeDefs,
   resolvers,
   plugins: [useExtendContext(() => ({ pubSub }))],

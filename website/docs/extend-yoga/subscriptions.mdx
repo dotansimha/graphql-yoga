@@ -14,10 +14,10 @@ Subscriptions can be added by extending your GraphQL schema with a `Subscription
 `server.ts`
 
 ```ts
-import { createGraphQLServer } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
 
 // Provide your schema
-const server = createGraphQLServer({
+const server = createServer({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String
@@ -84,13 +84,13 @@ GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it
 `server.ts`
 
 ```ts
-import { createGraphQLServer, createPubSub } from 'graphql-yoga'
+import { createServer, createPubSub } from 'graphql-yoga'
 
 let globalCounter = 0
 const pubSub = createPubSub()
 
 // Provide your schema
-const server = createGraphQLServer({
+const server = createServer({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String

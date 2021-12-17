@@ -1,4 +1,4 @@
-import { createGraphQLServer } from "graphql-yoga";
+import { createServer } from "graphql-yoga";
 
 const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
@@ -83,7 +83,7 @@ const resolvers = {
   },
 };
 
-const server = createGraphQLServer({
+const server = createServer({
   typeDefs,
   resolvers,
   graphiql: {

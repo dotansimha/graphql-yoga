@@ -1,39 +1,38 @@
-import type { BaseGraphQLServerOptions } from '@graphql-yoga/core'
+import type { ServerOptions as BaseServerOptions } from '@graphql-yoga/core'
 import type { DocumentNode } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { IncomingHttpHeaders } from 'http'
 import { OutgoingHttpHeaders } from 'http2'
-import { ServerOptions } from 'https'
+import { ServerOptions as HttpsServerOptions } from 'https'
 
 /**
  * Configuration options for the server
  */
-export type GraphQLServerOptions<TContext> =
-  BaseGraphQLServerOptions<TContext> & {
-    /**
-     * GraphQL endpoint
-     * Default: `/graphql`
-     */
-    endpoint?: string
-    /**
-     * Port to run server
-     */
-    port?: number
-    /**
-     * Hostname
-     * Default: `localhost`
-     */
-    hostname?: string
-    /**
-     * Enable pino logging
-     * @default true
-     */
-    enableLogging?: boolean
-    /**
-     * Enable HTTPS
-     */
-    https?: ServerOptions | boolean
-  }
+export type ServerOptions<TContext> = BaseServerOptions<TContext> & {
+  /**
+   * GraphQL endpoint
+   * Default: `/graphql`
+   */
+  endpoint?: string
+  /**
+   * Port to run server
+   */
+  port?: number
+  /**
+   * Hostname
+   * Default: `localhost`
+   */
+  hostname?: string
+  /**
+   * Enable pino logging
+   * @default true
+   */
+  enableLogging?: boolean
+  /**
+   * Enable HTTPS
+   */
+  https?: HttpsServerOptions | boolean
+}
 
 export type GraphQLServerInject<
   TData = any,

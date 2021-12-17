@@ -1,14 +1,19 @@
-import { createServer, IncomingMessage, Server, ServerResponse } from 'http'
+import {
+  createServer as createHttpServer,
+  IncomingMessage,
+  Server as NodeServer,
+  ServerResponse,
+} from 'http'
 import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
 import { getNodeRequest, sendNodeResponse } from '@ardatan/graphql-helix'
-import { BaseGraphQLServer } from '@graphql-yoga/core'
+import { Server as BaseServer } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
-import type { GraphQLServerInject, GraphQLServerOptions } from './types'
+import type { GraphQLServerInject, ServerOptions } from './types'
 import LightMyRequest from 'light-my-request'
 import { ExecutionResult, print } from 'graphql'
 
-class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
+class Server<TContext> extends BaseServer<TContext> {
   /**
    * Port for server
    */
@@ -22,9 +27,9 @@ class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
    */
   private hostname: string
 
-  private _server: Server
+  private _server: NodeServer
 
-  constructor(options: GraphQLServerOptions<TContext>) {
+  constructor(options: ServerOptions<TContext>) {
     super({
       ...options,
       // This should make default to dev mode base on environment variable
@@ -69,7 +74,7 @@ class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
           ? createHttpsServer(options.https, this.requestListener)
           : createHttpsServer(this.requestListener)
     } else {
-      this._server = createServer(this.requestListener)
+      this._server = createHttpServer(this.requestListener)
     }
 
     if (this.graphiql) {
@@ -192,18 +197,16 @@ class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
  * ```ts
  *  import { schema } from './schema'
  *   // Provide a GraphQL schema
- *  const server = createGraphQLServer({ schema })
+ *  const server = createServer({ schema })
  *  // Start the server. Defaults to http://localhost:4000/graphql
  *  server.start()
  * ```
  */
-export function createGraphQLServer<TContext>(
-  options: GraphQLServerOptions<TContext>,
-) {
-  return new GraphQLServer<TContext>(options)
+export function createServer<TContext>(options: ServerOptions<TContext>) {
+  return new Server<TContext>(options)
 }
 
-export type { GraphQLServerOptions } from './types'
+export type { ServerOptions } from './types'
 export { createPubSub } from './pubsub'
 export * from '@envelop/core'
 export { EnvelopError as GraphQLServerError } from '@envelop/core'
