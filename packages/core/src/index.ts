@@ -51,19 +51,19 @@ export type BaseGraphQLServerOptions<TContext> = {
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
   cors?:
-    | ((request: Request) => GraphQLServerCORSOptions)
-    | GraphQLServerCORSOptions
-    | boolean
+  | ((request: Request) => GraphQLServerCORSOptions)
+  | GraphQLServerCORSOptions
+  | boolean
   graphiql?: GraphiQLOptions | boolean
 } & (
-  | {
+    | {
       schema: GraphQLSchema
     }
-  | {
+    | {
       typeDefs: TypeSource
       resolvers?: IResolvers<any, TContext>
     }
-)
+  )
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -91,13 +91,9 @@ export class BaseGraphQLServer<TContext> {
       'schema' in options
         ? options.schema
         : makeExecutableSchema({
-            typeDefs: [options.typeDefs, 'scalar File', 'scalar Blob'],
-            resolvers: {
-              File: GraphQLFile,
-              Blob: GraphQLBlob,
-              ...options.resolvers,
-            },
-          })
+          typeDefs: options.typeDefs,
+          resolvers: options.resolvers,
+        })
 
     this.logger = console
     this.isDev = options.isDev ?? false
@@ -142,12 +138,12 @@ export class BaseGraphQLServer<TContext> {
         enableIf(!this.isDev, useMaskedErrors()),
         ...(options.context != null
           ? [
-              useExtendContext(
-                typeof options.context === 'function'
-                  ? options.context
-                  : () => options.context,
-              ),
-            ]
+            useExtendContext(
+              typeof options.context === 'function'
+                ? options.context
+                : () => options.context,
+            ),
+          ]
           : []),
         ...(options.plugins || []),
       ],
@@ -187,21 +183,3 @@ export function createGraphQLServer<TContext>(
 ) {
   return new BaseGraphQLServer<TContext>(options)
 }
-
-export const GraphQLBlob = new GraphQLScalarType({
-  name: 'Blob',
-  serialize: (value) => value,
-  parseValue: (value) => value,
-  extensions: {
-    codegenScalarType: 'Blob',
-  },
-})
-
-export const GraphQLFile = new GraphQLScalarType({
-  name: 'File',
-  serialize: (value) => value,
-  parseValue: (value) => value,
-  extensions: {
-    codegenScalarType: 'File',
-  },
-})

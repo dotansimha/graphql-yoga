@@ -95,7 +95,7 @@ describe('Uploads', () => {
   })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
-      mutation upload($file: Blob!) {
+      mutation upload($file: Upload!) {
         singleUpload(image: $file)
       }
     `
