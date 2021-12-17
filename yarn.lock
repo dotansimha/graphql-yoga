@@ -137,14 +137,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ardatan/graphql-helix@npm:0.0.6":
-  version: 0.0.6
-  resolution: "@ardatan/graphql-helix@npm:0.0.6"
+"@ardatan/graphql-helix@npm:0.0.8, @ardatan/graphql-helix@npm:^0.0.8":
+  version: 0.0.8
+  resolution: "@ardatan/graphql-helix@npm:0.0.8"
   dependencies:
-    cross-undici-fetch: 0.1.4
+    cross-undici-fetch: ^0.1.4
   peerDependencies:
     graphql: ^15.3.0 || ^16.0.0
-  checksum: 8d0ec3d31817366321736853b4065a03dee05d59ec428942bff2287e78c0623712813c6dc43a7d3e4dba8f021c6aa5e3bcc12538949aae8ce208b71109f01e65
+  checksum: f564d5f665cb79a2bee068b3671491621aef2e82ca360f66b5a5ea2b10b3d6e9f43fb1daa262063547f07121f24859724b8c9750b459c07ea0a62f4699f714de
   languageName: node
   linkType: hard
 
@@ -2405,7 +2405,7 @@ __metadata:
   version: 1.10.1
   resolution: "@chakra-ui/popover@npm:1.10.1"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": 0.0.8
     "@envelop/core": ^1.6.1
     "@graphql-typed-document-node/core": ^3.1.1
     "@types/node": ^16.11.7
@@ -3843,7 +3843,7 @@ __metadata:
   version: 0.1.0
   resolution: "@graphql-yoga/core@npm:0.1.0"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": 0.0.8
     "@envelop/core": ^1.6.2
     "@envelop/disable-introspection": ^1.2.1
     "@envelop/parser-cache": ^2.2.1
@@ -3860,7 +3860,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": ^0.0.8
     "@envelop/core": ^1.6.1
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
@@ -3875,7 +3875,7 @@ __metadata:
   version: 0.1.0
   resolution: "@graphql-yoga/handler@npm:0.1.0"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": 0.0.8
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
   checksum: d3b8b6cff71fc26502e2126b37341128176fc73866e4384c4344a7179e69dfc6f15c83f95130853d08c196a3562d7fa61a5c5fb0c6cee15a54c1b21d77f3fdc9
@@ -6317,7 +6317,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bser@npm:2.1.1"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": 0.0.8
     "@envelop/core": ^1.6.2
     "@graphql-yoga/core": 0.1.0
     "@graphql-yoga/handler": 0.1.0
@@ -7353,19 +7353,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-undici-fetch@npm:0.1.4, cross-undici-fetch@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "cross-undici-fetch@npm:0.1.4"
-  dependencies:
-    abort-controller: ^3.0.0
-    form-data-encoder: ^1.7.1
-    formdata-node: ^4.3.1
-    node-fetch: ^2.6.5
-    undici: ^4.9.3
-  checksum: 4b78f743ce863f91b5553eea926bf30e7d326c90dc9e708531565874ffba04f79364aabd32c78171567a543c2a819daa1a033a8c5a2c9c525d07e55da9e9f3bc
-  languageName: node
-  linkType: hard
-
 "cross-undici-fetch@npm:^0.0.20":
   version: 0.0.20
   resolution: "cross-undici-fetch@npm:0.0.20"
@@ -7375,6 +7362,19 @@ __metadata:
     node-fetch: ^2.6.5
     undici: ^4.9.3
   checksum: ae6426e6869bb7bf9c7a782fb57977e95615344aa54fd5518fbcb3375519c16284e1090a31dce84cb424d336a1a99f48774f97e30494d9827f67894461be3cb9
+  languageName: node
+  linkType: hard
+
+"cross-undici-fetch@npm:^0.1.4":
+  version: 0.1.4
+  resolution: "cross-undici-fetch@npm:0.1.4"
+  dependencies:
+    abort-controller: ^3.0.0
+    form-data-encoder: ^1.7.1
+    formdata-node: ^4.3.1
+    node-fetch: ^2.6.5
+    undici: ^4.9.3
+  checksum: 4b78f743ce863f91b5553eea926bf30e7d326c90dc9e708531565874ffba04f79364aabd32c78171567a543c2a819daa1a033a8c5a2c9c525d07e55da9e9f3bc
   languageName: node
   linkType: hard
 
@@ -9571,7 +9571,7 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@ardatan/graphql-helix": 0.0.6
+    "@ardatan/graphql-helix": ^0.0.8
     "@envelop/core": ^1.6.2
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/core": 0.2.0-alpha.1
