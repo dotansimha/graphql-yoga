@@ -67,7 +67,10 @@ const resolvers = {
   },
 };
 
-const pubSub = createPubSub()
+const pubSub = createPubSub<{
+  'global:counter': [number],
+}>()
+
 
 const server = new GraphQLServer({
   typeDefs,

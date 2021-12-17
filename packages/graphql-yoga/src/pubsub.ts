@@ -1,7 +1,7 @@
 import { makePushPullAsyncIterableIterator } from '@n1ru4l/push-pull-async-iterable-iterator'
 
 type PubSubPublishArgsByKey = {
-  [key: string]: [any] | [number | string, any]
+  [key: string]: [] | [any] | [number | string, any]
 }
 
 type EventAPI = {

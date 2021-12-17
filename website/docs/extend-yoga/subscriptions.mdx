@@ -4,12 +4,12 @@ title: Subscriptions
 sidebar_label: Subscriptions
 ---
 
-GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for subscriptions.
+GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for the subscription protocol.
 You don't need any extra packages to use subscriptions.
 
-## Server Implementation
+## Quick start
 
-You can basically extend you schema with `Subscription` fields
+Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
 `server.ts`
 
@@ -22,6 +22,7 @@ const server = new GraphQLServer({
     type Query {
       hello: String
     }
+
     type Subscription {
       countdown(from: Int!): Int!
     }
@@ -43,8 +44,168 @@ const server = new GraphQLServer({
     },
   },
 })
-// Start the server and explore http://localhost:4000/graphql
+
 server.start()
+```
+
+Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
+
+```graphql
+subscription {
+  countdown(from: 5)
+}
+```
+
+Then press the Play (Execute Query) button.
+
+## PubSub
+
+### Getting Started
+
+GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it easy to send new events to the client from within your mutation resolvers.
+
+`server.ts`
+
+```ts
+import { GraphQLServer, createPubSub } from 'graphql-yoga'
+
+let globalCounter = 0
+const pubSub = createPubSub()
+
+// Provide your schema
+const server = new GraphQLServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+
+    type Subscription {
+      globalCounter: Int!
+    }
+
+    type Mutation {
+      incrementGlobalCounter: Boolean
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+    Subscription: {
+      globalCounter: {
+        // This will return the value on every 1 sec until it reaches 0
+        subscribe: async function* (_, { from }, { pubSub }) {
+          // always immediatly send the latest global counter value to clients.
+          yield globalCounter
+          // send all new values published to the client
+          yield* pubSub.subscribe('global:counter')
+        },
+        resolve: (payload) => payload,
+      },
+    },
+    Mutation: {
+      incrementGlobalCounter: (_, __, { pubSub }) => {
+        globalCounter = globalCounter + 1
+        // publish the latest counter value
+        pubSub.publish('global:counter', globalCounter)
+      },
+    },
+  },
+})
+
+server.start()
+```
+
+### Topics
+
+When using TypeScript it is possible to make the event emitter type-safe by providing a channel configuration via a generic.
+
+```ts
+const pubSub = createPubSub<{
+  'global:counter': [payload: number]
+}>()
+
+pubsub.subscribe('global:counter')
+
+// This is now type-safe.
+pubSub.publish('global:counter', 1)
+
+// This causes a TypeScript error.
+pubSub.publish('global:counter')
+
+// This causes a TypeScript error.
+pubSub.publish('event does not exist')
+```
+
+You can subscribe to a specific topic using `pubSub.subscribe`.
+
+```ts
+const pubSub = createPubSub<{
+  'global:counter': [payload: number]
+}>()
+
+// Usage outside a GraphQL subscribe function
+async function subscribe() {
+  const eventSource = pubSub.subscribe('global:counter')
+
+  for await (const value of eventSource) {
+    console.log(value)
+    // dispose subscription after the first event has been published.
+    eventSource.return()
+  }
+}
+
+subscribe()
+```
+
+You can publish a value using `pubSub.publish`.
+
+```ts
+const pubSub = createPubSub<{
+  'global:counter': [payload: number]
+}>()
+
+pubSub.publish('global:counter', 3)
+```
+
+#### Topic configuration variants
+
+You can declare events with and without a payload.
+
+```ts
+const pubSub = createPubSub<{
+  // event has no payload
+  'event:without:payload': []
+  // event has payload of type number
+  'event:payload:number': [payload: number]
+  // event has payload of type { foo: number }
+  'event:payload:obj': [payload: { foo: number }]
+}>()
+
+pubSub.publish('event:without:payload')
+pubSub.publish('event:payload:number', 12)
+pubSub.publish('event:payload:obj', { foo: 1 })
+```
+
+#### Topic with dynamic ID
+
+Sometimes you only want to emit and listen for events for a specific entity (e.g. user or product).
+You can declare topics scoped to a special identifier.
+
+```ts
+const pubSub = createPubSub<{
+  'user:followerCount': [userId: string, payload: { followerCount: number }]
+}>()
+
+const userId1 = '420'
+const userId2 = '69'
+
+// the userId argument is enforced by the TypeScript compiler.
+pubSub.subscribe('user:followerCount', userId1)
+pubSub.subscribe('user:followerCount', userId2)
+
+pubSub.publish('user:followerCount', userId1, { followerCount: 30 })
+pubSub.publish('user:followerCount', userId2, { followerCount: 12 })
 ```
 
 ## Handling subscriptions on the client
