@@ -155,8 +155,7 @@ export class Server<TContext> {
             },
           }),
         ),
-        // Disable introspection in production
-        enableIf(options.introspection || true, useDisableIntrospection()),
+        enableIf(!(options.introspection ?? true), useDisableIntrospection()),
         enableIf(
           !!maskedErrors,
           useMaskedErrors(
