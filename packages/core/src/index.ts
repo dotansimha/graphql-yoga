@@ -5,6 +5,7 @@ import {
   GetEnvelopedFn,
   envelop,
   useMaskedErrors,
+  UseMaskedErrorsOpts,
   useExtendContext,
   enableIf,
   useLogger,
@@ -46,6 +47,28 @@ export type ServerOptions<TContext> = {
    * Default: `false`
    */
   isDev?: boolean
+  /**
+   * Allow introspection query. This is useful for exploring the API with tools like GraphiQL.
+   * If you are making a private GraphQL API,
+   * it is suggested that you disable this in production so that
+   * potential malicious API consumers do not see what all operations are possible.
+   *
+   * You can learn more about GraphQL introspection here:
+   * @see https://graphql.org/learn/introspection/
+   *
+   * Default: `true`
+   */
+  introspection?: boolean
+  /**
+   * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
+   * If you throw `GraphQLServerError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+   *
+   * You can lean more about this here:
+   * @see https://www.envelop.dev/plugins/use-masked-errors
+   *
+   * Default: `false`
+   */
+  maskedErrors?: boolean | UseMaskedErrorsOpts
   /**
    * Context
    */
@@ -93,6 +116,8 @@ export class Server<TContext> {
     this.logger = console
     this.isDev = options.isDev ?? false
 
+    const maskedErrors = options.maskedErrors || false
+
     this.getEnveloped = envelop({
       plugins: [
         // Use the schema provided by the user
@@ -128,9 +153,13 @@ export class Server<TContext> {
           }),
         ),
         // Disable introspection in production
-        enableIf(!this.isDev, useDisableIntrospection()),
-        // Mask errors in production
-        enableIf(!this.isDev, useMaskedErrors()),
+        enableIf(options.introspection || true, useDisableIntrospection()),
+        enableIf(
+          !!maskedErrors,
+          useMaskedErrors(
+            typeof maskedErrors === 'object' ? maskedErrors : undefined,
+          ),
+        ),
         ...(options.context != null
           ? [
               useExtendContext(
