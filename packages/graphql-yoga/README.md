@@ -2,7 +2,7 @@
 
 ```js
 const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
-const { GraphQLServer } = require('../core/dist')
+const { createGraphQLServer } = require('../core/dist')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -37,6 +37,6 @@ const schema = new GraphQLSchema({
   }),
 })
 
-const server = new GraphQLServer({ schema })
+const server = createGraphQLServer({ schema })
 server.start()
 ```

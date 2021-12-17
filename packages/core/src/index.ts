@@ -67,6 +67,7 @@ export type BaseGraphQLServerOptions<TContext> = {
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
+ * @internal
  */
 export class BaseGraphQLServer<TContext> {
   /**
@@ -179,6 +180,12 @@ export class BaseGraphQLServer<TContext> {
       this.graphiql = this.isDev ? {} : false
     }
   }
+}
+
+export function createGraphQLServer<TContext>(
+  options: BaseGraphQLServerOptions<TContext>,
+) {
+  return new BaseGraphQLServer<TContext>(options)
 }
 
 export const GraphQLBlob = new GraphQLScalarType({

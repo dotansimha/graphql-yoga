@@ -13,10 +13,10 @@ The following example adds [GraphQL JIT](https://github.com/zalando-incubator/gr
 
 ```ts
 import { useGraphQLJit } from '@envelop/graphql-jit'
-import { GraphQLServer } from 'graphql-yoga'
+import { createGraphQLServer } from 'graphql-yoga'
 
 // Provide your schema
-const server = new GraphQLServer({
+const server = createGraphQLServer({
   typeDefs: /* GraphQL */ `
     type Query {
       greetings: String!

@@ -76,10 +76,10 @@ The server returns the following response:
 This is what the [implementation](./index.js) looks like:
 
 ```js
-import { GraphQLServer } from './graphql-yoga'
+import { createGraphQLServer } from './graphql-yoga'
 import { Engine } from 'apollo-engine'
 // ... or using `require()`
-// const { GraphQLServer } = require('graphql-yoga')
+// const { createGraphQLServer } = require('graphql-yoga')
 // const { Engine } = require('apollo-engine')
 
 const typeDefs = `
@@ -94,7 +94,7 @@ const resolvers = {
   },
 }
 
-const server = new GraphQLServer({ typeDefs, resolvers })
+const server = createGraphQLServer({ typeDefs, resolvers })
 
 const engine = new Engine({
   engineConfig: { apiKey: process.env.APOLLO_ENGINE_KEY },

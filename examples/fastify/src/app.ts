@@ -1,10 +1,10 @@
-import { GraphQLServer } from 'graphql-yoga';
+import { createGraphQLServer } from 'graphql-yoga';
 import fastify from 'fastify';
 
 export function buildApp() {
     const app = fastify({ logger: true });
 
-    const graphQLServer = new GraphQLServer({
+    const graphQLServer = createGraphQLServer({
         typeDefs: /* GraphQL */ `
             type Query {
                 hello: String
