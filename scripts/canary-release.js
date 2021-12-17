@@ -42,7 +42,7 @@ function getRelevantChangesets(baseBranch) {
 async function updateVersions() {
   const cwd = process.cwd()
   // Exit pre mode
-  await unlink(cwd, '.changeset/pre.json')
+  await unlink(join(cwd, '.changeset/pre.json'))
   const packages = await getPackages(cwd)
   const config = await readConfig(cwd, packages)
   const modifiedChangesets = getRelevantChangesets(config.baseBranch)
