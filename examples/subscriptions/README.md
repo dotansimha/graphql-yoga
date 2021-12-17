@@ -20,94 +20,95 @@ yarn start   # or npm start
 
 ## Testing
 
-Open your browser at [http://localhost:4000](http://localhost:4000) and start a subscription.
+### Counter
 
-Paste the following subscription in the editor (left side) of the Playground:
+Open your browser at [http://localhost:4000](http://localhost:4000).
+
+Paste the following subscription in the editor (left side) of GraphiQL:
 
 ```graphql
 subscription {
-  counter {
-    count
-    countStr
-  }
+  counter
 }
 ```
 
-The counter will increment every two seconds and the corresponding data is received in the Playground:
+Press the Play (Execute Query) button.
+
+The counter will increment every second and the corresponding data is received in the Playground:
 
 ```json
 {
   "data": {
-    "counter": {
-      "count": 1,
-      "countStr": "Current count: 1"
-    }
+    "counter": 1,
+  }
+}
+// ... 1 seconds
+{
+  "data": {
+    "counter": 2,
   }
 }
 // ... 2 seconds
 {
   "data": {
-    "counter": {
-      "count": 2,
-      "countStr": "Current count: 2"
-    }
-  }
-}
-// ... 2 seconds
-{
-  "data": {
-    "counter": {
-      "count": 3,
-      "countStr": "Current count: 3"
-    }
+    "counter": 3,
   }
 }
 // ...
 ```
 
-## Implementation
+### Global counter
 
-This is what the [implementation](./index.js) looks like:
+Open your browser at [http://localhost:4000](http://localhost:4000)n.
 
-```js
-const { GraphQLServer, PubSub } = require('graphql-yoga')
+Paste the following subscription in the editor (left side) of GraphiQL:
 
-const typeDefs = `
-  type Query {
-    hello: String!
-  }
-
-  type Counter {
-    count: Int!
-    countStr: String
-  }
-
-  type Subscription {
-    counter: Counter!
-  }
-`
-
-const resolvers = {
-  Query: {
-    hello: () => `Hello`,
-  },
-  Counter: {
-    countStr: counter => `Current count: ${counter.count}`,
-  },
-  Subscription: {
-    counter: {
-      subscribe: (parent, args, { pubsub }) => {
-        const channel = Math.random().toString(36).substring(2, 15) // random channel name
-        let count = 0
-        setInterval(() => pubsub.publish(channel, { counter: { count: count++ } }), 2000)
-        return pubsub.asyncIterator(channel)
-      },
-    }
-  },
+```graphql
+subscription {
+  globalCounter
 }
-
-const pubsub = new PubSub()
-const server = new GraphQLServer({ typeDefs, resolvers, context: { pubsub } })
-
-server.start(() => console.log('Server is running on localhost:4000'))
 ```
+
+Press the Play (Execute Query) button.
+
+You will receive this initial result:
+
+```json
+{
+  "data": {
+    "globalCounter": 0,
+  }
+}
+```
+
+Open another browser window and execute the following mutation:
+
+```graphql
+mutation {
+  incrementGlobalCounter
+}
+```
+
+Press the Play (Execute Query) button.
+
+You will receive this result:
+
+```json
+{
+  "data": {
+    "incrementGlobalCounter": 1,
+  }
+}
+```
+
+On the other window that is executing the subscription, you will receive a new result.
+
+```json
+{
+  "data": {
+    "globalCounter": 1,
+  }
+}
+```
+
+As you re-execute the mutation the global counter will be further incremented.

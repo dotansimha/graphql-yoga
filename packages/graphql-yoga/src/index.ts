@@ -209,3 +209,4 @@ export {
   EnvelopError as GraphQLServerError,
 } from '@envelop/core'
 export { GraphQLBlob } from '@graphql-yoga/core'
+export { createPubSub } from './pubsub'
