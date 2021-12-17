@@ -10,7 +10,7 @@ type EventAPI = {
 type ChannelPubSubConfig = {
   /**
    * Event and EventTarget implementation.
-   * Providing this is mandatory for a Node.js version below 14.
+   * Providing this is mandatory for a Node.js versions below 16.
    */
   event?: EventAPI
 }
