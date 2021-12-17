@@ -15,11 +15,11 @@ GraphQL Yoga can be integrated easily as a route to the existing Koa application
 
 ```ts
 import Koa from 'koa'
-import { GraphQLServer } from 'graphql-yoga'
+import { createGraphQLServer } from 'graphql-yoga'
 
 const app = new Koa()
 
-const graphQLServer = new GraphQLServer({
+const graphQLServer = createGraphQLServer({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String

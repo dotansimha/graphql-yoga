@@ -2,7 +2,7 @@ import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import { GraphQLExtensionDeclaration, loadConfig } from 'graphql-config'
 import { CodeFileLoader } from '@graphql-tools/code-file-loader'
-import { GraphQLServer } from 'graphql-yoga'
+import { createGraphQLServer } from 'graphql-yoga'
 
 const terminateEvents = ['SIGINT', 'SIGTERM']
 
@@ -46,7 +46,7 @@ export function graphqlYoga() {
         throw new Error(`Could not find schema for project ${project}`)
       }
       console.log(`Building GraphQL Server`)
-      const graphQLServer = new GraphQLServer({
+      const graphQLServer = createGraphQLServer({
         schema,
       })
       console.log(`Starting GraphQL Server`)

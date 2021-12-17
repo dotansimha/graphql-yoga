@@ -1,10 +1,10 @@
-import { GraphQLServer } from 'graphql-yoga';
+import { createGraphQLServer } from 'graphql-yoga';
 import express from 'express';
 
 export function buildApp() {
     const app = express();
 
-    const graphQLServer = new GraphQLServer({
+    const graphQLServer = createGraphQLServer({
         typeDefs: /* GraphQL */ `
             type Query {
                 hello: String

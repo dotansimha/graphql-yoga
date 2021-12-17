@@ -17,13 +17,13 @@ So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Y
 ## Example
 
 ```ts
-import { GraphQLServer } from 'graphql-yoga'
+import { createGraphQLServer } from 'graphql-yoga'
 import fastify from 'fastify'
 
 // This is the fastify instance you have created
 const app = fastify({ logger: true })
 
-const graphQLServer = new GraphQLServer({
+const graphQLServer = createGraphQLServer({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String

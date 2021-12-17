@@ -11,10 +11,10 @@ You can configure or completely disable GraphiQL with the `graphiql` option. By 
 ## Example
 
 ```ts
-import { GraphQLServer } from 'graphql-yoga'
+import { createGraphQLServer } from 'graphql-yoga'
 
 // Provide your schema
-const server = new GraphQLServer({
+const server = createGraphQLServer({
   typeDefs: /* GraphQL */ `
     type Query {
       greetings: String!
