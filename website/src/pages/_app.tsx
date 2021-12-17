@@ -101,7 +101,7 @@ function AppContent(appProps: AppProps) {
           children: 'Get Started',
           title: 'Get started',
           href: '/docs',
-          onClick: (e) => handlePushRoute('/docs', e),
+          onClick: (e) => handlePushRoute('/docs/quick-start', e),
         }}
       />
       {isDocs ? (
@@ -126,9 +126,9 @@ const defaultSeo: AppSeoProps = {
   title: 'GraphQL Yoga',
   description: 'Guild Docs Example',
   logo: {
-    url: 'https://imgur.com/Sv6j0B6.png',
-    width: 50,
-    height: 54,
+    url: 'https://graphql-yoga.vercel.app/banner.svg',
+    width: 200,
+    height: 350,
   },
 }
 
