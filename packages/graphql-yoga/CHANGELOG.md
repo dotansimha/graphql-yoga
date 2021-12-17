@@ -1,5 +1,21 @@
 # graphql-yoga
 
+## 2.0.0-alpha.3
+
+### Minor Changes
+
+- 0edf1f8: feat: options for GraphiQL
+- 1a20e1e: Export everything from @envelop/core and export GraphQLFile scalar
+- 9554f81: Add PubSub utility.
+- 95e0ac0: feat: remove unnecessary Upload scalar types
+
+### Patch Changes
+
+- Updated dependencies [0edf1f8]
+- Updated dependencies [95e0ac0]
+  - @graphql-yoga/core@0.2.0-alpha.2
+  - @graphql-yoga/handler@0.2.0-alpha.1
+
 ## 2.0.0-alpha.2
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @graphql-yoga/core
 
+## 0.2.0-alpha.2
+
+### Minor Changes
+
+- 0edf1f8: feat: options for GraphiQL
+- 95e0ac0: feat: remove unnecessary Upload scalar types
+
+### Patch Changes
+
+- Updated dependencies [0edf1f8]
+- Updated dependencies [95e0ac0]
+  - @graphql-yoga/handler@0.2.0-alpha.1
+
 ## 0.2.0-alpha.1
 
 ### Minor Changes
