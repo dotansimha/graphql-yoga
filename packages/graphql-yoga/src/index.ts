@@ -67,34 +67,48 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
         }
       : {}
 
-    this.logger = pino({
+    const pinoLogger = pino({
       ...prettyPrintOptions,
       level: this.isDev ? 'debug' : 'info',
       enabled: options.enableLogging ?? true,
     })
+
+    this.logger = {
+      log: (...args) => pinoLogger.info(...args),
+      debug: (...args) => pinoLogger.debug(...args),
+      error: (...args) => pinoLogger.error(...args),
+      warn: (...args) => pinoLogger.warn(...args),
+      info: (...args) => pinoLogger.info(...args),
+    }
 
     this.logger.debug('Setting up server.')
 
     if (options.https) {
       this._server =
         typeof options.https === 'object'
-          ? createHttpsServer(options.https, this.requestListener.bind(this))
-          : createHttpsServer(this.requestListener.bind(this))
+          ? createHttpsServer(options.https, this.requestListener)
+          : createHttpsServer(this.requestListener)
     } else {
-      this._server = createServer(this.requestListener.bind(this))
+      this._server = createServer(this.requestListener)
+    }
+
+    if (this.graphiql) {
+      this.graphiql.endpoint = this.endpoint
     }
   }
 
   async handleIncomingMessage(
     ...args: Parameters<typeof getNodeRequest>
   ): Promise<Response> {
-    this.logger.debug('Node Request received', ...args)
+    this.logger.debug('Node Request received')
     const request = await getNodeRequest(...args)
+    this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request)
+    this.logger.debug('Response returned')
     return response
   }
 
-  async requestListener(req: IncomingMessage, res: ServerResponse) {
+  requestListener = async (req: IncomingMessage, res: ServerResponse) => {
     const response = await this.handleIncomingMessage(req)
     await sendNodeResponse(response, res)
   }
@@ -164,19 +178,16 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
     response: LightMyRequest.Response
     executionResult: ExecutionResult<TData>
   }> {
-    const response = await LightMyRequest.inject(
-      this.requestListener.bind(this) as any,
-      {
-        method: 'POST',
-        url: this.endpoint,
-        headers,
-        payload: JSON.stringify({
-          query: typeof document === 'string' ? document : print(document),
-          variables,
-          operationName,
-        }),
-      },
-    )
+    const response = await LightMyRequest.inject(this.requestListener as any, {
+      method: 'POST',
+      url: this.endpoint,
+      headers,
+      payload: JSON.stringify({
+        query: typeof document === 'string' ? document : print(document),
+        variables,
+        operationName,
+      }),
+    })
     return {
       response,
       get executionResult() {

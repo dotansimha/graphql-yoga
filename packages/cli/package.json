@@ -1,0 +1,51 @@
+{
+  "name": "@graphql-yoga/cli",
+  "description": "CLI tool that binds GraphQL Config to a GraphQL Server",
+  "version": "0.0.0",
+  "license": "MIT",
+  "peerDependencies": {
+    "graphql": "*"
+  },
+  "bin": {
+    "gql-yoga": "dist/bin.js",
+    "graphql-yoga": "dist/bin.js",
+    "yoga": "dist/bin.js"
+  },
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "buildOptions": {
+    "bin": {
+      "graphql-yoga": {
+        "input": "src/bin.ts"
+      }
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "dependencies": {
+    "@graphql-tools/code-file-loader": "^7.2.3",
+    "graphql-config": "^4.1.0",
+    "graphql-yoga": "2.0.0-alpha.2",
+    "yargs": "^17.3.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "17.0.7"
+  }
+}

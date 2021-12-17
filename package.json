@@ -1,14 +1,18 @@
 {
+  "name": "graphql-yoga-monorepo",
+  "private": true,
   "scripts": {
     "format": "prettier . --write",
     "pretty-quick": "pretty-quick --staged",
     "prebuild": "rimraf packages/*/dist",
     "build": "tsc --project tsconfig.build.json && bob build",
+    "postbuild": "yarn fix-bin",
     "test": "jest --passWithNoTests",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
     "start:docs": "yarn workspace @graphql-yoga/website dev",
-    "postinstall": "patch-package && husky install"
+    "postinstall": "patch-package && husky install",
+    "fix-bin": "node scripts/fix-bin.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +39,7 @@
     "examples/hello-world",
     "examples/express",
     "examples/fastify",
+    "examples/graphql-config",
     "website"
   ],
   "homepage": "https://github.com/dotansimha/graphql-yoga#readme",

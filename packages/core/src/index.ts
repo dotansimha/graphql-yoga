@@ -1,4 +1,4 @@
-import { handleRequest } from '@graphql-yoga/handler'
+import { GraphiQLOptions, handleRequest } from '@graphql-yoga/handler'
 import { GraphQLScalarType, GraphQLSchema } from 'graphql'
 import {
   Plugin,
@@ -13,7 +13,6 @@ import {
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
-import { Logger, dummyLogger } from 'ts-log'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
 
@@ -55,6 +54,7 @@ export type BaseGraphQLServerOptions<TContext> = {
     | ((request: Request) => GraphQLServerCORSOptions)
     | GraphQLServerCORSOptions
     | boolean
+  graphiql?: GraphiQLOptions | boolean
 } & (
   | {
       schema: GraphQLSchema
@@ -79,10 +79,11 @@ export class BaseGraphQLServer<TContext> {
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
   protected isDev: boolean
-  public logger: Logger
+  public logger: Pick<Console, 'log' | 'debug' | 'error' | 'warn' | 'info'>
   public readonly corsOptionsFactory?: (
     request: Request,
   ) => GraphQLServerCORSOptions
+  public readonly graphiql: GraphiQLOptions | false
 
   constructor(options: BaseGraphQLServerOptions<TContext>) {
     this.schema =
@@ -97,7 +98,7 @@ export class BaseGraphQLServer<TContext> {
             },
           })
 
-    this.logger = dummyLogger
+    this.logger = console
     this.isDev = options.isDev ?? false
 
     this.getEnveloped = envelop({
@@ -170,6 +171,12 @@ export class BaseGraphQLServer<TContext> {
       } else if (typeof options.cors === 'boolean') {
         this.corsOptionsFactory = () => DEFAULT_CORS_OPTIONS
       }
+    }
+
+    if (typeof options.graphiql === 'object' || options.graphiql === false) {
+      this.graphiql = options.graphiql
+    } else {
+      this.graphiql = this.isDev ? {} : false
     }
   }
 }

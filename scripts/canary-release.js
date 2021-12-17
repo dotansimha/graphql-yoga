@@ -1,13 +1,16 @@
 /* eslint-disable */
 const semver = require('semver')
 const cp = require('child_process')
-const { basename } = require('path')
+const { basename, join } = require('path')
 
 const { read: readConfig } = require('@changesets/config')
 const readChangesets = require('@changesets/read').default
 const assembleReleasePlan = require('@changesets/assemble-release-plan').default
 const applyReleasePlan = require('@changesets/apply-release-plan').default
 const { getPackages } = require('@manypkg/get-packages')
+const {
+  promises: { unlink },
+} = require('fs')
 
 function getNewVersion(version, type) {
   const gitHash = cp
@@ -38,6 +41,8 @@ function getRelevantChangesets(baseBranch) {
 
 async function updateVersions() {
   const cwd = process.cwd()
+  // Exit pre mode
+  await unlink(join(cwd, '.changeset/pre.json'))
   const packages = await getPackages(cwd)
   const config = await readConfig(cwd, packages)
   const modifiedChangesets = getRelevantChangesets(config.baseBranch)

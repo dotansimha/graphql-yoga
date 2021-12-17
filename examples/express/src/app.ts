@@ -30,7 +30,7 @@ export function buildApp() {
         }
     });
 
-    app.use('/graphql', (req, res) => graphQLServer.requestListener(req, res));
+    app.use('/graphql', graphQLServer.requestListener);
 
     return app
 }
