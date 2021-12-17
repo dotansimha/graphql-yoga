@@ -83,14 +83,20 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
     } else {
       this._server = createServer(this.requestListener.bind(this))
     }
+
+    if (this.graphiql) {
+      this.graphiql.endpoint = this.endpoint
+    }
   }
 
   async handleIncomingMessage(
     ...args: Parameters<typeof getNodeRequest>
   ): Promise<Response> {
-    this.logger.debug('Node Request received', ...args)
+    this.logger.debug('Node Request received')
     const request = await getNodeRequest(...args)
+    this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request)
+    this.logger.debug('Response returned')
     return response
   }
 

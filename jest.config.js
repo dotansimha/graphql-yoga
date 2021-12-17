@@ -16,6 +16,7 @@ module.exports = {
     '@graphql-yoga/core': '<rootDir>/packages/core/src/index.ts',
     '@graphql-yoga/handler': '<rootDir>/packages/handler/src/index.ts',
     'graphql-yoga': '<rootDir>/packages/graphql-yoga/src/index.ts',
+    '@graphql-yoga/cli': '<rootDir>/packages/cli/src/index.ts',
   },
   collectCoverage: true,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),

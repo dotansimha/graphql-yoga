@@ -1,4 +1,4 @@
-import { handleRequest } from '@graphql-yoga/handler'
+import { GraphiQLOptions, handleRequest } from '@graphql-yoga/handler'
 import { GraphQLScalarType, GraphQLSchema } from 'graphql'
 import {
   Plugin,
@@ -55,6 +55,7 @@ export type BaseGraphQLServerOptions<TContext> = {
     | ((request: Request) => GraphQLServerCORSOptions)
     | GraphQLServerCORSOptions
     | boolean
+  graphiql?: GraphiQLOptions | boolean
 } & (
   | {
       schema: GraphQLSchema
@@ -83,6 +84,7 @@ export class BaseGraphQLServer<TContext> {
   public readonly corsOptionsFactory?: (
     request: Request,
   ) => GraphQLServerCORSOptions
+  public readonly graphiql: GraphiQLOptions | false
 
   constructor(options: BaseGraphQLServerOptions<TContext>) {
     this.schema =
@@ -170,6 +172,12 @@ export class BaseGraphQLServer<TContext> {
       } else if (typeof options.cors === 'boolean') {
         this.corsOptionsFactory = () => DEFAULT_CORS_OPTIONS
       }
+    }
+
+    if (typeof options.graphiql === 'object' || options.graphiql === false) {
+      this.graphiql = options.graphiql
+    } else {
+      this.graphiql = this.isDev ? {} : false
     }
   }
 }
