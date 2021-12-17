@@ -1,3 +1,5 @@
+import { makePushPullAsyncIterableIterator } from '@n1ru4l/push-pull-async-iterable-iterator'
+
 type PubSubPublishArgsByKey = {
   [key: string]: [any] | [number | string, any]
 }
@@ -18,7 +20,7 @@ type ChannelPubSubConfig = {
 const resolveGlobalConfig = (api: EventAPI = globalThis): EventAPI => {
   if (!api.Event || !api.EventTarget) {
     throw new Error(`
-      [graphql-yoga] 'createChannelPubSub' uses the Event and EventTarget APIs.
+[graphql-yoga] 'createChannelPubSub' uses the Event and EventTarget APIs.
 
 In modern JavaScript environments those are part of the global scope. However, if you are using an older version of Node.js (<= 16.x.x), those APIs must be polyfilled.
 You can provide polyfills to the 'createChannelPubSub' function:
@@ -74,36 +76,24 @@ export const createChannelPubSub = <
       const topic =
         id === undefined ? routingKey : `${routingKey}:${id as number}`
 
-      const source = (async function* () {
-        const pushQueue: Array<Event> = []
-        const pullQueue: Array<(event: Event) => void> = []
-        const handler = (event: Event) => {
-          const nextResolve = pullQueue.shift()
-          if (nextResolve) {
-            nextResolve(event)
-          } else {
-            pushQueue.push(event)
-          }
-        }
-        target.addEventListener(topic, handler)
+      const { pushValue, asyncIterableIterator } =
+        makePushPullAsyncIterableIterator()
 
-        const pullValue = (): Promise<Event> =>
-          new Promise((resolve) => {
-            const nextEvent = pushQueue.shift()
-            if (nextEvent) {
-              resolve(nextEvent)
-            } else {
-              pullQueue.push(resolve)
-            }
-          })
+      const handler = (event: Event) => {
+        pushValue((event as any).data)
+      }
+      target.addEventListener(topic, handler)
 
-        while (true) {
-          const event = await pullValue()
-          yield (event as any).data
-        }
-      })()
+      const originalReturn = asyncIterableIterator.return.bind(
+        asyncIterableIterator,
+      )
 
-      return source
+      asyncIterableIterator.return = (...args) => {
+        target.removeEventListener(topic, handler)
+        return originalReturn(...args)
+      }
+
+      return asyncIterableIterator
     },
   }
 }
