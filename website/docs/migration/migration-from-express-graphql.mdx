@@ -21,6 +21,14 @@ const { schema } = require('./schema');
 
 const app = express();
 
+-app.use('/graphql', graphqlHTTP(req => ({
+-  schema: schema,
+-  context: {
+-    token: req.headers.authorization
+-  },
+-  graphiql: true,
+-})));
+
 +const yoga = new GraphQLServer({
 +   schema,
 +   context: (req) => ({ // Context factory gets called for every request
@@ -29,15 +37,7 @@ const app = express();
 +   graphiql: true,
 +})
 +
-+app.use('/graphql', (req, res) => yoga.requestListener(req, res));
-
--app.use('/graphql', graphqlHTTP(req => ({
--  schema: schema,
--  context: {
--    token: req.headers.authorization
--  },
--  graphiql: true,
--})));
++app.use('/graphql', yoga.requestListener);
 
 app.listen(4000);
 console.log('Running a GraphQL API server at http://localhost:4000/graphql');

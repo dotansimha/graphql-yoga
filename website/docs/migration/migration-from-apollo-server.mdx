@@ -61,5 +61,5 @@ For example, if you are using **Express**, you should remove `server.start()` fr
 
 ```diff
 - server.applyMiddleware({ app })
-+ app.use('/graphql', (req, res) => graphQLServer.requestListener(req, res))
++ app.use('/graphql', graphQLServer.requestListener)
 ```
