@@ -13,7 +13,6 @@ import {
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
-import { Logger, dummyLogger } from 'ts-log'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
 
@@ -80,7 +79,7 @@ export class BaseGraphQLServer<TContext> {
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
   protected isDev: boolean
-  public logger: Logger
+  public logger: Console
   public readonly corsOptionsFactory?: (
     request: Request,
   ) => GraphQLServerCORSOptions
@@ -99,7 +98,7 @@ export class BaseGraphQLServer<TContext> {
             },
           })
 
-    this.logger = dummyLogger
+    this.logger = console
     this.isDev = options.isDev ?? false
 
     this.getEnveloped = envelop({
