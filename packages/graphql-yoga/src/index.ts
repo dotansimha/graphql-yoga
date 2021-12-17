@@ -204,14 +204,6 @@ export function createGraphQLServer<TContext>(
 }
 
 export type { GraphQLServerOptions } from './types'
-export {
-  Plugin,
-  enableIf,
-  envelop,
-  useEnvelop,
-  usePayloadFormatter,
-  useExtendContext,
-  useTiming,
-  EnvelopError as GraphQLServerError,
-} from '@envelop/core'
 export { createPubSub } from './pubsub'
+export * from '@envelop/core'
+export { EnvelopError as GraphQLServerError } from '@envelop/core'
