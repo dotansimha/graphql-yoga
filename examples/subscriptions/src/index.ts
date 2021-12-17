@@ -1,3 +1,4 @@
+import { useErrorHandler } from "@envelop/core";
 import { GraphQLServer, useExtendContext, createChannelPubSub } from "graphql-yoga";
 
 const typeDefs = `
@@ -30,10 +31,12 @@ const resolvers = {
   },
 };
 
+const pubSub = createChannelPubSub()
+
 const server = new GraphQLServer({
   typeDefs,
   resolvers,
-  plugins: [useExtendContext(() => ({ pubSub: createChannelPubSub() }))],
+  plugins: [useExtendContext(() => ({ pubSub }))],
 });
 
 server.start();
