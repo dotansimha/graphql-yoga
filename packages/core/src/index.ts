@@ -79,7 +79,7 @@ export class BaseGraphQLServer<TContext> {
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
   protected isDev: boolean
-  public logger: Console
+  public logger: Pick<Console, 'log' | 'debug' | 'error' | 'warn' | 'info'>
   public readonly corsOptionsFactory?: (
     request: Request,
   ) => GraphQLServerCORSOptions

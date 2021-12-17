@@ -67,11 +67,19 @@ export class GraphQLServer<TContext> extends BaseGraphQLServer<TContext> {
         }
       : {}
 
-    this.logger = pino({
+    const pinoLogger = pino({
       ...prettyPrintOptions,
       level: this.isDev ? 'debug' : 'info',
       enabled: options.enableLogging ?? true,
     })
+
+    this.logger = {
+      log: (...args) => pinoLogger.info(...args),
+      debug: (...args) => pinoLogger.debug(...args),
+      error: (...args) => pinoLogger.error(...args),
+      warn: (...args) => pinoLogger.warn(...args),
+      info: (...args) => pinoLogger.info(...args),
+    }
 
     this.logger.debug('Setting up server.')
 
