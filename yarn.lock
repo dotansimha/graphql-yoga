@@ -137,7 +137,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ardatan/graphql-helix@npm:0.0.8, @ardatan/graphql-helix@npm:^0.0.8":
+"@ardatan/graphql-helix@npm:0.0.8":
   version: 0.0.8
   resolution: "@ardatan/graphql-helix@npm:0.0.8"
   dependencies:
@@ -145,6 +145,17 @@ __metadata:
   peerDependencies:
     graphql: ^15.3.0 || ^16.0.0
   checksum: f564d5f665cb79a2bee068b3671491621aef2e82ca360f66b5a5ea2b10b3d6e9f43fb1daa262063547f07121f24859724b8c9750b459c07ea0a62f4699f714de
+  languageName: node
+  linkType: hard
+
+"@ardatan/graphql-helix@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@ardatan/graphql-helix@npm:0.0.10"
+  dependencies:
+    cross-undici-fetch: ^0.1.8
+  peerDependencies:
+    graphql: ^15.3.0 || ^16.0.0
+  checksum: 052a3c4722f21cc4a9d89bd9f381a5a81a8b2b33738a7f7c3c39510385b06fe5656b7c3a955d8f5ae53984c26ef5bc6fd18130f77dcb65147c06fc09422c8f9b
   languageName: node
   linkType: hard
 
@@ -3896,7 +3907,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
-    "@ardatan/graphql-helix": ^0.0.8
+    "@ardatan/graphql-helix": ^0.0.10
     "@envelop/core": ^1.6.1
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
@@ -7757,6 +7768,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-undici-fetch@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "cross-undici-fetch@npm:0.1.8"
+  dependencies:
+    abort-controller: ^3.0.0
+    form-data-encoder: ^1.7.1
+    formdata-node: ^4.3.1
+    node-fetch: ^2.6.5
+    undici: ^4.9.3
+  checksum: b0014241c30e17646a922042396a3874855918f72c6492fbf52d7b98658683721832e02ad86257eb6fbc9302507766c1f87f5a79b6d36ae21196eadac408b9ba
+  languageName: node
+  linkType: hard
+
 "crypto-browserify@npm:3.12.0":
   version: 3.12.0
   resolution: "crypto-browserify@npm:3.12.0"
@@ -10327,7 +10351,7 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@ardatan/graphql-helix": ^0.0.8
+    "@ardatan/graphql-helix": ^0.0.10
     "@envelop/core": ^1.6.2
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/core": 0.2.0-alpha.2
