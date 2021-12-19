@@ -21,11 +21,14 @@ export function getRoutes(): IRoutes {
       migration: {
         $name: 'Migration from',
       },
+      testing: {
+        $name: 'Testing',
+      },
     },
   }
   GenerateRoutes({
     Routes,
-    ignorePaths: ['quick-start'],
+    ignorePaths: ['quick-start', 'testing'],
     folderPattern: 'docs',
   })
 
