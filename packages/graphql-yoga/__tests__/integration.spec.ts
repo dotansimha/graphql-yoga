@@ -1,11 +1,11 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
-import { createGraphQLServer } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
 import { AddressInfo } from 'net'
 import EventSource from 'eventsource'
 import request from 'supertest'
 import { schema } from '../test-utils/schema'
 
-const yoga = createGraphQLServer({ schema, enableLogging: false })
+const yoga = createServer({ schema, enableLogging: false })
 
 describe('Requests', () => {
   it('should send introspection query', async () => {

@@ -20,10 +20,10 @@ You only need to add a scalar type definition for `Upload` in your schema.
 `file-upload-example.ts`
 
 ```ts
-import { createGraphQLServer } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
 
 // Provide your schema
-const server = createGraphQLServer({
+const server = createServer({
   typeDefs: /* GraphQL */ `
     scalar Upload
 

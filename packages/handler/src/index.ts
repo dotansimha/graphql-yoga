@@ -6,12 +6,12 @@ import {
   ProcessRequestOptions,
   RenderGraphiQLOptions,
 } from '@ardatan/graphql-helix'
-import { BaseGraphQLServer, GraphQLServerCORSOptions } from '@graphql-yoga/core'
+import { Server, ServerCORSOptions } from '@graphql-yoga/core'
 import { Response } from 'cross-undici-fetch'
 
 export function handleOptions(
   request: Request,
-  corsFactory: (request: Request) => GraphQLServerCORSOptions,
+  corsFactory: (request: Request) => ServerCORSOptions,
 ) {
   const corsOptions = corsFactory(request)
   const headers: HeadersInit = {}
@@ -48,7 +48,7 @@ export function handleOptions(
 }
 
 export async function handleRequest<TContext>(
-  this: BaseGraphQLServer<TContext>,
+  this: Server<TContext>,
   request: Request,
 ) {
   try {

@@ -2,7 +2,7 @@
 
 ```js
 const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
-const { createGraphQLServer } = require('../core/dist')
+const { createServer } = require('graphql-yoga')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -37,6 +37,6 @@ const schema = new GraphQLSchema({
   }),
 })
 
-const server = createGraphQLServer({ schema })
+const server = createServer({ schema })
 server.start()
 ```

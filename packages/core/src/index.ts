@@ -1,5 +1,5 @@
 import { GraphiQLOptions, handleRequest } from '@graphql-yoga/handler'
-import { GraphQLScalarType, GraphQLSchema } from 'graphql'
+import { GraphQLSchema } from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
@@ -16,7 +16,7 @@ import { useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
 
-export type GraphQLServerCORSOptions = {
+export type ServerCORSOptions = {
   origin: string[]
   methods?: string[]
   allowedHeaders?: string[]
@@ -26,7 +26,7 @@ export type GraphQLServerCORSOptions = {
   optionsSuccessStatus?: number
 }
 
-const DEFAULT_CORS_OPTIONS: GraphQLServerCORSOptions = {
+const DEFAULT_CORS_OPTIONS: ServerCORSOptions = {
   origin: ['*'],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   optionsSuccessStatus: 204,
@@ -35,7 +35,7 @@ const DEFAULT_CORS_OPTIONS: GraphQLServerCORSOptions = {
 /**
  * Configuration options for the server
  */
-export type BaseGraphQLServerOptions<TContext> = {
+export type ServerOptions<TContext> = {
   /**
    * Envelop Plugins
    * @see https://envelop.dev/plugins
@@ -50,26 +50,23 @@ export type BaseGraphQLServerOptions<TContext> = {
    * Context
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
-  cors?:
-  | ((request: Request) => GraphQLServerCORSOptions)
-  | GraphQLServerCORSOptions
-  | boolean
+  cors?: ((request: Request) => ServerCORSOptions) | ServerCORSOptions | boolean
   graphiql?: GraphiQLOptions | boolean
 } & (
-    | {
+  | {
       schema: GraphQLSchema
     }
-    | {
+  | {
       typeDefs: TypeSource
       resolvers?: IResolvers<any, TContext>
     }
-  )
+)
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  * @internal
  */
-export class BaseGraphQLServer<TContext> {
+export class Server<TContext> {
   /**
    * Request handler for helix
    */
@@ -81,19 +78,17 @@ export class BaseGraphQLServer<TContext> {
   public readonly getEnveloped: GetEnvelopedFn<TContext>
   protected isDev: boolean
   public logger: Pick<Console, 'log' | 'debug' | 'error' | 'warn' | 'info'>
-  public readonly corsOptionsFactory?: (
-    request: Request,
-  ) => GraphQLServerCORSOptions
+  public readonly corsOptionsFactory?: (request: Request) => ServerCORSOptions
   public readonly graphiql: GraphiQLOptions | false
 
-  constructor(options: BaseGraphQLServerOptions<TContext>) {
+  constructor(options: ServerOptions<TContext>) {
     this.schema =
       'schema' in options
         ? options.schema
         : makeExecutableSchema({
-          typeDefs: options.typeDefs,
-          resolvers: options.resolvers,
-        })
+            typeDefs: options.typeDefs,
+            resolvers: options.resolvers,
+          })
 
     this.logger = console
     this.isDev = options.isDev ?? false
@@ -138,12 +133,12 @@ export class BaseGraphQLServer<TContext> {
         enableIf(!this.isDev, useMaskedErrors()),
         ...(options.context != null
           ? [
-            useExtendContext(
-              typeof options.context === 'function'
-                ? options.context
-                : () => options.context,
-            ),
-          ]
+              useExtendContext(
+                typeof options.context === 'function'
+                  ? options.context
+                  : () => options.context,
+              ),
+            ]
           : []),
         ...(options.plugins || []),
       ],
@@ -178,8 +173,6 @@ export class BaseGraphQLServer<TContext> {
   }
 }
 
-export function createGraphQLServer<TContext>(
-  options: BaseGraphQLServerOptions<TContext>,
-) {
-  return new BaseGraphQLServer<TContext>(options)
+export function createServer<TContext>(options: ServerOptions<TContext>) {
+  return new Server<TContext>(options)
 }

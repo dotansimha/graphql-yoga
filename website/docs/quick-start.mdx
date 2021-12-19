@@ -18,10 +18,10 @@ The following example shows how to create a simple GraphQL Yoga server that resp
 You can [learn more on GraphQL Tools documentation](https://www.graphql-tools.com/docs/generate-schema) how to create a schema using this pattern.
 
 ```ts
-import { createGraphQLServer } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
 
 // Provide your schema
-const server = createGraphQLServer({
+const server = createServer({
   typeDefs: /* GraphQL */ `
     type Query {
       greetings: String!
@@ -39,13 +39,13 @@ server.start()
 
 ## Passing an executable schema created by other tools
 
-You can pass existing `GraphQLSchema` instance to `createGraphQLServer`.
+You can pass existing `GraphQLSchema` instance to `createServer`.
 
 ```ts
 import { schema } from './schema'
-import { createGraphQLServer } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
 
-const server = createGraphQLServer({
+const server = createServer({
   schema,
 })
 
