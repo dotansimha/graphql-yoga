@@ -84,4 +84,4 @@ jobs:
         run: yarn stop
       - name: Compare
         working-directory: ./benchmark/hello-world
-        run: node benchmark/compare apollo:apollo.json express-graphql:express-graphql.json yoga-with-fastify:yoga-with-fastify.json yoga:yoga.json
+        run: node compare.js apollo:apollo.json express-graphql:express-graphql.json yoga-with-fastify:yoga-with-fastify.json yoga:yoga.json

@@ -7,7 +7,7 @@ module.exports = ({ stop }) =>
         hello: String!
       }
       type Mutation {
-        stop: Boolean!
+        stop: Boolean
       }
     `,
     resolvers: {
@@ -16,8 +16,7 @@ module.exports = ({ stop }) =>
       },
       Mutation: {
         stop: async () => {
-          await stop()
-          await new Promise((resolve) => setTimeout(resolve, 1000))
+          stop()
         },
       },
     },

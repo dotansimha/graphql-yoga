@@ -8,7 +8,7 @@ app.use(
   '/graphql',
   graphqlHTTP({
     schema: createSchema({
-      stop: () => new Promise((resolve) => server.close(resolve)),
+      stop: () => server.close(),
     }),
   }),
 )
