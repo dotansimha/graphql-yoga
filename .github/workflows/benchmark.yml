@@ -1,0 +1,68 @@
+name: Benchmark
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+
+      - name: Use Node
+        uses: actions/setup-node@master
+        with:
+          node-version: 12
+
+      - name: Get yarn cache
+        uses: c-hive/gha-yarn-cache@v2
+
+      - name: Install Dependencies using Yarn
+        run: yarn
+
+      - name: Build Packages
+        run: yarn build
+
+      - name: Setup K6
+        run: |
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+      - name: Apollo Server
+        working-directory: ./benchmark/hello-world
+        run: |
+          yarn start &
+          yarn wait-on tcp:4000 &&
+          yarn loadtest --out json=$CASE.json k6.js
+        env:
+          CASE: apollo
+      - name: Express GraphQL
+        working-directory: ./benchmark/hello-world
+        run: |
+          yarn start &
+          yarn wait-on tcp:4000 &&
+          yarn loadtest --out json=$CASE.json k6.js
+        env:
+          CASE: express-graphql
+      - name: Yoga w/ Fastify
+        working-directory: ./benchmark/hello-world
+        run: |
+          yarn start &
+          yarn wait-on tcp:4000 &&
+          yarn loadtest --out json=$CASE.json k6.js
+        env:
+          CASE: yoga-with-fastify
+      - name: Yoga
+        working-directory: ./benchmark/hello-world
+        run: |
+          yarn start &
+          yarn wait-on tcp:4000 &&
+          yarn loadtest --out json=$CASE.json k6.js
+        env:
+          CASE: yoga
+      - name: Compare
+        run: node benchmark/compare apollo:apollo.json express-graphql:express-graphql.json yoga-with-fastify:yoga-with-fastify.json yoga:yoga.json
