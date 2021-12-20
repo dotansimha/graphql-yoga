@@ -63,13 +63,8 @@ jobs:
         run: |
           yarn start &
           yarn wait-on tcp:4000 &
-          yarn loadtest
+          k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GH_API_TOKEN}} --out json=reports/yoga.json run k6.js
 
-        env:
-          CASE: yoga
-      - name: Stop Yoga
-        working-directory: ./benchmark/hello-world
-        run: yarn stop
       - name: Compare
         working-directory: ./benchmark/hello-world
         run: node compare.js apollo:apollo.json express-graphql:express-graphql.json yoga:yoga.json
