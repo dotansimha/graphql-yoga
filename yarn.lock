@@ -2890,9 +2890,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/assemble-release-plan@npm:^5.0.1, @changesets/assemble-release-plan@npm:^5.0.3":
-  version: 5.0.3
-  resolution: "@changesets/assemble-release-plan@npm:5.0.3"
+"@changesets/assemble-release-plan@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "@changesets/assemble-release-plan@npm:5.0.4"
   dependencies:
     "@babel/runtime": ^7.10.4
     "@changesets/errors": ^0.1.4
@@ -2900,28 +2900,29 @@ __metadata:
     "@changesets/types": ^4.0.2
     "@manypkg/get-packages": ^1.1.3
     semver: ^5.4.1
-  checksum: 0dc77b93cdb96cfa529bcc35aec17e0a072a38c5ed8fdb5a441a78415fc06008c25e04d5bb8c4e6711953895ed1146b89d2d600e1a72879935836bbf3e79a053
+  checksum: 74ab7b770f904bdae2cecb762c620ceaa76d170e418b0a5e5937a6a8b9f771f4925e169888ff661be57ccb1bb9e54734043392a6dcbea0e37a68700b2d9d8477
   languageName: node
   linkType: hard
 
-"@changesets/cli@npm:2.17.0":
-  version: 2.17.0
-  resolution: "@changesets/cli@npm:2.17.0"
+"@changesets/cli@npm:2.19.0":
+  version: 2.19.0
+  resolution: "@changesets/cli@npm:2.19.0"
   dependencies:
     "@babel/runtime": ^7.10.4
-    "@changesets/apply-release-plan": ^5.0.1
-    "@changesets/assemble-release-plan": ^5.0.1
-    "@changesets/config": ^1.6.1
+    "@changesets/apply-release-plan": ^5.0.3
+    "@changesets/assemble-release-plan": ^5.0.4
+    "@changesets/config": ^1.6.3
     "@changesets/errors": ^0.1.4
-    "@changesets/get-dependents-graph": ^1.2.2
-    "@changesets/get-release-plan": ^3.0.1
-    "@changesets/git": ^1.1.2
+    "@changesets/get-dependents-graph": ^1.2.4
+    "@changesets/get-release-plan": ^3.0.4
+    "@changesets/git": ^1.2.1
     "@changesets/logger": ^0.0.5
-    "@changesets/pre": ^1.0.7
-    "@changesets/read": ^0.5.0
-    "@changesets/types": ^4.0.1
-    "@changesets/write": ^0.1.5
-    "@manypkg/get-packages": ^1.0.1
+    "@changesets/pre": ^1.0.9
+    "@changesets/read": ^0.5.2
+    "@changesets/types": ^4.0.2
+    "@changesets/write": ^0.1.6
+    "@manypkg/get-packages": ^1.1.3
+    "@types/is-ci": ^3.0.0
     "@types/semver": ^6.0.0
     boxen: ^1.3.0
     chalk: ^2.1.0
@@ -2929,7 +2930,7 @@ __metadata:
     external-editor: ^3.1.0
     fs-extra: ^7.0.1
     human-id: ^1.0.2
-    is-ci: ^2.0.0
+    is-ci: ^3.0.1
     meow: ^6.0.0
     outdent: ^0.5.0
     p-limit: ^2.2.0
@@ -2940,7 +2941,7 @@ __metadata:
     tty-table: ^2.8.10
   bin:
     changeset: bin.js
-  checksum: 214a0752ccb0df059212986cf1415e10b2ae2a3416309a5990db737515ed0c914a06e078bfbc762e09009e9bb64021529778cf0a77e3509b319281586501fbcd
+  checksum: a711ad144fec04b2b7bb186b55080890802f59829a53b81af6f67830ef4fd4d0e2dd91422f1f102214cca0c76aead64c2a86741c0f83bca3448356345e6d19d3
   languageName: node
   linkType: hard
 
@@ -2968,7 +2969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/get-dependents-graph@npm:^1.2.2, @changesets/get-dependents-graph@npm:^1.2.4":
+"@changesets/get-dependents-graph@npm:^1.2.4":
   version: 1.2.4
   resolution: "@changesets/get-dependents-graph@npm:1.2.4"
   dependencies:
@@ -2981,18 +2982,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/get-release-plan@npm:^3.0.1":
-  version: 3.0.3
-  resolution: "@changesets/get-release-plan@npm:3.0.3"
+"@changesets/get-release-plan@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "@changesets/get-release-plan@npm:3.0.4"
   dependencies:
     "@babel/runtime": ^7.10.4
-    "@changesets/assemble-release-plan": ^5.0.3
+    "@changesets/assemble-release-plan": ^5.0.4
     "@changesets/config": ^1.6.3
-    "@changesets/pre": ^1.0.8
+    "@changesets/pre": ^1.0.9
     "@changesets/read": ^0.5.2
     "@changesets/types": ^4.0.2
     "@manypkg/get-packages": ^1.1.3
-  checksum: 30496fd64e88700b68bf3bd31721766b1362ce3eac0bb08c236eb8d858a17c6c9b40a6e71d25cfb34cb5619ab75429c01fe4e3dde979595a51589d3ddda0b354
+  checksum: 7f1a111f07973e608baafc6310d8d8736f866ecbc5f8c325b88300c0225901de70f7d0a1b32d84b298348f4538c188529458247db38d332f277a9b6d68fb9651
   languageName: node
   linkType: hard
 
@@ -3036,20 +3037,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/pre@npm:^1.0.7, @changesets/pre@npm:^1.0.8":
-  version: 1.0.8
-  resolution: "@changesets/pre@npm:1.0.8"
+"@changesets/pre@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@changesets/pre@npm:1.0.9"
   dependencies:
     "@babel/runtime": ^7.10.4
     "@changesets/errors": ^0.1.4
     "@changesets/types": ^4.0.2
     "@manypkg/get-packages": ^1.1.3
     fs-extra: ^7.0.1
-  checksum: 03f36e0e74ad88e6707b47d8d76faa7083732bb6a9c362faba7f353e779bca3a57dd81ed80ded88dab045b6f574619b7e31ab28e1c684a347a3b64c8c84a6aeb
+  checksum: 3f80fcbbdc9be8167f0e0c19a9e227c062234b93d63f739a00ae532aa2054965602f5357ed3ce5755560b6774a65a564ed659a193a7021f4bbc7488a15e73b22
   languageName: node
   linkType: hard
 
-"@changesets/read@npm:^0.5.0, @changesets/read@npm:^0.5.2":
+"@changesets/read@npm:^0.5.2":
   version: 0.5.2
   resolution: "@changesets/read@npm:0.5.2"
   dependencies:
@@ -3079,7 +3080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/write@npm:^0.1.5":
+"@changesets/write@npm:^0.1.6":
   version: 0.1.6
   resolution: "@changesets/write@npm:0.1.6"
   dependencies:
@@ -5163,6 +5164,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/is-ci@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/is-ci@npm:3.0.0"
+  dependencies:
+    ci-info: ^3.1.0
+  checksum: 7c1f1f16c1fa2134de7400d82766c83fa76057261ba890628af77a09382ebb92d945bb077b98cfcf3d40ab1469c9ffbd2278112867edbe57aa655f53547eb139
+  languageName: node
+  linkType: hard
+
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.3
   resolution: "@types/istanbul-lib-coverage@npm:2.0.3"
@@ -7127,6 +7137,13 @@ __metadata:
   version: 2.0.0
   resolution: "ci-info@npm:2.0.0"
   checksum: 3b374666a85ea3ca43fa49aa3a048d21c9b475c96eb13c133505d2324e7ae5efd6a454f41efe46a152269e9b6a00c9edbe63ec7fa1921957165aae16625acd67
+  languageName: node
+  linkType: hard
+
+"ci-info@npm:^3.1.0":
+  version: 3.3.0
+  resolution: "ci-info@npm:3.3.0"
+  checksum: c3d86fe374938ecda5093b1ba39acb535d8309185ba3f23587747c6a057e63f45419b406d880304dbc0e1d72392c9a33e42fe9a1e299209bc0ded5efaa232b66
   languageName: node
   linkType: hard
 
@@ -10328,7 +10345,7 @@ fsevents@~2.1.2:
     "@babel/core": ^7.16.0
     "@babel/preset-env": ^7.16.0
     "@babel/preset-typescript": ^7.16.0
-    "@changesets/cli": 2.17.0
+    "@changesets/cli": 2.19.0
     "@types/babel__core": ^7
     "@types/babel__preset-env": ^7
     "@types/jest": ^27.0.2
@@ -11234,6 +11251,17 @@ fsevents@~2.1.2:
   bin:
     is-ci: bin.js
   checksum: 77b869057510f3efa439bbb36e9be429d53b3f51abd4776eeea79ab3b221337fe1753d1e50058a9e2c650d38246108beffb15ccfd443929d77748d8c0cc90144
+  languageName: node
+  linkType: hard
+
+"is-ci@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "is-ci@npm:3.0.1"
+  dependencies:
+    ci-info: ^3.2.0
+  bin:
+    is-ci: bin.js
+  checksum: 192c66dc7826d58f803ecae624860dccf1899fc1f3ac5505284c0a5cf5f889046ffeb958fa651e5725d5705c5bcb14f055b79150ea5fcad7456a9569de60260e
   languageName: node
   linkType: hard
 
