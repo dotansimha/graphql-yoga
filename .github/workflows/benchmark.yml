@@ -32,10 +32,11 @@ jobs:
           echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
           sudo apt-get update
           sudo apt-get install k6
+      - name: Create `reports/` directory
+        run: mkdir ./benchmark/hello-world/reports
       - name: Apollo Server
         working-directory: ./benchmark/hello-world
         run: |
-          mkdir report &
           yarn start &
           yarn wait-on tcp:4000 &
           yarn loadtest
