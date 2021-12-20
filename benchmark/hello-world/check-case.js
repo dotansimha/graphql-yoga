@@ -1,4 +1,4 @@
-require('undici')
+require('cross-undici-fetch')
   .fetch(
     `http://localhost:4000/graphql?query=${encodeURIComponent('{ hello }')}`,
   )
