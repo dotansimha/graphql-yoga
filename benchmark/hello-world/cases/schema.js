@@ -15,7 +15,10 @@ module.exports = ({ stop }) =>
         hello: () => 'Hello World',
       },
       Mutation: {
-        stop,
+        stop: async () => {
+          await stop()
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+        },
       },
     },
   })
