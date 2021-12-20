@@ -7,7 +7,9 @@ const app = express()
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema: createSchema({ stop: () => server.close() }),
+    schema: createSchema({
+      stop: () => new Promise((resolve) => server.close(resolve)),
+    }),
   }),
 )
 
