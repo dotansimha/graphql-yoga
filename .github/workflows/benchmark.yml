@@ -58,18 +58,6 @@ jobs:
       - name: Stop Express GraphQL
         working-directory: ./benchmark/hello-world
         run: yarn stop
-      - name: Yoga w/ Fastify
-        working-directory: ./benchmark/hello-world
-        run: |
-          yarn start &
-          yarn wait-on tcp:4000 &
-          yarn loadtest
-
-        env:
-          CASE: yoga-with-fastify
-      - name: Stop Yoga w/ Fastify
-        working-directory: ./benchmark/hello-world
-        run: yarn stop
       - name: Yoga
         working-directory: ./benchmark/hello-world
         run: |
@@ -84,4 +72,4 @@ jobs:
         run: yarn stop
       - name: Compare
         working-directory: ./benchmark/hello-world
-        run: node compare.js apollo:apollo.json express-graphql:express-graphql.json yoga-with-fastify:yoga-with-fastify.json yoga:yoga.json
+        run: node compare.js apollo:apollo.json express-graphql:express-graphql.json yoga:yoga.json
