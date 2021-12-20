@@ -46,10 +46,9 @@ export function handleSummary(data) {
         return result.join('\n')
       },
     })
-
-    return {
-      stdout: textSummary(data, { indent: ' ', enableColors: true }),
-    }
+  }
+  return {
+    stdout: textSummary(data, { indent: ' ', enableColors: true }),
   }
 }
 
