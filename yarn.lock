@@ -148,14 +148,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ardatan/graphql-helix@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "@ardatan/graphql-helix@npm:0.0.10"
+"@ardatan/graphql-helix@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "@ardatan/graphql-helix@npm:0.0.11"
   dependencies:
-    cross-undici-fetch: ^0.1.8
+    cross-undici-fetch: ^0.1.10
   peerDependencies:
     graphql: ^15.3.0 || ^16.0.0
-  checksum: 052a3c4722f21cc4a9d89bd9f381a5a81a8b2b33738a7f7c3c39510385b06fe5656b7c3a955d8f5ae53984c26ef5bc6fd18130f77dcb65147c06fc09422c8f9b
+  checksum: 328a023281a6a945dc7fb3f7fc937e3d1e183aacd5b609a2ab187c7b449182c2e4c97454f509265ac76b9dd06af93c8cfbe3c4ff4f9916d67e0698abd0a85245
   languageName: node
   linkType: hard
 
@@ -3907,7 +3907,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
-    "@ardatan/graphql-helix": ^0.0.10
+    "@ardatan/graphql-helix": ^0.0.11
     "@envelop/core": ^1.6.1
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
@@ -7755,6 +7755,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-undici-fetch@npm:^0.1.10":
+  version: 0.1.10
+  resolution: "cross-undici-fetch@npm:0.1.10"
+  dependencies:
+    abort-controller: ^3.0.0
+    form-data-encoder: ^1.7.1
+    formdata-node: ^4.3.1
+    node-fetch: ^2.6.5
+    undici: ^4.9.3
+  checksum: 67a03fbb2aa02d5d1ed2247f10d8694c6487b57ab4f22b1c909e69257c4c4b5e471b6be58d6e0d1d1161d3cabb06c802aac9b58e346db1f973295b6741cd8a40
+  languageName: node
+  linkType: hard
+
 "cross-undici-fetch@npm:^0.1.4":
   version: 0.1.4
   resolution: "cross-undici-fetch@npm:0.1.4"
@@ -7765,19 +7778,6 @@ __metadata:
     node-fetch: ^2.6.5
     undici: ^4.9.3
   checksum: 4b78f743ce863f91b5553eea926bf30e7d326c90dc9e708531565874ffba04f79364aabd32c78171567a543c2a819daa1a033a8c5a2c9c525d07e55da9e9f3bc
-  languageName: node
-  linkType: hard
-
-"cross-undici-fetch@npm:^0.1.8":
-  version: 0.1.8
-  resolution: "cross-undici-fetch@npm:0.1.8"
-  dependencies:
-    abort-controller: ^3.0.0
-    form-data-encoder: ^1.7.1
-    formdata-node: ^4.3.1
-    node-fetch: ^2.6.5
-    undici: ^4.9.3
-  checksum: b0014241c30e17646a922042396a3874855918f72c6492fbf52d7b98658683721832e02ad86257eb6fbc9302507766c1f87f5a79b6d36ae21196eadac408b9ba
   languageName: node
   linkType: hard
 
@@ -10351,7 +10351,7 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@ardatan/graphql-helix": ^0.0.10
+    "@ardatan/graphql-helix": ^0.0.11
     "@envelop/core": ^1.6.2
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/core": 0.2.0-alpha.2
