@@ -9,7 +9,7 @@ export const options = {
   thresholds: {
     no_errors: ['rate=1.0'],
     expected_result: ['rate=1.0'],
-    http_req_duration: ['p(95)<=23'],
+    http_req_duration: ['p(95)<=27'],
   },
 }
 
@@ -62,6 +62,5 @@ export default function () {
     no_errors: (resp) => !('errors' in resp.json()),
     expected_result: (resp) =>
       resp.json().data && resp.json().data.hello === 'Hello World',
-    http_req_duration: ['p(95)<=52'],
   })
 }
