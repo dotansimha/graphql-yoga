@@ -3,7 +3,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  benchmarks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -36,7 +36,7 @@ jobs:
         working-directory: ./benchmark/hello-world
         run: |
           yarn start &
-          yarn wait-on tcp:4000 &&
+          yarn wait-on tcp:4000 &
           yarn loadtest --out json=$CASE.json k6.js
         env:
           CASE: apollo
@@ -44,7 +44,7 @@ jobs:
         working-directory: ./benchmark/hello-world
         run: |
           yarn start &
-          yarn wait-on tcp:4000 &&
+          yarn wait-on tcp:4000 &
           yarn loadtest --out json=$CASE.json k6.js
         env:
           CASE: express-graphql
@@ -52,7 +52,7 @@ jobs:
         working-directory: ./benchmark/hello-world
         run: |
           yarn start &
-          yarn wait-on tcp:4000 &&
+          yarn wait-on tcp:4000 &
           yarn loadtest --out json=$CASE.json k6.js
         env:
           CASE: yoga-with-fastify
@@ -60,7 +60,7 @@ jobs:
         working-directory: ./benchmark/hello-world
         run: |
           yarn start &
-          yarn wait-on tcp:4000 &&
+          yarn wait-on tcp:4000 &
           yarn loadtest --out json=$CASE.json k6.js
         env:
           CASE: yoga
