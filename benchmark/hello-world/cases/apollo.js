@@ -5,4 +5,4 @@ const apolloServer = new ApolloServer({
   schema: createSchema({ stop: () => apolloServer.stop() }),
 })
 
-apolloServer.apolloServer.listen(4000)
+apolloServer.listen(4000)
