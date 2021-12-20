@@ -43,6 +43,9 @@ jobs:
 
         env:
           CASE: apollo
+      - name: Stop Apollo Server
+        working-directory: ./benchmark/hello-world
+        run: yarn stop
       - name: Express GraphQL
         working-directory: ./benchmark/hello-world
         run: |
@@ -52,6 +55,9 @@ jobs:
 
         env:
           CASE: express-graphql
+      - name: Stop Express GraphQL
+        working-directory: ./benchmark/hello-world
+        run: yarn stop
       - name: Yoga w/ Fastify
         working-directory: ./benchmark/hello-world
         run: |
@@ -61,6 +67,9 @@ jobs:
 
         env:
           CASE: yoga-with-fastify
+      - name: Stop Yoga w/ Fastify
+        working-directory: ./benchmark/hello-world
+        run: yarn stop
       - name: Yoga
         working-directory: ./benchmark/hello-world
         run: |
@@ -70,5 +79,8 @@ jobs:
 
         env:
           CASE: yoga
+      - name: Stop Yoga
+        working-directory: ./benchmark/hello-world
+        run: yarn stop
       - name: Compare
         run: node benchmark/compare apollo:apollo.json express-graphql:express-graphql.json yoga-with-fastify:yoga-with-fastify.json yoga:yoga.json

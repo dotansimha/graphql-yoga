@@ -1,8 +1,8 @@
 const { createServer } = require('graphql-yoga')
-const schema = require('./schema')
+const createSchema = require('./schema')
 
 const graphQLServer = createServer({
-  schema,
+  schema: createSchema({ stop: () => app.close() }),
   isDev: false,
   enableLogging: false,
 })

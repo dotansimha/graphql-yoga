@@ -1,8 +1,8 @@
 const { ApolloServer } = require('apollo-server')
-const schema = require('./schema')
+const createSchema = require('./schema')
 
 const apolloServer = new ApolloServer({
-  schema,
+  schema: createSchema({ stop: () => apolloServer.stop() }),
 })
 
-apolloServer.listen(4000)
+apolloServer.apolloServer.listen(4000)

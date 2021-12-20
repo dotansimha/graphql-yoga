@@ -1,14 +1,14 @@
 const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
-const schema = require('./schema')
+const createSchema = require('./schema')
 
 const app = express()
 
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema,
+    schema: createSchema({ stop: () => server.close() }),
   }),
 )
 
-app.listen(4000)
+const server = app.listen(4000)

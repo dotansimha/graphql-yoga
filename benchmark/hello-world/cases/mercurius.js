@@ -1,11 +1,11 @@
 const Fastify = require('fastify')
 const mercurius = require('mercurius')
-const schema = require('./schema')
+const createSchema = require('./schema')
 
 const app = Fastify()
 
 app.register(mercurius, {
-  schema,
+  schema: createSchema({ stop: () => app.close() }),
   graphiql: false,
 })
 
