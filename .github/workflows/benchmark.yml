@@ -58,6 +58,10 @@ jobs:
       - name: Stop Express GraphQL
         working-directory: ./benchmark/hello-world
         run: yarn stop
+      - name: Sleep for 5 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5s'
       - name: Yoga
         working-directory: ./benchmark/hello-world
         run: |
@@ -67,6 +71,9 @@ jobs:
 
         env:
           CASE: yoga
+      - name: Stop Yoga
+        working-directory: ./benchmark/hello-world
+        run: yarn stop
       - name: Compare
         working-directory: ./benchmark/hello-world
         run: node compare.js apollo:apollo.json express-graphql:express-graphql.json yoga:yoga.json
