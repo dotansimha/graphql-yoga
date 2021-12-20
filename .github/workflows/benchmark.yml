@@ -35,9 +35,11 @@ jobs:
       - name: Apollo Server
         working-directory: ./benchmark/hello-world
         run: |
+          mkdir report &
           yarn start &
           yarn wait-on tcp:4000 &
-          yarn loadtest --out json=$CASE.json k6.js
+          yarn loadtest
+
         env:
           CASE: apollo
       - name: Express GraphQL
@@ -45,7 +47,8 @@ jobs:
         run: |
           yarn start &
           yarn wait-on tcp:4000 &
-          yarn loadtest --out json=$CASE.json k6.js
+          yarn loadtest
+
         env:
           CASE: express-graphql
       - name: Yoga w/ Fastify
@@ -53,7 +56,8 @@ jobs:
         run: |
           yarn start &
           yarn wait-on tcp:4000 &
-          yarn loadtest --out json=$CASE.json k6.js
+          yarn loadtest
+
         env:
           CASE: yoga-with-fastify
       - name: Yoga
@@ -61,7 +65,8 @@ jobs:
         run: |
           yarn start &
           yarn wait-on tcp:4000 &
-          yarn loadtest --out json=$CASE.json k6.js
+          yarn loadtest
+
         env:
           CASE: yoga
       - name: Compare

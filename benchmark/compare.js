@@ -6,7 +6,7 @@ function createReport(pointer) {
   const [name, file] = pointer.split(':')
 
   const lines = fs
-    .readFileSync(path.join(process.cwd(), file), 'utf-8')
+    .readFileSync(path.join(process.cwd(), 'reports', file), 'utf-8')
     .split('\n')
 
   let sum = 0
