@@ -5,11 +5,11 @@ import { githubComment } from 'https://raw.githubusercontent.com/dotansimha/k6-g
 
 export const options = {
   vus: 1,
-  duration: '15s',
+  duration: '30s',
   thresholds: {
     no_errors: ['rate=1.0'],
     expected_result: ['rate=1.0'],
-    http_req_duration: __ENV.GITHUB_TOKEN ? ['p(95)<=.4'] : [],
+    http_req_duration: __ENV.GITHUB_TOKEN ? ['p(90)<=.4'] : [],
   },
 }
 
