@@ -26,18 +26,19 @@ class Server<TContext> extends BaseServer<TContext> {
    * Hostname for server
    */
   private hostname: string
-
+  /**
+   * Detect Server environment
+   */
+  protected isDev: boolean
   private _server: NodeServer
 
   constructor(options: ServerOptions<TContext>) {
-    super({
-      ...options,
-      // This should make default to dev mode base on environment variable
-      isDev: options.isDev ?? process.env.NODE_ENV !== 'production',
-    })
+    super(options)
     this.port = options.port || parseInt(process.env.PORT || '4000')
     this.endpoint = options.endpoint || '/graphql'
     this.hostname = options.hostname || '0.0.0.0'
+    // This should make default to dev mode based on environment variable
+    this.isDev = options.isDev ?? process.env.NODE_ENV !== 'production'
 
     // Pretty printing only in dev
     const prettyPrintOptions = this.isDev
@@ -58,13 +59,21 @@ class Server<TContext> extends BaseServer<TContext> {
       enabled: options.enableLogging ?? true,
     })
 
-    this.logger = {
-      log: (...args) => pinoLogger.info(...args),
-      debug: (...args) => pinoLogger.debug(...args),
-      error: (...args) => pinoLogger.error(...args),
-      warn: (...args) => pinoLogger.warn(...args),
-      info: (...args) => pinoLogger.info(...args),
-    }
+    this.logger = options.logger
+      ? {
+          log: (...args) => pinoLogger.info(...args),
+          debug: (...args) => pinoLogger.debug(...args),
+          error: (...args) => pinoLogger.error(...args),
+          warn: (...args) => pinoLogger.warn(...args),
+          info: (...args) => pinoLogger.info(...args),
+        }
+      : {
+          log: () => {},
+          debug: () => {},
+          error: () => {},
+          warn: () => {},
+          info: () => {},
+        }
 
     this.logger.debug('Setting up server.')
 

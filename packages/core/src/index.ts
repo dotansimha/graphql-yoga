@@ -43,10 +43,11 @@ export type ServerOptions<TContext> = {
    */
   plugins?: Array<Plugin<TContext>>
   /**
-   * Detect server environment
+   * Enable logger
+   *
    * Default: `false`
    */
-  isDev?: boolean
+  logger?: boolean
   /**
    * Allow introspection query. This is useful for exploring the API with tools like GraphiQL.
    * If you are making a private GraphQL API,
@@ -74,6 +75,11 @@ export type ServerOptions<TContext> = {
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
   cors?: ((request: Request) => ServerCORSOptions) | ServerCORSOptions | boolean
+  /**
+   * GraphiQL options
+   *
+   * Default: `true`
+   */
   graphiql?: GraphiQLOptions | boolean
 } & (
   | {
@@ -99,7 +105,6 @@ export class Server<TContext> {
    * Instance of envelop
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
-  protected isDev: boolean
   public logger: Pick<Console, 'log' | 'debug' | 'error' | 'warn' | 'info'>
   public readonly corsOptionsFactory?: (request: Request) => ServerCORSOptions
   public readonly graphiql: GraphiQLOptions | false
@@ -113,8 +118,15 @@ export class Server<TContext> {
             resolvers: options.resolvers,
           })
 
-    this.logger = console
-    this.isDev = options.isDev ?? false
+    this.logger = options.logger
+      ? console
+      : {
+          log: () => {},
+          debug: () => {},
+          error: () => {},
+          warn: () => {},
+          info: () => {},
+        }
 
     const maskedErrors = options.maskedErrors || false
 
@@ -129,7 +141,7 @@ export class Server<TContext> {
         useExtendContext(() => ({ logger: this.logger })),
         // Log events - useful for debugging purposes
         enableIf(
-          this.isDev,
+          options.logger ?? false,
           useLogger({
             logFn: (eventName, events) => {
               if (eventName === 'execute-start') {
@@ -196,7 +208,7 @@ export class Server<TContext> {
     if (typeof options.graphiql === 'object' || options.graphiql === false) {
       this.graphiql = options.graphiql
     } else {
-      this.graphiql = this.isDev ? {} : false
+      this.graphiql = {}
     }
   }
 }
