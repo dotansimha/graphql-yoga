@@ -15,7 +15,7 @@ npm init svelte@next
 [GraphQL Yoga - SvelteKit](https://graphql-yoga.vercel.app/docs/integrations/integration-with-sveltekit)
 
 ```bash
-yarn add @graphql-yoga/core@0.3.0-canary-352ac0f.0 -D
+yarn add -D @graphql-yoga/core@0.3.0-canary-352ac0f.0
 ```
 
 ## 1/ Add the yogaHandler
