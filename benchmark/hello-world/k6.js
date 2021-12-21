@@ -5,7 +5,7 @@ import { githubComment } from 'https://raw.githubusercontent.com/dotansimha/k6-g
 
 export const options = {
   vus: 1,
-  duration: '20s',
+  duration: '10s',
   thresholds: {
     no_errors: ['rate=1.0'],
     expected_result: ['rate=1.0'],
