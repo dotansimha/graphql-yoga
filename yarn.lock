@@ -148,14 +148,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ardatan/graphql-helix@npm:^0.0.11":
-  version: 0.0.11
-  resolution: "@ardatan/graphql-helix@npm:0.0.11"
+"@ardatan/graphql-helix@npm:0.1.12":
+  version: 0.1.12
+  resolution: "@ardatan/graphql-helix@npm:0.1.12"
   dependencies:
     cross-undici-fetch: ^0.1.10
   peerDependencies:
     graphql: ^15.3.0 || ^16.0.0
-  checksum: 328a023281a6a945dc7fb3f7fc937e3d1e183aacd5b609a2ab187c7b449182c2e4c97454f509265ac76b9dd06af93c8cfbe3c4ff4f9916d67e0698abd0a85245
+  checksum: 5f9ecd9c5345477edf8cea6bfffd1b09e1f280b7a6d5d651e7161790035bebe1d5a2994cac16f8d7db6d0f581609504c361686fe0981cf8a0bb5b932af960d74
   languageName: node
   linkType: hard
 
@@ -3342,6 +3342,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@envelop/validation-cache@npm:2.3.0-alpha-cf6902c.0":
+  version: 2.3.0-alpha-cf6902c.0
+  resolution: "@envelop/validation-cache@npm:2.3.0-alpha-cf6902c.0"
+  dependencies:
+    tiny-lru: 7.0.6
+  peerDependencies:
+    "@envelop/core": ^1.6.1
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 5172403ff4467bc5de838a5409659521b6c67a12c59ea00197d6ffaae38fa7e7044c9af6b457b7572ee9a720f717f759f3bc2af1a81b82ba67ec0dd3201b1475
+  languageName: node
+  linkType: hard
+
 "@envelop/validation-cache@npm:^2.2.1":
   version: 2.2.1
   resolution: "@envelop/validation-cache@npm:2.2.1"
@@ -3876,7 +3888,7 @@ __metadata:
     "@envelop/core": ^1.6.2
     "@envelop/disable-introspection": ^1.2.1
     "@envelop/parser-cache": ^2.2.1
-    "@envelop/validation-cache": ^2.2.1
+    "@envelop/validation-cache": 2.3.0-alpha-cf6902c.0
     "@graphql-tools/schema": 8.3.1
     "@graphql-yoga/handler": 0.2.0-alpha.1
     "@types/node": ^16.11.7
@@ -3907,11 +3919,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
-    "@ardatan/graphql-helix": ^0.0.11
+    "@ardatan/graphql-helix": 0.1.12
     "@envelop/core": ^1.6.1
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
-    cross-undici-fetch: ^0.1.4
+    cross-undici-fetch: 0.1.12
     typescript: ^4.4.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
@@ -7743,6 +7755,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-undici-fetch@npm:0.1.12":
+  version: 0.1.12
+  resolution: "cross-undici-fetch@npm:0.1.12"
+  dependencies:
+    abort-controller: ^3.0.0
+    form-data-encoder: ^1.7.1
+    formdata-node: ^4.3.1
+    node-fetch: ^2.6.5
+    undici: ^4.9.3
+  checksum: bb13d695658f3db31f2733ef8e025fd644ffb1d4dd906e9d600f7527fad772874f38ca6df8393397a2d3c4d7b26c9236961298969e2fd5afb5dbfda1250ed056
+  languageName: node
+  linkType: hard
+
 "cross-undici-fetch@npm:^0.0.20":
   version: 0.0.20
   resolution: "cross-undici-fetch@npm:0.0.20"
@@ -10351,7 +10376,7 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@ardatan/graphql-helix": ^0.0.11
+    "@ardatan/graphql-helix": 0.1.12
     "@envelop/core": ^1.6.2
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/core": 0.2.0-alpha.2
@@ -10638,6 +10663,16 @@ fsevents@~2.1.2:
   checksum: 571c83eeb25e8130d172218712f807c0b96d62b020981400bccc1503a7cf14b09b8b10498a962d2739eccf231d950e3848ba7d420b58a6acd2f9283439546cd9
   languageName: node
   linkType: hard
+
+"hello-world-benchmark@workspace:benchmark/hello-world":
+  version: 0.0.0-use.local
+  resolution: "hello-world-benchmark@workspace:benchmark/hello-world"
+  dependencies:
+    graphql: 16.1.0
+    graphql-yoga: 2.0.0-alpha.3
+    wait-on: 6.0.0
+  languageName: unknown
+  linkType: soft
 
 "hello-world@workspace:examples/hello-world":
   version: 0.0.0-use.local
@@ -18683,7 +18718,7 @@ typescript@^4.4.4:
   languageName: node
   linkType: hard
 
-"wait-on@npm:^6.0.0":
+"wait-on@npm:6.0.0, wait-on@npm:^6.0.0":
   version: 6.0.0
   resolution: "wait-on@npm:6.0.0"
   dependencies:

@@ -98,10 +98,13 @@ export class Server<TContext> {
         // Use the schema provided by the user
         useSchema(this.schema),
         // Performance things
-        useParserCache(),
-        useValidationCache(),
-        // Inject logger instance to context. Useful to use logger in resolvers.
-        useExtendContext(() => ({ logger: this.logger })),
+        useParserCache({
+          errorCache: new Map(),
+          documentCache: new Map(),
+        }),
+        useValidationCache({
+          cache: new Map(),
+        }),
         // Log events - useful for debugging purposes
         enableIf(
           this.isDev,

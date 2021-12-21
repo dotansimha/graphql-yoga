@@ -16,6 +16,7 @@ GraphQL Yoga can be integrated easily as a route to the existing Koa application
 ```ts
 import Koa from 'koa'
 import { createServer } from 'graphql-yoga'
+import { Readable } from 'stream'
 
 const app = new Koa()
 
@@ -33,13 +34,24 @@ const graphQLServer = createServer({
 })
 
 // Bind GraphQL Yoga to `/graphql` endpoint
-// Here it takes the request and response objects and handles them internally
 app.use('/graphql', async (ctx) => {
+  // Keep the socket open
   ctx.req.socket.setTimeout(0)
   ctx.req.socket.setNoDelay(true)
   ctx.req.socket.setKeepAlive(true)
 
-  return graphQLServer.requestListener(ctx.request, ctx.res)
+  const response = await this.handleIncomingMessage(req)
+
+  // Set status code
+  ctx.status = response.status
+
+  // Set headers
+  response.headers.forEach((value, key) => {
+    ctx.set(key, value)
+  })
+
+  // Converts ReadableStream to a NodeJS Stream
+  ctx.body = Readable.from(response.body)
 })
 
 app.listen(4000, () => {
