@@ -46,6 +46,4 @@ jobs:
         shell: bash
       - name: Start and Report Yoga Benchmark
         working-directory: ./benchmark/hello-world
-        run: k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} --out json=reports/yoga.json run k6.js
-        env:
-          CASE: yoga
+        run: k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} run k6.js
