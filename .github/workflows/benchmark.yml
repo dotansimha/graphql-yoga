@@ -70,14 +70,19 @@ jobs:
       - name: Stop Mercurius
         working-directory: ./benchmark/hello-world
         run: yarn stop
-      - name: Yoga
+      - name: Start Yoga Server
         working-directory: ./benchmark/hello-world
         run: |
           yarn start &
-          yarn wait-on tcp:4000 &
-          delay 1 &
-          k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} --out json=reports/yoga.json run k6.js
-
+          yarn wait-on tcp:4000
+        env:
+          CASE: yoga
+      - name: Sleep for 5 seconds
+        run: sleep 5s
+        shell: bash
+      - name: Start and Report Yoga Benchmark
+        working-directory: ./benchmark/hello-world
+        run: k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} --out json=reports/yoga.json run k6.js
         env:
           CASE: yoga
       - name: Stop Yoga
