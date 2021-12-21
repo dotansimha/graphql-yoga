@@ -2,7 +2,6 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-  GraphQLBoolean,
   GraphQLScalarType,
 } from 'graphql'
 
@@ -27,19 +26,19 @@ export const schema = new GraphQLSchema({
         resolve: (_, { message }) => message,
       },
       singleUpload: {
-        type: GraphQLBoolean,
+        type: GraphQLString,
         description: 'Upload a single file',
         args: {
-          image: {
-            description: 'Image file to upload',
+          file: {
+            description: 'File to upload',
             type: new GraphQLScalarType({
               name: 'Upload',
             }),
           },
         },
-        resolve: async (_, { image }: { image: File }, { logger }) => {
-          logger.debug(image)
-          return !!image.name
+        resolve: async (_, { file }: { file: File }) => {
+          const content = await file.text()
+          return content
         },
       },
     }),

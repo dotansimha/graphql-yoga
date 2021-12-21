@@ -96,9 +96,12 @@ describe('Incremental Delivery', () => {
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
       mutation upload($file: Upload!) {
-        singleUpload(image: $file)
+        singleUpload(file: $file)
       }
     `
+
+    const fileContent = 'Hello World'
+
     const { body } = await request(yoga.server)
       .post('/graphql')
       .field(
@@ -106,13 +109,13 @@ describe('Incremental Delivery', () => {
         JSON.stringify({ query: UPLOAD_MUTATION, variables: { file: null } }),
       )
       .field('map', JSON.stringify({ 0: ['variables.file'] }))
-      .attach('0', Buffer.from('test'), {
+      .attach('0', Buffer.from(fileContent), {
         filename: 'test.txt',
         contentType: 'text/plain',
       })
 
     expect(body.errors).toBeUndefined()
-    expect(body.data.singleUpload).toBe(true)
+    expect(body.data.singleUpload).toBe(fileContent)
   })
 
   it('should get subscription', async () => {
