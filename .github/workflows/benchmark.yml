@@ -62,6 +62,18 @@ jobs:
         uses: jakejarvis/wait-action@master
         with:
           time: '5s'
+      - name: Mercurius
+        working-directory: ./benchmark/hello-world
+        run: |
+          yarn start &
+          yarn wait-on tcp:4000 &
+          yarn loadtest
+
+        env:
+          CASE: mercurius
+      - name: Stop Mercurius
+        working-directory: ./benchmark/hello-world
+        run: yarn stop
       - name: Yoga
         working-directory: ./benchmark/hello-world
         run: |
@@ -76,4 +88,4 @@ jobs:
         run: yarn stop
       - name: Compare
         working-directory: ./benchmark/hello-world
-        run: node compare.js apollo:apollo.json express-graphql:express-graphql.json yoga:yoga.json
+        run: node compare.js apollo:apollo.json express-graphql:express-graphql.json mercurius:mercurius.json yoga:yoga.json
