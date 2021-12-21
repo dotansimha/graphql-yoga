@@ -84,7 +84,7 @@ describe('Requests', () => {
   })
 })
 
-describe('Uploads', () => {
+describe('Incremental Delivery', () => {
   // TODO: Need to find a way to test using fastify inject
   beforeAll(async () => {
     await yoga.start()
