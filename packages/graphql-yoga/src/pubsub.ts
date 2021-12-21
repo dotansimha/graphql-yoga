@@ -43,6 +43,15 @@ const pubSub = createPubSub({
   return globalThis
 }
 
+type PubSubEvent<
+  TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
+  TKey extends Extract<keyof TPubSubPublishArgsByKey, string>,
+> = Event & {
+  data?: TPubSubPublishArgsByKey[TKey][1] extends undefined
+    ? TPubSubPublishArgsByKey[TKey][0]
+    : TPubSubPublishArgsByKey[TKey][1]
+}
+
 /**
  * Utility for publishing and subscribing to events.
  */
@@ -60,8 +69,10 @@ export const createPubSub = <
       routingKey: TKey,
       ...args: TPubSubPublishArgsByKey[TKey]
     ) {
-      const event = new Event(routingKey)
-      ;(event as any).data = args[0]
+      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new Event(
+        routingKey,
+      )
+      event.data = args[0]
       target.dispatchEvent(event)
     },
     subscribe<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
@@ -77,19 +88,25 @@ export const createPubSub = <
         id === undefined ? routingKey : `${routingKey}:${id as number}`
 
       const { pushValue, asyncIterableIterator } =
-        makePushPullAsyncIterableIterator()
+        makePushPullAsyncIterableIterator<
+          TPubSubPublishArgsByKey[TKey][1] extends undefined
+            ? TPubSubPublishArgsByKey[TKey][0]
+            : TPubSubPublishArgsByKey[TKey][1]
+        >()
 
-      const handler = (event: Event) => {
-        pushValue((event as any).data)
+      function pubsubEventListener(
+        event: PubSubEvent<TPubSubPublishArgsByKey, TKey>,
+      ) {
+        pushValue(event.data)
       }
-      target.addEventListener(topic, handler)
+      target.addEventListener(topic, pubsubEventListener)
 
       const originalReturn = asyncIterableIterator.return.bind(
         asyncIterableIterator,
       )
 
       asyncIterableIterator.return = (...args) => {
-        target.removeEventListener(topic, handler)
+        target.removeEventListener(topic, pubsubEventListener)
         return originalReturn(...args)
       }
 
