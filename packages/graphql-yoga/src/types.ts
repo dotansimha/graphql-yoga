@@ -32,6 +32,12 @@ export type ServerOptions<TContext> = BaseServerOptions<TContext> & {
    * Enable HTTPS
    */
   https?: HttpsServerOptions | boolean
+  /**
+   * Detect Environment
+   *
+   * Default: Check for `process.env.NODE_ENV === 'production'`
+   */
+  isDev?: boolean
 }
 
 export type GraphQLServerInject<
