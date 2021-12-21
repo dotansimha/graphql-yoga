@@ -74,6 +74,10 @@ jobs:
       - name: Stop Mercurius
         working-directory: ./benchmark/hello-world
         run: yarn stop
+      - name: Sleep for 5 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5s'
       - name: Yoga
         working-directory: ./benchmark/hello-world
         run: |
