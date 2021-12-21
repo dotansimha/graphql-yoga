@@ -98,8 +98,13 @@ export class Server<TContext> {
         // Use the schema provided by the user
         useSchema(this.schema),
         // Performance things
-        useParserCache(),
-        useValidationCache(),
+        useParserCache({
+          errorCache: new Map(),
+          documentCache: new Map(),
+        }),
+        useValidationCache({
+          cache: new Map(),
+        }),
         // Log events - useful for debugging purposes
         enableIf(
           this.isDev,
