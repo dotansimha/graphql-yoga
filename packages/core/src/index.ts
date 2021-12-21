@@ -100,8 +100,6 @@ export class Server<TContext> {
         // Performance things
         useParserCache(),
         useValidationCache(),
-        // Inject logger instance to context. Useful to use logger in resolvers.
-        useExtendContext(() => ({ logger: this.logger })),
         // Log events - useful for debugging purposes
         enableIf(
           this.isDev,
