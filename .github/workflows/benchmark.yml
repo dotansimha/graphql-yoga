@@ -15,7 +15,7 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@master
         with:
-          node-version: 12
+          node-version: 14
 
       - name: Get yarn cache
         uses: c-hive/gha-yarn-cache@v2
@@ -32,51 +32,15 @@ jobs:
           echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
           sudo apt-get update
           sudo apt-get install k6
-      - name: Create `reports/` directory
-        run: mkdir ./benchmark/hello-world/reports
-      - name: Apollo Server
-        working-directory: ./benchmark/hello-world
-        run: |
-          yarn start &
-          yarn wait-on tcp:4000 &
-          yarn loadtest
 
-        env:
-          CASE: apollo
-      - name: Stop Apollo Server
-        working-directory: ./benchmark/hello-world
-        run: yarn stop
-      - name: Express GraphQL
-        working-directory: ./benchmark/hello-world
-        run: |
-          yarn start &
-          yarn wait-on tcp:4000 &
-          yarn loadtest
-
-        env:
-          CASE: express-graphql
-      - name: Stop Express GraphQL
-        working-directory: ./benchmark/hello-world
-        run: yarn stop
-      - name: Mercurius
-        working-directory: ./benchmark/hello-world
-        run: |
-          yarn start &
-          yarn wait-on tcp:4000 &
-          yarn loadtest
-
-        env:
-          CASE: mercurius
-      - name: Stop Mercurius
-        working-directory: ./benchmark/hello-world
-        run: yarn stop
       - name: Start Yoga Server
         working-directory: ./benchmark/hello-world
         run: |
           yarn start &
           yarn wait-on tcp:4000
         env:
-          CASE: yoga
+          NODE_NO_WARNINGS: true
+          NODE_ENV: production
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
@@ -85,9 +49,3 @@ jobs:
         run: k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} --out json=reports/yoga.json run k6.js
         env:
           CASE: yoga
-      - name: Stop Yoga
-        working-directory: ./benchmark/hello-world
-        run: yarn stop
-      - name: Compare
-        working-directory: ./benchmark/hello-world
-        run: node compare.js apollo:apollo.json express-graphql:express-graphql.json mercurius:mercurius.json yoga:yoga.json
