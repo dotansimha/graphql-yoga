@@ -11,6 +11,16 @@ export async function yogaHandler(
 		headers: req.headers,
 		body: req.rawBody
 	});
+
+	const logLevel = process.env.LOG_LEVEL || '';
+	graphQLServer.logger = {
+		log: logLevel.includes('log') ? console.log : () => {},
+		debug: logLevel.includes('debug') ? console.debug : () => {},
+		warn: console.warn,
+		info: console.info,
+		error: console.error
+	};
+
 	const response: Response = await graphQLServer.handleRequest(request);
 
 	const responseHeaders: ResponseHeaders = {};
