@@ -1,5 +1,18 @@
 # graphql-yoga
 
+## 2.0.0-alpha.4
+
+### Minor Changes
+
+- fb894da: Rename createGraphQLServer to createServer
+
+### Patch Changes
+
+- Updated dependencies [e99ec3e]
+- Updated dependencies [fb894da]
+  - @graphql-yoga/subscription@0.1.0-alpha.0
+  - @graphql-yoga/core@0.2.0-alpha.3
+
 ## 2.0.0-alpha.3
 
 ### Minor Changes
