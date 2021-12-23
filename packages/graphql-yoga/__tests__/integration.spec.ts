@@ -5,21 +5,42 @@ import EventSource from 'eventsource'
 import request from 'supertest'
 import { schema } from '../test-utils/schema'
 
-const yoga = createServer({ schema, enableLogging: false })
-
-describe('Requests', () => {
-  it('should send introspection query', async () => {
-    const { response, executionResult } = await yoga.inject<IntrospectionQuery>(
-      {
+describe('Introspection Option', () => {
+  it('should succeed introspection query', async () => {
+    const yogaWithIntrospection = createServer({
+      schema,
+      enableLogging: false,
+      introspection: true,
+    })
+    const { response, executionResult } =
+      await yogaWithIntrospection.inject<IntrospectionQuery>({
         document: getIntrospectionQuery(),
-      },
-    )
-
+      })
     expect(response.statusCode).toBe(200)
     expect(executionResult.errors).toBeUndefined()
     expect(executionResult.data?.__schema.queryType.name).toBe('Query')
   })
 
+  it('should fail introspection query', async () => {
+    const yogaWithoutIntrospection = createServer({
+      schema,
+      enableLogging: false,
+      introspection: false,
+    })
+    const { response, executionResult } =
+      await yogaWithoutIntrospection.inject<IntrospectionQuery>({
+        document: getIntrospectionQuery(),
+      })
+
+    expect(response.statusCode).toBe(400)
+    expect(executionResult.data).toBeUndefined()
+    expect(executionResult.errors![0].name).toBe('GraphQLError')
+  })
+})
+
+const yoga = createServer({ schema, enableLogging: false })
+
+describe('Requests', () => {
   it('should send basic query', async () => {
     const { response, executionResult } = await yoga.inject({
       document: /* GraphQL */ `

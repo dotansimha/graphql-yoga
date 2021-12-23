@@ -52,6 +52,18 @@ export type ServerOptions<TContext> = {
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
   cors?: ((request: Request) => ServerCORSOptions) | ServerCORSOptions | boolean
   graphiql?: GraphiQLOptions | boolean
+  /**
+   * Allow introspection query. This is useful for exploring the API with tools like GraphiQL.
+   * If you are making a private GraphQL API,
+   * it is suggested that you disable this in production so that
+   * potential malicious API consumers do not see what all operations are possible.
+   *
+   * You can learn more about GraphQL introspection here:
+   * @see https://graphql.org/learn/introspection/
+   *
+   * Default: `true`
+   */
+  introspection?: boolean
 } & (
   | {
       schema: GraphQLSchema
@@ -131,7 +143,10 @@ export class Server<TContext> {
           }),
         ),
         // Disable introspection in production
-        enableIf(!this.isDev, useDisableIntrospection()),
+        enableIf(
+          !(options.introspection ?? this.isDev),
+          useDisableIntrospection(),
+        ),
         // Mask errors in production
         enableIf(!this.isDev, useMaskedErrors()),
         ...(options.context != null
