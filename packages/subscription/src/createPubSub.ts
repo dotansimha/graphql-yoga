@@ -1,4 +1,5 @@
 import { Repeater } from '@repeaterjs/repeater'
+import { TypedEventTarget } from './typed-event-target'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]
@@ -7,47 +8,6 @@ type PubSubPublishArgsByKey = {
 type EventAPI = {
   Event: typeof Event
   EventTarget: typeof EventTarget
-}
-
-type ChannelPubSubConfig = {
-  /**
-   * The event target. If not specified an (in-memory) EventTarget will be created.
-   * For multiple server replica or serverless environments a distributed EventTarget is recommended.
-   *
-   * An event dispatched on the event target MUST have a `data` property.
-   */
-  eventTarget?: EventTarget
-  /**
-   * Event and EventTarget implementation.
-   * Providing this is mandatory for a Node.js versions below 16.
-   */
-  event?: EventAPI
-}
-
-const resolveGlobalConfig = (api: EventAPI = globalThis): EventAPI => {
-  if (!api.Event || !api.EventTarget) {
-    throw new Error(`
-[graphql-yoga] 'createPubSub' uses the Event and EventTarget APIs.
-
-In modern JavaScript environments those are part of the global scope. However, if you are using an older version of Node.js (<= 16.x.x), those APIs must be polyfilled.
-You can provide polyfills to the 'createPubSub' function:
-
-\`\`\`
-// yarn install @ungap/event @ungap/event-target
-import Event from '@ungap/event'
-import EventTarget from '@ungap/event-target'
-
-const pubSub = createPubSub({
-  event: {
-    Event,
-    EventTarget,
-  }
-})
-\`\`\`
-`)
-  }
-
-  return globalThis
 }
 
 export type PubSubEvent<
@@ -59,13 +19,65 @@ export type PubSubEvent<
     : TPubSubPublishArgsByKey[TKey][1]
 }
 
+export type PubSubEventTarget<
+  TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
+> = TypedEventTarget<
+  PubSubEvent<
+    TPubSubPublishArgsByKey,
+    Extract<keyof TPubSubPublishArgsByKey, string>
+  >
+>
+
+export type ChannelPubSubConfig<
+  TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
+> = {
+  /**
+   * The event target. If not specified an (in-memory) EventTarget will be created.
+   * For multiple server replica or serverless environments a distributed EventTarget is recommended.
+   *
+   * An event dispatched on the event target MUST have a `data` property.
+   */
+  eventTarget?: PubSubEventTarget<TPubSubPublishArgsByKey>
+  /**
+   * Event and EventTarget implementation.
+   * Providing this is mandatory for a Node.js versions below 16.
+   */
+  event?: EventAPI
+}
+
+const resolveGlobalConfig = (api: EventAPI = globalThis): EventAPI => {
+  if (!api.Event || !api.EventTarget) {
+    throw new Error(`
+[@graphql-yoga/subscription] 'createPubSub' uses the Event and EventTarget APIs.
+
+In modern JavaScript environments those are part of the global scope. However, if you are using an older version of Node.js (<= 16.x.x), those APIs must be polyfilled.
+You can provide polyfills to the 'createPubSub' function:
+
+\`\`\`
+// yarn install @ungap/event @ungap/event-target
+import Event from '@ungap/event'
+import EventTarget from '@ungap/event-target'
+
+const pubSub = createPubSub({
+event: {
+    Event,
+    EventTarget,
+}
+})
+\`\`\`
+`)
+  }
+
+  return globalThis
+}
+
 /**
  * Utility for publishing and subscribing to events.
  */
 export const createPubSub = <
   TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
 >(
-  config?: ChannelPubSubConfig,
+  config?: ChannelPubSubConfig<TPubSubPublishArgsByKey>,
 ) => {
   const { Event, EventTarget } = resolveGlobalConfig(config?.event)
 
