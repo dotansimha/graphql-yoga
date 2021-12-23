@@ -1,5 +1,5 @@
 import { yogaHandler } from '$lib/graphql/yogaHandler';
-import { BaseGraphQLServer } from '@graphql-yoga/core';
+import { createServer } from '@graphql-yoga/core';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 const defaultQuery = `query GetHello {
@@ -7,8 +7,8 @@ const defaultQuery = `query GetHello {
 }
 `;
 
-const graphQLServer = new BaseGraphQLServer({
-	typeDefs: ``,
+const graphQLServer = createServer({
+	typeDefs: `type Query`, //Just to not be empty, but will query the real endpoint
 	graphiql: {
 		endpoint: '/api/graphql',
 		defaultQuery
