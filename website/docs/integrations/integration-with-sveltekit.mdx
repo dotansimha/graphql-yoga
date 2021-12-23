@@ -1,0 +1,117 @@
+---
+id: integration-with-sveltekit
+title: integration with SvelteKit
+sidebar_label: SvelteKit
+---
+
+[SvelteKit is the fastest way to build svelte apps.](https://kit.svelte.dev/) It is very simple, and let you build frontend & backend in a single place.
+
+You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQL & SvelteKit at the same time. [Envelop ecosystem](https://www.envelop.dev) to name only one!
+
+## Installation
+
+In a SvelteKit project:
+
+<PackageInstall packages={['-D @graphql-yoga/core@0.2.0-alpha.2']} />
+
+## Example
+
+### 1/ Add the yogaHandler
+
+Create the file `src/lib/graphql/yogaHandler.ts`:
+
+```ts
+import type { BaseGraphQLServer } from '@graphql-yoga/core'
+import type { ResponseHeaders } from '@sveltejs/kit/types/helper'
+import type { ServerRequest, ServerResponse } from '@sveltejs/kit/types/hooks'
+
+export async function yogaHandler(
+  req: ServerRequest,
+  graphQLServer: BaseGraphQLServer<unknown>,
+): Promise<ServerResponse> {
+  const request = new Request(`http://${req.host}/${req.path}`, {
+    method: req.method,
+    headers: req.headers,
+    body: req.rawBody,
+  })
+  const response: Response = await graphQLServer.handleRequest(request)
+
+  const responseHeaders: ResponseHeaders = {}
+
+  response.headers.forEach((value, key) => {
+    responseHeaders[key] = value
+  })
+
+  const responseBodyText = await response.text()
+
+  return {
+    status: response.status,
+    headers: responseHeaders,
+    body: responseBodyText,
+  }
+}
+```
+
+### 2/ Create your graphql endpoint
+
+Create the file `src/routes/api/graphql.ts`:
+
+```ts
+import { yogaHandler } from '$lib/graphql/yogaHandler'
+import { BaseGraphQLServer } from '@graphql-yoga/core'
+import type { ServerRequest } from '@sveltejs/kit/types/hooks'
+
+export async function get() {
+  return {
+    status: 302,
+    headers: { Location: '/' },
+  }
+}
+
+const yogaApp = new BaseGraphQLServer({
+  isDev: true,
+  typeDefs: `
+		type Query {
+			hello: String
+		}
+	`,
+  resolvers: {
+    Query: {
+      hello: () => 'GraphQL Yoga - SvelteKit',
+    },
+  },
+})
+
+export async function post(req: ServerRequest) {
+  return yogaHandler(req, yogaApp)
+}
+```
+
+### 3/ Create your graphiql page
+
+Create the file `src/routes/api/graphiql.ts`:
+
+```ts
+import { yogaHandler } from '$lib/graphql/yogaHandler'
+import { BaseGraphQLServer } from '@graphql-yoga/core'
+import type { ServerRequest } from '@sveltejs/kit/types/hooks'
+
+const defaultQuery = `query GetHello {
+  hello
+}
+`
+
+const graphQLServer = new BaseGraphQLServer({
+  typeDefs: ``,
+  graphiql: {
+    endpoint: '/api/graphql',
+    defaultQuery,
+  },
+})
+
+export async function get(req: ServerRequest) {
+  return yogaHandler(req, graphQLServer)
+}
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/sveltekit)
