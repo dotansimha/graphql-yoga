@@ -1,5 +1,5 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
-import { createServer } from 'graphql-yoga'
+import { createServer, GraphQLServerError } from 'graphql-yoga'
 import { AddressInfo } from 'net'
 import EventSource from 'eventsource'
 import request from 'supertest'
@@ -133,5 +133,86 @@ describe('Incremental Delivery', () => {
     const { data } = JSON.parse(payload)
 
     expect(data.ping).toBe('pong')
+  })
+})
+
+describe('Masked Error Option', () => {
+  const typeDefs = /* GraphQL */ `
+    type Query {
+      hello: String
+      hi: String
+    }
+  `
+
+  const resolvers = {
+    Query: {
+      hello: () => {
+        throw new GraphQLServerError('This error never gets masked.')
+      },
+      hi: () => {
+        throw new Error('This error will get mask if you enable maskedError.')
+      },
+    },
+  }
+
+  it('should mask error', async () => {
+    const server = createServer({
+      typeDefs,
+      resolvers,
+      maskedErrors: true,
+      enableLogging: false,
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hi hello }',
+    })
+
+    expect(executionResult.data.hi).toBeNull()
+    expect(executionResult.errors![0].message).toBe('Unexpected error.')
+    expect(executionResult.data.hello).toBeNull()
+    expect(executionResult.errors![1].message).toBe(
+      'This error never gets masked.',
+    )
+  })
+
+  it('should mask error with custom message', async () => {
+    const server = createServer({
+      typeDefs,
+      resolvers,
+      maskedErrors: { errorMessage: 'Hahahaha' },
+      enableLogging: false,
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hello hi }',
+    })
+
+    expect(executionResult.data.hello).toBeNull()
+    expect(executionResult.errors![0].message).toBe(
+      'This error never gets masked.',
+    )
+    expect(executionResult.data.hi).toBeNull()
+    expect(executionResult.errors![1].message).toBe('Hahahaha')
+  })
+
+  it('should not mask errors by default', async () => {
+    const server = createServer({
+      typeDefs,
+      resolvers,
+      enableLogging: false,
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hi hello }',
+    })
+
+    expect(executionResult.data.hi).toBeNull()
+    expect(executionResult.errors![0].message).toBe(
+      'This error will get mask if you enable maskedError.',
+    )
+    expect(executionResult.data.hello).toBeNull()
+    expect(executionResult.errors![1].message).toBe(
+      'This error never gets masked.',
+    )
   })
 })

@@ -5,6 +5,7 @@ import {
   GetEnvelopedFn,
   envelop,
   useMaskedErrors,
+  UseMaskedErrorsOpts,
   useExtendContext,
   enableIf,
   useLogger,
@@ -52,6 +53,16 @@ export type ServerOptions<TContext> = {
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
   cors?: ((request: Request) => ServerCORSOptions) | ServerCORSOptions | boolean
   graphiql?: GraphiQLOptions | boolean
+  /**
+   * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
+   * If you throw `GraphQLServerError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+   *
+   * You can lean more about this here:
+   * @see https://www.envelop.dev/plugins/use-masked-errors
+   *
+   * Default: `false`
+   */
+  maskedErrors?: boolean | UseMaskedErrorsOpts
 } & (
   | {
       schema: GraphQLSchema
@@ -93,6 +104,8 @@ export class Server<TContext> {
     this.logger = console
     this.isDev = options.isDev ?? false
 
+    const maskedErrorsOpts = options.maskedErrors ?? !this.isDev
+
     this.getEnveloped = envelop({
       plugins: [
         // Use the schema provided by the user
@@ -133,7 +146,12 @@ export class Server<TContext> {
         // Disable introspection in production
         enableIf(!this.isDev, useDisableIntrospection()),
         // Mask errors in production
-        enableIf(!this.isDev, useMaskedErrors()),
+        enableIf(
+          !!maskedErrorsOpts,
+          useMaskedErrors(
+            typeof maskedErrorsOpts === 'object' ? maskedErrorsOpts : undefined,
+          ),
+        ),
         ...(options.context != null
           ? [
               useExtendContext(
