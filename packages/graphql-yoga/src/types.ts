@@ -24,14 +24,14 @@ export type ServerOptions<TContext> = BaseServerOptions<TContext> & {
    */
   hostname?: string
   /**
-   * Enable pino logging
-   * @default true
-   */
-  enableLogging?: boolean
-  /**
    * Enable HTTPS
    */
   https?: HttpsServerOptions | boolean
+  /**
+   * Pretty logging with Pino
+   */
+  prettyLog?: boolean
+  logLevel?: 'debug' | 'info'
 }
 
 export type GraphQLServerInject<

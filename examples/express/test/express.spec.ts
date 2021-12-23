@@ -1,7 +1,7 @@
 import { buildApp } from "../src/app";
 import request from 'supertest'
 
-describe('fastify', () => {
+describe('express', () => {
     const app = buildApp();
     it('should show GraphiQL', async () => {
         const response = await request(app).get('/graphql').set('Accept', 'text/html');

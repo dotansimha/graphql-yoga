@@ -27,7 +27,9 @@ export function buildApp() {
                     },
                 },
             }
-        }
+        },
+        // Integrate Fastify Logger to Yoga
+        logger: app.log
     });
 
     app.route({

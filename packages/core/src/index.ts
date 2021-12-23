@@ -5,6 +5,7 @@ import {
   GetEnvelopedFn,
   envelop,
   useMaskedErrors,
+  UseMaskedErrorsOpts,
   useExtendContext,
   enableIf,
   useLogger,
@@ -32,6 +33,8 @@ const DEFAULT_CORS_OPTIONS: ServerCORSOptions = {
   optionsSuccessStatus: 204,
 }
 
+export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
+
 /**
  * Configuration options for the server
  */
@@ -42,15 +45,48 @@ export type ServerOptions<TContext> = {
    */
   plugins?: Array<Plugin<TContext>>
   /**
-   * Detect server environment
+   * Enable logging
+   * @default true
+   */
+  enableLogging?: boolean
+  /**
+   * Custom logger
+   *
+   * @default console
+   */
+  logger?: YogaLogger
+  /**
+   * Allow introspection query. This is useful for exploring the API with tools like GraphiQL.
+   * If you are making a private GraphQL API,
+   * it is suggested that you disable this in production so that
+   * potential malicious API consumers do not see what all operations are possible.
+   *
+   * You can learn more about GraphQL introspection here:
+   * @see https://graphql.org/learn/introspection/
+   *
+   * Default: `true`
+   */
+  introspection?: boolean
+  /**
+   * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
+   * If you throw `GraphQLServerError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+   *
+   * You can lean more about this here:
+   * @see https://www.envelop.dev/plugins/use-masked-errors
+   *
    * Default: `false`
    */
-  isDev?: boolean
+  maskedErrors?: boolean | UseMaskedErrorsOpts
   /**
    * Context
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
   cors?: ((request: Request) => ServerCORSOptions) | ServerCORSOptions | boolean
+  /**
+   * GraphiQL options
+   *
+   * Default: `true`
+   */
   graphiql?: GraphiQLOptions | boolean
 } & (
   | {
@@ -76,8 +112,7 @@ export class Server<TContext> {
    * Instance of envelop
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
-  protected isDev: boolean
-  public logger: Pick<Console, 'log' | 'debug' | 'error' | 'warn' | 'info'>
+  public logger: YogaLogger
   public readonly corsOptionsFactory?: (request: Request) => ServerCORSOptions
   public readonly graphiql: GraphiQLOptions | false
 
@@ -90,8 +125,18 @@ export class Server<TContext> {
             resolvers: options.resolvers,
           })
 
-    this.logger = console
-    this.isDev = options.isDev ?? false
+    this.logger = options.enableLogging
+      ? options.logger || console
+      : {
+          debug: () => {},
+          error: () => {},
+          warn: () => {},
+          info: () => {},
+        }
+
+    const maskedErrors = options.maskedErrors || false
+
+    const introspectionEnabled = options.introspection ?? true
 
     this.getEnveloped = envelop({
       plugins: [
@@ -107,7 +152,7 @@ export class Server<TContext> {
         }),
         // Log events - useful for debugging purposes
         enableIf(
-          this.isDev,
+          !!options.enableLogging,
           useLogger({
             logFn: (eventName, events) => {
               if (eventName === 'execute-start') {
@@ -130,10 +175,13 @@ export class Server<TContext> {
             },
           }),
         ),
-        // Disable introspection in production
-        enableIf(!this.isDev, useDisableIntrospection()),
-        // Mask errors in production
-        enableIf(!this.isDev, useMaskedErrors()),
+        enableIf(!introspectionEnabled, useDisableIntrospection()),
+        enableIf(
+          !!maskedErrors,
+          useMaskedErrors(
+            typeof maskedErrors === 'object' ? maskedErrors : undefined,
+          ),
+        ),
         ...(options.context != null
           ? [
               useExtendContext(
@@ -171,7 +219,7 @@ export class Server<TContext> {
     if (typeof options.graphiql === 'object' || options.graphiql === false) {
       this.graphiql = options.graphiql
     } else {
-      this.graphiql = this.isDev ? {} : false
+      this.graphiql = introspectionEnabled ? {} : false
     }
   }
 }
