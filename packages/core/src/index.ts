@@ -33,6 +33,11 @@ const DEFAULT_CORS_OPTIONS: ServerCORSOptions = {
   optionsSuccessStatus: 204,
 }
 
+export type YogaLogger = Pick<
+  Console,
+  'log' | 'debug' | 'error' | 'warn' | 'info'
+>
+
 /**
  * Configuration options for the server
  */
@@ -43,11 +48,16 @@ export type ServerOptions<TContext> = {
    */
   plugins?: Array<Plugin<TContext>>
   /**
-   * Enable logger
-   *
-   * Default: `false`
+   * Enable logging
+   * @default true
    */
-  logger?: boolean
+  enableLogging?: boolean
+  /**
+   * Custom logger
+   *
+   * @default console
+   */
+  logger?: YogaLogger
   /**
    * Allow introspection query. This is useful for exploring the API with tools like GraphiQL.
    * If you are making a private GraphQL API,
@@ -118,8 +128,8 @@ export class Server<TContext> {
             resolvers: options.resolvers,
           })
 
-    this.logger = options.logger
-      ? console
+    this.logger = options.enableLogging
+      ? options.logger || console
       : {
           log: () => {},
           debug: () => {},
@@ -141,7 +151,7 @@ export class Server<TContext> {
         useExtendContext(() => ({ logger: this.logger })),
         // Log events - useful for debugging purposes
         enableIf(
-          options.logger ?? false,
+          !!options.enableLogging,
           useLogger({
             logFn: (eventName, events) => {
               if (eventName === 'execute-start') {

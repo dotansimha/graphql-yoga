@@ -20,23 +20,18 @@ We are actively working on API for the library. This is a very simple example of
 
 ```js
 const { createServer } = require('graphql-yoga')
-const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
-
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'Query',
-    fields: () => ({
-      ping: {
-        type: GraphQLString,
-        resolve: () => 'pong',
-      },
-    }),
-  }),
-})
 // Provide your schema
 const server = createServer({
-  schema,
-  isDev: process.env.NODE_ENV !== 'production',
+  typeDefs: `
+    type Query {
+      ping: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      ping: () => 'pong',
+    },
+  },
 })
 // Start the server and explore http://localhost:4000/graphql
 server.start()

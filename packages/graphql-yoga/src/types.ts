@@ -24,20 +24,14 @@ export type ServerOptions<TContext> = BaseServerOptions<TContext> & {
    */
   hostname?: string
   /**
-   * Enable pino logging
-   * @default true
-   */
-  enableLogging?: boolean
-  /**
    * Enable HTTPS
    */
   https?: HttpsServerOptions | boolean
   /**
-   * Detect Environment
-   *
-   * Default: Check for `process.env.NODE_ENV === 'production'`
+   * Pretty logging with Pino
    */
-  isDev?: boolean
+  prettyLog?: boolean
+  logLevel?: 'debug' | 'info'
 }
 
 export type GraphQLServerInject<

@@ -7,11 +7,43 @@ import {
 import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
 import { getNodeRequest, sendNodeResponse } from '@ardatan/graphql-helix'
-import { Server as BaseServer } from '@graphql-yoga/core'
+import { Server as BaseServer, YogaLogger } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import type { GraphQLServerInject, ServerOptions } from './types'
 import LightMyRequest from 'light-my-request'
 import { ExecutionResult, print } from 'graphql'
+
+function getPinoLogger<TContext>(options: ServerOptions<TContext>): YogaLogger {
+  const prettyLog = options.prettyLog ?? process.env.NODE_ENV !== 'production'
+  const logLevel =
+    options.logLevel ?? process.env.NODE_ENV !== 'production' ? 'debug' : 'info'
+
+  const prettyPrintOptions = prettyLog
+    ? {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            translateTime: true,
+            colorize: true,
+          },
+        },
+      }
+    : {}
+
+  const pinoLogger = pino({
+    ...prettyPrintOptions,
+    level: logLevel,
+    enabled: true,
+  })
+
+  return {
+    log: (...args) => pinoLogger.info(...args),
+    debug: (...args) => pinoLogger.debug(...args),
+    error: (...args) => pinoLogger.error(...args),
+    warn: (...args) => pinoLogger.warn(...args),
+    info: (...args) => pinoLogger.info(...args),
+  }
+}
 
 class Server<TContext> extends BaseServer<TContext> {
   /**
@@ -26,54 +58,16 @@ class Server<TContext> extends BaseServer<TContext> {
    * Hostname for server
    */
   private hostname: string
-  /**
-   * Detect Server environment
-   */
-  protected isDev: boolean
   private _server: NodeServer
 
   constructor(options: ServerOptions<TContext>) {
-    super(options)
+    super({
+      ...options,
+      logger: options.logger || getPinoLogger(options),
+    })
     this.port = options.port || parseInt(process.env.PORT || '4000')
     this.endpoint = options.endpoint || '/graphql'
     this.hostname = options.hostname || '0.0.0.0'
-    // This should make default to dev mode based on environment variable
-    this.isDev = options.isDev ?? process.env.NODE_ENV !== 'production'
-
-    // Pretty printing only in dev
-    const prettyPrintOptions = this.isDev
-      ? {
-          transport: {
-            target: 'pino-pretty',
-            options: {
-              translateTime: true,
-              colorize: true,
-            },
-          },
-        }
-      : {}
-
-    const pinoLogger = pino({
-      ...prettyPrintOptions,
-      level: this.isDev ? 'debug' : 'info',
-      enabled: options.enableLogging ?? true,
-    })
-
-    this.logger = options.logger
-      ? {
-          log: (...args) => pinoLogger.info(...args),
-          debug: (...args) => pinoLogger.debug(...args),
-          error: (...args) => pinoLogger.error(...args),
-          warn: (...args) => pinoLogger.warn(...args),
-          info: (...args) => pinoLogger.info(...args),
-        }
-      : {
-          log: () => {},
-          debug: () => {},
-          error: () => {},
-          warn: () => {},
-          info: () => {},
-        }
 
     this.logger.debug('Setting up server.')
 
