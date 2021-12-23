@@ -137,17 +137,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ardatan/graphql-helix@npm:0.0.6":
-  version: 0.0.6
-  resolution: "@ardatan/graphql-helix@npm:0.0.6"
-  dependencies:
-    cross-undici-fetch: 0.1.4
-  peerDependencies:
-    graphql: ^15.3.0 || ^16.0.0
-  checksum: 8d0ec3d31817366321736853b4065a03dee05d59ec428942bff2287e78c0623712813c6dc43a7d3e4dba8f021c6aa5e3bcc12538949aae8ce208b71109f01e65
-  languageName: node
-  linkType: hard
-
 "@ardatan/graphql-helix@npm:0.0.8":
   version: 0.0.8
   resolution: "@ardatan/graphql-helix@npm:0.0.8"
@@ -3931,22 +3920,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-yoga/core@npm:0.3.0-canary-352ac0f.0":
-  version: 0.3.0-canary-352ac0f.0
-  resolution: "@graphql-yoga/core@npm:0.3.0-canary-352ac0f.0"
-  dependencies:
-    "@envelop/core": ^1.6.2
-    "@envelop/disable-introspection": ^1.2.1
-    "@envelop/parser-cache": ^2.2.1
-    "@envelop/validation-cache": ^2.2.1
-    "@graphql-tools/schema": 8.3.1
-    "@graphql-yoga/handler": 0.3.0-canary-352ac0f.0
-  peerDependencies:
-    graphql: ^15.2.0 || ^16.0.0
-  checksum: 3014bae53a32ebd867253788898f12cf1b6b7c4e9d7f574684fc12d2c1b2f8f8e89b00c56cf9d2276600f12df005873db1601ac644cb65ec8dd1fd2d763fc8cf
-  languageName: node
-  linkType: hard
-
 "@graphql-yoga/handler@0.2.0-alpha.1, @graphql-yoga/handler@workspace:packages/handler":
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
@@ -3970,18 +3943,6 @@ __metadata:
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
   checksum: d3b8b6cff71fc26502e2126b37341128176fc73866e4384c4344a7179e69dfc6f15c83f95130853d08c196a3562d7fa61a5c5fb0c6cee15a54c1b21d77f3fdc9
-  languageName: node
-  linkType: hard
-
-"@graphql-yoga/handler@npm:0.3.0-canary-352ac0f.0":
-  version: 0.3.0-canary-352ac0f.0
-  resolution: "@graphql-yoga/handler@npm:0.3.0-canary-352ac0f.0"
-  dependencies:
-    "@ardatan/graphql-helix": 0.0.6
-    cross-undici-fetch: ^0.1.4
-  peerDependencies:
-    graphql: ^15.2.0 || ^16.0.0
-  checksum: 6f28e168c525f84c910f387efba5327804663d97c1e5c0713fb396902c7e8fc7d619405e2faec6c6df21973bd75d10b9b6627ae1600534d22cace79037638018
   languageName: node
   linkType: hard
 
@@ -8040,19 +8001,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-undici-fetch@npm:0.1.4, cross-undici-fetch@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "cross-undici-fetch@npm:0.1.4"
-  dependencies:
-    abort-controller: ^3.0.0
-    form-data-encoder: ^1.7.1
-    formdata-node: ^4.3.1
-    node-fetch: ^2.6.5
-    undici: ^4.9.3
-  checksum: 4b78f743ce863f91b5553eea926bf30e7d326c90dc9e708531565874ffba04f79364aabd32c78171567a543c2a819daa1a033a8c5a2c9c525d07e55da9e9f3bc
-  languageName: node
-  linkType: hard
-
 "cross-undici-fetch@npm:^0.0.20":
   version: 0.0.20
   resolution: "cross-undici-fetch@npm:0.0.20"
@@ -8075,6 +8023,19 @@ __metadata:
     node-fetch: ^2.6.5
     undici: ^4.9.3
   checksum: 67a03fbb2aa02d5d1ed2247f10d8694c6487b57ab4f22b1c909e69257c4c4b5e471b6be58d6e0d1d1161d3cabb06c802aac9b58e346db1f973295b6741cd8a40
+  languageName: node
+  linkType: hard
+
+"cross-undici-fetch@npm:^0.1.4":
+  version: 0.1.4
+  resolution: "cross-undici-fetch@npm:0.1.4"
+  dependencies:
+    abort-controller: ^3.0.0
+    form-data-encoder: ^1.7.1
+    formdata-node: ^4.3.1
+    node-fetch: ^2.6.5
+    undici: ^4.9.3
+  checksum: 4b78f743ce863f91b5553eea926bf30e7d326c90dc9e708531565874ffba04f79364aabd32c78171567a543c2a819daa1a033a8c5a2c9c525d07e55da9e9f3bc
   languageName: node
   linkType: hard
 
@@ -18189,7 +18150,7 @@ resolve@1.15.1:
   version: 0.0.0-use.local
   resolution: "sveltekit@workspace:examples/sveltekit"
   dependencies:
-    "@graphql-yoga/core": 0.3.0-canary-352ac0f.0
+    "@graphql-yoga/core": 0.2.0-alpha.2
     "@sveltejs/adapter-auto": next
     "@sveltejs/kit": next
     "@typescript-eslint/eslint-plugin": ^4.31.1
