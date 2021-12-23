@@ -1,5 +1,11 @@
 # @graphql-yoga/cli
 
+## 0.0.1-alpha.2
+
+### Patch Changes
+
+- graphql-yoga@2.0.0-alpha.5
+
 ## 0.0.1-alpha.1
 
 ### Patch Changes

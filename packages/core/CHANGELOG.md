@@ -1,5 +1,11 @@
 # @graphql-yoga/core
 
+## 0.2.0-alpha.4
+
+### Minor Changes
+
+- d2c2d18: expose options for enabling introspection and maskedErrors
+
 ## 0.2.0-alpha.3
 
 ### Minor Changes
