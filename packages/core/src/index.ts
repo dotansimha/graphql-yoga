@@ -33,10 +33,7 @@ const DEFAULT_CORS_OPTIONS: ServerCORSOptions = {
   optionsSuccessStatus: 204,
 }
 
-export type YogaLogger = Pick<
-  Console,
-  'log' | 'debug' | 'error' | 'warn' | 'info'
->
+export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
 
 /**
  * Configuration options for the server
@@ -115,7 +112,7 @@ export class Server<TContext> {
    * Instance of envelop
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
-  public logger: Pick<Console, 'log' | 'debug' | 'error' | 'warn' | 'info'>
+  public logger: YogaLogger
   public readonly corsOptionsFactory?: (request: Request) => ServerCORSOptions
   public readonly graphiql: GraphiQLOptions | false
 
@@ -131,7 +128,6 @@ export class Server<TContext> {
     this.logger = options.enableLogging
       ? options.logger || console
       : {
-          log: () => {},
           debug: () => {},
           error: () => {},
           warn: () => {},

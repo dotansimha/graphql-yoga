@@ -48,7 +48,6 @@ server.start()
 ## Features
 
 - GraphQL spec-compliant
-- HTTP based on [`fastify`](https://fastify.io)
 - TypeScript
 - File upload
 - Realtime capabilities

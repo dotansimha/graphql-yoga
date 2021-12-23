@@ -30,19 +30,11 @@ function getPinoLogger<TContext>(options: ServerOptions<TContext>): YogaLogger {
       }
     : {}
 
-  const pinoLogger = pino({
+  return pino({
     ...prettyPrintOptions,
     level: logLevel,
     enabled: true,
   })
-
-  return {
-    log: (...args) => pinoLogger.info(...args),
-    debug: (...args) => pinoLogger.debug(...args),
-    error: (...args) => pinoLogger.error(...args),
-    warn: (...args) => pinoLogger.warn(...args),
-    info: (...args) => pinoLogger.info(...args),
-  }
 }
 
 class Server<TContext> extends BaseServer<TContext> {
@@ -108,7 +100,7 @@ class Server<TContext> extends BaseServer<TContext> {
   start(
     callback: VoidFunction = () => {
       this.logger.info(
-        `GraphQL server running at http://${this.hostname}:${this.port}${this.endpoint}.`,
+        `GraphQL Server running at http://${this.hostname}:${this.port}${this.endpoint}.`,
       )
     },
   ) {
