@@ -27,7 +27,7 @@ export function buildApp() {
                     }
                 },
             }
-        }
+        },
     });
 
     app.use('/graphql', graphQLServer.requestListener);
