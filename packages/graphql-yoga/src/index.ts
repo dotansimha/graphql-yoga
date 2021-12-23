@@ -207,6 +207,9 @@ export function createServer<TContext>(options: ServerOptions<TContext>) {
 }
 
 export type { ServerOptions } from './types'
-export { createPubSub } from './pubsub'
+export { createPubSub } from './subscription/pubsub'
+export { map } from './subscription/operators/map'
+export { filter } from './subscription/operators/filter'
+
 export * from '@envelop/core'
 export { EnvelopError as GraphQLServerError } from '@envelop/core'

@@ -1,4 +1,4 @@
-import { makePushPullAsyncIterableIterator } from '@n1ru4l/push-pull-async-iterable-iterator'
+import { Repeater } from '@repeaterjs/repeater'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]
@@ -10,6 +10,13 @@ type EventAPI = {
 }
 
 type ChannelPubSubConfig = {
+  /**
+   * The event target. If not specified an (in-memory) EventTarget will be created.
+   * For multiple server replica or serverless environments a distributed EventTarget is recommended.
+   *
+   * An event dispatched on the event target MUST have a `data` property.
+   */
+  eventTarget?: EventTarget
   /**
    * Event and EventTarget implementation.
    * Providing this is mandatory for a Node.js versions below 16.
@@ -43,7 +50,7 @@ const pubSub = createPubSub({
   return globalThis
 }
 
-type PubSubEvent<
+export type PubSubEvent<
   TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
   TKey extends Extract<keyof TPubSubPublishArgsByKey, string>,
 > = Event & {
@@ -62,7 +69,7 @@ export const createPubSub = <
 ) => {
   const { Event, EventTarget } = resolveGlobalConfig(config?.event)
 
-  const target = new EventTarget()
+  const target = config?.eventTarget ?? new EventTarget()
 
   return {
     publish<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
@@ -79,7 +86,7 @@ export const createPubSub = <
       ...[routingKey, id]: TPubSubPublishArgsByKey[TKey][1] extends undefined
         ? [TKey]
         : [TKey, TPubSubPublishArgsByKey[TKey][0]]
-    ): AsyncGenerator<
+    ): Repeater<
       TPubSubPublishArgsByKey[TKey][1] extends undefined
         ? TPubSubPublishArgsByKey[TKey][0]
         : TPubSubPublishArgsByKey[TKey][1]
@@ -87,30 +94,19 @@ export const createPubSub = <
       const topic =
         id === undefined ? routingKey : `${routingKey}:${id as number}`
 
-      const { pushValue, asyncIterableIterator } =
-        makePushPullAsyncIterableIterator<
-          TPubSubPublishArgsByKey[TKey][1] extends undefined
-            ? TPubSubPublishArgsByKey[TKey][0]
-            : TPubSubPublishArgsByKey[TKey][1]
-        >()
+      return new Repeater(function subscriptionRepeater(next, stop) {
+        stop.then(function subscriptionRepeaterStopHandler() {
+          target.removeEventListener(topic, pubsubEventListener)
+        })
 
-      function pubsubEventListener(
-        event: PubSubEvent<TPubSubPublishArgsByKey, TKey>,
-      ) {
-        pushValue(event.data)
-      }
-      target.addEventListener(topic, pubsubEventListener)
+        target.addEventListener(topic, pubsubEventListener)
 
-      const originalReturn = asyncIterableIterator.return.bind(
-        asyncIterableIterator,
-      )
-
-      asyncIterableIterator.return = (...args) => {
-        target.removeEventListener(topic, pubsubEventListener)
-        return originalReturn(...args)
-      }
-
-      return asyncIterableIterator
+        function pubsubEventListener(
+          event: PubSubEvent<TPubSubPublishArgsByKey, TKey>,
+        ) {
+          next(event.data)
+        }
+      })
     },
   }
 }
