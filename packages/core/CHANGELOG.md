@@ -1,5 +1,11 @@
 # @graphql-yoga/core
 
+## 0.2.0-alpha.3
+
+### Minor Changes
+
+- fb894da: Rename createGraphQLServer to createServer
+
 ## 0.2.0-alpha.2
 
 ### Minor Changes
