@@ -1,5 +1,5 @@
 import { yogaHandler } from '$lib/graphql/yogaHandler';
-import { BaseGraphQLServer } from '@graphql-yoga/core';
+import { createServer } from '@graphql-yoga/core';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 export async function get() {
@@ -9,7 +9,7 @@ export async function get() {
 	};
 }
 
-const yogaApp = new BaseGraphQLServer({
+const yogaApp = createServer({
 	isDev: true,
 	typeDefs: `
 		type Query {
