@@ -11,8 +11,6 @@ const server = createServer({
       hello: () => 'Hello World',
     },
   },
-  isDev: false,
-  enableLogging: false,
 })
 
 server.start()

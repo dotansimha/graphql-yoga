@@ -136,6 +136,8 @@ export class Server<TContext> {
 
     const maskedErrors = options.maskedErrors || false
 
+    const introspectionEnabled = options.introspection ?? true
+
     this.getEnveloped = envelop({
       plugins: [
         // Use the schema provided by the user
@@ -173,7 +175,7 @@ export class Server<TContext> {
             },
           }),
         ),
-        enableIf(!(options.introspection ?? true), useDisableIntrospection()),
+        enableIf(!introspectionEnabled, useDisableIntrospection()),
         enableIf(
           !!maskedErrors,
           useMaskedErrors(
@@ -217,7 +219,7 @@ export class Server<TContext> {
     if (typeof options.graphiql === 'object' || options.graphiql === false) {
       this.graphiql = options.graphiql
     } else {
-      this.graphiql = {}
+      this.graphiql = introspectionEnabled ? {} : false
     }
   }
 }
