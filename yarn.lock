@@ -3980,7 +3980,7 @@ __metadata:
     "@types/node": ^16.11.7
     "@types/react": ^17.0.37
     "@types/react-dom": ^17.0.11
-    bob-tsm: ^0.3.6
+    bob-tsm: ^0.4.0
     concurrently: ^6.4.0
     cross-env: ^7.0.3
     esbuild: ^0.14.2
@@ -6761,19 +6761,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bob-tsm@npm:^0.3.6":
-  version: 0.3.6
-  resolution: "bob-tsm@npm:0.3.6"
+"bob-tsm@npm:^0.4.0":
+  version: 0.4.1
+  resolution: "bob-tsm@npm:0.4.1"
   dependencies:
     fsevents: ~2.3.2
   peerDependencies:
-    esbuild: "*"
+    esbuild: ">=0.13.14"
+    typescript: ">=4.1.2"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     bob-tsm: bin.mjs
-  checksum: cba11a804cc0c726c96088889f2245b50d57465ec11fed35f42dc3e2e05147a1e71fe105948a11b6a09de3cdd3dde47f664fb72ae60af4167b7f77f7b574d1d2
+  checksum: 2d590c910054fe2122446014bece803083d2fe92b0fdd12e5dde16b0bfe4b5be7c7c340b0666c2603831164ce792dc1aa63b0f4479d92685a0c3595178a7ca5a
   languageName: node
   linkType: hard
 
