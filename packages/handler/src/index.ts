@@ -98,3 +98,4 @@ export async function handleRequest<TContext>(
 }
 
 export type GraphiQLOptions = RenderGraphiQLOptions
+export { renderGraphiQL } from '@ardatan/graphql-helix'

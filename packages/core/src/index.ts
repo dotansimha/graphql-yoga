@@ -227,3 +227,5 @@ export class Server<TContext> {
 export function createServer<TContext>(options: ServerOptions<TContext>) {
   return new Server<TContext>(options)
 }
+
+export { renderGraphiQL } from '@graphql-yoga/handler'
