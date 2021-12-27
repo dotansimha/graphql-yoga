@@ -1,5 +1,12 @@
 # defer-stream-example
 
+## 0.0.1-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [36af58e]
+  - graphql-yoga@2.0.0-alpha.6
+
 ## 0.0.1-alpha.2
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # graphql-yoga
 
+## 2.0.0-alpha.6
+
+### Minor Changes
+
+- 36af58e: export renderGraphiQL function
+
+### Patch Changes
+
+- Updated dependencies [36af58e]
+  - @graphql-yoga/core@0.2.0-alpha.5
+  - @graphql-yoga/handler@0.2.0-alpha.2
+
 ## 2.0.0-alpha.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graphql-yoga/handler
 
+## 0.2.0-alpha.2
+
+### Minor Changes
+
+- 36af58e: export renderGraphiQL function
+
 ## 0.2.0-alpha.1
 
 ### Minor Changes

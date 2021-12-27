@@ -1,5 +1,12 @@
 # hello-world
 
+## 0.0.1-alpha.5
+
+### Patch Changes
+
+- Updated dependencies [36af58e]
+  - graphql-yoga@2.0.0-alpha.6
+
 ## 0.0.1-alpha.4
 
 ### Patch Changes
