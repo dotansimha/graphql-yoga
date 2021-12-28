@@ -10,7 +10,6 @@ export async function get() {
 }
 
 const yogaApp = createServer({
-	isDev: true,
 	typeDefs: `
 		type Query {
 			hello: String
