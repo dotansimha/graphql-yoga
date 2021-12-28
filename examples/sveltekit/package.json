@@ -13,7 +13,6 @@
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
   },
   "devDependencies": {
-    "@graphql-yoga/core": "^0.2.0-alpha.5",
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/kit": "next",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
@@ -21,7 +20,6 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-svelte3": "^3.2.1",
-    "graphql": "^16.2.0",
     "prettier": "^2.4.1",
     "prettier-plugin-svelte": "^2.4.0",
     "svelte": "^3.44.0",
@@ -30,5 +28,9 @@
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
   },
+  "dependencies": {
+		"@graphql-yoga/core": "^0.2.0-alpha.5",
+		"graphql": "^16.2.0"
+	},
   "type": "module"
 }
