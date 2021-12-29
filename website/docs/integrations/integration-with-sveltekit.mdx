@@ -12,7 +12,7 @@ You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQ
 
 In a SvelteKit project:
 
-<PackageInstall packages={['-D @graphql-yoga/core@alpha']} />
+<PackageInstall packages={['graphql', '@graphql-yoga/core@alpha']} />
 
 ## Example
 
@@ -21,13 +21,13 @@ In a SvelteKit project:
 Create the file `src/lib/graphql/yogaHandler.ts`:
 
 ```ts
-import type { BaseGraphQLServer } from '@graphql-yoga/core'
+import type { Server } from '@graphql-yoga/core'
 import type { ResponseHeaders } from '@sveltejs/kit/types/helper'
 import type { ServerRequest, ServerResponse } from '@sveltejs/kit/types/hooks'
 
 export async function yogaHandler(
   req: ServerRequest,
-  graphQLServer: BaseGraphQLServer<unknown>,
+  graphQLServer: Server<unknown>,
 ): Promise<ServerResponse> {
   const request = new Request(`http://${req.host}/${req.path}`, {
     method: req.method,
@@ -69,7 +69,6 @@ export async function get() {
 }
 
 const yogaApp = createServer({
-  isDev: true,
   typeDefs: `
 		type Query {
 			hello: String
@@ -92,8 +91,7 @@ export async function post(req: ServerRequest) {
 Create the file `src/routes/api/graphiql.ts`:
 
 ```ts
-import { yogaHandler } from '$lib/graphql/yogaHandler'
-import { createServer } from '@graphql-yoga/core'
+import { renderGraphiQL } from '@graphql-yoga/core'
 import type { ServerRequest } from '@sveltejs/kit/types/hooks'
 
 const defaultQuery = `query GetHello {
@@ -101,16 +99,14 @@ const defaultQuery = `query GetHello {
 }
 `
 
-const graphQLServer = createServer({
-  typeDefs: `type Query`,
-  graphiql: {
-    endpoint: '/api/graphql',
-    defaultQuery,
-  },
-})
-
 export async function get(req: ServerRequest) {
-  return yogaHandler(req, graphQLServer)
+  return {
+    status: 200,
+    body: renderGraphiQL({
+      endpoint: '/api/graphql',
+      defaultQuery,
+    }),
+  }
 }
 ```
 

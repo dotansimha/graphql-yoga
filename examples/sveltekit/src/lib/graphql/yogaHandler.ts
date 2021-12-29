@@ -1,10 +1,10 @@
-import type { BaseGraphQLServer } from '@graphql-yoga/core';
+import type { Server } from '@graphql-yoga/core';
 import type { ResponseHeaders } from '@sveltejs/kit/types/helper';
 import type { ServerRequest, ServerResponse } from '@sveltejs/kit/types/hooks';
 
 export async function yogaHandler(
 	req: ServerRequest,
-	graphQLServer: BaseGraphQLServer<unknown>
+	graphQLServer: Server<unknown>
 ): Promise<ServerResponse> {
 	const request = new Request(`http://${req.host}/${req.path}`, {
 		method: req.method,
