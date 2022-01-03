@@ -29,7 +29,7 @@ export async function yogaHandler(
   req: ServerRequest,
   graphQLServer: Server<unknown>,
 ): Promise<ServerResponse> {
-  const request = new Request(`http://${req.host}/${req.path}`, {
+  const request = new Request(`http://${req.url.host}/${req.url.pathname}`, {
     method: req.method,
     headers: req.headers,
     body: req.rawBody,
