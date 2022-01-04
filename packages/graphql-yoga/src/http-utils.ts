@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'http'
 import type { Http2ServerResponse } from 'http2'
 import { Request, ReadableStream } from 'cross-undici-fetch'
 import { isAsyncIterable } from '@graphql-tools/utils'
+import { Readable } from 'stream'
 
 interface NodeRequest {
   protocol?: string
@@ -29,26 +30,14 @@ export async function getNodeRequest(
       method: nodeRequest.method,
     })
   } else if (maybeParsedBody) {
-    const request = new Request(fullUrl, {
+    return new Request(fullUrl, {
       headers: nodeRequest.headers,
       method: nodeRequest.method,
+      body:
+        typeof maybeParsedBody === 'string'
+          ? maybeParsedBody
+          : JSON.stringify(maybeParsedBody),
     })
-    Object.defineProperties(request, {
-      json: {
-        value: async () => maybeParsedBody,
-      },
-      text: {
-        value: async () => JSON.stringify(maybeParsedBody),
-      },
-      body: {
-        get: () =>
-          new Request(fullUrl, {
-            method: 'POST',
-            body: JSON.stringify(maybeParsedBody),
-          }).body,
-      },
-    })
-    return request
   } else if (isAsyncIterable(rawRequest)) {
     let iterator: AsyncIterator<any>
     const body = new ReadableStream({
@@ -93,52 +82,10 @@ export async function sendNodeResponse(
   serverResponse.statusCode = responseResult.status
   serverResponse.statusMessage = responseResult.statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
-  const responseBody = await (responseResult.body as unknown as Promise<
-    ReadableStream<Uint8Array> | AsyncIterable<Uint8Array> | null
-  >)
+  const responseBody = await (responseResult.body as unknown as Promise<any>)
   if (responseBody != null) {
-    // If the response body is a NodeJS Readable stream, we can pipe it to the response directly
-    if (typeof (responseBody as any).pipe === 'function') {
-      ;(responseBody as any).pipe(serverResponse)
-    } else {
-      // If it is a buffer
-      if (responseBody instanceof Uint8Array) {
-        serverResponse.write(responseBody)
-        // If it is an AsyncIterable
-      } else if (isAsyncIterable(responseBody)) {
-        for await (const chunk of responseBody) {
-          if (chunk) {
-            serverResponse.write(chunk)
-          }
-        }
-        // If it is a real ReadableStream
-      } else if (typeof responseBody.getReader === 'function') {
-        const reader = responseBody.getReader()
-        const asyncIterable: AsyncIterable<Uint8Array> = {
-          [Symbol.asyncIterator]: () => {
-            const reader = responseBody.getReader()
-            return {
-              next: () => reader.read() as Promise<IteratorResult<Uint8Array>>,
-              return: async () => {
-                reader.releaseLock()
-                return {
-                  done: true,
-                  value: undefined,
-                }
-              },
-            }
-          },
-        }
-        for await (const chunk of asyncIterable) {
-          if (chunk) {
-            serverResponse.write(chunk)
-          }
-        }
-        serverResponse.on('close', () => {
-          reader.releaseLock()
-        })
-      }
-      serverResponse.end()
-    }
+    const nodeReadable =
+      'pipe' in responseBody ? responseBody : Readable.from(responseBody)
+    nodeReadable.pipe(serverResponse)
   }
 }
