@@ -206,4 +206,4 @@ export * from '@graphql-yoga/subscription'
 
 export * from '@envelop/core'
 export { EnvelopError as GraphQLServerError } from '@envelop/core'
-export { renderGraphiQL } from '@ardatan/graphql-helix'
+export { renderGraphiQL } from '@graphql-yoga/handler'
