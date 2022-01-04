@@ -1,8 +1,9 @@
-const textEncoder = new TextEncoder()
-export function encodeString(str: string): Uint8Array {
-  // TODO: enhance this
-  if ('Buffer' in globalThis) {
-    return Buffer.from(str, 'utf8')
-  }
-  return textEncoder.encode(str)
+let encodeString: (str: string) => Uint8Array
+if ('Buffer' in globalThis) {
+  encodeString = (str) => Buffer.from(str, 'utf-8')
+} else {
+  const textEncoder = new TextEncoder()
+  encodeString = (str) => textEncoder.encode(str)
 }
+
+export { encodeString }
