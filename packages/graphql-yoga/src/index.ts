@@ -6,7 +6,7 @@ import {
 } from 'http'
 import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
-import { getNodeRequest, sendNodeResponse } from '@ardatan/graphql-helix'
+import { getNodeRequest, sendNodeResponse } from './http-utils'
 import { Server as BaseServer, YogaLogger } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import type { GraphQLServerInject, ServerOptions } from './types'

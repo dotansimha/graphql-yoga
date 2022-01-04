@@ -1,4 +1,8 @@
-import { GraphiQLOptions, handleRequest } from '@graphql-yoga/handler'
+import {
+  CORSOptions,
+  GraphiQLOptions,
+  handleRequest,
+} from '@graphql-yoga/handler'
 import { GraphQLSchema } from 'graphql'
 import {
   Plugin,
@@ -17,17 +21,7 @@ import { useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
 
-export type ServerCORSOptions = {
-  origin: string[]
-  methods?: string[]
-  allowedHeaders?: string[]
-  exposedHeaders?: string[]
-  credentials?: boolean
-  maxAge?: number
-  optionsSuccessStatus?: number
-}
-
-const DEFAULT_CORS_OPTIONS: ServerCORSOptions = {
+const DEFAULT_CORS_OPTIONS: CORSOptions = {
   origin: ['*'],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   optionsSuccessStatus: 204,
@@ -81,7 +75,7 @@ export type ServerOptions<TContext> = {
    * Context
    */
   context?: (req: Request) => Promise<TContext> | Promise<TContext>
-  cors?: ((request: Request) => ServerCORSOptions) | ServerCORSOptions | boolean
+  cors?: ((request: Request) => CORSOptions) | CORSOptions | boolean
   /**
    * GraphiQL options
    *
@@ -94,7 +88,7 @@ export type ServerOptions<TContext> = {
     }
   | {
       typeDefs: TypeSource
-      resolvers?: IResolvers<any, TContext>
+      resolvers?: IResolvers<any, TContext> | Array<IResolvers<any, TContext>>
     }
 )
 
@@ -113,7 +107,7 @@ export class Server<TContext> {
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
   public logger: YogaLogger
-  public readonly corsOptionsFactory?: (request: Request) => ServerCORSOptions
+  public readonly corsOptionsFactory?: (request: Request) => CORSOptions
   public readonly graphiql: GraphiQLOptions | false
 
   constructor(options: ServerOptions<TContext>) {

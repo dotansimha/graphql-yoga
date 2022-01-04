@@ -3856,6 +3856,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-tools/utils@npm:8.6.0, @graphql-tools/utils@npm:^8.6.0":
+  version: 8.6.0
+  resolution: "@graphql-tools/utils@npm:8.6.0"
+  dependencies:
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: ef6fef40d4568606059f77dc8839f18c75a4330096ec89a21f0965bd58c749d80087830551c618fd040fdbcdcb9be35c949b2d96c495a1f1dbfba943b124bc3b
+  languageName: node
+  linkType: hard
+
 "@graphql-tools/utils@npm:^8.5.1":
   version: 8.5.4
   resolution: "@graphql-tools/utils@npm:8.5.4"
@@ -3932,9 +3943,11 @@ __metadata:
   dependencies:
     "@ardatan/graphql-helix": 0.1.12
     "@envelop/core": ^1.6.1
+    "@graphql-tools/utils": 8.6.0
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
     cross-undici-fetch: 0.1.12
+    dset: 3.1.1
     typescript: ^4.4.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
@@ -8662,17 +8675,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dset@npm:3.1.1, dset@npm:^3.1.0":
+  version: 3.1.1
+  resolution: "dset@npm:3.1.1"
+  checksum: db9aeb64c28eea35f9392b4a304375415ac19e66f4afd1816f6b8e05b76355375aef075f2b737d720022c938e640220f4a27b5c9892b1d08942b3638bf0760e8
+  languageName: node
+  linkType: hard
+
 "dset@npm:^2.0.1":
   version: 2.1.0
   resolution: "dset@npm:2.1.0"
   checksum: 9fdb325dde5cedb264e37a1bece8aeefb88023e9f2bbc9c38d656cd06b2322a050ba5b361e1c8047b84e482d6e50d0d6b10a6bf439afdd8ab131fd039c103483
-  languageName: node
-  linkType: hard
-
-"dset@npm:^3.1.0":
-  version: 3.1.1
-  resolution: "dset@npm:3.1.1"
-  checksum: db9aeb64c28eea35f9392b4a304375415ac19e66f4afd1816f6b8e05b76355375aef075f2b737d720022c938e640220f4a27b5c9892b1d08942b3638bf0760e8
   languageName: node
   linkType: hard
 
@@ -10953,8 +10966,8 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@ardatan/graphql-helix": 0.1.12
     "@envelop/core": ^1.6.2
+    "@graphql-tools/utils": ^8.6.0
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/core": 0.2.0-alpha.5
     "@graphql-yoga/handler": 0.2.0-alpha.2
