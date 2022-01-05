@@ -1,5 +1,7 @@
 <p align="center"><img src="./website/public/banner.svg" width="350" /></p>
 
+> Note: New generation of GraphQL-Yoga is under development and testing. You can try the alpha - feedback is always welcome!  
+
 # graphql-yoga
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
