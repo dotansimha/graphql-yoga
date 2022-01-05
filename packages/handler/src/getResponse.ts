@@ -33,7 +33,7 @@ export function getMultipartResponse(
   let iterator: AsyncIterator<ExecutionResult<any>>
 
   const readableStream = new ReadableStream({
-    async start(controller) {
+    start(controller) {
       iterator = asyncExecutionResult[Symbol.asyncIterator]()
       controller.enqueue(`---`)
     },
@@ -44,7 +44,8 @@ export function getMultipartResponse(
           controller.enqueue('\r\n-----\r\n')
           controller.close()
         })
-      } else {
+      }
+      if (value != null) {
         const chunk = JSON.stringify(value)
         const encodedChunk = encodeString(chunk)
         controller.enqueue('\r\n')
@@ -83,7 +84,7 @@ export function getPushResponse(
   let iterator: AsyncIterator<ExecutionResult<any>>
 
   const readableStream = new ReadableStream({
-    async start() {
+    start() {
       iterator = asyncExecutionResult[Symbol.asyncIterator]()
     },
     async pull(controller) {
@@ -92,7 +93,8 @@ export function getPushResponse(
         queueMicrotask(() => {
           controller.close()
         })
-      } else {
+      }
+      if (value != null) {
         const chunk = JSON.stringify(value)
         controller.enqueue(`data: ${chunk}\n\n`)
       }

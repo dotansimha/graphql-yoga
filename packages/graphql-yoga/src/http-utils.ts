@@ -1,11 +1,11 @@
 // @denoify-ignore
-import type { IncomingMessage, ServerResponse } from 'http'
-import type { Http2ServerResponse } from 'http2'
-import { Request, ReadableStream } from 'cross-undici-fetch'
-import { isAsyncIterable } from '@graphql-tools/utils'
-import { Readable } from 'stream'
+import type { IncomingMessage, Server, ServerResponse } from 'http'
+import { Request } from 'cross-undici-fetch'
+import { pipeline, Readable } from 'stream'
+import { AddressInfo } from 'net'
+import { promisify } from 'util'
 
-interface NodeRequest {
+export interface NodeRequest {
   protocol?: string
   hostname?: string
   body?: any
@@ -38,44 +38,20 @@ export async function getNodeRequest(
           ? maybeParsedBody
           : JSON.stringify(maybeParsedBody),
     })
-  } else if (isAsyncIterable(rawRequest)) {
-    let iterator: AsyncIterator<any>
-    const body = new ReadableStream({
-      async start() {
-        iterator = rawRequest[Symbol.asyncIterator]()
-      },
-      async pull(controller) {
-        const { done, value } = await iterator.next()
-        if (done) {
-          queueMicrotask(() => {
-            controller.close()
-          })
-        } else {
-          controller.enqueue(value)
-        }
-      },
-      async cancel(e) {
-        await iterator.return?.(e)
-      },
-    })
-    return new Request(fullUrl, {
-      headers: nodeRequest.headers,
-      method: nodeRequest.method,
-      body,
-    })
   }
-  throw new Error(`Unknown request`)
+  return new Request(fullUrl, {
+    headers: nodeRequest.headers,
+    method: nodeRequest.method,
+    body: rawRequest as any,
+  })
 }
 
-export type ServerResponseOrHttp2ServerResponse =
-  | ServerResponse
-  | Http2ServerResponse
+const pipeline$ = promisify(pipeline)
 
 export async function sendNodeResponse(
   responseResult: Response,
-  serverResponseOrHttp2Response: ServerResponseOrHttp2ServerResponse,
+  serverResponse: ServerResponse,
 ): Promise<void> {
-  const serverResponse = serverResponseOrHttp2Response as ServerResponse
   responseResult.headers.forEach((value, name) => {
     serverResponse.setHeader(name, value)
   })
@@ -83,9 +59,6 @@ export async function sendNodeResponse(
   serverResponse.statusMessage = responseResult.statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
   const responseBody = await (responseResult.body as unknown as Promise<any>)
-  if (responseBody != null) {
-    const nodeReadable =
-      'pipe' in responseBody ? responseBody : Readable.from(responseBody)
-    nodeReadable.pipe(serverResponse)
-  }
+  const nodeReadable = Readable.from(responseBody)
+  await pipeline$(nodeReadable, serverResponse)
 }
