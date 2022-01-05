@@ -16,20 +16,37 @@ In a SvelteKit project:
 
 ## Example
 
-### 1/ Add the yogaHandler
+### 1/ Create your graphql endpoint
 
-Create the file `src/lib/graphql/yogaHandler.ts`:
+Create the file `src/routes/api/graphql.ts`:
 
 ```ts
-import type { Server } from '@graphql-yoga/core'
+import { createServer } from '@graphql-yoga/core'
 import type { ResponseHeaders } from '@sveltejs/kit/types/helper'
-import type { ServerRequest, ServerResponse } from '@sveltejs/kit/types/hooks'
+import type { ServerRequest } from '@sveltejs/kit/types/hooks'
 
-export async function yogaHandler(
-  req: ServerRequest,
-  graphQLServer: Server<unknown>,
-): Promise<ServerResponse> {
-  const request = new Request(`http://${req.url.host}/${req.url.pathname}`, {
+export async function get() {
+  return {
+    status: 302,
+    headers: { Location: '/' },
+  }
+}
+
+const graphQLServer = createServer({
+  typeDefs: `
+		type Query {
+			hello: String
+		}
+	`,
+  resolvers: {
+    Query: {
+      hello: () => 'GraphQL Yoga - SvelteKit',
+    },
+  },
+})
+
+export async function post(req: ServerRequest) {
+  const request = new Request(req.url.toString(), {
     method: req.method,
     headers: req.headers,
     body: req.rawBody,
@@ -52,41 +69,7 @@ export async function yogaHandler(
 }
 ```
 
-### 2/ Create your graphql endpoint
-
-Create the file `src/routes/api/graphql.ts`:
-
-```ts
-import { yogaHandler } from '$lib/graphql/yogaHandler'
-import { createServer } from '@graphql-yoga/core'
-import type { ServerRequest } from '@sveltejs/kit/types/hooks'
-
-export async function get() {
-  return {
-    status: 302,
-    headers: { Location: '/' },
-  }
-}
-
-const yogaApp = createServer({
-  typeDefs: `
-		type Query {
-			hello: String
-		}
-	`,
-  resolvers: {
-    Query: {
-      hello: () => 'GraphQL Yoga - SvelteKit',
-    },
-  },
-})
-
-export async function post(req: ServerRequest) {
-  return yogaHandler(req, yogaApp)
-}
-```
-
-### 3/ Create your graphiql page
+### 2/ Create your graphiql page
 
 Create the file `src/routes/api/graphiql.ts`:
 
