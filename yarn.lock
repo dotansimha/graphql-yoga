@@ -159,17 +159,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ardatan/graphql-helix@npm:0.1.12":
-  version: 0.1.12
-  resolution: "@ardatan/graphql-helix@npm:0.1.12"
-  dependencies:
-    cross-undici-fetch: ^0.1.10
-  peerDependencies:
-    graphql: ^15.3.0 || ^16.0.0
-  checksum: 5f9ecd9c5345477edf8cea6bfffd1b09e1f280b7a6d5d651e7161790035bebe1d5a2994cac16f8d7db6d0f581609504c361686fe0981cf8a0bb5b932af960d74
-  languageName: node
-  linkType: hard
-
 "@babel/code-frame@npm:7.12.11":
   version: 7.12.11
   resolution: "@babel/code-frame@npm:7.12.11"
@@ -3353,18 +3342,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/validation-cache@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@envelop/validation-cache@npm:2.3.0"
-  dependencies:
-    tiny-lru: 7.0.6
-  peerDependencies:
-    "@envelop/core": ^1.6.1
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: 39d674baef420ff758898bfa736b23d3fd4190bef23c1742c06cd3234fe6db33afdca8da0c4d217a0dc185c9170e0be07ca087f7f30a3ca84de0292cdd89717c
-  languageName: node
-  linkType: hard
-
 "@envelop/validation-cache@npm:^2.2.1":
   version: 2.2.1
   resolution: "@envelop/validation-cache@npm:2.2.1"
@@ -3374,6 +3351,18 @@ __metadata:
     "@envelop/core": ^1.6.1
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: 7f768d149d58636e979ca79734342f94dbaa18e63069e7462d7dd4dbd53443dd2855364a8713aa373022c5be5f963aa9dd188f2f27f2bb4a2902cb7fb082542b
+  languageName: node
+  linkType: hard
+
+"@envelop/validation-cache@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@envelop/validation-cache@npm:2.3.0"
+  dependencies:
+    tiny-lru: 7.0.6
+  peerDependencies:
+    "@envelop/core": ^1.6.1
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 39d674baef420ff758898bfa736b23d3fd4190bef23c1742c06cd3234fe6db33afdca8da0c4d217a0dc185c9170e0be07ca087f7f30a3ca84de0292cdd89717c
   languageName: node
   linkType: hard
 
@@ -3867,6 +3856,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-tools/utils@npm:^8.6.0":
+  version: 8.6.0
+  resolution: "@graphql-tools/utils@npm:8.6.0"
+  dependencies:
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: ef6fef40d4568606059f77dc8839f18c75a4330096ec89a21f0965bd58c749d80087830551c618fd040fdbcdcb9be35c949b2d96c495a1f1dbfba943b124bc3b
+  languageName: node
+  linkType: hard
+
 "@graphql-tools/wrap@npm:^8.3.1":
   version: 8.3.2
   resolution: "@graphql-tools/wrap@npm:8.3.2"
@@ -3916,8 +3916,8 @@ __metadata:
     "@envelop/core": ^1.6.2
     "@envelop/disable-introspection": ^1.2.1
     "@envelop/parser-cache": ^2.2.1
-    "@envelop/validation-cache": 2.3.0
-    "@graphql-tools/schema": 8.3.1
+    "@envelop/validation-cache": ^2.3.0
+    "@graphql-tools/schema": ^8.3.1
     "@graphql-yoga/handler": 0.2.0-alpha.2
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
@@ -3930,11 +3930,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
-    "@ardatan/graphql-helix": 0.1.12
     "@envelop/core": ^1.6.1
+    "@graphql-tools/utils": ^8.6.0
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
-    cross-undici-fetch: 0.1.12
+    cross-undici-fetch: ^0.1.13
+    dset: ^3.1.1
+    graphql-helix: 1.11.0
     typescript: ^4.4.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
@@ -8008,19 +8010,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-undici-fetch@npm:0.1.12":
-  version: 0.1.12
-  resolution: "cross-undici-fetch@npm:0.1.12"
-  dependencies:
-    abort-controller: ^3.0.0
-    form-data-encoder: ^1.7.1
-    formdata-node: ^4.3.1
-    node-fetch: ^2.6.5
-    undici: ^4.9.3
-  checksum: bb13d695658f3db31f2733ef8e025fd644ffb1d4dd906e9d600f7527fad772874f38ca6df8393397a2d3c4d7b26c9236961298969e2fd5afb5dbfda1250ed056
-  languageName: node
-  linkType: hard
-
 "cross-undici-fetch@npm:0.1.4, cross-undici-fetch@npm:^0.1.4":
   version: 0.1.4
   resolution: "cross-undici-fetch@npm:0.1.4"
@@ -8046,16 +8035,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-undici-fetch@npm:^0.1.10":
-  version: 0.1.10
-  resolution: "cross-undici-fetch@npm:0.1.10"
+"cross-undici-fetch@npm:^0.1.13":
+  version: 0.1.13
+  resolution: "cross-undici-fetch@npm:0.1.13"
   dependencies:
     abort-controller: ^3.0.0
     form-data-encoder: ^1.7.1
     formdata-node: ^4.3.1
     node-fetch: ^2.6.5
     undici: ^4.9.3
-  checksum: 67a03fbb2aa02d5d1ed2247f10d8694c6487b57ab4f22b1c909e69257c4c4b5e471b6be58d6e0d1d1161d3cabb06c802aac9b58e346db1f973295b6741cd8a40
+  checksum: 8481a54242ade7bf079886719bd83eab5f4e57fac9eea193868aab09937e6770fc0f0c07e5ad166b0111a98af3c449c465f8124748bb2649c6a877e82fc9cef3
   languageName: node
   linkType: hard
 
@@ -8669,7 +8658,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dset@npm:^3.1.0":
+"dset@npm:^3.1.0, dset@npm:^3.1.1":
   version: 3.1.1
   resolution: "dset@npm:3.1.1"
   checksum: db9aeb64c28eea35f9392b4a304375415ac19e66f4afd1816f6b8e05b76355375aef075f2b737d720022c938e640220f4a27b5c9892b1d08942b3638bf0760e8
@@ -10881,6 +10870,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"graphql-helix@npm:1.11.0":
+  version: 1.11.0
+  resolution: "graphql-helix@npm:1.11.0"
+  peerDependencies:
+    graphql: ^15.3.0 || ^16.0.0
+  checksum: 18460adb7580ee3ad379da0565d9a48570e80f2492f8c8e8d29ddac2866c2cf6b48f982bc52ce6e220ebea19506f51e85f697a9ddae45e2ba83a47b50835966c
+  languageName: node
+  linkType: hard
+
 "graphql-request@npm:^3.3.0":
   version: 3.7.0
   resolution: "graphql-request@npm:3.7.0"
@@ -10953,8 +10951,8 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@ardatan/graphql-helix": 0.1.12
     "@envelop/core": ^1.6.2
+    "@graphql-tools/utils": ^8.6.0
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/core": 0.2.0-alpha.5
     "@graphql-yoga/handler": 0.2.0-alpha.2
@@ -10964,6 +10962,7 @@ fsevents@~2.1.2:
     "@ungap/event": ^0.2.2
     "@ungap/event-target": ^0.2.3
     bob-the-bundler: ^1.5.1
+    cross-undici-fetch: ^0.1.13
     eventsource: ^1.1.0
     graphql: ^16.0.1
     light-my-request: ^4.7.0

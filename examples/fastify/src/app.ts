@@ -1,5 +1,6 @@
 import { createServer } from 'graphql-yoga';
 import fastify from 'fastify';
+import { Readable } from 'stream';
 
 export function buildApp() {
     const app = fastify({ logger: true });
@@ -42,7 +43,8 @@ export function buildApp() {
             });
 
             reply.status(response.status);
-            reply.send(response.body);
+            const nodeStream = Readable.from(response.body);
+            reply.send(nodeStream);
         }
     })
 
