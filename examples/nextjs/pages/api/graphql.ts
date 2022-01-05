@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { GraphQLServer } from 'graphql-yoga'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { createServer } from 'graphql-yoga'
 
-const server = new GraphQLServer({
+const server = createServer({
   typeDefs: 'type Query {hello: String!}',
   resolvers: { Query: { hello: () => 'Hello World' } },
   cors: false,
