@@ -1,10 +1,10 @@
-import { renderGraphiQL, shouldRenderGraphiQL } from '@ardatan/graphql-helix'
 import { Server } from '@graphql-yoga/core'
 import { handleOptions } from './handleOptions'
 import { Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { ProcessRequestOptions } from './types'
 import { processRequest } from './processRequest'
+import { shouldRenderGraphiQL, renderGraphiQL } from './graphiql'
 
 export async function handleRequest<TContext>(
   this: Server<TContext>,

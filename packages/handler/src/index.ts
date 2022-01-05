@@ -1,6 +1,3 @@
-export {
-  RenderGraphiQLOptions as GraphiQLOptions,
-  renderGraphiQL,
-} from '@ardatan/graphql-helix'
+export * from './graphiql'
 export * from './handleOptions'
 export * from './handleRequest'

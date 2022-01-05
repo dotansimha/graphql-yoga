@@ -1,8 +1,7 @@
 // @denoify-ignore
-import type { IncomingMessage, Server, ServerResponse } from 'http'
+import type { IncomingMessage, ServerResponse } from 'http'
 import { Request } from 'cross-undici-fetch'
 import { pipeline, Readable } from 'stream'
-import { AddressInfo } from 'net'
 import { promisify } from 'util'
 
 export interface NodeRequest {

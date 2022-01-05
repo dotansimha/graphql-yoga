@@ -159,17 +159,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ardatan/graphql-helix@npm:^0.1.12":
-  version: 0.1.12
-  resolution: "@ardatan/graphql-helix@npm:0.1.12"
-  dependencies:
-    cross-undici-fetch: ^0.1.10
-  peerDependencies:
-    graphql: ^15.3.0 || ^16.0.0
-  checksum: 5f9ecd9c5345477edf8cea6bfffd1b09e1f280b7a6d5d651e7161790035bebe1d5a2994cac16f8d7db6d0f581609504c361686fe0981cf8a0bb5b932af960d74
-  languageName: node
-  linkType: hard
-
 "@babel/code-frame@npm:7.12.11":
   version: 7.12.11
   resolution: "@babel/code-frame@npm:7.12.11"
@@ -3941,13 +3930,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/handler@workspace:packages/handler"
   dependencies:
-    "@ardatan/graphql-helix": ^0.1.12
     "@envelop/core": ^1.6.1
     "@graphql-tools/utils": ^8.6.0
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
     cross-undici-fetch: ^0.1.13
     dset: ^3.1.1
+    graphql-helix: 1.11.0
     typescript: ^4.4.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
@@ -8046,19 +8035,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-undici-fetch@npm:^0.1.10":
-  version: 0.1.10
-  resolution: "cross-undici-fetch@npm:0.1.10"
-  dependencies:
-    abort-controller: ^3.0.0
-    form-data-encoder: ^1.7.1
-    formdata-node: ^4.3.1
-    node-fetch: ^2.6.5
-    undici: ^4.9.3
-  checksum: 67a03fbb2aa02d5d1ed2247f10d8694c6487b57ab4f22b1c909e69257c4c4b5e471b6be58d6e0d1d1161d3cabb06c802aac9b58e346db1f973295b6741cd8a40
-  languageName: node
-  linkType: hard
-
 "cross-undici-fetch@npm:^0.1.13":
   version: 0.1.13
   resolution: "cross-undici-fetch@npm:0.1.13"
@@ -10891,6 +10867,15 @@ fsevents@~2.1.2:
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: ab54c868c0fa4d3c1c48f40656b11e4c2c2071090464afde439a0414ae063c874b52bfea5694eb9099eba69af62400006294cd0cd673b2e5a9ef86779d7bf50a
+  languageName: node
+  linkType: hard
+
+"graphql-helix@npm:1.11.0":
+  version: 1.11.0
+  resolution: "graphql-helix@npm:1.11.0"
+  peerDependencies:
+    graphql: ^15.3.0 || ^16.0.0
+  checksum: 18460adb7580ee3ad379da0565d9a48570e80f2492f8c8e8d29ddac2866c2cf6b48f982bc52ce6e220ebea19506f51e85f697a9ddae45e2ba83a47b50835966c
   languageName: node
   linkType: hard
 

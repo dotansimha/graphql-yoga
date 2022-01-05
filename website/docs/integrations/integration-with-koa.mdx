@@ -51,7 +51,8 @@ app.use('/graphql', async (ctx) => {
   })
 
   // Converts ReadableStream to a NodeJS Stream
-  ctx.body = Readable.from(response.body)
+  const nodeStream = Readable.from(response.body)
+  ctx.body = nodeStream
 })
 
 app.listen(4000, () => {
