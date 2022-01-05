@@ -1,5 +1,5 @@
-import { yogaHandler } from '$lib/graphql/yogaHandler';
 import { createServer } from '@graphql-yoga/core';
+import type { ResponseHeaders } from '@sveltejs/kit/types/helper';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 export async function get() {
@@ -9,7 +9,7 @@ export async function get() {
 	};
 }
 
-const yogaApp = createServer({
+const graphQLServer = createServer({
 	typeDefs: `
 		type Query {
 			hello: String
@@ -23,5 +23,24 @@ const yogaApp = createServer({
 });
 
 export async function post(req: ServerRequest) {
-	return yogaHandler(req, yogaApp);
+	const request = new Request(req.url.toString(), {
+		method: req.method,
+		headers: req.headers,
+		body: req.rawBody
+	});
+	const response: Response = await graphQLServer.handleRequest(request);
+
+	const responseHeaders: ResponseHeaders = {};
+
+	response.headers.forEach((value, key) => {
+		responseHeaders[key] = value;
+	});
+
+	const responseBodyText = await response.text();
+
+	return {
+		status: response.status,
+		headers: responseHeaders,
+		body: responseBodyText
+	};
 }
