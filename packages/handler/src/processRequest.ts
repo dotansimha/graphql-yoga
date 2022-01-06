@@ -9,7 +9,11 @@ import {
   ExecutionResult,
 } from 'graphql'
 import { isAsyncIterable } from '@graphql-tools/utils'
-import { ExecutionPatchResult, ProcessRequestOptions } from './types'
+import {
+  ExecutionPatchResult,
+  InitialContext,
+  RequestProcessContext,
+} from './types'
 import {
   getMultipartResponse,
   getPushResponse,
@@ -40,23 +44,19 @@ const getExecutableOperation = (
   return operation
 }
 
-export const processRequest = async <TContext = {}, TRootValue = {}>(
-  options: ProcessRequestOptions<TContext, TRootValue>,
-): Promise<Response> => {
-  const {
-    contextFactory,
-    execute = defaultExecute,
-    operationName,
-    parse = defaultParse,
-    query,
-    request,
-    rootValueFactory,
-    schema,
-    subscribe = defaultSubscribe,
-    validate = defaultValidate,
-    variables,
-  } = options
-
+export const processRequest = async <TContext, TRootValue = {}>({
+  contextFactory,
+  execute = defaultExecute,
+  operationName,
+  parse = defaultParse,
+  query,
+  request,
+  rootValueFactory,
+  schema,
+  subscribe = defaultSubscribe,
+  validate = defaultValidate,
+  variables,
+}: RequestProcessContext<TContext, TRootValue>): Promise<Response> => {
   let context: TContext | undefined
   let rootValue: TRootValue | undefined
   let document: DocumentNode | undefined
@@ -133,9 +133,18 @@ export const processRequest = async <TContext = {}, TRootValue = {}>(
       })
     }
 
-    context = contextFactory ? await contextFactory(request) : ({} as TContext)
+    const initialContext: InitialContext = {
+      operationName,
+      query,
+      request,
+      variables,
+    }
+
+    context = contextFactory
+      ? await contextFactory(initialContext)
+      : ({} as TContext)
     rootValue = rootValueFactory
-      ? await rootValueFactory(request)
+      ? await rootValueFactory(initialContext)
       : ({} as TRootValue)
 
     if (operation.operation === 'subscription') {

@@ -12,8 +12,11 @@ import { EnvelopError as GraphQLServerError } from '@envelop/core'
 import type { GraphQLServerInject, ServerOptions } from './types'
 import LightMyRequest from 'light-my-request'
 import { ExecutionResult, print } from 'graphql'
+import { InitialContext } from '@graphql-yoga/handler'
 
-function getPinoLogger<TContext>(options: ServerOptions<TContext>): YogaLogger {
+function getPinoLogger<TContext, TRootValue>(
+  options: ServerOptions<TContext, TRootValue>,
+): YogaLogger {
   const prettyLog = options.prettyLog ?? process.env.NODE_ENV !== 'production'
   const logLevel =
     options.logLevel ?? process.env.NODE_ENV !== 'production' ? 'debug' : 'info'
@@ -37,7 +40,10 @@ function getPinoLogger<TContext>(options: ServerOptions<TContext>): YogaLogger {
   })
 }
 
-class Server<TContext> extends BaseServer<TContext> {
+class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
+  TContext,
+  TRootValue
+> {
   /**
    * Port for server
    */
@@ -52,7 +58,7 @@ class Server<TContext> extends BaseServer<TContext> {
   private hostname: string
   private _server: NodeServer
 
-  constructor(options: ServerOptions<TContext>) {
+  constructor(options: ServerOptions<TContext, TRootValue>) {
     super({
       ...options,
       logger: options.logger || getPinoLogger(options),
@@ -195,8 +201,10 @@ class Server<TContext> extends BaseServer<TContext> {
  *  server.start()
  * ```
  */
-export function createServer<TContext>(options: ServerOptions<TContext>) {
-  return new Server<TContext>(options)
+export function createServer<TContext extends InitialContext, TRootValue>(
+  options: ServerOptions<TContext, TRootValue>,
+) {
+  return new Server<TContext, TRootValue>(options)
 }
 
 export type { ServerOptions } from './types'

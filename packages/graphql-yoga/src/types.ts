@@ -8,7 +8,10 @@ import { ServerOptions as HttpsServerOptions } from 'https'
 /**
  * Configuration options for the server
  */
-export type ServerOptions<TContext> = BaseServerOptions<TContext> & {
+export type ServerOptions<TContext, TRootValue> = BaseServerOptions<
+  TContext,
+  TRootValue
+> & {
   /**
    * GraphQL endpoint
    * Default: `/graphql`

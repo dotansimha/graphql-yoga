@@ -32,23 +32,7 @@ export interface FormatPayloadParams<TContext, TRootValue> {
   rootValue?: TRootValue
 }
 
-export interface ProcessRequestOptions<TContext, TRootValue> {
-  /**
-   * A function whose return value is passed in as the `context` to `execute`.
-   */
-  contextFactory?: (request: Request) => Promise<TContext> | TContext
-  /**
-   * An optional function which will be used to execute instead of default `execute` from `graphql-js`.
-   */
-  execute?: (...args: any[]) => any
-  /**
-   * The name of the Operation in the Document to execute.
-   */
-  operationName?: string
-  /**
-   * An optional function which will be used to create a document instead of the default `parse` from `graphql-js`.
-   */
-  parse?: (...args: any[]) => any
+export interface InitialContext {
   /**
    * A Document containing GraphQL Operations and Fragments to execute.
    */
@@ -58,13 +42,41 @@ export interface ProcessRequestOptions<TContext, TRootValue> {
    */
   request: Request
   /**
-   * A function whose return value is passed in as the `rootValue` to `execute`.
+   * The name of the Operation in the Document to execute.
    */
-  rootValueFactory?: (request: Request) => Promise<TRootValue> | TRootValue
+  operationName?: string
+  /**
+   * Values for any Variables defined by the Operation.
+   */
+  variables?: string | { [name: string]: any }
+}
+
+export interface RequestProcessContext<TContext, TRootValue>
+  extends InitialContext {
   /**
    * The GraphQL schema used to process the request.
    */
   schema: GraphQLSchema
+  /**
+   * A function whose return value is passed in as the `context` to `execute`.
+   */
+  contextFactory?: (
+    initialContext: InitialContext,
+  ) => Promise<TContext> | TContext
+  /**
+   * An optional function which will be used to execute instead of default `execute` from `graphql-js`.
+   */
+  execute?: (...args: any[]) => any
+  /**
+   * An optional function which will be used to create a document instead of the default `parse` from `graphql-js`.
+   */
+  parse?: (...args: any[]) => any
+  /**
+   * A function whose return value is passed in as the `rootValue` to `execute`.
+   */
+  rootValueFactory?: (
+    initialContext: InitialContext,
+  ) => Promise<TRootValue> | TRootValue
   /**
    * An optional function which will be used to subscribe instead of default `subscribe` from `graphql-js`.
    */
@@ -73,8 +85,4 @@ export interface ProcessRequestOptions<TContext, TRootValue> {
    * An optional function which will be used to validate instead of default `validate` from `graphql-js`.
    */
   validate?: (...args: any[]) => any
-  /**
-   * Values for any Variables defined by the Operation.
-   */
-  variables?: string | { [name: string]: any }
 }

@@ -20,6 +20,7 @@ import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
+import { InitialContext } from 'packages/handler/src/types'
 
 const DEFAULT_CORS_OPTIONS: CORSOptions = {
   origin: ['*'],
@@ -29,15 +30,18 @@ const DEFAULT_CORS_OPTIONS: CORSOptions = {
 
 export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
 
-/**
- * Configuration options for the server
- */
-export type ServerOptions<TContext> = {
+interface OptionsWithPlugins<TContext> {
   /**
    * Envelop Plugins
    * @see https://envelop.dev/plugins
    */
-  plugins?: Array<Plugin<TContext>>
+  plugins: Array<Plugin<TContext> | 0>
+}
+
+/**
+ * Configuration options for the server
+ */
+export type ServerOptions<TContext, TRootValue> = {
   /**
    * Enable logging
    * @default true
@@ -74,7 +78,10 @@ export type ServerOptions<TContext> = {
   /**
    * Context
    */
-  context?: (req: Request) => Promise<TContext> | Promise<TContext>
+  context?:
+    | ((initialContext: InitialContext) => Promise<TContext> | TContext)
+    | Promise<TContext>
+    | TContext
   cors?: ((request: Request) => CORSOptions) | CORSOptions | boolean
   /**
    * GraphiQL options
@@ -83,25 +90,27 @@ export type ServerOptions<TContext> = {
    */
   graphiql?: GraphiQLOptions | boolean
 } & (
-  | {
+  | ({
       schema: GraphQLSchema
-    }
-  | {
+    } & Partial<OptionsWithPlugins<TContext>>)
+  | ({
       typeDefs: TypeSource
-      resolvers?: IResolvers<any, TContext> | Array<IResolvers<any, TContext>>
-    }
+      resolvers?:
+        | IResolvers<TRootValue, TContext>
+        | Array<IResolvers<TRootValue, TContext>>
+    } & Partial<OptionsWithPlugins<TContext>>)
+  | OptionsWithPlugins<TContext>
 )
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  * @internal
  */
-export class Server<TContext> {
+export class Server<TContext extends InitialContext, TRootValue> {
   /**
    * Request handler for helix
    */
   public readonly handleRequest = handleRequest
-  public readonly schema: GraphQLSchema
   /**
    * Instance of envelop
    */
@@ -110,14 +119,16 @@ export class Server<TContext> {
   public readonly corsOptionsFactory?: (request: Request) => CORSOptions
   public readonly graphiql: GraphiQLOptions | false
 
-  constructor(options: ServerOptions<TContext>) {
-    this.schema =
+  constructor(options: ServerOptions<TContext, TRootValue>) {
+    const schema =
       'schema' in options
         ? options.schema
-        : makeExecutableSchema({
+        : 'typeDefs' in options
+        ? makeExecutableSchema({
             typeDefs: options.typeDefs,
             resolvers: options.resolvers,
           })
+        : null
 
     this.logger = options.enableLogging
       ? options.logger || console
@@ -135,7 +146,7 @@ export class Server<TContext> {
     this.getEnveloped = envelop({
       plugins: [
         // Use the schema provided by the user
-        useSchema(this.schema),
+        enableIf(schema != null, useSchema(schema!)),
         // Performance things
         useParserCache({
           errorCache: new Map(),
@@ -150,10 +161,11 @@ export class Server<TContext> {
           useLogger({
             logFn: (eventName, events) => {
               if (eventName === 'execute-start') {
-                const context = events.args.contextValue
-                const query = context.request?.body?.query
-                const variables = context.request?.body?.variables
-                const headers = context.request?.headers
+                const {
+                  request: { headers },
+                  query,
+                  variables,
+                }: InitialContext = events.args.contextValue
                 this.logger.debug(eventName)
                 this.logger.debug(query, 'query')
                 // there can be no variables
@@ -176,15 +188,14 @@ export class Server<TContext> {
             typeof maskedErrors === 'object' ? maskedErrors : undefined,
           ),
         ),
-        ...(options.context != null
-          ? [
-              useExtendContext(
-                typeof options.context === 'function'
-                  ? options.context
-                  : () => options.context,
-              ),
-            ]
-          : []),
+        enableIf(
+          options.context != null,
+          useExtendContext(
+            typeof options.context === 'function'
+              ? options.context
+              : () => options.context,
+          ) as any,
+        ),
         ...(options.plugins || []),
       ],
     })
@@ -192,8 +203,8 @@ export class Server<TContext> {
     if (options.cors != null) {
       if (typeof options.cors === 'function') {
         const userProvidedCorsOptionsFactory = options.cors
-        this.corsOptionsFactory = (...args) => {
-          const corsOptions = userProvidedCorsOptionsFactory(...args)
+        this.corsOptionsFactory = (request) => {
+          const corsOptions = userProvidedCorsOptionsFactory(request)
           return {
             ...DEFAULT_CORS_OPTIONS,
             ...corsOptions,
@@ -218,8 +229,10 @@ export class Server<TContext> {
   }
 }
 
-export function createServer<TContext>(options: ServerOptions<TContext>) {
-  return new Server<TContext>(options)
+export function createServer<TContext extends InitialContext, TRootValue>(
+  options: ServerOptions<TContext, TRootValue>,
+) {
+  return new Server<TContext, TRootValue>(options)
 }
 
 export { renderGraphiQL } from '@graphql-yoga/handler'
