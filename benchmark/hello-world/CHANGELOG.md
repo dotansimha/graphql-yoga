@@ -1,5 +1,12 @@
 # hello-world-benchmark
 
+## 0.0.1-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [3d54829]
+  - graphql-yoga@2.0.0-alpha.7
+
 ## 0.0.1-alpha.2
 
 ### Patch Changes

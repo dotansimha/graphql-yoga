@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 2.0.0-alpha.7
+
+### Patch Changes
+
+- 3d54829: enhance: move W3C changes
+- Updated dependencies [3d54829]
+  - @graphql-yoga/core@0.2.0-alpha.6
+  - @graphql-yoga/handler@0.2.0-alpha.3
+
 ## 2.0.0-alpha.6
 
 ### Minor Changes

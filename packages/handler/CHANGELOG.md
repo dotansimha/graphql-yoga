@@ -1,5 +1,11 @@
 # @graphql-yoga/handler
 
+## 0.2.0-alpha.3
+
+### Patch Changes
+
+- 3d54829: enhance: move W3C changes
+
 ## 0.2.0-alpha.2
 
 ### Minor Changes
