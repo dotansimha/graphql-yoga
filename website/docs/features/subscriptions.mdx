@@ -86,7 +86,6 @@ GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it
 ```ts
 import { createServer, createPubSub } from 'graphql-yoga'
 
-let globalCounter = 0
 const pubSub = createPubSub()
 
 // Provide your schema
@@ -97,11 +96,11 @@ const server = createServer({
     }
 
     type Subscription {
-      globalCounter: Int!
+      randomNumber: Float!
     }
 
     type Mutation {
-      incrementGlobalCounter: Boolean
+      broadcastRandomNumber: Boolean
     }
   `,
   resolvers: {
@@ -110,21 +109,15 @@ const server = createServer({
     },
     Subscription: {
       globalCounter: {
-        // This will return the value on every 1 sec until it reaches 0
-        subscribe: async function* (_, { from }, { pubSub }) {
-          // always immediatly send the latest global counter value to clients.
-          yield globalCounter
-          // send all new values published to the client
-          yield* pubSub.subscribe('global:counter')
-        },
+        // subscribe to the randomNumber event
+        subscribe: () => pubSub.subscribe('randomNumber'),
         resolve: (payload) => payload,
       },
     },
     Mutation: {
-      incrementGlobalCounter: (_, __, { pubSub }) => {
-        globalCounter = globalCounter + 1
-        // publish the latest counter value
-        pubSub.publish('global:counter', globalCounter)
+      broadcastRandomNumber: (_, args) => {
+        // publish a random number
+        pubSub.publish('randomNumber', Math.random())
       },
     },
   },
@@ -139,16 +132,16 @@ When using TypeScript it is possible to make the event emitter type-safe by prov
 
 ```ts
 const pubSub = createPubSub<{
-  'global:counter': [payload: number]
+  randomNumber: [randomNumber: number]
 }>()
 
-pubsub.subscribe('global:counter')
+pubsub.subscribe('randomNumber')
 
 // This is now type-safe.
-pubSub.publish('global:counter', 1)
+pubSub.publish('randomNumber', 1)
 
 // This causes a TypeScript error.
-pubSub.publish('global:counter')
+pubSub.publish('randomNumber')
 
 // This causes a TypeScript error.
 pubSub.publish('event does not exist')
@@ -158,12 +151,12 @@ You can subscribe to a specific topic using `pubSub.subscribe`.
 
 ```ts
 const pubSub = createPubSub<{
-  'global:counter': [payload: number]
+  randomNumber: [randomNumber: number]
 }>()
 
 // Usage outside a GraphQL subscribe function
 async function subscribe() {
-  const eventSource = pubSub.subscribe('global:counter')
+  const eventSource = pubSub.subscribe('randomNumber')
 
   for await (const value of eventSource) {
     console.log(value)
@@ -173,16 +166,18 @@ async function subscribe() {
 }
 
 subscribe()
+
+pubSub.publish('randomNumber', 3)
 ```
 
 You can publish a value using `pubSub.publish`.
 
 ```ts
 const pubSub = createPubSub<{
-  'global:counter': [payload: number]
+  randomNumber: [randomNumber: number]
 }>()
 
-pubSub.publish('global:counter', 3)
+pubSub.publish('randomNumber', 3)
 ```
 
 #### Topic configuration variants
@@ -347,4 +342,153 @@ const client = createClient({
     }),
   ],
 })
+```
+
+## Advanced
+
+### Filter and map values
+
+Sometimes it is useful to filter or map events for an individual subscription set up by a client e.g. based on subscription field arguments.
+Yoga has a few utility functions that make this as simple as possible.
+
+```ts
+import { createServer, createPubSub, pipe, map, filter } from 'graphql-yoga'
+
+const pubSub = createPubSub<{
+  randomNumber: [randomNumber: number]
+}>()
+
+const source = pipe(
+  pubSub.subscribe('randomNumber'),
+  map((publishedNumber) => publishedNumber * 2),
+  filter((multipliedNumber) => multipliedNumber < 10),
+)
+
+;(async () => {
+  for await (const value of source) {
+    console.log(value)
+  }
+})()
+
+pubSub.publish('randomNumber', 1) // logs 2
+pubSub.publish('randomNumber', 2) // logs 4
+pubSub.publish('randomNumber', 5) // filtered out
+pubSub.publish('randomNumber', 3) // logs 6
+source.return()
+```
+
+```ts
+import { createServer, createPubSub } from 'graphql-yoga'
+
+const pubSub = createPubSub()
+
+// Provide your schema
+const server = createServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+
+    type Subscription {
+      randomNumber(multiplyBy: Int!, lessThan: Float!): Float!
+    }
+
+    type Mutation {
+      broadcastRandomNumber: Boolean
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+    Subscription: {
+      globalCounter: {
+        // subscribe to the randomNumber event
+        subscribe: (_, args) =>
+          pipe(
+            pubSub.subscribe('randomNumber'),
+            map((publishedNumber) => publishedNumber * args.multiplyBy),
+            filter((multipliedNumber) => multipliedNumber < args.lessThan),
+          ),
+        resolve: (payload) => payload,
+      },
+    },
+    Mutation: {
+      broadcastRandomNumber: (_, args) => {
+        // publish a random number
+        pubSub.publish('randomNumber', Math.random())
+      },
+    },
+  },
+})
+
+server.start()
+```
+
+### Subscriptions with initial value
+
+GraphQL subscriptions are primarily designed to send a stream of events to the client.
+Sometimes it is useful to send an initial value to a client as soon as the GraphQL subscription is set up.
+
+An example for this would be a `Subscription.globalCounter` field that syncs a counter with all clients by streaming the initial counter value to a client that sets up the subscription and then, furthermore, streams the updated counter value to the clients every time it changes.
+
+GraphQL subscriptions are implemented using [Async Iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator), which in itself is a very complex topic with a lot of pitfalls that can cause memory leaks if not treated with caution.
+
+Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org/) ("The missing constructor for creating safe async iterators") for providing a friendly developer experience.
+
+```ts
+import { createServer, createPubSub, Repeater, pipe, map } from 'graphql-yoga'
+
+let globalCounter = 0
+const pubSub = createPubSub()
+
+// Provide your schema
+const server = createServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+
+    type Subscription {
+      globalCounter: Int!
+    }
+
+    type Mutation {
+      incrementGlobalCounter: Int!
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+    Subscription: {
+      globalCounter: {
+        // Merge initial value with source stream of new values
+        subscribe: () =>
+          pipe(
+            Repeater.merge([
+              // cause an initial event so the globalCounter is streamed to the client
+              // upon initiating the subscription
+              undefined,
+              // event stream for future updates
+              pubSub.subscribe('globalCounter:change'),
+            ]),
+            // map all events to the latest globalCounter
+            map(() => globalCounter),
+          ),
+        resolve: (payload) => payload,
+      },
+    },
+    Mutation: {
+      incrementGlobalCounter: (_, __, { pubSub }) => {
+        globalCounter = globalCounter + 1
+        // publish a global counter increment event
+        pubSub.publish('globalCounter:change')
+        return globalCounter
+      },
+    },
+  },
+})
+
+server.start()
 ```

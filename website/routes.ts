@@ -6,8 +6,8 @@ export function getRoutes(): IRoutes {
       'quick-start': {
         $name: 'Quick Start',
       },
-      'extend-yoga': {
-        $name: 'Extend Yoga',
+      features: {
+        $name: 'Features',
         $routes: [
           ['graphiql', 'GraphiQL'],
           ['error-masking', 'Error Masking'],
