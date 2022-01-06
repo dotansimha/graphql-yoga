@@ -348,8 +348,10 @@ const client = createClient({
 
 ### Filter and map values
 
-Sometimes it is useful to filter or map events for an individual subscription set up by a client e.g. based on subscription field arguments.
+Sometimes it is useful to filter or map events for an individual subscription set up by a client based on subscription field arguments.
 Yoga has a few utility functions that make this as simple as possible.
+
+**Example PubSub event stream transform**
 
 ```ts
 import { createServer, createPubSub, pipe, map, filter } from 'graphql-yoga'
@@ -377,6 +379,8 @@ pubSub.publish('randomNumber', 3) // logs 6
 source.return()
 ```
 
+**Example Random number stream transform**
+
 ```ts
 import { createServer, createPubSub } from 'graphql-yoga'
 
@@ -402,7 +406,7 @@ const server = createServer({
       hello: () => 'world',
     },
     Subscription: {
-      globalCounter: {
+      randomNumber: {
         // subscribe to the randomNumber event
         subscribe: (_, args) =>
           pipe(
