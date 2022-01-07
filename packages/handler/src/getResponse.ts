@@ -40,10 +40,8 @@ export function getMultipartResponse(
     async pull(controller) {
       const { done, value } = await iterator.next()
       if (done) {
-        queueMicrotask(() => {
-          controller.enqueue('\r\n-----\r\n')
-          controller.close()
-        })
+        controller.enqueue('\r\n-----\r\n')
+        controller.close()
       }
       if (value != null) {
         const chunk = JSON.stringify(value)
@@ -90,9 +88,8 @@ export function getPushResponse(
     async pull(controller) {
       const { done, value } = await iterator.next()
       if (done) {
-        queueMicrotask(() => {
-          controller.close()
-        })
+        console.log('GELDI')
+        controller.close()
       }
       if (value != null) {
         const chunk = JSON.stringify(value)

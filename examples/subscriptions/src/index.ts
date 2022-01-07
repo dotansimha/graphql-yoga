@@ -39,7 +39,6 @@ const resolvers = {
     counter: {
       subscribe: async function* () {
         let counter = 0;
-
         // count up until the subscription is terminated
         while (true) {
           yield counter++
@@ -49,7 +48,7 @@ const resolvers = {
       resolve: (payload) => payload,
     },
     globalCounter: {
-      subscribe: async function * (_source, _args, context) {
+      subscribe: async function* (_source, _args, context) {
         // as soon as a client subscribes to this field we want to send him the latest value.
         yield globalCounter
         // after the initial value has been sent, we send new values to the client as the counter has been incremented.
@@ -75,6 +74,7 @@ const pubSub = createPubSub<{
 const server = createServer({
   typeDefs,
   resolvers,
+  enableLogging: true,
   plugins: [useExtendContext(() => ({ pubSub }))],
 });
 

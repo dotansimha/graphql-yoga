@@ -3,7 +3,7 @@ import { createServer, GraphQLServerError } from 'graphql-yoga'
 import { AddressInfo } from 'net'
 import EventSource from 'eventsource'
 import request from 'supertest'
-import { schema } from '../test-utils/schema'
+import { getCounterValue, schema } from '../test-utils/schema'
 
 const yoga = createServer({ schema, enableLogging: false })
 
@@ -221,16 +221,23 @@ describe('Incremental Delivery', () => {
     const { address, port } = yoga.server.address() as AddressInfo
 
     const eventSource = new EventSource(
-      `http://${address}:${port}/graphql?query=subscription{ping}`,
+      `http://${address}:${port}/graphql?query=subscription{counter}`,
     )
-    const payload = await new Promise<any>((resolve) => {
-      eventSource.addEventListener('message', (event: any) => {
-        resolve(event.data)
-        eventSource.close()
-      })
-    })
-    const { data } = JSON.parse(payload)
 
-    expect(data.ping).toBe('pong')
+    const counterValue1 = getCounterValue()
+
+    await new Promise((resolve) => setTimeout(resolve, 300))
+
+    expect(getCounterValue() > counterValue1).toBe(true)
+
+    eventSource.close()
+
+    await new Promise((resolve) => setTimeout(resolve, 300))
+
+    const counterValue2 = getCounterValue()
+
+    await new Promise((resolve) => setTimeout(resolve, 300))
+
+    expect(getCounterValue()).toBe(counterValue2)
   })
 })

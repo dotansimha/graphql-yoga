@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'http'
 import { Request } from 'cross-undici-fetch'
 import { pipeline, Readable } from 'stream'
 import { promisify } from 'util'
+import { isAsyncIterable } from '@graphql-tools/utils'
 
 export interface NodeRequest {
   protocol?: string
@@ -45,8 +46,6 @@ export async function getNodeRequest(
   })
 }
 
-const pipeline$ = promisify(pipeline)
-
 export async function sendNodeResponse(
   responseResult: Response,
   serverResponse: ServerResponse,
@@ -59,5 +58,5 @@ export async function sendNodeResponse(
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
   const responseBody = await (responseResult.body as unknown as Promise<any>)
   const nodeReadable = Readable.from(responseBody)
-  await pipeline$(nodeReadable, serverResponse)
+  nodeReadable.pipe(serverResponse)
 }
