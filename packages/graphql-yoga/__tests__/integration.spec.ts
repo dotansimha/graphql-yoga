@@ -1,5 +1,5 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
-import { createServer, GraphQLServerError } from 'graphql-yoga'
+import { createServer, GraphQLYogaError } from 'graphql-yoga'
 import { AddressInfo } from 'net'
 import EventSource from 'eventsource'
 import request from 'supertest'
@@ -48,7 +48,7 @@ describe('Masked Error Option', () => {
   const resolvers = {
     Query: {
       hello: () => {
-        throw new GraphQLServerError('This error never gets masked.')
+        throw new GraphQLYogaError('This error never gets masked.')
       },
       hi: () => {
         throw new Error('This error will get mask if you enable maskedError.')
