@@ -50,7 +50,7 @@ const resolveGlobalConfig = (api: EventAPI = globalThis): EventAPI => {
     throw new Error(`
 [@graphql-yoga/subscription] 'createPubSub' uses the Event and EventTarget APIs.
 
-In modern JavaScript environments those are part of the global scope. However, if you are using an older version of Node.js (<= 16.x.x), those APIs must be polyfilled.
+In modern JavaScript environments those are part of the global scope. However, if you are using an older version of Node.js (< 16.x.x), those APIs must be polyfilled.
 You can provide polyfills to the 'createPubSub' function:
 
 \`\`\`

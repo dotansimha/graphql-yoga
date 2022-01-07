@@ -1,4 +1,4 @@
-import { createServer, useExtendContext, createPubSub } from "graphql-yoga";
+import { createServer, useExtendContext, createPubSub, Repeater, pipe, map } from "graphql-yoga";
 
 const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
@@ -49,26 +49,32 @@ const resolvers = {
       resolve: (payload) => payload,
     },
     globalCounter: {
-      subscribe: async function* (_source, _args, context) {
-        // as soon as a client subscribes to this field we want to send him the latest value.
-        yield globalCounter
-        // after the initial value has been sent, we send new values to the client as the counter has been incremented.
-        yield* context.pubSub.subscribe("global:counter")
-      },
+      // Merge initial value with source stream of new values
+      subscribe: (_, _args, context) => pipe(
+        Repeater.merge([
+          // cause an initial event so the globalCounter is streamed to the client 
+          // upon initiating the subscription
+          undefined,
+          // event stream for future updates
+          context.pubSub.subscribe("globalCounter:changed")
+        ]),
+        // map all events to the latest globalCounter
+        map(() => globalCounter)
+      ),
       resolve: (payload) => payload,
     },
   },
   Mutation: {
     incrementGlobalCounter: (_source, _args, context) => {
       globalCounter++
-      context.pubSub.publish("global:counter", globalCounter)
+      context.pubSub.publish("globalCounter:changed")
       return globalCounter
     }
   },
 };
 
 const pubSub = createPubSub<{
-  'global:counter': [number],
+  'globalCounter:changed': [],
 }>()
 
 
