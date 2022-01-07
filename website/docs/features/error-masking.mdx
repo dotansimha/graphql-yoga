@@ -48,7 +48,7 @@ Executing the following operation will now result within a leaking error message
 
 ```graphql
 query {
-  greetings
+  greeting
 }
 ```
 
@@ -65,7 +65,7 @@ query {
           "column": 3
         }
       ],
-      "path": ["greetings"]
+      "path": ["greeting"]
     }
   ],
   "data": null
@@ -82,12 +82,12 @@ import { fetch } from 'cross-undici-fetch'
 const server = createServer({
   typeDefs: /* GraphQL */ `
     type Query {
-      greetings: String!
+      greeting: String!
     }
   `,
   resolvers: {
     Query: {
-      greetings: async () => {
+      greeting: async () => {
         // This service does not exist
         const greeting = await fetch('http://localhost:9876/greeting').then(
           (res) => res.text(),

@@ -1,6 +1,6 @@
-# subscriptions
+# error masking
 
-This directory contains a simple GraphQL subscriptions example based on `graphql-yoga`.
+This directory contains a simple GraphQL error masking example based on `graphql-yoga`.
 
 ## Get started
 
@@ -8,7 +8,7 @@ This directory contains a simple GraphQL subscriptions example based on `graphql
 
 ```sh
 git clone https://github.com/graphcool/graphql-yoga.git
-cd graphql-yoga/examples/subscriptions
+cd graphql-yoga/examples/error-masking
 ```
 
 **Install dependencies and run the app:**
@@ -20,95 +20,83 @@ yarn start   # or npm start
 
 ## Testing
 
-### Counter
+### Mask unexpected errors
 
 Open your browser at [http://localhost:4000](http://localhost:4000).
 
-Paste the following subscription in the editor (left side) of GraphiQL:
+Paste the following operation in the editor (left side) of GraphiQL:
 
 ```graphql
-subscription {
-  counter
+query {
+  greeting
 }
 ```
 
 Press the Play (Execute Query) button.
 
-The counter will increment every second and the corresponding data is received in the Playground:
+The execution result should be identical with the following JSON response.
+
+**Execution Result with masked error message**
 
 ```json
 {
-  "data": {
-    "counter": 1,
-  }
+  "errors": [
+    {
+      "message": "Unexpected error.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["greeting"]
+    }
+  ],
+  "data": null
 }
-// ... 1 seconds
-{
-  "data": {
-    "counter": 2,
-  }
-}
-// ... 2 seconds
-{
-  "data": {
-    "counter": 3,
-  }
-}
-// ...
 ```
 
-### Global counter
+### Expose expected errors
 
-Open your browser at [http://localhost:4000](http://localhost:4000)n.
+Open your browser at [http://localhost:4000](http://localhost:4000).
 
-Paste the following subscription in the editor (left side) of GraphiQL:
+Paste the following operation in the editor (left side) of GraphiQL:
 
 ```graphql
-subscription {
-  globalCounter
+query {
+  user(byId: "6") {
+    id
+  }
 }
 ```
 
 Press the Play (Execute Query) button.
 
-You will receive this initial result:
+The execution result should be identical with the following JSON response.
+
+**Execution Result with expected error message**
+
 
 ```json
 {
-  "data": {
-    "globalCounter": 0,
-  }
+  "errors": [
+    {
+      "message": "User with id '6' not found.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["user"],
+      "extensions": {
+        "code": "USER_NOT_FOUND",
+        "someRandomExtensions": {
+          "aaaa": 3
+        }
+      }
+    }
+  ],
+  "data": null
 }
 ```
-
-Open another browser window and execute the following mutation:
-
-```graphql
-mutation {
-  incrementGlobalCounter
-}
-```
-
-Press the Play (Execute Query) button.
-
-You will receive this result:
-
-```json
-{
-  "data": {
-    "incrementGlobalCounter": 1,
-  }
-}
-```
-
-On the other window that is executing the subscription, you will receive a new result.
-
-```json
-{
-  "data": {
-    "globalCounter": 1,
-  }
-}
-```
-
-As you re-execute the mutation the global counter will be further incremented.

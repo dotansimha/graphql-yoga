@@ -24,13 +24,13 @@ const server = createServer({
       login: String!
     }
     type Query {
-      greetings: String!
+      greeting: String!
       user(byId: ID!): User!
     }
   `,
   resolvers: {
     Query: {
-      greetings: async () => {
+      greeting: async () => {
         // This service does not exist
         const greeting = await fetch('http://localhost:9876/greeting').then(
           (res) => res.text(),
