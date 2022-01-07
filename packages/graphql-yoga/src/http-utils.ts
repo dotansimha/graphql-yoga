@@ -57,6 +57,25 @@ export async function sendNodeResponse(
   serverResponse.statusMessage = responseResult.statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
   const responseBody = await (responseResult.body as unknown as Promise<any>)
-  const nodeReadable = Readable.from(responseBody)
-  nodeReadable.pipe(serverResponse)
+  if (responseBody.getReader) {
+    const reader: ReadableStreamDefaultReader = responseBody.getReader()
+    serverResponse.on('close', () => {
+      reader.cancel()
+    })
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) {
+        break
+      }
+      if (value) {
+        serverResponse.write(value)
+      }
+    }
+    if (!serverResponse.destroyed) {
+      serverResponse.end()
+    }
+  } else {
+    const nodeReadable = Readable.from(responseBody)
+    nodeReadable.pipe(serverResponse)
+  }
 }

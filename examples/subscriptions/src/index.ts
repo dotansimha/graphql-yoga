@@ -39,6 +39,7 @@ const resolvers = {
     counter: {
       subscribe: async function* () {
         let counter = 0;
+
         // count up until the subscription is terminated
         while (true) {
           yield counter++

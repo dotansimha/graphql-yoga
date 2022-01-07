@@ -88,7 +88,6 @@ export function getPushResponse(
     async pull(controller) {
       const { done, value } = await iterator.next()
       if (done) {
-        console.log('GELDI')
         controller.close()
       }
       if (value != null) {
