@@ -63,7 +63,7 @@ export type ServerOptions<TContext> = {
   introspection?: boolean
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
-   * If you throw `GraphQLServerError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+   * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
    *
    * You can lean more about this here:
    * @see https://www.envelop.dev/plugins/use-masked-errors

@@ -8,7 +8,7 @@ import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
 import { Server as BaseServer, YogaLogger } from '@graphql-yoga/core'
-import { EnvelopError as GraphQLServerError } from '@envelop/core'
+import { EnvelopError as GraphQLYogaError } from '@envelop/core'
 import type { GraphQLServerInject, ServerOptions } from './types'
 import LightMyRequest from 'light-my-request'
 import { ExecutionResult, print } from 'graphql'
@@ -126,7 +126,7 @@ class Server<TContext> extends BaseServer<TContext> {
       this._server.close((err) => {
         callback(err)
         if (err != null) {
-          reject(new GraphQLServerError(err.message))
+          reject(new GraphQLYogaError(err.message))
         } else {
           resolve()
         }
@@ -203,5 +203,5 @@ export type { ServerOptions } from './types'
 export * from '@graphql-yoga/subscription'
 
 export * from '@envelop/core'
-export { EnvelopError as GraphQLServerError } from '@envelop/core'
+export { EnvelopError as GraphQLYogaError } from '@envelop/core'
 export { renderGraphiQL } from '@graphql-yoga/handler'
