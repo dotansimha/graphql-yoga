@@ -471,7 +471,8 @@ const server = createServer({
         subscribe: () =>
           pipe(
             Repeater.merge([
-              // cause an initial event so the globalCounter is streamed to the client
+              // cause an initial event so the
+              // globalCounter is streamed to the client
               // upon initiating the subscription
               undefined,
               // event stream for future updates
@@ -489,6 +490,90 @@ const server = createServer({
         // publish a global counter increment event
         pubSub.publish('globalCounter:change')
         return globalCounter
+      },
+    },
+  },
+})
+
+server.start()
+```
+
+### Listen to multiple Pub/Sub topics
+
+Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
+
+```ts
+import { createServer, createPubSub, Repeater } from 'graphql-yoga'
+
+type User = {
+  id: string
+  login: string
+}
+
+let user: User | null = {
+  id: '1',
+  login: 'Laurin',
+}
+
+const pubSub = createPubSub<{
+  userLoginChanged: []
+  userDeleted: []
+}>()
+
+// Provide your schema
+const server = createServer({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+
+    type User {
+      id: ID!
+      login: String
+    }
+
+    type Subscription {
+      user: User
+    }
+
+    type Mutation {
+      deleteUser: Boolean
+      updateUserLogin(newLogin: String!): Boolean
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world',
+    },
+    Subscription: {
+      user: {
+        // Merge initial value with source streams of new values
+        subscribe: () =>
+          pipe(
+            Repeater.merge([
+              undefined,
+              pubSub.subscribe('userLoginChanged'),
+              pubSub.subscribe('userDeleted'),
+            ]),
+            // map all stream values to the latest user
+            map(() => user),
+          ),
+        resolve: (payload) => payload,
+      },
+    },
+    Mutation: {
+      deleteUser: () => {
+        user = null
+        pubSub.publish('userDeleted')
+        return true
+      },
+      updateUserLogin: (_, args) => {
+        if (!user) {
+          return false
+        }
+        user.login = args.newLogin
+        pubSub.publish('userLoginChanged')
+        return true
       },
     },
   },
