@@ -477,14 +477,14 @@ const server = createServer({
               // event stream for future updates
               pubSub.subscribe('globalCounter:change'),
             ]),
-            // map all events to the latest globalCounter
+            // map all stream values to the latest globalCounter
             map(() => globalCounter),
           ),
         resolve: (payload) => payload,
       },
     },
     Mutation: {
-      incrementGlobalCounter: (_, __, { pubSub }) => {
+      incrementGlobalCounter: () => {
         globalCounter = globalCounter + 1
         // publish a global counter increment event
         pubSub.publish('globalCounter:change')
