@@ -3,7 +3,14 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLScalarType,
+  GraphQLInt,
 } from 'graphql'
+
+let counter = 0
+
+export function getCounterValue() {
+  return counter
+}
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -46,11 +53,15 @@ export const schema = new GraphQLSchema({
   subscription: new GraphQLObjectType({
     name: 'Subscription',
     fields: () => ({
-      ping: {
-        type: GraphQLString,
+      counter: {
+        type: GraphQLInt,
         subscribe: async function* () {
-          yield { ping: 'pong' }
+          while (true) {
+            await new Promise((resolve) => setTimeout(resolve, 100))
+            yield counter++
+          }
         },
+        resolve: (counter) => counter,
       },
     }),
   }),
