@@ -2,14 +2,14 @@ import { Server } from '@graphql-yoga/core'
 import { handleOptions } from './handleOptions'
 import { Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
-import { ProcessRequestOptions } from './types'
 import { processRequest } from './processRequest'
 import { shouldRenderGraphiQL, renderGraphiQL } from './graphiql'
+import { InitialContext } from '.'
 
-export async function handleRequest<TContext>(
-  this: Server<TContext>,
-  request: Request,
-) {
+export async function handleRequest<
+  TContext extends InitialContext,
+  TRootValue,
+>(this: Server<TContext, TRootValue>, request: Request) {
   try {
     if (this.corsOptionsFactory != null && request.method === 'OPTIONS') {
       return handleOptions(request, this.corsOptionsFactory)
@@ -31,16 +31,28 @@ export async function handleRequest<TContext>(
       request,
     )
 
-    const proxy = this.getEnveloped(request)
-    const processRequestOptions: ProcessRequestOptions<any, any> = {
+    const { execute, validate, subscribe, parse, contextFactory, schema } =
+      this.getEnveloped<InitialContext>({
+        request,
+        query,
+        variables,
+        operationName,
+      })
+
+    this.logger.debug(`Processing Request by Helix`)
+
+    return await processRequest({
       request,
       query,
       variables,
       operationName,
-      ...proxy,
-    }
-    this.logger.debug(`Processing Request by Helix`)
-    return await processRequest(processRequestOptions)
+      execute,
+      validate,
+      subscribe,
+      parse,
+      contextFactory,
+      schema,
+    })
   } catch (err: any) {
     this.logger.error(err.message, err)
     const response = new Response(err.message, {
