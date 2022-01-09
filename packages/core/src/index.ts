@@ -15,7 +15,10 @@ import {
   useLogger,
   useSchema,
 } from '@envelop/core'
-import { useDisableIntrospection } from '@envelop/disable-introspection'
+import {
+  DisableIntrospectionOptions,
+  useDisableIntrospection,
+} from '@envelop/disable-introspection'
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
@@ -64,7 +67,7 @@ export type ServerOptions<TContext, TRootValue> = {
    *
    * Default: `true`
    */
-  introspection?: boolean
+  introspection?: boolean | DisableIntrospectionOptions
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -181,7 +184,14 @@ export class Server<TContext extends InitialContext, TRootValue> {
             },
           }),
         ),
-        enableIf(!introspectionEnabled, useDisableIntrospection()),
+        enableIf(
+          !introspectionEnabled,
+          useDisableIntrospection(
+            typeof introspectionEnabled === 'boolean'
+              ? {}
+              : introspectionEnabled,
+          ),
+        ),
         enableIf(
           !!maskedErrors,
           useMaskedErrors(
