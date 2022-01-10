@@ -246,8 +246,22 @@ export class Server<TContext extends InitialContext, TRootValue> {
 
     if (typeof options?.graphiql === 'object' || options?.graphiql === false) {
       this.graphiql = options.graphiql
-    } else {
+    } else if (options.graphiql === true) {
+      if (introspectionDisabled) {
+        this.logger.warn(
+          'Graphiql may not work properly with introspection disabled',
+        )
+      }
+      this.graphiql = {}
+    } else if (typeof introspectionDisabled === 'boolean') {
+      // case graphiql is not manually set and introspectionDisabled is set statically
       this.graphiql = introspectionDisabled ? false : {}
+    } else {
+      // case graphiql is not manually set and introspectionDisabled is set dynamically
+      this.logger.warn(
+        'Graphiql may not work properly with introspection disabled',
+      )
+      this.graphiql = {}
     }
   }
 }
