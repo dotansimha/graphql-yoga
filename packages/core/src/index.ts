@@ -57,17 +57,17 @@ export type ServerOptions<TContext, TRootValue> = {
    */
   logger?: YogaLogger
   /**
-   * Allow introspection query. This is useful for exploring the API with tools like GraphiQL.
+   * Disable introspection query. This is useful for exploring the API with tools like GraphiQL.
    * If you are making a private GraphQL API,
-   * it is suggested that you disable this in production so that
+   * it is suggested that you set this TRUE in production so that
    * potential malicious API consumers do not see what all operations are possible.
    *
    * You can learn more about GraphQL introspection here:
    * @see https://graphql.org/learn/introspection/
    *
-   * Default: `true`
+   * Default: `false`
    */
-  introspection?: boolean | DisableIntrospectionOptions
+  disableIntrospection?: boolean | DisableIntrospectionOptions
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -144,7 +144,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
 
     const maskedErrors = options.maskedErrors || false
 
-    const introspectionEnabled = options.introspection ?? true
+    const introspectionDisabled = options.disableIntrospection ?? false
 
     this.getEnveloped = envelop({
       plugins: [
@@ -185,11 +185,11 @@ export class Server<TContext extends InitialContext, TRootValue> {
           }),
         ),
         enableIf(
-          !introspectionEnabled,
+          !!introspectionDisabled,
           useDisableIntrospection(
-            typeof introspectionEnabled === 'boolean'
+            typeof introspectionDisabled === 'boolean'
               ? {}
-              : introspectionEnabled,
+              : introspectionDisabled,
           ),
         ),
         enableIf(
@@ -234,7 +234,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
     if (typeof options.graphiql === 'object' || options.graphiql === false) {
       this.graphiql = options.graphiql
     } else {
-      this.graphiql = introspectionEnabled ? {} : false
+      this.graphiql = introspectionDisabled ? false : {}
     }
   }
 }
