@@ -9,7 +9,11 @@ import { InitialContext } from '.'
 export async function handleRequest<
   TContext extends InitialContext,
   TRootValue,
->(this: Server<TContext, TRootValue>, request: Request) {
+>(
+  this: Server<TContext, TRootValue>,
+  request: Request,
+  additionalContext: any,
+) {
   try {
     if (this.corsOptionsFactory != null && request.method === 'OPTIONS') {
       return handleOptions(request, this.corsOptionsFactory)
@@ -37,6 +41,7 @@ export async function handleRequest<
         query,
         variables,
         operationName,
+        ...additionalContext,
       })
 
     this.logger.debug(`Processing Request by Helix`)

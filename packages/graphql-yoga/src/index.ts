@@ -40,10 +40,14 @@ function getPinoLogger<TContext, TRootValue>(
   })
 }
 
-class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
-  TContext,
-  TRootValue
-> {
+interface InitialNodeContext extends InitialContext {
+  nodeRequest: NodeRequest
+}
+
+class Server<
+  TContext extends InitialNodeContext,
+  TRootValue,
+> extends BaseServer<TContext, TRootValue> {
   /**
    * Port for server
    */
@@ -87,7 +91,9 @@ class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
     this.logger.debug('Node Request received')
     const request = await getNodeRequest(nodeRequest)
     this.logger.debug('Node Request processed')
-    const response = await this.handleRequest(request)
+    const response = await this.handleRequest(request, {
+      nodeRequest,
+    })
     this.logger.debug('Response returned')
     return response
   }
@@ -201,7 +207,7 @@ class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
  *  server.start()
  * ```
  */
-export function createServer<TContext extends InitialContext, TRootValue>(
+export function createServer<TContext extends InitialNodeContext, TRootValue>(
   options: ServerOptions<TContext, TRootValue>,
 ) {
   return new Server<TContext, TRootValue>(options)
