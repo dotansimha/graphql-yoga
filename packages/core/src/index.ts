@@ -57,15 +57,15 @@ export type ServerOptions<TContext, TRootValue> = {
    */
   logger?: YogaLogger
   /**
-   * Allow introspection query. This is useful for exploring the API with tools like GraphiQL.
+   * Disable introspection query. This is useful for exploring the API with tools like GraphiQL.
    * If you are making a private GraphQL API,
-   * it is suggested that you disable this in production so that
+   * it is suggested that you set this TRUE in production so that
    * potential malicious API consumers do not see what all operations are possible.
    *
    * You can learn more about GraphQL introspection here:
    * @see https://graphql.org/learn/introspection/
    *
-   * Default: `true`
+   * Default: `false`
    */
   disableIntrospection?: boolean | DisableIntrospectionOptions
   /**

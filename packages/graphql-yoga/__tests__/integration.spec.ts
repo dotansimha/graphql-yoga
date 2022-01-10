@@ -24,7 +24,7 @@ describe('Introspection Option', () => {
     const server = createServer({
       schema,
       enableLogging: false,
-      introspection: false,
+      disableIntrospection: true,
     })
     const { response, executionResult } =
       await server.inject<IntrospectionQuery>({
