@@ -1,9 +1,6 @@
-// @denoify-ignore
 import type { IncomingMessage, ServerResponse } from 'http'
 import { Request } from 'cross-undici-fetch'
-import { pipeline, Readable } from 'stream'
-import { promisify } from 'util'
-import { isAsyncIterable } from '@graphql-tools/utils'
+import { Readable } from 'stream'
 
 export interface NodeRequest {
   protocol?: string
@@ -16,7 +13,15 @@ export interface NodeRequest {
   raw?: IncomingMessage
 }
 
-export async function getNodeRequest(
+const requestNodeRequestMap = new WeakMap<Request, NodeRequest>()
+
+export function getNodeRequestFromRequest(
+  request: Request,
+): NodeRequest | undefined {
+  return requestNodeRequestMap.get(request)
+}
+
+export async function getRequestFromNodeRequest(
   nodeRequest: NodeRequest,
 ): Promise<Request> {
   const fullUrl = `${nodeRequest.protocol || 'http'}://${
@@ -25,12 +30,14 @@ export async function getNodeRequest(
   const maybeParsedBody = nodeRequest.body
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   if (nodeRequest.method !== 'POST') {
-    return new Request(fullUrl, {
+    const request = new Request(fullUrl, {
       headers: nodeRequest.headers,
       method: nodeRequest.method,
     })
+    requestNodeRequestMap.set(request, nodeRequest)
+    return request
   } else if (maybeParsedBody) {
-    return new Request(fullUrl, {
+    const request = new Request(fullUrl, {
       headers: nodeRequest.headers,
       method: nodeRequest.method,
       body:
@@ -38,12 +45,16 @@ export async function getNodeRequest(
           ? maybeParsedBody
           : JSON.stringify(maybeParsedBody),
     })
+    requestNodeRequestMap.set(request, nodeRequest)
+    return request
   }
-  return new Request(fullUrl, {
+  const request = new Request(fullUrl, {
     headers: nodeRequest.headers,
     method: nodeRequest.method,
     body: rawRequest as any,
   })
+  requestNodeRequestMap.set(request, nodeRequest)
+  return request
 }
 
 export async function sendNodeResponse(

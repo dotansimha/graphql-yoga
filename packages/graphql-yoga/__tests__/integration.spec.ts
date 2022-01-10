@@ -181,6 +181,15 @@ describe('Requests', () => {
       'Must provide query string.',
     )
   })
+
+  it('should keep Node Request object with standard one', async () => {
+    const { executionResult } = await yoga.inject({
+      document: '{ isNode }',
+    })
+
+    expect(executionResult.errors).toBeFalsy()
+    expect(executionResult.data.isNode).toBeTruthy()
+  })
 })
 
 describe('Incremental Delivery', () => {

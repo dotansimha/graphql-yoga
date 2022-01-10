@@ -4,7 +4,9 @@ import {
   GraphQLString,
   GraphQLScalarType,
   GraphQLInt,
+  GraphQLBoolean,
 } from 'graphql'
+import { getNodeRequestFromRequest } from '../src/http-utils'
 
 let counter = 0
 
@@ -19,6 +21,10 @@ export const schema = new GraphQLSchema({
       ping: {
         type: GraphQLString,
         resolve: () => 'pong',
+      },
+      isNode: {
+        type: GraphQLBoolean,
+        resolve: (_, __, { request }) => !!getNodeRequestFromRequest(request),
       },
     }),
   }),

@@ -6,7 +6,11 @@ import {
 } from 'http'
 import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
-import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
+import {
+  getRequestFromNodeRequest,
+  NodeRequest,
+  sendNodeResponse,
+} from './http-utils'
 import { Server as BaseServer, YogaLogger } from '@graphql-yoga/core'
 import { EnvelopError as GraphQLYogaError } from '@envelop/core'
 import type { GraphQLServerInject, ServerOptions } from './types'
@@ -85,7 +89,7 @@ class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
 
   async handleIncomingMessage(nodeRequest: NodeRequest): Promise<Response> {
     this.logger.debug('Node Request received')
-    const request = await getNodeRequest(nodeRequest)
+    const request = await getRequestFromNodeRequest(nodeRequest)
     this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request)
     this.logger.debug('Response returned')
