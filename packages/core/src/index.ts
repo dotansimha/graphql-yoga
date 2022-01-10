@@ -234,7 +234,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
     if (typeof options.graphiql === 'object' || options.graphiql === false) {
       this.graphiql = options.graphiql
     } else {
-      this.graphiql = {}
+      this.graphiql = introspectionDisabled ? false : {}
     }
   }
 }
