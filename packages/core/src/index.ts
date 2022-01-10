@@ -67,7 +67,7 @@ export type ServerOptions<TContext, TRootValue> = {
    *
    * Default: `true`
    */
-  introspection?: boolean | DisableIntrospectionOptions
+  disableIntrospection?: boolean | DisableIntrospectionOptions
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -144,7 +144,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
 
     const maskedErrors = options.maskedErrors || false
 
-    const introspectionEnabled = options.introspection ?? true
+    const introspectionDisabled = options.disableIntrospection ?? false
 
     this.getEnveloped = envelop({
       plugins: [
@@ -185,11 +185,11 @@ export class Server<TContext extends InitialContext, TRootValue> {
           }),
         ),
         enableIf(
-          !introspectionEnabled,
+          !!introspectionDisabled,
           useDisableIntrospection(
-            typeof introspectionEnabled === 'boolean'
+            typeof introspectionDisabled === 'boolean'
               ? {}
-              : introspectionEnabled,
+              : introspectionDisabled,
           ),
         ),
         enableIf(
@@ -234,7 +234,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
     if (typeof options.graphiql === 'object' || options.graphiql === false) {
       this.graphiql = options.graphiql
     } else {
-      this.graphiql = introspectionEnabled ? {} : false
+      this.graphiql = {}
     }
   }
 }
