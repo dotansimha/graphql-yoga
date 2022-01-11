@@ -43,7 +43,7 @@ export function buildApp() {
             });
 
             reply.status(response.status);
-            const nodeStream = Readable.from(response.body);
+            const nodeStream = Readable.from(response.body as any);
             reply.send(nodeStream);
         }
     })
