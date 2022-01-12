@@ -4,12 +4,18 @@ import { Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { shouldRenderGraphiQL, renderGraphiQL } from './graphiql'
-import { InitialContext } from '.'
+import { InitialContext } from './types'
 
 export async function handleRequest<
-  TContext extends InitialContext,
-  TRootValue,
->(this: Server<TContext, TRootValue>, request: Request) {
+  TAdditionalContext = {},
+  TContext extends InitialContext & TAdditionalContext = InitialContext &
+    TAdditionalContext,
+  TRootValue = {},
+>(
+  this: Server<TContext, TRootValue>,
+  request: Request,
+  additionalContext?: any,
+) {
   try {
     if (this.corsOptionsFactory != null && request.method === 'OPTIONS') {
       return handleOptions(request, this.corsOptionsFactory)
@@ -37,6 +43,7 @@ export async function handleRequest<
         query,
         variables,
         operationName,
+        ...additionalContext,
       })
 
     this.logger.debug(`Processing Request by Helix`)

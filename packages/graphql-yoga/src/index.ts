@@ -83,17 +83,30 @@ class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
     }
   }
 
-  async handleIncomingMessage(nodeRequest: NodeRequest): Promise<Response> {
+  async handleIncomingMessage<TAdditionalContext = {}>(
+    req: NodeRequest,
+    additionalContext?: TAdditionalContext,
+  ): Promise<Response> {
     this.logger.debug('Node Request received')
-    const request = await getNodeRequest(nodeRequest)
+    const request = await getNodeRequest(req)
     this.logger.debug('Node Request processed')
-    const response = await this.handleRequest(request)
+    const response = await this.handleRequest(request, {
+      req,
+      ...additionalContext,
+    })
     this.logger.debug('Response returned')
     return response
   }
 
-  requestListener = async (req: IncomingMessage, res: ServerResponse) => {
-    const response = await this.handleIncomingMessage(req)
+  requestListener = async <TAdditionalContext = {}>(
+    req: IncomingMessage,
+    res: ServerResponse,
+    additionalContext?: TAdditionalContext,
+  ) => {
+    const response = await this.handleIncomingMessage(req, {
+      res,
+      ...additionalContext,
+    })
     await sendNodeResponse(response, res)
   }
 

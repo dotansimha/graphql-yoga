@@ -1,4 +1,5 @@
 import {
+  GraphQLBoolean,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
@@ -19,6 +20,10 @@ export const schema = new GraphQLSchema({
       ping: {
         type: GraphQLString,
         resolve: () => 'pong',
+      },
+      isNode: {
+        type: GraphQLBoolean,
+        resolve: (_, __, { req, res }) => !!req && !!res,
       },
     }),
   }),

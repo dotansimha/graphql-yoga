@@ -37,7 +37,7 @@ export function buildApp() {
         url: '/graphql',
         method: ['GET', 'POST', 'OPTIONS'],
         handler: async (req, reply) => {
-            const response = await graphQLServer.handleIncomingMessage(req)
+            const response = await graphQLServer.handleIncomingMessage(req, { reply });
             response.headers.forEach((value, key) => {
                 reply.header(key, value);
             });
