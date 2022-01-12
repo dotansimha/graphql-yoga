@@ -65,14 +65,17 @@ describe('fastify-modules example integration', () => {
 
   it('should find request in context', async () => {
     const response = await request(app.server)
-      .get('/graphql')
-      .query({
-        query: /* GraphQL */ `
-          query {
-            request
-          }
-        `,
-      })
+      .post('/graphql')
+      .set({ 'content-type': 'application/json' })
+      .send(
+        JSON.stringify({
+          query: /* GraphQL */ `
+            query {
+              request
+            }
+          `,
+        }),
+      )
 
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain('application/json')
