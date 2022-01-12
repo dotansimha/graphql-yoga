@@ -2,7 +2,7 @@ import { Injectable, Inject, CONTEXT, Scope } from 'graphql-modules'
 import { inspect } from 'util'
 
 @Injectable({
-  scope: Scope.Singleton,
+  scope: Scope.Operation,
   global: true,
 })
 export class BasicProvider {
