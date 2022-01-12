@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import { buildApp } from './app'
 
 const app = buildApp()

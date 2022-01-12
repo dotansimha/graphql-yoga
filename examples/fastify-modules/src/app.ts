@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { createServer } from 'graphql-yoga'
 import fastify, { RouteHandlerMethod } from 'fastify'
 import { Readable } from 'stream'

@@ -3,8 +3,8 @@ import { BasicProvider } from './providers'
 export const resolvers = {
   Query: {
     hello: () => 'world',
-    request: (root, args, { injector }): string => {
-      return injector.get(BasicProvider).getRequest()
+    contextKeys: (root, args, { injector }): string => {
+      return injector.get(BasicProvider).getContextKeys()
     },
   },
   Subscription: {

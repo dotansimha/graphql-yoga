@@ -1,6 +1,6 @@
 type Query {
   hello: String
-  request: String
+  contextKeys: [String]
 }
 type Subscription {
   countdown(from: Int!): Int!

@@ -6,5 +6,10 @@ module.exports = {
     ],
     '@babel/preset-typescript',
   ],
-  plugins: [['@babel/plugin-proposal-decorators', { legacy: true }]],
+  plugins: [
+    'babel-plugin-transform-typescript-metadata',
+    ['@babel/plugin-proposal-decorators', { legacy: true }],
+    'babel-plugin-parameter-decorator',
+    '@babel/plugin-proposal-class-properties',
+  ],
 }

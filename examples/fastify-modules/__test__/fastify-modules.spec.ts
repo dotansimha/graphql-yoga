@@ -71,7 +71,7 @@ describe('fastify-modules example integration', () => {
         JSON.stringify({
           query: /* GraphQL */ `
             query {
-              request
+              contextKeys
             }
           `,
         }),
@@ -79,6 +79,7 @@ describe('fastify-modules example integration', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain('application/json')
-    expect(response.body).toContain('req')
+    expect(response.body?.errors).toBeFalsy()
+    expect(response.body?.data?.contextKeys).toContain('request')
   })
 })

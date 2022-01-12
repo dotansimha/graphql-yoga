@@ -1,21 +1,19 @@
-import { FastifyRequest } from 'fastify'
 import { Injectable, Inject, CONTEXT, Scope } from 'graphql-modules'
+import { inspect } from 'util'
 
 @Injectable({
   scope: Scope.Singleton,
   global: true,
 })
 export class BasicProvider {
-  constructor(
-    @Inject(CONTEXT) private ctx: { request: Request; req: FastifyRequest },
-  ) {}
+  constructor(@Inject(CONTEXT) private ctx: { request: Request }) {}
 
-  public getRequest(): string {
-    console.log(
-      JSON.stringify(
-        this.ctx.request ? this.ctx.request.headers : this.ctx.req,
-      ),
-    )
-    return JSON.stringify(Object.keys(this.ctx))
+  public getContextKeys(): string[] {
+    if (!this.ctx) {
+      throw new Error(
+        `Expected context to be defined but got: ${inspect(this.ctx)}`,
+      )
+    }
+    return Object.keys(this.ctx)
   }
 }
