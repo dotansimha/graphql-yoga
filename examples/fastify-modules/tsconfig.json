@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
     "target": "esnext",
     "moduleResolution": "node",
     "module": "commonjs",
     "sourceMap": true,
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }
