@@ -48,7 +48,8 @@ app.route({
   url: '/graphql',
   method: ['GET', 'POST', 'OPTIONS'],
   handler: async (req, reply) => {
-    const response = await graphQLServer.handleIncomingMessage(req)
+    // The second argument of `handleIncomingMessage` is passing `reply` in GraphQL context.
+    const response = await graphQLServer.handleIncomingMessage(req, { reply })
     response.headers.forEach((value, key) => {
       reply.header(key, value)
     })

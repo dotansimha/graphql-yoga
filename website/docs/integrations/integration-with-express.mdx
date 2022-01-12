@@ -41,4 +41,20 @@ app.listen(4000, () => {
 })
 ```
 
+## Accessing the original request and response objects of Express
+
+```ts
+// Assume that we are using
+const resolvers = {
+  Query: {
+    me: async (_, __, { req, res }) => {
+      const userId = req.session.userId // We can access Express session that is passed in `req.session`
+      // res.header('my-special-header', 'My Special Value') // We can set headers on the response
+      const user = await User.findById(userId)
+      return user
+    },
+  },
+}
+```
+
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/express)
