@@ -33,7 +33,18 @@ describe('Introspection Option', () => {
 
     expect(response.statusCode).toBe(400)
     expect(executionResult.data).toBeUndefined()
-    expect(executionResult.errors![0].name).toBe('GraphQLError')
+    console.log(executionResult.errors)
+    expect(executionResult.errors![0]).toMatchInlineSnapshot(`
+      Object {
+        "locations": Array [
+          Object {
+            "column": 7,
+            "line": 3,
+          },
+        ],
+        "message": "GraphQL introspection has been disabled, but the requested query contained the field \\"__schema\\".",
+      }
+    `)
   })
 })
 
@@ -117,6 +128,77 @@ describe('Masked Error Option', () => {
     expect(executionResult.errors![1].message).toBe(
       'This error never gets masked.',
     )
+  })
+})
+
+describe('Context error', () => {
+  it('Error thrown within context factory without error masking is not swallowed and does not include stack trace', async () => {
+    const server = createServer({
+      enableLogging: false,
+      maskedErrors: false,
+      context: () => {
+        throw new Error('I like turtles')
+      },
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hello }',
+    })
+    expect(executionResult).toMatchInlineSnapshot(`
+      Object {
+        "errors": Array [
+          Object {
+            "message": "I like turtles",
+          },
+        ],
+      }
+    `)
+  })
+
+  it('Error thrown within context factory with error masking is masked', async () => {
+    const server = createServer({
+      enableLogging: false,
+      maskedErrors: true,
+      context: () => {
+        throw new Error('I like turtles')
+      },
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hello }',
+    })
+    expect(executionResult).toMatchInlineSnapshot(`
+      Object {
+        "errors": Array [
+          Object {
+            "message": "Unexpected error.",
+          },
+        ],
+      }
+    `)
+  })
+
+  it('GraphQLYogaError thrown within context factory with error masking is not masked', async () => {
+    const server = createServer({
+      enableLogging: false,
+      maskedErrors: true,
+      context: () => {
+        throw new GraphQLYogaError('I like turtles')
+      },
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hello }',
+    })
+    expect(executionResult).toMatchInlineSnapshot(`
+      Object {
+        "errors": Array [
+          Object {
+            "message": "I like turtles",
+          },
+        ],
+      }
+    `)
   })
 })
 

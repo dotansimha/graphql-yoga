@@ -1,4 +1,4 @@
-import { ExecutionResult } from 'graphql'
+import { ExecutionResult, GraphQLError } from 'graphql'
 import { ExecutionPatchResult } from './types'
 import { ReadableStream, Response } from 'cross-undici-fetch'
 import { encodeString } from './encodeString'
@@ -103,10 +103,9 @@ export function getPushResponse(
 }
 
 interface ErrorResponseParams {
-  message: string
   status?: number
   headers?: any
-  errors?: Error[]
+  errors: GraphQLError[]
   isEventStream: boolean
 }
 
@@ -115,18 +114,13 @@ async function* getSingleResult(payload: any) {
 }
 
 export function getErrorResponse({
-  message,
   status = 500,
   headers = {},
-  errors = [new Error(message)],
+  errors,
   isEventStream,
 }: ErrorResponseParams): Response {
-  const payload: any = {
-    errors: errors.map((error) => ({
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    })),
+  const payload: ExecutionResult = {
+    errors,
   }
   if (isEventStream) {
     return getPushResponse(getSingleResult(payload))
