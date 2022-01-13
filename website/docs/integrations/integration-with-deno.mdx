@@ -16,18 +16,7 @@ But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/core` whic
 import { serve } from 'https://deno.land/std@0.117.0/http/server.ts'
 import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/core?dts'
 
-const graphQLServer = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world',
-    },
-  },
-})
+const graphQLServer = createServer()
 
 serve((req) => graphQLServer.handleRequest(req), {
   addr: ':4000',

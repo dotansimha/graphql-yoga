@@ -21,18 +21,7 @@ But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/core` whic
 ```ts
 import { createServer } from '@graphql-yoga/core'
 
-const graphQLServer = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world',
-    },
-  },
-})
+const graphQLServer = createServer()
 
 addEventListener('fetch', (event) => {
   event.respondWith(graphQLServer.handleRequest(event.request))

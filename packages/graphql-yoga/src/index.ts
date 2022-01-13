@@ -15,11 +15,13 @@ import { ExecutionResult, print } from 'graphql'
 import { InitialContext } from '@graphql-yoga/handler'
 
 function getPinoLogger<TContext, TRootValue>(
-  options: ServerOptions<TContext, TRootValue>,
+  options?: ServerOptions<TContext, TRootValue>,
 ): YogaLogger {
-  const prettyLog = options.prettyLog ?? process.env.NODE_ENV !== 'production'
+  const prettyLog = options?.prettyLog ?? process.env.NODE_ENV !== 'production'
   const logLevel =
-    options.logLevel ?? process.env.NODE_ENV !== 'production' ? 'debug' : 'info'
+    options?.logLevel ?? process.env.NODE_ENV !== 'production'
+      ? 'debug'
+      : 'info'
 
   const prettyPrintOptions = prettyLog
     ? {
@@ -58,20 +60,20 @@ class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
   private hostname: string
   private _server: NodeServer
 
-  constructor(options: ServerOptions<TContext, TRootValue>) {
+  constructor(options?: ServerOptions<TContext, TRootValue>) {
     super({
       ...options,
-      logger: options.logger || getPinoLogger(options),
+      logger: options?.logger ?? getPinoLogger(options),
     })
-    this.port = options.port || parseInt(process.env.PORT || '4000')
-    this.endpoint = options.endpoint || '/graphql'
-    this.hostname = options.hostname || '0.0.0.0'
+    this.port = options?.port ?? parseInt(process.env.PORT || '4000')
+    this.endpoint = options?.endpoint || '/graphql'
+    this.hostname = options?.hostname || '0.0.0.0'
 
     this.logger.debug('Setting up server.')
 
-    if (options.https) {
+    if (options?.https) {
       this._server =
-        typeof options.https === 'object'
+        typeof options?.https === 'object'
           ? createHttpsServer(options.https, this.requestListener)
           : createHttpsServer(this.requestListener)
     } else {
@@ -202,7 +204,7 @@ class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
  * ```
  */
 export function createServer<TContext extends InitialContext, TRootValue>(
-  options: ServerOptions<TContext, TRootValue>,
+  options?: ServerOptions<TContext, TRootValue>,
 ) {
   return new Server<TContext, TRootValue>(options)
 }

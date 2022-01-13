@@ -19,18 +19,7 @@ import { createServer } from 'graphql-yoga'
 
 const app = express()
 
-const graphQLServer = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world',
-    },
-  },
-})
+const graphQLServer = createServer()
 
 // Bind GraphQL Yoga to `/graphql` endpoint
 // Here it takes the request and response objects and handles them internally

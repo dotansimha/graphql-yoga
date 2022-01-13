@@ -32,18 +32,7 @@ export async function get() {
   }
 }
 
-const graphQLServer = createServer({
-  typeDefs: `
-		type Query {
-			hello: String
-		}
-	`,
-  resolvers: {
-    Query: {
-      hello: () => 'GraphQL Yoga - SvelteKit',
-    },
-  },
-})
+const graphQLServer = createServer()
 
 export async function post(req: ServerRequest) {
   const request = new Request(req.url.toString(), {
@@ -77,9 +66,10 @@ Create the file `src/routes/api/graphiql.ts`:
 import { renderGraphiQL } from '@graphql-yoga/core'
 import type { ServerRequest } from '@sveltejs/kit/types/hooks'
 
-const defaultQuery = `query GetHello {
-  hello
-}
+const defaultQuery = /* GraphQL */ `
+  query GetHello {
+    hello
+  }
 `
 
 export async function get(req: ServerRequest) {
