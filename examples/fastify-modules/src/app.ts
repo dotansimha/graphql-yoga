@@ -14,6 +14,7 @@ export function createGraphQLApp() {
 
 export const graphqlHandler = (): RouteHandlerMethod => {
   const graphQLServer = createServer({
+    logging: false,
     plugins: [useGraphQLModules(createGraphQLApp())],
   })
 
@@ -31,7 +32,7 @@ export const graphqlHandler = (): RouteHandlerMethod => {
 }
 
 export function buildApp() {
-  const app = fastify({ logger: true })
+  const app = fastify({ logger: false })
 
   app.route({
     url: '/graphql',

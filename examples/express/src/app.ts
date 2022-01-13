@@ -30,6 +30,7 @@ export function buildApp() {
         },
       },
     },
+    logging: false,
   })
 
   app.use('/graphql', graphQLServer.requestListener)

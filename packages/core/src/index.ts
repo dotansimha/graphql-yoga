@@ -51,16 +51,10 @@ interface OptionsWithPlugins<TContext> {
  */
 export type ServerOptions<TContext, TRootValue> = {
   /**
-   * Enable logging
+   * Enable/disable logging or provide a custom logger.
    * @default true
    */
-  enableLogging?: boolean
-  /**
-   * Custom logger
-   *
-   * @default console
-   */
-  logger?: YogaLogger
+  logging?: boolean | YogaLogger
   /**
    * Disable introspection query. This is useful for exploring the API with tools like GraphiQL.
    * If you are making a private GraphQL API,
@@ -148,14 +142,18 @@ export class Server<TContext extends InitialContext, TRootValue> {
           })
       : defaultSchema
 
-    this.logger = options?.enableLogging
-      ? options.logger || console
-      : {
-          debug: () => {},
-          error: () => {},
-          warn: () => {},
-          info: () => {},
-        }
+    const logger = options?.logging ?? true
+    this.logger =
+      typeof logger === 'boolean'
+        ? logger === true
+          ? console
+          : {
+              debug: () => {},
+              error: () => {},
+              warn: () => {},
+              info: () => {},
+            }
+        : logger
 
     const maskedErrors = options?.maskedErrors ?? false
 
@@ -175,7 +173,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
         }),
         // Log events - useful for debugging purposes
         enableIf(
-          !!options?.enableLogging,
+          !!logger,
           useLogger({
             logFn: (eventName, events) => {
               if (eventName === 'execute-start') {

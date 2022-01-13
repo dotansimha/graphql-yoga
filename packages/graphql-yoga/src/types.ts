@@ -8,9 +8,9 @@ import { ServerOptions as HttpsServerOptions } from 'https'
 /**
  * Configuration options for the server
  */
-export type ServerOptions<TContext, TRootValue> = BaseServerOptions<
-  TContext,
-  TRootValue
+export type ServerOptions<TContext, TRootValue> = Omit<
+  BaseServerOptions<TContext, TRootValue>,
+  'logging'
 > & {
   /**
    * GraphQL endpoint
@@ -33,8 +33,12 @@ export type ServerOptions<TContext, TRootValue> = BaseServerOptions<
   /**
    * Pretty logging with Pino
    */
-  prettyLog?: boolean
-  logLevel?: 'debug' | 'info'
+  logging?:
+    | BaseServerOptions<TContext, TRootValue>['logging']
+    | {
+        prettyLog?: boolean
+        logLevel?: 'debug' | 'info'
+      }
 }
 
 export type GraphQLServerInject<

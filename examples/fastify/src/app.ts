@@ -40,7 +40,7 @@ export function buildApp() {
       },
     },
     // Integrate Fastify Logger to Yoga
-    logger: app.log,
+    logging: app.log,
   })
 
   app.route({

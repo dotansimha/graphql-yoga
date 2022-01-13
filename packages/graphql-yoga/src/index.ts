@@ -15,13 +15,18 @@ import { ExecutionResult, print } from 'graphql'
 import { InitialContext } from '@graphql-yoga/handler'
 
 function getPinoLogger<TContext, TRootValue>(
-  options?: ServerOptions<TContext, TRootValue>,
+  options: ServerOptions<TContext, TRootValue>['logging'] = {},
 ): YogaLogger {
-  const prettyLog = options?.prettyLog ?? process.env.NODE_ENV !== 'production'
+  const prettyLog =
+    typeof options === 'object' && 'prettyLog' in options
+      ? options?.prettyLog
+      : process.env.NODE_ENV === 'development'
+
   const logLevel =
-    options?.logLevel ?? process.env.NODE_ENV !== 'production'
-      ? 'debug'
-      : 'info'
+    (typeof options === 'object' &&
+      'logLevel' in options &&
+      options.logLevel) ||
+    (process.env.NODE_ENV === 'development' ? 'debug' : 'info')
 
   const prettyPrintOptions = prettyLog
     ? {
@@ -63,7 +68,10 @@ class Server<TContext extends InitialContext, TRootValue> extends BaseServer<
   constructor(options?: ServerOptions<TContext, TRootValue>) {
     super({
       ...options,
-      logger: options?.logger ?? getPinoLogger(options),
+      logging:
+        typeof options?.logging === 'object' && 'debug' in options?.logging
+          ? options?.logging
+          : getPinoLogger(options?.logging),
     })
     this.port = options?.port ?? parseInt(process.env.PORT || '4000')
     this.endpoint = options?.endpoint || '/graphql'
