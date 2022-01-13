@@ -5,7 +5,7 @@ import EventSource from 'eventsource'
 import request from 'supertest'
 import { getCounterValue, schema } from '../test-utils/schema'
 
-const yoga = createServer({ schema, enableLogging: false })
+const yoga = createServer({ schema, logging: false })
 
 describe('Introspection Option', () => {
   it('should succeed introspection query', async () => {
@@ -23,7 +23,7 @@ describe('Introspection Option', () => {
   it('should fail introspection query', async () => {
     const server = createServer({
       schema,
-      enableLogging: false,
+      logging: false,
       disableIntrospection: true,
     })
     const { response, executionResult } =
@@ -33,7 +33,6 @@ describe('Introspection Option', () => {
 
     expect(response.statusCode).toBe(400)
     expect(executionResult.data).toBeUndefined()
-    console.log(executionResult.errors)
     expect(executionResult.errors![0]).toMatchInlineSnapshot(`
       Object {
         "locations": Array [
@@ -76,7 +75,7 @@ describe('Masked Error Option', () => {
     const server = createServer({
       schema,
       maskedErrors: true,
-      enableLogging: false,
+      logging: false,
     })
 
     const { executionResult } = await server.inject({
@@ -95,7 +94,7 @@ describe('Masked Error Option', () => {
     const server = createServer({
       schema,
       maskedErrors: { errorMessage: 'Hahahaha' },
-      enableLogging: false,
+      logging: false,
     })
 
     const { executionResult } = await server.inject({
@@ -113,7 +112,7 @@ describe('Masked Error Option', () => {
   it('should not mask errors by default', async () => {
     const server = createServer({
       schema,
-      enableLogging: false,
+      logging: false,
     })
 
     const { executionResult } = await server.inject({
@@ -134,7 +133,7 @@ describe('Masked Error Option', () => {
 describe('Context error', () => {
   it('Error thrown within context factory without error masking is not swallowed and does not include stack trace', async () => {
     const server = createServer({
-      enableLogging: false,
+      logging: false,
       maskedErrors: false,
       context: () => {
         throw new Error('I like turtles')
@@ -157,7 +156,7 @@ describe('Context error', () => {
 
   it('Error thrown within context factory with error masking is masked', async () => {
     const server = createServer({
-      enableLogging: false,
+      logging: false,
       maskedErrors: true,
       context: () => {
         throw new Error('I like turtles')
@@ -180,7 +179,7 @@ describe('Context error', () => {
 
   it('GraphQLYogaError thrown within context factory with error masking is not masked', async () => {
     const server = createServer({
-      enableLogging: false,
+      logging: false,
       maskedErrors: true,
       context: () => {
         throw new GraphQLYogaError('I like turtles')

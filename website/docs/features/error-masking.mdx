@@ -18,24 +18,25 @@ import { fetch } from 'cross-undici-fetch'
 
 // Provide your schema
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      greeting: String!
-    }
-  `,
-  resolvers: {
-    Query: {
-      greeting: async () => {
-        // This service does not exist
-        const greeting = await fetch('http://localhost:9876/greeting').then(
-          (res) => res.text(),
-        )
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        greeting: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        greeting: async () => {
+          // This service does not exist
+          const greeting = await fetch('http://localhost:9876/greeting').then(
+            (res) => res.text(),
+          )
 
-        return greeting
+          return greeting
+        },
       },
     },
   },
-  enableLogging: true,
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -80,24 +81,25 @@ import { fetch } from 'cross-undici-fetch'
 
 // Provide your schema
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      greeting: String!
-    }
-  `,
-  resolvers: {
-    Query: {
-      greeting: async () => {
-        // This service does not exist
-        const greeting = await fetch('http://localhost:9876/greeting').then(
-          (res) => res.text(),
-        )
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        greeting: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        greeting: async () => {
+          // This service does not exist
+          const greeting = await fetch('http://localhost:9876/greeting').then(
+            (res) => res.text(),
+          )
 
-        return greeting
+          return greeting
+        },
       },
     },
   },
-  enableLogging: true,
   // Mask unexpected errors
   maskedErrors: true,
 })
@@ -154,28 +156,31 @@ const users = [
 
 // Provide your schema
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type User {
-      id: ID!
-      login: String!
-    }
-    type Query {
-      user(byId: ID!): User!
-    }
-  `,
-  resolvers: {
-    Query: {
-      user: async (_, args) => {
-        const user = users.find((user) => user.id === args.byId)
-        if (!user) {
-          throw new GraphQLServerError(`User with id '${args.byId}' not found.`)
-        }
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type User {
+        id: ID!
+        login: String!
+      }
+      type Query {
+        user(byId: ID!): User!
+      }
+    `,
+    resolvers: {
+      Query: {
+        user: async (_, args) => {
+          const user = users.find((user) => user.id === args.byId)
+          if (!user) {
+            throw new GraphQLServerError(
+              `User with id '${args.byId}' not found.`,
+            )
+          }
 
-        return user
+          return user
+        },
       },
     },
   },
-  enableLogging: true,
   // Mask unexpected errors
   maskedErrors: true,
 })
@@ -240,34 +245,35 @@ const users = [
 
 // Provide your schema
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type User {
-      id: ID!
-      login: String!
-    }
-    type Query {
-      user(byId: ID!): User!
-    }
-  `,
-  resolvers: {
-    Query: {
-      user: async (_, args) => {
-        const user = users.find((user) => user.id === args.byId)
-        if (!user) {
-          throw new GraphQLServerError(
-            `User with id '${args.byId}' not found.`,
-            // error extensions
-            {
-              code: 'USER_NOT_FOUND',
-            },
-          )
-        }
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type User {
+        id: ID!
+        login: String!
+      }
+      type Query {
+        user(byId: ID!): User!
+      }
+    `,
+    resolvers: {
+      Query: {
+        user: async (_, args) => {
+          const user = users.find((user) => user.id === args.byId)
+          if (!user) {
+            throw new GraphQLServerError(
+              `User with id '${args.byId}' not found.`,
+              // error extensions
+              {
+                code: 'USER_NOT_FOUND',
+              },
+            )
+          }
 
-        return user
+          return user
+        },
       },
     },
   },
-  enableLogging: true,
   // Mask unexpected errors
   maskedErrors: true,
 })
