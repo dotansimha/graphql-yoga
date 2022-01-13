@@ -20,18 +20,7 @@ import { Readable } from 'stream'
 
 const app = new Koa()
 
-const graphQLServer = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world',
-    },
-  },
-})
+const graphQLServer = createServer()
 
 // Bind GraphQL Yoga to `/graphql` endpoint
 app.use('/graphql', async (ctx) => {

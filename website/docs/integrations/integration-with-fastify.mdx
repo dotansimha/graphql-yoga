@@ -25,16 +25,6 @@ import { Readable } from 'stream'
 const app = fastify({ logger: true })
 
 const graphQLServer = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world',
-    },
-  },
   // Integrate Fastify logger
   logger: app.log,
 })

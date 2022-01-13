@@ -19,8 +19,6 @@ sidebar_label: Next.js
 import { createServer } from 'graphql-yoga'
 
 const server = createServer({
-  typeDefs: 'type Query {hello: String!}',
-  resolvers: { Query: { hello: () => 'Hello World' } },
   cors: false,
   endpoint: '/api/graphql',
 })

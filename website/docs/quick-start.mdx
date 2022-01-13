@@ -14,32 +14,57 @@ GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-comp
 
 ## Create a Hello World GraphQL API
 
-The following example shows how to create a simple GraphQL Yoga server that responds to a simple query, and it uses `typeDefs` and `resolvers` pattern of GraphQL Tools.
-You can [learn more on GraphQL Tools documentation](https://www.graphql-tools.com/docs/generate-schema) how to create a schema using this pattern.
+The following example shows how to create a simple GraphQL Yoga server that responds to a simple query.
 
 ```ts
 import { createServer } from 'graphql-yoga'
 
-// Provide your schema
-const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      greetings: String!
-    }
-  `,
-  resolvers: {
-    Query: {
-      greetings: () => 'Hello World!',
-    },
-  },
-})
-// Start the server and explore http://localhost:4000/graphql
+// Create your server
+const server = createServer({})
 server.start()
 ```
 
+That is it!
+
+Now visit `http://localhost:4000/graphql` in your browser and execute the followiing query operation:
+
+```graphql
+query HelloWorld {
+  hello
+}
+```
+
+## Provide your own GraphQL schema
+
+You probably want to write your own schema instead of using the hello world schema that is served by default!
+
+```ts
+import { createServer } from 'graphql-yoga'
+
+// Create your server
+const server = createServer({
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'Hello Hello Hello',
+      },
+    },
+  },
+})
+server.start()
+```
+
+You can simply provide type definitions and a resolver map based on the popular graphql-tools `makeExecutableSchema` pattern. You can [learn more on the GraphQL Tools documentation](https://www.graphql-tools.com/docs/generate-schema)
+
 ## Passing an executable schema created by other tools
 
-You can pass existing `GraphQLSchema` instance to `createServer`.
+You can also pass an existing `GraphQLSchema` instance to `createServer`.
+Use your favorite schema building library such as [GiraphQL](https://giraphql.com/), [gqtx](https://github.com/sikanhe/gqtx), [GraphQL Nexus](https://nexusjs.org/) or plain [graphql-js schema classes](https://graphql.org/graphql-js/type/#graphqlschema).
 
 ```ts
 import { schema } from './schema'

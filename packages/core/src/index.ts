@@ -138,8 +138,8 @@ export class Server<TContext extends InitialContext, TRootValue> {
   public readonly corsOptionsFactory?: (request: Request) => CORSOptions
   public readonly graphiql: GraphiQLOptions | false
 
-  constructor(options: ServerOptions<TContext, TRootValue>) {
-    const schema = options.schema
+  constructor(options?: ServerOptions<TContext, TRootValue>) {
+    const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
         : makeExecutableSchema({
@@ -148,7 +148,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
           })
       : defaultSchema
 
-    this.logger = options.enableLogging
+    this.logger = options?.enableLogging
       ? options.logger || console
       : {
           debug: () => {},
@@ -157,9 +157,9 @@ export class Server<TContext extends InitialContext, TRootValue> {
           info: () => {},
         }
 
-    const maskedErrors = options.maskedErrors || false
+    const maskedErrors = options?.maskedErrors ?? false
 
-    const introspectionDisabled = options.disableIntrospection ?? false
+    const introspectionDisabled = options?.disableIntrospection ?? false
 
     this.getEnveloped = envelop({
       plugins: [
@@ -175,7 +175,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
         }),
         // Log events - useful for debugging purposes
         enableIf(
-          !!options.enableLogging,
+          !!options?.enableLogging,
           useLogger({
             logFn: (eventName, events) => {
               if (eventName === 'execute-start') {
@@ -214,18 +214,18 @@ export class Server<TContext extends InitialContext, TRootValue> {
           ),
         ),
         enableIf(
-          options.context != null,
+          options?.context != null,
           useExtendContext(
-            typeof options.context === 'function'
-              ? options.context
-              : () => options.context,
+            typeof options?.context === 'function'
+              ? options?.context
+              : () => options?.context,
           ) as any,
         ),
-        ...(options.plugins || []),
+        ...(options?.plugins ?? []),
       ],
     })
 
-    if (options.cors != null) {
+    if (options?.cors != null) {
       if (typeof options.cors === 'function') {
         const userProvidedCorsOptionsFactory = options.cors
         this.corsOptionsFactory = (request) => {
@@ -246,7 +246,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
       }
     }
 
-    if (typeof options.graphiql === 'object' || options.graphiql === false) {
+    if (typeof options?.graphiql === 'object' || options?.graphiql === false) {
       this.graphiql = options.graphiql
     } else {
       this.graphiql = introspectionDisabled ? false : {}
@@ -255,7 +255,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
 }
 
 export function createServer<TContext extends InitialContext, TRootValue>(
-  options: ServerOptions<TContext, TRootValue>,
+  options?: ServerOptions<TContext, TRootValue>,
 ) {
   return new Server<TContext, TRootValue>(options)
 }
