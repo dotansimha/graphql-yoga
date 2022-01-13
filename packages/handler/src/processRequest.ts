@@ -4,6 +4,7 @@ import {
   DocumentNode,
   OperationDefinitionNode,
   ExecutionArgs,
+  GraphQLError,
 } from 'graphql'
 import { isAsyncIterable } from '@graphql-tools/utils'
 import { ExecutionPatchResult, RequestProcessContext } from './types'
@@ -59,10 +60,12 @@ export const processRequest = async <TContext, TRootValue = {}>({
     if (request.method !== 'GET' && request.method !== 'POST') {
       return getErrorResponse({
         status: 405,
-        message: 'GraphQL only supports GET and POST requests.',
         headers: {
           Allow: 'GET, POST',
         },
+        errors: [
+          new GraphQLError('GraphQL only supports GET and POST requests.'),
+        ],
         isEventStream,
       })
     }
@@ -70,18 +73,17 @@ export const processRequest = async <TContext, TRootValue = {}>({
     if (query == null) {
       return getErrorResponse({
         status: 400,
-        message: 'Must provide query string.',
+        errors: [new GraphQLError('Must provide query string.')],
         isEventStream,
       })
     }
 
     try {
       document = await parseQuery(query, parse)
-    } catch (e: any) {
+    } catch (e: unknown) {
       return getErrorResponse({
         status: 400,
-        message: 'Syntax error',
-        errors: [e],
+        errors: [e as GraphQLError],
         isEventStream,
       })
     }
@@ -90,7 +92,6 @@ export const processRequest = async <TContext, TRootValue = {}>({
     if (validationErrors.length > 0) {
       return getErrorResponse({
         status: 400,
-        message: 'Invalid query.',
         errors: validationErrors,
         isEventStream,
       })
@@ -101,7 +102,11 @@ export const processRequest = async <TContext, TRootValue = {}>({
     if (operation.operation === 'mutation' && request.method === 'GET') {
       return getErrorResponse({
         status: 405,
-        message: 'Can only perform a mutation operation from a POST request.',
+        errors: [
+          new GraphQLError(
+            'Can only perform a mutation operation from a POST request.',
+          ),
+        ],
         headers: {
           Allow: 'POST',
         },
@@ -118,7 +123,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
       }
     } catch (_error) {
       return getErrorResponse({
-        message: 'Variables are invalid JSON.',
+        errors: [new GraphQLError('Variables are invalid JSON.')],
         status: 400,
         isEventStream,
       })
@@ -162,9 +167,20 @@ export const processRequest = async <TContext, TRootValue = {}>({
       }
     }
   } catch (error: any) {
-    const errors = Array.isArray(error) ? error : error.errors || [error]
+    const errors = [
+      error instanceof GraphQLError
+        ? error
+        : new GraphQLError(
+            error.message,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            error,
+          ),
+    ]
+
     return getErrorResponse({
-      message: 'Error',
       status: 500,
       errors,
       isEventStream,
