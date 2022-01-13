@@ -3,7 +3,12 @@ import {
   GraphiQLOptions,
   handleRequest,
 } from '@graphql-yoga/handler'
-import { GraphQLSchema } from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLSchema,
+  GraphQLString,
+  isSchema,
+} from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
@@ -92,18 +97,29 @@ export type ServerOptions<TContext, TRootValue> = {
    * Default: `true`
    */
   graphiql?: GraphiQLOptions | boolean
-} & (
-  | ({
-      schema: GraphQLSchema
-    } & Partial<OptionsWithPlugins<TContext>>)
-  | ({
-      typeDefs: TypeSource
-      resolvers?:
-        | IResolvers<TRootValue, TContext>
-        | Array<IResolvers<TRootValue, TContext>>
-    } & Partial<OptionsWithPlugins<TContext>>)
-  | OptionsWithPlugins<TContext>
-)
+
+  schema?:
+    | GraphQLSchema
+    | {
+        typeDefs: TypeSource
+        resolvers?:
+          | IResolvers<TRootValue, TContext>
+          | Array<IResolvers<TRootValue, TContext>>
+      }
+} & Partial<OptionsWithPlugins<TContext>>
+
+const defaultSchema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'Query',
+    fields: {
+      hello: {
+        type: GraphQLString,
+        resolve: () =>
+          'Hello there! This GraphQL server is powered by GraphQL Yoga.',
+      },
+    },
+  }),
+})
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -123,15 +139,14 @@ export class Server<TContext extends InitialContext, TRootValue> {
   public readonly graphiql: GraphiQLOptions | false
 
   constructor(options: ServerOptions<TContext, TRootValue>) {
-    const schema =
-      'schema' in options
+    const schema = options.schema
+      ? isSchema(options.schema)
         ? options.schema
-        : 'typeDefs' in options
-        ? makeExecutableSchema({
-            typeDefs: options.typeDefs,
-            resolvers: options.resolvers,
+        : makeExecutableSchema({
+            typeDefs: options.schema.typeDefs,
+            resolvers: options.schema.resolvers,
           })
-        : null
+      : defaultSchema
 
     this.logger = options.enableLogging
       ? options.logger || console

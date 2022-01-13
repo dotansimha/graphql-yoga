@@ -56,10 +56,14 @@ describe('Masked Error Option', () => {
     },
   }
 
+  const schema = {
+    typeDefs,
+    resolvers,
+  }
+
   it('should mask error', async () => {
     const server = createServer({
-      typeDefs,
-      resolvers,
+      schema,
       maskedErrors: true,
       enableLogging: false,
     })
@@ -78,8 +82,7 @@ describe('Masked Error Option', () => {
 
   it('should mask error with custom message', async () => {
     const server = createServer({
-      typeDefs,
-      resolvers,
+      schema,
       maskedErrors: { errorMessage: 'Hahahaha' },
       enableLogging: false,
     })
@@ -98,8 +101,7 @@ describe('Masked Error Option', () => {
 
   it('should not mask errors by default', async () => {
     const server = createServer({
-      typeDefs,
-      resolvers,
+      schema,
       enableLogging: false,
     })
 
