@@ -60,29 +60,21 @@ export interface RequestProcessContext<TContext, TRootValue>
   /**
    * A function whose return value is passed in as the `context` to `execute`.
    */
-  contextFactory?: (
-    initialContext: InitialContext,
-  ) => Promise<TContext> | TContext
+  contextFactory: () => Promise<TContext> | TContext
   /**
-   * An optional function which will be used to execute instead of default `execute` from `graphql-js`.
+   * A function which will be used to execute instead of default `execute` from `graphql-js`.
    */
-  execute?: (...args: any[]) => any
+  execute: (...args: any[]) => any
   /**
-   * An optional function which will be used to create a document instead of the default `parse` from `graphql-js`.
+   * A function which will be used to create a document instead of the default `parse` from `graphql-js`.
    */
-  parse?: (...args: any[]) => any
+  parse: (...args: any[]) => any
   /**
-   * A function whose return value is passed in as the `rootValue` to `execute`.
+   * A function which will be used to subscribe instead of default `subscribe` from `graphql-js`.
    */
-  rootValueFactory?: (
-    initialContext: InitialContext,
-  ) => Promise<TRootValue> | TRootValue
+  subscribe: (...args: any[]) => any
   /**
-   * An optional function which will be used to subscribe instead of default `subscribe` from `graphql-js`.
+   * A function which will be used to validate instead of default `validate` from `graphql-js`.
    */
-  subscribe?: (...args: any[]) => any
-  /**
-   * An optional function which will be used to validate instead of default `validate` from `graphql-js`.
-   */
-  validate?: (...args: any[]) => any
+  validate: (...args: any[]) => any
 }

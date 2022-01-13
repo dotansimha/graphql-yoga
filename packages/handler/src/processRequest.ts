@@ -1,19 +1,12 @@
 import {
-  execute as defaultExecute,
   getOperationAST,
   parse as defaultParse,
-  subscribe as defaultSubscribe,
-  validate as defaultValidate,
   DocumentNode,
   OperationDefinitionNode,
-  ExecutionResult,
+  ExecutionArgs,
 } from 'graphql'
 import { isAsyncIterable } from '@graphql-tools/utils'
-import {
-  ExecutionPatchResult,
-  InitialContext,
-  RequestProcessContext,
-} from './types'
+import { ExecutionPatchResult, RequestProcessContext } from './types'
 import {
   getMultipartResponse,
   getPushResponse,
@@ -46,19 +39,17 @@ const getExecutableOperation = (
 
 export const processRequest = async <TContext, TRootValue = {}>({
   contextFactory,
-  execute = defaultExecute,
+  execute,
   operationName,
-  parse = defaultParse,
+  parse,
   query,
   request,
-  rootValueFactory,
   schema,
-  subscribe = defaultSubscribe,
-  validate = defaultValidate,
+  subscribe,
+  validate,
   variables,
 }: RequestProcessContext<TContext, TRootValue>): Promise<Response> => {
-  let context: TContext | undefined
-  let rootValue: TRootValue | undefined
+  let contextValue: TContext | undefined
   let document: DocumentNode | undefined
   let operation: OperationDefinitionNode | undefined
 
@@ -133,29 +124,18 @@ export const processRequest = async <TContext, TRootValue = {}>({
       })
     }
 
-    const initialContext: InitialContext = {
+    contextValue = await contextFactory()
+
+    const executionArgs: ExecutionArgs = {
+      schema,
+      document,
+      contextValue,
+      variableValues,
       operationName,
-      query,
-      request,
-      variables,
     }
 
-    context = contextFactory
-      ? await contextFactory(initialContext)
-      : ({} as TContext)
-    rootValue = rootValueFactory
-      ? await rootValueFactory(initialContext)
-      : ({} as TRootValue)
-
     if (operation.operation === 'subscription') {
-      const result = await subscribe({
-        schema,
-        document,
-        rootValue,
-        contextValue: context,
-        variableValues,
-        operationName,
-      })
+      const result = await subscribe(executionArgs)
 
       // If errors are encountered while subscribing to the operation, an execution result
       // instead of an AsyncIterable.
@@ -169,14 +149,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
         }
       }
     } else {
-      const result = await execute({
-        schema,
-        document,
-        rootValue,
-        contextValue: context,
-        variableValues,
-        operationName,
-      })
+      const result = await execute(executionArgs)
 
       // Operations that use @defer, @stream and @live will return an `AsyncIterable` instead of an
       // execution result.

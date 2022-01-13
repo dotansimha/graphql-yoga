@@ -1,0 +1,7 @@
+type Query {
+  hello: String
+  contextKeys: [String]
+}
+type Subscription {
+  countdown(from: Int!): Int!
+}
