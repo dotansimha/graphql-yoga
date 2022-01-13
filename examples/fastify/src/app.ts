@@ -46,9 +46,9 @@ export function buildApp() {
     method: ['GET', 'POST', 'OPTIONS'],
     handler: async (req, reply) => {
       const response = await graphQLServer.handleIncomingMessage(req)
-      response.headers.forEach((value, key) => {
-        reply.header(key, value)
-      })
+      for (const [name, value] of response.headers) {
+        reply.header(name, value)
+      }
 
       reply.status(response.status)
       const nodeStream = Readable.from(response.body as any)
