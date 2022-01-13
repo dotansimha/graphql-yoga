@@ -1,14 +1,16 @@
 const { createServer } = require('graphql-yoga')
 
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String!
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'Hello World',
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'Hello World',
+      },
     },
   },
 })
