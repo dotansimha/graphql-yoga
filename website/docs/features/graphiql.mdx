@@ -1,12 +1,13 @@
 ---
 id: graphiql
-title: GraphiQL Playground
+title: GraphiQL
 sidebar_label: GraphiQL
 ---
 
 [GraphiQL is an in-browser IDE for writing, validating, and testing GraphQL queries.](https://github.com/graphql/graphiql)
 
-You can configure or completely disable GraphiQL with the `graphiql` option. By default, GraphiQL is only enabled in development mode.
+You can configure or completely disable GraphiQL with the `graphiql` option.
+By default, GraphiQL is only enabled.
 
 ## Example
 
@@ -15,21 +16,10 @@ import { createServer } from '@graphql-yoga/node'
 
 // Provide your schema
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      greetings: String!
-    }
-  `,
-  resolvers: {
-    Query: {
-      greetings: () => 'Hello World!',
-    },
-  },
   graphiql: {
-    // See all options here: https://github.com/graphql/graphiql/tree/main/packages/graphiql
     defaultQuery: /* GraphQL */ `
       query {
-        greetings
+        hello
       }
     `,
   },
@@ -37,3 +27,39 @@ const server = createServer({
 // Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
+
+## Disabling GraphiQL
+
+You can disable GraphiQL simply setting the `graphiql` option to `false`.
+
+```ts
+import { createServer } from 'graphql-yoga'
+
+// Provide your schema
+const server = createServer({
+  graphiql: false,
+})
+// Start the server and explore http://localhost:4000/graphql
+server.start()
+```
+
+> Be aware that this does not really make your GraphQL server more secure. As long as the introspection and/or the "did you mean x" suggestion feature of GraphQL are enabled.
+
+```ts
+import { createServer } from 'graphql-yoga'
+
+// Provide your schema
+const server = createServer({
+  graphiql: false,
+  introspection: false,
+})
+// Start the server and explore http://localhost:4000/graphql
+server.start()
+```
+
+Disabling the "did you mean x" suggestion feature can not be disabled at the moment ([see the corresponding graphql-js GitHub issue](https://github.com/graphql/graphql-js/issues/2247)).
+
+So if your goal is to avoid unknown actors from reverse-engineering your GraphQL schema and executing arbitary operations, it is highly recommended to use persisted operations.
+Envelop has the plugin [`@envelop/persisted-operations`](https://www.npmjs.com/package/@envelop/persisted-operations) that can be used with GraphQL Yoga.
+
+A more detailed guide and example for adding persisted operations to GraphQL Yoga will follow.

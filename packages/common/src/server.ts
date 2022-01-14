@@ -52,22 +52,31 @@ interface OptionsWithPlugins<TContext> {
  */
 export type YogaServerOptions<TContext, TRootValue> = {
   /**
+   * Disable/enable the dev mode.
+   * @default false
+   */
+  isDev?: boolean
+  /**
    * Enable/disable logging or provide a custom logger.
    * @default true
    */
   logging?: boolean | YogaLogger
   /**
-   * Disable introspection query. This is useful for exploring the API with tools like GraphiQL.
+   * Enable/disable GraphQL introspection.
+   * This is useful for exploring the API with tools like GraphiQL.
    * If you are making a private GraphQL API,
    * it is suggested that you set this TRUE in production so that
    * potential malicious API consumers do not see what all operations are possible.
    *
+   * BE AWARE that [GraphQL.js implements "did you mean x" suggestions for invalid GraphQL operations](https://github.com/graphql/graphql-js/issues/2247).
+   * Therefore disabling is not a 100% secure approach. Persisted operations is considered a safer approach.
+   *
    * You can learn more about GraphQL introspection here:
    * @see https://graphql.org/learn/introspection/
    *
-   * Default: `false`
+   * Default: `true`
    */
-  disableIntrospection?: boolean | DisableIntrospectionOptions
+  introspection?: boolean | DisableIntrospectionOptions
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -151,8 +160,10 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
   private readonly corsOptionsFactory: (request: Request) => CORSOptions = () =>
     DEFAULT_CORS_OPTIONS
   protected readonly graphiql: GraphiQLOptions | false
+  private isDev: boolean
 
   constructor(options?: YogaServerOptions<TContext, TRootValue>) {
+    this.isDev = options?.isDev ?? false
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
@@ -175,9 +186,9 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
             }
         : logger
 
-    const maskedErrors = options?.maskedErrors ?? false
+    const maskedErrors = options?.maskedErrors ?? true
 
-    const introspectionDisabled = options?.disableIntrospection ?? false
+    const introspectionEnabled = options?.introspection ?? true
 
     this.getEnveloped = envelop({
       plugins: [
@@ -217,17 +228,24 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
           }),
         ),
         enableIf(
-          !!introspectionDisabled,
+          !introspectionEnabled,
           useDisableIntrospection(
-            typeof introspectionDisabled === 'boolean'
-              ? {}
-              : introspectionDisabled,
+            typeof introspectionEnabled === 'boolean'
+              ? undefined
+              : introspectionEnabled,
           ),
         ),
         enableIf(
           !!maskedErrors,
           useMaskedErrors(
-            typeof maskedErrors === 'object' ? maskedErrors : undefined,
+            typeof maskedErrors === 'object'
+              ? {
+                  isDev: this.isDev,
+                  ...maskedErrors,
+                }
+              : {
+                  isDev: this.isDev,
+                },
           ),
         ),
         enableIf(
@@ -262,9 +280,9 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
     }
 
     if (typeof options?.graphiql === 'object' || options?.graphiql === false) {
-      this.graphiql = options.graphiql
+      this.graphiql = options?.graphiql
     } else {
-      this.graphiql = introspectionDisabled ? false : {}
+      this.graphiql = !!introspectionEnabled ? {} : false
     }
   }
 

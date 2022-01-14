@@ -12,10 +12,10 @@ You can start with installing `graphql-yoga` package.
 
 ### Install equivalent **Envelop** plugins of the Apollo Server
 
-- `disableIntrospection: true` flag
-  - If you are using this flag, [install `@envelop/disable-introspection`](https://www.envelop.dev/plugins/use-disable-introspection)
+Some features that are included within apollo-server by default must be installed as envelop plugins ([Lern more about envelop plugins here](/docs/features/envelop-plugins)).
+
 - Apollo Federation
-  - If you are using Apollo Server errors, [install `@envelop/use-apollo-federation`](https://www.envelop.dev/plugins/use-apollo-federation)
+  - If you are using Apollo Federation, [install `@envelop/use-apollo-federation`](https://www.envelop.dev/plugins/use-apollo-federation)
 - Apollo Server Errors
   - If you are using Apollo Server errors, [install `@envelop/use-apollo-server-errors`](https://www.envelop.dev/plugins/use-apollo-server-errors)
 - Apollo Tracing
@@ -23,7 +23,7 @@ You can start with installing `graphql-yoga` package.
 - Response Cache
   - If you are using Response Cache, [you should set up `@envelop/use-response-cache`](https://www.envelop.dev/plugins/use-response-cache) for the same functionality
 
-[Check more plugins on Envelop Plugin Hub](https://www.envelop.dev/plugins)
+[Check out more plugins on Envelop Plugin Hub](https://www.envelop.dev/plugins)
 
 ## Example initial usage of GraphQL Yoga
 
@@ -35,7 +35,6 @@ For example if you are using Apollo Server Errors;
 import { schema } from './schema'
 - import { ApolloServer } from 'apollo-server'
 + import { GraphQLYoga } from 'graphql-yoga'
-
 + import { useApolloServerErrors } from '@envelop/apollo-server-errors'
 
 - const server = new ApolloServer({
@@ -43,7 +42,6 @@ import { schema } from './schema'
   // You can also pass `typeDefs` and `resolvers` here directly if you previously use `ApolloServer` constructor to build your `GraphQLSchema`
   // schema: { typeDefs, resolvers },
   schema,
-+  // Add here the plugins you installed above
 +  plugins: [useApolloServerErrors()],
 })
 
@@ -52,7 +50,7 @@ server.start()
 
 ## Migration from standalone `apollo-server`
 
-You don't need anything special. You can just use GraphQL Yoga as in the example above;
+You don't need anything special. You can just use GraphQL Yoga as in the example above.
 
 ## Migration from `apollo-server-*`
 

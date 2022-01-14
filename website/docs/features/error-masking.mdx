@@ -1,6 +1,6 @@
 ---
 id: error-masking
-title: Yoga Error Masking
+title: Error Masking
 sidebar_label: Error Masking
 ---
 
@@ -18,6 +18,7 @@ import { fetch } from 'cross-undici-fetch'
 
 // Provide your schema
 const server = createServer({
+  maskedErrors: false,
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -101,6 +102,7 @@ const server = createServer({
     },
   },
   // Mask unexpected errors
+  // true is the default options. Yoga is safe by default!
   maskedErrors: true,
 })
 
@@ -129,6 +131,79 @@ server.start()
 ```
 
 You now sucessfully enabled masking of all kinds of unexpected errors within your GraphQL schema!
+
+## Receive original error in development
+
+When developing locally seeing the original error within your Chrome Dev Tools might be handy for debugging. You might be tempted to disable the masked errors via the `maskedErrors` config option, however, we do not recommending that at all! Having development and production behavior as close as possible is very important for not having any surprises in production.
+
+Instead we recommend enabling the Yoga development mode.
+
+```ts
+import { createServer } from 'graphql-yoga'
+import { fetch } from 'cross-undici-fetch'
+
+// Provide your schema
+const server = createServer({
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        greeting: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        greeting: async () => {
+          // This service does not exist
+          const greeting = await fetch('http://localhost:9876/greeting').then(
+            (res) => res.text(),
+          )
+
+          return greeting
+        },
+      },
+    },
+  },
+  isDev: true, // process.env.NODE_ENV === "development"
+})
+
+server.start()
+```
+
+**GraphQL Operation**
+
+```graphql
+query {
+  greeting
+}
+```
+
+This will add a more detailed error with a proper stacktrace to the errors extensions.
+
+**GraphQL Error Response with original error extensions**
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unexpected error.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["greeting"],
+      "extensions": {
+        "originalError": {
+          "message": "request to http://localhost:9876/greeting failed, reason: connect ECONNREFUSED 127.0.0.1:9876",
+          "stack": "FetchError: request to http://localhost:9876/greeting failed, reason: connect ECONNREFUSED 127.0.0.1:9876\n    at ClientRequest.<anonymous> (C:\\Users\\XXXX\\Projects\\graphql-yoga\\node_modules\\node-fetch\\lib\\index.js:1483:11)\n    at ClientRequest.emit (events.js:376:20)\n    at Socket.socketErrorListener (_http_client.js:475:9)\n    at Socket.emit (events.js:376:20)\n    at emitErrorNT (internal/streams/destroy.js:106:8)\n    at emitErrorCloseNT (internal/streams/destroy.js:74:3)\n    at processTicksAndRejections (internal/process/task_queues.js:82:21)"
+        }
+      }
+    }
+  ],
+  "data": null
+}
+```
 
 ## Exposing expected errors
 
