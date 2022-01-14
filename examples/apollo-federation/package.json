@@ -1,0 +1,17 @@
+{
+  "name": "apollo-federation-with-yoga",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"yarn start:service\" \"yarn start:gateway\"",
+    "start:service": "cd service && yarn start",
+    "start:gateway": "cd gateway && yarn start"
+  },
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  },
+  "workspaces": [
+    "service",
+    "gateway"
+  ]
+}
