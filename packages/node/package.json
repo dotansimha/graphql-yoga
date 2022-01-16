@@ -1,11 +1,11 @@
 {
-  "name": "graphql-yoga",
-  "version": "2.0.0-alpha.7",
+  "name": "@graphql-yoga/node",
+  "version": "0.0.0",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
-    "directory": "packages/graphql-yoga"
+    "directory": "packages/node"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -42,10 +42,25 @@
     "access": "public"
   },
   "dependencies": {
-    "@graphql-yoga/node": "0.0.0"
+    "@envelop/core": "^1.6.2",
+    "@graphql-tools/utils": "^8.6.0",
+    "@graphql-typed-document-node/core": "^3.1.1",
+    "@graphql-yoga/core": "0.2.0-alpha.6",
+    "@graphql-yoga/handler": "0.2.0-alpha.3",
+    "@graphql-yoga/subscription": "0.1.0-alpha.0",
+    "cross-undici-fetch": "^0.1.15",
+    "light-my-request": "^4.7.0",
+    "pino": "^7.2.0",
+    "pino-pretty": "^7.2.0"
   },
   "devDependencies": {
-    "bob-the-bundler": "^1.5.1"
+    "@types/eventsource": "^1",
+    "@types/node": "^16.11.7",
+    "@ungap/event": "^0.2.2",
+    "@ungap/event-target": "^0.2.3",
+    "bob-the-bundler": "^1.5.1",
+    "eventsource": "^1.1.0",
+    "graphql": "^16.0.1"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"

@@ -1,5 +1,5 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
-import { createServer, GraphQLYogaError } from 'graphql-yoga'
+import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 import { AddressInfo } from 'net'
 import EventSource from 'eventsource'
 import request from 'supertest'

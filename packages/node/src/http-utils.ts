@@ -1,9 +1,7 @@
 // @denoify-ignore
 import type { IncomingMessage, ServerResponse } from 'http'
 import { Request } from 'cross-undici-fetch'
-import { pipeline, Readable } from 'stream'
-import { promisify } from 'util'
-import { isAsyncIterable } from '@graphql-tools/utils'
+import { Readable } from 'stream'
 
 export interface NodeRequest {
   protocol?: string
