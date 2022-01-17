@@ -140,7 +140,7 @@ describe('Context error', () => {
     })
 
     const { executionResult } = await server.inject({
-      document: '{ hello }',
+      document: '{ greetings }',
     })
     expect(executionResult).toMatchInlineSnapshot(`
       Object {
@@ -163,7 +163,7 @@ describe('Context error', () => {
     })
 
     const { executionResult } = await server.inject({
-      document: '{ hello }',
+      document: '{ greetings }',
     })
     expect(executionResult).toMatchInlineSnapshot(`
       Object {
@@ -186,7 +186,7 @@ describe('Context error', () => {
     })
 
     const { executionResult } = await server.inject({
-      document: '{ hello }',
+      document: '{ greetings }',
     })
     expect(executionResult).toMatchInlineSnapshot(`
       Object {
