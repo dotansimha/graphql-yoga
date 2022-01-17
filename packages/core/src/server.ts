@@ -110,7 +110,7 @@ export function getDefaultSchema() {
       Greetings from GraphQL Yoga!
       """
       type Query {
-        hello: String
+        greetings: String
       }
       type Subscription {
         """
