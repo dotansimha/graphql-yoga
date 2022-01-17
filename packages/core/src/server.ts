@@ -106,13 +106,33 @@ export type YogaServerOptions<TContext, TRootValue> = {
 export function getDefaultSchema() {
   return makeExecutableSchema({
     typeDefs: /* GraphQL */ `
+      """
+      Greetings from GraphQL Yoga!
+      """
       type Query {
         hello: String
+      }
+      type Subscription {
+        """
+        Current Time
+        """
+        time: String
       }
     `,
     resolvers: {
       Query: {
-        hello: () => 'world',
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type',
+      },
+      Subscription: {
+        time: {
+          subscribe: async function* () {
+            while (true) {
+              yield { time: new Date().toISOString() }
+              await new Promise((resolve) => setTimeout(resolve, 1000))
+            }
+          },
+        },
       },
     },
   })

@@ -225,4 +225,16 @@ export function createServer<TContext extends YogaInitialContext, TRootValue>(
   return new YogaNodeServer<TContext, TRootValue>(options)
 }
 
-export * from '@graphql-yoga/core'
+export {
+  ExecutionPatchResult,
+  YogaInitialContext,
+  CORSOptions,
+  YogaLogger,
+  GraphQLYogaError,
+  shouldRenderGraphiQL,
+  renderGraphiQL,
+  GraphiQLOptions,
+} from '@graphql-yoga/core'
+
+export * from '@envelop/core'
+export * from '@graphql-yoga/subscription'
