@@ -9,6 +9,7 @@ sidebar_label: Apollo Federation
 Thanks to [Envelop's Apollo Federation](https://www.envelop.dev/plugins/use-apollo-federation) plugin, we can use GraphQL Yoga to build our gateway server.
 
 > As documented in the [Apollo Federation docs](https://www.apollographql.com/docs/federation/gateway/#setup), `@apollo/gateway` package doesn't support GraphQL v16 so you have to install `graphql@15`
+> Please note that Apollo Federation implementation doesn't support GraphQL Subscriptions. If you need to use Subscriptions with a Federated Gateway you can use [Schema Stitching](https://www.graphql-tools.com/docs/schema-stitching/stitch-federation)
 
 ## Gateway
 
