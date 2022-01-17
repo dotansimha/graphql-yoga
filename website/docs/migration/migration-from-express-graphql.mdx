@@ -8,7 +8,7 @@ sidebar_label: Express GraphQL
 
 You can start with installing `graphql-yoga` package.
 
-<PackageInstall packages={['graphql-yoga@alpha']} />
+<PackageInstall packages={['@graphql-yoga/node@alpha']} />
 
 ## Replace Express GraphQL's middleware
 
@@ -17,7 +17,7 @@ You should replace Express GraphQL's middleware with GraphQL Yoga's;
 ```diff
 const express = require('express');
 - const { graphqlHTTP } = require('express-graphql');
-+ const { createServer } = require('graphql-yoga');
++ const { createServer } = require('@graphql-yoga/node');
 const { schema } = require('./schema');
 
 const app = express();

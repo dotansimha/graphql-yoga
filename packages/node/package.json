@@ -1,25 +1,25 @@
 {
-  "name": "@graphql-yoga/handler",
-  "version": "0.2.0-alpha.3",
-  "description": "Normalize requests and response",
+  "name": "@graphql-yoga/node",
+  "version": "0.0.0",
+  "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
-    "directory": "packages/handler"
+    "directory": "packages/node"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
     "prepack": "bob prepack"
   },
-  "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://github.com/saihaj)",
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://saihaj.dev/)",
   "license": "MIT",
-  "devDependencies": {
-    "@envelop/core": "^1.6.1",
-    "@types/node": "^16.11.7",
-    "bob-the-bundler": "^1.5.1",
-    "typescript": "^4.4.4"
-  },
   "buildOptions": {
     "input": "./src/index.ts"
   },
@@ -43,9 +43,21 @@
   },
   "dependencies": {
     "@graphql-tools/utils": "^8.6.0",
+    "@graphql-typed-document-node/core": "^3.1.1",
+    "@graphql-yoga/core": "0.2.0-alpha.6",
     "cross-undici-fetch": "^0.1.15",
-    "dset": "^3.1.1",
-    "graphql-helix": "1.11.0"
+    "light-my-request": "^4.7.0",
+    "pino": "^7.2.0",
+    "pino-pretty": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/eventsource": "^1",
+    "@types/node": "^16.11.7",
+    "@ungap/event": "^0.2.2",
+    "@ungap/event-target": "^0.2.3",
+    "bob-the-bundler": "^1.5.1",
+    "eventsource": "^1.1.0",
+    "graphql": "^16.0.1"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"

@@ -1,6 +1,6 @@
 <p align="center"><img src="./website/public/banner.svg" width="350" /></p>
 
-> Note: New generation of GraphQL-Yoga is under development and testing. You can try the alpha - feedback is always welcome!  
+> Note: New generation of GraphQL-Yoga is under development and testing. You can try the alpha - feedback is always welcome!
 
 # graphql-yoga
 
@@ -21,7 +21,7 @@ npm i graphql-yoga@alpha graphql
 We are actively working on API for the library. This is a very simple example of how to use it:
 
 ```js
-const { createServer } = require('graphql-yoga')
+const { createServer } = require('@graphql-yoga/node')
 // Provide your schema
 const server = createServer({
   typeDefs: `

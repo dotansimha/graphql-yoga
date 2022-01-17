@@ -1,4 +1,4 @@
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 import express from 'express'
 
 export function buildApp() {

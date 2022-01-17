@@ -1,0 +1,11 @@
+---
+'@graphql-yoga/cli': patch
+'@graphql-yoga/core': patch
+'graphql-yoga': patch
+'@graphql-yoga/node': patch
+---
+
+Node Server implementation has been moved to `@graphql-yoga/node` package.
+
+CLI implementation has been moved to
+`graphql-yoga` package.

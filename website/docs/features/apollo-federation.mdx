@@ -26,7 +26,7 @@ Thanks to [Envelop's Apollo Federation](https://www.envelop.dev/plugins/use-apol
 ### Example Gateway
 
 ```ts
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 import { ApolloGateway } from '@apollo/gateway'
 import { useApolloFederation } from '@envelop/apollo-federation'
 
@@ -68,7 +68,7 @@ You don't need any extra plugins for Yoga for Federation Service.
 ```ts
 const { parse } = require('graphql')
 const { buildSubgraphSchema } = require('@apollo/subgraph')
-const { createServer } = require('graphql-yoga')
+const { createServer } = require('@graphql-yoga/node')
 
 const typeDefs = parse(/* GraphQL */ `
   type Query {

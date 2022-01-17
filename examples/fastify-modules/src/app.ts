@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 import fastify, { RouteHandlerMethod } from 'fastify'
 import { Readable } from 'stream'
 import { useGraphQLModules } from '@envelop/graphql-modules'
