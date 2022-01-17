@@ -15,7 +15,7 @@ npm init svelte@next
 [GraphQL Yoga - SvelteKit](https://graphql-yoga.vercel.app/docs/integrations/integration-with-sveltekit)
 
 ```bash
-yarn add -D @graphql-yoga/core@0.2.0-alpha.2
+yarn add -D @graphql-yoga/common@0.2.0-alpha.2
 ```
 
 ## 1/ Add the yogaHandler
@@ -23,7 +23,7 @@ yarn add -D @graphql-yoga/core@0.2.0-alpha.2
 Create the file `src/lib/graphql/yogaHandler.ts`:
 
 ```ts
-import type { BaseGraphQLServer } from '@graphql-yoga/core';
+import type { BaseGraphQLServer } from '@graphql-yoga/common';
 import type { ResponseHeaders } from '@sveltejs/kit/types/helper';
 import type { ServerRequest, ServerResponse } from '@sveltejs/kit/types/hooks';
 
@@ -60,7 +60,7 @@ Create the file `src/routes/api/graphql.ts`:
 
 ```ts
 import { yogaHandler } from '$lib/graphql/yogaHandler';
-import { BaseGraphQLServer } from '@graphql-yoga/core';
+import { BaseGraphQLServer } from '@graphql-yoga/common';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 export async function get() {
@@ -95,7 +95,7 @@ Create the file `src/routes/api/graphiql.ts`:
 
 ```ts
 import { yogaHandler } from '$lib/graphql/yogaHandler';
-import { BaseGraphQLServer } from '@graphql-yoga/core';
+import { BaseGraphQLServer } from '@graphql-yoga/common';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 const defaultQuery = `query GetHello {

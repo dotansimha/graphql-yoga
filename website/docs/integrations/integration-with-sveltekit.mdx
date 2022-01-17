@@ -12,7 +12,7 @@ You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQ
 
 In a SvelteKit project:
 
-<PackageInstall packages={['graphql', '@graphql-yoga/core@alpha']} />
+<PackageInstall packages={['graphql', '@graphql-yoga/common@alpha']} />
 
 ## Example
 
@@ -21,7 +21,7 @@ In a SvelteKit project:
 Create the file `src/routes/api/graphql.ts`:
 
 ```ts
-import { createServer } from '@graphql-yoga/core'
+import { createServer } from '@graphql-yoga/common'
 import type { ResponseHeaders } from '@sveltejs/kit/types/helper'
 import type { ServerRequest } from '@sveltejs/kit/types/hooks'
 
@@ -63,7 +63,7 @@ export async function post(req: ServerRequest) {
 Create the file `src/routes/api/graphiql.ts`:
 
 ```ts
-import { renderGraphiQL } from '@graphql-yoga/core'
+import { renderGraphiQL } from '@graphql-yoga/common'
 import type { ServerRequest } from '@sveltejs/kit/types/hooks'
 
 const defaultQuery = /* GraphQL */ `

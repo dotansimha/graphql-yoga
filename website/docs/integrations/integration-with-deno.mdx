@@ -6,7 +6,7 @@ sidebar_label: Deno
 
 GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
 [Deno is a simple, modern and secure runtime for JavaScript and TypeScript that uses V8 and is built in Rust](https://deno.land/).
-But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/core` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects.
+But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/common` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects.
 
 ## Example
 
@@ -14,7 +14,7 @@ But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/core` whic
 
 ```ts
 import { serve } from 'https://deno.land/std@0.117.0/http/server.ts'
-import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/core?dts'
+import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/common@alpha?dts'
 
 const graphQLServer = createServer()
 

@@ -12,7 +12,7 @@ import {
   YogaLogger,
   YogaInitialContext,
   GraphQLYogaError,
-} from '@graphql-yoga/core'
+} from '@graphql-yoga/common'
 import type {
   GraphQLServerInject,
   YogaNodeServerOptions,
@@ -234,7 +234,7 @@ export {
   shouldRenderGraphiQL,
   renderGraphiQL,
   GraphiQLOptions,
-} from '@graphql-yoga/core'
+} from '@graphql-yoga/common'
 
 export * from '@envelop/core'
 export * from '@graphql-yoga/subscription'

@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/core': minor
+'@graphql-yoga/common': minor
 'graphql-yoga': minor
 ---
 

@@ -2,7 +2,7 @@ import request from 'supertest'
 import { buildApp } from '../src/app'
 
 describe('fastify example integration', () => {
-  const app = buildApp()
+  const app = buildApp(false)
 
   beforeAll(async () => {
     await app.ready()

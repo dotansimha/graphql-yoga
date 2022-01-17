@@ -1,4 +1,4 @@
-import { renderGraphiQL } from '@graphql-yoga/core';
+import { renderGraphiQL } from '@graphql-yoga/common';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 const defaultQuery = `query GetHello {

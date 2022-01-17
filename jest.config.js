@@ -13,7 +13,7 @@ module.exports = {
   // TODO: get tests for `examples`
   modulePathIgnorePatterns: ['dist'],
   moduleNameMapper: {
-    '@graphql-yoga/core': '<rootDir>/packages/core/src/index.ts',
+    '@graphql-yoga/common': '<rootDir>/packages/common/src/index.ts',
     '@graphql-yoga/subscription':
       '<rootDir>/packages/subscription/src/index.ts',
     '@graphql-yoga/node': '<rootDir>/packages/node/src/index.ts',

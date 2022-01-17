@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/core': minor
+'@graphql-yoga/common': minor
 ---
 
 **BREAKING** Move `typeDefs` and `resolvers` under the `schema` option.

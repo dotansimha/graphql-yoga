@@ -1,4 +1,4 @@
-import { createServer } from '@graphql-yoga/core';
+import { createServer } from '@graphql-yoga/common';
 import type { ResponseHeaders } from '@sveltejs/kit/types/helper';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 

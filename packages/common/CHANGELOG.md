@@ -1,4 +1,4 @@
-# @graphql-yoga/core
+# @graphql-yoga/common
 
 ## 0.2.0-alpha.6
 

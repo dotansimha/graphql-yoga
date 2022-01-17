@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/core': patch
+'@graphql-yoga/common': patch
 'graphql-yoga': patch
 '@graphql-yoga/node': patch
 ---

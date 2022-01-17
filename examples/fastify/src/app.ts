@@ -2,8 +2,8 @@ import { createServer } from '@graphql-yoga/node'
 import fastify from 'fastify'
 import { Readable } from 'stream'
 
-export function buildApp() {
-  const app = fastify({ logger: true })
+export function buildApp(logging = true) {
+  const app = fastify({ logger: logging })
 
   const graphQLServer = createServer({
     schema: {

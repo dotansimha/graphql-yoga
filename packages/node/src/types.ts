@@ -1,4 +1,4 @@
-import type { YogaServerOptions } from '@graphql-yoga/core'
+import type { YogaServerOptions } from '@graphql-yoga/common'
 import type { DocumentNode } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { IncomingHttpHeaders } from 'http'
