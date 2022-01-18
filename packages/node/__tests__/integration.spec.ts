@@ -1,8 +1,10 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 import { createServer, GraphQLYogaError } from '../src'
 import EventSource from 'eventsource'
+import fastify, { RouteHandlerMethod } from 'fastify'
 import request from 'supertest'
 import { getCounterValue, schema } from '../test-utils/schema'
+import { Readable } from 'stream'
 
 const yoga = createServer({ schema, logging: false })
 
@@ -331,5 +333,73 @@ describe('Incremental Delivery', () => {
     await new Promise((resolve) => setTimeout(resolve, 300))
 
     expect(getCounterValue()).toBe(counterValue2)
+  })
+})
+
+const fastifyServer = fastify({ logger: true })
+
+describe('Fastify Integration', () => {
+  beforeAll(async () => {
+    await yoga.start()
+
+    fastifyServer.route({
+      url: '/graphql',
+      method: ['GET', 'POST', 'OPTIONS'],
+      handler: async (req, reply) => {
+        const response = await yoga.handleIncomingMessage(req)
+        response.headers.forEach((value, key) => {
+          reply.header(key, value)
+        })
+
+        reply.status(response.status)
+
+        const nodeStream = Readable.from(response.body as any)
+        reply.send(nodeStream)
+      },
+    })
+
+    fastifyServer.addContentTypeParser('multipart', (req, _payload, done) => {
+      req.isMultipart = true
+      done(null)
+    })
+
+    await fastifyServer.ready()
+  })
+
+  afterAll(async () => {
+    await yoga.stop()
+    await fastifyServer.close()
+  })
+
+  it('should upload a file', async () => {
+    const UPLOAD_MUTATION = /* GraphQL */ `
+      mutation upload($file: Upload!) {
+        singleUpload(file: $file) {
+          name
+          type
+          text
+        }
+      }
+    `
+
+    const fileName = 'test.pdf'
+    const fileContent =
+      'JVBERi0xLjUKJYCBgoMKMSAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvRmlyc3QgMTQxL04gMjAvTGVuZ3=='
+
+    const { body } = await request(fastifyServer.server)
+      .post('/graphql')
+      .field(
+        'operations',
+        JSON.stringify({ query: UPLOAD_MUTATION, variables: { file: null } }),
+      )
+      .field('map', JSON.stringify({ 1: ['variables.file'] }))
+      .attach('1', Buffer.from(fileContent), {
+        filename: fileName,
+      })
+
+    expect(body.errors).toBeUndefined()
+    expect(body.data.singleUpload.name).toBe(fileName)
+    expect(body.data.singleUpload.type).toBe('application/pdf')
+    expect(body.data.singleUpload.text).toBe(fileContent)
   })
 })
