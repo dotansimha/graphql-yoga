@@ -359,7 +359,6 @@ describe('Fastify Integration', () => {
     })
 
     fastifyServer.addContentTypeParser('multipart', (req, _payload, done) => {
-      req.isMultipart = true
       done(null)
     })
 
