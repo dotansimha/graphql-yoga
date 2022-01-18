@@ -10,14 +10,14 @@ GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-comp
 
 > When using Node.js we recommend at least using version **16**. Using an older LTS version (such as 14) is still possible, but requires polyfilling APIs when using some features of GraphQL Yoga. You will receive user-friendly error messages that guide you on installing those polyfills.
 
-<PackageInstall packages={['graphql', 'graphql-yoga@alpha']} />
+<PackageInstall packages={['graphql', '@graphql-yoga/node@alpha']} />
 
 ## Create a Hello World GraphQL API
 
 The following example shows how to create a simple GraphQL Yoga server that responds to a simple query.
 
 ```ts
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 
 // Create your server
 const server = createServer({})
@@ -39,7 +39,7 @@ query HelloWorld {
 You probably want to write your own schema instead of using the hello world schema that is served by default!
 
 ```ts
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 
 // Create your server
 const server = createServer({
@@ -68,7 +68,7 @@ Use your favorite schema building library such as [GiraphQL](https://giraphql.co
 
 ```ts
 import { schema } from './schema'
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 
 const server = createServer({
   schema,

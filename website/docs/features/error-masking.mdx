@@ -13,7 +13,7 @@ Such errors could be caused by failing to establish connection to remote service
 Let's setup a simple schema that calls a remote service that is unavailable.
 
 ```ts
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 import { fetch } from 'cross-undici-fetch'
 
 // Provide your schema
@@ -76,7 +76,7 @@ query {
 By setting the `maskedErrors` configuration option to `true`, we can automatically mask this error.
 
 ```ts
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 import { fetch } from 'cross-undici-fetch'
 
 // Provide your schema

@@ -8,7 +8,7 @@ sidebar_label: Next.js
 
 ## Installation
 
-<PackageInstall packages={['graphql', 'graphql-yoga@alpha']} />
+<PackageInstall packages={['graphql', '@graphql-yoga/node@alpha']} />
 
 ## Example
 
@@ -16,7 +16,7 @@ sidebar_label: Next.js
 
 ```ts
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 
 const server = createServer({
   cors: false,

@@ -1,4 +1,4 @@
-const { createServer } = require('graphql-yoga')
+const { createServer } = require('@graphql-yoga/node')
 
 const server = createServer({
   schema: {
@@ -13,6 +13,7 @@ const server = createServer({
       },
     },
   },
+  logging: false,
 })
 
 server.start()

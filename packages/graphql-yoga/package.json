@@ -9,6 +9,11 @@
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "bin": {
+    "gql-yoga": "dist/bin.js",
+    "graphql-yoga": "dist/bin.js",
+    "yoga": "dist/bin.js"
+  },
   "scripts": {
     "prepack": "bob prepack"
   },
@@ -21,7 +26,12 @@
   "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://saihaj.dev/)",
   "license": "MIT",
   "buildOptions": {
-    "input": "./src/index.ts"
+    "input": "./src/index.ts",
+    "bin": {
+      "graphql-yoga": {
+        "input": "src/bin.ts"
+      }
+    }
   },
   "exports": {
     ".": {
@@ -42,25 +52,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@envelop/core": "^1.6.2",
-    "@graphql-tools/utils": "^8.6.0",
-    "@graphql-typed-document-node/core": "^3.1.1",
-    "@graphql-yoga/core": "0.2.0-alpha.6",
-    "@graphql-yoga/handler": "0.2.0-alpha.3",
-    "@graphql-yoga/subscription": "0.1.0-alpha.0",
-    "cross-undici-fetch": "^0.1.15",
-    "light-my-request": "^4.7.0",
-    "pino": "^7.2.0",
-    "pino-pretty": "^7.2.0"
+    "@graphql-tools/code-file-loader": "^7.2.3",
+    "@graphql-yoga/node": "0.0.0",
+    "graphql-config": "^4.1.0",
+    "yargs": "^17.3.0"
   },
   "devDependencies": {
-    "@types/eventsource": "^1",
-    "@types/node": "^16.11.7",
-    "@ungap/event": "^0.2.2",
-    "@ungap/event-target": "^0.2.3",
-    "bob-the-bundler": "^1.5.1",
-    "eventsource": "^1.1.0",
-    "graphql": "^16.0.1"
+    "@types/yargs": "17.0.8"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"

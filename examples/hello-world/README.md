@@ -63,9 +63,9 @@ The server returns the following response:
 This is what the [implementation](./index.js) looks like:
 
 ```js
-import { createServer } from './graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 // ... or using `require()`
-// const { createServer } = require('graphql-yoga')
+// const { createServer } = require('@graphql-yoga/node')
 
 const typeDefs = `
   type Query {

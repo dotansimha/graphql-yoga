@@ -1,7 +1,6 @@
 ---
-'@graphql-yoga/core': minor
+'@graphql-yoga/common': minor
 'graphql-yoga': minor
-'@graphql-yoga/handler': minor
 ---
 
 export renderGraphiQL function

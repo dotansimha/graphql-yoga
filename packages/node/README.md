@@ -1,8 +1,8 @@
-# `@graphql-yoga`
+# `@graphql-yoga/node`
 
 ```js
 const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
-const { createServer } = require('graphql-yoga')
+const { createServer } = require('@graphql-yoga/node')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

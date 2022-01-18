@@ -32,7 +32,7 @@ export interface FormatPayloadParams<TContext, TRootValue> {
   rootValue?: TRootValue
 }
 
-export interface InitialContext {
+export interface YogaInitialContext {
   /**
    * A Document containing GraphQL Operations and Fragments to execute.
    */
@@ -52,7 +52,7 @@ export interface InitialContext {
 }
 
 export interface RequestProcessContext<TContext, TRootValue>
-  extends InitialContext {
+  extends YogaInitialContext {
   /**
    * The GraphQL schema used to process the request.
    */
@@ -78,3 +78,16 @@ export interface RequestProcessContext<TContext, TRootValue>
    */
   validate: (...args: any[]) => any
 }
+
+export interface CORSOptions {
+  origin: string[]
+  methods?: string[]
+  allowedHeaders?: string[]
+  exposedHeaders?: string[]
+  credentials?: boolean
+  maxAge?: number
+  optionsSuccessStatus?: number
+}
+
+export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
+export { EnvelopError as GraphQLYogaError } from '@envelop/core'

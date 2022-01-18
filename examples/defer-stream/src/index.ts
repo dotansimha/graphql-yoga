@@ -1,4 +1,4 @@
-import { createServer } from "graphql-yoga";
+import { createServer } from "@graphql-yoga/node";
 
 const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 
@@ -76,7 +76,7 @@ const resolvers = {
       await wait(2000)
       return "Just a bit late, right?"
     },
-    slowField: async() => {
+    slowField: async () => {
       await wait(5000)
       return "I am slow"
     },
@@ -123,7 +123,7 @@ const server = createServer({
       }
 
     `.split("\n").map(line => line.replace("      ", "")).join("\n")
-  } 
+  }
 });
 
 server.start();

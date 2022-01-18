@@ -1,4 +1,4 @@
-import type { ServerOptions as BaseServerOptions } from '@graphql-yoga/core'
+import type { YogaServerOptions } from '@graphql-yoga/common'
 import type { DocumentNode } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { IncomingHttpHeaders } from 'http'
@@ -8,8 +8,8 @@ import { ServerOptions as HttpsServerOptions } from 'https'
 /**
  * Configuration options for the server
  */
-export type ServerOptions<TContext, TRootValue> = Omit<
-  BaseServerOptions<TContext, TRootValue>,
+export type YogaNodeServerOptions<TContext, TRootValue> = Omit<
+  YogaServerOptions<TContext, TRootValue>,
   'logging'
 > & {
   /**
@@ -34,7 +34,7 @@ export type ServerOptions<TContext, TRootValue> = Omit<
    * Pretty logging with Pino
    */
   logging?:
-    | BaseServerOptions<TContext, TRootValue>['logging']
+    | YogaServerOptions<TContext, TRootValue>['logging']
     | {
         prettyLog?: boolean
         logLevel?: 'debug' | 'info'
@@ -46,11 +46,18 @@ export type GraphQLServerInject<
   TVariables = Record<string, any>,
 > = {
   /** GraphQL Operation to execute */
-  document: string | DocumentNode | TypedDocumentNode<TData, TVariables>
+  document: string | TypedDocumentNode<TData, TVariables>
   /** Variables for GraphQL Operation */
   variables?: TVariables
   /** Name for GraphQL Operation */
   operationName?: string
   /** Set any headers for the GraphQL request */
   headers?: IncomingHttpHeaders | OutgoingHttpHeaders | undefined
+}
+
+export interface AddressInfo {
+  protocol: 'http' | 'https'
+  hostname: string
+  endpoint: string
+  port: number
 }

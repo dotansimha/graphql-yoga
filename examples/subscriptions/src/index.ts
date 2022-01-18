@@ -1,4 +1,4 @@
-import { createServer, useExtendContext, createPubSub, Repeater, pipe, map } from "graphql-yoga";
+import { createServer, useExtendContext, createPubSub, Repeater, pipe, map } from "@graphql-yoga/node";
 
 const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
 

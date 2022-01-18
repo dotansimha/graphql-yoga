@@ -1,6 +1,6 @@
 const { parse } = require('graphql')
 const { buildSubgraphSchema } = require('@apollo/subgraph')
-const { createServer } = require('graphql-yoga')
+const { createServer } = require('@graphql-yoga/node')
 
 const typeDefs = parse(/* GraphQL */ `
   type Query {

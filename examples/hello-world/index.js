@@ -1,4 +1,4 @@
-const { createServer } = require('graphql-yoga')
+const { createServer } = require('@graphql-yoga/node')
 
 const server = createServer({ 
   typeDefs: /* GraphQL */ `

@@ -1,6 +1,6 @@
 <p align="center"><img src="./website/public/banner.svg" width="350" /></p>
 
-> Note: New generation of GraphQL-Yoga is under development and testing. You can try the alpha - feedback is always welcome!  
+> Note: New generation of GraphQL-Yoga is under development and testing. You can try the alpha - feedback is always welcome!
 
 # graphql-yoga
 
@@ -8,12 +8,12 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 
 You can try out the `alpha` release today and give us [feedback](https://github.com/dotansimha/graphql-yoga/issues/704)!.
 
-We are working on documentation and examples for the `alpha` release. You can check them out https://graphql-yoga.vercel.app
+We are working on documentation and examples for the `alpha` release. You can check them out https://www.graphql-yoga.com
 
 ### Installation
 
 ```shell
-npm i graphql-yoga@alpha graphql
+npm i @graphql-yoga/node@alpha graphql
 ```
 
 ### Basic Usage
@@ -21,7 +21,7 @@ npm i graphql-yoga@alpha graphql
 We are actively working on API for the library. This is a very simple example of how to use it:
 
 ```js
-const { createServer } = require('graphql-yoga')
+const { createServer } = require('@graphql-yoga/node')
 // Provide your schema
 const server = createServer({
   typeDefs: `

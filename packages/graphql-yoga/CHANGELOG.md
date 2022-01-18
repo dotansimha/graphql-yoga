@@ -6,7 +6,7 @@
 
 - 3d54829: enhance: move W3C changes
 - Updated dependencies [3d54829]
-  - @graphql-yoga/core@0.2.0-alpha.6
+  - @graphql-yoga/common@0.2.0-alpha.6
   - @graphql-yoga/handler@0.2.0-alpha.3
 
 ## 2.0.0-alpha.6
@@ -18,7 +18,7 @@
 ### Patch Changes
 
 - Updated dependencies [36af58e]
-  - @graphql-yoga/core@0.2.0-alpha.5
+  - @graphql-yoga/common@0.2.0-alpha.5
   - @graphql-yoga/handler@0.2.0-alpha.2
 
 ## 2.0.0-alpha.5
@@ -26,7 +26,7 @@
 ### Patch Changes
 
 - Updated dependencies [d2c2d18]
-  - @graphql-yoga/core@0.2.0-alpha.4
+  - @graphql-yoga/common@0.2.0-alpha.4
 
 ## 2.0.0-alpha.4
 
@@ -39,7 +39,7 @@
 - Updated dependencies [e99ec3e]
 - Updated dependencies [fb894da]
   - @graphql-yoga/subscription@0.1.0-alpha.0
-  - @graphql-yoga/core@0.2.0-alpha.3
+  - @graphql-yoga/common@0.2.0-alpha.3
 
 ## 2.0.0-alpha.3
 
@@ -54,7 +54,7 @@
 
 - Updated dependencies [0edf1f8]
 - Updated dependencies [95e0ac0]
-  - @graphql-yoga/core@0.2.0-alpha.2
+  - @graphql-yoga/common@0.2.0-alpha.2
   - @graphql-yoga/handler@0.2.0-alpha.1
 
 ## 2.0.0-alpha.2
@@ -62,7 +62,7 @@
 ### Patch Changes
 
 - Updated dependencies [5de1acf]
-  - @graphql-yoga/core@0.2.0-alpha.1
+  - @graphql-yoga/common@0.2.0-alpha.1
 
 ## 2.0.0-alpha.1
 
@@ -74,7 +74,7 @@
 
 - Updated dependencies [d078e84]
 - Updated dependencies [d8f8a81]
-  - @graphql-yoga/core@0.2.0-alpha.0
+  - @graphql-yoga/common@0.2.0-alpha.0
   - @graphql-yoga/handler@0.2.0-alpha.0
 
 ## 2.0.0-alpha.0

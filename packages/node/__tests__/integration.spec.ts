@@ -1,6 +1,5 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
-import { createServer, GraphQLYogaError } from 'graphql-yoga'
-import { AddressInfo } from 'net'
+import { createServer, GraphQLYogaError } from '../src'
 import EventSource from 'eventsource'
 import request from 'supertest'
 import { getCounterValue, schema } from '../test-utils/schema'
@@ -141,7 +140,7 @@ describe('Context error', () => {
     })
 
     const { executionResult } = await server.inject({
-      document: '{ hello }',
+      document: '{ greetings }',
     })
     expect(executionResult).toMatchInlineSnapshot(`
       Object {
@@ -164,7 +163,7 @@ describe('Context error', () => {
     })
 
     const { executionResult } = await server.inject({
-      document: '{ hello }',
+      document: '{ greetings }',
     })
     expect(executionResult).toMatchInlineSnapshot(`
       Object {
@@ -187,7 +186,7 @@ describe('Context error', () => {
     })
 
     const { executionResult } = await server.inject({
-      document: '{ hello }',
+      document: '{ greetings }',
     })
     expect(executionResult).toMatchInlineSnapshot(`
       Object {
@@ -284,7 +283,9 @@ describe('Incremental Delivery', () => {
 
     const fileContent = 'Hello World'
 
-    const { body } = await request(yoga.server)
+    const nodeServer = yoga.getNodeServer()
+
+    const { body } = await request(yoga.getNodeServer())
       .post('/graphql')
       .field(
         'operations',
@@ -301,10 +302,10 @@ describe('Incremental Delivery', () => {
   })
 
   it('should get subscription', async () => {
-    const { address, port } = yoga.server.address() as AddressInfo
+    const { protocol, hostname, port, endpoint } = yoga.getAddressInfo()
 
     const eventSource = new EventSource(
-      `http://${address}:${port}/graphql?query=subscription{counter}`,
+      `${protocol}://${hostname}:${port}/${endpoint}?query=subscription{counter}`,
     )
 
     const counterValue1 = getCounterValue()

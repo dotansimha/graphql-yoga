@@ -4450,53 +4450,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-yoga/cli@0.0.1-alpha.4, @graphql-yoga/cli@workspace:packages/cli":
+"@graphql-yoga/common@0.2.0-alpha.6, @graphql-yoga/common@^0.2.0-alpha.5, @graphql-yoga/common@workspace:packages/common":
   version: 0.0.0-use.local
-  resolution: "@graphql-yoga/cli@workspace:packages/cli"
-  dependencies:
-    "@graphql-tools/code-file-loader": ^7.2.3
-    "@types/yargs": 17.0.8
-    graphql-config: ^4.1.0
-    graphql-yoga: 2.0.0-alpha.7
-    yargs: ^17.3.0
-  peerDependencies:
-    graphql: "*"
-  bin:
-    gql-yoga: dist/bin.js
-    graphql-yoga: dist/bin.js
-    yoga: dist/bin.js
-  languageName: unknown
-  linkType: soft
-
-"@graphql-yoga/core@0.2.0-alpha.6, @graphql-yoga/core@^0.2.0-alpha.5, @graphql-yoga/core@workspace:packages/core":
-  version: 0.0.0-use.local
-  resolution: "@graphql-yoga/core@workspace:packages/core"
+  resolution: "@graphql-yoga/common@workspace:packages/common"
   dependencies:
     "@envelop/core": ^1.6.2
     "@envelop/disable-introspection": ^2.0.0
     "@envelop/parser-cache": ^3.0.0
     "@envelop/validation-cache": ^3.0.0
     "@graphql-tools/schema": ^8.3.1
-    "@graphql-yoga/handler": 0.2.0-alpha.3
-    "@types/node": ^16.11.7
-    bob-the-bundler: ^1.5.1
-  peerDependencies:
-    graphql: ^15.2.0 || ^16.0.0
-  languageName: unknown
-  linkType: soft
-
-"@graphql-yoga/handler@0.2.0-alpha.3, @graphql-yoga/handler@workspace:packages/handler":
-  version: 0.0.0-use.local
-  resolution: "@graphql-yoga/handler@workspace:packages/handler"
-  dependencies:
-    "@envelop/core": ^1.6.1
     "@graphql-tools/utils": ^8.6.0
+    "@graphql-yoga/subscription": 0.1.0-alpha.0
     "@types/node": ^16.11.7
     bob-the-bundler: ^1.5.1
     cross-undici-fetch: ^0.1.15
     dset: ^3.1.1
     graphql-helix: 1.11.0
-    typescript: ^4.4.4
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
   languageName: unknown
@@ -4512,6 +4481,31 @@ __metadata:
   checksum: d3b8b6cff71fc26502e2126b37341128176fc73866e4384c4344a7179e69dfc6f15c83f95130853d08c196a3562d7fa61a5c5fb0c6cee15a54c1b21d77f3fdc9
   languageName: node
   linkType: hard
+
+"@graphql-yoga/node@0.0.0, @graphql-yoga/node@workspace:packages/node":
+  version: 0.0.0-use.local
+  resolution: "@graphql-yoga/node@workspace:packages/node"
+  dependencies:
+    "@envelop/core": ^1.6.2
+    "@graphql-tools/utils": ^8.6.0
+    "@graphql-typed-document-node/core": ^3.1.1
+    "@graphql-yoga/common": 0.2.0-alpha.6
+    "@graphql-yoga/subscription": 0.1.0-alpha.0
+    "@types/eventsource": ^1
+    "@types/node": ^16.11.7
+    "@ungap/event": ^0.2.2
+    "@ungap/event-target": ^0.2.3
+    bob-the-bundler: ^1.5.1
+    cross-undici-fetch: ^0.1.15
+    eventsource: ^1.1.0
+    graphql: ^16.0.1
+    light-my-request: ^4.7.0
+    pino: ^7.2.0
+    pino-pretty: ^7.2.0
+  peerDependencies:
+    graphql: ^15.2.0 || ^16.0.0
+  languageName: unknown
+  linkType: soft
 
 "@graphql-yoga/subscription@0.1.0-alpha.0, @graphql-yoga/subscription@workspace:packages/subscription":
   version: 0.0.0-use.local
@@ -6862,8 +6856,8 @@ __metadata:
   dependencies:
     "@apollo/gateway": ^0.45.1
     "@envelop/apollo-federation": ^1.0.0
+    "@graphql-yoga/node": 0.0.0
     graphql: ^15.5.3
-    graphql-yoga: 2.0.0-alpha.7
   languageName: unknown
   linkType: soft
 
@@ -6984,8 +6978,8 @@ __metadata:
   resolution: "apollo-subgraph-with-yoga@workspace:examples/apollo-federation/service"
   dependencies:
     "@apollo/subgraph": ^0.1.5
+    "@graphql-yoga/node": 0.0.0
     graphql: ^16.2.0
-    graphql-yoga: 2.0.0-alpha.7
   languageName: unknown
   linkType: soft
 
@@ -9327,8 +9321,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "defer-stream-example@workspace:examples/defer-stream"
   dependencies:
+    "@graphql-yoga/node": 0.0.0
     graphql: 16.0.0-experimental-stream-defer.5
-    graphql-yoga: 2.0.0-alpha.7
     ts-node: 10.4.0
     typescript: ^4.4.4
   languageName: unknown
@@ -10792,9 +10786,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "express-example@workspace:examples/express"
   dependencies:
+    "@graphql-yoga/node": 0.0.0
     "@types/express": ^4.17.13
     express: ^4.17.1
-    graphql-yoga: 2.0.0-alpha.7
     supertest: ^6.1.6
     ts-node: 10.4.0
     typescript: 4.5.2
@@ -10979,9 +10973,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "fastify-example@workspace:examples/fastify"
   dependencies:
+    "@graphql-yoga/node": 0.0.0
     "@types/node": ^16.11.7
     fastify: 3.24.1
-    graphql-yoga: 2.0.0-alpha.7
     ts-node: 10.4.0
     typescript: 4.5.2
   languageName: unknown
@@ -10993,10 +10987,10 @@ __metadata:
   dependencies:
     "@envelop/graphql-modules": 2.0.0
     "@graphql-tools/load-files": 6.5.3
+    "@graphql-yoga/node": 0.0.0
     "@types/node": ^16.11.7
     fastify: 3.24.1
     graphql-modules: 2.0.0
-    graphql-yoga: 2.0.0-alpha.7
     reflect-metadata: 0.1.13
     ts-node: 10.4.0
     typescript: 4.5.2
@@ -11805,8 +11799,8 @@ fsevents@~2.1.2:
     "@graphql-codegen/typescript": ^2.4.1
     "@graphql-codegen/typescript-resolvers": ^2.4.2
     "@graphql-tools/schema": ^8.3.1
-    "@graphql-yoga/cli": 0.0.1-alpha.4
     graphql: ^16.1.0
+    graphql-yoga: 2.0.0-alpha.7
     ts-node: ^10.4.0
     typescript: ^4.5.4
   languageName: unknown
@@ -11932,25 +11926,17 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "graphql-yoga@workspace:packages/graphql-yoga"
   dependencies:
-    "@envelop/core": ^1.6.2
-    "@graphql-tools/utils": ^8.6.0
-    "@graphql-typed-document-node/core": ^3.1.1
-    "@graphql-yoga/core": 0.2.0-alpha.6
-    "@graphql-yoga/handler": 0.2.0-alpha.3
-    "@graphql-yoga/subscription": 0.1.0-alpha.0
-    "@types/eventsource": ^1
-    "@types/node": ^16.11.7
-    "@ungap/event": ^0.2.2
-    "@ungap/event-target": ^0.2.3
-    bob-the-bundler: ^1.5.1
-    cross-undici-fetch: ^0.1.15
-    eventsource: ^1.1.0
-    graphql: ^16.0.1
-    light-my-request: ^4.7.0
-    pino: ^7.2.0
-    pino-pretty: ^7.2.0
+    "@graphql-tools/code-file-loader": ^7.2.3
+    "@graphql-yoga/node": 0.0.0
+    "@types/yargs": 17.0.8
+    graphql-config: ^4.1.0
+    yargs: ^17.3.0
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
+  bin:
+    gql-yoga: dist/bin.js
+    graphql-yoga: dist/bin.js
+    yoga: dist/bin.js
   languageName: unknown
   linkType: soft
 
@@ -12225,8 +12211,8 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "hello-world-benchmark@workspace:benchmark/hello-world"
   dependencies:
+    "@graphql-yoga/node": 0.0.0
     graphql: 16.2.0
-    graphql-yoga: 2.0.0-alpha.7
     wait-on: 6.0.0
   languageName: unknown
   linkType: soft
@@ -12235,8 +12221,8 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "hello-world@workspace:examples/hello-world"
   dependencies:
+    "@graphql-yoga/node": 0.0.0
     graphql: 16.1.0
-    graphql-yoga: 2.0.0-alpha.7
   languageName: unknown
   linkType: soft
 
@@ -15504,10 +15490,10 @@ fsevents@~2.1.2:
   version: 0.0.0-use.local
   resolution: "nextjs@workspace:examples/nextjs"
   dependencies:
+    "@graphql-yoga/node": 0.0.0
     eslint: 8.4.1
     eslint-config-next: 12.0.7
     graphql: ^16.1.0
-    graphql-yoga: 2.0.0-alpha.7
     next: 12.0.7
     react: 17.0.2
     react-dom: 17.0.2
@@ -19079,8 +19065,8 @@ resolve@1.15.1:
   version: 0.0.0-use.local
   resolution: "subscriptions-example@workspace:examples/subscriptions"
   dependencies:
+    "@graphql-yoga/node": 0.0.0
     graphql: ^16.1.0
-    graphql-yoga: 2.0.0-alpha.7
     ts-node: 10.4.0
     typescript: ^4.4.4
   languageName: unknown
@@ -19264,7 +19250,7 @@ resolve@1.15.1:
   version: 0.0.0-use.local
   resolution: "sveltekit@workspace:examples/sveltekit"
   dependencies:
-    "@graphql-yoga/core": ^0.2.0-alpha.5
+    "@graphql-yoga/common": ^0.2.0-alpha.5
     "@sveltejs/adapter-auto": next
     "@sveltejs/kit": next
     "@typescript-eslint/eslint-plugin": ^4.31.1

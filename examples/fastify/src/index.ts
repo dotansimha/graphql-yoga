@@ -1,6 +1,6 @@
 import { buildApp } from './app'
 
-const app = buildApp()
+const app = buildApp(true)
 
 app
   .listen(4000)

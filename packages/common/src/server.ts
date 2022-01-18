@@ -1,9 +1,4 @@
 import {
-  CORSOptions,
-  GraphiQLOptions,
-  handleRequest,
-} from '@graphql-yoga/handler'
-import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
@@ -28,15 +23,21 @@ import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
-import { InitialContext } from 'packages/handler/src/types'
+import { CORSOptions, YogaInitialContext, YogaLogger } from './types'
+import {
+  GraphiQLOptions,
+  renderGraphiQL,
+  shouldRenderGraphiQL,
+} from './graphiql'
+import { Response } from 'cross-undici-fetch'
+import { getGraphQLParameters } from './getGraphQLParameters'
+import { processRequest } from './processRequest'
 
 const DEFAULT_CORS_OPTIONS: CORSOptions = {
   origin: ['*'],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   optionsSuccessStatus: 204,
 }
-
-export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -49,7 +50,7 @@ interface OptionsWithPlugins<TContext> {
 /**
  * Configuration options for the server
  */
-export type ServerOptions<TContext, TRootValue> = {
+export type YogaServerOptions<TContext, TRootValue> = {
   /**
    * Enable/disable logging or provide a custom logger.
    * @default true
@@ -81,7 +82,7 @@ export type ServerOptions<TContext, TRootValue> = {
    * Context
    */
   context?:
-    | ((initialContext: InitialContext) => Promise<TContext> | TContext)
+    | ((initialContext: YogaInitialContext) => Promise<TContext> | TContext)
     | Promise<TContext>
     | TContext
   cors?: ((request: Request) => CORSOptions) | CORSOptions | boolean
@@ -102,37 +103,56 @@ export type ServerOptions<TContext, TRootValue> = {
       }
 } & Partial<OptionsWithPlugins<TContext>>
 
-const defaultSchema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'Query',
-    fields: {
-      hello: {
-        type: GraphQLString,
-        resolve: () =>
-          'Hello there! This GraphQL server is powered by GraphQL Yoga.',
+export function getDefaultSchema() {
+  return makeExecutableSchema({
+    typeDefs: /* GraphQL */ `
+      """
+      Greetings from GraphQL Yoga!
+      """
+      type Query {
+        greetings: String
+      }
+      type Subscription {
+        """
+        Current Time
+        """
+        time: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type',
+      },
+      Subscription: {
+        time: {
+          subscribe: async function* () {
+            while (true) {
+              yield { time: new Date().toISOString() }
+              await new Promise((resolve) => setTimeout(resolve, 1000))
+            }
+          },
+        },
       },
     },
-  }),
-})
+  })
+}
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  * @internal
  */
-export class Server<TContext extends InitialContext, TRootValue> {
-  /**
-   * Request handler for helix
-   */
-  public readonly handleRequest = handleRequest
+export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
   /**
    * Instance of envelop
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
   public logger: YogaLogger
-  public readonly corsOptionsFactory?: (request: Request) => CORSOptions
-  public readonly graphiql: GraphiQLOptions | false
+  private readonly corsOptionsFactory: (request: Request) => CORSOptions = () =>
+    DEFAULT_CORS_OPTIONS
+  protected readonly graphiql: GraphiQLOptions | false
 
-  constructor(options?: ServerOptions<TContext, TRootValue>) {
+  constructor(options?: YogaServerOptions<TContext, TRootValue>) {
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
@@ -140,7 +160,7 @@ export class Server<TContext extends InitialContext, TRootValue> {
             typeDefs: options.schema.typeDefs,
             resolvers: options.schema.resolvers,
           })
-      : defaultSchema
+      : getDefaultSchema()
 
     const logger = options?.logging ?? true
     this.logger =
@@ -176,23 +196,22 @@ export class Server<TContext extends InitialContext, TRootValue> {
           !!logger,
           useLogger({
             logFn: (eventName, events) => {
-              if (eventName === 'execute-start') {
-                const {
-                  request: { headers },
-                  query,
-                  variables,
-                }: InitialContext = events.args.contextValue
-                this.logger.debug(eventName)
-                this.logger.debug(query, 'query')
-                // there can be no variables
-                if (variables && Object.keys(variables).length > 0) {
+              switch (eventName) {
+                case 'execute-start':
+                  const {
+                    query,
+                    variables,
+                    operationName,
+                  }: YogaInitialContext = events.args.contextValue
+                  this.logger.debug(eventName)
+                  this.logger.debug(query, 'query')
+                  this.logger.debug(operationName, 'headers')
                   this.logger.debug(variables, 'variables')
-                }
-                this.logger.debug(headers, 'headers')
-              }
-              if (eventName === 'execute-end') {
-                this.logger.debug(eventName)
-                this.logger.debug(events.result, 'response')
+                  break
+                case 'execute-end':
+                  this.logger.debug(eventName)
+                  this.logger.debug(events.result, 'response')
+                  break
               }
             },
           }),
@@ -239,8 +258,6 @@ export class Server<TContext extends InitialContext, TRootValue> {
           ...options.cors,
         }
         this.corsOptionsFactory = () => corsOptions
-      } else if (typeof options.cors === 'boolean') {
-        this.corsOptionsFactory = () => DEFAULT_CORS_OPTIONS
       }
     }
 
@@ -250,12 +267,101 @@ export class Server<TContext extends InitialContext, TRootValue> {
       this.graphiql = introspectionDisabled ? false : {}
     }
   }
+
+  handleOptions(request: Request) {
+    const corsOptions = this.corsOptionsFactory(request)
+    const headers: HeadersInit = {}
+    if (corsOptions.origin) {
+      headers['Access-Control-Allow-Origin'] = corsOptions.origin.join(', ')
+    }
+
+    if (corsOptions.methods) {
+      headers['Access-Control-Allow-Methods'] = corsOptions.methods.join(', ')
+    }
+
+    if (corsOptions.allowedHeaders) {
+      headers['Access-Control-Allow-Headers'] =
+        corsOptions.allowedHeaders.join(', ')
+    }
+
+    if (corsOptions.exposedHeaders) {
+      headers['Access-Control-Expose-Headers'] =
+        corsOptions.exposedHeaders.join(', ')
+    }
+
+    if (corsOptions.credentials) {
+      headers['Access-Control-Allow-Credentials'] = 'true'
+    }
+
+    if (corsOptions.maxAge) {
+      headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
+    }
+
+    return new Response(null, {
+      headers,
+      status: corsOptions.optionsSuccessStatus,
+    })
+  }
+
+  async handleRequest(request: Request) {
+    try {
+      if (request.method === 'OPTIONS') {
+        return this.handleOptions(request)
+      }
+
+      this.logger.debug(`Checking if GraphiQL Request`)
+      if (shouldRenderGraphiQL(request) && this.graphiql) {
+        const graphiQLBody = renderGraphiQL(this.graphiql)
+        return new Response(graphiQLBody, {
+          headers: {
+            'Content-Type': 'text/html',
+          },
+          status: 200,
+        })
+      }
+
+      this.logger.debug(`Extracting GraphQL Parameters`)
+      const { query, variables, operationName } = await getGraphQLParameters(
+        request,
+      )
+
+      const { execute, validate, subscribe, parse, contextFactory, schema } =
+        this.getEnveloped<YogaInitialContext>({
+          request,
+          query,
+          variables,
+          operationName,
+        })
+
+      this.logger.debug(`Processing Request by Helix`)
+
+      return await processRequest({
+        request,
+        query,
+        variables,
+        operationName,
+        execute,
+        validate,
+        subscribe,
+        parse,
+        contextFactory,
+        schema,
+      })
+    } catch (err: any) {
+      this.logger.error(err.message, err)
+      const response = new Response(err.message, {
+        status: 500,
+        statusText: 'Internal Server Error',
+      })
+      return response
+    }
+  }
 }
 
-export function createServer<TContext extends InitialContext, TRootValue>(
-  options?: ServerOptions<TContext, TRootValue>,
+export function createServer<TContext extends YogaInitialContext, TRootValue>(
+  options?: YogaServerOptions<TContext, TRootValue>,
 ) {
-  return new Server<TContext, TRootValue>(options)
+  return new YogaServer<TContext, TRootValue>(options)
 }
 
-export { renderGraphiQL } from '@graphql-yoga/handler'
+export { renderGraphiQL }

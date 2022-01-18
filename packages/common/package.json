@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-yoga/core",
+  "name": "@graphql-yoga/common",
   "version": "0.2.0-alpha.6",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
-    "directory": "packages/core"
+    "directory": "packages/common"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -47,7 +47,11 @@
     "@envelop/parser-cache": "^3.0.0",
     "@envelop/validation-cache": "^3.0.0",
     "@graphql-tools/schema": "^8.3.1",
-    "@graphql-yoga/handler": "0.2.0-alpha.3"
+    "@graphql-tools/utils": "^8.6.0",
+    "@graphql-yoga/subscription": "0.1.0-alpha.0",
+    "cross-undici-fetch": "^0.1.15",
+    "dset": "^3.1.1",
+    "graphql-helix": "1.11.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
