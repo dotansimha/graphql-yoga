@@ -33,7 +33,14 @@ export const schema = new GraphQLSchema({
         resolve: (_, { message }) => message,
       },
       singleUpload: {
-        type: GraphQLString,
+        type: new GraphQLObjectType({
+          name: 'FileInfo',
+          fields: () => ({
+            name: { type: GraphQLString },
+            type: { type: GraphQLString },
+            text: { type: GraphQLString },
+          }),
+        }),
         description: 'Upload a single file',
         args: {
           file: {
@@ -43,10 +50,7 @@ export const schema = new GraphQLSchema({
             }),
           },
         },
-        resolve: async (_, { file }: { file: File }) => {
-          const content = await file.text()
-          return content
-        },
+        resolve: async (_, { file }: { file: File }) => file,
       },
     }),
   }),
