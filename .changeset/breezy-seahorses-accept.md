@@ -1,6 +1,7 @@
 ---
-'@graphql-yoga/core': minor
+'@graphql-yoga/common': minor
 'graphql-yoga': minor
+'@graphql-yoga/node': minor
 ---
 
 **BREAKING** Set `maskedErrors` value to `true` by default for saver defaults.
