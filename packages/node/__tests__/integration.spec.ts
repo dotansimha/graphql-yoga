@@ -1,13 +1,14 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 import { createServer, GraphQLYogaError } from '../src'
+import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
 import { getCounterValue, schema } from '../test-utils/schema'
 
 const yoga = createServer({ schema, logging: false })
 
-describe('Introspection Option', () => {
-  it('should succeed introspection query', async () => {
+describe('Disable Introspection with plugin', () => {
+  it('succeeds introspection query', async () => {
     const { response, executionResult } = await yoga.inject<IntrospectionQuery>(
       {
         document: getIntrospectionQuery(),
@@ -19,11 +20,12 @@ describe('Introspection Option', () => {
     expect(executionResult.data?.__schema.queryType.name).toBe('Query')
   })
 
-  it('should fail introspection query', async () => {
+  it('fails introspection query with useDisableIntrospection', async () => {
     const server = createServer({
       schema,
       logging: false,
-      disableIntrospection: true,
+      // @ts-ignore
+      plugins: [useDisableIntrospection()],
     })
     const { response, executionResult } =
       await server.inject<IntrospectionQuery>({
@@ -70,6 +72,12 @@ describe('Masked Error Option', () => {
     resolvers,
   }
 
+  const initialEnv = process.env.NODE_ENV
+
+  afterEach(() => {
+    process.env.NODE_ENV = initialEnv
+  })
+
   it('should mask error', async () => {
     const server = createServer({
       schema,
@@ -108,7 +116,7 @@ describe('Masked Error Option', () => {
     expect(executionResult.errors![1].message).toBe('Hahahaha')
   })
 
-  it('should not mask errors by default', async () => {
+  it('should mask errors by default', async () => {
     const server = createServer({
       schema,
       logging: false,
@@ -119,13 +127,58 @@ describe('Masked Error Option', () => {
     })
 
     expect(executionResult.data.hi).toBeNull()
-    expect(executionResult.errors![0].message).toBe(
-      'This error will get mask if you enable maskedError.',
-    )
+    expect(executionResult.errors![0].message).toBe('Unexpected error.')
     expect(executionResult.data.hello).toBeNull()
     expect(executionResult.errors![1].message).toBe(
       'This error never gets masked.',
     )
+  })
+
+  it('includes the original error in the extensions in dev mode (isDev flag)', async () => {
+    const server = createServer({
+      schema,
+      logging: false,
+      maskedErrors: {
+        isDev: true,
+      },
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hi }',
+    })
+
+    expect(executionResult.data.hi).toBeNull()
+    expect(executionResult.errors?.[0]?.message).toBe('Unexpected error.')
+    expect(executionResult.errors?.[0]?.extensions).toStrictEqual({
+      originalError: {
+        message: 'This error will get mask if you enable maskedError.',
+        stack: expect.stringContaining(
+          'Error: This error will get mask if you enable maskedError.',
+        ),
+      },
+    })
+  })
+  it('includes the original error in the extensions in dev mode (NODE_ENV=development)', async () => {
+    process.env.NODE_ENV = 'development'
+    const server = createServer({
+      schema,
+      logging: false,
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hi }',
+    })
+
+    expect(executionResult.data.hi).toBeNull()
+    expect(executionResult.errors?.[0]?.message).toBe('Unexpected error.')
+    expect(executionResult.errors?.[0]?.extensions).toStrictEqual({
+      originalError: {
+        message: 'This error will get mask if you enable maskedError.',
+        stack: expect.stringContaining(
+          'Error: This error will get mask if you enable maskedError.',
+        ),
+      },
+    })
   })
 })
 
@@ -156,7 +209,6 @@ describe('Context error', () => {
   it('Error thrown within context factory with error masking is masked', async () => {
     const server = createServer({
       logging: false,
-      maskedErrors: true,
       context: () => {
         throw new Error('I like turtles')
       },
@@ -179,7 +231,6 @@ describe('Context error', () => {
   it('GraphQLYogaError thrown within context factory with error masking is not masked', async () => {
     const server = createServer({
       logging: false,
-      maskedErrors: true,
       context: () => {
         throw new GraphQLYogaError('I like turtles')
       },
