@@ -70,6 +70,12 @@ describe('Masked Error Option', () => {
     resolvers,
   }
 
+  const initialEnv = process.env.NODE_ENV
+
+  afterEach(() => {
+    process.env.NODE_ENV = initialEnv
+  })
+
   it('should mask error', async () => {
     const server = createServer({
       schema,
@@ -126,11 +132,35 @@ describe('Masked Error Option', () => {
     )
   })
 
-  it('includes the original error in the extensions in dev mode', async () => {
+  it('includes the original error in the extensions in dev mode (isDev flag)', async () => {
     const server = createServer({
       schema,
       logging: false,
-      isDev: true,
+      maskedErrors: {
+        isDev: true,
+      },
+    })
+
+    const { executionResult } = await server.inject({
+      document: '{ hi }',
+    })
+
+    expect(executionResult.data.hi).toBeNull()
+    expect(executionResult.errors?.[0]?.message).toBe('Unexpected error.')
+    expect(executionResult.errors?.[0]?.extensions).toStrictEqual({
+      originalError: {
+        message: 'This error will get mask if you enable maskedError.',
+        stack: expect.stringContaining(
+          'Error: This error will get mask if you enable maskedError.',
+        ),
+      },
+    })
+  })
+  it('includes the original error in the extensions in dev mode (NODE_ENV=development)', async () => {
+    process.env.NODE_ENV = 'development'
+    const server = createServer({
+      schema,
+      logging: false,
     })
 
     const { executionResult } = await server.inject({

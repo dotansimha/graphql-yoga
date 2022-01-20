@@ -52,11 +52,6 @@ interface OptionsWithPlugins<TContext> {
  */
 export type YogaServerOptions<TContext, TRootValue> = {
   /**
-   * Disable/enable the dev mode.
-   * @default false
-   */
-  isDev?: boolean
-  /**
    * Enable/disable logging or provide a custom logger.
    * @default true
    */
@@ -160,10 +155,8 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
   private readonly corsOptionsFactory: (request: Request) => CORSOptions = () =>
     DEFAULT_CORS_OPTIONS
   protected readonly graphiql: GraphiQLOptions | false
-  private isDev: boolean
 
   constructor(options?: YogaServerOptions<TContext, TRootValue>) {
-    this.isDev = options?.isDev ?? false
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
@@ -238,14 +231,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
         enableIf(
           !!maskedErrors,
           useMaskedErrors(
-            typeof maskedErrors === 'object'
-              ? {
-                  isDev: this.isDev,
-                  ...maskedErrors,
-                }
-              : {
-                  isDev: this.isDev,
-                },
+            typeof maskedErrors === 'object' ? maskedErrors : undefined,
           ),
         ),
         enableIf(

@@ -163,7 +163,9 @@ const server = createServer({
       },
     },
   },
-  isDev: true, // process.env.NODE_ENV === "development"
+  maskedErrors: {
+    isDev: true, // process.env.NODE_ENV === "development"
+  },
 })
 
 server.start()
@@ -203,6 +205,18 @@ This will add a more detailed error with a proper stacktrace to the errors exten
   ],
   "data": null
 }
+```
+
+On Node.js the original error is always included when `process.env.NODE_ENV` is set to `"development"`.
+
+On unix and windows systems the environment variable can be set when starting the server.
+
+```bash
+# Unix (Linux/MacOS)
+NODE_ENV=development node server.js
+# Windows
+set NODE_ENV=development
+node server.js
 ```
 
 ## Exposing expected errors
