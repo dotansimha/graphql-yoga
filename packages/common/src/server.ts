@@ -75,7 +75,7 @@ export type YogaServerOptions<TContext, TRootValue> = {
    *
    * Default: `true`
    */
-  graphiql?: GraphiQLOptions | boolean
+  graphiql?: GraphiQLOptions | false
 
   schema?:
     | GraphQLSchema
@@ -235,7 +235,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
       }
     }
 
-    this.graphiql = options?.graphiql === true ? {} : false
+    this.graphiql = options?.graphiql === false ? options.graphiql : {}
   }
 
   handleOptions(request: Request) {
