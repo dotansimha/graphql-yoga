@@ -1,13 +1,14 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 import { createServer, GraphQLYogaError } from '../src'
+import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
 import { getCounterValue, schema } from '../test-utils/schema'
 
 const yoga = createServer({ schema, logging: false })
 
-describe('Introspection Option', () => {
-  it('should succeed introspection query', async () => {
+describe('Disable Introspection with plugin', () => {
+  it('succeeds introspection query', async () => {
     const { response, executionResult } = await yoga.inject<IntrospectionQuery>(
       {
         document: getIntrospectionQuery(),
@@ -19,11 +20,12 @@ describe('Introspection Option', () => {
     expect(executionResult.data?.__schema.queryType.name).toBe('Query')
   })
 
-  it('should fail introspection query', async () => {
+  it('fails introspection query with useDisableIntrospection', async () => {
     const server = createServer({
       schema,
       logging: false,
-      introspection: false,
+      // @ts-ignore
+      plugins: [useDisableIntrospection()],
     })
     const { response, executionResult } =
       await server.inject<IntrospectionQuery>({

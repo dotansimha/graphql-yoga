@@ -15,10 +15,6 @@ import {
   useLogger,
   useSchema,
 } from '@envelop/core'
-import {
-  DisableIntrospectionOptions,
-  useDisableIntrospection,
-} from '@envelop/disable-introspection'
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
@@ -56,22 +52,6 @@ export type YogaServerOptions<TContext, TRootValue> = {
    * @default true
    */
   logging?: boolean | YogaLogger
-  /**
-   * Enable/disable GraphQL introspection.
-   * This is useful for exploring the API with tools like GraphiQL.
-   * If you are making a private GraphQL API,
-   * it is suggested that you set this TRUE in production so that
-   * potential malicious API consumers do not see what all operations are possible.
-   *
-   * BE AWARE that [GraphQL.js implements "did you mean x" suggestions for invalid GraphQL operations](https://github.com/graphql/graphql-js/issues/2247).
-   * Therefore disabling is not a 100% secure approach. Persisted operations is considered a safer approach.
-   *
-   * You can learn more about GraphQL introspection here:
-   * @see https://graphql.org/learn/introspection/
-   *
-   * Default: `true`
-   */
-  introspection?: boolean | DisableIntrospectionOptions
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -181,8 +161,6 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
 
     const maskedErrors = options?.maskedErrors ?? true
 
-    const introspectionEnabled = options?.introspection ?? true
-
     this.getEnveloped = envelop({
       plugins: [
         // Use the schema provided by the user
@@ -221,14 +199,6 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
           }),
         ),
         enableIf(
-          !introspectionEnabled,
-          useDisableIntrospection(
-            typeof introspectionEnabled === 'boolean'
-              ? undefined
-              : introspectionEnabled,
-          ),
-        ),
-        enableIf(
           !!maskedErrors,
           useMaskedErrors(
             typeof maskedErrors === 'object' ? maskedErrors : undefined,
@@ -265,11 +235,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
       }
     }
 
-    if (typeof options?.graphiql === 'object' || options?.graphiql === false) {
-      this.graphiql = options?.graphiql
-    } else {
-      this.graphiql = !!introspectionEnabled ? {} : false
-    }
+    this.graphiql = options?.graphiql === true ? {} : false
   }
 
   handleOptions(request: Request) {
