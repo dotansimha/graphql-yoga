@@ -16,4 +16,5 @@ export const map =
       while ((latest = await iterable.next()).done === false) {
         await push(await mapper(latest.value))
       }
+      stop()
     })

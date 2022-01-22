@@ -23,5 +23,6 @@ export function filter(filter: (value: unknown) => boolean) {
           await push(latest.value)
         }
       }
+      stop()
     })
 }
