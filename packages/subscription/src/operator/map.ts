@@ -5,12 +5,16 @@ import { Repeater } from '@repeaterjs/repeater'
  */
 export const map =
   <T, O>(mapper: (input: T) => Promise<O> | O) =>
-  (source: Repeater<T>): Repeater<O> =>
+  (source: AsyncIterable<T>): Repeater<O> =>
     new Repeater(async (push, stop) => {
+      const iterable = source[Symbol.asyncIterator]()
       stop.then(() => {
-        source.return()
+        iterable.return?.()
       })
-      for await (const value of source) {
-        push(await mapper(value))
+
+      let latest: IteratorResult<T>
+      while ((latest = await iterable.next()).done === false) {
+        await push(await mapper(latest.value))
       }
+      stop()
     })

@@ -45,6 +45,28 @@ export type ChannelPubSubConfig<
   event?: EventAPI
 }
 
+export type PubSub<TPubSubPublishArgsByKey extends PubSubPublishArgsByKey> = {
+  /**
+   * Publish a value for a given topic.
+   */
+  publish<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
+    routingKey: TKey,
+    ...args: TPubSubPublishArgsByKey[TKey]
+  ): void
+  /**
+   * Subscribe to a topic.
+   */
+  subscribe<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
+    ...[routingKey, id]: TPubSubPublishArgsByKey[TKey][1] extends undefined
+      ? [TKey]
+      : [TKey, TPubSubPublishArgsByKey[TKey][0]]
+  ): Repeater<
+    TPubSubPublishArgsByKey[TKey][1] extends undefined
+      ? TPubSubPublishArgsByKey[TKey][0]
+      : TPubSubPublishArgsByKey[TKey][1]
+  >
+}
+
 const resolveGlobalConfig = (api: EventAPI = globalThis): EventAPI => {
   if (!api.Event || !api.EventTarget) {
     throw new Error(`
@@ -78,7 +100,7 @@ export const createPubSub = <
   TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
 >(
   config?: ChannelPubSubConfig<TPubSubPublishArgsByKey>,
-) => {
+): PubSub<TPubSubPublishArgsByKey> => {
   const { Event, EventTarget } = resolveGlobalConfig(config?.event)
 
   const target = config?.eventTarget ?? new EventTarget()
