@@ -306,26 +306,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.16.7":
-  version: 7.16.7
-  resolution: "@babel/core@npm:7.16.7"
+"@babel/core@npm:7.16.12":
+  version: 7.16.12
+  resolution: "@babel/core@npm:7.16.12"
   dependencies:
     "@babel/code-frame": ^7.16.7
-    "@babel/generator": ^7.16.7
+    "@babel/generator": ^7.16.8
     "@babel/helper-compilation-targets": ^7.16.7
     "@babel/helper-module-transforms": ^7.16.7
     "@babel/helpers": ^7.16.7
-    "@babel/parser": ^7.16.7
+    "@babel/parser": ^7.16.12
     "@babel/template": ^7.16.7
-    "@babel/traverse": ^7.16.7
-    "@babel/types": ^7.16.7
+    "@babel/traverse": ^7.16.10
+    "@babel/types": ^7.16.8
     convert-source-map: ^1.7.0
     debug: ^4.1.0
     gensync: ^1.0.0-beta.2
     json5: ^2.1.2
     semver: ^6.3.0
     source-map: ^0.5.0
-  checksum: 3206e077e76db189726c4da19a5296eae11c6c1f5abea7013e74f18708bb91616914717ff8d8ca466cc0ba9d2d2147e9a84c3c357b9ad4cba601da14107838ed
+  checksum: 29b56f3cb7c329fc038a2efaccf64ac3025835676b3d90f57f2265b6acd477a970114d09021b38d019ac8f20b2bb1596a9e79ce1f820d6b8cf0e4a802891817c
   languageName: node
   linkType: hard
 
@@ -352,7 +352,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.12.5, @babel/generator@npm:^7.14.0, @babel/generator@npm:^7.16.7, @babel/generator@npm:^7.16.8, @babel/generator@npm:^7.7.2":
+"@babel/generator@npm:^7.12.5, @babel/generator@npm:^7.14.0, @babel/generator@npm:^7.16.8, @babel/generator@npm:^7.7.2":
   version: 7.16.8
   resolution: "@babel/generator@npm:7.16.8"
   dependencies:
@@ -396,7 +396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-create-class-features-plugin@npm:^7.16.7":
+"@babel/helper-create-class-features-plugin@npm:^7.16.10, @babel/helper-create-class-features-plugin@npm:^7.16.7":
   version: 7.16.10
   resolution: "@babel/helper-create-class-features-plugin@npm:7.16.10"
   dependencies:
@@ -655,6 +655,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/parser@npm:^7.16.12":
+  version: 7.16.12
+  resolution: "@babel/parser@npm:7.16.12"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: af287f0f3dfa564958a7dddfeb62e08c0de9ce9bd8447fcde0997da26ec477bf19f37161b9d970e2c7e0d1f77e441258907d3347beddd0d42cae85ed46947703
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression@npm:7.16.7"
@@ -855,15 +864,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-private-methods@npm:^7.16.7":
-  version: 7.16.7
-  resolution: "@babel/plugin-proposal-private-methods@npm:7.16.7"
+"@babel/plugin-proposal-private-methods@npm:^7.16.11":
+  version: 7.16.11
+  resolution: "@babel/plugin-proposal-private-methods@npm:7.16.11"
   dependencies:
-    "@babel/helper-create-class-features-plugin": ^7.16.7
+    "@babel/helper-create-class-features-plugin": ^7.16.10
     "@babel/helper-plugin-utils": ^7.16.7
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 1d3aef6f1818278d257ed6f1a90ec3b0cfe85e1b24cabf1bcd0d2a0033f8ae15f9cb36140ec2adc2a317f63fc78095ce0b5c154f73128e0f84480879a4b64269
+  checksum: b333e5aa91c265bb394a57b5f4ae1a34fc8ee73a8d75506b12df258d8b5342107cbd9261f95e606bd3264a5b023db77f1f95be30c2e526683916c57f793f7943
   languageName: node
   linkType: hard
 
@@ -1564,9 +1573,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:7.16.8":
-  version: 7.16.8
-  resolution: "@babel/preset-env@npm:7.16.8"
+"@babel/preset-env@npm:7.16.11":
+  version: 7.16.11
+  resolution: "@babel/preset-env@npm:7.16.11"
   dependencies:
     "@babel/compat-data": ^7.16.8
     "@babel/helper-compilation-targets": ^7.16.7
@@ -1586,7 +1595,7 @@ __metadata:
     "@babel/plugin-proposal-object-rest-spread": ^7.16.7
     "@babel/plugin-proposal-optional-catch-binding": ^7.16.7
     "@babel/plugin-proposal-optional-chaining": ^7.16.7
-    "@babel/plugin-proposal-private-methods": ^7.16.7
+    "@babel/plugin-proposal-private-methods": ^7.16.11
     "@babel/plugin-proposal-private-property-in-object": ^7.16.7
     "@babel/plugin-proposal-unicode-property-regex": ^7.16.7
     "@babel/plugin-syntax-async-generators": ^7.8.4
@@ -1644,7 +1653,7 @@ __metadata:
     semver: ^6.3.0
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 834fc0638b26e9a118a4deaac828ebb9cc17c4d1aa6497e6588003de1ff3768b1ee9bfddd055ccc6be526c65b92d5c463168da2425d26a53c836b38eeb3362cb
+  checksum: c8029c272073df787309d983ae458dd094b57f87152b8ccad95c7c8b1e82b042c1077e169538aae5f98b7659de0632d10708d9c85acf21a5e9406d7dd3656d8c
   languageName: node
   linkType: hard
 
@@ -11011,10 +11020,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "graphql-yoga-monorepo@workspace:."
   dependencies:
-    "@babel/core": 7.16.7
+    "@babel/core": 7.16.12
     "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/plugin-proposal-decorators": 7.16.7
-    "@babel/preset-env": 7.16.8
+    "@babel/preset-env": 7.16.11
     "@babel/preset-typescript": 7.16.7
     "@changesets/cli": 2.17.0
     "@types/babel__core": ^7
