@@ -235,7 +235,10 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
       }
     }
 
-    this.graphiql = options?.graphiql === false ? options.graphiql : {}
+    this.graphiql =
+      options?.graphiql === false || typeof options?.graphiql === 'object'
+        ? options.graphiql
+        : {}
   }
 
   handleOptions(request: Request) {

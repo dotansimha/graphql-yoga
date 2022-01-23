@@ -4,12 +4,7 @@
 
 <span>
 	Endpoint GraphQL (post)
-	<pre>/api/graphql</pre>
-</span>
-
-<span>
-	Endpoint Graph<i>i</i>QL (get)
-	<pre><a rel="external" href="/api/graphiql">/api/graphiql</a></pre>
+	<pre><a rel="external" href="/api/graphql">/api/graphql</a></pre>
 </span>
 
 <style>
