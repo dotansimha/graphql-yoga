@@ -1,5 +1,11 @@
 # nextjs
 
+## 0.0.1-alpha.6
+
+### Patch Changes
+
+- @graphql-yoga/node@0.1.0-alpha.1
+
 ## 0.0.1-alpha.5
 
 ### Patch Changes
