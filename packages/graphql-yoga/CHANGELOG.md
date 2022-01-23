@@ -1,5 +1,29 @@
 # graphql-yoga
 
+## 2.0.0-alpha.8
+
+### Minor Changes
+
+- 6750eff: rename `GraphQLServerError` to `GraphQLYogaError`.
+- d414f95: **BREAKING** Set `maskedErrors` value to `true` by default for safer defaults.
+
+  **BREAKING** Remove `disableIntrospection`. [Please use `useDisableIntrospection` from `@envelop/disable-introspection` instead.](https://www.envelop.dev/plugins/use-disable-introspection)
+
+- bea2dcc: align envelop types
+- fc1f2c7: make options optional
+
+### Patch Changes
+
+- 6effd5d: fix(node): handle response cancellation correctly
+- a10a16c: Node Server implementation has been moved to `@graphql-yoga/node` package.
+
+  CLI implementation has been moved to
+  `graphql-yoga` package.
+
+- Updated dependencies [d414f95]
+- Updated dependencies [a10a16c]
+  - @graphql-yoga/node@0.1.0-alpha.0
+
 ## 2.0.0-alpha.7
 
 ### Patch Changes
