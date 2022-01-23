@@ -273,7 +273,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
     })
   }
 
-  async handleRequest(request: Request) {
+  handleRequest = async (request: Request) => {
     try {
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
