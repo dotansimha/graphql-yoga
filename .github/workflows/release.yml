@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
 
       - name: Use Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v2
         with:
           node-version: 17.x
 
@@ -26,14 +26,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
-      - name: Get yarn cache
-        uses: c-hive/gha-yarn-cache@v2
-
-      - name: Install Dependencies using Yarn
-        run: yarn
+      - name: Install Dependencies
+        run: pnpm install
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets

@@ -17,12 +17,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 17
+          cache: 'pnpm'
 
-      - name: Get yarn cache
-        uses: c-hive/gha-yarn-cache@v2
-
-      - name: Install Dependencies using Yarn
-        run: yarn
+      - name: Install Dependencies
+        run: pnpm install
 
       - name: Setup NPM credentials
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc

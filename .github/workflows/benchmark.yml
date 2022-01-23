@@ -13,18 +13,16 @@ jobs:
           fetch-depth: 0
 
       - name: Use Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@pnpm
         with:
-          node-version: 14
+          node-version: 16
+          cache: 'pnpm'
 
-      - name: Get yarn cache
-        uses: c-hive/gha-yarn-cache@v2
-
-      - name: Install Dependencies using Yarn
-        run: yarn
+      - name: Install Dependencies
+        run: pnpm install
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Setup K6
         run: |
@@ -36,8 +34,8 @@ jobs:
       - name: Start Yoga Server
         working-directory: ./benchmark/hello-world
         run: |
-          yarn start &
-          yarn wait-on tcp:4000
+          pnpm start &
+          pnpm wait-on tcp:4000
         env:
           NODE_NO_WARNINGS: true
           NODE_ENV: production
