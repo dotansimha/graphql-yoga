@@ -6,7 +6,7 @@ sidebar_label: SvelteKit
 
 [SvelteKit is the fastest way to build svelte apps.](https://kit.svelte.dev/) It is very simple, and let you build frontend & backend in a single place.
 
-You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQL & SvelteKit at the same time. [Envelop ecosystem](https://www.envelop.dev) to name only one!
+You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQL & SvelteKit at the same time. [Envelop ecosystem](https://www.envelop.dev) for example!
 
 ## Installation
 
@@ -21,9 +21,9 @@ In a SvelteKit project:
 Create the file `src/routes/api/graphql.ts`:
 
 ```ts
+import { useGraphQlJit } from '@envelop/graphql-jit'
 import { createServer } from '@graphql-yoga/common'
-import type { ResponseHeaders } from '@sveltejs/kit/types/helper'
-import type { ServerRequest } from '@sveltejs/kit/types/hooks'
+import type { RequestEvent } from '@sveltejs/kit/types/hooks'
 
 export async function get() {
   return {
@@ -32,29 +32,29 @@ export async function get() {
   }
 }
 
-const graphQLServer = createServer()
+const yogaApp = createServer({
+  logging: false,
+  maskedErrors: process.env.NODE_ENV === 'development',
+  schema: {
+    typeDefs: `
+			type Query {
+				hello: String
+			}
+		`,
+    resolvers: {
+      Query: {
+        hello: () => 'SvelteKit - GraphQL Yoga',
+      },
+    },
+  },
+  plugins: [
+    useGraphQlJit(),
+    // other plugins: https://www.envelop.dev/plugins
+  ],
+})
 
-export async function post(req: ServerRequest) {
-  const request = new Request(req.url.toString(), {
-    method: req.method,
-    headers: req.headers,
-    body: req.rawBody,
-  })
-  const response: Response = await graphQLServer.handleRequest(request)
-
-  const responseHeaders: ResponseHeaders = {}
-
-  response.headers.forEach((value, key) => {
-    responseHeaders[key] = value
-  })
-
-  const responseBodyText = await response.text()
-
-  return {
-    status: response.status,
-    headers: responseHeaders,
-    body: responseBodyText,
-  }
+export async function post(event: RequestEvent) {
+  return yogaApp.handleRequest(event.request)
 }
 ```
 
@@ -64,17 +64,16 @@ Create the file `src/routes/api/graphiql.ts`:
 
 ```ts
 import { renderGraphiQL } from '@graphql-yoga/common'
-import type { ServerRequest } from '@sveltejs/kit/types/hooks'
 
-const defaultQuery = /* GraphQL */ `
-  query GetHello {
-    hello
-  }
+const defaultQuery = `query GetHello {
+  hello
+}
 `
 
-export async function get(req: ServerRequest) {
+export async function get() {
   return {
     status: 200,
+    headers: new Headers({ 'content-type': 'text/html' }),
     body: renderGraphiQL({
       endpoint: '/api/graphql',
       defaultQuery,

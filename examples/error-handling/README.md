@@ -76,7 +76,6 @@ The execution result should be identical with the following JSON response.
 
 **Execution Result with expected error message**
 
-
 ```json
 {
   "errors": [
