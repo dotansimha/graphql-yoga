@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 2.0.0-alpha.9
+
+### Patch Changes
+
+- @graphql-yoga/node@0.1.0-alpha.1
+
 ## 2.0.0-alpha.8
 
 ### Minor Changes

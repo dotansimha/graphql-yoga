@@ -1,5 +1,11 @@
 # fastify-example
 
+## 0.0.1-alpha.8
+
+### Patch Changes
+
+- @graphql-yoga/node@0.1.0-alpha.1
+
 ## 0.0.1-alpha.7
 
 ### Patch Changes

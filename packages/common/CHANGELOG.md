@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 0.2.0-alpha.8
+
+### Patch Changes
+
+- f2f6202: fix(common): respect given graphiql options
+
 ## 0.2.0-alpha.7
 
 ### Minor Changes
