@@ -1,5 +1,12 @@
 # fastify-example
 
+## 0.0.1-alpha.9
+
+### Patch Changes
+
+- Updated dependencies [b0b244b]
+  - @graphql-yoga/node@0.1.0-alpha.2
+
 ## 0.0.1-alpha.8
 
 ### Patch Changes

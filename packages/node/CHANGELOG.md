@@ -1,5 +1,13 @@
 # @graphql-yoga/node
 
+## 0.1.0-alpha.2
+
+### Patch Changes
+
+- b0b244b: bump cross-undici-fetch
+- Updated dependencies [b0b244b]
+  - @graphql-yoga/common@0.2.0-alpha.9
+
 ## 0.1.0-alpha.1
 
 ### Patch Changes
