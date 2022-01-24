@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 0.2.0-alpha.9
+
+### Patch Changes
+
+- b0b244b: bump cross-undici-fetch
+
 ## 0.2.0-alpha.8
 
 ### Patch Changes
