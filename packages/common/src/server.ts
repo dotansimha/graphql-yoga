@@ -1,11 +1,4 @@
-import {
-  getIntrospectionQuery,
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString,
-  introspectionFromSchema,
-  isSchema,
-} from 'graphql'
+import { GraphQLSchema, isSchema } from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
