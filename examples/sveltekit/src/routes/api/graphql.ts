@@ -4,7 +4,6 @@ import type { RequestEvent } from '@sveltejs/kit/types/hooks';
 
 const yogaApp = createServer({
 	logging: false,
-	maskedErrors: process.env.NODE_ENV === 'development',
 	schema: {
 		typeDefs: `
 			type Query {

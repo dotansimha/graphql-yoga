@@ -134,9 +134,9 @@ You now sucessfully enabled masking of all kinds of unexpected errors within you
 
 ## Receive original error in development
 
-When developing locally seeing the original error within your Chrome Dev Tools might be handy for debugging. You might be tempted to disable the masked errors via the `maskedErrors` config option, however, we do not recommending that at all! Having development and production behavior as close as possible is very important for not having any surprises in production.
+When developing locally seeing the original error within your Chrome Dev Tools might be handy for debugging. You might be tempted to disable the masked errors via the `maskedErrors` config option, however, **we do not recommend that at all!** Having development and production behavior as close as possible is very important for not having any surprises in production.
 
-Instead we recommend enabling the Yoga development mode.
+Instead we recommend enabling the Yoga development mode. (Note: if you don't set `maskedErrors`, it's the default behaviour, and it's good!)
 
 ```ts
 import { createServer } from 'graphql-yoga'
@@ -164,8 +164,13 @@ const server = createServer({
     },
   },
   maskedErrors: {
-    isDev: true, // process.env.NODE_ENV === "development"
+    isDev: true, // We don't recommend this.
   },
+  // // when maskedErrors is not set, the default behavior is:
+  // maskedErrors: {
+  //   isDev: process.env.NODE_ENV === "development"
+  // },
+  // // So, Close to production & with `originalError` only on development. 👍
 })
 
 server.start()
@@ -221,12 +226,12 @@ node server.js
 
 ## Exposing expected errors
 
-Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be send to clients instead of being masked. This can be achieved by using and throwing a `GraphQLServerError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
+Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be send to clients instead of being masked. This can be achieved by using and throwing a `GraphQLYogaError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
 
 E.g. you want to throw an error if a resource cannot be found by an ID.
 
 ```ts
-import { createServer, GraphQLServerError } from 'graphql-yoga'
+import { createServer, GraphQLYogaError } from 'graphql-yoga'
 
 const users = [
   {
@@ -260,9 +265,7 @@ const server = createServer({
         user: async (_, args) => {
           const user = users.find((user) => user.id === args.byId)
           if (!user) {
-            throw new GraphQLServerError(
-              `User with id '${args.byId}' not found.`,
-            )
+            throw new GraphQLYogaError(`User with id '${args.byId}' not found.`)
           }
 
           return user
@@ -312,10 +315,10 @@ query {
 
 Sometimes it is useful to enrich errors with additional information e.g. an error code that can be interpreted by the client.
 
-Error extensions can be passed as the second parameter to the `GraphQLServerError` constructor.
+Error extensions can be passed as the second parameter to the `GraphQLYogaError` constructor.
 
 ```ts
-import { createServer, GraphQLServerError } from 'graphql-yoga'
+import { createServer, GraphQLYogaError } from 'graphql-yoga'
 
 const users = [
   {
@@ -349,7 +352,7 @@ const server = createServer({
         user: async (_, args) => {
           const user = users.find((user) => user.id === args.byId)
           if (!user) {
-            throw new GraphQLServerError(
+            throw new GraphQLYogaError(
               `User with id '${args.byId}' not found.`,
               // error extensions
               {
@@ -407,7 +410,7 @@ query {
 The extensions are not only limited to a `code` property. Any JSON serializable value can be passed as extensions.
 
 ```ts
-throw new GraphQLServerError(
+throw new GraphQLYogaError(
   `User with id '${args.byId}' not found.`,
   // error extensions
   {
