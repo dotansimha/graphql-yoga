@@ -1,5 +1,11 @@
 # hello-world-benchmark
 
+## 0.0.1-alpha.7
+
+### Patch Changes
+
+- @graphql-yoga/node@0.1.0-alpha.3
+
 ## 0.0.1-alpha.6
 
 ### Patch Changes
