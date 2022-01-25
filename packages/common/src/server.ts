@@ -1,7 +1,9 @@
 import {
+  getIntrospectionQuery,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  introspectionFromSchema,
   isSchema,
 } from 'graphql'
 import {
@@ -25,7 +27,7 @@ import {
   renderGraphiQL,
   shouldRenderGraphiQL,
 } from './graphiql'
-import { Response } from 'cross-undici-fetch'
+import { fetch, Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 
@@ -276,10 +278,40 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
     })
   }
 
+  private id = Date.now().toString()
+
   handleRequest = async (request: Request) => {
     try {
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
+      }
+      const urlObj = new URL(request.url)
+      if (urlObj.pathname === '/health') {
+        return new Response(`{ "message": "alive" }`, {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'x-yoga-id': this.id,
+          },
+        })
+      }
+      if (urlObj.pathname === '/readiness') {
+        urlObj.pathname = '/health'
+        const readinessResponse = await fetch(urlObj.toString())
+        if (
+          readinessResponse.status === 200 &&
+          readinessResponse.headers.get('x-yoga-id') === this.id
+        ) {
+          return new Response(`{ "message": "ready" }`, {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+        }
+        throw new Error(
+          `Readiness check failed with status ${readinessResponse.status}`,
+        )
       }
 
       this.logger.debug(`Checking if GraphiQL Request`)

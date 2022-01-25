@@ -384,3 +384,19 @@ describe('Incremental Delivery', () => {
     expect(getCounterValue()).toBe(counterValue2)
   })
 })
+
+describe('health checks', () => {
+  const yogaApp = createServer({})
+  beforeEach(() => {
+    return yogaApp.start()
+  })
+  afterEach(() => {
+    return yogaApp.stop()
+  })
+  it('should return 200 status code for /health endpoint', () => {
+    return request(yogaApp.getNodeServer()).get('/health').expect(200)
+  })
+  it('should return 200 status code for /readiness endpoint', () => {
+    return request(yogaApp.getNodeServer()).get('/readiness').expect(200)
+  })
+})
