@@ -57,9 +57,9 @@ export type YogaServerOptions<TContext, TRootValue> = {
    * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
    *
    * You can lean more about this here:
-   * @see https://www.envelop.dev/plugins/use-masked-errors
+   * @see https://graphql-yoga.vercel.app/docs/features/error-masking
    *
-   * Default: `false`
+   * Default: `true`
    */
   maskedErrors?: boolean | UseMaskedErrorsOpts
   /**
