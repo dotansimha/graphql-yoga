@@ -1,5 +1,12 @@
 # @graphql-yoga/node
 
+## 0.1.0-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [890e4ec]
+  - @graphql-yoga/common@0.2.0-alpha.10
+
 ## 0.1.0-alpha.2
 
 ### Patch Changes

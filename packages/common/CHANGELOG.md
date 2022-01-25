@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 0.2.0-alpha.10
+
+### Minor Changes
+
+- 890e4ec: feat(common): introduce /readiness and /health endpoints
+
 ## 0.2.0-alpha.9
 
 ### Patch Changes
