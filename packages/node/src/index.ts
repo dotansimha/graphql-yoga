@@ -20,6 +20,7 @@ import type {
 } from './types'
 import LightMyRequest from 'light-my-request'
 import { ExecutionResult, print } from 'graphql'
+import { platform } from 'os'
 
 function getPinoLogger<TContext, TRootValue>(
   options: YogaNodeServerOptions<TContext, TRootValue>['logging'] = {},
@@ -27,7 +28,7 @@ function getPinoLogger<TContext, TRootValue>(
   const prettyLog =
     typeof options === 'object' && 'prettyLog' in options
       ? options?.prettyLog
-      : process.env.NODE_ENV === 'development'
+      : process.env.NODE_ENV !== 'production'
 
   const logLevel =
     (typeof options === 'object' &&
@@ -73,10 +74,12 @@ class YogaNodeServer<
           : getPinoLogger(options?.logging),
     })
     this.addressInfo = {
-      hostname: options?.hostname || '0.0.0.0',
+      // Windows doesn't support 0.0.0.0 binding
+      hostname:
+        options?.hostname || (platform() === 'win32' ? 'localhost' : '0.0.0.0'),
       port: options?.port ?? parseInt(process.env.PORT || '4000'),
       endpoint: options?.endpoint || '/graphql',
-      protocol: 'http',
+      protocol: options?.https ? 'https' : 'http',
     }
 
     this.logger.debug('Setting up server.')
@@ -95,8 +98,12 @@ class YogaNodeServer<
     return this.addressInfo
   }
 
+  getServerUrl(): string {
+    return `${this.addressInfo.protocol}://${this.addressInfo.hostname}:${this.addressInfo.port}${this.addressInfo.endpoint}`
+  }
+
   async handleIncomingMessage(nodeRequest: NodeRequest): Promise<Response> {
-    this.logger.debug('Node Request received')
+    this.logger.debug(`Node Request received`)
     const request = await getNodeRequest(nodeRequest, this.addressInfo)
     this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request)
@@ -113,7 +120,6 @@ class YogaNodeServer<
     return new Promise<void>((resolve, reject) => {
       try {
         if (this.options?.https) {
-          this.addressInfo.protocol = 'https'
           this.nodeServer =
             typeof this.options?.https === 'object'
               ? createHttpsServer(this.options.https, this.requestListener)
@@ -125,20 +131,20 @@ class YogaNodeServer<
           this.addressInfo.port,
           this.addressInfo.hostname,
           () => {
-            this.logger.info(
-              `GraphQL Server running at http://${this.addressInfo.hostname}:${this.addressInfo.port}${this.addressInfo.endpoint}.`,
-            )
+            const serverUrl = this.getServerUrl()
+            this.logger.info(`GraphQL Server running at ${serverUrl}.`)
             resolve()
           },
         )
       } catch (e: any) {
+        this.logger.error(`GraphQL Server couldn't start`, e)
         reject(e)
       }
     })
   }
 
   stop() {
-    this.logger.info('Shutting down GraphQL server.')
+    this.logger.info('Shutting down GraphQL Server.')
     return new Promise<void>((resolve, reject) => {
       if (!this.nodeServer) {
         reject(new GraphQLYogaError('Server not running.'))
@@ -153,6 +159,7 @@ class YogaNodeServer<
           reject(err)
         } else {
           this.nodeServer = null
+          this.logger.info(`GraphQL Server stopped successfully`)
           resolve()
         }
       })

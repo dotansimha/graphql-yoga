@@ -361,10 +361,10 @@ describe('Incremental Delivery', () => {
   })
 
   it('should get subscription', async () => {
-    const { protocol, hostname, port, endpoint } = yoga.getAddressInfo()
+    const serverUrl = yoga.getServerUrl()
 
     const eventSource = new EventSource(
-      `${protocol}://${hostname}:${port}/${endpoint}?query=subscription{counter}`,
+      `${serverUrl}?query=subscription{counter}`,
     )
 
     const counterValue1 = getCounterValue()
