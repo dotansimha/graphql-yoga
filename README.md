@@ -24,14 +24,16 @@ We are actively working on API for the library. This is a very simple example of
 const { createServer } = require('@graphql-yoga/node')
 // Provide your schema
 const server = createServer({
-  typeDefs: `
-    type Query {
-      ping: String
-    }
-  `,
-  resolvers: {
-    Query: {
-      ping: () => 'pong',
+  schema: {
+    typeDefs: `
+      type Query {
+        ping: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        ping: () => 'pong',
+      },
     },
   },
 })
