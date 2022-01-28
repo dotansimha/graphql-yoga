@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="/" />
+    <meta charset="utf-8" />
+    <title>YogaGraphiQL Dev</title>
+  </head>
+  <body id="body" class="no-focus-outline">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script>
+      if (globalThis.window?.setImmediate == null) {
+        //@ts-ignore
+        globalThis.window.setImmediate = setTimeout
+        globalThis.global = globalThis
+      }
+    </script>
+    <script type="module" src="./src/bundle.tsx"></script>
+  </body>
+</html>
