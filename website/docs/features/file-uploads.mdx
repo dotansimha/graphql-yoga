@@ -24,24 +24,26 @@ import { createServer } from '@graphql-yoga/node'
 
 // Provide your schema
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    scalar Upload
+  schema: {
+    typeDefs: /* GraphQL */ `
+      scalar Upload
 
-    type Query {
-      greetings: String!
-    }
-    type Mutation {
-      readTextFile(file: Upload!): String!
-    }
-  `,
-  resolvers: {
-    Query: {
-      greetings: () => 'Hello World!',
-    },
-    Mutation: {
-      readTextFile: async (_, { file }: { file: File }) => {
-        const textContent = await file.text()
-        return textContent
+      type Query {
+        greetings: String!
+      }
+      type Mutation {
+        readTextFile(file: Upload!): String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        greetings: () => 'Hello World!',
+      },
+      Mutation: {
+        readTextFile: async (_, { file }: { file: File }) => {
+          const textContent = await file.text()
+          return textContent
+        },
       },
     },
   },
