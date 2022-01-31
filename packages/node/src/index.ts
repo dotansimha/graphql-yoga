@@ -20,6 +20,7 @@ import type {
 } from './types'
 import LightMyRequest from 'light-my-request'
 import { ExecutionResult, print } from 'graphql'
+import 'pino-pretty'
 
 function getPinoLogger<TContext, TRootValue>(
   options: YogaNodeServerOptions<TContext, TRootValue>['logging'] = {},
