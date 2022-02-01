@@ -28,7 +28,7 @@ function getPinoLogger<TContext, TRootValue>(
   const prettyLog =
     typeof options === 'object' && 'prettyLog' in options
       ? options?.prettyLog
-      : process.env.NODE_ENV !== 'production'
+      : process.env.NODE_ENV === 'development'
 
   const logLevel =
     (typeof options === 'object' &&
