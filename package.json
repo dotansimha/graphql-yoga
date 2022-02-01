@@ -5,7 +5,8 @@
     "format": "prettier . --write",
     "pretty-quick": "pretty-quick --staged",
     "prebuild": "rimraf packages/*/dist",
-    "build": "tsc --project tsconfig.build.json && bob build",
+    "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && tsc --project tsconfig.build.json && bob build",
+    "postbuild": "yarn fix-bin",
     "test": "jest --passWithNoTests",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
@@ -78,6 +79,7 @@
   },
   "resolutions": {
     "@changesets/apply-release-plan": "5.0.1",
-    "graphql": "16.3.0"
+    "graphql": "16.3.0",
+    "graphiql@1.5.16": "patch:graphiql@npm:1.5.16#.yarn/patches/graphiql-npm-1.5.16-6af0eb47ef"
   }
 }

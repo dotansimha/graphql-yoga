@@ -7,7 +7,8 @@ import {
   UrlLoader,
 } from '@graphql-tools/url-loader'
 import { DocumentNode, Kind, parse } from 'graphql'
-import styles from 'graphiql/graphiql.css'
+import 'graphiql/graphiql.css'
+import './styles.css'
 
 const getOperationWithFragments = (
   document: DocumentNode,
@@ -31,32 +32,8 @@ const getOperationWithFragments = (
 }
 
 export type YogaGraphiQLProps = {
+  [key: string]: any
   endpoint?: string
-}
-
-const globalStyles = /* CSS */ `
-  body,
-  html {
-    margin: 0;
-  }
-
-  .graphiql-container {
-    height: 100vh;
-  }
-`
-function useGraphiQLStyles() {
-  React.useEffect(() => {
-    const elHead = globalThis.document.getElementsByTagName('head')[0]
-    const elStyle = globalThis.document.createElement('style')
-
-    elStyle.type = 'text/css'
-    elHead.appendChild(elStyle)
-    elStyle.innerHTML = styles + globalStyles
-
-    return () => {
-      elHead.removeChild(elStyle)
-    }
-  }, [])
 }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
@@ -93,10 +70,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     }
   }, [])
 
-  useGraphiQLStyles()
-
   return (
     <GraphiQL
+      {...props}
       ref={graphiqlRef}
       fetcher={fetcher}
       headerEditorEnabled={true}

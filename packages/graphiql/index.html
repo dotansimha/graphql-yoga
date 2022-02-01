@@ -10,12 +10,17 @@
     <div id="root"></div>
 
     <script>
+      // Polyfills until we can change DataLoader
       if (globalThis.window?.setImmediate == null) {
         //@ts-ignore
         globalThis.window.setImmediate = setTimeout
         globalThis.global = globalThis
       }
     </script>
-    <script type="module" src="./src/bundle.tsx"></script>
+    <script type="module">
+      import * as yogaGraphiQL from './src/bundle.tsx'
+      const container = window.document.querySelector('#root')
+      yogaGraphiQL.renderYogaGraphiQL(container)
+    </script>
   </body>
 </html>
