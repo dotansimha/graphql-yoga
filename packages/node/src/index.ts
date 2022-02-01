@@ -147,7 +147,7 @@ class YogaNodeServer<
       this.nodeServer.close((err) => {
         if (err != null) {
           this.logger.error(
-            'Something went wrong :( trying to shutdown the server.',
+            'Something went wrong while trying to shutdown the server.',
             err,
           )
           reject(err)
@@ -186,7 +186,9 @@ class YogaNodeServer<
       url: this.addressInfo.endpoint,
       headers,
       payload: JSON.stringify({
-        query: typeof document === 'string' ? document : print(document),
+        query:
+          document &&
+          (typeof document === 'string' ? document : print(document)),
         variables,
         operationName,
       }),
