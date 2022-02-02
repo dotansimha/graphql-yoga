@@ -3112,6 +3112,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@envelop/parser-cache@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@envelop/parser-cache@npm:4.0.0"
+  dependencies:
+    tiny-lru: 7.0.6
+  peerDependencies:
+    "@envelop/core": ^2.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 17ff4cbcfc48e45baad6a5fdb40ef8434be1d1d31f5b21121fe7a0d7cf415adb2bc83346ad3c186cd8dcb692688cd41b72380dcaf94bbf896caaa75ec9cf09ed
+  languageName: node
+  linkType: hard
+
 "@envelop/types@npm:1.5.1":
   version: 1.5.1
   resolution: "@envelop/types@npm:1.5.1"
@@ -3678,7 +3690,7 @@ __metadata:
   dependencies:
     "@envelop/core": ^1.7.1
     "@envelop/disable-introspection": ^2.0.0
-    "@envelop/parser-cache": ^3.0.0
+    "@envelop/parser-cache": ^4.0.0
     "@envelop/validation-cache": ^3.0.0
     "@graphql-tools/schema": ^8.3.1
     "@graphql-tools/utils": ^8.6.0
