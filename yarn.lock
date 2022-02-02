@@ -3066,6 +3066,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@envelop/core@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@envelop/core@npm:2.0.0"
+  dependencies:
+    "@envelop/types": 2.0.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 3b2dd1b304d2c32e818e3b50d8cb4a84f31316b80ebc23c66d3873492fb73f8db2dbdf8a0724c611d84db3834c6c70b8938e9eb186a1c2b3ee628fea7cf4736a
+  languageName: node
+  linkType: hard
+
 "@envelop/disable-introspection@npm:^2.0.0":
   version: 2.0.0
   resolution: "@envelop/disable-introspection@npm:2.0.0"
@@ -3073,6 +3084,16 @@ __metadata:
     "@envelop/core": ^1.7.0
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: 07b422bae8a7558b5d75bb50ade408499ba57595aa469bfbf1c362e9c9691958cfcd84b5b0f7940b0474d8e009b5732851b311e4dcfd8e3e99ba895cbf264e44
+  languageName: node
+  linkType: hard
+
+"@envelop/disable-introspection@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@envelop/disable-introspection@npm:3.0.0"
+  peerDependencies:
+    "@envelop/core": ^2.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 2906380eea1ebcb1dac973c19c3ffc160a34772157389ee2b5605499b827ce218c52d5baec61d08704f76bb9d560fe1f594f80dc1f931cef02c773a5fdc6fe9e
   languageName: node
   linkType: hard
 
@@ -3112,12 +3133,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@envelop/parser-cache@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@envelop/parser-cache@npm:4.0.0"
+  dependencies:
+    tiny-lru: 7.0.6
+  peerDependencies:
+    "@envelop/core": ^2.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 17ff4cbcfc48e45baad6a5fdb40ef8434be1d1d31f5b21121fe7a0d7cf415adb2bc83346ad3c186cd8dcb692688cd41b72380dcaf94bbf896caaa75ec9cf09ed
+  languageName: node
+  linkType: hard
+
 "@envelop/types@npm:1.5.1":
   version: 1.5.1
   resolution: "@envelop/types@npm:1.5.1"
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: 2344e87ceafc3191d95b59bbb4973c8e826ebc36412ecbc7776f11ab52daadcd9fb7916cf4f61b2f3f4f65358852203b9d319ce9741a6d92f07537082c640412
+  languageName: node
+  linkType: hard
+
+"@envelop/types@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@envelop/types@npm:2.0.0"
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 146863aeb7f5901316d227805295e8e05e472b9fb2ee0aa10995b5b642b9fe681cb43563ca2e2082bd4ed5891cbd0f54235a076a47bb49e5fe3d0bbe9431b721
   languageName: node
   linkType: hard
 
@@ -3130,6 +3172,18 @@ __metadata:
     "@envelop/core": ^1.7.0
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: 98166cf36c8db5aabc3d806ffe96dcf58e32a212d343d486717f70e09eccf61dba16a427e1eecdfe3b7cbddefd4103a5d9d8b0508b38bb116de7ad1d094a0c94
+  languageName: node
+  linkType: hard
+
+"@envelop/validation-cache@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@envelop/validation-cache@npm:4.0.0"
+  dependencies:
+    tiny-lru: 7.0.6
+  peerDependencies:
+    "@envelop/core": ^2.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 6816d1e0d9bd109522e9fafedcca4d1d8b0d008d39aa4eb710b588e4942b30f4a85fc689a6d7c95eea015cf0aee2acc73e9eb85d8cc1cb1a4b1e99e537954f87
   languageName: node
   linkType: hard
 
@@ -3676,10 +3730,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/common@workspace:packages/common"
   dependencies:
-    "@envelop/core": ^1.7.1
-    "@envelop/disable-introspection": ^2.0.0
-    "@envelop/parser-cache": ^3.0.0
-    "@envelop/validation-cache": ^3.0.0
+    "@envelop/core": ^2.0.0
+    "@envelop/disable-introspection": ^3.0.0
+    "@envelop/parser-cache": ^4.0.0
+    "@envelop/validation-cache": ^4.0.0
     "@graphql-tools/schema": ^8.3.1
     "@graphql-tools/utils": ^8.6.0
     "@graphql-yoga/subscription": 0.1.0-alpha.1
@@ -3718,7 +3772,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@graphql-yoga/node@workspace:packages/node"
   dependencies:
-    "@envelop/core": ^1.7.1
+    "@envelop/core": ^2.0.0
     "@graphql-tools/utils": ^8.6.0
     "@graphql-typed-document-node/core": ^3.1.1
     "@graphql-yoga/common": 0.2.0-alpha.10
