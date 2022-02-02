@@ -17,6 +17,8 @@ module.exports = {
     '@graphql-yoga/subscription':
       '<rootDir>/packages/subscription/src/index.ts',
     '@graphql-yoga/node': '<rootDir>/packages/node/src/index.ts',
+    '@graphql-yoga/render-graphiql':
+      '<rootDir>/packages/render-graphiql/src/index.ts',
     'graphql-yoga': '<rootDir>/packages/graphql-yoga/src/index.ts',
   },
   collectCoverage: true,

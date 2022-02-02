@@ -4,7 +4,6 @@ export const renderGraphiQL = (opts?: YogaGraphiQLOptions) => /* HTML */ `
   <!DOCTYPE html>
   <html lang="en">
     <head>
-      <base href="/" />
       <meta charset="utf-8" />
       <title>Yoga GraphiQL</title>
       <style>
