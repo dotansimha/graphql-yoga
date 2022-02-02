@@ -361,5 +361,3 @@ export function createServer<TContext extends YogaInitialContext, TRootValue>(
 ) {
   return new YogaServer<TContext, TRootValue>(options)
 }
-
-export { renderGraphiQL }

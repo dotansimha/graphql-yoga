@@ -156,7 +156,7 @@ index f02b5bafcdfb3c226c19f23f5be624fcfde0a880..0382f152616e85bbdaa8dacd17b698e5
              CodeMirror.registerHelper('info', 'graphql-results', function (token, _options, _cm, pos) {
                  var infoElements = [];
 diff --git a/esm/components/VariableEditor.js b/esm/components/VariableEditor.js
-index 407d5643d8b4592d5d58c81eab6ebf0954ca4aca..2e3319f6d7543b3d58bc57c71deb290472d27023 100644
+index 407d5643d8b4592d5d58c81eab6ebf0954ca4aca..a0fa03f14381b50411c7cd9c8934abc9e78c314c 100644
 --- a/esm/components/VariableEditor.js
 +++ b/esm/components/VariableEditor.js
 @@ -25,6 +25,21 @@ var __assign = (this && this.__assign) || function () {
@@ -212,6 +212,15 @@ index 407d5643d8b4592d5d58c81eab6ebf0954ca4aca..2e3319f6d7543b3d58bc57c71deb2904
          if (!this.editor) {
              return;
          }
+@@ -152,7 +152,7 @@ var VariableEditor = (function (_super) {
+         if (this.props.variableToType !== prevProps.variableToType) {
+             this.editor.options.lint.variableToType = this.props.variableToType;
+             this.editor.options.hintOptions.variableToType = this.props.variableToType;
+-            this.CodeMirror.signal(this.editor, 'change', this.editor);
++            CodeMirror.signal(this.editor, 'change', this.editor);
+         }
+         if (this.props.value !== prevProps.value &&
+             this.props.value !== this.cachedValue) {
 diff --git a/esm/utility/onHasCompletion.js b/esm/utility/onHasCompletion.js
 index 173cb9d9b1bf2806e25ce75d6e248f636673365b..c6a3f96a07e2c3224371f17edf2898b9f33c1492 100644
 --- a/esm/utility/onHasCompletion.js
