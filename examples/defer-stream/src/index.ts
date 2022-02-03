@@ -1,6 +1,7 @@
-import { createServer } from "@graphql-yoga/node";
+import { createServer } from '@graphql-yoga/node'
 
-const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
+const wait = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time))
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -14,7 +15,6 @@ const typeDefs = /* GraphQL */ `
     A field that resolves fast.
     """
     fastField: String!
-    
 
     """
     A field that resolves a bit slow.
@@ -27,37 +27,36 @@ const typeDefs = /* GraphQL */ `
     Maybe you want to @defer this field ;)
     """
     slowField: String!
-    
   }
-`;
+`
 
 const alphabet = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z"
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
 ]
 
 const resolvers = {
@@ -70,18 +69,18 @@ const resolvers = {
     },
     fastField: async () => {
       await wait(100)
-      return "I am speed"
+      return 'I am speed'
     },
     mediumSlowField: async () => {
       await wait(2000)
-      return "Just a bit late, right?"
+      return 'Just a bit late, right?'
     },
     slowField: async () => {
       await wait(5000)
-      return "I am slow"
+      return 'I am slow'
     },
   },
-};
+}
 
 const server = createServer({
   typeDefs,
@@ -122,8 +121,11 @@ const server = createServer({
         fastField
       }
 
-    `.split("\n").map(line => line.replace("      ", "")).join("\n")
-  }
-});
+    `
+      .split('\n')
+      .map((line) => line.replace('      ', ''))
+      .join('\n'),
+  },
+})
 
-server.start();
+server.start()

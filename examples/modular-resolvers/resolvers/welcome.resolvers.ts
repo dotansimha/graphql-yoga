@@ -1,5 +1,5 @@
 export default {
   Query: {
-    welcome: (_, { yourNickname }) => `Welcome, ${yourNickname || "here"}!`
-  }
-};
+    welcome: (_, { yourNickname }) => `Welcome, ${yourNickname || 'here'}!`,
+  },
+}

@@ -76,7 +76,7 @@ You will receive this initial result:
 ```json
 {
   "data": {
-    "globalCounter": 0,
+    "globalCounter": 0
   }
 }
 ```
@@ -96,7 +96,7 @@ You will receive this result:
 ```json
 {
   "data": {
-    "incrementGlobalCounter": 1,
+    "incrementGlobalCounter": 1
   }
 }
 ```
@@ -106,7 +106,7 @@ On the other window that is executing the subscription, you will receive a new r
 ```json
 {
   "data": {
-    "globalCounter": 1,
+    "globalCounter": 1
   }
 }
 ```

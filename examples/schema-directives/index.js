@@ -15,7 +15,7 @@ const typeDefs = `
 class UpperDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field
-    field.resolve = async function(...args) {
+    field.resolve = async function (...args) {
       const result = await resolve.apply(this, args)
       if (typeof result === 'string') {
         return result.toUpperCase()
@@ -33,7 +33,7 @@ class AuthDirective extends SchemaDirectiveVisitor {
       const [, , context] = args
       if (
         expectedRoles.length === 0 ||
-        expectedRoles.some(r => context.roles.includes(r))
+        expectedRoles.some((r) => context.roles.includes(r))
       ) {
         // Call original resolver if role check has passed
         return resolve.apply(this, args)
