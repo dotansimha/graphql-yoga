@@ -19,7 +19,6 @@ const absoluteGraphqlYogaBinPath = resolve(
 const dir = readdirSync(absoluteExamplesDirPath)
 for (const path of dir) {
   const absolutePath = join(absoluteExamplesDirPath, path)
-  console.log(absolutePath)
   if (lstatSync(absolutePath).isDirectory()) {
     const execNames = ['yoga', 'gql-yoga', 'graphql-yoga']
     for (const execName of execNames) {
