@@ -9,6 +9,7 @@ import {
 import { DocumentNode, Kind, parse } from 'graphql'
 import 'graphiql/graphiql.css'
 import './styles.css'
+import { YogaLogo } from './YogaLogo'
 
 const getOperationWithFragments = (
   document: DocumentNode,
@@ -100,6 +101,19 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           </>
         ),
       }}
-    />
+    >
+      <GraphiQL.Logo>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: 40, display: 'flex' }}>
+            <YogaLogo />
+          </div>
+          <span>
+            {'Yoga Graph'}
+            <em>{'i'}</em>
+            {'QL'}
+          </span>
+        </div>
+      </GraphiQL.Logo>
+    </GraphiQL>
   )
 }
