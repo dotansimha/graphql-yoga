@@ -1,7 +1,40 @@
-diff --git a/esm/components/HeaderEditor.js b/esm/components/HeaderEditor.js
-index b7e81947142cf739b809ca2a8f4e0dd021d3d8ff..667c0dc6868d17eed13d5b249f8170dc2c33c183 100644
---- a/esm/components/HeaderEditor.js
-+++ b/esm/components/HeaderEditor.js
+diff --git a/node_modules/graphiql/dist/components/GraphiQL.d.ts b/node_modules/graphiql/dist/components/GraphiQL.d.ts
+index 8257ed6..d51bf17 100644
+--- a/node_modules/graphiql/dist/components/GraphiQL.d.ts
++++ b/node_modules/graphiql/dist/components/GraphiQL.d.ts
+@@ -54,6 +54,8 @@ export declare type GraphiQLProps = {
+     docExplorerOpen?: boolean;
+     toolbar?: GraphiQLToolbarConfig;
+     maxHistoryLength?: number;
++    onSchemaChange?: (schema: GraphQLSchema) => void;
++    leftDocExplorerContent?: React.ReactElement | null;
+ };
+ export declare type GraphiQLState = {
+     schema?: GraphQLSchema | null;
+diff --git a/node_modules/graphiql/esm/components/GraphiQL.js b/node_modules/graphiql/esm/components/GraphiQL.js
+index 63ebcad..f6fb859 100644
+--- a/node_modules/graphiql/esm/components/GraphiQL.js
++++ b/node_modules/graphiql/esm/components/GraphiQL.js
+@@ -788,6 +788,7 @@ var GraphiQL = (function (_super) {
+                     React.createElement("button", { className: "docExplorerHide", onClick: this.handleToggleHistory, "aria-label": "Close History" }, '\u2715')))),
+             React.createElement("div", { className: "editorWrap" },
+                 React.createElement("div", { className: "topBarWrap" },
++                    _this.props.leftDocExplorerContent || null,
+                     React.createElement("div", { className: "topBar" },
+                         logo,
+                         React.createElement(ExecuteButton, { isRunning: Boolean(this.state.subscription), onRun: this.handleRunQuery, onStop: this.handleStopQuery, operations: this.state.operations }),
+@@ -955,6 +956,7 @@ var GraphiQL = (function (_super) {
+                 if (schema) {
+                     var queryFacts = getOperationFacts(schema, _this.state.query);
+                     _this.safeSetState(__assign(__assign({ schema: schema }, queryFacts), { schemaErrors: undefined }));
++                    _this.props.onSchemaChange && _this.props.onSchemaChange(schema)
+                 }
+             }
+             else {
+diff --git a/node_modules/graphiql/esm/components/HeaderEditor.js b/node_modules/graphiql/esm/components/HeaderEditor.js
+index b7e8194..667c0dc 100644
+--- a/node_modules/graphiql/esm/components/HeaderEditor.js
++++ b/node_modules/graphiql/esm/components/HeaderEditor.js
 @@ -25,6 +25,19 @@ var __assign = (this && this.__assign) || function () {
  import React from 'react';
  import onHasCompletion from '../utility/onHasCompletion';
@@ -51,10 +84,10 @@ index b7e81947142cf739b809ca2a8f4e0dd021d3d8ff..667c0dc6868d17eed13d5b249f8170dc
          if (!this.editor) {
              return;
          }
-diff --git a/esm/components/QueryEditor.js b/esm/components/QueryEditor.js
-index c5b9d9043cce8b2a1b8c68bbc44f6fc2d3670622..696559b963584aa743724c494d04a582f3786526 100644
---- a/esm/components/QueryEditor.js
-+++ b/esm/components/QueryEditor.js
+diff --git a/node_modules/graphiql/esm/components/QueryEditor.js b/node_modules/graphiql/esm/components/QueryEditor.js
+index c5b9d90..696559b 100644
+--- a/node_modules/graphiql/esm/components/QueryEditor.js
++++ b/node_modules/graphiql/esm/components/QueryEditor.js
 @@ -27,6 +27,25 @@ import MD from 'markdown-it';
  import { normalizeWhitespace } from '../utility/normalizeWhitespace';
  import onHasCompletion from '../utility/onHasCompletion';
@@ -114,10 +147,10 @@ index c5b9d9043cce8b2a1b8c68bbc44f6fc2d3670622..696559b963584aa743724c494d04a582
          this.ignoreChangeEvent = true;
          if (this.props.schema !== prevProps.schema && this.editor) {
              this.editor.options.lint.schema = this.props.schema;
-diff --git a/esm/components/ResultViewer.js b/esm/components/ResultViewer.js
-index f02b5bafcdfb3c226c19f23f5be624fcfde0a880..0382f152616e85bbdaa8dacd17b698e5bf14ef79 100644
---- a/esm/components/ResultViewer.js
-+++ b/esm/components/ResultViewer.js
+diff --git a/node_modules/graphiql/esm/components/ResultViewer.js b/node_modules/graphiql/esm/components/ResultViewer.js
+index f02b5ba..0382f15 100644
+--- a/node_modules/graphiql/esm/components/ResultViewer.js
++++ b/node_modules/graphiql/esm/components/ResultViewer.js
 @@ -14,6 +14,16 @@ var __extends = (this && this.__extends) || (function () {
  import React from 'react';
  import ReactDOM from 'react-dom';
@@ -155,10 +188,10 @@ index f02b5bafcdfb3c226c19f23f5be624fcfde0a880..0382f152616e85bbdaa8dacd17b698e5
              var tooltipDiv_1 = document.createElement('div');
              CodeMirror.registerHelper('info', 'graphql-results', function (token, _options, _cm, pos) {
                  var infoElements = [];
-diff --git a/esm/components/VariableEditor.js b/esm/components/VariableEditor.js
-index 407d5643d8b4592d5d58c81eab6ebf0954ca4aca..a0fa03f14381b50411c7cd9c8934abc9e78c314c 100644
---- a/esm/components/VariableEditor.js
-+++ b/esm/components/VariableEditor.js
+diff --git a/node_modules/graphiql/esm/components/VariableEditor.js b/node_modules/graphiql/esm/components/VariableEditor.js
+index 407d564..a0fa03f 100644
+--- a/node_modules/graphiql/esm/components/VariableEditor.js
++++ b/node_modules/graphiql/esm/components/VariableEditor.js
 @@ -25,6 +25,21 @@ var __assign = (this && this.__assign) || function () {
  import React from 'react';
  import onHasCompletion from '../utility/onHasCompletion';
@@ -221,10 +254,10 @@ index 407d5643d8b4592d5d58c81eab6ebf0954ca4aca..a0fa03f14381b50411c7cd9c8934abc9
          }
          if (this.props.value !== prevProps.value &&
              this.props.value !== this.cachedValue) {
-diff --git a/esm/utility/onHasCompletion.js b/esm/utility/onHasCompletion.js
-index 173cb9d9b1bf2806e25ce75d6e248f636673365b..c6a3f96a07e2c3224371f17edf2898b9f33c1492 100644
---- a/esm/utility/onHasCompletion.js
-+++ b/esm/utility/onHasCompletion.js
+diff --git a/node_modules/graphiql/esm/utility/onHasCompletion.js b/node_modules/graphiql/esm/utility/onHasCompletion.js
+index 173cb9d..c6a3f96 100644
+--- a/node_modules/graphiql/esm/utility/onHasCompletion.js
++++ b/node_modules/graphiql/esm/utility/onHasCompletion.js
 @@ -1,9 +1,9 @@
  import { GraphQLNonNull, GraphQLList, } from 'graphql';
  import escapeHTML from 'escape-html';

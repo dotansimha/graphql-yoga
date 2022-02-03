@@ -6,7 +6,8 @@ import {
   SubscriptionProtocol,
   UrlLoader,
 } from '@graphql-tools/url-loader'
-import { DocumentNode, Kind, parse } from 'graphql'
+import { DocumentNode, GraphQLSchema, Kind, parse } from 'graphql'
+import GraphiQLExplorer from 'graphiql-explorer'
 import 'graphiql/graphiql.css'
 import './styles.css'
 import { YogaLogo } from './YogaLogo'
@@ -71,49 +72,79 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     }
   }, [])
 
-  return (
-    <GraphiQL
-      {...props}
-      ref={graphiqlRef}
-      fetcher={fetcher}
-      headerEditorEnabled={true}
-      defaultVariableEditorOpen={true}
-      toolbar={{
-        additionalContent: (
-          <>
-            <button
-              className="toolbar-button"
-              onClick={() => {
-                const state = graphiqlRef.current?.state
+  const [showExplorer, setShowExplorer] = React.useState(false)
+  const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
+  const [query, setQuery] = React.useState<string>('{ __typename }')
 
-                copyToClipboard(
-                  urlLoader.prepareGETUrl({
-                    baseUrl: window.location.href,
-                    query: state?.query || '',
-                    variables: state?.variables,
-                    operationName: state?.operationName,
-                  }),
-                )
-              }}
+  return (
+    <div className="graphiql-container">
+      {schema ? (
+        <GraphiQLExplorer
+          schema={schema}
+          query={query}
+          onEdit={(query: string) => setQuery(query)}
+          explorerIsOpen={showExplorer}
+          onToggleExplorer={() => setShowExplorer((isOpen) => !isOpen)}
+        />
+      ) : null}
+      <GraphiQL
+        {...props}
+        ref={graphiqlRef}
+        fetcher={fetcher}
+        headerEditorEnabled={true}
+        defaultVariableEditorOpen={true}
+        toolbar={{
+          additionalContent: (
+            <>
+              <button
+                className="toolbar-button"
+                onClick={() => {
+                  const state = graphiqlRef.current?.state
+
+                  copyToClipboard(
+                    urlLoader.prepareGETUrl({
+                      baseUrl: window.location.href,
+                      query: state?.query || '',
+                      variables: state?.variables,
+                      operationName: state?.operationName,
+                    }),
+                  )
+                }}
+              >
+                Copy Link
+              </button>
+            </>
+          ),
+        }}
+        onSchemaChange={(schema) => {
+          setSchema(schema)
+        }}
+        query={query}
+        onEditQuery={(query) => typeof query === 'string' && setQuery(query)}
+        leftDocExplorerContent={
+          showExplorer ? null : (
+            <button
+              className="docExplorerShow docExplorerShowReverse"
+              onClick={() => setShowExplorer((isOpen) => !isOpen)}
             >
-              Copy Link
+              Explorer
             </button>
-          </>
-        ),
-      }}
-    >
-      <GraphiQL.Logo>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ width: 40, display: 'flex' }}>
-            <YogaLogo />
+          )
+        }
+      >
+        <GraphiQL.Logo>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ width: 40, display: 'flex' }}>
+              <YogaLogo />
+            </div>
+            <span>
+              {'Yoga Graph'}
+              <em>{'i'}</em>
+              {'QL'}
+            </span>
           </div>
-          <span>
-            {'Yoga Graph'}
-            <em>{'i'}</em>
-            {'QL'}
-          </span>
-        </div>
-      </GraphiQL.Logo>
-    </GraphiQL>
+        </GraphiQL.Logo>
+      </GraphiQL>
+    </div>
   )
 }
