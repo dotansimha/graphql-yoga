@@ -76,7 +76,7 @@ class YogaNodeServer<
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
       hostname:
-        options?.hostname || (platform() === 'win32' ? 'localhost' : '0.0.0.0'),
+        options?.hostname || (platform() === 'win32' ? '127.0.0.1' : '0.0.0.0'),
       port: options?.port ?? parseInt(process.env.PORT || '4000'),
       endpoint: options?.endpoint || '/graphql',
       protocol: options?.https ? 'https' : 'http',
@@ -127,6 +127,7 @@ class YogaNodeServer<
         } else {
           this.nodeServer = createHttpServer(this.requestListener)
         }
+
         this.nodeServer.listen(
           this.addressInfo.port,
           this.addressInfo.hostname,
