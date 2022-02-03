@@ -74,7 +74,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const [showExplorer, setShowExplorer] = React.useState(false)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
-  const [query, setQuery] = React.useState<string>('{ __typename }')
+  const [query, setQuery] = React.useState<string>('')
 
   return (
     <div className="graphiql-container">
@@ -122,14 +122,16 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         query={query}
         onEditQuery={(query) => typeof query === 'string' && setQuery(query)}
         leftDocExplorerContent={
-          showExplorer ? null : (
-            <button
-              className="docExplorerShow docExplorerShowReverse"
-              onClick={() => setShowExplorer((isOpen) => !isOpen)}
-            >
-              Explorer
-            </button>
-          )
+          schema ? (
+            showExplorer ? null : (
+              <button
+                className="docExplorerShow docExplorerShowReverse"
+                onClick={() => setShowExplorer((isOpen) => !isOpen)}
+              >
+                Explorer
+              </button>
+            )
+          ) : null
         }
       >
         <GraphiQL.Logo>
