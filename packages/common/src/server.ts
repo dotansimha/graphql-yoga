@@ -9,6 +9,7 @@ import {
   enableIf,
   useLogger,
   useSchema,
+  useImmediateIntrospection,
 } from '@envelop/core'
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
@@ -168,6 +169,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
         useValidationCache({
           cache: new Map(),
         }),
+        useImmediateIntrospection(),
         // Log events - useful for debugging purposes
         enableIf(
           !!logger,
