@@ -1,0 +1,42 @@
+body,
+html {
+  margin: 0;
+}
+
+.graphiql-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+.graphiql-explorer-node {
+  margin-left: 3px;
+}
+
+.graphiql-explorer-root .graphiql-operation-title-bar {
+  display: flex;
+  align-items: center;
+}
+
+.graphiql-explorer-root .graphiql-operation-title-bar input {
+  min-width: 11ch;
+}
+
+.graphiql-container .docExplorerShowReverse {
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+.docExplorerShowReverse::before {
+  display: none !important;
+}
+
+.docExplorerShowReverse::after {
+  border-left: 2px solid #3b5998;
+  border-top: 2px solid #3b5998;
+  content: '';
+  display: inline-block;
+  height: 9px;
+  margin: 0 0 -1px 3px;
+  position: relative;
+  transform: rotate(135deg);
+  width: 9px;
+}

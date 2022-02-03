@@ -346,7 +346,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
         schema,
       })
     } catch (err: any) {
-      this.logger.error(err.message, err)
+      this.logger.error(err.message, err.stack, err)
       const response = new Response(err.message, {
         status: 500,
         statusText: 'Internal Server Error',
@@ -361,5 +361,3 @@ export function createServer<TContext extends YogaInitialContext, TRootValue>(
 ) {
   return new YogaServer<TContext, TRootValue>(options)
 }
-
-export { renderGraphiQL }
