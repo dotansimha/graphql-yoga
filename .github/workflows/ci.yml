@@ -24,7 +24,7 @@ jobs:
         uses: c-hive/gha-yarn-cache@v2
 
       - name: Install Dependencies using Yarn
-        run: yarn
+        run: yarn --ignore-engines
 
       - name: Build Packages
         run: yarn build

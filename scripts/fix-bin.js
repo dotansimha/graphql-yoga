@@ -7,10 +7,14 @@ const {
 } = require('fs-extra')
 const { resolve, join } = require('path')
 
-const absoluteExamplesDirPath = resolve(__dirname, '../examples')
+const absoluteExamplesDirPath = resolve(__dirname, '..', 'examples')
 const absoluteGraphqlYogaBinPath = resolve(
   __dirname,
-  '../packages/cli/dist/bin.js',
+  '..',
+  'packages',
+  'cli',
+  'dist',
+  'bin.js',
 )
 const dir = readdirSync(absoluteExamplesDirPath)
 for (const path of dir) {
