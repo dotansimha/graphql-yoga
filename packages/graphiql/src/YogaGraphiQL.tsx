@@ -1,6 +1,6 @@
 import React from 'react'
 import copyToClipboard from 'copy-to-clipboard'
-import { GraphiQL, Fetcher } from 'graphiql'
+import { GraphiQL, Fetcher, GraphiQLProps } from 'graphiql'
 import {
   LoadFromUrlOptions,
   SubscriptionProtocol,
@@ -10,6 +10,7 @@ import { DocumentNode, GraphQLSchema, Kind, parse } from 'graphql'
 import GraphiQLExplorer from 'graphiql-explorer'
 import 'graphiql/graphiql.css'
 import './styles.css'
+import './dark-mode.css'
 import { YogaLogo } from './YogaLogo'
 
 const getOperationWithFragments = (
@@ -33,8 +34,7 @@ const getOperationWithFragments = (
   }
 }
 
-export type YogaGraphiQLProps = {
-  [key: string]: any
+export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
   endpoint?: string
 }
 
@@ -88,7 +88,6 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         />
       ) : null}
       <GraphiQL
-        {...props}
         ref={graphiqlRef}
         fetcher={fetcher}
         headerEditorEnabled={true}
@@ -133,6 +132,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
             )
           ) : null
         }
+        {...props}
       >
         <GraphiQL.Logo>
           <div style={{ display: 'flex', alignItems: 'center' }}>
