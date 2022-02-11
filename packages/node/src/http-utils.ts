@@ -1,7 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import { Request, Response } from 'cross-undici-fetch'
+import { Request } from 'cross-undici-fetch'
 import { Readable } from 'stream'
 import type { AddressInfo } from './types'
+import { inspect } from 'util'
 
 export interface NodeRequest {
   protocol?: string
@@ -70,6 +71,24 @@ export async function getNodeRequest(
   })
 }
 
+function isReadableStream(responseBody: any): responseBody is ReadableStream {
+  return !!responseBody.getReader
+}
+
+function isReadable(responseBody: any): responseBody is Readable {
+  return !!responseBody.pipe
+}
+
+function isAsyncIterable(
+  responseBody: any,
+): responseBody is AsyncIterable<any> {
+  return !!responseBody[Symbol.asyncIterator]
+}
+
+function isIterable(responseBody: any): responseBody is Iterable<any> {
+  return !!responseBody[Symbol.iterator]
+}
+
 export async function sendNodeResponse(
   responseResult: Response,
   serverResponse: ServerResponse,
@@ -81,7 +100,7 @@ export async function sendNodeResponse(
   serverResponse.statusMessage = responseResult.statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
   const responseBody = await (responseResult.body as unknown as Promise<any>)
-  if (responseBody.getReader) {
+  if (isReadableStream(responseBody)) {
     const reader: ReadableStreamDefaultReader = responseBody.getReader()
     serverResponse.on('close', () => {
       reader.cancel()
@@ -98,8 +117,40 @@ export async function sendNodeResponse(
     if (!serverResponse.destroyed) {
       serverResponse.end()
     }
-  } else {
+  } else if (isReadable(responseBody)) {
+    responseBody.pipe(serverResponse)
+  } else if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     const nodeReadable = Readable.from(responseBody)
     nodeReadable.pipe(serverResponse)
+  } else {
+    throw new Error(`Unrecognized response body: ${inspect(responseBody)}`)
+  }
+}
+
+export function getNodeStreamFromResponseBody(responseBody: any): Readable {
+  if (isReadable(responseBody)) {
+    return responseBody
+  }
+  if (isReadableStream(responseBody)) {
+    const reader: ReadableStreamDefaultReader = responseBody.getReader()
+    return new Readable({
+      async read() {
+        const { done, value } = await reader.read()
+        if (done) {
+          this.push(null)
+        }
+        if (value) {
+          this.push(value)
+        }
+      },
+      destroy(e) {
+        reader.cancel(e)
+      },
+    })
+  }
+  if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
+    return Readable.from(responseBody)
+  } else {
+    throw new Error(`Unrecognized response body: ${inspect(responseBody)}`)
   }
 }

@@ -248,3 +248,4 @@ export {
 
 export * from '@envelop/core'
 export * from '@graphql-yoga/subscription'
+export { getNodeStreamFromResponseBody } from './http-utils'
