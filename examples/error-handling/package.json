@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.0.1-alpha.4",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "check": "tsc --pretty --noEmit"
   },
   "dependencies": {
     "cross-undici-fetch": "^0.1.24",

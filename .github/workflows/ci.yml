@@ -31,3 +31,24 @@ jobs:
 
       - name: Run Tests
         run: yarn test
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Use Node 17
+        uses: actions/setup-node@master
+        with:
+          node-version: 17
+
+      - name: Get yarn cache
+        uses: c-hive/gha-yarn-cache@v2
+
+      - name: Install Dependencies using Yarn
+        run: yarn --ignore-engines
+
+      - name: Typecheck
+        run: yarn run check

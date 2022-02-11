@@ -7,7 +7,8 @@
     "dev": "concurrently -r \"next-remote-watch ./docs ./routes.ts ./src/pages/_app.tsx ./src/pages/_document.tsx\" \"wait-on -s 1 http://localhost:3000 && open-cli http://localhost:3000\"",
     "next": "next",
     "start": "next start",
-    "analyze": "cross-env ANALYZE=true next build"
+    "analyze": "cross-env ANALYZE=true next build",
+    "check": "exit 0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.0.6",
