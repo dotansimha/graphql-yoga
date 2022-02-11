@@ -17,7 +17,6 @@ const yogaApp = createServer({
 		}
 	},
 	plugins: [
-		// @ts-expect-error - TODO: fix this
 		useGraphQlJit()
 		// other plugins: https://www.envelop.dev/plugins
 	],
