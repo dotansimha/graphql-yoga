@@ -50,5 +50,8 @@ jobs:
       - name: Install Dependencies using Yarn
         run: yarn --ignore-engines
 
+      - name: Build Packages
+        run: yarn build
+
       - name: Typecheck
         run: yarn run check
