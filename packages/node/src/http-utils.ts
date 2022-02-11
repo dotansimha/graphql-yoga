@@ -100,7 +100,9 @@ export async function sendNodeResponse(
   serverResponse.statusMessage = responseResult.statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
   const responseBody = await (responseResult.body as unknown as Promise<any>)
-  if (isReadableStream(responseBody)) {
+  if (isReadable(responseBody)) {
+    responseBody.pipe(serverResponse)
+  } else if (isReadableStream(responseBody)) {
     const reader: ReadableStreamDefaultReader = responseBody.getReader()
     serverResponse.on('close', () => {
       reader.cancel()
@@ -117,8 +119,6 @@ export async function sendNodeResponse(
     if (!serverResponse.destroyed) {
       serverResponse.end()
     }
-  } else if (isReadable(responseBody)) {
-    responseBody.pipe(serverResponse)
   } else if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     const nodeReadable = Readable.from(responseBody)
     nodeReadable.pipe(serverResponse)
