@@ -87,7 +87,9 @@ const pubSub = createPubSub<{
   'globalCounter:changed': []
 }>()
 
-type Context = Partial<typeof pubSub> & YogaInitialContext
+interface Context extends YogaInitialContext {
+  pubSub: typeof pubSub
+}
 
 const server = createServer<Context, any>({
   schema: {
@@ -95,7 +97,7 @@ const server = createServer<Context, any>({
     typeDefs,
   },
   logging: true,
-  plugins: [useExtendContext(() => ({ pubSub } as Partial<Context>))],
+  plugins: [useExtendContext(() => ({ pubSub }))],
 })
 
 server.start()
