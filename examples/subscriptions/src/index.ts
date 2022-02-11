@@ -5,6 +5,7 @@ import {
   Repeater,
   pipe,
   map,
+  YogaInitialContext,
 } from '@graphql-yoga/node'
 
 const wait = (time: number) =>
@@ -86,11 +87,15 @@ const pubSub = createPubSub<{
   'globalCounter:changed': []
 }>()
 
-const server = createServer({
-  typeDefs,
-  resolvers,
-  enableLogging: true,
-  plugins: [useExtendContext(() => ({ pubSub }))],
+type Context = Partial<typeof pubSub> & YogaInitialContext
+
+const server = createServer<Context, any>({
+  schema: {
+    resolvers,
+    typeDefs,
+  },
+  logging: true,
+  plugins: [useExtendContext(() => ({ pubSub } as Partial<Context>))],
 })
 
 server.start()
