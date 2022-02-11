@@ -54,12 +54,16 @@ export function handleSummary(data) {
 
 export default function () {
   const res = http.get(
-    `http://localhost:4000/graphql?query=${encodeURIComponent('{ hello }')}`,
+    `http://localhost:4000/graphql?query=${encodeURIComponent(
+      '{ greetings }',
+    )}`,
   )
 
   check(res, {
     no_errors: (resp) => !('errors' in resp.json()),
     expected_result: (resp) =>
-      resp.json().data && resp.json().data.hello === 'Hello World',
+      resp.json().data &&
+      resp.json().data.greetings ===
+        'This is the `greetings` field of the root `Query` type',
   })
 }
