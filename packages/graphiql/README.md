@@ -5,7 +5,7 @@ This package is currently not published to npm and only contains the React compo
 
 ## Development
 
-You can run a local instance on `http://localhost:3000` with the following command".
+You can run a local instance on `http://localhost:4001` with the following command".
 
 ```ts
 yarn workspace @graphiql/yoga start
