@@ -113,7 +113,7 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
     return responseBody
   }
   if (isReadableStream(responseBody)) {
-    let reader: ReadableStreamReader<Uint8Array> | undefined
+    let reader: ReadableStreamReader<Uint8Array>
     return new Readable({
       construct(callback) {
         try {
@@ -124,20 +124,21 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
         }
       },
       read() {
-        reader?.read().then(({ done, value }) => {
+        reader.read().then(({ done, value }) => {
           if (value) {
             this.push(value)
           }
-          if (done) {
+          if (done || reader.closed) {
             this.push(null)
-            reader?.releaseLock()
-            reader = undefined
+            reader.releaseLock()
           }
         })
       },
-      destroy(e) {
-        reader?.cancel(e)
-        reader = undefined
+      destroy(e, callback) {
+        reader
+          .cancel(e)
+          .then(() => callback(null))
+          .catch((e) => callback(e))
       },
     })
   }
