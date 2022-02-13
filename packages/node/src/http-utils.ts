@@ -100,8 +100,12 @@ export async function sendNodeResponse(
   serverResponse.statusMessage = responseResult.statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
   const responseBody = await (responseResult.body as unknown as Promise<any>)
-  const nodeReadable = getNodeStreamFromResponseBody(responseBody)
-  nodeReadable.pipe(serverResponse)
+  if (responseBody == null) {
+    serverResponse.end()
+  } else {
+    const nodeReadable = getNodeStreamFromResponseBody(responseBody)
+    nodeReadable.pipe(serverResponse)
+  }
 }
 
 export function getNodeStreamFromResponseBody(responseBody: any): Readable {
@@ -109,19 +113,31 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
     return responseBody
   }
   if (isReadableStream(responseBody)) {
-    const reader: ReadableStreamDefaultReader = responseBody.getReader()
+    let reader: ReadableStreamReader<Uint8Array> | undefined
     return new Readable({
-      async read() {
-        const { done, value } = await reader.read()
-        if (done) {
-          this.push(null)
-        }
-        if (value) {
-          this.push(value)
+      construct(callback) {
+        try {
+          reader = responseBody.getReader()
+          callback(null)
+        } catch (e: any) {
+          callback(e)
         }
       },
+      read() {
+        reader?.read().then(({ done, value }) => {
+          if (value) {
+            this.push(value)
+          }
+          if (done) {
+            this.push(null)
+            reader?.releaseLock()
+            reader = undefined
+          }
+        })
+      },
       destroy(e) {
-        reader.cancel(e)
+        reader?.cancel(e)
+        reader = undefined
       },
     })
   }
