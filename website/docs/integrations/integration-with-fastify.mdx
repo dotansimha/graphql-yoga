@@ -17,7 +17,7 @@ So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Y
 ## Example
 
 ```ts
-import { createServer, getNodeStreamFromResponseBody } from '@graphql-yoga/node'
+import { createServer } from '@graphql-yoga/node'
 import fastify from 'fastify'
 import { Readable } from 'stream'
 
@@ -46,7 +46,7 @@ app.route({
     reply.status(response.status)
 
     // Converts ReadableStream to a NodeJS Stream
-    const nodeStream = getNodeStreamFromResponseBody(response.body)
+    const nodeStream = Readable.from(response.body)
     reply.send(nodeStream)
   },
 })

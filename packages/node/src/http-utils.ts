@@ -71,99 +71,32 @@ export async function getNodeRequest(
   })
 }
 
-function isReadableStream(responseBody: any): responseBody is ReadableStream {
-  return !!responseBody.getReader
-}
-
 function isReadable(responseBody: any): responseBody is Readable {
   return !!responseBody.pipe
 }
 
-function isAsyncIterable(
-  responseBody: any,
-): responseBody is AsyncIterable<any> {
-  return !!responseBody[Symbol.asyncIterator]
+declare global {
+  interface ReadableStream<R = any> {
+    [Symbol.asyncIterator]: () => AsyncIterator<R>
+  }
 }
 
-function isIterable(responseBody: any): responseBody is Iterable<any> {
-  return !!responseBody[Symbol.iterator]
-}
-
-export async function sendNodeResponse(
-  responseResult: Response,
+export function sendNodeResponse(
+  { headers, status, statusText, body }: Response,
   serverResponse: ServerResponse,
-): Promise<void> {
-  responseResult.headers.forEach((value, name) => {
+): void {
+  headers.forEach((value, name) => {
     serverResponse.setHeader(name, value)
   })
-  serverResponse.statusCode = responseResult.status
-  serverResponse.statusMessage = responseResult.statusText
+  serverResponse.statusCode = status
+  serverResponse.statusMessage = statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
-  const responseBody = await (responseResult.body as unknown as Promise<any>)
-  if (responseBody == null) {
+  if (body == null) {
     serverResponse.end()
   } else {
-    const nodeStream = getNodeStreamFromResponseBody(responseBody)
+    const nodeStream = (
+      isReadable(body) ? body : Readable.from(body)
+    ) as Readable
     nodeStream.pipe(serverResponse)
-    serverResponse.once('close', () => {
-      if (!nodeStream.destroyed) {
-        nodeStream.destroy()
-      }
-    })
   }
-}
-
-export function getNodeStreamFromResponseBody(responseBody: any): Readable {
-  if (isReadable(responseBody)) {
-    return responseBody
-  }
-  const passThrough = new PassThrough()
-  if (isReadableStream(responseBody)) {
-    const reader = responseBody.getReader()
-    void reader
-      .read()
-      .then(function pump({
-        done,
-        value,
-      }: ReadableStreamDefaultReadResult<Uint8Array>): any {
-        if (passThrough.destroyed) {
-          reader.releaseLock()
-        } else {
-          if (value != null) {
-            passThrough.write(value)
-          }
-          if (done) {
-            passThrough.end()
-            reader.releaseLock()
-          } else {
-            return reader.read().then(pump)
-          }
-        }
-      })
-  } else if (isAsyncIterable(responseBody)) {
-    const iterator = responseBody[Symbol.asyncIterator]()
-    void iterator
-      .next()
-      .then(function pump({ done, value }: IteratorResult<any>): any {
-        if (passThrough.destroyed) {
-          return iterator.return?.()
-        } else {
-          if (value != null) {
-            passThrough.write(value)
-          }
-          if (done) {
-            passThrough.end()
-            return iterator.return?.()
-          } else {
-            return iterator.next().then(pump)
-          }
-        }
-      })
-  } else if (isIterable(responseBody)) {
-    process.nextTick(() => {
-      passThrough.write(responseBody)
-      passThrough.end()
-    })
-  }
-  return passThrough
 }

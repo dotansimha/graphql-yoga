@@ -9,7 +9,6 @@ import pino from 'pino'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
 import {
   YogaServer,
-  YogaLogger,
   YogaInitialContext,
   GraphQLYogaError,
   YogaServerOptions,
@@ -116,7 +115,7 @@ class YogaNodeServer<
 
   requestListener = async (req: IncomingMessage, res: ServerResponse) => {
     const response = await this.handleIncomingMessage(req)
-    await sendNodeResponse(response, res)
+    sendNodeResponse(response, res)
   }
 
   start() {
@@ -251,4 +250,3 @@ export {
 
 export * from '@envelop/core'
 export * from '@graphql-yoga/subscription'
-export { getNodeStreamFromResponseBody } from './http-utils'

@@ -1,4 +1,5 @@
-import { createServer, getNodeStreamFromResponseBody } from '@graphql-yoga/node'
+import { createServer } from '@graphql-yoga/node'
+import { Readable } from 'stream'
 import fastify from 'fastify'
 
 export function buildApp(logging = true) {
@@ -52,7 +53,7 @@ export function buildApp(logging = true) {
       }
 
       reply.status(response.status)
-      const nodeStream = getNodeStreamFromResponseBody(response.body)
+      const nodeStream = Readable.from(response.body)
       reply.send(nodeStream)
     },
   })
