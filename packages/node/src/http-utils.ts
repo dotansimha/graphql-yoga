@@ -112,9 +112,9 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
   if (isReadable(responseBody)) {
     return responseBody
   }
-  if ((Readable as any).fromWeb && isReadableStream(responseBody)) {
-    return (Readable as any).fromWeb(responseBody)
-  }
+  /*   if ((Readable as any).fromWeb && isReadableStream(responseBody)) {
+      return (Readable as any).fromWeb(responseBody)
+    } */
   if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     return Readable.from(responseBody)
   } else {
