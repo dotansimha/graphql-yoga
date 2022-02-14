@@ -112,10 +112,19 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
   if (isReadable(responseBody)) {
     return responseBody
   }
-  /* TODO: Readable.fromWeb doesn't work as expected 
   if ((Readable as any).fromWeb && isReadableStream(responseBody)) {
-    return (Readable as any).fromWeb(responseBody)
-  } */
+    const [clonedResponseBody] = responseBody.tee()
+    const readable: Readable = (Readable as any).fromWeb(clonedResponseBody)
+    Object.defineProperty(readable, 'pipe', {
+      value: function wrappedPipe(pipedReadable: Writable, opts: any) {
+        pipedReadable.on('close', () => {
+          readable.destroy()
+        })
+        return Readable.prototype.pipe.call(readable, pipedReadable, opts)
+      },
+    })
+    return readable
+  }
   if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     return Readable.from(responseBody)
   } else {
