@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 import { Request } from 'cross-undici-fetch'
-import { Readable, Writable } from 'stream'
+import { Duplex, PassThrough, Readable, Writable } from 'stream'
 import type { AddressInfo } from './types'
 import { inspect } from 'util'
 
@@ -103,36 +103,13 @@ export async function sendNodeResponse(
   if (responseBody == null) {
     serverResponse.end()
   } else {
-    if (isReadable(responseBody)) {
-      responseBody.pipe(serverResponse)
-    } else if (isReadableStream(responseBody)) {
-      const reader = responseBody.getReader()
-      while (true) {
-        const { done, value } = await reader.read()
-        if (serverResponse.destroyed) {
-          reader.releaseLock()
-          break
-        }
-        if (value != null) {
-          serverResponse.write(value)
-        }
-        if (done) {
-          serverResponse.end()
-          reader.releaseLock()
-          break
-        }
+    const nodeStream = getNodeStreamFromResponseBody(responseBody)
+    nodeStream.pipe(serverResponse)
+    serverResponse.once('close', () => {
+      if (!nodeStream.destroyed) {
+        nodeStream.destroy()
       }
-    } else if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
-      for await (const chunk of responseBody) {
-        if (serverResponse.destroyed) {
-          break
-        }
-        serverResponse.write(chunk)
-      }
-      if (!serverResponse.destroyed) {
-        serverResponse.end()
-      }
-    }
+    })
   }
 }
 
@@ -140,9 +117,53 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
   if (isReadable(responseBody)) {
     return responseBody
   }
-  if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
-    return Readable.from(responseBody)
-  } else {
-    throw new Error(`Unrecognized response body: ${inspect(responseBody)}`)
+  const passThrough = new PassThrough()
+  if (isReadableStream(responseBody)) {
+    const reader = responseBody.getReader()
+    void reader
+      .read()
+      .then(function pump({
+        done,
+        value,
+      }: ReadableStreamDefaultReadResult<Uint8Array>): any {
+        if (passThrough.destroyed) {
+          reader.releaseLock()
+        } else {
+          if (value != null) {
+            passThrough.write(value)
+          }
+          if (done) {
+            passThrough.end()
+            reader.releaseLock()
+          } else {
+            return reader.read().then(pump)
+          }
+        }
+      })
+  } else if (isAsyncIterable(responseBody)) {
+    const iterator = responseBody[Symbol.asyncIterator]()
+    void iterator
+      .next()
+      .then(function pump({ done, value }: IteratorResult<any>): any {
+        if (passThrough.destroyed) {
+          return iterator.return?.()
+        } else {
+          if (value != null) {
+            passThrough.write(value)
+          }
+          if (done) {
+            passThrough.end()
+            return iterator.return?.()
+          } else {
+            return iterator.next().then(pump)
+          }
+        }
+      })
+  } else if (isIterable(responseBody)) {
+    process.nextTick(() => {
+      passThrough.write(responseBody)
+      passThrough.end()
+    })
   }
+  return passThrough
 }
