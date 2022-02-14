@@ -9,9 +9,9 @@ import pino from 'pino'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
 import {
   YogaServer,
-  YogaLogger,
   YogaInitialContext,
   GraphQLYogaError,
+  YogaServerOptions,
 } from '@graphql-yoga/common'
 import type {
   GraphQLServerInject,
@@ -24,16 +24,21 @@ import { platform } from 'os'
 
 function getPinoLogger<TContext, TRootValue>(
   options: YogaNodeServerOptions<TContext, TRootValue>['logging'] = {},
-): YogaLogger {
+): YogaServerOptions<TContext, TRootValue>['logging'] {
+  if (options === false) {
+    return false
+  }
+  const optionsIsAnObject = typeof options === 'object'
+  if (optionsIsAnObject && 'debug' in options) {
+    return options
+  }
   const prettyLog =
-    typeof options === 'object' && 'prettyLog' in options
+    optionsIsAnObject && 'prettyLog' in options
       ? options?.prettyLog
       : process.env.NODE_ENV === 'development'
 
   const logLevel =
-    (typeof options === 'object' &&
-      'logLevel' in options &&
-      options.logLevel) ||
+    (optionsIsAnObject && 'logLevel' in options && options.logLevel) ||
     (process.env.NODE_ENV === 'development' ? 'debug' : 'info')
 
   const prettyPrintOptions = prettyLog
@@ -68,10 +73,7 @@ class YogaNodeServer<
   constructor(private options?: YogaNodeServerOptions<TContext, TRootValue>) {
     super({
       ...options,
-      logging:
-        typeof options?.logging === 'object' && 'debug' in options?.logging
-          ? options?.logging
-          : getPinoLogger(options?.logging),
+      logging: getPinoLogger(options?.logging),
     })
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
@@ -113,7 +115,7 @@ class YogaNodeServer<
 
   requestListener = async (req: IncomingMessage, res: ServerResponse) => {
     const response = await this.handleIncomingMessage(req)
-    await sendNodeResponse(response, res)
+    sendNodeResponse(response, res)
   }
 
   start() {

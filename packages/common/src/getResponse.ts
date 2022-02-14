@@ -39,10 +39,6 @@ export function getMultipartResponse(
     },
     async pull(controller) {
       const { done, value } = await iterator.next()
-      if (done) {
-        controller.enqueue('\r\n-----\r\n')
-        controller.close()
-      }
       if (value != null) {
         const chunk = JSON.stringify(value)
         const encodedChunk = encodeString(chunk)
@@ -56,6 +52,10 @@ export function getMultipartResponse(
         if (value.hasNext) {
           controller.enqueue('\r\n---')
         }
+      }
+      if (done) {
+        controller.enqueue('\r\n-----\r\n')
+        controller.close()
       }
     },
     async cancel(e) {
@@ -87,12 +87,12 @@ export function getPushResponse(
     },
     async pull(controller) {
       const { done, value } = await iterator.next()
-      if (done) {
-        controller.close()
-      }
       if (value != null) {
         const chunk = JSON.stringify(value)
         controller.enqueue(`data: ${chunk}\n\n`)
+      }
+      if (done) {
+        controller.close()
       }
     },
     async cancel(e) {
