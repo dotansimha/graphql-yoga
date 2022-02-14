@@ -103,27 +103,42 @@ export async function sendNodeResponse(
   if (responseBody == null) {
     serverResponse.end()
   } else {
-    const nodeReadable = getNodeStreamFromResponseBody(responseBody)
-    nodeReadable.pipe(serverResponse)
+    if (isReadable(responseBody)) {
+      responseBody.pipe(serverResponse)
+    } else if (isReadableStream(responseBody)) {
+      const reader = responseBody.getReader()
+      while (true) {
+        const { done, value } = await reader.read()
+        if (serverResponse.destroyed) {
+          reader.releaseLock()
+          break
+        }
+        if (value != null) {
+          serverResponse.write(value)
+        }
+        if (done) {
+          serverResponse.end()
+          reader.releaseLock()
+          break
+        }
+      }
+    } else if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
+      for await (const chunk of responseBody) {
+        if (serverResponse.destroyed) {
+          break
+        }
+        serverResponse.write(chunk)
+      }
+      if (!serverResponse.destroyed) {
+        serverResponse.end()
+      }
+    }
   }
 }
 
 export function getNodeStreamFromResponseBody(responseBody: any): Readable {
   if (isReadable(responseBody)) {
     return responseBody
-  }
-  if ((Readable as any).fromWeb && isReadableStream(responseBody)) {
-    const [clonedResponseBody] = responseBody.tee()
-    const readable: Readable = (Readable as any).fromWeb(clonedResponseBody)
-    Object.defineProperty(readable, 'pipe', {
-      value: function wrappedPipe(pipedReadable: Writable, opts: any) {
-        pipedReadable.on('close', () => {
-          readable.destroy()
-        })
-        return Readable.prototype.pipe.call(readable, pipedReadable, opts)
-      },
-    })
-    return readable
   }
   if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     return Readable.from(responseBody)
