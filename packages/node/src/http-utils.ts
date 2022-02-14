@@ -108,27 +108,14 @@ export async function sendNodeResponse(
   }
 }
 
-export function getNodeStreamFromResponseBody(responseBody: any): Readable {
+export function getNodeStreamFromResponseBody(
+  responseBody: any,
+): Readable | ReadableStreamAdapterReadable<any> {
   if (isReadable(responseBody)) {
     return responseBody
   }
-  if (isReadableStream(responseBody)) {
-    const reader = responseBody.getReader()
-    const readable = new Readable({
-      read() {
-        reader
-          .read()
-          .then((result) => {
-            if (result.done) {
-              this.push(null)
-            } else {
-              this.push(result.value)
-            }
-          })
-          .catch((error) => this.destroy(error))
-      },
-    })
-    return readable
+  if (isReadableStream(responseBody) && 'fromWeb' in responseBody) {
+    return (Readable as any).fromWeb(responseBody)
   }
   if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     return Readable.from(responseBody)
