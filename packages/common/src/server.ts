@@ -35,7 +35,7 @@ interface OptionsWithPlugins<TContext> {
    * Envelop Plugins
    * @see https://envelop.dev/plugins
    */
-  plugins: Array<Plugin<TContext> | 0>
+  plugins: Array<Plugin<TContext> | Plugin | {}>
 }
 
 /**

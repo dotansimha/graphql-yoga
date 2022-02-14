@@ -11,7 +11,8 @@
   "module": "dist/index.mjs",
   "scripts": {
     "prepack": "bob prepack",
-    "build": "node scripts/yoga-bundle-string.mjs"
+    "build": "node scripts/yoga-bundle-string.mjs",
+    "check": "tsc --pretty --noEmit"
   },
   "keywords": [
     "graphql",
