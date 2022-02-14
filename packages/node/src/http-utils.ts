@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 import { Request } from 'cross-undici-fetch'
-import { Readable } from 'stream'
+import { Readable, Writable } from 'stream'
 import type { AddressInfo } from './types'
 import { inspect } from 'util'
 
@@ -112,9 +112,10 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
   if (isReadable(responseBody)) {
     return responseBody
   }
-  /*   if ((Readable as any).fromWeb && isReadableStream(responseBody)) {
-      return (Readable as any).fromWeb(responseBody)
-    } */
+  /* TODO: Readable.fromWeb doesn't work as expected 
+  if ((Readable as any).fromWeb && isReadableStream(responseBody)) {
+    return (Readable as any).fromWeb(responseBody)
+  } */
   if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     return Readable.from(responseBody)
   } else {
