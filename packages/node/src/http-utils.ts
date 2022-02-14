@@ -108,9 +108,7 @@ export async function sendNodeResponse(
   }
 }
 
-export function getNodeStreamFromResponseBody(
-  responseBody: any,
-): Readable | ReadableStreamAdapterReadable<any> {
+export function getNodeStreamFromResponseBody(responseBody: any): Readable {
   if (isReadable(responseBody)) {
     return responseBody
   }
