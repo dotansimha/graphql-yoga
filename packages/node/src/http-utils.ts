@@ -113,34 +113,22 @@ export function getNodeStreamFromResponseBody(responseBody: any): Readable {
     return responseBody
   }
   if (isReadableStream(responseBody)) {
-    let reader: ReadableStreamReader<Uint8Array>
-    return new Readable({
-      construct(callback) {
-        try {
-          reader = responseBody.getReader()
-          callback(null)
-        } catch (e: any) {
-          callback(e)
-        }
-      },
+    const reader = responseBody.getReader()
+    const readable = new Readable({
       read() {
-        reader.read().then(({ done, value }) => {
-          if (value) {
-            this.push(value)
-          }
-          if (done || reader.closed) {
-            this.push(null)
-            reader.releaseLock()
-          }
-        })
-      },
-      destroy(e, callback) {
         reader
-          .cancel(e)
-          .then(() => callback(null))
-          .catch((e) => callback(e))
+          .read()
+          .then((result) => {
+            if (result.done) {
+              this.push(null)
+            } else {
+              this.push(result.value)
+            }
+          })
+          .catch((error) => this.destroy(error))
       },
     })
+    return readable
   }
   if (isAsyncIterable(responseBody) || isIterable(responseBody)) {
     return Readable.from(responseBody)

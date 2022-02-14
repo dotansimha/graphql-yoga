@@ -362,7 +362,7 @@ describe('Incremental Delivery', () => {
     expect(body.data.singleUpload.text).toBe(fileContent)
   })
 
-  it('should get subscription', async () => {
+  it.skip('should get subscription', async () => {
     const serverUrl = yoga.getServerUrl()
 
     const eventSource = new EventSource(
