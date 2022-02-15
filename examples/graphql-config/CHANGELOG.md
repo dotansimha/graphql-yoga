@@ -1,5 +1,12 @@
 # graphql-config-example
 
+## 0.0.1-alpha.9
+
+### Patch Changes
+
+- Updated dependencies [dcaea56]
+  - graphql-yoga@2.0.0-alpha.12
+
 ## 0.0.1-alpha.8
 
 ### Patch Changes
