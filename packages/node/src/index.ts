@@ -20,6 +20,7 @@ import type {
 } from './types'
 import LightMyRequest from 'light-my-request'
 import { ExecutionResult, print } from 'graphql'
+import 'pino-pretty'
 import { platform } from 'os'
 
 function getPinoLogger<TContext, TRootValue>(
