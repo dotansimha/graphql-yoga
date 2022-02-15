@@ -42,3 +42,30 @@ export function getRoutes(): IRoutes {
     ),
   }
 }
+
+export function getTutorialRoutes(): IRoutes {
+  const Routes: IRoutes = {
+    _: {
+      '00-introduction': {
+        $name: 'Introduction',
+      },
+    },
+  }
+
+  GenerateRoutes({
+    Routes,
+    folderPattern: 'tutorial',
+  })
+
+  return {
+    ...Routes,
+    _: Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      Object.entries(Routes._).map(([key, value]) => [
+        `tutorial/${key}`,
+        value,
+      ]),
+    ),
+  }
+}

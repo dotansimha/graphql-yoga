@@ -90,6 +90,18 @@ function AppContent(appProps: AppProps) {
             onClick: (e) => handlePushRoute('/', e),
           },
           {
+            children: 'Documentation',
+            title: 'Documentation',
+            href: '/docs',
+            onClick: (e) => handlePushRoute('/docs', e),
+          },
+          {
+            children: 'Tutorial',
+            title: 'Tutorial',
+            href: '/tutorial',
+            onClick: (e) => handlePushRoute('/tutorial', e),
+          },
+          {
             children: 'GitHub',
             title: "Head to project's GitHub",
             href: 'https://github.com/dotansimha/graphql-yoga',

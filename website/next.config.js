@@ -14,5 +14,19 @@ module.exports = withBundleAnalyzer(
   withGuildDocs({
     i18n,
     getRoutes,
+    redirects: () => {
+      return [
+        {
+          source: '/docs',
+          destination: '/docs/quick-start',
+          permanent: true,
+        },
+        {
+          source: '/tutorial',
+          destination: '/tutorial/00-introduction',
+          permanent: true,
+        },
+      ]
+    },
   }),
 )
