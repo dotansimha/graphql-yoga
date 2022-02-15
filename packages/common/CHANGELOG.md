@@ -1,5 +1,17 @@
 # @graphql-yoga/common
 
+## 0.2.0-alpha.11
+
+### Minor Changes
+
+- dcaea56: add missing tslib dependency
+
+### Patch Changes
+
+- 84091d2: Fix plugin context types
+- Updated dependencies [dcaea56]
+  - @graphql-yoga/subscription@0.1.0-alpha.2
+
 ## 0.2.0-alpha.10
 
 ### Minor Changes

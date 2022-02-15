@@ -1,5 +1,11 @@
 # @graphql-yoga/subscription
 
+## 0.1.0-alpha.2
+
+### Minor Changes
+
+- dcaea56: add missing tslib dependency
+
 ## 0.1.0-alpha.1
 
 ### Minor Changes

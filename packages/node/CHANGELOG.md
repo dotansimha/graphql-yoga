@@ -1,5 +1,23 @@
 # @graphql-yoga/node
 
+## 0.1.0-alpha.4
+
+### Minor Changes
+
+- 133f8e9: feat(node): improve sendNodeResponse
+- dcaea56: feat(node): add getServerUrl that returns expected full GraphQL API URL
+- ce60a48: fix(node): add import of pino-pretty for the bundler-based envs like Next.JS
+- dcaea56: add missing tslib dependency
+
+### Patch Changes
+
+- dcaea56: fix(node): use localhost instead of 0.0.0.0 on Windows
+- f5f06f4: fix(node): do not try to print if document is falsy
+- Updated dependencies [84091d2]
+- Updated dependencies [dcaea56]
+  - @graphql-yoga/common@0.2.0-alpha.11
+  - @graphql-yoga/subscription@0.1.0-alpha.2
+
 ## 0.1.0-alpha.3
 
 ### Patch Changes
