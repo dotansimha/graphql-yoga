@@ -1,6 +1,15 @@
-import { createServer, useExtendContext, createPubSub, Repeater, pipe, map } from "@graphql-yoga/node";
+import {
+  createServer,
+  useExtendContext,
+  createPubSub,
+  Repeater,
+  pipe,
+  map,
+  YogaInitialContext,
+} from '@graphql-yoga/node'
 
-const wait = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
+const wait = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time))
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -27,7 +36,7 @@ const typeDefs = /* GraphQL */ `
     """
     incrementGlobalCounter: Int!
   }
-`;
+`
 
 let globalCounter = 0
 
@@ -38,7 +47,7 @@ const resolvers = {
   Subscription: {
     counter: {
       subscribe: async function* () {
-        let counter = 0;
+        let counter = 0
 
         // count up until the subscription is terminated
         while (true) {
@@ -50,39 +59,45 @@ const resolvers = {
     },
     globalCounter: {
       // Merge initial value with source stream of new values
-      subscribe: (_, _args, context) => pipe(
-        Repeater.merge([
-          // cause an initial event so the globalCounter is streamed to the client 
-          // upon initiating the subscription
-          undefined,
-          // event stream for future updates
-          context.pubSub.subscribe("globalCounter:changed")
-        ]),
-        // map all events to the latest globalCounter
-        map(() => globalCounter)
-      ),
+      subscribe: (_, _args, context) =>
+        pipe(
+          Repeater.merge([
+            // cause an initial event so the globalCounter is streamed to the client
+            // upon initiating the subscription
+            undefined,
+            // event stream for future updates
+            context.pubSub.subscribe('globalCounter:changed'),
+          ]),
+          // map all events to the latest globalCounter
+          map(() => globalCounter),
+        ),
       resolve: (payload) => payload,
     },
   },
   Mutation: {
     incrementGlobalCounter: (_source, _args, context) => {
       globalCounter++
-      context.pubSub.publish("globalCounter:changed")
+      context.pubSub.publish('globalCounter:changed')
       return globalCounter
-    }
+    },
   },
-};
+}
 
 const pubSub = createPubSub<{
-  'globalCounter:changed': [],
+  'globalCounter:changed': []
 }>()
 
+interface Context extends YogaInitialContext {
+  pubSub: typeof pubSub
+}
 
-const server = createServer({
-  typeDefs,
-  resolvers,
-  enableLogging: true,
+const server = createServer<Context, any>({
+  schema: {
+    resolvers,
+    typeDefs,
+  },
+  logging: true,
   plugins: [useExtendContext(() => ({ pubSub }))],
-});
+})
 
-server.start();
+server.start()

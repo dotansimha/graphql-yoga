@@ -26,8 +26,12 @@
       "@graphql-yoga/common": ["packages/common/src/index.ts"],
       "@graphql-yoga/subscription": ["packages/subscription/src/index.ts"],
       "@graphql-yoga/node": ["packages/node/src/index.ts"],
+      "@graphql-yoga/render-graphiql": [
+        "packages/render-graphiql/src/index.ts"
+      ],
       "graphql-yoga": ["packages/graphql-yoga/src/index.ts"]
-    }
+    },
+    "jsx": "preserve"
   },
   "include": ["packages"],
   "exclude": ["**/dist", "**/temp"]

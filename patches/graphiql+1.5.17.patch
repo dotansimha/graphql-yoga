@@ -1,0 +1,271 @@
+diff --git a/node_modules/graphiql/dist/components/GraphiQL.d.ts b/node_modules/graphiql/dist/components/GraphiQL.d.ts
+index 8257ed6..d51bf17 100644
+--- a/node_modules/graphiql/dist/components/GraphiQL.d.ts
++++ b/node_modules/graphiql/dist/components/GraphiQL.d.ts
+@@ -54,6 +54,8 @@ export declare type GraphiQLProps = {
+     docExplorerOpen?: boolean;
+     toolbar?: GraphiQLToolbarConfig;
+     maxHistoryLength?: number;
++    onSchemaChange?: (schema: GraphQLSchema) => void;
++    leftDocExplorerContent?: React.ReactElement | null;
+ };
+ export declare type GraphiQLState = {
+     schema?: GraphQLSchema | null;
+diff --git a/node_modules/graphiql/esm/components/GraphiQL.js b/node_modules/graphiql/esm/components/GraphiQL.js
+index 63ebcad..f6fb859 100644
+--- a/node_modules/graphiql/esm/components/GraphiQL.js
++++ b/node_modules/graphiql/esm/components/GraphiQL.js
+@@ -788,6 +788,7 @@ var GraphiQL = (function (_super) {
+                     React.createElement("button", { className: "docExplorerHide", onClick: this.handleToggleHistory, "aria-label": "Close History" }, '\u2715')))),
+             React.createElement("div", { className: "editorWrap" },
+                 React.createElement("div", { className: "topBarWrap" },
++                    _this.props.leftDocExplorerContent || null,
+                     React.createElement("div", { className: "topBar" },
+                         logo,
+                         React.createElement(ExecuteButton, { isRunning: Boolean(this.state.subscription), onRun: this.handleRunQuery, onStop: this.handleStopQuery, operations: this.state.operations }),
+@@ -955,6 +956,7 @@ var GraphiQL = (function (_super) {
+                 if (schema) {
+                     var queryFacts = getOperationFacts(schema, _this.state.query);
+                     _this.safeSetState(__assign(__assign({ schema: schema }, queryFacts), { schemaErrors: undefined }));
++                    _this.props.onSchemaChange && _this.props.onSchemaChange(schema)
+                 }
+             }
+             else {
+diff --git a/node_modules/graphiql/esm/components/HeaderEditor.js b/node_modules/graphiql/esm/components/HeaderEditor.js
+index b7e8194..667c0dc 100644
+--- a/node_modules/graphiql/esm/components/HeaderEditor.js
++++ b/node_modules/graphiql/esm/components/HeaderEditor.js
+@@ -25,6 +25,19 @@ var __assign = (this && this.__assign) || function () {
+ import React from 'react';
+ import onHasCompletion from '../utility/onHasCompletion';
+ import commonKeys from '../utility/commonKeys';
++import CodeMirror from 'codemirror';
++import 'codemirror/addon/hint/show-hint';
++import 'codemirror/addon/edit/matchbrackets';
++import 'codemirror/addon/edit/closebrackets';
++import 'codemirror/addon/fold/brace-fold';
++import 'codemirror/addon/fold/foldgutter';
++import 'codemirror/addon/lint/lint';
++import 'codemirror/addon/search/searchcursor';
++import 'codemirror/addon/search/jump-to-line';
++import 'codemirror/addon/dialog/dialog';
++import 'codemirror/mode/javascript/javascript';
++import 'codemirror/keymap/sublime';
++
+ var HeaderEditor = (function (_super) {
+     __extends(HeaderEditor, _super);
+     function HeaderEditor(props) {
+@@ -63,19 +76,7 @@ var HeaderEditor = (function (_super) {
+     }
+     HeaderEditor.prototype.componentDidMount = function () {
+         var _this = this;
+-        this.CodeMirror = require('codemirror');
+-        require('codemirror/addon/hint/show-hint');
+-        require('codemirror/addon/edit/matchbrackets');
+-        require('codemirror/addon/edit/closebrackets');
+-        require('codemirror/addon/fold/brace-fold');
+-        require('codemirror/addon/fold/foldgutter');
+-        require('codemirror/addon/lint/lint');
+-        require('codemirror/addon/search/searchcursor');
+-        require('codemirror/addon/search/jump-to-line');
+-        require('codemirror/addon/dialog/dialog');
+-        require('codemirror/mode/javascript/javascript');
+-        require('codemirror/keymap/sublime');
+-        var editor = (this.editor = this.CodeMirror(this._node, {
++        var editor = (this.editor = CodeMirror(this._node, {
+             value: this.props.value || '',
+             lineNumbers: true,
+             tabSize: 2,
+@@ -133,7 +134,6 @@ var HeaderEditor = (function (_super) {
+         editor.on('hasCompletion', this._onHasCompletion);
+     };
+     HeaderEditor.prototype.componentDidUpdate = function (prevProps) {
+-        this.CodeMirror = require('codemirror');
+         if (!this.editor) {
+             return;
+         }
+diff --git a/node_modules/graphiql/esm/components/QueryEditor.js b/node_modules/graphiql/esm/components/QueryEditor.js
+index c5b9d90..696559b 100644
+--- a/node_modules/graphiql/esm/components/QueryEditor.js
++++ b/node_modules/graphiql/esm/components/QueryEditor.js
+@@ -27,6 +27,25 @@ import MD from 'markdown-it';
+ import { normalizeWhitespace } from '../utility/normalizeWhitespace';
+ import onHasCompletion from '../utility/onHasCompletion';
+ import commonKeys from '../utility/commonKeys';
++import CodeMirror from 'codemirror'
++import 'codemirror/addon/hint/show-hint';
++import 'codemirror/addon/comment/comment';
++import 'codemirror/addon/edit/matchbrackets';
++import 'codemirror/addon/edit/closebrackets';
++import 'codemirror/addon/fold/foldgutter';
++import 'codemirror/addon/fold/brace-fold';
++import 'codemirror/addon/search/search';
++import 'codemirror/addon/search/searchcursor';
++import 'codemirror/addon/search/jump-to-line';
++import 'codemirror/addon/dialog/dialog';
++import 'codemirror/addon/lint/lint';
++import 'codemirror/keymap/sublime';
++import 'codemirror-graphql/hint';
++import 'codemirror-graphql/lint';
++import 'codemirror-graphql/info';
++import 'codemirror-graphql/jump';
++import 'codemirror-graphql/mode';
++
+ var md = new MD();
+ var AUTO_COMPLETE_AFTER_KEY = /^[a-zA-Z0-9_@(]$/;
+ var QueryEditor = (function (_super) {
+@@ -58,24 +77,6 @@ var QueryEditor = (function (_super) {
+     QueryEditor.prototype.componentDidMount = function () {
+         var _this = this;
+         var _a, _b, _c;
+-        var CodeMirror = require('codemirror');
+-        require('codemirror/addon/hint/show-hint');
+-        require('codemirror/addon/comment/comment');
+-        require('codemirror/addon/edit/matchbrackets');
+-        require('codemirror/addon/edit/closebrackets');
+-        require('codemirror/addon/fold/foldgutter');
+-        require('codemirror/addon/fold/brace-fold');
+-        require('codemirror/addon/search/search');
+-        require('codemirror/addon/search/searchcursor');
+-        require('codemirror/addon/search/jump-to-line');
+-        require('codemirror/addon/dialog/dialog');
+-        require('codemirror/addon/lint/lint');
+-        require('codemirror/keymap/sublime');
+-        require('codemirror-graphql/hint');
+-        require('codemirror-graphql/lint');
+-        require('codemirror-graphql/info');
+-        require('codemirror-graphql/jump');
+-        require('codemirror-graphql/mode');
+         var editor = (this.editor = CodeMirror(this._node, {
+             value: this.props.value || '',
+             lineNumbers: true,
+@@ -166,7 +167,6 @@ var QueryEditor = (function (_super) {
+         }
+     };
+     QueryEditor.prototype.componentDidUpdate = function (prevProps) {
+-        var CodeMirror = require('codemirror');
+         this.ignoreChangeEvent = true;
+         if (this.props.schema !== prevProps.schema && this.editor) {
+             this.editor.options.lint.schema = this.props.schema;
+diff --git a/node_modules/graphiql/esm/components/ResultViewer.js b/node_modules/graphiql/esm/components/ResultViewer.js
+index f02b5ba..0382f15 100644
+--- a/node_modules/graphiql/esm/components/ResultViewer.js
++++ b/node_modules/graphiql/esm/components/ResultViewer.js
+@@ -14,6 +14,16 @@ var __extends = (this && this.__extends) || (function () {
+ import React from 'react';
+ import ReactDOM from 'react-dom';
+ import commonKeys from '../utility/commonKeys';
++import CodeMirror from 'codemirror';
++import 'codemirror/addon/fold/foldgutter';
++import 'codemirror/addon/fold/brace-fold';
++import 'codemirror/addon/dialog/dialog';
++import 'codemirror/addon/search/search';
++import 'codemirror/addon/search/searchcursor';
++import 'codemirror/addon/search/jump-to-line';
++import 'codemirror/keymap/sublime';
++import 'codemirror-graphql/results/mode';
++import 'codemirror-graphql/utils/info-addon';
+ var ResultViewer = (function (_super) {
+     __extends(ResultViewer, _super);
+     function ResultViewer() {
+@@ -23,19 +33,9 @@ var ResultViewer = (function (_super) {
+         return _this;
+     }
+     ResultViewer.prototype.componentDidMount = function () {
+-        var CodeMirror = require('codemirror');
+-        require('codemirror/addon/fold/foldgutter');
+-        require('codemirror/addon/fold/brace-fold');
+-        require('codemirror/addon/dialog/dialog');
+-        require('codemirror/addon/search/search');
+-        require('codemirror/addon/search/searchcursor');
+-        require('codemirror/addon/search/jump-to-line');
+-        require('codemirror/keymap/sublime');
+-        require('codemirror-graphql/results/mode');
+         var Tooltip = this.props.ResultsTooltip;
+         var ImagePreview = this.props.ImagePreview;
+         if (Tooltip || ImagePreview) {
+-            require('codemirror-graphql/utils/info-addon');
+             var tooltipDiv_1 = document.createElement('div');
+             CodeMirror.registerHelper('info', 'graphql-results', function (token, _options, _cm, pos) {
+                 var infoElements = [];
+diff --git a/node_modules/graphiql/esm/components/VariableEditor.js b/node_modules/graphiql/esm/components/VariableEditor.js
+index 407d564..a0fa03f 100644
+--- a/node_modules/graphiql/esm/components/VariableEditor.js
++++ b/node_modules/graphiql/esm/components/VariableEditor.js
+@@ -25,6 +25,21 @@ var __assign = (this && this.__assign) || function () {
+ import React from 'react';
+ import onHasCompletion from '../utility/onHasCompletion';
+ import commonKeys from '../utility/commonKeys';
++import CodeMirror from 'codemirror';
++import 'codemirror/addon/hint/show-hint';
++import 'codemirror/addon/edit/matchbrackets';
++import 'codemirror/addon/edit/closebrackets';
++import 'codemirror/addon/fold/brace-fold';
++import 'codemirror/addon/fold/foldgutter';
++import 'codemirror/addon/lint/lint';
++import 'codemirror/addon/search/searchcursor';
++import 'codemirror/addon/search/jump-to-line';
++import 'codemirror/addon/dialog/dialog';
++import 'codemirror/keymap/sublime';
++import 'codemirror-graphql/variables/hint';
++import 'codemirror-graphql/variables/lint';
++import 'codemirror-graphql/variables/mode';
++
+ var VariableEditor = (function (_super) {
+     __extends(VariableEditor, _super);
+     function VariableEditor(props) {
+@@ -63,21 +78,7 @@ var VariableEditor = (function (_super) {
+     }
+     VariableEditor.prototype.componentDidMount = function () {
+         var _this = this;
+-        this.CodeMirror = require('codemirror');
+-        require('codemirror/addon/hint/show-hint');
+-        require('codemirror/addon/edit/matchbrackets');
+-        require('codemirror/addon/edit/closebrackets');
+-        require('codemirror/addon/fold/brace-fold');
+-        require('codemirror/addon/fold/foldgutter');
+-        require('codemirror/addon/lint/lint');
+-        require('codemirror/addon/search/searchcursor');
+-        require('codemirror/addon/search/jump-to-line');
+-        require('codemirror/addon/dialog/dialog');
+-        require('codemirror/keymap/sublime');
+-        require('codemirror-graphql/variables/hint');
+-        require('codemirror-graphql/variables/lint');
+-        require('codemirror-graphql/variables/mode');
+-        var editor = (this.editor = this.CodeMirror(this._node, {
++        var editor = (this.editor = CodeMirror(this._node, {
+             value: this.props.value || '',
+             lineNumbers: true,
+             tabSize: 2,
+@@ -144,7 +145,6 @@ var VariableEditor = (function (_super) {
+         editor.on('hasCompletion', this._onHasCompletion);
+     };
+     VariableEditor.prototype.componentDidUpdate = function (prevProps) {
+-        this.CodeMirror = require('codemirror');
+         if (!this.editor) {
+             return;
+         }
+@@ -152,7 +152,7 @@ var VariableEditor = (function (_super) {
+         if (this.props.variableToType !== prevProps.variableToType) {
+             this.editor.options.lint.variableToType = this.props.variableToType;
+             this.editor.options.hintOptions.variableToType = this.props.variableToType;
+-            this.CodeMirror.signal(this.editor, 'change', this.editor);
++            CodeMirror.signal(this.editor, 'change', this.editor);
+         }
+         if (this.props.value !== prevProps.value &&
+             this.props.value !== this.cachedValue) {
+diff --git a/node_modules/graphiql/esm/utility/onHasCompletion.js b/node_modules/graphiql/esm/utility/onHasCompletion.js
+index 173cb9d..c6a3f96 100644
+--- a/node_modules/graphiql/esm/utility/onHasCompletion.js
++++ b/node_modules/graphiql/esm/utility/onHasCompletion.js
+@@ -1,9 +1,9 @@
+ import { GraphQLNonNull, GraphQLList, } from 'graphql';
+ import escapeHTML from 'escape-html';
+ import MD from 'markdown-it';
++import CodeMirror from 'codemirror';
+ var md = new MD();
+ export default function onHasCompletion(_cm, data, onHintInformationRender) {
+-    var CodeMirror = require('codemirror');
+     var information;
+     var deprecation;
+     CodeMirror.on(data, 'select', function (ctx, el) {

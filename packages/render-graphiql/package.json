@@ -1,0 +1,46 @@
+{
+  "name": "@graphql-yoga/render-graphiql",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/render-graphiql"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "prepack": "bob prepack",
+    "build": "node scripts/yoga-bundle-string.mjs",
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "author": "Laurin Quast <laurinquast@googlemail.com>",
+  "license": "MIT",
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
+}

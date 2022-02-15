@@ -5,8 +5,8 @@
     "format": "prettier . --write",
     "pretty-quick": "pretty-quick --staged",
     "prebuild": "rimraf packages/*/dist",
-    "build": "tsc --project tsconfig.build.json && bob build",
-    "postbuild": "yarn fix-bin",
+    "check": "yarn workspaces run check",
+    "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && tsc --project tsconfig.build.json && bob build",
     "test": "jest --passWithNoTests",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
@@ -36,26 +36,16 @@
   },
   "workspaces": [
     "packages/*",
-    "examples/apollo-federation",
-    "examples/defer-stream",
-    "examples/error-masking",
-    "examples/express",
-    "examples/fastify",
-    "examples/fastify-modules",
-    "examples/graphql-config",
-    "examples/hello-world",
-    "examples/nextjs",
-    "examples/subscriptions",
-    "examples/sveltekit",
+    "examples/*",
     "benchmark/*",
     "website"
   ],
   "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
   "packageManager": "yarn@3.1.1",
   "devDependencies": {
-    "@babel/core": "7.16.12",
+    "@babel/core": "7.17.2",
     "@babel/plugin-proposal-class-properties": "7.16.7",
-    "@babel/plugin-proposal-decorators": "7.16.7",
+    "@babel/plugin-proposal-decorators": "7.17.2",
     "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "7.16.7",
     "@changesets/cli": "2.17.0",
@@ -79,6 +69,7 @@
   },
   "resolutions": {
     "@changesets/apply-release-plan": "5.0.1",
-    "graphql": "16.2.0"
+    "graphql": "16.3.0",
+    "cross-undici-fetch": "0.1.24"
   }
 }

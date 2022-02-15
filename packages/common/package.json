@@ -10,7 +10,8 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "prepack": "bob prepack"
+    "prepack": "bob prepack",
+    "check": "tsc --pretty --noEmit"
   },
   "keywords": [
     "graphql",
@@ -42,16 +43,17 @@
     "access": "public"
   },
   "dependencies": {
-    "@envelop/core": "^1.7.1",
-    "@envelop/disable-introspection": "^2.0.0",
-    "@envelop/parser-cache": "^3.0.0",
-    "@envelop/validation-cache": "^3.0.0",
+    "@envelop/core": "^2.0.0",
+    "@envelop/disable-introspection": "^3.0.0",
+    "@envelop/parser-cache": "^4.0.0",
+    "@envelop/validation-cache": "^4.0.0",
     "@graphql-tools/schema": "^8.3.1",
     "@graphql-tools/utils": "^8.6.0",
+    "@graphql-yoga/render-graphiql": "0.0.0",
     "@graphql-yoga/subscription": "0.1.0-alpha.1",
-    "cross-undici-fetch": "^0.1.19",
+    "cross-undici-fetch": "^0.1.24",
     "dset": "^3.1.1",
-    "graphql-helix": "1.11.0"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/node": "^16.11.7",

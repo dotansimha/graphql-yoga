@@ -10,7 +10,8 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "prepack": "bob prepack"
+    "prepack": "bob prepack",
+    "check": "tsc --pretty --noEmit"
   },
   "keywords": [
     "graphql",
@@ -42,15 +43,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@envelop/core": "^1.7.1",
+    "@envelop/core": "^2.0.0",
     "@graphql-tools/utils": "^8.6.0",
     "@graphql-typed-document-node/core": "^3.1.1",
     "@graphql-yoga/common": "0.2.0-alpha.10",
     "@graphql-yoga/subscription": "0.1.0-alpha.1",
-    "cross-undici-fetch": "^0.1.19",
+    "cross-undici-fetch": "^0.1.24",
     "light-my-request": "^4.7.0",
     "pino": "^7.2.0",
-    "pino-pretty": "^7.2.0"
+    "pino-pretty": "^7.2.0",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/eventsource": "^1",
@@ -59,7 +61,8 @@
     "@ungap/event-target": "^0.2.3",
     "bob-the-bundler": "^1.5.1",
     "eventsource": "^1.1.0",
-    "graphql": "^16.0.1"
+    "graphql": "^16.0.1",
+    "puppeteer": "13.3.2"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"

@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node start-server.js",
-    "loadtest": "k6 run k6.js"
+    "loadtest": "k6 run k6.js",
+    "check": "exit 0"
   },
   "dependencies": {
     "@graphql-yoga/node": "0.1.0-alpha.3",
-    "graphql": "16.2.0",
-    "wait-on": "6.0.0"
+    "graphql": "16.3.0",
+    "wait-on": "6.0.1"
   }
 }

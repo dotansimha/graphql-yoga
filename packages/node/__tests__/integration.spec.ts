@@ -1,9 +1,11 @@
 import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
-import { createServer, GraphQLYogaError } from '../src'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
+import puppeteer from 'puppeteer'
+import { createServer, GraphQLYogaError } from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
+import { createTestSchema } from './__fixtures__/schema'
 
 const yoga = createServer({ schema, logging: false })
 
@@ -361,10 +363,10 @@ describe('Incremental Delivery', () => {
   })
 
   it('should get subscription', async () => {
-    const { protocol, hostname, port, endpoint } = yoga.getAddressInfo()
+    const serverUrl = yoga.getServerUrl()
 
     const eventSource = new EventSource(
-      `${protocol}://${hostname}:${port}/${endpoint}?query=subscription{counter}`,
+      `${serverUrl}?query=subscription{counter}`,
     )
 
     const counterValue1 = getCounterValue()
@@ -398,5 +400,156 @@ describe('health checks', () => {
   })
   it('should return 200 status code for /readiness endpoint', () => {
     return request(yogaApp.getNodeServer()).get('/readiness').expect(200)
+  })
+})
+
+describe('GraphiQL', () => {
+  const yogaApp = createServer({
+    schema: createTestSchema(),
+    graphiql: {
+      defaultQuery: '',
+    },
+  })
+
+  let browser: puppeteer.Browser
+  let page: puppeteer.Page
+
+  const playButtonSelector = `[d="M 11 9 L 24 16 L 11 23 z"]`
+  const stopButtonSelector = `[d="M 10 10 L 23 10 L 23 23 L 10 23 z"]`
+
+  beforeAll(async () => {
+    await yogaApp.start()
+    browser = await puppeteer.launch({
+      // If you wanna run tests with open browser
+      // set your PUPPETEER_HEADLESS env to "false"
+      headless: process.env.PUPPETEER_HEADLESS !== 'false',
+      args: ['--incognito'],
+    })
+  })
+  beforeEach(async () => {
+    if (page !== undefined) {
+      await page.close()
+    }
+    const context = await browser.createIncognitoBrowserContext()
+    page = await context.newPage()
+  })
+  afterAll(async () => {
+    await browser.close()
+    await yogaApp.stop()
+  })
+
+  const typeOperationText = async (text: string) => {
+    await page.type('.query-editor .CodeMirror textarea', text)
+    // TODO: figure out how we can avoid this wait
+    // it is very likely that there is a delay from textarea -> react state update
+    await new Promise((res) => setTimeout(res, 100))
+  }
+
+  const typeVariablesText = async (text: string) => {
+    await page.type('.variable-editor .CodeMirror textarea', text)
+    // TODO: figure out how we can avoid this wait
+    // it is very likely that there is a delay from textarea -> react state update
+    await new Promise((res) => setTimeout(res, 100))
+  }
+
+  const waitForResult = async () => {
+    await page.waitForFunction(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      () => !!window.g.resultComponent.viewer.getValue(),
+    )
+    const resultContents = await page.evaluate(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return window.g.resultComponent.viewer.getValue()
+    })
+
+    return resultContents
+  }
+
+  it('execute simple query operation', async () => {
+    await page.goto(`http://localhost:4000/graphql`)
+    await typeOperationText('{ alwaysTrue }')
+
+    await page.click('.execute-button')
+    const resultContents = await waitForResult()
+
+    expect(resultContents).toEqual(
+      JSON.stringify(
+        {
+          data: {
+            alwaysTrue: true,
+          },
+        },
+        null,
+        2,
+      ),
+    )
+  })
+
+  it('execute mutation operation', async () => {
+    await page.goto(`http://localhost:4000/graphql`)
+    await typeOperationText(
+      `mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`,
+    )
+    await typeVariablesText(`{ "number": 3 }`)
+    await page.click('.execute-button')
+    const resultContents = await waitForResult()
+
+    expect(resultContents).toEqual(
+      JSON.stringify(
+        {
+          data: {
+            setFavoriteNumber: 3,
+          },
+        },
+        null,
+        2,
+      ),
+    )
+  })
+
+  test('execute SSE (subscription) operation', async () => {
+    await page.goto(`http://localhost:4000/graphql`)
+    await typeOperationText(`subscription { count(to: 2) }`)
+    await page.click('.execute-button')
+
+    await new Promise((res) => setTimeout(res, 50))
+
+    const [resultContents, isShowingStopButton] = await page.evaluate(
+      (stopButtonSelector) => {
+        return [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.g.resultComponent.viewer.getValue(),
+          !!window.document.querySelector(stopButtonSelector),
+        ]
+      },
+      stopButtonSelector,
+    )
+    expect(JSON.parse(resultContents)).toEqual({
+      data: {
+        count: 1,
+      },
+    })
+    expect(isShowingStopButton).toEqual(true)
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    const [resultContents1, isShowingPlayButton] = await page.evaluate(
+      (playButtonSelector) => {
+        return [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.g.resultComponent.viewer.getValue(),
+          !!window.document.querySelector(playButtonSelector),
+        ]
+      },
+      playButtonSelector,
+    )
+    expect(JSON.parse(resultContents1)).toEqual({
+      data: {
+        count: 2,
+      },
+    })
+    expect(isShowingPlayButton).toEqual(true)
   })
 })

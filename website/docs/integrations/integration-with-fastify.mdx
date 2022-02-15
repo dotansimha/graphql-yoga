@@ -46,7 +46,7 @@ app.route({
     reply.status(response.status)
 
     // Converts ReadableStream to a NodeJS Stream
-    const nodeStream = Readable.from(response.body as any)
+    const nodeStream = Readable.from(response.body)
     reply.send(nodeStream)
   },
 })

@@ -19,7 +19,7 @@ describe('fastify-modules example integration', () => {
     })
 
     expect(response.statusCode).toEqual(200)
-    expect(response.text).toContain('<title>GraphiQL</title>')
+    expect(response.text).toContain('<title>Yoga GraphiQL</title>')
   })
 
   it('handles query operation via POST', async () => {

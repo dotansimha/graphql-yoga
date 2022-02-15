@@ -10,7 +10,8 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "prepack": "bob prepack"
+    "prepack": "bob prepack",
+    "check": "tsc --pretty --noEmit"
   },
   "keywords": [
     "pubsub",
@@ -42,7 +43,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@repeaterjs/repeater": "^3.0.4"
+    "@repeaterjs/repeater": "^3.0.4",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "bob-the-bundler": "^1.5.1"

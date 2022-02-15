@@ -1,6 +1,6 @@
 const { createServer } = require('@graphql-yoga/node')
 
-const server = createServer({ 
+const server = createServer({
   typeDefs: /* GraphQL */ `
     type Query {
       hello(name: String): String!
@@ -8,9 +8,9 @@ const server = createServer({
   `,
   resolvers: {
     Query: {
-    hello: (_, { name }) => `Hello ${name || 'World'}`,
+      hello: (_, { name }) => `Hello ${name || 'World'}`,
     },
   },
- })
+})
 
 server.start()

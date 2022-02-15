@@ -1,7 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import { Request, Response } from 'cross-undici-fetch'
-import { Readable } from 'stream'
+import { Request } from 'cross-undici-fetch'
+import { Duplex, PassThrough, Readable, Writable } from 'stream'
 import type { AddressInfo } from './types'
+import { inspect } from 'util'
 
 export interface NodeRequest {
   protocol?: string
@@ -70,36 +71,32 @@ export async function getNodeRequest(
   })
 }
 
-export async function sendNodeResponse(
-  responseResult: Response,
+function isReadable(responseBody: any): responseBody is Readable {
+  return !!responseBody.pipe
+}
+
+declare global {
+  interface ReadableStream<R = any> {
+    [Symbol.asyncIterator]: () => AsyncIterator<R>
+  }
+}
+
+export function sendNodeResponse(
+  { headers, status, statusText, body }: Response,
   serverResponse: ServerResponse,
-): Promise<void> {
-  responseResult.headers.forEach((value, name) => {
+): void {
+  headers.forEach((value, name) => {
     serverResponse.setHeader(name, value)
   })
-  serverResponse.statusCode = responseResult.status
-  serverResponse.statusMessage = responseResult.statusText
+  serverResponse.statusCode = status
+  serverResponse.statusMessage = statusText
   // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
-  const responseBody = await (responseResult.body as unknown as Promise<any>)
-  if (responseBody.getReader) {
-    const reader: ReadableStreamDefaultReader = responseBody.getReader()
-    serverResponse.on('close', () => {
-      reader.cancel()
-    })
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) {
-        break
-      }
-      if (value) {
-        serverResponse.write(value)
-      }
-    }
-    if (!serverResponse.destroyed) {
-      serverResponse.end()
-    }
+  if (body == null) {
+    serverResponse.end()
   } else {
-    const nodeReadable = Readable.from(responseBody)
-    nodeReadable.pipe(serverResponse)
+    const nodeStream = (
+      isReadable(body) ? body : Readable.from(body)
+    ) as Readable
+    nodeStream.pipe(serverResponse)
   }
 }
