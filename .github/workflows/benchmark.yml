@@ -32,7 +32,7 @@ jobs:
 
       - name: Start Yoga Server
         working-directory: ./benchmark/hello-world
-        run: yarn start & yarn wait-on tcp:4000
+        run: yarn start & yarn wait-on http://127.0.0.1:4000/graphql
         env:
           NODE_OPTIONS: --experimental-fetch
           NODE_NO_WARNINGS: true
