@@ -2,11 +2,6 @@ name: Benchmark
 on:
   pull_request:
 
-env:
-  NODE_OPTIONS: --experimental-fetch
-  NODE_NO_WARNINGS: true
-  NODE_ENV: production
-
 jobs:
   benchmarks:
     runs-on: ubuntu-latest
@@ -20,7 +15,7 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@master
         with:
-          node-version: 16.4.2
+          node-version: 17
 
       - name: Get yarn cache
         uses: c-hive/gha-yarn-cache@v2
@@ -43,6 +38,10 @@ jobs:
         run: |
           yarn start &
           yarn wait-on tcp:4000
+        env:
+          NODE_OPTIONS: --experimental-fetch
+          NODE_NO_WARNINGS: true
+          NODE_ENV: production
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
