@@ -1,5 +1,13 @@
 # sveltekit
 
+## 0.0.1-beta.0
+
+### Patch Changes
+
+- de1693e: trigger release
+- Updated dependencies [de1693e]
+  - @graphql-yoga/common@0.0.1-beta.0
+
 ## 0.0.2-alpha.3
 
 ### Patch Changes

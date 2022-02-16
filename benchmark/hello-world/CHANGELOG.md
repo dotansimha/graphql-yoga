@@ -1,5 +1,13 @@
 # hello-world-benchmark
 
+## 0.0.1-beta.9
+
+### Patch Changes
+
+- de1693e: trigger release
+- Updated dependencies [de1693e]
+  - @graphql-yoga/node@0.0.1-beta.0
+
 ## 0.0.1-alpha.8
 
 ### Patch Changes

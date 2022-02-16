@@ -1,5 +1,11 @@
 # @graphql-yoga/subscription
 
+## 0.0.1-beta.0
+
+### Patch Changes
+
+- de1693e: trigger release
+
 ## 0.1.0-alpha.2
 
 ### Minor Changes
