@@ -63,9 +63,16 @@ const accentColor =
 const serializedMdx = process.env.SERIALIZED_MDX_ROUTES
 const mdxRoutes = { data: serializedMdx && JSON.parse(serializedMdx) }
 
+const serializedTutorialMdx = process.env.SERIALIZED_TUTORIAL_MDX_ROUTES
+const tutorialMdxRoutes = {
+  data: serializedTutorialMdx && JSON.parse(serializedTutorialMdx),
+}
+
 function AppContent(appProps: AppProps) {
   const { Component, pageProps, router } = appProps
+
   const isDocs = router.asPath.startsWith('/docs')
+  const isTutorial = router.asPath.startsWith('/tutorial')
 
   return (
     <>
@@ -121,6 +128,15 @@ function AppContent(appProps: AppProps) {
           appProps={appProps}
           accentColor={accentColor}
           mdxRoutes={mdxRoutes}
+        />
+      ) : isTutorial ? (
+        <DocsPage
+          appProps={appProps}
+          accentColor={accentColor}
+          mdxRoutes={tutorialMdxRoutes}
+          docsTitleProps={{
+            children: 'Tutorial',
+          }}
         />
       ) : (
         <Component {...pageProps} />

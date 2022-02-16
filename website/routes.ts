@@ -36,9 +36,7 @@ export function getRoutes(): IRoutes {
   return {
     ...Routes,
     _: Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      Object.entries(Routes._).map(([key, value]) => [`docs/${key}`, value]),
+      Object.entries(Routes._!).map(([key, value]) => [`docs/${key}`, value]),
     ),
   }
 }
@@ -52,17 +50,10 @@ export function getTutorialRoutes(): IRoutes {
     },
   }
 
-  GenerateRoutes({
-    Routes,
-    folderPattern: 'tutorial',
-  })
-
   return {
     ...Routes,
     _: Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      Object.entries(Routes._).map(([key, value]) => [
+      Object.entries(Routes._!).map(([key, value]) => [
         `tutorial/${key}`,
         value,
       ]),
