@@ -29,11 +29,16 @@ jobs:
       - name: Build Packages
         run: yarn build
 
-      - name: Run Tests
+      - if: matrix.node-version == 17
+        name: Run Tests with --experimental-fetch
         run: yarn test
         env:
           NODE_OPTIONS: --experimental-fetch
           NODE_NO_WARNINGS: true
+
+      - if: matrix.node-version != 17
+        name: Run Tests
+        run: yarn test
 
   typecheck:
     name: Typecheck
