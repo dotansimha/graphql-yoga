@@ -1,19 +1,19 @@
 <p align="center"><img src="./website/public/banner.svg" width="350" /></p>
 
-> Note: New generation of GraphQL-Yoga is under development and testing. You can try the alpha - feedback is always welcome!
+> Note: New generation of GraphQL-Yoga is under development and testing. You can try the beta - feedback is always welcome!
 
 # graphql-yoga
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
-You can try out the `alpha` release today and give us [feedback](https://github.com/dotansimha/graphql-yoga/issues/704)!.
+You can try out the `beta` release today and give us [feedback](https://github.com/dotansimha/graphql-yoga/issues/704)!.
 
-We are working on documentation and examples for the `alpha` release. You can check them out https://www.graphql-yoga.com
+We are working on documentation and examples for the `beta` release. You can check them out https://www.graphql-yoga.com
 
 ### Installation
 
 ```shell
-npm i @graphql-yoga/node@alpha graphql
+npm i @graphql-yoga/node@beta graphql
 ```
 
 ### Basic Usage
