@@ -1,5 +1,16 @@
 # graphql-yoga
 
+## 2.0.0-beta.0
+
+### Major Changes
+
+- de1693e: trigger release
+
+### Patch Changes
+
+- Updated dependencies [de1693e]
+  - @graphql-yoga/node@0.0.1-beta.0
+
 ## 2.0.0-alpha.12
 
 ### Minor Changes
