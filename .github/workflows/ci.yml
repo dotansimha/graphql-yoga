@@ -2,6 +2,10 @@ name: Tests
 on:
   pull_request:
 
+env:
+  NODE_OPTIONS: --experimental-fetch
+  NODE_NO_WARNINGS: true
+
 jobs:
   build:
     runs-on: ubuntu-latest

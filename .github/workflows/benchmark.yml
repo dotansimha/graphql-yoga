@@ -2,6 +2,11 @@ name: Benchmark
 on:
   pull_request:
 
+env:
+  NODE_OPTIONS: --experimental-fetch
+  NODE_NO_WARNINGS: true
+  NODE_ENV: production
+
 jobs:
   benchmarks:
     runs-on: ubuntu-latest
@@ -38,9 +43,6 @@ jobs:
         run: |
           yarn start &
           yarn wait-on tcp:4000
-        env:
-          NODE_NO_WARNINGS: true
-          NODE_ENV: production
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
