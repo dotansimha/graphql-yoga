@@ -8,9 +8,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
-          fetch-depth: 0
 
       - name: Use Node
         uses: actions/setup-node@master
@@ -35,9 +32,7 @@ jobs:
 
       - name: Start Yoga Server
         working-directory: ./benchmark/hello-world
-        run: |
-          yarn start &
-          yarn wait-on tcp:4000
+        run: yarn start & yarn wait-on tcp:4000
         env:
           NODE_OPTIONS: --experimental-fetch
           NODE_NO_WARNINGS: true
