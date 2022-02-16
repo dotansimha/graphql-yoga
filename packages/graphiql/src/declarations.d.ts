@@ -12,6 +12,19 @@ declare module 'graphiql-explorer' {
     onEdit: (value: string) => void
     explorerIsOpen: boolean
     onToggleExplorer: () => void
+    colors: {
+      keyword: string
+      def: string // OperationName, FragmentName
+      property: string // FieldName
+      qualifier: string // FieldAlias
+      attribute: string // ArgumentName and ObjectFieldName
+      number: string
+      string: string
+      string2: string // Enum
+      builtin: string // Boolean
+      variable: string
+      atom: string // Type
+    }
   }): React.ReactElement
   export default GraphiQLExplorer
 }

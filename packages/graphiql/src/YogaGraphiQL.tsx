@@ -72,7 +72,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     }
   }, [])
 
-  const [showExplorer, setShowExplorer] = React.useState(false)
+  const [showExplorer, setShowExplorer] = React.useState(true)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
   const [query, setQuery] = React.useState<string>('')
 
@@ -85,6 +85,19 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           onEdit={(query: string) => setQuery(query)}
           explorerIsOpen={showExplorer}
           onToggleExplorer={() => setShowExplorer((isOpen) => !isOpen)}
+          colors={{
+            keyword: '#FF6D5D',
+            def: '#9F51D9', // OperationName, FragmentName
+            property: '#0083c7', // FieldName
+            qualifier: '#008AED', // FieldAlias
+            attribute: '#00b8ff', // ArgumentName and ObjectFieldName
+            number: '#97b1aa', // type number
+            string: '#00917D', // type String
+            string2: '#146574', // Enum
+            builtin: '#da8aff', // Boolean
+            variable: '#FF6D5D',
+            atom: '#ff9f4c', // Type
+          }}
         />
       ) : null}
       <GraphiQL
