@@ -34,11 +34,11 @@ For example if you are using Apollo Server Errors;
 ```diff
 import { schema } from './schema'
 - import { ApolloServer } from 'apollo-server'
-+ import { GraphQLYoga } from 'graphql-yoga'
++ import { createServer } from '@graphql-yoga/node'
 + import { useApolloServerErrors } from '@envelop/apollo-server-errors'
 
 - const server = new ApolloServer({
-+ const server = new GraphQLYoga({
++ const server = createServer({
   // You can also pass `typeDefs` and `resolvers` here directly if you previously use `ApolloServer` constructor to build your `GraphQLSchema`
   // schema: { typeDefs, resolvers },
   schema,
