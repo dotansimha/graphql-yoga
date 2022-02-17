@@ -24,12 +24,6 @@ import { fetch, Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 
-const DEFAULT_CORS_OPTIONS: CORSOptions = {
-  origin: ['*'],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  optionsSuccessStatus: 204,
-}
-
 interface OptionsWithPlugins<TContext> {
   /**
    * Envelop Plugins
@@ -127,8 +121,8 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
    */
   public readonly getEnveloped: GetEnvelopedFn<TContext>
   public logger: YogaLogger
-  private readonly corsOptionsFactory: (request: Request) => CORSOptions = () =>
-    DEFAULT_CORS_OPTIONS
+  private readonly corsOptionsFactory: (request: Request) => CORSOptions =
+    () => ({})
   protected readonly graphiql: GraphiQLOptions | false
 
   constructor(options?: YogaServerOptions<TContext, TRootValue>) {
@@ -213,17 +207,9 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
 
     if (options?.cors != null) {
       if (typeof options.cors === 'function') {
-        const userProvidedCorsOptionsFactory = options.cors
-        this.corsOptionsFactory = (request) => {
-          const corsOptions = userProvidedCorsOptionsFactory(request)
-          return {
-            ...DEFAULT_CORS_OPTIONS,
-            ...corsOptions,
-          }
-        }
+        this.corsOptionsFactory = options.cors
       } else if (typeof options.cors === 'object') {
         const corsOptions = {
-          ...DEFAULT_CORS_OPTIONS,
           ...options.cors,
         }
         this.corsOptionsFactory = () => corsOptions
@@ -236,39 +222,51 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
         : {}
   }
 
-  handleOptions(request: Request) {
+  getCORSResponseHeaders(request: Request): Record<string, string> {
     const corsOptions = this.corsOptionsFactory(request)
-    const headers: HeadersInit = {}
-    if (corsOptions.origin) {
-      headers['Access-Control-Allow-Origin'] = corsOptions.origin.join(', ')
-    }
 
-    if (corsOptions.methods) {
-      headers['Access-Control-Allow-Methods'] = corsOptions.methods.join(', ')
-    }
+    const headers: Record<string, string> = {}
 
-    if (corsOptions.allowedHeaders) {
-      headers['Access-Control-Allow-Headers'] =
-        corsOptions.allowedHeaders.join(', ')
-    }
+    headers['Access-Control-Allow-Origin'] = corsOptions.origin
+      ? corsOptions.origin.join(', ')
+      : request.headers.get('origin') || '*'
+
+    headers['Access-Control-Allow-Methods'] = corsOptions.methods
+      ? corsOptions.methods.join(', ')
+      : request.headers.get('access-control-request-method') ||
+        'GET, POST, OPTIONS'
+
+    headers['Access-Control-Allow-Headers'] = corsOptions.allowedHeaders
+      ? corsOptions.allowedHeaders.join(', ')
+      : request.headers.get('access-control-request-headers') ||
+        'content-type, content-length, accept-encoding'
+
+    headers['Access-Control-Allow-Credentials'] =
+      corsOptions.credentials == false ? 'false' : 'true'
 
     if (corsOptions.exposedHeaders) {
       headers['Access-Control-Expose-Headers'] =
         corsOptions.exposedHeaders.join(', ')
     }
 
-    if (corsOptions.credentials) {
-      headers['Access-Control-Allow-Credentials'] = 'true'
-    }
-
     if (corsOptions.maxAge) {
       headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
     }
 
-    return new Response(null, {
+    headers['Server'] = 'GraphQL Yoga'
+
+    return headers
+  }
+
+  handleOptions(request: Request) {
+    const headers = this.getCORSResponseHeaders(request)
+
+    const optionsResponse = new Response(null, {
+      status: 204,
       headers,
-      status: corsOptions.optionsSuccessStatus,
     })
+
+    return optionsResponse
   }
 
   private id = Date.now().toString()
@@ -333,7 +331,8 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
 
       this.logger.debug(`Processing Request by Helix`)
 
-      return await processRequest({
+      const corsHeaders = this.getCORSResponseHeaders(request)
+      const response = await processRequest({
         request,
         query,
         variables,
@@ -344,7 +343,9 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
         parse,
         contextFactory,
         schema,
+        extraHeaders: corsHeaders,
       })
+      return response
     } catch (err: any) {
       this.logger.error(err.message, err.stack, err)
       const response = new Response(err.message, {

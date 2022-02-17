@@ -49,6 +49,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
   subscribe,
   validate,
   variables,
+  extraHeaders,
 }: RequestProcessContext<TContext, TRootValue>): Promise<Response> => {
   let contextValue: TContext | undefined
   let document: DocumentNode | undefined
@@ -62,6 +63,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
         status: 405,
         headers: {
           Allow: 'GET, POST',
+          ...extraHeaders,
         },
         errors: [
           new GraphQLError('GraphQL only supports GET and POST requests.'),
@@ -75,6 +77,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
         status: 400,
         errors: [new GraphQLError('Must provide query string.')],
         isEventStream,
+        headers: extraHeaders,
       })
     }
 
@@ -85,6 +88,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
         status: 400,
         errors: [e as GraphQLError],
         isEventStream,
+        headers: extraHeaders,
       })
     }
 
@@ -94,6 +98,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
         status: 400,
         errors: validationErrors,
         isEventStream,
+        headers: extraHeaders,
       })
     }
 
@@ -109,6 +114,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
         ],
         headers: {
           Allow: 'POST',
+          ...extraHeaders,
         },
         isEventStream,
       })
@@ -126,6 +132,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
         errors: [new GraphQLError('Variables are invalid JSON.')],
         status: 400,
         isEventStream,
+        headers: extraHeaders,
       })
     }
 
@@ -145,12 +152,12 @@ export const processRequest = async <TContext, TRootValue = {}>({
       // If errors are encountered while subscribing to the operation, an execution result
       // instead of an AsyncIterable.
       if (isAsyncIterable<ExecutionPatchResult>(result)) {
-        return getPushResponse(result)
+        return getPushResponse(result, extraHeaders)
       } else {
         if (isEventStream) {
-          return getPushResponse(result)
+          return getPushResponse(result, extraHeaders)
         } else {
-          return getRegularResponse(result)
+          return getRegularResponse(result, extraHeaders)
         }
       }
     } else {
@@ -160,10 +167,10 @@ export const processRequest = async <TContext, TRootValue = {}>({
       // execution result.
       if (isAsyncIterable<ExecutionPatchResult>(result)) {
         return isEventStream
-          ? getPushResponse(result)
-          : getMultipartResponse(result)
+          ? getPushResponse(result, extraHeaders)
+          : getMultipartResponse(result, extraHeaders)
       } else {
-        return getRegularResponse(result)
+        return getRegularResponse(result, extraHeaders)
       }
     }
   } catch (error: any) {
@@ -184,6 +191,7 @@ export const processRequest = async <TContext, TRootValue = {}>({
       status: 500,
       errors,
       isEventStream,
+      headers: extraHeaders,
     })
   }
 }

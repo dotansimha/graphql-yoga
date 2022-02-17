@@ -5,7 +5,8 @@ export const renderGraphiQL = (opts?: YogaGraphiQLOptions) => /* HTML */ `
   <html lang="en">
     <head>
       <meta charset="utf-8" />
-      <title>Yoga GraphiQL</title>
+      <title>${opts?.title || 'Yoga GraphiQL'}</title>
+      <link rel="icon" href="https://www.graphql-yoga.com/favicon.ico" />
       <style>
         ${css}
       </style>
@@ -56,4 +57,8 @@ export type YogaGraphiQLOptions = {
    * Whether the header editor is enabled. Defaults to `true`.
    */
   headerEditorEnabled?: boolean
+  /**
+   * The title to display at the top of the page. Defaults to `"YogaGraphiQL"`.
+   */
+  title?: string
 }

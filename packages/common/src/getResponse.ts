@@ -3,10 +3,14 @@ import { ExecutionPatchResult } from './types'
 import { ReadableStream, Response } from 'cross-undici-fetch'
 import { encodeString } from './encodeString'
 
-export function getRegularResponse(executionResult: ExecutionResult): Response {
+export function getRegularResponse(
+  executionResult: ExecutionResult,
+  extraHeaders: Record<string, string>,
+): Response {
   const responseBody = JSON.stringify(executionResult)
   const decodedString = encodeString(responseBody)
   const headersInit: HeadersInit = {
+    ...extraHeaders,
     'Content-Type': 'application/json',
     'Content-Length': decodedString.byteLength.toString(),
   }
@@ -19,8 +23,10 @@ export function getRegularResponse(executionResult: ExecutionResult): Response {
 
 export function getMultipartResponse(
   asyncExecutionResult: AsyncIterable<ExecutionPatchResult<any>>,
+  extraHeaders: Record<string, string>,
 ): Response {
   const headersInit: HeadersInit = {
+    ...extraHeaders,
     Connection: 'keep-alive',
     'Content-Type': 'multipart/mixed; boundary="-"',
     'Transfer-Encoding': 'chunked',
@@ -68,8 +74,10 @@ export function getMultipartResponse(
 
 export function getPushResponse(
   asyncExecutionResult: AsyncIterable<ExecutionResult<any>>,
+  extraHeaders: Record<string, string>,
 ): Response {
   const headersInit: HeadersInit = {
+    ...extraHeaders,
     'Content-Type': 'text/event-stream',
     Connection: 'keep-alive',
     'Cache-Control': 'no-cache',
@@ -104,7 +112,7 @@ export function getPushResponse(
 
 interface ErrorResponseParams {
   status?: number
-  headers?: any
+  headers: Record<string, string>
   errors: GraphQLError[]
   isEventStream: boolean
 }
@@ -115,7 +123,7 @@ async function* getSingleResult(payload: any) {
 
 export function getErrorResponse({
   status = 500,
-  headers = {},
+  headers,
   errors,
   isEventStream,
 }: ErrorResponseParams): Response {
@@ -123,7 +131,7 @@ export function getErrorResponse({
     errors,
   }
   if (isEventStream) {
-    return getPushResponse(getSingleResult(payload))
+    return getPushResponse(getSingleResult(payload), headers)
   }
   return new Response(JSON.stringify(payload), {
     status,

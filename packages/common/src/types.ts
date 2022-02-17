@@ -77,16 +77,19 @@ export interface RequestProcessContext<TContext, TRootValue>
    * A function which will be used to validate instead of default `validate` from `graphql-js`.
    */
   validate: (...args: any[]) => any
+  /**
+   * The extra headers server will send in the request
+   */
+  extraHeaders: Record<string, string>
 }
 
 export interface CORSOptions {
-  origin: string[]
+  origin?: string[]
   methods?: string[]
   allowedHeaders?: string[]
   exposedHeaders?: string[]
   credentials?: boolean
   maxAge?: number
-  optionsSuccessStatus?: number
 }
 
 export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
