@@ -1,5 +1,13 @@
 # @graphql-yoga/common
 
+## 0.0.1-beta.1
+
+### Patch Changes
+
+- a665e1e: fix(common): expose CORS headers correctly in regular requests
+- Updated dependencies [a665e1e]
+  - @graphql-yoga/render-graphiql@0.1.0-beta.1
+
 ## 0.0.1-beta.0
 
 ### Patch Changes
