@@ -7,6 +7,9 @@ export default defineConfig({
   plugins: [reactRefresh()],
   server: {
     port: 4001,
+    proxy: {
+      '/graphql': 'http://localhost:4000',
+    },
   },
   build: {
     lib: {
