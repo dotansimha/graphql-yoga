@@ -222,57 +222,49 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
         : {}
   }
 
-  setCORSResponseHeaders(request: Request, response: Response) {
+  getCORSResponseHeaders(request: Request): Record<string, string> {
     const corsOptions = this.corsOptionsFactory(request)
 
-    response.headers.set(
-      'Access-Control-Allow-Origin',
-      corsOptions.origin
-        ? corsOptions.origin.join(', ')
-        : request.headers.get('origin') || '*',
-    )
-    response.headers.set(
-      'Access-Control-Allow-Methods',
-      corsOptions.methods
-        ? corsOptions.methods.join(', ')
-        : request.headers.get('access-control-request-method') ||
-            'GET, POST, OPTIONS',
-    )
-    response.headers.set(
-      'Access-Control-Allow-Headers',
-      corsOptions.allowedHeaders
-        ? corsOptions.allowedHeaders.join(', ')
-        : request.headers.get('access-control-request-headers') ||
-            'content-type, content-length, accept-encoding',
-    )
-    response.headers.set(
-      'Access-Control-Allow-Credentials',
-      corsOptions.credentials == false ? 'false' : 'true',
-    )
+    const headers: Record<string, string> = {}
+
+    headers['Access-Control-Allow-Origin'] = corsOptions.origin
+      ? corsOptions.origin.join(', ')
+      : request.headers.get('origin') || '*'
+
+    headers['Access-Control-Allow-Methods'] = corsOptions.methods
+      ? corsOptions.methods.join(', ')
+      : request.headers.get('access-control-request-method') ||
+        'GET, POST, OPTIONS'
+
+    headers['Access-Control-Allow-Headers'] = corsOptions.allowedHeaders
+      ? corsOptions.allowedHeaders.join(', ')
+      : request.headers.get('access-control-request-headers') ||
+        'content-type, content-length, accept-encoding'
+
+    headers['Access-Control-Allow-Credentials'] =
+      corsOptions.credentials == false ? 'false' : 'true'
 
     if (corsOptions.exposedHeaders) {
-      response.headers.set(
-        'Access-Control-Expose-Headers',
-        corsOptions.exposedHeaders.join(', '),
-      )
+      headers['Access-Control-Expose-Headers'] =
+        corsOptions.exposedHeaders.join(', ')
     }
 
     if (corsOptions.maxAge) {
-      response.headers.set(
-        'Access-Control-Max-Age',
-        corsOptions.maxAge.toString(),
-      )
+      headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
     }
 
-    response.headers.set('Server', 'GraphQL Yoga')
+    headers['Server'] = 'GraphQL Yoga'
+
+    return headers
   }
 
   handleOptions(request: Request) {
+    const headers = this.getCORSResponseHeaders(request)
+
     const optionsResponse = new Response(null, {
       status: 204,
+      headers,
     })
-
-    this.setCORSResponseHeaders(request, optionsResponse)
 
     return optionsResponse
   }
@@ -339,6 +331,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
 
       this.logger.debug(`Processing Request by Helix`)
 
+      const corsHeaders = this.getCORSResponseHeaders(request)
       const response = await processRequest({
         request,
         query,
@@ -350,8 +343,8 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
         parse,
         contextFactory,
         schema,
+        extraHeaders: corsHeaders,
       })
-      this.setCORSResponseHeaders(request, response)
       return response
     } catch (err: any) {
       this.logger.error(err.message, err.stack, err)
