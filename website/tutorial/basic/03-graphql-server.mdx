@@ -1,0 +1,62 @@
+---
+id: 03-graphql-server
+title: GraphQL Server
+sidebar_label: GraphQL Server
+---
+
+Now that you have a GraphQL schema, and you understand the concept of GraphQL schema and a GraphQL query, it's time to create a real GraphQL server.
+
+You are going to use the HTTP protocol to serve the GraphQL server, but note that there are other options for serving GraphQL - you can use WebSocket, SSE (Server-Sent Events) and basically any network transport protocol that you wish! (You can find a list of transport implementations at the end of this page)
+
+### Creating a GraphQL HTTP server with Yoga
+
+In this tutorial, we will be using `@graphql-yoga/node` for building our Node.js GraphQL HTTP server.
+
+<Instruction>
+
+You'll need `fastify` package available in your project, so install it using the following command:
+
+```bash
+npm install --save @graphql-yoga/node
+```
+
+</Instruction>
+
+<Instruction>
+
+Now, update `src/index.ts` to create a simple GraphQL HTTP server on port `3000`:
+
+```typescript
+import { createServer } from '@graphql-yoga/node'
+
+async function main() {
+  const server = createServer()
+  await server.start()
+}
+
+main()
+```
+
+</Instruction>
+
+> You've removed the previous GraphQL setup from this file, but don't worry - in a few minutes you'll add it with more capabilities and a real server!
+
+Now, try to run your server again with `npm run dev` (or, `npm run start`). You shouldn't see any special output in the log, but you can now open your browser and navigate to `http://localhost:3000/graphql`.
+
+You can now try to run your server, and you should be able to run our query in a HTTP-based GraphQL request.
+
+<Instruction>
+
+If you have `curl` installed on your machine, you should be able to run and see the GraphQL response (you can also use any kind of HTTP requests tools, like [Postman](https://www.postman.com/)):
+
+```bash
+curl -X POST http://localhost:3000/graphql -H "Content-type: application/json" --data-raw '{"query": "query { info }"}'
+```
+
+And you should see in return:
+
+```(nocopy)
+{ "data": { "info": "Test" } }
+```
+
+</Instruction>

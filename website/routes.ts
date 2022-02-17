@@ -44,8 +44,23 @@ export function getRoutes(): IRoutes {
 export function getTutorialRoutes(): IRoutes {
   const Routes: IRoutes = {
     _: {
-      '00-introduction': {
-        $name: 'Introduction',
+      basic: {
+        $name: 'Basic',
+        $routes: [
+          ['00-introduction', 'Introduction'],
+          ['01-project-setup', 'Project Setup'],
+          ['02-getting-started', 'Getting Started'],
+          ['03-graphql-server', 'GraphQL Server'],
+          ['04-a-simple-query', 'A simple Query'],
+          ['05-a-simple-mutation', 'A simple Mutation'],
+          ['06-adding-a-database', 'Adding a Database'],
+          [
+            '07-connecting-server-and-database',
+            'Connection Server and Database',
+          ],
+          ['08-authentication', 'Authentication'],
+          ['09-subscriptions', 'Subscriptions'],
+        ],
       },
     },
   }

@@ -3,7 +3,7 @@ import '../../public/style.css'
 
 import { appWithTranslation } from 'next-i18next'
 
-import { extendTheme, theme as chakraTheme } from '@chakra-ui/react'
+import { Box, extendTheme, theme as chakraTheme } from '@chakra-ui/react'
 import { mode } from '@chakra-ui/theme-tools'
 import {
   ExtendComponents,
@@ -12,14 +12,17 @@ import {
   DocsPage,
   AppSeoProps,
 } from '@guild-docs/client'
-import { Header, Subheader, Footer } from '@theguild/components'
+import { Header, Subheader, Footer, Instruction } from '@theguild/components'
 
 import type { AppProps } from 'next/app'
+import React from 'react'
 
 ExtendComponents({
-  HelloWorld() {
-    return <p>Hello World!</p>
-  },
+  Instruction: (props: React.ComponentProps<typeof Instruction>) => (
+    <Box mt={4}>
+      <Instruction>{props.children}</Instruction>
+    </Box>
+  ),
 })
 
 const styles: typeof chakraTheme['styles'] = {
