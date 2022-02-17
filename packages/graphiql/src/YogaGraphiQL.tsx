@@ -72,9 +72,10 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     }
   }, [])
 
-  const [showExplorer, setShowExplorer] = React.useState(true)
+  const [showExplorer, setShowExplorer] = React.useState(false)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
   const [query, setQuery] = React.useState<string>('')
+  const [showDocs, setShowDocs] = React.useState(false)
 
   return (
     <div className="graphiql-container">
@@ -105,6 +106,8 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         fetcher={fetcher}
         headerEditorEnabled={true}
         defaultVariableEditorOpen={true}
+        docExplorerOpen={showDocs}
+        onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
         toolbar={{
           additionalContent: (
             <>

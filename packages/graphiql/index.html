@@ -4,6 +4,7 @@
     <base href="/" />
     <meta charset="utf-8" />
     <title>YogaGraphiQL Dev</title>
+    <link rel="icon" href="https://www.graphql-yoga.com/favicon.ico" />
   </head>
   <body id="body" class="no-focus-outline">
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -20,7 +21,9 @@
     <script type="module">
       import * as yogaGraphiQL from './src/bundle.tsx'
       const container = window.document.querySelector('#root')
-      yogaGraphiQL.renderYogaGraphiQL(container)
+      yogaGraphiQL.renderYogaGraphiQL(container, {
+        endpoint: 'http://localhost:4000/graphql',
+      })
     </script>
   </body>
 </html>

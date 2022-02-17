@@ -80,13 +80,12 @@ export interface RequestProcessContext<TContext, TRootValue>
 }
 
 export interface CORSOptions {
-  origin: string[]
+  origin?: string[]
   methods?: string[]
   allowedHeaders?: string[]
   exposedHeaders?: string[]
   credentials?: boolean
   maxAge?: number
-  optionsSuccessStatus?: number
 }
 
 export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>

@@ -6,6 +6,7 @@ export const renderGraphiQL = (opts?: YogaGraphiQLOptions) => /* HTML */ `
     <head>
       <meta charset="utf-8" />
       <title>Yoga GraphiQL</title>
+      <link rel="icon" href="https://www.graphql-yoga.com/favicon.ico" />
       <style>
         ${css}
       </style>
