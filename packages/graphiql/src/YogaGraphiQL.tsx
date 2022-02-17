@@ -36,6 +36,7 @@ const getOperationWithFragments = (
 
 export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
   endpoint?: string
+  title?: string
 }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
@@ -156,9 +157,15 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
               <YogaLogo />
             </div>
             <span>
-              {'Yoga Graph'}
-              <em>{'i'}</em>
-              {'QL'}
+              {props?.title ? (
+                props.title
+              ) : (
+                <>
+                  {'Yoga Graph'}
+                  <em>{'i'}</em>
+                  {'QL'}
+                </>
+              )}
             </span>
           </div>
         </GraphiQL.Logo>

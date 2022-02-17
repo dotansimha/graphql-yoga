@@ -11,6 +11,9 @@ const server = createServer({
       hello: (_, { name }) => `Hello ${name || 'World'}`,
     },
   },
+  graphiql: {
+    title: 'Hello World',
+  },
 })
 
 server.start()
