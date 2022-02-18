@@ -1,0 +1,23 @@
+{
+  "name": "hackernews-node-ts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "ts-node-dev --exit-child --respawn src/main.ts",
+    "start": "ts-node src/main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "16.11.7",
+    "ts-node": "10.4.0",
+    "ts-node-dev": "1.1.8",
+    "typescript": "4.5.5"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "8.3.1",
+    "@graphql-yoga/node": "0.1.0-alpha.4",
+    "graphql": "16.3.0"
+  }
+}

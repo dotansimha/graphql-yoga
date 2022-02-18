@@ -14,23 +14,24 @@ In this tutorial, we will be using `@graphql-yoga/node` for building our Node.js
 
 <Instruction>
 
-You'll need `fastify` package available in your project, so install it using the following command:
+You'll need the `@graphql-yoga/node` package available in your project, so install it using the following command:
 
 ```bash
-npm install --save @graphql-yoga/node
+npm install --save --exact @graphql-yoga/node
 ```
 
 </Instruction>
 
 <Instruction>
 
-Now, update `src/index.ts` to create a simple GraphQL HTTP server on port `3000`:
+Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `3000`:
 
 ```typescript
 import { createServer } from '@graphql-yoga/node'
+import { schema } from './schema'
 
 async function main() {
-  const server = createServer()
+  const server = createServer({ schema })
   await server.start()
 }
 

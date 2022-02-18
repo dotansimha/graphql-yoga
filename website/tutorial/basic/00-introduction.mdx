@@ -17,17 +17,18 @@ You are going to use the following technologies:
 - [TypeScript](https://www.typescriptlang.org/) - a strongly typed programming language which builds on JavaScript giving you better tooling at any scale.
 - `graphql-yoga`- the easiest way of running a GraphQL server.
 - [`graphql-js`](https://github.com/graphql/graphql-js) - we will use the core `graphql` library as execution engine for our server.
-- [Prisma](https://www.prisma.io/): Replaces traditional ORMs. Use Prisma Client to access your database inside of
-  GraphQL resolvers.
-- [GraphiQL](https://github.com/graphql/graphiql): A "GraphQL IDE" that allows you to interactively
-  explore the functionality of a GraphQL API by sending queries and mutations to it. It's somewhat similar to
+- [GraphiQL](https://github.com/graphql/graphiql): A graphical interface that allows you to interactively
+  explore the functionality of a GraphQL API by sending query, mutation and subscription operations. It's somewhat similar to
   [Postman](https://www.getpostman.com/) which offers comparable functionality for REST APIs. Among other things,
   GraphiQL:
   - Auto-generates comprehensive documentation for all available API operations.
   - Provides an editor where you can write queries, mutations & subscriptions, with auto-completion(!) and syntax
     highlighting.
+- [SQLite](https://www.sqlite.org/): A lightweight and easy to use relational database management system for persisting data on the file system.
+- [Prisma](https://www.prisma.io/): The glue between your code and SQLite database. Use Prisma Client to access your database inside of
+  GraphQL resolvers.
 
-You can find the [code of the tutorial in this repository](https://github.com/dotansimha/graphql-typescript-node-tutorial).
+You can find the [code of the tutorial in this repository](https://github.com/dotansimha/graphql-yoga/tree/master/examples/hackernews-node-ts).
 
 ### What to expect
 
@@ -36,7 +37,7 @@ rundown of what to expect.
 
 You'll start by learning the basics of how a GraphQL server works, simply by defining a
 [_GraphQL schema_](https://www.prisma.io/blog/graphql-server-basics-the-schema-ac5e2950214e) for the server and writing
-corresponding _resolver functions_. In the beginning, these resolvers will only work with data that's stored in-memory -
+corresponding _resolver functions_ for retriving data. In the beginning, these resolvers will only work with data that's stored in-memory -
 so nothing will persist beyond the runtime of the server.
 
 Nobody wants a server that's not able to store and persist data, right? Not to worry! Next, you're going to add a
@@ -49,5 +50,7 @@ also allow you to check the permissions of your users for certain API operations
 
 Next, you'll allow the consumers of the API to constrain the list of items they retrieve from the API by adding
 filtering and pagination capabilities to it.
+
+Last but not least, we will make a part of the API real-time by adding GraphQL subscriptions!
 
 Let's get started 🚀

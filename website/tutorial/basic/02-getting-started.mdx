@@ -35,18 +35,17 @@ There are many ways to create a GraphQL schema - in this tutorial, you are going
 Start by installing `graphql` and `@graphql-tools/schema` library in your project, using the following command:
 
 ```bash
-npm install --save graphql @graphql-tools/schema graphql-import-node
+npm install --save graphql @graphql-tools/schema
 ```
 
 The command above will get you the following libraries installed in the project:
 
 - `graphql` is the GraphQL engine implementation.
 - `@graphql-tools/schema` is a library for creating GraphQL executable schemas.
-- `graphql-import-node` is needed here in order to allow importing of `.graphql` files.
 
 </Instruction>
 
-A GraphQL schema can be written with GraphQL SDL (*S*chema *D*efinition *L*anguage), which is the GraphQL language for defining your API/contract. The actual code and business-logic of each field is called a GraphQL _resolvers_.
+A GraphQL schema can be written with GraphQL SDL (*S*chema *D*efinition *L*anguage), which is the GraphQL language for defining your API/contract. The actual code and business-logic of each field is called a GraphQL _resolver_.
 
 So let's get started by creating your first, very-simple, GraphQL schema.
 
@@ -54,35 +53,66 @@ To get started with a simple GraphQL schema, you need to create a SDL file defin
 
 <Instruction>
 
-Create a `src/schema.graphql` file with the following content:
+Create a `src/schema.ts` file with the following content:
 
-```graphql
-type Query {
-  info: String!
-}
+```typescript
+export const typeDefinitions = /* GraphQL */ `
+  type Query {
+    info: String!
+  }
+`
 ```
 
 </Instruction>
 
-Now, you can create your actual executable schema and implement it.
+These are our type definitions that describe what data can be retrieved from the schema.
 
 <Instruction>
 
-Create a new file in your project, under `src/schema.ts`, with the following:
+Up next you define the corresponding resolver functions that are used for resolving the data.
 
-```ts
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import typeDefs from './schema.graphql'
+```typescript
+export const typeDefinitions = /* GraphQL */ `
+  type Query {
+    info: String!
+  }
+`
 
 const resolvers = {
   Query: {
     info: () => 'Test',
   },
 }
+```
+
+</Instruction>
+
+As you can see the resolver map follows the same structure as the type definitions.
+
+The typename (`Query`) is an object in which the fields (`info`) are functions that return the corresponding data of that field.
+
+<Instruction>
+
+Now you still need to glue together the type definitions and the resolver map.
+
+```typescript
+import { makeExecutableSchema } from '@graphql-tools/schema'
+
+export const typeDefinitions = /* GraphQL */ `
+  type Query {
+    info: String!
+  }
+`
+
+export const resolvers = {
+  Query: {
+    info: () => 'Test',
+  },
+}
 
 export const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
+  resolvers: [resolvers],
+  typeDefs: [typeDefinitions],
 })
 ```
 
@@ -90,17 +120,17 @@ export const schema = makeExecutableSchema({
 
 In the code-snippet above, you've created or used the following variables:
 
-- `typeDefs` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `info`, of type `String`. You can import it directly from `.graphql` file thanks to `graphql-import-node`.
+- `typeDefinitions` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `info`, of type `String`. You can import it directly from `.graphql` file thanks to `graphql-import-node`.
 - `resolvers` - the resolver functions are part of the GraphQL schema, and they are the actual implementation (code / logic) of the GraphQL schema.
 - `schema` - a combination of the GraphQL SDL and the resolvers. `makeExecutableSchema` function is in charge of gluing them together into an executable schema we can later use.
 
-Now that you have a GraphQL schema, you can use that to fetch data using a GraphQL `query`!
+Now that you have a GraphQL schema, you can use that to fetch data using a GraphQL `query` operation!
 
 ### Query the GraphQL schema
 
 As explained before, the GraphQL schema is only your contract, and it exposes the set of all types and capabilities that your API layer can do.
 
-To use your GraphQL scehma and consume data from it, you will need to write a GraphQL `query` definition.
+To use your GraphQL schema and consume data from it, you will need to write an executable GraphQL `query` definition.
 
 Based on the schema your created before, you can use the following query:
 
@@ -116,15 +146,18 @@ To query our local schema, even without any fancy GraphQL client or even a Graph
 
 <Instruction>
 
-Update the code in `src/index.ts` to contain the following snippet:
+Update the code in `src/main.ts` to contain the following snippet:
 
 ```ts
-import 'graphql-import-node'
 import { execute, parse } from 'graphql'
 import { schema } from './schema'
 
 async function main() {
-  const myQuery = parse(`query { info }`)
+  const myQuery = parse(/* GraphQL */ `
+    query {
+      info
+    }
+  `)
 
   const result = await execute({
     schema,
@@ -142,7 +175,7 @@ main()
 Now, try to run our project again (either with `npm run dev` or `npm run start`), you should see in the output log the following:
 
 ```
-{ data: { info: 'Test' } }
+{ data: [Object: null prototype] { info: 'Test' } }
 ```
 
 **So what happened here?**
@@ -239,6 +272,18 @@ query {
   }
 }
 
+# Query multiple users and a single user by their id
+query {
+  users {
+    id
+    name
+  }
+  user(id: "user-1") {
+    id
+    name
+  }
+}
+
 # Create a new user
 mutation {
   createUser(name: "Bob") {
@@ -263,6 +308,8 @@ There are a few things to note:
   - For the `user(id: ID!)` field, the return type `User` means the returned value could be `null` _or_ a `User` object.
   - For the `createUser(name: String!)` field, the return type `User!` means this operation always returns a `User`
     object.
+
+You will learn how to write the corresponding resolver function maps for addition type fields in the following chapters.
 
 ### Additional Resources
 
