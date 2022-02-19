@@ -110,10 +110,14 @@ export const createPubSub = <
       routingKey: TKey,
       ...args: TPubSubPublishArgsByKey[TKey]
     ) {
-      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new Event(
-        routingKey,
-      )
-      event.data = args[0]
+      const payload = args[1] ?? args[0]
+      const topic =
+        args[1] === undefined
+          ? routingKey
+          : `${routingKey}:${args[0] as number}`
+
+      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new Event(topic)
+      event.data = payload
       target.dispatchEvent(event)
     },
     subscribe<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
