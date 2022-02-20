@@ -10,12 +10,8 @@ async function collectAsyncIterableValues<TType>(
   return values
 }
 
-if (!globalThis.Event) {
-  global.Event = require('@ungap/event')
-}
-
-if (!globalThis.EventTarget) {
-  global.EventTarget = require('@ungap/event-target')
+if (!globalThis.EventTarget || !globalThis.Event) {
+  require('event-target-polyfill')
 }
 
 describe('createPubSub', () => {
