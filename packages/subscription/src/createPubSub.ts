@@ -76,15 +76,20 @@ In modern JavaScript environments those are part of the global scope. However, i
 You can provide polyfills to the 'createPubSub' function:
 
 \`\`\`
-// yarn install @ungap/event @ungap/event-target
-import Event from '@ungap/event'
-import EventTarget from '@ungap/event-target'
+// yarn install --exact event-target-polyfill@0.0.3
+import 'event-target-polyfill'
 
+const pubSub = createPubSub()
+\`\`\`
+
+Alternatively, you can provide your own custom implementation.
+
+\`\`\`
 const pubSub = createPubSub({
-event: {
+  event: {
     Event,
     EventTarget,
-}
+  }
 })
 \`\`\`
 `)
@@ -110,10 +115,14 @@ export const createPubSub = <
       routingKey: TKey,
       ...args: TPubSubPublishArgsByKey[TKey]
     ) {
-      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new Event(
-        routingKey,
-      )
-      event.data = args[0]
+      const payload = args[1] ?? args[0]
+      const topic =
+        args[1] === undefined
+          ? routingKey
+          : `${routingKey}:${args[0] as number}`
+
+      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new Event(topic)
+      event.data = payload
       target.dispatchEvent(event)
     },
     subscribe<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
