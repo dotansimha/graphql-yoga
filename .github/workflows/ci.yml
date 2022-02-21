@@ -40,6 +40,10 @@ jobs:
         name: Run Tests
         run: yarn test
 
+      - name: Run Cloudflare Tests
+        working-directory: examples/cloudflare
+        run: yarn test
+
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest

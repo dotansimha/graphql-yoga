@@ -1,4 +1,4 @@
-import worker from '@/index'
+import worker from '../src/index'
 import { getIntrospectionQuery } from 'graphql'
 
 test('should render GraphiQL', async () => {
