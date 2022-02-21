@@ -37,6 +37,10 @@ export const typeDefinitions = /* GraphQL */ `
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
   }
+
+  type Subscription {
+    newLink: Link!
+  }
 `
 
 export const resolvers = {
@@ -89,6 +93,8 @@ export const resolvers = {
         },
       })
 
+      context.pubSub.publish('newLink', { newLink })
+
       return newLink
     },
     signup: async (
@@ -133,6 +139,13 @@ export const resolvers = {
         token,
         user,
       }
+    },
+  },
+  Subscription: {
+    newLink: {
+      subscribe: (parent: unknown, args: {}, context: GraphQLContext) => {
+        return context.pubSub.subscribe('newLink')
+      },
     },
   },
 }
