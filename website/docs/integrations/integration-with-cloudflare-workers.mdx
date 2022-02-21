@@ -10,22 +10,36 @@ But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/common` wh
 
 ## Installation
 
-<PackageInstall
-  packages={['@cloudflare/worker', 'graphql', '@graphql-yoga/common@beta']}
-/>
+<PackageInstall packages={['graphql', '@graphql-yoga/common@beta']} />
 
-## Example
+## Example with regular `fetch` event listener
 
-`cf-example.ts`
+`listener.mjs`
 
 ```ts
 import { createServer } from '@graphql-yoga/common'
 
-const graphQLServer = createServer()
+const server = createServer()
 
-addEventListener('fetch', (event) => {
-  event.respondWith(graphQLServer.handleRequest(event.request))
+self.addEventListener('fetch', (event: FetchEvent) => {
+  event.respondWith(server.handleRequest(event.request))
 })
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/cf)
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/cloudflare-modules)
+
+## Example with Modules Approach
+
+`modules.mjs`
+
+```ts
+import { createServer } from '@graphql-yoga/common'
+
+const yoga = createServer()
+
+export default {
+  fetch: yoga.handleRequest,
+}
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/service-worker)
