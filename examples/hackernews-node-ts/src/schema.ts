@@ -1,5 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import type { Link, User } from '@prisma/client'
+import type { Link, Prisma, User } from '@prisma/client'
 import { hash, compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 import { GraphQLYogaError } from '@graphql-yoga/node'
@@ -35,7 +35,7 @@ export const typeDefinitions = /* GraphQL */ `
 
   type Query {
     info: String!
-    feed: [Link!]!
+    feed(filter: String): [Link!]!
     me: User!
   }
 
@@ -50,13 +50,51 @@ export const typeDefinitions = /* GraphQL */ `
     newLink: Link!
     newVote: Vote!
   }
+
+  input LinkOrderByInput {
+    description: Sort
+    url: Sort
+    createdAt: Sort
+  }
+
+  enum Sort {
+    asc
+    desc
+  }
 `
 
 export const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
-      return context.prisma.link.findMany()
+    feed: async (
+      parent: unknown,
+      args: {
+        filter?: string
+        skip?: number
+        take?: number
+        orderBy?: {
+          description?: Prisma.SortOrder
+          url?: Prisma.SortOrder
+          createdAt?: Prisma.SortOrder
+        }
+      },
+      context: GraphQLContext,
+    ) => {
+      const where = args.filter
+        ? {
+            OR: [
+              { description: { contains: args.filter } },
+              { url: { contains: args.filter } },
+            ],
+          }
+        : {}
+
+      return context.prisma.link.findMany({
+        where,
+        skip: args.skip,
+        take: args.take,
+        orderBy: args.orderBy,
+      })
     },
     me: (parent: unknown, args: {}, context: GraphQLContext) => {
       if (context.currentUser === null) {
