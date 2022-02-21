@@ -25,14 +25,6 @@ const yogaApp = createServer({
 	}
 });
 
-async function requestEventHandler(event: RequestEvent) {
-	const response = await yogaApp.handleRequest(event.request);
-
-	return {
-		status: response.status,
-		headers: new Headers(response.headers),
-		body: await response.text()
-	};
-}
+const requestEventHandler = (event: RequestEvent) => yogaApp.handleRequest(event.request);
 
 export { requestEventHandler as get, requestEventHandler as post };
