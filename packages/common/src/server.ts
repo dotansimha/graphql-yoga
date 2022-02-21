@@ -329,7 +329,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
           operationName,
         })
 
-      this.logger.debug(`Processing Request by Helix`)
+      this.logger.debug(`Processing Request`)
 
       const corsHeaders = this.getCORSResponseHeaders(request)
       const response = await processRequest({
