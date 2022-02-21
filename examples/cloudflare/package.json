@@ -1,0 +1,24 @@
+{
+  "name": "cloudflare",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "module": "./dist/index.mjs",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "miniflare --live-reload --debug",
+    "test": "npm run build && node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
+    "types:check": "tsc && tsc -p test/tsconfig.json"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.1.1",
+    "@types/jest": "^27.0.2",
+    "esbuild": "^0.13.13",
+    "jest": "^27.3.1",
+    "jest-environment-miniflare": "^2.0.0",
+    "miniflare": "^2.0.0",
+    "prettier": "^2.4.1",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.4.4"
+  }
+}
