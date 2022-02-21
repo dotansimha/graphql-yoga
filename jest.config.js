@@ -23,5 +23,8 @@ module.exports = {
   },
   collectCoverage: true,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
-  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)', '!**/examples/cloudflare/**'],
+  testMatch: [
+    '**/?(*.)+(spec|test).[jt]s?(x)',
+    '!**/examples/cloudflare-modules/**',
+  ],
 }
