@@ -97,7 +97,7 @@ Open your application schema and add the `Subscription` type:
 
 ```graphql
 type Subscription {
-  newLink: Link
+  newLink: Link!
 }
 ```
 
@@ -318,7 +318,7 @@ model Link {
   createdAt   DateTime @default(now())
   description String
   url         String
-  postedBy    User?     @relation(fields: [postedById], references: [id])
+  postedBy    User?    @relation(fields: [postedById], references: [id])
   postedById  Int?
   votes       Vote[]
 }
@@ -382,11 +382,11 @@ type Vote {
 
 </Instruction>
 
-It should also be possible to query all the `votes` from a `Link`, so you need to adjust the `Link` type in `schema.graphql` as well.
+It should also be possible to query all the `votes` from a `Link`, so you need to adjust the `Link` type in `schema.ts` as well.
 
 <Instruction>
 
-Open `schema.graphql` and add the `votes` field to `Link`:
+Open `schema.ts` and add the `votes` field to `Link`:
 
 ```graphql
 type Link {
@@ -416,7 +416,7 @@ const resolvers = {
     ) => {
       // 1
       if (!context.currentUser) {
-        throw new Error('You must login in order to use upvote!')
+        throw new GraphQLYogaError('You must login in order to use upvote!')
       }
 
       // 2
@@ -445,7 +445,7 @@ const resolvers = {
       })
 
       // 5
-      context.pubSub.publish('newVote', { createdVote: newVote })
+      context.pubSub.publish('newVote', { newVote })
 
       return newVote
     },
@@ -473,16 +473,15 @@ Now, just like before, we'll add the event to our typed PubSub.
 Open `src/pubsub.ts` and declare the `newVote` event:
 
 ```typescript
+import { createPubSub } from '@graphql-yoga/node'
 import { Link, Vote } from '@prisma/client'
-import { PubSub } from 'graphql-subscriptions'
-import { TypedPubSub } from 'typed-graphql-subscriptions'
 
 export type PubSubChannels = {
-  newLink: [{ createdLink: Link }]
-  newVote: [{ createdVote: Vote }]
+  newLink: [{ newLink: Link }]
+  newVote: [{ newVote: Vote }]
 }
 
-export const pubSub = new TypedPubSub<PubSubChannels>(new PubSub())
+export const pubSub = createPubSub<PubSubChannels>()
 ```
 
 </Instruction>
@@ -501,9 +500,9 @@ Open `src/schema.ts` and add the missing resolvers function to it, starting with
 
 ```typescript
 const resolvers = {
-  // ... other resolvers ...
+  // ... other resolver maps ...
   Link: {
-    // ... other resolvers ...
+    // ... other Link field resolver functions ...
     votes: (parent: Link, args: {}, context: GraphQLContext) =>
       context.prisma.link.findUnique({ where: { id: parent.id } }).votes(),
   },
@@ -520,7 +519,7 @@ Add a new type and fields resolvers in `src/schema.ts`:
 
 ```typescript
 const resolvers = {
-  // ... other resolvers ...
+  // ... resolver maps ...
   Vote: {
     link: (parent: User, args: {}, context: GraphQLContext) =>
       context.prisma.vote.findUnique({ where: { id: parent.id } }).link(),
@@ -544,8 +543,8 @@ Add a new field to the `Subscription` type of your GraphQL schema:
 
 ```graphql
 type Subscription {
-  newLink: Link
-  newVote: Vote
+  newLink: Link!
+  newVote: Vote!
 }
 ```
 
@@ -559,15 +558,12 @@ Add the following Subscription resolver code to `src/schema.ts`:
 
 ```typescript
 export const resolvers = {
-  // ... other resolvers ...
+  // ... other resolver maps ...
   Subscription: {
-    // ... other resolvers ...
+    // ... other Subscription field resolvers ...
     newVote: {
       subscribe: (parent: unknown, args: {}, context: GraphQLContext) => {
         return context.pubSub.asyncIterator('newVote')
-      },
-      resolve: (payload: PubSubChannels['newVote'][0]) => {
-        return payload.createdVote
       },
     },
   },
@@ -580,7 +576,7 @@ All right, that's it! You can now test the implementation of your `newVote` subs
 
 <Instruction>
 
-If you haven't done so already, stop and restart the server by first killing it with **CTRL+C**, then run `npm run start`.
+If you haven't done so already, stop and restart the server by first killing it with **CTRL+C**, then run `npm run dev`.
 
 </Instruction>
 

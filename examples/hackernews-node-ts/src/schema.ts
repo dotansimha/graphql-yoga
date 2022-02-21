@@ -12,6 +12,7 @@ export const typeDefinitions = /* GraphQL */ `
     description: String!
     url: String!
     postedBy: User
+    votes: [Vote!]!
   }
 
   type User {
@@ -26,6 +27,12 @@ export const typeDefinitions = /* GraphQL */ `
     user: User
   }
 
+  type Vote {
+    id: ID!
+    link: Link!
+    user: User!
+  }
+
   type Query {
     info: String!
     feed: [Link!]!
@@ -36,10 +43,12 @@ export const typeDefinitions = /* GraphQL */ `
     post(url: String!, description: String!): Link!
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
+    vote(linkId: ID!): Vote
   }
 
   type Subscription {
     newLink: Link!
+    newVote: Vote!
   }
 `
 
@@ -74,6 +83,14 @@ export const resolvers = {
         .findUnique({ where: { id: parent.id } })
         .postedBy()
     },
+    votes: (parent: Link, args: {}, context: GraphQLContext) =>
+      context.prisma.link.findUnique({ where: { id: parent.id } }).votes(),
+  },
+  Vote: {
+    link: (parent: User, args: {}, context: GraphQLContext) =>
+      context.prisma.vote.findUnique({ where: { id: parent.id } }).link(),
+    user: (parent: User, args: {}, context: GraphQLContext) =>
+      context.prisma.vote.findUnique({ where: { id: parent.id } }).user(),
   },
   Mutation: {
     post: async (
@@ -139,6 +156,40 @@ export const resolvers = {
         token,
         user,
       }
+    },
+    vote: async (
+      parent: unknown,
+      args: { linkId: string },
+      context: GraphQLContext,
+    ) => {
+      if (!context.currentUser) {
+        throw new GraphQLYogaError('You must login in order to use upvote!')
+      }
+
+      const userId = context.currentUser.id
+      const vote = await context.prisma.vote.findUnique({
+        where: {
+          linkId_userId: {
+            linkId: Number(args.linkId),
+            userId: userId,
+          },
+        },
+      })
+
+      if (vote !== null) {
+        throw new GraphQLYogaError(`Already voted for link: ${args.linkId}`)
+      }
+
+      const newVote = await context.prisma.vote.create({
+        data: {
+          user: { connect: { id: userId } },
+          link: { connect: { id: Number(args.linkId) } },
+        },
+      })
+
+      context.pubSub.publish('newVote', { newVote })
+
+      return newVote
     },
   },
   Subscription: {

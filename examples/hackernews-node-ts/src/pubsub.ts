@@ -1,8 +1,9 @@
 import { createPubSub } from '@graphql-yoga/node'
-import { Link } from '@prisma/client'
+import { Link, Vote } from '@prisma/client'
 
 export type PubSubChannels = {
   newLink: [{ newLink: Link }]
+  newVote: [{ newVote: Vote }]
 }
 
 export const pubSub = createPubSub<PubSubChannels>()
