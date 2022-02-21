@@ -39,7 +39,7 @@ jobs:
         run: yarn test
 
   test-cf:
-    name: Testing on Cloudflare Workers
+    name: Testing on Cloudflare Workers w/ Modules Approach
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -60,7 +60,7 @@ jobs:
         run: yarn build
 
       - name: Run Tests
-        working-directory: ./examples/cloudflare
+        working-directory: ./examples/cloudflare-modules
         run: yarn test
 
   typecheck:
