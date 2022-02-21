@@ -42,7 +42,7 @@ To add TypeScript support for your NodeJS project, do the following:
 In your project directory, install the packages required to run a TypeScript project:
 
 ```bash
-npm install --save-dev --exact typescript @types/node ts-node ts-node-dev
+npm install --save-dev --exact typescript @types/node ts-node ts-node-dev cross-env
 ```
 
 </Instruction>
@@ -54,6 +54,7 @@ The command above will get you the following libraries installed in the project:
 - `typescript` is the basic TypeScript language support and compiler.
 - `@types/node` is a package that contains the basic TypeScript types for NodeJS environment.
 - `ts-node` and `ts-node-dev` are libraries that allows you to run `.ts` files directly, without a compilation step to JavaScript and automatically re-run your files after you apply file changes.
+- `cross-env` allows providing environment variables cross platform (windows environment variables are different 🤷).
 
 <Instruction>
 
@@ -77,7 +78,7 @@ To make it easier to run your project, replace the `"scripts"` section in your `
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "ts-node-dev --exit-child --respawn src/main.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
     "start": "ts-node src/main.ts"
   },
   "devDependencies": {
