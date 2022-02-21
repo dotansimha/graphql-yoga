@@ -3,21 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "ts-node-dev --exit-child --respawn src/main.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
     "start": "ts-node src/main.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@prisma/client": "3.9.2",
+    "@types/bcryptjs": "2.4.2",
+    "@types/jsonwebtoken": "8.5.8",
     "@types/node": "16.11.7",
+    "cross-env": "7.0.3",
     "ts-node": "10.4.0",
     "ts-node-dev": "1.1.8",
-    "typescript": "4.5.5"
+    "typescript": "4.5.5",
+    "prisma": "3.9.2"
   },
   "dependencies": {
     "@graphql-tools/schema": "8.3.1",
     "@graphql-yoga/node": "0.1.0-alpha.4",
-    "graphql": "16.3.0"
+    "bcryptjs": "2.4.3",
+    "graphql": "16.3.0",
+    "jsonwebtoken": "8.5.1"
   }
 }

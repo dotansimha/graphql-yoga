@@ -80,7 +80,7 @@ operations that you want to add to the API - in this case a `signup` and `login`
 
 <Instruction>
 
-Open the application schema in `src/schema.graphql` and update schema types as follows:
+Open the application schema in `src/schema.ts` and update schema types as follows:
 
 ```graphql
 type Query {
@@ -149,17 +149,17 @@ You'll also use `bcryptjs` for simple encryption for the user's password.
 Start by installing `jsonwebtoken` library from NPM:
 
 ```bash
-npm install --save jsonwebtoken bcryptjs
+npm install --save ---exact jsonwebtoken bcryptjs
 ```
 
 </Instruction>
 
 <Instruction>
 
-And to get better integration with TypeScript, you need to install the typings library:
+And to get better integration with TypeScript, you need to install the typing libraries:
 
 ```bash
-npm install --save-dev @types/jsonwebtoken @types/bcryptjs
+npm install --save-dev --exact @types/jsonwebtoken @types/bcryptjs
 ```
 
 </Instruction>
@@ -187,8 +187,9 @@ import { hash } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 
 const resolvers = {
-  // ... other resolvers ...
+  // ... other resolver maps ...
   Mutation: {
+    // ... other Mutation field resolvers ...
     signup: async (
       parent: unknown,
       args: { email: string; password: string; name: string },
@@ -254,8 +255,9 @@ Add the following right under the `signup` mutation:
 import { hash, compare } from 'bcryptjs'
 
 const resolvers = {
-  // ... other resolvers ...
+  // ... other resolver maps ...
   Mutation: {
+    // ... other Mutation field resolvers ...
     login: async (
       parent: unknown,
       args: { email: string; password: string },
@@ -331,7 +333,7 @@ Authorization: "Bearer MY_TOKEN_HERE"
 
 To add support for this kind of authentication in our server, you'll need to be able to access the raw incoming HTTP request, then verify the token and identify the current user.
 
-You also want to be able to tell who's the current authenticated user during our resolvers, so you'll inject the current user into the GraphQL `context`.
+You also want to be able to tell who's the current authenticated user within our resolvers, so you'll inject the current user into the GraphQL `context`.
 
 So let's do that:
 
@@ -350,9 +352,10 @@ export async function authenticateUser(
   prisma: PrismaClient,
   request: FastifyRequest,
 ): Promise<User | null> {
-  if (request?.headers?.authorization) {
+  const header = request.headers.get('authorization')
+  if (header !== null) {
     // 1
-    const token = request.headers.authorization.split(' ')[1]
+    const token = header.split(' ')[1]
     // 2
     const tokenPayload = verify(token, APP_SECRET) as JwtPayload
     // 3
@@ -380,41 +383,24 @@ Now, modify your `contextFactory` in `src/context.ts` function to call this func
 
 ```typescript
 import { PrismaClient, User } from '@prisma/client'
-import { FastifyRequest } from 'fastify'
+import { YogaInitialContext } from '@graphql-yoga/node'
 import { authenticateUser } from './auth'
 
 const prisma = new PrismaClient()
 
 export type GraphQLContext = {
   prisma: PrismaClient
-  currentUser: User | null
+  currentUser: null | User
 }
 
-export async function contextFactory(
-  request: FastifyRequest,
+export async function createContext(
+  initialContext: YogaInitialContext,
 ): Promise<GraphQLContext> {
   return {
     prisma,
-    currentUser: await authenticateUser(prisma, request),
+    currentUser: await authenticateUser(prisma, initialContext.request),
   }
 }
-```
-
-</Instruction>
-
-<Instruction>
-
-And to make sure that your `contextFactory` has access to the incoming HTTP request, make sure to pass it in `src/index.ts` while building the context:
-
-```typescript
-const result = await processRequest({
-  request,
-  schema,
-  operationName,
-  contextFactory: () => contextFactory(req),
-  query,
-  variables,
-})
 ```
 
 </Instruction>
@@ -439,7 +425,9 @@ And then implement the resolver for this new field:
 
 ```typescript
 const resolvers = {
+  // ... other resolver maps ...
   Query: {
+    // ... other Query Object Type field resolver functions ...
     me: (parent: unknown, args: {}, context: GraphQLContext) => {
       if (context.currentUser === null) {
         throw new Error('Unauthenticated!')

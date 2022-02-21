@@ -44,7 +44,7 @@ Speaking of being productive and building awesome stuff, let's jump back in and 
 First, let's install the Prisma CLI and Prisma Client by running the following command in your terminal:
 
 ```bash
-npm install --save-dev prisma @prisma/client
+npm install --save-dev ---exact prisma @prisma/client
 ```
 
 </Instruction>
@@ -75,7 +75,7 @@ Let's see it in action with your project!
 
 <Instruction>
 
-Open `schema.prisma` and add the following code:
+Open `schema.prisma` and replace the existing contents with the following code:
 
 ```graphql
 // 1
@@ -237,6 +237,8 @@ const newLink = await prisma.link.create({
 ![You successfully queried the database with Prisma Client](https://i.imgur.com/AUAtnxZ.png)
 
 Great! Re-run the previous command and this time you should now see your newly created link print in the terminal output! Much more satisfying ✨
+
+For each additional run you will see one more item within the list. That is great, as it means our data is persisted outside of the Node.js memory!
 
 ### Summary of your workflow
 
