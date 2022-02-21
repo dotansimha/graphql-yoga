@@ -2,6 +2,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema'
 import type { Link, User } from '@prisma/client'
 import { hash, compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
+import { GraphQLYogaError } from '@graphql-yoga/node'
 import type { GraphQLContext } from './context'
 import { APP_SECRET } from './auth'
 
@@ -46,7 +47,7 @@ export const resolvers = {
     },
     me: (parent: unknown, args: {}, context: GraphQLContext) => {
       if (context.currentUser === null) {
-        throw new Error('Unauthenticated!')
+        throw new GraphQLYogaError('Unauthenticated!')
       }
 
       return context.currentUser
@@ -77,7 +78,7 @@ export const resolvers = {
       context: GraphQLContext,
     ) => {
       if (context.currentUser === null) {
-        throw new Error('Unauthenticated!')
+        throw new GraphQLYogaError('Unauthenticated!')
       }
 
       const newLink = await context.prisma.link.create({
@@ -118,12 +119,12 @@ export const resolvers = {
         where: { email: args.email },
       })
       if (!user) {
-        throw new Error('No such user found')
+        throw new GraphQLYogaError('No such user found')
       }
 
       const valid = await compare(args.password, user.password)
       if (!valid) {
-        throw new Error('Invalid password')
+        throw new GraphQLYogaError('Invalid password')
       }
 
       const token = sign({ userId: user.id }, APP_SECRET)

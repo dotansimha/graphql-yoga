@@ -1,0 +1,253 @@
+---
+id: 09-error-handling
+title: Error Handling
+sidebar_label: Error Handling
+---
+
+In the previous chapter you added authorization logic to our GraphQL resolver functions that throw `Error` instances. In this chapter you will learn how Yoga handles such errors and how you can improve the error experience for API users.
+
+### Recap of our current resolver Authorization logic
+
+The authorization logic within the resolvers is a simple if condition for checking whether the `currentUser` property on the `context` object is `null`. If the value is `null` an error is thrown, otherwise, any further business logic is executed.
+
+```ts
+const resolvers = {
+  // ... other resolver maps ...
+  Mutation: {
+    // ... other Mutation object type field resolver functions ...
+    post: async (
+      parent: unknown,
+      args: { url: string; description: string },
+      context: GraphQLContext,
+    ) => {
+      // authorization logic
+      if (context.currentUser === null) {
+        throw new Error('Unauthenticated!')
+      }
+
+      const newLink = await context.prisma.link.create({
+        data: {
+          url: args.url,
+          description: args.description,
+          postedBy: { connect: { id: context.currentUser.id } },
+        },
+      })
+
+      return newLink
+    },
+  },
+}
+```
+
+When executing the following mutation without an authorization token, you will receive an error.
+
+```graphql
+mutation {
+  post(description: "Google", url: "http://google.de") {
+    id
+  }
+}
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unexpected error.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["post"],
+      "extensions": {
+        "originalError": {
+          "message": "Unauthenticated!",
+          "stack": "Error: Unauthenticated!\n    at hackernews-node-ts/src/schema.ts:80:15\n    at Generator.next (<anonymous>)\n    at hackernews-node-ts/src/schema.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (hackernews-node-ts/src/schema.ts:4:12)\n    at Object.post (hackernews-node-ts/src/schema.ts:78:9)\n    at executeField (hackernews-node-ts/node_modules/graphql/execution/execute.js:479:20)\n    at hackernews-node-ts/node_modules/graphql/execution/execute.js:375:22\n    at promiseReduce (hackernews-node-ts/node_modules/graphql/jsutils/promiseReduce.js:23:9)\n    at executeFieldsSerially (hackernews-node-ts/node_modules/graphql/execution/execute.js:371:43)"
+        }
+      }
+    }
+  ],
+  "data": null
+}
+```
+
+As you can see the error includes an `extensions` `originalError` field with the original error that we throw within our `Mutation.post` field resolver function. It includes a full stack-trace of the original error for finding the cause easily.
+
+## Yoga Error Masking
+
+In a production environment, such a stack-trace that is leaked to the outside world is a potential security thread as that information could be misused for malicous attacks.
+
+The `extensions` `originalError` field is only present within the error if the server has been started with the `NODE_ENV` environment variable being set to `development`.
+
+As you might remember this is only the case when you are starting the server using `npm run dev`.
+
+<Instruction>
+
+Start the GraphQL server using the `npm run start` script.
+
+```bash
+npm run start
+```
+
+Then execute the same operation again.
+
+```graphql
+mutation {
+  post(description: "Google", url: "http://google.de") {
+    id
+  }
+}
+```
+
+</Instruction>
+
+Now you can see that there is no `originalError` within the error.
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unexpected error.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["post"]
+    }
+  ],
+  "data": null
+}
+```
+
+This is great, but now we never know whether our request failed because of authentication issues or some other unexpected issue 9e.g. a corrupted database 🤔).
+
+The error message `Unexpected error.` is also not really helpful as an authentication error is kind of something we can expect.
+
+## Exposing safe error messages
+
+So let's say instead of the message `Unexpected error.`, we instead want to raise an error with the message `Unauthenticated!`.
+
+The `@graphql-yoga/node` package exports the `GraphQLYogaError` class.
+
+<Instruction>
+
+Instead of throwing an `Error` you will adjust the code within `src/schema.ts` to throw an `GraphQLYogaError` instead.
+
+```typescript
+// ... other imports ...
+import { GraphQLYogaError } from '@graphql-yoga/node'
+// ... other imports ...
+
+const resolvers = {
+  // ... other resolver maps ...
+  Mutation: {
+    // ... other Mutation object type field resolver functions ...
+    post: async (
+      parent: unknown,
+      args: { url: string; description: string },
+      context: GraphQLContext,
+    ) => {
+      // authorization logic
+      if (context.currentUser === null) {
+        throw new GraphQLYogaError('Unauthenticated!')
+      }
+
+      const newLink = await context.prisma.link.create({
+        data: {
+          url: args.url,
+          description: args.description,
+          postedBy: { connect: { id: context.currentUser.id } },
+        },
+      })
+
+      return newLink
+    },
+  },
+}
+```
+
+</Instruction>
+
+<Instruction>
+
+Restart the server using `npm run dev` and execute the mutation operation again without an authorization token.
+
+```graphql
+mutation {
+  post(description: "Google", url: "http://google.de") {
+    id
+  }
+}
+```
+
+</Instruction>
+
+You will receive a response with the `Unauthenticated!` message.
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unauthenticated!",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["me"]
+    }
+  ],
+  "data": null
+}
+```
+
+<Instruction>
+
+Restart the server using `npm run start` and execute the mutation operation again without an authorization token.
+
+```graphql
+mutation {
+  post(description: "Google", url: "http://google.de") {
+    id
+  }
+}
+```
+
+</Instruction>
+
+Even without `NODE_ENV` being set to `development` you will receive the same `Unauthenticated!` message.
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unauthenticated!",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["me"]
+    }
+  ],
+  "data": null
+}
+```
+
+GraphQLYoga will exclude `GraphQLYogaError` errors being thrown within the resolvers from masking.
+
+That means everytime you want to expose an error to the outside world you should throw a `GraphQLYogaError` error.
+
+Any other unexpected errors will automatically masked from the outside world, bringing you sensible and safe defaults for your future Yoga production deployment!
+
+<Instruction>
+
+You can now replace all remaining `Error` constructor calls with `GraphQLYogaError` constructor calls.
+
+</Instruction>
