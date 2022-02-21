@@ -29,7 +29,7 @@ app.use('/graphql', async (ctx) => {
   ctx.req.socket.setNoDelay(true)
   ctx.req.socket.setKeepAlive(true)
 
-  const response = await this.handleIncomingMessage(req)
+  const response = await this.handleIncomingMessage(ctx.req)
 
   // Set status code
   ctx.status = response.status
