@@ -3,7 +3,8 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test-node:
+    name: Testing on Node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -11,9 +12,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
-          fetch-depth: 0
 
       - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@master
@@ -40,8 +38,29 @@ jobs:
         name: Run Tests
         run: yarn test
 
-      - name: Run Cloudflare Tests
-        working-directory: examples/cloudflare
+  test-cf:
+    name: Testing on Cloudflare Workers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Use Node 17
+        uses: actions/setup-node@master
+        with:
+          node-version: 17
+
+      - name: Get yarn cache
+        uses: c-hive/gha-yarn-cache@v2
+
+      - name: Install Dependencies using Yarn
+        run: yarn --ignore-engines
+
+      - name: Build Packages
+        run: yarn build
+
+      - name: Run Tests
+        working-directory: ./examples/cloudflare
         run: yarn test
 
   typecheck:
