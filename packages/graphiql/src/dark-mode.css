@@ -11,17 +11,30 @@
 .CodeMirror {
   background: #282d34 !important;
 }
+
 .graphiql-container .doc-explorer-contents,
 .graphiql-container .history-contents {
   background-color: #21262b;
   border-top: 1px solid #181a1f;
 }
 
+.graphiql-container .doc-explorer-contents .graphiql-explorer-node svg {
+  margin-right: 5px !important;
+}
+
+.graphiql-container .doc-explorer-contents .graphiql-explorer-node path {
+  fill: #e0dddd !important;
+}
+
 .graphiql-container .toolbar-button {
   background: #1c2125 !important;
   box-shadow: none !important;
-  color: #5c626d !important;
+  color: white !important;
   border: 1px solid #181a1f !important;
+}
+
+.graphiql-container .toolbar-button:hover {
+  color: #c7c7c7 !important;
 }
 
 .graphiql-container .result-window .CodeMirror-gutters {
@@ -46,7 +59,11 @@
 }
 
 .graphiql-container .docExplorerHide {
-  color: #606671;
+  color: #ffffff;
+}
+
+.graphiql-container .docExplorerHide:hover {
+  color: #c7c7c7;
 }
 
 .graphiql-container .doc-explorer-title,
@@ -122,6 +139,10 @@
   fill: #c9ccd2;
 }
 
+.graphiql-container .execute-button:hover {
+  fill: #999ba0;
+}
+
 .graphiql-container .history-contents p {
   border: none;
 }
@@ -195,6 +216,10 @@
   color: #9f51d9;
 }
 
+.cm-punctuation {
+  color: #c7c7c7 !important;
+}
+
 .doc-type-description code {
   color: #cc3932;
   background-color: #383c41 !important;
@@ -210,6 +235,10 @@
 
 a {
   color: #7b9ad4;
+}
+
+.CodeMirror .CodeMirror-cursor {
+  border-left: 1px solid white;
 }
 
 .CodeMirror-lint-tooltip {
