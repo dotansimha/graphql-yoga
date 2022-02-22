@@ -4,7 +4,9 @@ title: Adding a Database
 sidebar_label: Adding a Database
 ---
 
-In this section, you're going to set up a [SQLite](https://www.sqlite.org/index.html) to persist the data of incoming GraphQL mutations. Instead of writing SQL directly, you will
+Your GraphQL API can connect to any kind of data source, such as a remote REST (or even GraphQL) API or database. In this chapter we are covering connecting to an relational SQL database.
+
+You're going to set up a [SQLite](https://www.sqlite.org/index.html) to persist the data of incoming GraphQL mutations. Instead of writing SQL directly, you will
 use [Prisma](https://www.prisma.io/) to access your database.
 
 ## So, what is Prisma?
@@ -77,7 +79,7 @@ Let's see it in action with your project!
 
 Open `schema.prisma` and replace the existing contents with the following code:
 
-```graphql
+```prisma
 // 1
 datasource db {
   provider = "sqlite"

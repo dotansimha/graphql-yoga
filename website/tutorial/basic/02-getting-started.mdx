@@ -28,7 +28,7 @@ Later, you'll replace the direct execution with a GraphQL server (based on HTTP 
 
 ### Creating your first GraphQL schema
 
-There are many ways to create a GraphQL schema - in this tutorial, you are going to use schema-first approach, and build the schema with the `@graphql-tools/schema` library (take a look at the end of this chapter for more advanced/different solutions for creating your GraphQL schema).
+There are many ways to create a GraphQL schema - in this tutorial, you are going to use schema-first approach, and build the schema with the `@graphql-tools/schema` library (take a look at the end of this chapter for different solutions for creating your GraphQL schema).
 
 <Instruction>
 
@@ -120,7 +120,7 @@ export const schema = makeExecutableSchema({
 
 In the code-snippet above, you've created or used the following variables:
 
-- `typeDefinitions` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `info`, of type `String`. You can import it directly from `.graphql` file thanks to `graphql-import-node`.
+- `typeDefinitions` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `info`, of type `String`.
 - `resolvers` - the resolver functions are part of the GraphQL schema, and they are the actual implementation (code / logic) of the GraphQL schema.
 - `schema` - a combination of the GraphQL SDL and the resolvers. `makeExecutableSchema` function is in charge of gluing them together into an executable schema we can later use.
 
@@ -130,9 +130,9 @@ Now that you have a GraphQL schema, you can use that to fetch data using a Graph
 
 As explained before, the GraphQL schema is only your contract, and it exposes the set of all types and capabilities that your API layer can do.
 
-To use your GraphQL schema and consume data from it, you will need to write an executable GraphQL `query` definition.
+To use your GraphQL schema and consume data from it, you will need to write a GraphQL `query` operation.
 
-Based on the schema your created before, you can use the following query:
+Based on the schema you created before, you can use the following query:
 
 ```graphql
 query {
@@ -181,6 +181,36 @@ Now, try to run our project again (either with `npm run dev` or `npm run start`)
 **So what happened here?**
 
 First, the GraphQL `query` was parsed it using `parse` function of `graphql` - this will create a `DocumentNode` object that can later be executed by GraphQL.
+
+The `DocumentNode` is a abstract syntax tree (AST), an intermediate format that represents the operation string in a more processible friendly way for machines.
+
+The JSON representation of the `DocumentNode` of the `query { info }` operation looks like the following.
+
+```json
+{
+  "kind": "Document",
+  "definitions": [
+    {
+      "kind": "OperationDefinition",
+      "operation": "query",
+      "variableDefinitions": [],
+      "selectionSet": {
+        "kind": "SelectionSet",
+        "selections": [
+          {
+            "kind": "Field",
+            "name": {
+              "kind": "Name",
+              "value": "info"
+            },
+            "arguments": []
+          }
+        ]
+      }
+    }
+  ]
+}
+```
 
 Then, the `execute` function of `graphql` was called with the following parameters:
 
@@ -319,7 +349,8 @@ Here are a few popular open-source libraries:
 
 - [`graphql`](https://graphql.org/graphql-js/type/) - you can use raw `graphql` using object classes in order to create your schema.
 - [`@graphql-tools/schema`](https://www.graphql-tools.com/docs/generate-schema) - schema-first library for creating executable schemas.
+- [`pothos`](https://github.com/hayes/pothos) - library for creating GraphQL schemas in typescript using a strongly typed code first approach and a built-in plugin system
+- [`gqtx`](https://github.com/sikanhe/gqtx) - library for creating GraphQL schemas in typescript using a strongly typed code first approach
 - [`nexus-graphql`](https://nexusjs.org/) - Declarative, Code-First GraphQL Schemas for JavaScript/TypeScript
 - [`typegraphql`](https://github.com/MichalLytek/type-graphql) - GraphQL schema and resolvers with TypeScript, using classes and decorators.
 - [`graphql-modules`](https://www.graphql-modules.com/) - schema first library for creating strict, reusable GraphQL schema modules.
-- [`giraphql`](https://github.com/hayes/giraphql/) - library for creating GraphQL schemas in typescript using a strongly typed code first approach

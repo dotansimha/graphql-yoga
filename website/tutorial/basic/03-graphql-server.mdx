@@ -12,19 +12,21 @@ You are going to use the HTTP protocol to serve the GraphQL server, but note tha
 
 In this tutorial, we will be using `@graphql-yoga/node` for building our Node.js GraphQL HTTP server.
 
+> Yoga can also run on other platforms, such as Cloudflare Workers or deno. [We recommend checking out the integrations section in our documentation after finishing the tutorial.](/docs/integrations/integration-with-cloudflare-workers)
+
 <Instruction>
 
 You'll need the `@graphql-yoga/node` package available in your project, so install it using the following command:
 
 ```bash
-npm install --save --exact @graphql-yoga/node
+npm install --save --exact @graphql-yoga/node@beta
 ```
 
 </Instruction>
 
 <Instruction>
 
-Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `3000`:
+Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:
 
 ```typescript
 import { createServer } from '@graphql-yoga/node'
@@ -40,8 +42,6 @@ main()
 
 </Instruction>
 
-> You've removed the previous GraphQL setup from this file, but don't worry - in a few minutes you'll add it with more capabilities and a real server!
-
 Now, try to run your server again with `npm run dev` (or, `npm run start`). You shouldn't see any special output in the log, but you can now open your browser and navigate to `http://localhost:3000/graphql`.
 
 You can now try to run your server, and you should be able to run our query in a HTTP-based GraphQL request.
@@ -51,7 +51,7 @@ You can now try to run your server, and you should be able to run our query in a
 If you have `curl` installed on your machine, you should be able to run and see the GraphQL response (you can also use any kind of HTTP requests tools, like [Postman](https://www.postman.com/)):
 
 ```bash
-curl -X POST http://localhost:3000/graphql -H "Content-type: application/json" --data-raw '{"query": "query { info }"}'
+curl -X POST http://localhost:4000/graphql -H "Content-type: application/json" --data-raw '{"query": "query { info }"}'
 ```
 
 And you should see in return:

@@ -40,7 +40,7 @@ Next, you need to update the implementation of the `feed` resolver to account fo
 
 Now, update the `feed` resolver to look as follows:
 
-```typescrip
+```typescript
 const resolvers = {
   // ... other resolvers ...
   Query: {
@@ -48,7 +48,7 @@ const resolvers = {
     feed: async (
       parent: unknown,
       args: { filter?: string },
-      context: GraphQLContext
+      context: GraphQLContext,
     ) => {
       const where = args.filter
         ? {
@@ -57,11 +57,11 @@ const resolvers = {
               { url: { contains: args.filter } },
             ],
           }
-        : {};
+        : {}
 
-      return context.prisma.link.findMany({ where });
+      return context.prisma.link.findMany({ where })
     },
-  }
+  },
 }
 ```
 
@@ -138,7 +138,7 @@ Now, adjust the resolver implementation:
 
 And now adjust the implementation of the `Query.feed` resolver function:
 
-```typescrip
+```typescript
 const resolvers = {
   // ... other resolvers ...
   Query: {
@@ -146,7 +146,7 @@ const resolvers = {
     feed: async (
       parent: unknown,
       args: { filter?: string; skip?: number; take?: number },
-      context: GraphQLContext
+      context: GraphQLContext,
     ) => {
       const where = args.filter
         ? {
@@ -155,15 +155,15 @@ const resolvers = {
               { url: { contains: args.filter } },
             ],
           }
-        : {};
+        : {}
 
       return context.prisma.link.findMany({
         where,
         skip: args.skip,
         take: args.take,
-      });
+      })
     },
-  }
+  },
 }
 ```
 

@@ -9,10 +9,9 @@ clone for querying a feed of _links_ that were posted by other users.
 
 ### Extending the schema definition
 
-Let's start by implementing a `feed` field on the `Query` root types which allows retriving a list of `Link` elements. In general, when
-adding a new feature to the GraphQL Schema, the process will look pretty similar every time:
+Let's start by implementing a `feed` field on the `Query` root types which allow retrieving a list of `Link` elements. In general, when adding a new feature to the GraphQL Schema, the process will look pretty similar every time:
 
-1. Extend the GraphQL schema definition (SDL) with a new _root field_ (or new _object types_ and fields, if needed)
+1. Extend the GraphQL schema definition (SDL) with new _root fields_ (on the `Query`, `Mutation` or `Subscription` object types) and new _object types_ and fields, if needed
 1. Implement corresponding _resolver functions_ for the added fields/object types
 
 This process is also referred to as the _schema-driven_ or _schema-first development_ workflow.
@@ -100,8 +99,7 @@ Let's walk through the numbered comments again:
 1. Finally, you're adding three more resolvers for the fields on the `Link` type from the schema definition. We'll
    discuss what the `parent` argument that's passed into the resolver here is in a bit.
 
-Go ahead and test the implementation by running the server and navigate to `http://localhost:3000/graphql` in your browser. If you expand
-the documentation of the GraphiQL, you'll notice that another field on the root `Query` object type called `feed` is now available:
+Go ahead and test the implementation by running the server and navigate to `http://localhost:4000/graphql` in your browser. If you expand the documentation of the GraphiQL, you'll notice that another field on the root `Query` object type called `feed` is now available:
 
 ![another `Query` root type field called feed](https://i.imgur.com/k60k4BC.png)
 

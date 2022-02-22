@@ -10,7 +10,7 @@ This step will cover the initial NodeJS setup required, basic configuration for 
 
 ### Requirements
 
-- Have NodeJS installed on your operation system ([instructions](https://nodejs.org/en/download/package-manager/)). You can use any recent version (12/14/16).
+- Have NodeJS installed on your operation system ([instructions](https://nodejs.org/en/download/package-manager/)). You can use any recent version (14/16/17), but, we highly recommend using the stable Node.js 16 LTS release.
 - Your favorite terminal configured (you are going to use it a lot!)
 - Run `node -v`, `npm -v`, `npx -v` in your terminal and make sure these commands are available for use.
 
@@ -47,9 +47,9 @@ npm install --save-dev --exact typescript @types/node ts-node ts-node-dev cross-
 
 </Instruction>
 
-This will add the dependencies to your project, and will update the `package.json`.
+This will add the dependencies to your project under the `node_modules` folder, and update the `package.json`.
 
-The command above will get you the following libraries installed in the project:
+The command above installs the following libraries:
 
 - `typescript` is the basic TypeScript language support and compiler.
 - `@types/node` is a package that contains the basic TypeScript types for NodeJS environment.
@@ -58,7 +58,7 @@ The command above will get you the following libraries installed in the project:
 
 <Instruction>
 
-Now, to create a new TypeScript tools with the default configuration, run the following:
+Now, initialize a new TypeScript configuration for your project using the following command:
 
 ```bash
 npx tsc --init
