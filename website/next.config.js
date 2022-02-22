@@ -27,7 +27,7 @@ module.exports = withBundleAnalyzer(
         },
         {
           source: '/tutorial',
-          destination: '/tutorial/00-introduction',
+          destination: '/tutorial/basic/00-introduction',
           permanent: true,
         },
       ]
