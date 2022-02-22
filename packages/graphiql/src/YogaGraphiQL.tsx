@@ -137,7 +137,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         }}
         query={query}
         onEditQuery={(query) => typeof query === 'string' && setQuery(query)}
-        leftDocExplorerContent={
+        beforeTopBarContent={
           schema ? (
             showExplorer ? null : (
               <button
