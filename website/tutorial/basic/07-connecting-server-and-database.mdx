@@ -122,7 +122,7 @@ const resolvers = {
     url: (parent: Link) => parent.url,
   },
   Mutation: {
-    post: async (
+    postLink: async (
       parent: unknown,
       args: { description: string; url: string },
       context: GraphQLContext,
@@ -170,14 +170,14 @@ It accesses the `prisma` object via the `context` argument we discussed a moment
 
 Now, you should be able to imagine the complete system and workflow of a Prisma/GraphQL project, where our Prisma Client API exposes a number of database queries that let you read and write data in the database.
 
-#### Understanding the `post` resolver
+#### Understanding the `postLink` resolver
 
-The `post` resolver now looks like this:
+The `postLink` resolver now looks like this:
 
 ```typescript
 const resolvers = {
   Mutation: {
-    post: async (
+    postLink: async (
       parent: unknown,
       args: { description: string; url: string },
       context: GraphQLContext,
@@ -212,7 +212,7 @@ persisted in your SQLite database. Therefore, if you restart the server, the `fe
 
 <Instruction>
 
-Open GraphiQL and try to run the `feed` query and the `post` mutation:
+Open GraphiQL and try to run the `feed` query and the `postLink` mutation:
 
 ```graphql
 query {
@@ -226,7 +226,10 @@ query {
 
 ```graphql
 mutation {
-  post(url: "www.prisma.io", description: "Prisma replaces traditional ORMs") {
+  postLink(
+    url: "www.prisma.io"
+    description: "Prisma replaces traditional ORMs"
+  ) {
     id
   }
 }

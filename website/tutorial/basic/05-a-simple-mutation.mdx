@@ -23,7 +23,7 @@ export const typeDefinitions = /* GraphQL */ `
   }
 
   type Mutation {
-    post(url: String!, description: String!): Link!
+    postLink(url: String!, description: String!): Link!
   }
 
   type Link {
@@ -65,7 +65,7 @@ const resolvers = {
     feed: () => links,
   },
   Mutation: {
-    post: (parent: unknown, args: { description: string; url: string }) => {
+    postLink: (parent: unknown, args: { description: string; url: string }) => {
       // 1
       let idCount = links.length
 
@@ -93,7 +93,7 @@ Also, here's what's going on with the numbered comments:
 
 1. You're adding a new integer variable that simply serves as a very rudimentary way to generate unique IDs for newly
    created `Link` elements.
-1. The implementation of the `post` resolver on the `Mutation` object type first creates a new `link` object, then adds it to the existing `links`
+1. The implementation of the `postLink` resolver on the `Mutation` object type first creates a new `link` object, then adds it to the existing `links`
    array and finally returns the new `link`.
 
 Now's a good time to discuss the second argument that's passed into all resolver functions: `args`. Any guesses what
@@ -109,7 +109,10 @@ Go ahead and restart your server so you can test the new API operations. Here is
 
 ```graphql
 mutation {
-  post(url: "www.prisma.io", description: "Prisma replaces traditional ORMs") {
+  postLink(
+    url: "www.prisma.io"
+    description: "Prisma replaces traditional ORMs"
+  ) {
     id
   }
 }
@@ -120,7 +123,7 @@ The server response will look as follows:
 ```json(nocopy)
 {
   "data": {
-    "post": {
+    "postLink": {
       "id": "link-1"
     }
   }
