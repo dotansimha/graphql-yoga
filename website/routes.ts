@@ -64,14 +64,14 @@ export function getTutorialRoutes(): IRoutes {
           ['11-summary', 'Summary'],
         ],
       },
-      advanced: {
-        $name: 'Advanced',
-        $routes: [
-          ['00-introduction', 'Introduction'],
-          ['01-authentication', 'Authentication'],
-          ['02-subscriptions', 'Subscriptions'],
-        ],
-      },
+      // advanced: {
+      //   $name: 'Advanced',
+      //   $routes: [
+      //     ['00-introduction', 'Introduction'],
+      //     ['01-authentication', 'Authentication'],
+      //     ['02-subscriptions', 'Subscriptions'],
+      //   ],
+      // },
     },
   }
 
