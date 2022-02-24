@@ -23,7 +23,7 @@ const app = new Koa()
 const graphQLServer = createServer()
 
 // Bind GraphQL Yoga to `/graphql` endpoint
-app.use('/graphql', async (ctx) => {
+app.use(async (ctx) => {
   // Keep the socket open
   ctx.req.socket.setTimeout(0)
   ctx.req.socket.setNoDelay(true)
@@ -37,7 +37,7 @@ app.use('/graphql', async (ctx) => {
 
   // Set headers
   response.headers.forEach((value, key) => {
-    ctx.set(key, value)
+    ctx.append(key, value)
   })
 
   // Converts ReadableStream to a NodeJS Stream
@@ -46,7 +46,7 @@ app.use('/graphql', async (ctx) => {
 })
 
 app.listen(4000, () => {
-  console.log('Running a GraphQL API server at http://localhost:4000/graphql')
+  console.log('Running a GraphQL API server at http://localhost:4000')
 })
 ```
 
