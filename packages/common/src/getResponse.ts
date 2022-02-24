@@ -81,6 +81,7 @@ export function getPushResponse(
     'Content-Type': 'text/event-stream',
     Connection: 'keep-alive',
     'Cache-Control': 'no-cache',
+    'Content-Encoding': 'none',
   }
   const responseInit: ResponseInit = {
     headers: headersInit,
