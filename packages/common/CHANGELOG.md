@@ -1,5 +1,14 @@
 # @graphql-yoga/common
 
+## 0.0.1-beta.2
+
+### Patch Changes
+
+- 11e80ea: Remove "By Helix from debug messages"
+- daeea82: fix(common): bump cross-undici-fetch and pass encoding header for wider support
+- Updated dependencies [8d03bee]
+  - @graphql-yoga/subscription@0.0.1-beta.1
+
 ## 0.0.1-beta.1
 
 ### Patch Changes

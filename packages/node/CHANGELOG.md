@@ -1,5 +1,16 @@
 # @graphql-yoga/node
 
+## 0.0.1-beta.2
+
+### Patch Changes
+
+- daeea82: fix(common): bump cross-undici-fetch and pass encoding header for wider support
+- Updated dependencies [8d03bee]
+- Updated dependencies [11e80ea]
+- Updated dependencies [daeea82]
+  - @graphql-yoga/subscription@0.0.1-beta.1
+  - @graphql-yoga/common@0.0.1-beta.2
+
 ## 0.0.1-beta.1
 
 ### Patch Changes
