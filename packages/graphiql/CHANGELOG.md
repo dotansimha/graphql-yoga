@@ -1,5 +1,11 @@
 # @graphql-yoga/graphiql
 
+## 0.1.0-beta.2
+
+### Minor Changes
+
+- 799a050: Improve caret color, add hover colors and add some paddings
+
 ## 0.1.0-beta.1
 
 ### Minor Changes

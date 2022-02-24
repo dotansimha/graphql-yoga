@@ -1,5 +1,11 @@
 # @graphql-yoga/subscription
 
+## 0.0.1-beta.1
+
+### Patch Changes
+
+- 8d03bee: fix publishing values when using the id argument for granular resource based subscriptions
+
 ## 0.0.1-beta.0
 
 ### Patch Changes
