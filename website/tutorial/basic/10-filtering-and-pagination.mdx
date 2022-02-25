@@ -179,3 +179,113 @@ query {
 ```
 
 ![test the pagination API ](https://i.imgur.com/XeZgSJo.png)
+
+### Pagination field argument sanitization
+
+In the last chapter you already sanitized the arguments within the `Mutation.postCommentOnLink` field resolver function.
+
+Up next, let's also take into consideration that the `Query.feed` arguments should also have some sanitizing.
+
+As more links are posted onto the feed, the size of the feed increases. At some point there could be thousands of feed items. When deploying the the GraphQL API to production you would not want to allow querying ALL the links at once. That means you have to introduce a default value for the `take` argument.
+
+Furthermore, you should limit the `take` argument to be within a range that makes sense for the feed. The original hackernews shows 30 links per page.
+
+Let's use the value 30 as the default value and 50 as the upper limit and 1 as the lower limit. Fetching 0 records does not make sense.
+
+<Instruction>
+
+Adjust the current schema resolver implementation according to the following.
+
+```typescript
+// ... other code ...
+
+const applyTakeConstraints = (params: {
+  min: number
+  max: number
+  value: number
+}) => {
+  if (params.value < params.min || params.value > params.max) {
+    throw new GraphQLYogaError(
+      `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`,
+    )
+  }
+  return params.value
+}
+
+export const resolvers = {
+  // ... other resolvers maps ...
+  Query: {
+    // ... other Query object type resolver functions ...
+    feed: async (
+      parent: unknown,
+      args: { filter?: string; skip?: number; take?: number },
+      context: GraphQLContext,
+    ) => {
+      const where = args.filterNeedle
+        ? {
+            OR: [
+              { description: { contains: args.filterNeedle } },
+              { url: { contains: args.filterNeedle } },
+            ],
+          }
+        : {}
+
+      const take = applyTakeConstraints({
+        min: 1,
+        max: 50,
+        value: args.skip ?? 30,
+      })
+
+      return context.prisma.link.findMany({
+        where,
+        skip: args.skip,
+        take,
+      })
+    },
+  },
+}
+```
+
+</Instruction>
+
+Cool! Now we you can try executing a operation with a `take` argument value outside the range!
+
+<Instruction>
+
+Execute the following query operation via GraphiQL.
+
+```graphql
+query {
+  feed(take: -1) {
+    id
+    description
+    url
+  }
+}
+```
+
+</Instruction>
+
+As expected, you receive an error:
+
+```json
+{
+  "errors": [
+    {
+      "message": "'take' argument value '-1' is outside the valid range of '1' to '50'.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["feed"]
+    }
+  ],
+  "data": null
+}
+```
+
+### Optional Exercise
+
+As an optional exercise for interiorizing the knowledge, you can now also implement validation of the `skip` argument of `Query.feed` field and prohibit using negative numbers.
