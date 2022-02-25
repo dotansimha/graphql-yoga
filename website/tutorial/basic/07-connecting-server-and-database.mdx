@@ -154,12 +154,12 @@ Now let's understand how these new resolvers are working!
 
 The `feed` resolver is implemented as follows:
 
-```typescript{4,6}(nocopy)
+```typescript
 const resolvers = {
   Query: {
     // ...
     feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
-      return context.prisma.link.findMany();
+      return context.prisma.link.findMany()
     },
   },
   // ...
