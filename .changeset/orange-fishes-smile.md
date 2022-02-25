@@ -21,7 +21,7 @@ someServer.someServerHandlerMethod(
 
 So `handleIncomingMessage` of `YogaNodeServer` can accept a second parameter to add Node specific stuff to the context besides WHATWG `Request` object;
 
-For Fastify;
+For Fastify:
 
 ```ts
 app.route({
