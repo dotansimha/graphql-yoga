@@ -220,10 +220,215 @@ You will receive a response with the `Cannot post common on non-existing link wi
 }
 ```
 
-<Instruction>
-
 As you might have noticed, GraphQLYoga will exclude `GraphQLYogaError` errors thrown within the resolvers from masking the error masking.
 
 That means everytime you want to expose an error to the outside world you should throw an `GraphQLYogaError` error.
 
 At the same time any other unexpected error will automatically be masked from the outside world, bringing you sensible and safe defaults for a GraphQL Yoga production deployment!
+
+### Field Argument sanitazing
+
+There is actually one more issue within The `Mutation.postCommentOnLink` field resolver.
+
+So far you only executed the mutation operation while using an string encoded integer value for the `linkId` argument.
+
+<Instruction>
+
+Execute that operation again using this non-integer value.
+
+```graphql
+mutation postCommentOnLink {
+  postCommentOnLink(linkId: "11a", body: "This is my second comment!") {
+    id
+    body
+  }
+}
+```
+
+</Instruction>
+
+All seems good, right?
+
+```json
+{
+  "errors": [
+    {
+      "message": "Cannot post common on non-existing link with id '11a'.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["postCommentOnLink"]
+    }
+  ],
+  "data": null
+}
+```
+
+Let's also try another non integer string value.
+
+<Instruction>
+
+Execute that operation again using this non-integer value.
+
+```graphql
+mutation {
+  postCommentOnLink(linkId: "uuuuuu", body: "This is my second comment!") {
+    id
+    body
+  }
+}
+```
+
+</Instruction>
+
+What the heck is happening now?
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unexpected error.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["postCommentOnLink"],
+      "extensions": {
+        "originalError": {
+          "message": "\nInvalid `.create()` invocation in\nhackernews/src/schema.ts:93:10\n\n   90   context: GraphQLContext,\n   91 ) => {\n   92   const comment = await context.prisma.comment\n→  93     .create({\n            data: {\n              body: 'This is my second comment!',\n              linkId: NaN\n              ~~~~~~\n            }\n          })\n\nUnknown arg `linkId` in data.linkId for type CommentCreateInput. Did you mean `link`? Available args:\ntype CommentCreateInput {\n  createdAt?: DateTime\n  body: String\n  link?: LinkCreateNestedOneWithoutCommentsInput\n}\n\n",
+          "stack": "Error: \nInvalid `.create()` invocation in\nhackernews/src/schema.ts:93:10\n\n   90   context: GraphQLContext,\n   91 ) => {\n   92   const comment = await context.prisma.comment\n→  93     .create({\n            data: {\n              body: 'This is my second comment!',\n              linkId: NaN\n              ~~~~~~\n            }\n          })\n\nUnknown arg `linkId` in data.linkId for type CommentCreateInput. Did you mean `link`? Available args:\ntype CommentCreateInput {\n  createdAt?: DateTime\n  body: String\n  link?: LinkCreateNestedOneWithoutCommentsInput\n}\n\n\n    at Object.validate (hackernews/node_modules/@prisma/client/runtime/index.js:34786:20)\n    at PrismaClient._executeRequest (hackernews/node_modules/@prisma/client/runtime/index.js:40911:17)\n    at consumer (hackernews/node_modules/@prisma/client/runtime/index.js:40856:23)\n    at hackernews/node_modules/@prisma/client/runtime/index.js:40860:76\n    at runInChildSpan (hackernews/node_modules/@prisma/client/runtime/index.js:39945:12)\n    at hackernews/node_modules/@prisma/client/runtime/index.js:40860:20\n    at AsyncResource.runInAsyncScope (async_hooks.js:197:9)\n    at PrismaClient._request (hackernews/node_modules/@prisma/client/runtime/index.js:40859:86)\n    at hackernews/node_modules/@prisma/client/runtime/index.js:40190:25\n    at _callback (hackernews/node_modules/@prisma/client/runtime/index.js:39960:52)"
+        }
+      }
+    }
+  ],
+  "data": null
+}
+```
+
+You just enountered another unexpected error that got masked.
+
+Let's analyze the error message.
+
+```
+Invalid `.create()` invocation in hackernews/src/schema.ts:93:10
+
+Unknown arg `linkId` in data.linkId for type CommentCreateInput.
+
+linkId: NaN
+```
+
+These are the three parts within the error message that should make it click.
+
+It seems like the `linkId` passed to the prisma `create` function is `NaN`, which is a special value for "not a number" in JavaScript. The underlying database, however, expects a `integer` value. The error is raised and thrown, as you did not add logic for handling this edge case, yet.
+
+But why did the previous value `"11a"`, not result in such an error?
+
+In order to clarify that question we need to have a small excursion on how the [`parseInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt) function works.
+
+Basically, there are multiple mathematical numeral systems. The implementation tries to be a bit smart and fault-tolerant. So, instead let's build a quick custom funcion, `parseIntSafe`, that first validates the string contents using a regex.
+
+<Instruction>
+
+Add the following code to the `src/schema.ts` file.
+
+```typescript
+// ... other code ...
+
+const parseIntSafe = (value: string): number | null => {
+  if (/^(\d+)$/.test(value)) {
+    return parseInt(value, 10)
+  }
+  return null
+}
+
+export const resolvers = {
+  // ... other resolver maps ...
+  Mutation: {
+    // ... other field resolver functions
+    postCommentOnLink: async (
+      parent: unknown,
+      args: { linkId: string; body: string },
+      context: GraphQLContext,
+    ) => {
+      const linkId = parseIntSafe(args.linkId)
+      if (linkId === null) {
+        return Promise.reject(
+          new GraphQLYogaError(
+            `Cannot post common on non-existing link with id '${args.linkId}'.`,
+          ),
+        )
+      }
+
+      const comment = await context.prisma.comment
+        .create({
+          data: {
+            body: args.body,
+            linkId,
+          },
+        })
+        .catch((err: unknown) => {
+          if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code === 'P2003') {
+              return Promise.reject(
+                new GraphQLYogaError(
+                  `Cannot post common on non-existing link with id '${args.linkId}'.`,
+                ),
+              )
+            }
+          }
+          return Promise.reject(err)
+        })
+      return comment
+  },
+}
+```
+
+</Instruction>
+
+The regex `/^(\d+)$/` simply verifies that every character within the `value` is a digit. In case the value includes a non digit character, you simply return `null` and then reject the resolver with a `GraphQLYogaError` error.
+
+Returning `null` instead of returning `NaN` is the better choice here, as it allows nice TypeScript checks (`linkId === null`).
+
+<Instruction>
+
+Execute that operation again using this non-integer value.
+
+```graphql
+mutation postCommentOnLink {
+  postCommentOnLink(linkId: "uuuuuu", body: "This is my second comment!") {
+    id
+    body
+  }
+}
+```
+
+</Instruction>
+
+All good now. 🎉
+
+```json
+{
+  "errors": [
+    {
+      "message": "Cannot post common on non-existing link with id 'uuuuuu'.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["postCommentOnLink"]
+    }
+  ],
+  "data": null
+}
+```
+
+Remember, when implementing your GraphQL resolver functions, the input arguments should always be sanitized and validated!
+
+As an optional exercise for internaling the knowledge, you can now also implement validation of the `body` argument. You wouldn't want anyone to post an empty body, right?

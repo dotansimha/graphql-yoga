@@ -28,29 +28,30 @@ You are going to use the following technologies:
 - [Prisma](https://www.prisma.io/): The glue between your code and SQLite database. Use Prisma Client to access your database inside of
   GraphQL resolvers.
 
-You can find the [code of the tutorial in this repository](https://github.com/dotansimha/graphql-yoga/tree/master/examples/hackernews-node-ts).
+You can find the [code of the tutorial in this repository](https://github.com/dotansimha/graphql-yoga/tree/master/examples/hackernews).
 
 ### What to expect
 
-The goal of this tutorial is to build an API for a [HackerNews](https://news.ycombinator.com/) clone. Here is a quick
-rundown of what to expect.
+The goal of this tutorial is to build an API for a [HackerNews](https://news.ycombinator.com/) clone.
 
-You'll start by learning the basics of how a GraphQL server works, simply by defining a
-[_GraphQL schema_](https://www.prisma.io/blog/graphql-server-basics-the-schema-ac5e2950214e) for the server and writing
-corresponding _resolver functions_ for retrieving data. In the beginning, these resolvers will only work with data that's stored in-memory -
-so nothing will persist beyond the runtime of the server.
+Hackernews is a platform where people can share links to websites and people can comment on them.
 
-Nobody wants a server that's not able to store and persist data, right? Not to worry! Next, you're going to add a
-[SQLite](http://sqlite.org/) database to the project which will be accessed using [Prisma 3](https://www.prisma.io/).
+Here is a quick rundown of what to expect of this tutorial.
 
-Once you have the database connected, you are going to add more advanced features to the API.
+You'll start by learning the basics of how a GraphQL server works, simply by defining a [_GraphQL schema_](https://www.prisma.io/blog/graphql-server-basics-the-schema-ac5e2950214e) for the server and implementing your first GraphQL resolvers for posting links and retreiving a feed of links.
 
-You'll start by implementing signup/login functionality that enables users to authenticate against the API. This will
-also allow you to check the permissions of your users for certain API operations.
+In the beginning, these resolvers will only work with data that's stored in-memory - so nothing will persist beyond the runtime of the server.
 
-Next, we will make a part of the API real-time by adding GraphQL subscriptions!
+Nobody wants a server that's not able to store and persist data, right?
 
-Finally, you'll allow the consumers of the API to constrain the list of items they retrieve from the API by adding
-filtering and pagination capabilities to it.
+No worries! Next, you're going to add a [SQLite](http://sqlite.org/) database to the project which will be accessed using the [Prisma 3 ORM](https://www.prisma.io/).
+
+Once you have the database connected, you are going to add more features to the API.
+
+You will implement comments on the links and introduce graph relations.
+
+Aftewards, you will learn all about proper error and sanitizing invalid user input.
+
+Finally, you'll implement pagination and filtering capabilities to the API!
 
 Let's get started 🚀

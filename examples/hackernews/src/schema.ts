@@ -1,5 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
+import { GraphQLYogaError } from '@graphql-yoga/node'
 import type { Link } from '@prisma/client'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import type { GraphQLContext } from './context'
 
 export const typeDefinitions = /* GraphQL */ `
@@ -17,7 +19,7 @@ export const typeDefinitions = /* GraphQL */ `
 
   type Query {
     info: String!
-    feed: [Link!]!
+    feed(filterNeedle: String, skip: Int, take: Int): [Link!]!
     comment(id: ID!): Comment
   }
 
@@ -27,11 +29,31 @@ export const typeDefinitions = /* GraphQL */ `
   }
 `
 
+const parseIntSafe = (value: string): number | null => {
+  if (/^(\d+)$/.test(value)) {
+    return parseInt(value, 10)
+  }
+  return null
+}
+
 export const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
-      return context.prisma.link.findMany()
+    feed: async (
+      parent: unknown,
+      args: { filterNeedle?: string },
+      context: GraphQLContext,
+    ) => {
+      const where = args.filterNeedle
+        ? {
+            OR: [
+              { description: { contains: args.filterNeedle } },
+              { url: { contains: args.filterNeedle } },
+            ],
+          }
+        : {}
+
+      return context.prisma.link.findMany({ where })
     },
     comment: async (
       parent: unknown,
@@ -74,13 +96,34 @@ export const resolvers = {
       args: { linkId: string; body: string },
       context: GraphQLContext,
     ) => {
-      const comment = await context.prisma.comment.create({
-        data: {
-          body: args.body,
-          linkId: parseInt(args.linkId),
-        },
-      })
+      const linkId = parseIntSafe(args.linkId)
+      if (linkId === null) {
+        return Promise.reject(
+          new GraphQLYogaError(
+            `Cannot post common on non-existing link with id '${args.linkId}'.`,
+          ),
+        )
+      }
 
+      const comment = await context.prisma.comment
+        .create({
+          data: {
+            body: args.body,
+            linkId,
+          },
+        })
+        .catch((err: unknown) => {
+          if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code === 'P2003') {
+              return Promise.reject(
+                new GraphQLYogaError(
+                  `Cannot post common on non-existing link with id '${args.linkId}'.`,
+                ),
+              )
+            }
+          }
+          return Promise.reject(err)
+        })
       return comment
     },
   },
