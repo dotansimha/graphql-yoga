@@ -44,7 +44,7 @@ app.route({
 })
 ```
 
-But in this case to improve type safety, it is recommended to add a generic parameter to `createServer` like below;
+But in this case to improve type safety, it is recommended to add a generic parameter to `createServer` like below:
 
 ```ts
 const graphQLServer = createServer<{
