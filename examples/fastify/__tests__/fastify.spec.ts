@@ -58,7 +58,6 @@ describe('fastify example integration', () => {
       )
 
     expect(response.statusCode).toEqual(200)
-    console.log(response.body)
     expect(response.body).toStrictEqual({
       data: {
         isFastify: true,
