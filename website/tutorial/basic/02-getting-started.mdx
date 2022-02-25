@@ -178,9 +178,11 @@ Now, try to run our project again (either with `npm run dev` or `npm run start`)
 { data: [Object: null prototype] { hello: 'Hello World' } }
 ```
 
+You can ignore the `[Object: null prototype]`. It is just means that the object does not inherit any properties from the global Object prototype and is a security measure that is insignificant for this tutorial.
+
 **So what happened here?**
 
-First, the GraphQL `query` was parsed it using `parse` function of `graphql` - this will create a `DocumentNode` object that can later be executed by GraphQL.
+First, the GraphQL `query` operation string was parsed it using the `parse` function of `graphql` - this will create a `DocumentNode` object that can later be executed by GraphQL.
 
 The `DocumentNode` is a abstract syntax tree (AST), an intermediate format that represents the operation string in a more processible friendly way for machines.
 
