@@ -23,7 +23,7 @@ So, let's go ahead and tackle the first step, extending the GraphQL schema defin
 In `src/schema.ts`, update the GraphQL schema to look as follows:
 
 ```typescript
-export const typeDefinitions = /* GraphQL */ `
+const typeDefinitions = /* GraphQL */ `
   type Query {
     info: String!
     feed: [Link!]!
@@ -72,7 +72,7 @@ const links: Link[] = [
   },
 ]
 
-export const resolvers = {
+const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
     // 3

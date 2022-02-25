@@ -4,7 +4,7 @@ import type { Link } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import type { GraphQLContext } from './context'
 
-export const typeDefinitions = /* GraphQL */ `
+const typeDefinitions = /* GraphQL */ `
   type Link {
     id: ID!
     description: String!
@@ -49,7 +49,7 @@ const applyTakeConstraints = (params: {
   return params.value
 }
 
-export const resolvers = {
+const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
     feed: async (

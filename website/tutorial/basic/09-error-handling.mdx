@@ -346,7 +346,7 @@ const parseIntSafe = (value: string): number | null => {
   return null
 }
 
-export const resolvers = {
+const resolvers = {
   // ... other resolver maps ...
   Mutation: {
     // ... other field resolver functions
@@ -384,6 +384,7 @@ export const resolvers = {
           return Promise.reject(err)
         })
       return comment
+    },
   },
 }
 ```

@@ -56,7 +56,7 @@ To get started with a simple GraphQL schema, you need to create a SDL file defin
 Create a `src/schema.ts` file with the following content:
 
 ```typescript
-export const typeDefinitions = /* GraphQL */ `
+const typeDefinitions = /* GraphQL */ `
   type Query {
     info: String!
   }
@@ -72,7 +72,7 @@ These are our type definitions that describe what data can be retrieved from the
 Up next you define the corresponding resolver functions that are used for resolving the data.
 
 ```typescript
-export const typeDefinitions = /* GraphQL */ `
+const typeDefinitions = /* GraphQL */ `
   type Query {
     info: String!
   }
@@ -98,13 +98,13 @@ Now you still need to glue together the type definitions and the resolver map.
 ```typescript
 import { makeExecutableSchema } from '@graphql-tools/schema'
 
-export const typeDefinitions = /* GraphQL */ `
+const typeDefinitions = /* GraphQL */ `
   type Query {
     info: String!
   }
 `
 
-export const resolvers = {
+const resolvers = {
   Query: {
     info: () => 'Test',
   },

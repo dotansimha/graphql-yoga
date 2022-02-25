@@ -16,7 +16,7 @@ Like before, you need to start by adding the new operation to your GraphQL schem
 In `src/schema.ts`, extend the schema definition as follows:
 
 ```ts
-export const typeDefinitions = /* GraphQL */ `
+const typeDefinitions = /* GraphQL */ `
   type Query {
     info: String!
     feed: [Link!]!
