@@ -22,4 +22,16 @@ describe('koa', () => {
       },
     })
   })
+  it('should expose Koa context', async () => {
+    const response = await request(app.callback())
+      .post('/graphql')
+      .send({ query: '{ isKoa }' })
+    expect(response.statusCode).toBe(200)
+    expect(response.headers['content-type']).toContain('application/json')
+    expect(response.body).toStrictEqual({
+      data: {
+        isKoa: true,
+      },
+    })
+  })
 })

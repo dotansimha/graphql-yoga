@@ -20,7 +20,7 @@ import { Readable } from 'stream'
 
 const app = new Koa()
 
-const graphQLServer = createServer()
+const graphQLServer = createServer<Koa.ParameterizedContext>()
 
 // Bind GraphQL Yoga to `/graphql` endpoint
 app.use(async (ctx) => {
