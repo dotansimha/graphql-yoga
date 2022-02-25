@@ -58,7 +58,7 @@ Create a `src/schema.ts` file with the following content:
 ```typescript
 const typeDefinitions = /* GraphQL */ `
   type Query {
-    info: String!
+    hello: String!
   }
 `
 ```
@@ -74,13 +74,13 @@ Up next you define the corresponding resolver functions that are used for resolv
 ```typescript
 const typeDefinitions = /* GraphQL */ `
   type Query {
-    info: String!
+    hello: String!
   }
 `
 
 const resolvers = {
   Query: {
-    info: () => 'Test',
+    hello: () => 'Hello World!',
   },
 }
 ```
@@ -89,7 +89,7 @@ const resolvers = {
 
 As you can see the resolver map follows the same structure as the type definitions.
 
-The typename (`Query`) is an object in which the fields (`info`) are functions that return the corresponding data of that field.
+The typename (`Query`) is an object in which the fields (`hello`) are functions that return the corresponding data of that field.
 
 <Instruction>
 
@@ -100,13 +100,13 @@ import { makeExecutableSchema } from '@graphql-tools/schema'
 
 const typeDefinitions = /* GraphQL */ `
   type Query {
-    info: String!
+    hello: String!
   }
 `
 
 const resolvers = {
   Query: {
-    info: () => 'Test',
+    hello: () => 'Hello World!',
   },
 }
 
@@ -155,7 +155,7 @@ import { schema } from './schema'
 async function main() {
   const myQuery = parse(/* GraphQL */ `
     query {
-      info
+      hello
     }
   `)
 
@@ -175,7 +175,7 @@ main()
 Now, try to run our project again (either with `npm run dev` or `npm run start`), you should see in the output log the following:
 
 ```
-{ data: [Object: null prototype] { info: 'Test' } }
+{ data: [Object: null prototype] { hello: 'Hello World' } }
 ```
 
 **So what happened here?**
@@ -184,7 +184,7 @@ First, the GraphQL `query` was parsed it using `parse` function of `graphql` - t
 
 The `DocumentNode` is a abstract syntax tree (AST), an intermediate format that represents the operation string in a more processible friendly way for machines.
 
-The JSON representation of the `DocumentNode` of the `query { info }` operation looks like the following.
+The JSON representation of the `DocumentNode` of the `query { hello }` operation looks like the following.
 
 ```json
 {
@@ -201,7 +201,7 @@ The JSON representation of the `DocumentNode` of the `query { info }` operation 
             "kind": "Field",
             "name": {
               "kind": "Name",
-              "value": "info"
+              "value": "hello"
             },
             "arguments": []
           }
@@ -245,7 +245,7 @@ As an example, consider the simple GraphQL schema we used above:
 
 ```graphql
 type Query {
-  info: String!
+  hello: String!
 }
 ```
 

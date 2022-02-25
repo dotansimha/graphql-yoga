@@ -18,7 +18,7 @@ const typeDefinitions = /* GraphQL */ `
   }
 
   type Query {
-    info: String!
+    hello: String!
     feed(filterNeedle: String, skip: Int, take: Int): [Link!]!
     comment(id: ID!): Comment
   }
@@ -51,7 +51,7 @@ const applyTakeConstraints = (params: {
 
 const resolvers = {
   Query: {
-    info: () => `This is the API of a Hackernews Clone`,
+    hello: () => `Hello World!`,
     feed: async (
       parent: unknown,
       args: { filterNeedle?: string; skip?: number; take?: number },
