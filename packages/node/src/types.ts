@@ -8,8 +8,8 @@ import { ServerOptions as HttpsServerOptions } from 'https'
 /**
  * Configuration options for the server
  */
-export type YogaNodeServerOptions<TContext, TRootValue> = Omit<
-  YogaServerOptions<TContext, TRootValue>,
+export type YogaNodeServerOptions<TAdditionalContext, TRootValue> = Omit<
+  YogaServerOptions<TAdditionalContext, TRootValue>,
   'logging'
 > & {
   /**
@@ -34,7 +34,7 @@ export type YogaNodeServerOptions<TContext, TRootValue> = Omit<
    * Pretty logging with Pino
    */
   logging?:
-    | YogaServerOptions<TContext, TRootValue>['logging']
+    | YogaServerOptions<TAdditionalContext, TRootValue>['logging']
     | {
         prettyLog?: boolean
         logLevel?: 'debug' | 'info'

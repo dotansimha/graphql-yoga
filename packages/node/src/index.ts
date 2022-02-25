@@ -62,16 +62,18 @@ function getPinoLogger<TContext, TRootValue>(
 }
 
 class YogaNodeServer<
-  TContext extends YogaInitialContext,
+  TAdditionalContext extends Record<string, any>,
   TRootValue,
-> extends YogaServer<TContext, TRootValue> {
+> extends YogaServer<TAdditionalContext, TRootValue> {
   /**
    * Address Information for Server
    */
   private addressInfo: AddressInfo
   private nodeServer: NodeServer | null = null
 
-  constructor(private options?: YogaNodeServerOptions<TContext, TRootValue>) {
+  constructor(
+    private options?: YogaNodeServerOptions<TAdditionalContext, TRootValue>,
+  ) {
     super({
       ...options,
       logging: getPinoLogger(options?.logging),
@@ -105,17 +107,20 @@ class YogaNodeServer<
     return `${this.addressInfo.protocol}://${this.addressInfo.hostname}:${this.addressInfo.port}${this.addressInfo.endpoint}`
   }
 
-  async handleIncomingMessage(nodeRequest: NodeRequest): Promise<Response> {
+  async handleIncomingMessage(
+    nodeRequest: NodeRequest,
+    additionalContext?: TAdditionalContext,
+  ): Promise<Response> {
     this.logger.debug(`Node Request received`)
     const request = await getNodeRequest(nodeRequest, this.addressInfo)
     this.logger.debug('Node Request processed')
-    const response = await this.handleRequest(request)
+    const response = await this.handleRequest(request, additionalContext)
     this.logger.debug('Response returned')
     return response
   }
 
   requestListener = async (req: IncomingMessage, res: ServerResponse) => {
-    const response = await this.handleIncomingMessage(req)
+    const response = await this.handleIncomingMessage(req, { req, res } as any)
     sendNodeResponse(response, res)
   }
 
@@ -232,10 +237,14 @@ class YogaNodeServer<
  *  server.start()
  * ```
  */
-export function createServer<TContext extends YogaInitialContext, TRootValue>(
-  options?: YogaNodeServerOptions<TContext, TRootValue>,
-) {
-  return new YogaNodeServer<TContext, TRootValue>(options)
+export function createServer<
+  TAdditionalContext extends Record<string, any> = {
+    req: IncomingMessage
+    res: ServerResponse
+  },
+  TRootValue = {},
+>(options?: YogaNodeServerOptions<TAdditionalContext, TRootValue>) {
+  return new YogaNodeServer<TAdditionalContext, TRootValue>(options)
 }
 
 export {

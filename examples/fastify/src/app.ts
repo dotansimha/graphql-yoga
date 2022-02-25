@@ -1,15 +1,19 @@
 import { createServer } from '@graphql-yoga/node'
 import { Readable } from 'stream'
-import fastify from 'fastify'
+import fastify, { FastifyReply, FastifyRequest } from 'fastify'
 
 export function buildApp(logging = true) {
   const app = fastify({ logger: logging })
 
-  const graphQLServer = createServer({
+  const graphQLServer = createServer<{
+    req: FastifyRequest
+    reply: FastifyReply
+  }>({
     schema: {
       typeDefs: /* GraphQL */ `
         type Query {
           hello: String
+          isFastify: Boolean
         }
         type Mutation {
           hello: String
@@ -21,6 +25,7 @@ export function buildApp(logging = true) {
       resolvers: {
         Query: {
           hello: () => 'world',
+          isFastify: (_, __, context) => !!context.req && !!context.reply,
         },
         Mutation: {
           hello: () => 'world',
@@ -47,7 +52,10 @@ export function buildApp(logging = true) {
     url: '/graphql',
     method: ['GET', 'POST', 'OPTIONS'],
     handler: async (req, reply) => {
-      const response = await graphQLServer.handleIncomingMessage(req)
+      const response = await graphQLServer.handleIncomingMessage(req, {
+        req,
+        reply,
+      })
       for (const [name, value] of response.headers) {
         reply.header(name, value)
       }

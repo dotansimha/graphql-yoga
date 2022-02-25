@@ -18,13 +18,16 @@ So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Y
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
-import fastify from 'fastify'
+import fastify, { FastifyRequest, FastifyReply } from 'fastify'
 import { Readable } from 'stream'
 
 // This is the fastify instance you have created
 const app = fastify({ logger: true })
 
-const graphQLServer = createServer({
+const graphQLServer = createServer<{
+  req: FastifyRequest
+  reply: FastifyReply
+}>({
   // Integrate Fastify logger
   logger: app.log,
 })
@@ -38,7 +41,11 @@ app.route({
   url: '/graphql',
   method: ['GET', 'POST', 'OPTIONS'],
   handler: async (req, reply) => {
-    const response = await graphQLServer.handleIncomingMessage(req)
+    // Second parameter adds Fastify's `req` and `reply` to the GraphQL Context
+    const response = await graphQLServer.handleIncomingMessage(req, {
+      req,
+      reply,
+    })
     response.headers.forEach((value, key) => {
       reply.header(key, value)
     })

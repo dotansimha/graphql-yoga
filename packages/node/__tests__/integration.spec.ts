@@ -403,6 +403,35 @@ describe('health checks', () => {
   })
 })
 
+it('should expose Node req and res objects in the context', async () => {
+  const server = createServer({
+    schema: {
+      typeDefs: /* GraphQL */ `
+        type Query {
+          isNode: Boolean!
+        }
+      `,
+      resolvers: {
+        Query: {
+          isNode: (_, __, { req, res }) => !!req && !!res,
+        },
+      },
+    },
+    logging: false,
+  })
+  const { response, executionResult } = await server.inject({
+    document: /* GraphQL */ `
+      query {
+        isNode
+      }
+    `,
+  })
+
+  expect(response.statusCode).toBe(200)
+  expect(executionResult.errors).toBeUndefined()
+  expect(executionResult.data.isNode).toBe(true)
+})
+
 describe('GraphiQL', () => {
   const yogaApp = createServer({
     schema: createTestSchema(),

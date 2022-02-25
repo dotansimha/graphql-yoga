@@ -82,4 +82,25 @@ describe('fastify-modules example integration', () => {
     expect(response.body?.errors).toBeFalsy()
     expect(response.body?.data?.contextKeys).toContain('request')
   })
+
+  it("exposes fastify's request and reply objects", async () => {
+    const response = await request(app.server)
+      .post('/graphql')
+      .set({ 'content-type': 'application/json' })
+      .send(
+        JSON.stringify({
+          query: /* GraphQL */ `
+            query {
+              contextKeys
+            }
+          `,
+        }),
+      )
+
+    expect(response.statusCode).toBe(200)
+    expect(response.headers['content-type']).toContain('application/json')
+    expect(response.body?.errors).toBeFalsy()
+    expect(response.body?.data?.contextKeys).toContain('req')
+    expect(response.body?.data?.contextKeys).toContain('reply')
+  })
 })

@@ -42,8 +42,9 @@ const yogaApp = createServer({
   },
 })
 
+// Second parameter adds SvelteKit's RequestEvent into GraphQL Context
 const requestEventHandler = (event: RequestEvent) =>
-  yogaApp.handleRequest(event.request)
+  yogaApp.handleRequest(event.request, event)
 
 export { requestEventHandler as get, requestEventHandler as post }
 ```

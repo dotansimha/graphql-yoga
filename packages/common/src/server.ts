@@ -35,7 +35,7 @@ interface OptionsWithPlugins<TContext> {
 /**
  * Configuration options for the server
  */
-export type YogaServerOptions<TContext, TRootValue> = {
+export type YogaServerOptions<TAdditionalContext, TRootValue> = {
   /**
    * Enable/disable logging or provide a custom logger.
    * @default true
@@ -55,9 +55,11 @@ export type YogaServerOptions<TContext, TRootValue> = {
    * Context
    */
   context?:
-    | ((initialContext: YogaInitialContext) => Promise<TContext> | TContext)
-    | Promise<TContext>
-    | TContext
+    | ((
+        initialContext: YogaInitialContext,
+      ) => Promise<TAdditionalContext> | TAdditionalContext)
+    | Promise<TAdditionalContext>
+    | TAdditionalContext
   cors?: ((request: Request) => CORSOptions) | CORSOptions | boolean
   /**
    * GraphiQL options
@@ -71,10 +73,12 @@ export type YogaServerOptions<TContext, TRootValue> = {
     | {
         typeDefs: TypeSource
         resolvers?:
-          | IResolvers<TRootValue, TContext>
-          | Array<IResolvers<TRootValue, TContext>>
+          | IResolvers<TRootValue, TAdditionalContext & YogaInitialContext>
+          | Array<
+              IResolvers<TRootValue, TAdditionalContext & YogaInitialContext>
+            >
       }
-} & Partial<OptionsWithPlugins<TContext>>
+} & Partial<OptionsWithPlugins<TAdditionalContext>>
 
 export function getDefaultSchema() {
   return makeExecutableSchema({
@@ -115,17 +119,22 @@ export function getDefaultSchema() {
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  * @internal
  */
-export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
+export class YogaServer<
+  TAdditionalContext extends Record<string, any>,
+  TRootValue,
+> {
   /**
    * Instance of envelop
    */
-  public readonly getEnveloped: GetEnvelopedFn<TContext>
+  public readonly getEnveloped: GetEnvelopedFn<
+    TAdditionalContext & YogaInitialContext
+  >
   public logger: YogaLogger
   private readonly corsOptionsFactory: (request: Request) => CORSOptions =
     () => ({})
   protected readonly graphiql: GraphiQLOptions | false
 
-  constructor(options?: YogaServerOptions<TContext, TRootValue>) {
+  constructor(options?: YogaServerOptions<TAdditionalContext, TRootValue>) {
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
@@ -199,11 +208,11 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
             typeof options?.context === 'function'
               ? options?.context
               : () => options?.context,
-          ) as any,
+          ),
         ),
         ...(options?.plugins ?? []),
       ],
-    })
+    }) as GetEnvelopedFn<TAdditionalContext & YogaInitialContext>
 
     if (options?.cors != null) {
       if (typeof options.cors === 'function') {
@@ -271,7 +280,10 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
 
   private id = Date.now().toString()
 
-  handleRequest = async (request: Request) => {
+  handleRequest = async (
+    request: Request,
+    additionalContext?: TAdditionalContext,
+  ) => {
     try {
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
@@ -327,6 +339,7 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
           query,
           variables,
           operationName,
+          ...additionalContext,
         })
 
       this.logger.debug(`Processing Request`)
@@ -357,8 +370,9 @@ export class YogaServer<TContext extends YogaInitialContext, TRootValue> {
   }
 }
 
-export function createServer<TContext extends YogaInitialContext, TRootValue>(
-  options?: YogaServerOptions<TContext, TRootValue>,
-) {
-  return new YogaServer<TContext, TRootValue>(options)
+export function createServer<
+  TAdditionalContext extends Record<string, any> = Record<string, any>,
+  TRootValue = {},
+>(options?: YogaServerOptions<TAdditionalContext, TRootValue>) {
+  return new YogaServer<TAdditionalContext, TRootValue>(options)
 }

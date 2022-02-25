@@ -43,6 +43,29 @@ describe('fastify example integration', () => {
     })
   })
 
+  it("exposes fastify's request and reply objects", async () => {
+    const response = await request(app.server)
+      .post('/graphql')
+      .set({ 'content-type': 'application/json' })
+      .send(
+        JSON.stringify({
+          query: /* GraphQL */ `
+            {
+              isFastify
+            }
+          `,
+        }),
+      )
+
+    expect(response.statusCode).toEqual(200)
+    console.log(response.body)
+    expect(response.body).toStrictEqual({
+      data: {
+        isFastify: true,
+      },
+    })
+  })
+
   it('handles query operation via GET', async () => {
     const response = await request(app.server)
       .get('/graphql')
