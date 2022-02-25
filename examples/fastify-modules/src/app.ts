@@ -1,7 +1,11 @@
 import 'reflect-metadata'
 import { createServer } from '@graphql-yoga/node'
 import { Readable } from 'stream'
-import fastify, { RouteHandlerMethod } from 'fastify'
+import fastify, {
+  FastifyReply,
+  FastifyRequest,
+  RouteHandlerMethod,
+} from 'fastify'
 import { useGraphQLModules } from '@envelop/graphql-modules'
 import { createApplication } from 'graphql-modules'
 import { basicModule } from './modules/basic'
@@ -13,13 +17,19 @@ export function createGraphQLApp() {
 }
 
 export const graphqlHandler = (): RouteHandlerMethod => {
-  const graphQLServer = createServer({
+  const graphQLServer = createServer<{
+    req: FastifyRequest
+    reply: FastifyReply
+  }>({
     logging: false,
     plugins: [useGraphQLModules(createGraphQLApp())],
   })
 
   return async (req, reply) => {
-    const response = await graphQLServer.handleIncomingMessage(req)
+    const response = await graphQLServer.handleIncomingMessage(req, {
+      req,
+      reply,
+    })
     response.headers.forEach((value, key) => {
       reply.header(key, value)
     })
