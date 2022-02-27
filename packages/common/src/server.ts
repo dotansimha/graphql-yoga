@@ -44,7 +44,7 @@ interface OptionsWithPlugins<TContext> {
 /**
  * Configuration options for the server
  */
-export type YogaServerOptions<TAdditionalContext, TRootValue> = {
+export type YogaServerOptions<TServerContext, TUserContext, TRootValue> = {
   /**
    * Enable/disable logging or provide a custom logger.
    * @default true
@@ -64,11 +64,11 @@ export type YogaServerOptions<TAdditionalContext, TRootValue> = {
    * Context
    */
   context?:
-    | ((
-        initialContext: YogaInitialContext,
-      ) => Promise<TAdditionalContext> | TAdditionalContext)
-    | Promise<TAdditionalContext>
-    | TAdditionalContext
+  | ((
+    initialContext: YogaInitialContext & TServerContext,
+  ) => Promise<TUserContext> | TUserContext)
+  | Promise<TUserContext>
+  | TUserContext
   cors?: ((request: Request) => CORSOptions) | CORSOptions | boolean
   /**
    * GraphiQL options
@@ -78,19 +78,27 @@ export type YogaServerOptions<TAdditionalContext, TRootValue> = {
   graphiql?: GraphiQLOptions | false
 
   schema?:
-    | GraphQLSchema
-    | {
-        typeDefs: TypeSource
-        resolvers?:
-          | IResolvers<TRootValue, TAdditionalContext & YogaInitialContext>
-          | Array<
-              IResolvers<TRootValue, TAdditionalContext & YogaInitialContext>
-            >
-      }
+  | GraphQLSchema
+  | {
+    typeDefs: TypeSource
+    resolvers?:
+    | IResolvers<
+      TRootValue,
+      TUserContext & TServerContext & YogaInitialContext
+    >
+    | Array<
+      IResolvers<
+        TRootValue,
+        TUserContext & TServerContext & YogaInitialContext
+      >
+    >
+  }
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
-} & Partial<OptionsWithPlugins<TAdditionalContext>>
+} & Partial<
+  OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
+>
 
 export function getDefaultSchema() {
   return makeExecutableSchema({
@@ -132,28 +140,31 @@ export function getDefaultSchema() {
  * @internal
  */
 export class YogaServer<
-  TAdditionalContext extends Record<string, any>,
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
   TRootValue,
-> {
+  > {
   /**
    * Instance of envelop
    */
   public readonly getEnveloped: GetEnvelopedFn<
-    TAdditionalContext & YogaInitialContext
+    TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
   private readonly corsOptionsFactory: (request: Request) => CORSOptions =
     () => ({})
   protected readonly graphiql: GraphiQLOptions | false
 
-  constructor(options?: YogaServerOptions<TAdditionalContext, TRootValue>) {
+  constructor(
+    options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+  ) {
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
         : makeExecutableSchema({
-            typeDefs: options.schema.typeDefs,
-            resolvers: options.schema.resolvers,
-          })
+          typeDefs: options.schema.typeDefs,
+          resolvers: options.schema.resolvers,
+        })
       : getDefaultSchema()
 
     const logger = options?.logging ?? true
@@ -162,11 +173,11 @@ export class YogaServer<
         ? logger === true
           ? console
           : {
-              debug: () => {},
-              error: () => {},
-              warn: () => {},
-              info: () => {},
-            }
+            debug: () => { },
+            error: () => { },
+            warn: () => { },
+            info: () => { },
+          }
         : logger
 
     const maskedErrors = options?.maskedErrors ?? true
@@ -232,7 +243,7 @@ export class YogaServer<
         ),
         ...(options?.plugins ?? []),
       ],
-    }) as GetEnvelopedFn<TAdditionalContext & YogaInitialContext>
+    }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
     if (options?.cors != null) {
       if (typeof options.cors === 'function') {
@@ -263,12 +274,12 @@ export class YogaServer<
     headers['Access-Control-Allow-Methods'] = corsOptions.methods
       ? corsOptions.methods.join(', ')
       : request.headers.get('access-control-request-method') ||
-        'GET, POST, OPTIONS'
+      'GET, POST, OPTIONS'
 
     headers['Access-Control-Allow-Headers'] = corsOptions.allowedHeaders
       ? corsOptions.allowedHeaders.join(', ')
       : request.headers.get('access-control-request-headers') ||
-        'content-type, content-length, accept-encoding'
+      'content-type, content-length, accept-encoding'
 
     headers['Access-Control-Allow-Credentials'] =
       corsOptions.credentials == false ? 'false' : 'true'
@@ -300,10 +311,7 @@ export class YogaServer<
 
   private id = Date.now().toString()
 
-  handleRequest = async (
-    request: Request,
-    additionalContext?: TAdditionalContext,
-  ) => {
+  handleRequest = async (request: Request, serverContext?: TServerContext) => {
     try {
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
@@ -359,7 +367,7 @@ export class YogaServer<
           query,
           variables,
           operationName,
-          ...additionalContext,
+          ...serverContext,
         })
 
       this.logger.debug(`Processing Request`)
@@ -435,8 +443,9 @@ export class YogaServer<
 }
 
 export function createServer<
-  TAdditionalContext extends Record<string, any> = Record<string, any>,
+  TServerContext extends Record<string, any> = Record<string, any>,
+  TUserContext extends Record<string, any> = {},
   TRootValue = {},
->(options?: YogaServerOptions<TAdditionalContext, TRootValue>) {
-  return new YogaServer<TAdditionalContext, TRootValue>(options)
+  >(options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>) {
+  return new YogaServer<TServerContext, TUserContext, TRootValue>(options)
 }

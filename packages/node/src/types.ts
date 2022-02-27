@@ -8,38 +8,39 @@ import { ServerOptions as HttpsServerOptions } from 'https'
 /**
  * Configuration options for the server
  */
-export type YogaNodeServerOptions<TAdditionalContext, TRootValue> = Omit<
-  YogaServerOptions<TAdditionalContext, TRootValue>,
-  'logging'
-> & {
-  /**
-   * GraphQL endpoint
-   * Default: `/graphql`
-   */
-  endpoint?: string
-  /**
-   * Port to run server
-   */
-  port?: number
-  /**
-   * Hostname
-   * Default: `localhost`
-   */
-  hostname?: string
-  /**
-   * Enable HTTPS
-   */
-  https?: HttpsServerOptions | boolean
-  /**
-   * Pretty logging with Pino
-   */
-  logging?:
-    | YogaServerOptions<TAdditionalContext, TRootValue>['logging']
-    | {
-        prettyLog?: boolean
-        logLevel?: 'debug' | 'info'
-      }
-}
+export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
+  Omit<
+    YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+    'logging'
+  > & {
+    /**
+     * GraphQL endpoint
+     * Default: `/graphql`
+     */
+    endpoint?: string
+    /**
+     * Port to run server
+     */
+    port?: number
+    /**
+     * Hostname
+     * Default: `localhost`
+     */
+    hostname?: string
+    /**
+     * Enable HTTPS
+     */
+    https?: HttpsServerOptions | boolean
+    /**
+     * Pretty logging with Pino
+     */
+    logging?:
+      | YogaServerOptions<TUserContext, TServerContext, TRootValue>['logging']
+      | {
+          prettyLog?: boolean
+          logLevel?: 'debug' | 'info'
+        }
+  }
 
 export interface AddressInfo {
   protocol: 'http' | 'https'
