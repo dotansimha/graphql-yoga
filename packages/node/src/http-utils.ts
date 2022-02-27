@@ -87,12 +87,6 @@ function isReadable(responseBody: any): responseBody is Readable {
   return !!responseBody.pipe
 }
 
-declare global {
-  interface ReadableStream<R = any> {
-    [Symbol.asyncIterator]: () => AsyncIterator<R>
-  }
-}
-
 export function sendNodeResponse(
   { headers, status, statusText, body }: Response,
   serverResponse: ServerResponse,

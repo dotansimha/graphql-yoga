@@ -109,3 +109,9 @@ export type GraphQLServerInject<
 
 export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
 export { EnvelopError as GraphQLYogaError } from '@envelop/core'
+
+declare global {
+  interface ReadableStream<R = any> {
+    [Symbol.asyncIterator]: () => AsyncIterator<R>
+  }
+}

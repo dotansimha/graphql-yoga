@@ -61,7 +61,7 @@ export function buildApp(logging = true) {
       }
 
       reply.status(response.status)
-      const nodeStream = Readable.from(response.body)
+      const nodeStream = Readable.from(response.body!)
       reply.send(nodeStream)
     },
   })
