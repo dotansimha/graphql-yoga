@@ -1,5 +1,13 @@
 # subscriptions-example
 
+## 0.0.1-beta.4
+
+### Patch Changes
+
+- Updated dependencies [433558f]
+- Updated dependencies [433558f]
+  - @graphql-yoga/node@0.1.0-beta.4
+
 ## 0.0.1-beta.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 0.1.0-beta.4
+
+### Minor Changes
+
+- 433558f: feat(common/node): remove lightmyrequest and move inject method to common package
+
 ## 0.1.0-beta.3
 
 ### Minor Changes
