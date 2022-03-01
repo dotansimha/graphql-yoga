@@ -7,36 +7,34 @@ import { createServer, GraphQLYogaError } from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
 
-const yoga = createServer({ schema, logging: false })
-
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
-    const { response, executionResult } = await yoga.inject<IntrospectionQuery>(
-      {
-        document: getIntrospectionQuery(),
-      },
-    )
+    const yoga = createServer({ schema, logging: false })
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: getIntrospectionQuery(),
+    })
 
     expect(response.statusCode).toBe(200)
-    expect(executionResult.errors).toBeUndefined()
-    expect(executionResult.data?.__schema.queryType.name).toBe('Query')
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data?.__schema.queryType.name).toBe('Query')
   })
 
   it('fails introspection query with useDisableIntrospection', async () => {
-    const server = createServer({
+    const yoga = createServer({
       schema,
       logging: false,
       // @ts-ignore
       plugins: [useDisableIntrospection()],
     })
-    const { response, executionResult } =
-      await server.inject<IntrospectionQuery>({
-        document: getIntrospectionQuery(),
-      })
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: getIntrospectionQuery(),
+    })
 
     expect(response.statusCode).toBe(400)
-    expect(executionResult.data).toBeUndefined()
-    expect(executionResult.errors![0]).toMatchInlineSnapshot(`
+    const body = JSON.parse(response.text)
+    expect(body.data).toBeUndefined()
+    expect(body.errors![0]).toMatchInlineSnapshot(`
       Object {
         "locations": Array [
           Object {
@@ -81,63 +79,60 @@ describe('Masked Error Option', () => {
   })
 
   it('should mask error', async () => {
-    const server = createServer({
+    const yoga = createServer({
       schema,
       maskedErrors: true,
       logging: false,
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ hi hello }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ hi hello }',
     })
 
-    expect(executionResult.data.hi).toBeNull()
-    expect(executionResult.errors![0].message).toBe('Unexpected error.')
-    expect(executionResult.data.hello).toBeNull()
-    expect(executionResult.errors![1].message).toBe(
-      'This error never gets masked.',
-    )
+    const body = JSON.parse(response.text)
+    expect(body.data.hi).toBeNull()
+    expect(body.errors![0].message).toBe('Unexpected error.')
+    expect(body.data.hello).toBeNull()
+    expect(body.errors![1].message).toBe('This error never gets masked.')
   })
 
   it('should mask error with custom message', async () => {
-    const server = createServer({
+    const yoga = createServer({
       schema,
       maskedErrors: { errorMessage: 'Hahahaha' },
       logging: false,
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ hello hi }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ hello hi }',
     })
 
-    expect(executionResult.data.hello).toBeNull()
-    expect(executionResult.errors![0].message).toBe(
-      'This error never gets masked.',
-    )
-    expect(executionResult.data.hi).toBeNull()
-    expect(executionResult.errors![1].message).toBe('Hahahaha')
+    const body = JSON.parse(response.text)
+    expect(body.data.hello).toBeNull()
+    expect(body.errors![0].message).toBe('This error never gets masked.')
+    expect(body.data.hi).toBeNull()
+    expect(body.errors![1].message).toBe('Hahahaha')
   })
 
   it('should mask errors by default', async () => {
-    const server = createServer({
+    const yoga = createServer({
       schema,
       logging: false,
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ hi hello }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ hi hello }',
     })
 
-    expect(executionResult.data.hi).toBeNull()
-    expect(executionResult.errors![0].message).toBe('Unexpected error.')
-    expect(executionResult.data.hello).toBeNull()
-    expect(executionResult.errors![1].message).toBe(
-      'This error never gets masked.',
-    )
+    const body = JSON.parse(response.text)
+    expect(body.data.hi).toBeNull()
+    expect(body.errors![0].message).toBe('Unexpected error.')
+    expect(body.data.hello).toBeNull()
+    expect(body.errors![1].message).toBe('This error never gets masked.')
   })
 
   it('includes the original error in the extensions in dev mode (isDev flag)', async () => {
-    const server = createServer({
+    const yoga = createServer({
       schema,
       logging: false,
       maskedErrors: {
@@ -145,13 +140,14 @@ describe('Masked Error Option', () => {
       },
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ hi }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ hi hello }',
     })
 
-    expect(executionResult.data.hi).toBeNull()
-    expect(executionResult.errors?.[0]?.message).toBe('Unexpected error.')
-    expect(executionResult.errors?.[0]?.extensions).toStrictEqual({
+    const body = JSON.parse(response.text)
+    expect(body.data.hi).toBeNull()
+    expect(body.errors?.[0]?.message).toBe('Unexpected error.')
+    expect(body.errors?.[0]?.extensions).toStrictEqual({
       originalError: {
         message: 'This error will get mask if you enable maskedError.',
         stack: expect.stringContaining(
@@ -162,18 +158,19 @@ describe('Masked Error Option', () => {
   })
   it('includes the original error in the extensions in dev mode (NODE_ENV=development)', async () => {
     process.env.NODE_ENV = 'development'
-    const server = createServer({
+    const yoga = createServer({
       schema,
       logging: false,
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ hi }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ hi hello }',
     })
 
-    expect(executionResult.data.hi).toBeNull()
-    expect(executionResult.errors?.[0]?.message).toBe('Unexpected error.')
-    expect(executionResult.errors?.[0]?.extensions).toStrictEqual({
+    const body = JSON.parse(response.text)
+    expect(body.data.hi).toBeNull()
+    expect(body.errors?.[0]?.message).toBe('Unexpected error.')
+    expect(body.errors?.[0]?.extensions).toStrictEqual({
       originalError: {
         message: 'This error will get mask if you enable maskedError.',
         stack: expect.stringContaining(
@@ -186,7 +183,7 @@ describe('Masked Error Option', () => {
 
 describe('Context error', () => {
   it('Error thrown within context factory without error masking is not swallowed and does not include stack trace', async () => {
-    const server = createServer({
+    const yoga = createServer({
       logging: false,
       maskedErrors: false,
       context: () => {
@@ -194,10 +191,11 @@ describe('Context error', () => {
       },
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ greetings }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ greetings }',
     })
-    expect(executionResult).toMatchInlineSnapshot(`
+    const body = JSON.parse(response.text)
+    expect(body).toMatchInlineSnapshot(`
       Object {
         "errors": Array [
           Object {
@@ -209,17 +207,18 @@ describe('Context error', () => {
   })
 
   it('Error thrown within context factory with error masking is masked', async () => {
-    const server = createServer({
+    const yoga = createServer({
       logging: false,
       context: () => {
         throw new Error('I like turtles')
       },
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ greetings }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ greetings }',
     })
-    expect(executionResult).toMatchInlineSnapshot(`
+    const body = JSON.parse(response.text)
+    expect(body).toMatchInlineSnapshot(`
       Object {
         "errors": Array [
           Object {
@@ -231,17 +230,18 @@ describe('Context error', () => {
   })
 
   it('GraphQLYogaError thrown within context factory with error masking is not masked', async () => {
-    const server = createServer({
+    const yoga = createServer({
       logging: false,
       context: () => {
         throw new GraphQLYogaError('I like turtles')
       },
     })
 
-    const { executionResult } = await server.inject({
-      document: '{ greetings }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ greetings }',
     })
-    expect(executionResult).toMatchInlineSnapshot(`
+    const body = JSON.parse(response.text)
+    expect(body).toMatchInlineSnapshot(`
       Object {
         "errors": Array [
           Object {
@@ -254,71 +254,80 @@ describe('Context error', () => {
 })
 
 describe('Requests', () => {
+  const yoga = createServer({ schema, logging: false })
   it('should send basic query', async () => {
-    const { response, executionResult } = await yoga.inject({
-      document: /* GraphQL */ `
-        query {
-          ping
-        }
-      `,
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ ping }',
     })
 
     expect(response.statusCode).toBe(200)
-    expect(executionResult.errors).toBeUndefined()
-    expect(executionResult.data.ping).toBe('pong')
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
   })
 
   it('should send basic mutation', async () => {
-    const { response, executionResult } = await yoga.inject({
-      document: /* GraphQL */ `
-        mutation {
-          echo(message: "hello")
-        }
-      `,
-    })
+    const response = await request(yoga.getNodeServer())
+      .post('/graphql')
+      .send({
+        query: /* GraphQL */ `
+          mutation {
+            echo(message: "hello")
+          }
+        `,
+      })
 
     expect(response.statusCode).toBe(200)
-    expect(executionResult.errors).toBeUndefined()
-    expect(executionResult.data.echo).toBe('hello')
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.echo).toBe('hello')
   })
 
   it('should send variables', async () => {
-    const { response, executionResult } = await yoga.inject({
-      document: /* GraphQL */ `
-        mutation ($text: String) {
-          echo(message: $text)
-        }
-      `,
-      variables: {
-        text: 'hello',
-      },
-    })
+    const response = await request(yoga.getNodeServer())
+      .post('/graphql')
+      .send({
+        query: /* GraphQL */ `
+          mutation ($text: String) {
+            echo(message: $text)
+          }
+        `,
+        variables: {
+          text: 'hello',
+        },
+      })
 
     expect(response.statusCode).toBe(200)
-    expect(executionResult.errors).toBeUndefined()
-    expect(executionResult.data.echo).toBe('hello')
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.echo).toBe('hello')
   })
 
   it('should error on malformed query', async () => {
-    const { executionResult } = await yoga.inject({
-      document: '{ query { ping }',
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: '{ query { ping }',
     })
 
-    expect(executionResult.errors).toBeDefined()
-    expect(executionResult.data).toBeUndefined()
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeDefined()
+    expect(body.data).toBeUndefined()
   })
 
   it('should error missing query', async () => {
-    const { executionResult } = await yoga.inject({ document: null } as any)
+    const response = await request(yoga.getNodeServer())
+      .post('/graphql')
+      .send({
+        query: null,
+      } as any)
 
-    expect(executionResult.data).toBeUndefined()
-    expect(executionResult.errors?.[0].message).toBe(
-      'Must provide query string.',
-    )
+    const body = JSON.parse(response.text)
+    expect(body.data).toBeUndefined()
+    expect(body.errors?.[0].message).toBe('Must provide query string.')
   })
 })
 
 describe('Incremental Delivery', () => {
+  const yoga = createServer({ schema, logging: false })
   // TODO: Need to find a way to test using fastify inject
   beforeAll(async () => {
     await yoga.start()
@@ -404,7 +413,7 @@ describe('health checks', () => {
 })
 
 it('should expose Node req and res objects in the context', async () => {
-  const server = createServer({
+  const yoga = createServer({
     schema: {
       typeDefs: /* GraphQL */ `
         type Query {
@@ -419,17 +428,20 @@ it('should expose Node req and res objects in the context', async () => {
     },
     logging: false,
   })
-  const { response, executionResult } = await server.inject({
-    document: /* GraphQL */ `
-      query {
-        isNode
-      }
-    `,
-  })
+  const response = await request(yoga.getNodeServer())
+    .post('/graphql')
+    .send({
+      query: /* GraphQL */ `
+        query {
+          isNode
+        }
+      `,
+    })
 
   expect(response.statusCode).toBe(200)
-  expect(executionResult.errors).toBeUndefined()
-  expect(executionResult.data.isNode).toBe(true)
+  const body = JSON.parse(response.text)
+  expect(body.errors).toBeUndefined()
+  expect(body.data.isNode).toBe(true)
 })
 
 describe('GraphiQL', () => {

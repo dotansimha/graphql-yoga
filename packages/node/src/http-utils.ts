@@ -52,15 +52,17 @@ export async function getNodeRequest(
     return new Request(fullUrl, baseRequestInit)
   }
 
-  const maybeParsedBody = nodeRequest.body
-  if (maybeParsedBody) {
-    return new Request(fullUrl, {
-      ...baseRequestInit,
-      body:
-        typeof maybeParsedBody === 'string'
-          ? maybeParsedBody
-          : JSON.stringify(maybeParsedBody),
-    })
+  if (nodeRequest.headers['content-type'].includes('json')) {
+    const maybeParsedBody = nodeRequest.body
+    if (maybeParsedBody) {
+      return new Request(fullUrl, {
+        ...baseRequestInit,
+        body:
+          typeof maybeParsedBody === 'string'
+            ? maybeParsedBody
+            : JSON.stringify(maybeParsedBody),
+      })
+    }
   }
 
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest

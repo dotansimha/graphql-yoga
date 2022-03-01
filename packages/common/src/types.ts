@@ -5,6 +5,7 @@ import type {
   GraphQLSchema,
   OperationDefinitionNode,
 } from 'graphql'
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },
@@ -90,6 +91,20 @@ export interface CORSOptions {
   exposedHeaders?: string[]
   credentials?: boolean
   maxAge?: number
+}
+
+export type GraphQLServerInject<
+  TData = any,
+  TVariables = Record<string, any>,
+> = {
+  /** GraphQL Operation to execute */
+  document: string | TypedDocumentNode<TData, TVariables>
+  /** Variables for GraphQL Operation */
+  variables?: TVariables
+  /** Name for GraphQL Operation */
+  operationName?: string
+  /** Set any headers for the GraphQL request */
+  headers?: HeadersInit
 }
 
 export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>

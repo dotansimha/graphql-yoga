@@ -4,7 +4,7 @@ title: Testing
 sidebar_label: Testing
 ---
 
-GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection thanks to [`light-my-request`](https://github.com/fastify/light-my-request).
+GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection.
 
 ## Hello world test
 
@@ -14,10 +14,11 @@ Let's write test for our [Hello World GraphQL API](/docs/quick-start#create-a-he
 import server from './server'
 import { deepEqual } from 'assert'
 
-const { executionResult, response } = await server.inject({
+const response = await server.inject({
   document: '{ hello }',
 })
 
-deepEqual(response.statusCode, 200)
+deepEqual(response.status, 200)
+const executionResult = await response.json()
 deepEqual(executionResult.data.hello, 'Hello World')
 ```

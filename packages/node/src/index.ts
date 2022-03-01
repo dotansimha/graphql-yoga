@@ -7,19 +7,8 @@ import {
 import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
-import {
-  YogaServer,
-  YogaInitialContext,
-  GraphQLYogaError,
-  YogaServerOptions,
-} from '@graphql-yoga/common'
-import type {
-  GraphQLServerInject,
-  YogaNodeServerOptions,
-  AddressInfo,
-} from './types'
-import LightMyRequest from 'light-my-request'
-import { ExecutionResult, print } from 'graphql'
+import { YogaServer, YogaServerOptions } from '@graphql-yoga/common'
+import type { YogaNodeServerOptions, AddressInfo } from './types'
 import 'pino-pretty'
 import { platform } from 'os'
 
@@ -95,7 +84,17 @@ class YogaNodeServer<
     }
   }
 
-  getNodeServer(): NodeServer | null {
+  getNodeServer(): NodeServer {
+    if (!this.nodeServer) {
+      if (this.options?.https) {
+        this.nodeServer =
+          typeof this.options?.https === 'object'
+            ? createHttpsServer(this.options.https, this.requestListener)
+            : createHttpsServer(this.requestListener)
+      } else {
+        this.nodeServer = createHttpServer(this.requestListener)
+      }
+    }
     return this.nodeServer
   }
 
@@ -125,18 +124,10 @@ class YogaNodeServer<
   }
 
   start() {
+    const nodeServer = this.getNodeServer()
     return new Promise<void>((resolve, reject) => {
       try {
-        if (this.options?.https) {
-          this.nodeServer =
-            typeof this.options?.https === 'object'
-              ? createHttpsServer(this.options.https, this.requestListener)
-              : createHttpsServer(this.requestListener)
-        } else {
-          this.nodeServer = createHttpServer(this.requestListener)
-        }
-
-        this.nodeServer.listen(
+        nodeServer.listen(
           this.addressInfo.port,
           this.addressInfo.hostname,
           () => {
@@ -153,13 +144,10 @@ class YogaNodeServer<
   }
 
   stop() {
+    const nodeServer = this.getNodeServer()
     this.logger.info('Shutting down GraphQL Server.')
     return new Promise<void>((resolve, reject) => {
-      if (!this.nodeServer) {
-        reject(new GraphQLYogaError('Server not running.'))
-        return
-      }
-      this.nodeServer.close((err) => {
+      nodeServer.close((err) => {
         if (err != null) {
           this.logger.error(
             'Something went wrong while trying to shutdown the server.',
@@ -167,54 +155,11 @@ class YogaNodeServer<
           )
           reject(err)
         } else {
-          this.nodeServer = null
           this.logger.info(`GraphQL Server stopped successfully`)
           resolve()
         }
       })
     })
-  }
-
-  /**
-   * Testing utility to mock http request for GraphQL endpoint
-   *
-   *
-   * Example - Test a simple query
-   * ```ts
-   * const response = await yoga.inject({
-   *  document: "query { ping }",
-   * })
-   * expect(response.statusCode).toBe(200)
-   * expect(response.data.ping).toBe('pong')
-   * ```
-   **/
-  async inject<TData = any, TVariables = any>({
-    document,
-    variables,
-    operationName,
-    headers,
-  }: GraphQLServerInject<TData, TVariables>): Promise<{
-    response: LightMyRequest.Response
-    executionResult: ExecutionResult<TData>
-  }> {
-    const response = await LightMyRequest.inject(this.requestListener as any, {
-      method: 'POST',
-      url: this.addressInfo.endpoint,
-      headers,
-      payload: JSON.stringify({
-        query:
-          document &&
-          (typeof document === 'string' ? document : print(document)),
-        variables,
-        operationName,
-      }),
-    })
-    return {
-      response,
-      get executionResult() {
-        return JSON.parse(response.payload)
-      },
-    }
   }
 }
 
