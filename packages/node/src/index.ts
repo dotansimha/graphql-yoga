@@ -7,15 +7,8 @@ import {
 import { createServer as createHttpsServer } from 'https'
 import pino from 'pino'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
-import {
-  YogaServer,
-  YogaInitialContext,
-  GraphQLYogaError,
-  YogaServerOptions,
-} from '@graphql-yoga/common'
+import { YogaServer, YogaServerOptions } from '@graphql-yoga/common'
 import type { YogaNodeServerOptions, AddressInfo } from './types'
-import LightMyRequest from 'light-my-request'
-import { ExecutionResult, print } from 'graphql'
 import 'pino-pretty'
 import { platform } from 'os'
 
