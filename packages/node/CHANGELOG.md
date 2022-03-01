@@ -1,5 +1,17 @@
 # @graphql-yoga/node
 
+## 0.1.0-beta.4
+
+### Minor Changes
+
+- 433558f: feat(common/node): remove lightmyrequest and move inject method to common package
+
+### Patch Changes
+
+- 433558f: fix(node): respect body attribute only if request body is json
+- Updated dependencies [433558f]
+  - @graphql-yoga/common@0.1.0-beta.4
+
 ## 0.1.0-beta.3
 
 ### Minor Changes
