@@ -41,20 +41,6 @@ export type YogaNodeServerOptions<TAdditionalContext, TRootValue> = Omit<
       }
 }
 
-export type GraphQLServerInject<
-  TData = any,
-  TVariables = Record<string, any>,
-> = {
-  /** GraphQL Operation to execute */
-  document: string | TypedDocumentNode<TData, TVariables>
-  /** Variables for GraphQL Operation */
-  variables?: TVariables
-  /** Name for GraphQL Operation */
-  operationName?: string
-  /** Set any headers for the GraphQL request */
-  headers?: IncomingHttpHeaders | OutgoingHttpHeaders | undefined
-}
-
 export interface AddressInfo {
   protocol: 'http' | 'https'
   hostname: string

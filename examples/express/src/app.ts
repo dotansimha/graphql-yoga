@@ -7,8 +7,12 @@ export function buildApp() {
   const graphQLServer = createServer({
     schema: {
       typeDefs: /* GraphQL */ `
+        scalar File
         type Query {
           hello: String
+        }
+        type Mutation {
+          getFileName(file: File!): String
         }
         type Subscription {
           countdown(from: Int!): Int!
@@ -17,6 +21,9 @@ export function buildApp() {
       resolvers: {
         Query: {
           hello: () => 'world',
+        },
+        Mutation: {
+          getFileName: (root, { file }: { file: File }) => file.name,
         },
         Subscription: {
           countdown: {

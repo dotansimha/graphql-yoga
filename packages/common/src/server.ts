@@ -1,4 +1,4 @@
-import { GraphQLSchema, isSchema } from 'graphql'
+import { GraphQLSchema, isSchema, print } from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
@@ -13,14 +13,19 @@ import {
 import { useValidationCache } from '@envelop/validation-cache'
 import { useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { IResolvers, TypeSource } from '@graphql-tools/utils'
-import { CORSOptions, YogaInitialContext, YogaLogger } from './types'
+import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
+import {
+  CORSOptions,
+  GraphQLServerInject,
+  YogaInitialContext,
+  YogaLogger,
+} from './types'
 import {
   GraphiQLOptions,
   renderGraphiQL,
   shouldRenderGraphiQL,
 } from './graphiql'
-import { fetch, Response } from 'cross-undici-fetch'
+import { fetch, Request, Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 
@@ -366,6 +371,50 @@ export class YogaServer<
         statusText: 'Internal Server Error',
       })
       return response
+    }
+  }
+
+  /**
+   * Testing utility to mock http request for GraphQL endpoint
+   *
+   *
+   * Example - Test a simple query
+   * ```ts
+   * const response = await yoga.inject({
+   *  document: "query { ping }",
+   * })
+   * expect(response.statusCode).toBe(200)
+   * expect(response.data.ping).toBe('pong')
+   * ```
+   **/
+  async inject<TData = any, TVariables = any>({
+    document,
+    variables,
+    operationName,
+    headers,
+  }: GraphQLServerInject<TData, TVariables>): Promise<{
+    response: Response
+    executionResult: ExecutionResult<TData> | null
+  }> {
+    const request = new Request('http://localhost/graphql', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        query:
+          document &&
+          (typeof document === 'string' ? document : print(document)),
+        variables,
+        operationName,
+      }),
+    })
+    const response = await this.handleRequest(request)
+    let executionResult: ExecutionResult<TData> | null = null
+    if (response.headers.get('content-type') === 'application/json') {
+      executionResult = await response.json()
+    }
+    return {
+      response,
+      executionResult,
     }
   }
 }

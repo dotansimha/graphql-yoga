@@ -22,4 +22,27 @@ describe('express', () => {
       },
     })
   })
+  it('should handle file uploads', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .field(
+        'operations',
+        JSON.stringify({
+          query: 'mutation ($file: File!) { getFileName(file: $file) }',
+          variables: { file: null },
+        }),
+      )
+      .field('map', JSON.stringify({ 0: ['variables.file'] }))
+      .attach('0', Buffer.from('TESTCONTENT'), {
+        filename: 'file.txt',
+        contentType: 'plain/text',
+      })
+    expect(response.statusCode).toBe(200)
+    expect(response.headers['content-type']).toContain('application/json')
+    expect(response.body).toStrictEqual({
+      data: {
+        getFileName: 'file.txt',
+      },
+    })
+  })
 })
