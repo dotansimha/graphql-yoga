@@ -36,9 +36,52 @@ export function getRoutes(): IRoutes {
   return {
     ...Routes,
     _: Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      Object.entries(Routes._).map(([key, value]) => [`docs/${key}`, value]),
+      Object.entries(Routes._!).map(([key, value]) => [`docs/${key}`, value]),
+    ),
+  }
+}
+
+export function getTutorialRoutes(): IRoutes {
+  const Routes: IRoutes = {
+    _: {
+      basic: {
+        $name: 'Basic',
+        $routes: [
+          ['00-introduction', 'Introduction'],
+          ['01-project-setup', 'Project Setup'],
+          ['02-getting-started', 'Getting Started'],
+          ['03-graphql-server', 'GraphQL Server'],
+          ['04-a-simple-query', 'A simple Query'],
+          ['05-a-simple-mutation', 'A simple Mutation'],
+          ['06-adding-a-database', 'Adding a Database'],
+          [
+            '07-connecting-server-and-database',
+            'Connection Server and Database',
+          ],
+          ['08-graph-relations', 'Graph Relations'],
+          ['09-error-handling', 'Error Handling'],
+          ['10-filtering-and-pagination', 'Filtering and Pagination'],
+          ['11-summary', 'Summary'],
+        ],
+      },
+      // advanced: {
+      //   $name: 'Advanced',
+      //   $routes: [
+      //     ['00-introduction', 'Introduction'],
+      //     ['01-authentication', 'Authentication'],
+      //     ['02-subscriptions', 'Subscriptions'],
+      //   ],
+      // },
+    },
+  }
+
+  return {
+    ...Routes,
+    _: Object.fromEntries(
+      Object.entries(Routes._!).map(([key, value]) => [
+        `tutorial/${key}`,
+        value,
+      ]),
     ),
   }
 }

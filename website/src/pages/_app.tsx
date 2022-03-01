@@ -3,7 +3,7 @@ import '../../public/style.css'
 
 import { appWithTranslation } from 'next-i18next'
 
-import { extendTheme, theme as chakraTheme } from '@chakra-ui/react'
+import { Box, extendTheme, theme as chakraTheme } from '@chakra-ui/react'
 import { mode } from '@chakra-ui/theme-tools'
 import {
   ExtendComponents,
@@ -12,14 +12,17 @@ import {
   DocsPage,
   AppSeoProps,
 } from '@guild-docs/client'
-import { Header, Subheader, Footer } from '@theguild/components'
+import { Header, Subheader, Footer, Instruction } from '@theguild/components'
 
 import type { AppProps } from 'next/app'
+import React from 'react'
 
 ExtendComponents({
-  HelloWorld() {
-    return <p>Hello World!</p>
-  },
+  Instruction: (props: React.ComponentProps<typeof Instruction>) => (
+    <Box mt={4}>
+      <Instruction>{props.children}</Instruction>
+    </Box>
+  ),
 })
 
 const styles: typeof chakraTheme['styles'] = {
@@ -63,9 +66,16 @@ const accentColor =
 const serializedMdx = process.env.SERIALIZED_MDX_ROUTES
 const mdxRoutes = { data: serializedMdx && JSON.parse(serializedMdx) }
 
+const serializedTutorialMdx = process.env.SERIALIZED_TUTORIAL_MDX_ROUTES
+const tutorialMdxRoutes = {
+  data: serializedTutorialMdx && JSON.parse(serializedTutorialMdx),
+}
+
 function AppContent(appProps: AppProps) {
   const { Component, pageProps, router } = appProps
+
   const isDocs = router.asPath.startsWith('/docs')
+  const isTutorial = router.asPath.startsWith('/tutorial')
 
   return (
     <>
@@ -90,6 +100,18 @@ function AppContent(appProps: AppProps) {
             onClick: (e) => handlePushRoute('/', e),
           },
           {
+            children: 'Documentation',
+            title: 'Documentation',
+            href: '/docs',
+            onClick: (e) => handlePushRoute('/docs', e),
+          },
+          {
+            children: 'Tutorial',
+            title: 'Tutorial',
+            href: '/tutorial',
+            onClick: (e) => handlePushRoute('/tutorial', e),
+          },
+          {
             children: 'GitHub',
             title: "Head to project's GitHub",
             href: 'https://github.com/dotansimha/graphql-yoga',
@@ -109,6 +131,15 @@ function AppContent(appProps: AppProps) {
           appProps={appProps}
           accentColor={accentColor}
           mdxRoutes={mdxRoutes}
+        />
+      ) : isTutorial ? (
+        <DocsPage
+          appProps={appProps}
+          accentColor={accentColor}
+          mdxRoutes={tutorialMdxRoutes}
+          docsTitleProps={{
+            children: 'Tutorial',
+          }}
         />
       ) : (
         <Component {...pageProps} />

@@ -7,12 +7,20 @@ export default function Index() {
       <HeroGradient
         title="GraphQL Yoga"
         description="Fully-featured GraphQL Server with focus on easy setup, performance and great developer experience"
-        link={{
-          href: '/docs/quick-start',
-          children: 'Get Started',
-          title: 'Get started with The Guild Docs',
-          onClick: (e) => handlePushRoute('/docs/quick-start', e),
-        }}
+        link={[
+          {
+            href: '/docs/quick-start',
+            children: 'Read the Docs',
+            title: 'Read the Yoga Docs',
+            onClick: (e) => handlePushRoute('/docs/quick-start', e),
+          },
+          {
+            href: '/docs/tutorial',
+            children: 'Start the Tutorial',
+            title: 'Start the Tutorial',
+            onClick: (e) => handlePushRoute('/tutorial', e),
+          },
+        ]}
         // TODO: add it back in when v2 is stable
         // version={<NPMBadge name="graphql-yoga" />}
         colors={['#59BDEF', '#ED2E7E']}
