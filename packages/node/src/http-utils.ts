@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 import { Request } from 'cross-undici-fetch'
-import { Duplex, PassThrough, Readable, Writable } from 'stream'
+import { Readable } from 'stream'
 import type { AddressInfo } from './types'
-import { inspect } from 'util'
+import { Socket } from 'net'
 
 export interface NodeRequest {
   protocol?: string
@@ -13,6 +13,7 @@ export interface NodeRequest {
   headers: any
   req?: IncomingMessage
   raw?: IncomingMessage
+  socket?: Socket
 }
 
 function getRequestAddressInfo(
@@ -21,10 +22,13 @@ function getRequestAddressInfo(
 ): AddressInfo {
   const hostnameWithPort =
     nodeRequest.hostname ??
+    nodeRequest.socket?.localAddress ??
     nodeRequest.headers.host ??
     defaultAddressInfo.hostname
-  const [hostname = nodeRequest.hostname, port = defaultAddressInfo.port] =
-    hostnameWithPort.split(':')
+  const [
+    hostname = nodeRequest.hostname,
+    port = nodeRequest.socket?.localPort || defaultAddressInfo.port,
+  ] = hostnameWithPort?.replace('::ffff:', '').split(':')
   return {
     protocol: nodeRequest.protocol ?? defaultAddressInfo.protocol,
     hostname,
@@ -41,7 +45,8 @@ export async function getNodeRequest(
   nodeRequest: NodeRequest,
   defaultAddressInfo: AddressInfo,
 ): Promise<Request> {
-  const addressInfo = getRequestAddressInfo(nodeRequest, defaultAddressInfo)
+  const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
+  const addressInfo = getRequestAddressInfo(rawRequest, defaultAddressInfo)
   const fullUrl = buildFullUrl(addressInfo)
   const baseRequestInit: RequestInit = {
     method: nodeRequest.method,
@@ -65,7 +70,6 @@ export async function getNodeRequest(
     }
   }
 
-  const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   return new Request(fullUrl, {
     headers: nodeRequest.headers,
     method: nodeRequest.method,
@@ -96,9 +100,7 @@ export function sendNodeResponse(
   if (body == null) {
     serverResponse.end()
   } else {
-    const nodeStream = (
-      isReadable(body) ? body : Readable.from(body)
-    ) as Readable
+    const nodeStream = isReadable(body) ? body : Readable.from(body)
     nodeStream.pipe(serverResponse)
   }
 }
