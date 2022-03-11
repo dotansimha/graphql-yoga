@@ -100,7 +100,7 @@ type Query {
 
 type Mutation {
   postLink(url: String!, description: String!): Link!
-  postCommentOnLink(linkId: ID!): Comment!
+  postCommentOnLink(linkId: ID!, body: String!): Comment!
 }
 ```
 
