@@ -140,7 +140,7 @@ const resolvers = {
     // ... other Query object type resolver functions ...
     feed: async (
       parent: unknown,
-      args: { filter?: string; skip?: number; take?: number },
+      args: { filterNeedle?: string; skip?: number; take?: number },
       context: GraphQLContext,
     ) => {
       const where = args.filterNeedle
@@ -218,7 +218,7 @@ const resolvers = {
     // ... other Query object type resolver functions ...
     feed: async (
       parent: unknown,
-      args: { filter?: string; skip?: number; take?: number },
+      args: { filterNeedle?: string; skip?: number; take?: number },
       context: GraphQLContext,
     ) => {
       const where = args.filterNeedle
