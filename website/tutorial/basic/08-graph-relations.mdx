@@ -164,7 +164,7 @@ const resolvers = {
 You pass two arguments for creating the new comment to the `comment.create` call.
 
 1. **`linkId`**. This is the id of the link the comment belongs to. GraphQL has a special scalar for describing ids that you used before, called `ID`. In general it is a best practise to use it. The downside is that a GraphQL `ID` is always a string. Thus, within the resolver function you must parse the actual integer value of the `ID`, as the SQLite database uses integer values for IDs.
-2. **body``**. This is the comment body, there is nothing special about it.
+2. **`body`**. This is the comment body, there is nothing special about it.
 
 You probably can't wait to actually try sending a mutation for creating your first comment.
 
