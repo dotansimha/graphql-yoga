@@ -120,7 +120,7 @@ export const schema = makeExecutableSchema({
 
 In the code-snippet above, you've created or used the following variables:
 
-- `typeDefinitions` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `info`, of type `String`.
+- `typeDefinitions` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `hello`, of type `String`.
 - `resolvers` - the resolver functions are part of the GraphQL schema, and they are the actual implementation (code / logic) of the GraphQL schema.
 - `schema` - a combination of the GraphQL SDL and the resolvers. `makeExecutableSchema` function is in charge of gluing them together into an executable schema we can later use.
 
@@ -136,7 +136,7 @@ Based on the schema you created before, you can use the following query:
 
 ```graphql
 query {
-  info
+  hello
 }
 ```
 
@@ -251,7 +251,7 @@ type Query {
 }
 ```
 
-This schema only has a single root field, called `info`. When sending queries, mutations or subscriptions to a GraphQL
+This schema only has a single root field, called `hello`. When sending queries, mutations or subscriptions to a GraphQL
 API, these always need to start with a root field! In this case, we only have one root field, so there's really only one
 possible query that's accepted by the API.
 
@@ -279,7 +279,7 @@ additional definition of the `User` type is required because otherwise the schem
 What are the API operations that can be derived from this schema definition? Well, we know that each API operation
 always needs to start with a root field. However, we haven't learned yet what it looks like when the _type_ of a root
 field is itself another [object type](http://graphql.org/learn/schema/#object-types-and-fields). This is the case here,
-where the types of the root fields are `[User!]!`, `User` and `User!`. In the `info` example from before, the type of
+where the types of the root fields are `[User!]!`, `User` and `User!`. In the `hello` example from before, the type of
 the root field was a `String`, which is a [scalar type](http://graphql.org/learn/schema/#scalar-types).
 
 When the type of a root field is an object type, you can further expand the query (or mutation/subscription) with fields

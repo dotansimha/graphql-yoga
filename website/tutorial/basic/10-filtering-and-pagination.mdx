@@ -140,7 +140,7 @@ const resolvers = {
     // ... other Query object type resolver functions ...
     feed: async (
       parent: unknown,
-      args: { filter?: string; skip?: number; take?: number },
+      args: { filterNeedle?: string; skip?: number; take?: number },
       context: GraphQLContext,
     ) => {
       const where = args.filterNeedle
@@ -218,7 +218,7 @@ const resolvers = {
     // ... other Query object type resolver functions ...
     feed: async (
       parent: unknown,
-      args: { filter?: string; skip?: number; take?: number },
+      args: { filterNeedle?: string; skip?: number; take?: number },
       context: GraphQLContext,
     ) => {
       const where = args.filterNeedle
@@ -233,7 +233,7 @@ const resolvers = {
       const take = applyTakeConstraints({
         min: 1,
         max: 50,
-        value: args.skip ?? 30,
+        value: args.take ?? 30,
       })
 
       return context.prisma.link.findMany({
