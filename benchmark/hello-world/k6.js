@@ -7,8 +7,8 @@ export const options = {
   vus: 1,
   duration: '30s',
   thresholds: {
-    no_errors: ['rate=1.0'],
-    expected_result: ['rate=1.0'],
+    no_errors: ['rate>0.98'],
+    expected_result: ['rate>0.98'],
     http_req_duration: ['avg<=1'],
   },
 }
