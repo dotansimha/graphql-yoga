@@ -26,15 +26,17 @@ function getRequestAddressInfo(
     nodeRequest.headers.host ??
     defaultAddressInfo.hostname
   const [
-    hostname = nodeRequest.hostname,
-    port = nodeRequest.socket?.localPort || defaultAddressInfo.port,
-  ] = hostnameWithPort?.replace('::ffff:', '').split(':')
+    hostname = 'localhost',
+    port = nodeRequest.socket?.localPort || defaultAddressInfo.port || 80,
+  ] = hostnameWithPort?.replace('::ffff:', '')
   return {
-    protocol: nodeRequest.protocol ?? defaultAddressInfo.protocol,
+    protocol: (nodeRequest.protocol ||
+      defaultAddressInfo.protocol ||
+      'http') as 'http',
     hostname,
-    endpoint: nodeRequest.url ?? defaultAddressInfo.endpoint,
+    endpoint: nodeRequest.url || defaultAddressInfo.endpoint,
     port,
-  } as AddressInfo
+  }
 }
 
 function buildFullUrl(addressInfo: AddressInfo) {
