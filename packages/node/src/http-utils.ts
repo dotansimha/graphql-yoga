@@ -22,13 +22,18 @@ function getRequestAddressInfo(
 ): AddressInfo {
   const hostnameWithPort =
     nodeRequest.hostname ??
-    nodeRequest.socket?.localAddress ??
+    nodeRequest.socket?.localAddress
+      ?.split('ffff')
+      ?.join('')
+      ?.split('::')
+      ?.join('') ??
     nodeRequest.headers.host ??
     defaultAddressInfo.hostname
   const [
     hostname = 'localhost',
     port = nodeRequest.socket?.localPort || defaultAddressInfo.port || 80,
-  ] = hostnameWithPort?.replace('::ffff:', '')
+  ] = hostnameWithPort
+
   return {
     protocol: (nodeRequest.protocol ||
       defaultAddressInfo.protocol ||
