@@ -111,7 +111,7 @@ class YogaNodeServer<
     additionalContext?: TAdditionalContext,
   ): Promise<Response> {
     this.logger.debug(`Node Request received`)
-    const request = await getNodeRequest(nodeRequest, this.addressInfo)
+    const request = getNodeRequest(nodeRequest, this.addressInfo)
     this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request, additionalContext)
     this.logger.debug('Response returned')

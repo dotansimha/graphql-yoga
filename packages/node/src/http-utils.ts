@@ -41,10 +41,10 @@ function buildFullUrl(addressInfo: AddressInfo) {
   return `${addressInfo.protocol}://${addressInfo.hostname}:${addressInfo.port}${addressInfo.endpoint}`
 }
 
-export async function getNodeRequest(
+export function getNodeRequest(
   nodeRequest: NodeRequest,
   defaultAddressInfo: AddressInfo,
-): Promise<Request> {
+): Request {
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   const addressInfo = getRequestAddressInfo(rawRequest, defaultAddressInfo)
   const fullUrl = buildFullUrl(addressInfo)
