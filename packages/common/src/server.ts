@@ -10,8 +10,12 @@ import {
   useLogger,
   useSchema,
 } from '@envelop/core'
-import { useValidationCache } from '@envelop/validation-cache'
-import { useParserCache } from '@envelop/parser-cache'
+import {
+  useValidationCache,
+  ValidationCache,
+  ValidationCacheOptions,
+} from '@envelop/validation-cache'
+import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
@@ -83,6 +87,9 @@ export type YogaServerOptions<TAdditionalContext, TRootValue> = {
               IResolvers<TRootValue, TAdditionalContext & YogaInitialContext>
             >
       }
+
+  parserCache?: boolean | ParserCacheOptions
+  validationCache?: boolean | ValidationCache
 } & Partial<OptionsWithPlugins<TAdditionalContext>>
 
 export function getDefaultSchema() {
@@ -169,13 +176,21 @@ export class YogaServer<
         // Use the schema provided by the user
         enableIf(schema != null, useSchema(schema!)),
         // Performance things
-        useParserCache({
-          errorCache: new Map(),
-          documentCache: new Map(),
-        }),
-        useValidationCache({
-          cache: new Map(),
-        }),
+        enableIf(options?.parserCache !== false, () =>
+          useParserCache(
+            typeof options?.parserCache === 'object'
+              ? options?.parserCache
+              : undefined,
+          ),
+        ),
+        enableIf(options?.validationCache !== false, () =>
+          useValidationCache({
+            cache:
+              typeof options?.validationCache === 'object'
+                ? options?.validationCache
+                : undefined,
+          }),
+        ),
         // Log events - useful for debugging purposes
         enableIf(
           !!logger,

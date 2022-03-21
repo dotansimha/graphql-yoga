@@ -20,21 +20,27 @@ function getRequestAddressInfo(
   nodeRequest: NodeRequest,
   defaultAddressInfo: AddressInfo,
 ): AddressInfo {
-  const hostnameWithPort =
-    nodeRequest.hostname ??
-    nodeRequest.socket?.localAddress ??
-    nodeRequest.headers.host ??
-    defaultAddressInfo.hostname
-  const [
-    hostname = nodeRequest.hostname,
-    port = nodeRequest.socket?.localPort || defaultAddressInfo.port,
-  ] = hostnameWithPort?.replace('::ffff:', '').split(':')
+  const hostname =
+    nodeRequest.hostname ||
+    nodeRequest.socket?.localAddress
+      ?.split('ffff')
+      ?.join('')
+      ?.split(':')
+      ?.join('') ||
+    nodeRequest.headers.host ||
+    defaultAddressInfo.hostname ||
+    'localhost'
+
+  const port = nodeRequest.socket?.localPort || defaultAddressInfo.port || 80
+
   return {
-    protocol: nodeRequest.protocol ?? defaultAddressInfo.protocol,
+    protocol: (nodeRequest.protocol ||
+      defaultAddressInfo.protocol ||
+      'http') as 'http',
     hostname,
-    endpoint: nodeRequest.url ?? defaultAddressInfo.endpoint,
+    endpoint: nodeRequest.url || defaultAddressInfo.endpoint,
     port,
-  } as AddressInfo
+  }
 }
 
 function buildFullUrl(addressInfo: AddressInfo) {
