@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1-beta.4",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node --transpile-only src/index.ts",
     "check": "tsc --pretty --noEmit"
   },
   "dependencies": {

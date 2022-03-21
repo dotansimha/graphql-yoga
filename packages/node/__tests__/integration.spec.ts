@@ -397,7 +397,9 @@ describe('Incremental Delivery', () => {
 })
 
 describe('health checks', () => {
-  const yogaApp = createServer({})
+  const yogaApp = createServer({
+    logging: false,
+  })
   beforeEach(() => {
     return yogaApp.start()
   })
@@ -447,9 +449,7 @@ it('should expose Node req and res objects in the context', async () => {
 describe('GraphiQL', () => {
   const yogaApp = createServer({
     schema: createTestSchema(),
-    graphiql: {
-      defaultQuery: '',
-    },
+    logging: false,
   })
 
   let browser: puppeteer.Browser
@@ -592,5 +592,20 @@ describe('GraphiQL', () => {
       },
     })
     expect(isShowingPlayButton).toEqual(true)
+  })
+
+  test('show the query provided in the search param', async () => {
+    const query = '{ alwaysTrue }'
+    await page.goto(
+      `http://localhost:4000/graphql?query=${encodeURIComponent(query)}`,
+    )
+    const queryText = await page.evaluate(() => {
+      return (
+        window.document.querySelector(
+          '.query-editor .CodeMirror textarea',
+        ) as HTMLTextAreaElement
+      )?.value
+    })
+    expect(queryText).toEqual(query)
   })
 })

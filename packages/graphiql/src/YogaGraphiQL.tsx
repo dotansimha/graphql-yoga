@@ -12,6 +12,7 @@ import 'graphiql/graphiql.css'
 import './styles.css'
 import './dark-mode.css'
 import { YogaLogo } from './YogaLogo'
+import { useUrlSearchParams } from 'use-url-search-params'
 
 const getOperationWithFragments = (
   document: DocumentNode,
@@ -38,6 +39,43 @@ export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
   endpoint?: string
   title?: string
 }
+
+const initialQuery = /* GraphQL */ `
+  # Welcome to YogaGraphiQL
+  #
+  # YogaGraphiQL is an in-browser tool for writing, validating, and
+  # testing GraphQL queries.
+  #
+  # Type queries into this side of the screen, and you will see intelligent
+  # typeaheads aware of the current GraphQL type schema and live syntax and
+  # validation errors highlighted within the text.
+  #
+  # GraphQL queries typically start with a "{" character. Lines that start
+  # with a # are ignored.
+  #
+  # An example GraphQL query might look like:
+  #
+  #     {
+  #       field(arg: "value") {
+  #         subField
+  #       }
+  #     }
+  #
+  # Keyboard shortcuts:
+  #
+  #  Prettify Query:  Shift-Ctrl-P (or press the prettify button above)
+  #
+  #     Merge Query:  Shift-Ctrl-M (or press the merge button above)
+  #
+  #       Run Query:  Ctrl-Enter (or press the play button above)
+  #
+  #   Auto Complete:  Ctrl-Space (or just start typing)
+  #
+
+  {
+    __typename
+  }
+`
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const endpoint = props.endpoint ?? '/graphql'
@@ -75,7 +113,15 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const [showExplorer, setShowExplorer] = React.useState(false)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
-  const [query, setQuery] = React.useState<string>('')
+  const types = {
+    query: String,
+  }
+  const [params, setParams] = useUrlSearchParams(
+    {
+      query: props.defaultQuery || initialQuery,
+    },
+    types,
+  )
   const [showDocs, setShowDocs] = React.useState(false)
 
   return (
@@ -83,8 +129,12 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       {schema ? (
         <GraphiQLExplorer
           schema={schema}
-          query={query}
-          onEdit={(query: string) => setQuery(query)}
+          query={params.query?.toString() || ''}
+          onEdit={(query: string) => {
+            setParams({
+              query,
+            })
+          }}
           explorerIsOpen={showExplorer}
           onToggleExplorer={() => setShowExplorer((isOpen) => !isOpen)}
           colors={{
@@ -135,8 +185,12 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         onSchemaChange={(schema) => {
           setSchema(schema)
         }}
-        query={query}
-        onEditQuery={(query) => typeof query === 'string' && setQuery(query)}
+        query={params.query?.toString() || ''}
+        onEditQuery={(query) =>
+          setParams({
+            query,
+          })
+        }
         beforeTopBarContent={
           schema ? (
             showExplorer ? null : (
