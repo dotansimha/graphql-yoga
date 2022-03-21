@@ -6,6 +6,12 @@ import styled from '@emotion/styled'
 import src from '@chakra-ui/icon/dist/declarations/src'
 
 const Wrapper = styled.div`
+  @media only screen and (min-width: 500px) {
+    & img {
+      margin-top: 8%;
+      margin-right: 6%;
+    }
+  }
   @media only screen and (max-width: 500px) {
     & img {
       display: none !important;
