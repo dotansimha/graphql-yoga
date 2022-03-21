@@ -599,13 +599,19 @@ describe('GraphiQL', () => {
     await page.goto(
       `http://localhost:4000/graphql?query=${encodeURIComponent(query)}`,
     )
-    const queryText = await page.evaluate(() => {
-      return (
-        window.document.querySelector(
-          '.query-editor .CodeMirror textarea',
-        ) as HTMLTextAreaElement
-      )?.value
-    })
-    expect(queryText).toEqual(query)
+    await page.click('.execute-button')
+    const resultContents = await waitForResult()
+
+    expect(resultContents).toEqual(
+      JSON.stringify(
+        {
+          data: {
+            alwaysTrue: true,
+          },
+        },
+        null,
+        2,
+      ),
+    )
   })
 })
