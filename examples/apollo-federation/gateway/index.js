@@ -15,7 +15,6 @@ async function main() {
   await gateway.load()
 
   const server = createServer({
-    schema: gateway.schema,
     plugins: [
       useApolloFederation({
         gateway,
