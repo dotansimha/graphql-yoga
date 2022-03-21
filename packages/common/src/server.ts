@@ -90,6 +90,9 @@ export type YogaServerOptions<TAdditionalContext, TRootValue> = {
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
+
+  healthCheckPath?: string
+  readinessCheckPath?: string
 } & Partial<OptionsWithPlugins<TAdditionalContext>>
 
 export function getDefaultSchema() {
@@ -145,6 +148,8 @@ export class YogaServer<
   private readonly corsOptionsFactory: (request: Request) => CORSOptions =
     () => ({})
   protected readonly graphiql: GraphiQLOptions | false
+  private healthCheckPath: string
+  private readinessCheckPath: string
 
   constructor(options?: YogaServerOptions<TAdditionalContext, TRootValue>) {
     const schema = options?.schema
@@ -249,6 +254,9 @@ export class YogaServer<
       options?.graphiql === false || typeof options?.graphiql === 'object'
         ? options.graphiql
         : {}
+
+    this.healthCheckPath = options?.healthCheckPath ?? '/health'
+    this.readinessCheckPath = options?.readinessCheckPath ?? '/readiness'
   }
 
   getCORSResponseHeaders(request: Request): Record<string, string> {
@@ -309,7 +317,7 @@ export class YogaServer<
         return this.handleOptions(request)
       }
       const urlObj = new URL(request.url)
-      if (urlObj.pathname === '/health') {
+      if (urlObj.pathname === this.healthCheckPath) {
         return new Response(`{ "message": "alive" }`, {
           status: 200,
           headers: {
@@ -318,7 +326,7 @@ export class YogaServer<
           },
         })
       }
-      if (urlObj.pathname === '/readiness') {
+      if (urlObj.pathname === this.readinessCheckPath) {
         urlObj.pathname = '/health'
         const readinessResponse = await fetch(urlObj.toString())
         if (
