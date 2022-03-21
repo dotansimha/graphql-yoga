@@ -266,6 +266,17 @@ describe('Requests', () => {
     expect(body.data.ping).toBe('pong')
   })
 
+  it('should send basic query with GET', async () => {
+    const response = await request(yoga.getNodeServer())
+      .get('/graphql?query=' + encodeURIComponent('{ ping }'))
+      .send()
+
+    expect(response.statusCode).toBe(200)
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
+
   it('should send basic mutation', async () => {
     const response = await request(yoga.getNodeServer())
       .post('/graphql')
