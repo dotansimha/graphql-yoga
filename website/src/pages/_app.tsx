@@ -12,7 +12,12 @@ import {
   DocsPage,
   AppSeoProps,
 } from '@guild-docs/client'
-import { Header, Subheader, Footer, Instruction } from '@theguild/components'
+import {
+  Header,
+  Subheader,
+  Instruction,
+  FooterExtended,
+} from '@theguild/components'
 
 import type { AppProps } from 'next/app'
 import React from 'react'
@@ -83,9 +88,9 @@ function AppContent(appProps: AppProps) {
       <Subheader
         activeLink={router.asPath}
         product={{
-          title: 'GraphQL Yoga',
+          title: 'Yoga',
           description:
-            'Fully-featured, simple to set up, performant and extendable server',
+            'Fully-featured, simple to set up, performant and extendable NodeJS server',
           image: {
             src: '/assets/logo.svg',
             alt: 'Docs',
@@ -144,7 +149,7 @@ function AppContent(appProps: AppProps) {
       ) : (
         <Component {...pageProps} />
       )}
-      <Footer />
+      <FooterExtended />
     </>
   )
 }
@@ -155,7 +160,8 @@ const AppContentWrapper = appWithTranslation(function TranslatedApp(appProps) {
 
 const defaultSeo: AppSeoProps = {
   title: 'GraphQL Yoga',
-  description: 'Guild Docs Example',
+  description:
+    'Fully-featured, simple to set up, performant and extendable GraphQL NodeJS (JavaScript/TypeScript) server',
   logo: {
     url: 'https://graphql-yoga.vercel.app/banner.svg',
     width: 200,
