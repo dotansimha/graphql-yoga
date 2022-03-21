@@ -37,14 +37,14 @@ function getPinoLogger<TServerContext, TUserContext, TRootValue>(
 
   const prettyPrintOptions = prettyLog
     ? {
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          translateTime: true,
-          colorize: true,
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            translateTime: true,
+            colorize: true,
+          },
         },
-      },
-    }
+      }
     : {}
 
   return pino({
@@ -58,7 +58,7 @@ class YogaNodeServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-  > extends YogaServer<TServerContext, TUserContext, TRootValue> {
+> extends YogaServer<TServerContext, TUserContext, TRootValue> {
   /**
    * Address Information for Server
    */
@@ -117,7 +117,7 @@ class YogaNodeServer<
 
   async handleIncomingMessage(
     nodeRequest: NodeRequest,
-    serverContext?: TServerContext,
+    serverContext: TServerContext,
   ): Promise<Response> {
     this.logger.debug(`Node Request received`)
     const request = getNodeRequest(nodeRequest, this.addressInfo)
@@ -198,7 +198,7 @@ export function createServer<
   },
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
-  >(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
+>(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
   return new YogaNodeServer<TServerContext, TUserContext, TRootValue>(options)
 }
 
