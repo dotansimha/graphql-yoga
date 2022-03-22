@@ -266,6 +266,17 @@ describe('Requests', () => {
     expect(body.data.ping).toBe('pong')
   })
 
+  it('should send basic query with GET', async () => {
+    const response = await request(yoga.getNodeServer())
+      .get('/graphql?query=' + encodeURIComponent('{ ping }'))
+      .send()
+
+    expect(response.statusCode).toBe(200)
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
+
   it('should send basic mutation', async () => {
     const response = await request(yoga.getNodeServer())
       .post('/graphql')
@@ -397,20 +408,30 @@ describe('Incremental Delivery', () => {
 })
 
 describe('health checks', () => {
+  const healthCheckPath = '/' + Date.now().toString()
+  const readinessCheckPath = '/' + (Date.now() + 1).toString()
   const yogaApp = createServer({
     logging: false,
+    healthCheckPath,
+    readinessCheckPath,
   })
-  beforeEach(() => {
+  beforeAll(() => {
     return yogaApp.start()
   })
-  afterEach(() => {
+  afterAll(() => {
     return yogaApp.stop()
   })
-  it('should return 200 status code for /health endpoint', () => {
-    return request(yogaApp.getNodeServer()).get('/health').expect(200)
+  it('should return 200 status code for health check endpoint', async () => {
+    const result = await request(yogaApp.getNodeServer()).get(healthCheckPath)
+    expect(result.status).toBe(200)
+    expect(result.body.message).toBe('alive')
   })
-  it('should return 200 status code for /readiness endpoint', () => {
-    return request(yogaApp.getNodeServer()).get('/readiness').expect(200)
+  it('should return 200 status code for readiness check endpoint', async () => {
+    const result = await request(yogaApp.getNodeServer()).get(
+      readinessCheckPath,
+    )
+    expect(result.status).toBe(200)
+    expect(result.body.message).toBe('ready')
   })
 })
 
