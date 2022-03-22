@@ -319,7 +319,12 @@ export class YogaServer<
 
   private id = Date.now().toString()
 
-  handleRequest = async (request: Request, serverContext?: TServerContext) => {
+  handleRequest = async (
+    request: Request,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext]
+      : [serverContext: TServerContext]
+  ) => {
     try {
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
@@ -375,7 +380,7 @@ export class YogaServer<
           query,
           variables,
           operationName,
-          ...serverContext,
+          ...args[0],
         })
 
       this.logger.debug(`Processing Request`)
