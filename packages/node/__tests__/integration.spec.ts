@@ -408,12 +408,8 @@ describe('Incremental Delivery', () => {
 })
 
 describe('health checks', () => {
-  const healthCheckPath = '/' + Date.now().toString()
-  const readinessCheckPath = '/' + (Date.now() + 1).toString()
   const yogaApp = createServer({
     logging: false,
-    healthCheckPath,
-    readinessCheckPath,
   })
   beforeAll(() => {
     return yogaApp.start()
@@ -422,14 +418,12 @@ describe('health checks', () => {
     return yogaApp.stop()
   })
   it('should return 200 status code for health check endpoint', async () => {
-    const result = await request(yogaApp.getNodeServer()).get(healthCheckPath)
+    const result = await request(yogaApp.getNodeServer()).get('/health')
     expect(result.status).toBe(200)
     expect(result.body.message).toBe('alive')
   })
   it('should return 200 status code for readiness check endpoint', async () => {
-    const result = await request(yogaApp.getNodeServer()).get(
-      readinessCheckPath,
-    )
+    const result = await request(yogaApp.getNodeServer()).get('/readiness')
     expect(result.status).toBe(200)
     expect(result.body.message).toBe('ready')
   })

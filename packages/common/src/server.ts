@@ -100,9 +100,6 @@ export type YogaServerOptions<
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
-
-  healthCheckPath?: string | boolean
-  readinessCheckPath?: string | boolean
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
@@ -161,8 +158,6 @@ export class YogaServer<
   private readonly corsOptionsFactory: (request: Request) => CORSOptions =
     () => ({})
   protected readonly graphiql: GraphiQLOptions | false
-  private healthCheckPath: string | false
-  private readinessCheckPath: string | false
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
@@ -273,24 +268,6 @@ export class YogaServer<
       options?.graphiql === false || typeof options?.graphiql === 'object'
         ? options.graphiql
         : {}
-
-    this.healthCheckPath =
-      typeof options?.healthCheckPath === 'string'
-        ? options.healthCheckPath
-        : options?.healthCheckPath === false
-        ? false
-        : '/health'
-    if (this.healthCheckPath === false && options?.readinessCheckPath != null) {
-      this.logger.warn(
-        `Readiness check is also disabled because you cannot have readiness check endpoint if health check is disabled.`,
-      )
-    }
-    this.readinessCheckPath =
-      typeof options?.readinessCheckPath === 'string'
-        ? options.readinessCheckPath
-        : options?.readinessCheckPath === false
-        ? false
-        : '/readiness'
   }
 
   getCORSResponseHeaders(request: Request): Record<string, string> {
@@ -352,37 +329,34 @@ export class YogaServer<
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
       }
-      if (this.healthCheckPath !== false) {
-        const urlObj = new URL(request.url)
-        if (urlObj.pathname === this.healthCheckPath) {
-          return new Response(`{ "message": "alive" }`, {
+      const requestUrl = new URL(request.url)
+      if (requestUrl.pathname.endsWith('/health')) {
+        return new Response(`{ "message": "alive" }`, {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'x-yoga-id': this.id,
+          },
+        })
+      }
+      if (requestUrl.pathname.endsWith('/readiness')) {
+        const readinessResponse = await fetch(
+          request.url.replace('/readiness', '/health'),
+        )
+        if (
+          readinessResponse.status === 200 &&
+          readinessResponse.headers.get('x-yoga-id') === this.id
+        ) {
+          return new Response(`{ "message": "ready" }`, {
             status: 200,
             headers: {
               'Content-Type': 'application/json',
-              'x-yoga-id': this.id,
             },
           })
         }
-        if (this.readinessCheckPath !== false) {
-          if (urlObj.pathname === this.readinessCheckPath) {
-            urlObj.pathname = this.healthCheckPath
-            const readinessResponse = await fetch(urlObj.toString())
-            if (
-              readinessResponse.status === 200 &&
-              readinessResponse.headers.get('x-yoga-id') === this.id
-            ) {
-              return new Response(`{ "message": "ready" }`, {
-                status: 200,
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              })
-            }
-            throw new Error(
-              `Readiness check failed with status ${readinessResponse.status}`,
-            )
-          }
-        }
+        throw new Error(
+          `Readiness check failed with status ${readinessResponse.status}`,
+        )
       }
 
       this.logger.debug(`Checking if GraphiQL Request`)
