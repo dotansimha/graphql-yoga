@@ -96,6 +96,7 @@ export interface CORSOptions {
 export type GraphQLServerInject<
   TData = any,
   TVariables = Record<string, any>,
+  TServerContext extends Record<string, any> = Record<string, any>,
 > = {
   /** GraphQL Operation to execute */
   document: string | TypedDocumentNode<TData, TVariables>
@@ -105,7 +106,15 @@ export type GraphQLServerInject<
   operationName?: string
   /** Set any headers for the GraphQL request */
   headers?: HeadersInit
-}
+} & ({} extends TServerContext
+  ? { serverContext?: TServerContext }
+  : { serverContext: TServerContext })
 
 export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
 export { EnvelopError as GraphQLYogaError } from '@envelop/core'
+
+declare global {
+  interface ReadableStream<R = any> {
+    [Symbol.asyncIterator]: () => AsyncIterator<R>
+  }
+}

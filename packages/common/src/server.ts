@@ -44,7 +44,11 @@ interface OptionsWithPlugins<TContext> {
 /**
  * Configuration options for the server
  */
-export type YogaServerOptions<TAdditionalContext, TRootValue> = {
+export type YogaServerOptions<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+  TRootValue,
+> = {
   /**
    * Enable/disable logging or provide a custom logger.
    * @default true
@@ -65,10 +69,10 @@ export type YogaServerOptions<TAdditionalContext, TRootValue> = {
    */
   context?:
     | ((
-        initialContext: YogaInitialContext,
-      ) => Promise<TAdditionalContext> | TAdditionalContext)
-    | Promise<TAdditionalContext>
-    | TAdditionalContext
+        initialContext: YogaInitialContext & TServerContext,
+      ) => Promise<TUserContext> | TUserContext)
+    | Promise<TUserContext>
+    | TUserContext
   cors?: ((request: Request) => CORSOptions) | CORSOptions | boolean
   /**
    * GraphiQL options
@@ -82,9 +86,15 @@ export type YogaServerOptions<TAdditionalContext, TRootValue> = {
     | {
         typeDefs: TypeSource
         resolvers?:
-          | IResolvers<TRootValue, TAdditionalContext & YogaInitialContext>
+          | IResolvers<
+              TRootValue,
+              TUserContext & TServerContext & YogaInitialContext
+            >
           | Array<
-              IResolvers<TRootValue, TAdditionalContext & YogaInitialContext>
+              IResolvers<
+                TRootValue,
+                TUserContext & TServerContext & YogaInitialContext
+              >
             >
       }
 
@@ -93,7 +103,9 @@ export type YogaServerOptions<TAdditionalContext, TRootValue> = {
 
   healthCheckPath?: string | boolean
   readinessCheckPath?: string | boolean
-} & Partial<OptionsWithPlugins<TAdditionalContext>>
+} & Partial<
+  OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
+>
 
 export function getDefaultSchema() {
   return makeExecutableSchema({
@@ -135,14 +147,15 @@ export function getDefaultSchema() {
  * @internal
  */
 export class YogaServer<
-  TAdditionalContext extends Record<string, any>,
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
   TRootValue,
 > {
   /**
    * Instance of envelop
    */
   public readonly getEnveloped: GetEnvelopedFn<
-    TAdditionalContext & YogaInitialContext
+    TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
   private readonly corsOptionsFactory: (request: Request) => CORSOptions =
@@ -151,7 +164,9 @@ export class YogaServer<
   private healthCheckPath: string | false
   private readinessCheckPath: string | false
 
-  constructor(options?: YogaServerOptions<TAdditionalContext, TRootValue>) {
+  constructor(
+    options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+  ) {
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
@@ -229,15 +244,19 @@ export class YogaServer<
         ),
         enableIf(
           options?.context != null,
-          useExtendContext(
-            typeof options?.context === 'function'
-              ? options?.context
-              : () => options?.context,
-          ),
+          useExtendContext(async (initialContext) => {
+            if (options?.context) {
+              if (typeof options.context === 'function') {
+                return (options.context as Function)(initialContext)
+              } else {
+                return options.context
+              }
+            }
+          }),
         ),
         ...(options?.plugins ?? []),
       ],
-    }) as GetEnvelopedFn<TAdditionalContext & YogaInitialContext>
+    }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
     if (options?.cors != null) {
       if (typeof options.cors === 'function') {
@@ -259,8 +278,8 @@ export class YogaServer<
       typeof options?.healthCheckPath === 'string'
         ? options.healthCheckPath
         : options?.healthCheckPath === false
-        ? false
-        : '/health'
+          ? false
+          : '/health'
     if (this.healthCheckPath === false && options?.readinessCheckPath != null) {
       this.logger.warn(
         `Readiness check is also disabled because you cannot have readiness check endpoint if health check is disabled.`,
@@ -270,8 +289,8 @@ export class YogaServer<
       typeof options?.readinessCheckPath === 'string'
         ? options.readinessCheckPath
         : options?.readinessCheckPath === false
-        ? false
-        : '/readiness'
+          ? false
+          : '/readiness'
   }
 
   getCORSResponseHeaders(request: Request): Record<string, string> {
@@ -325,7 +344,9 @@ export class YogaServer<
 
   handleRequest = async (
     request: Request,
-    additionalContext?: TAdditionalContext,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext | undefined]
+      : [serverContext: TServerContext]
   ) => {
     try {
       if (request.method === 'OPTIONS') {
@@ -386,7 +407,7 @@ export class YogaServer<
           query,
           variables,
           operationName,
-          ...additionalContext,
+          ...args[0],
         })
 
       this.logger.debug(`Processing Request`)
@@ -434,7 +455,8 @@ export class YogaServer<
     variables,
     operationName,
     headers,
-  }: GraphQLServerInject<TData, TVariables>): Promise<{
+    serverContext,
+  }: GraphQLServerInject<TData, TVariables, TServerContext>): Promise<{
     response: Response
     executionResult: ExecutionResult<TData> | null
   }> {
@@ -449,7 +471,10 @@ export class YogaServer<
         operationName,
       }),
     })
-    const response = await this.handleRequest(request)
+    const response = await this.handleRequest(
+      request,
+      serverContext as TServerContext,
+    )
     let executionResult: ExecutionResult<TData> | null = null
     if (response.headers.get('content-type') === 'application/json') {
       executionResult = await response.json()
@@ -462,8 +487,9 @@ export class YogaServer<
 }
 
 export function createServer<
-  TAdditionalContext extends Record<string, any> = Record<string, any>,
+  TServerContext extends Record<string, any> = Record<string, any>,
+  TUserContext extends Record<string, any> = {},
   TRootValue = {},
->(options?: YogaServerOptions<TAdditionalContext, TRootValue>) {
-  return new YogaServer<TAdditionalContext, TRootValue>(options)
+>(options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>) {
+  return new YogaServer<TServerContext, TUserContext, TRootValue>(options)
 }
