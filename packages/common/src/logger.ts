@@ -16,7 +16,7 @@ export interface YogaLogger {
   error: (...args: any[]) => void
 }
 
-const isDebug = typeof process === 'object' ? process.env.DEBUG : false
+const isDebug = () => (typeof process === 'object' ? process.env.DEBUG : false)
 
 function getPrefix() {
   return titleBold(`🧘 Yoga -`)
@@ -30,7 +30,7 @@ function getLoggerMessage(...args: any[]) {
 
 export const defaultYogaLogger: YogaLogger = {
   debug(...args: any[]) {
-    if (isDebug) {
+    if (isDebug()) {
       const message = getLoggerMessage(...args)
       console.debug(`${getPrefix()} 🐛 ${debugColor(message)}`)
     }
