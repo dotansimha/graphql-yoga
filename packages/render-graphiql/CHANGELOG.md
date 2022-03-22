@@ -1,5 +1,11 @@
 # @graphql-yoga/render-graphiql
 
+## 0.1.0-beta.2
+
+### Minor Changes
+
+- f88b30b: feat(graphiql): use query search param for default query
+
 ## 0.1.0-beta.1
 
 ### Minor Changes
