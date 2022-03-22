@@ -27,7 +27,7 @@ function getRequestAddressInfo(
       ?.join('')
       ?.split(':')
       ?.join('') ||
-    nodeRequest.headers.host ||
+    nodeRequest.headers?.host?.split(':')[0] ||
     defaultAddressInfo.hostname ||
     'localhost'
 
