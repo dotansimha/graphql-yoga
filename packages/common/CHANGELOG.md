@@ -1,5 +1,18 @@
 # @graphql-yoga/common
 
+## 0.1.0-beta.5
+
+### Minor Changes
+
+- 4e3129d: feat(common): ability to configure health check and readiness check endpoints
+- 2a033fb: feat(common): ability to configure parse and validate caching
+
+### Patch Changes
+
+- 5fba736: fix(common/node): seperate generics for server and user context types
+- Updated dependencies [f88b30b]
+  - @graphql-yoga/render-graphiql@0.1.0-beta.2
+
 ## 0.1.0-beta.4
 
 ### Minor Changes

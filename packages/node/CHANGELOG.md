@@ -1,5 +1,20 @@
 # @graphql-yoga/node
 
+## 0.1.0-beta.5
+
+### Minor Changes
+
+- cfec14b: enhance(node): get address info from the socket connection if possible
+
+### Patch Changes
+
+- 5fba736: fix(common/node): seperate generics for server and user context types
+- 44ad1b3: enhance(node): getNodeRequest doesn't need to be async
+- Updated dependencies [4e3129d]
+- Updated dependencies [5fba736]
+- Updated dependencies [2a033fb]
+  - @graphql-yoga/common@0.1.0-beta.5
+
 ## 0.1.0-beta.4
 
 ### Minor Changes
