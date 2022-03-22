@@ -49,7 +49,11 @@ export interface YogaInitialContext {
   /**
    * Values for any Variables defined by the Operation.
    */
-  variables?: string | { [name: string]: any }
+  variables?: string | Record<string, any>
+  /**
+   * Additional extensions object sent by the client.
+   */
+  extensions?: Record<string, any>
 }
 
 export interface RequestProcessContext<TContext, TRootValue>

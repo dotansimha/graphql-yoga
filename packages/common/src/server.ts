@@ -278,8 +278,8 @@ export class YogaServer<
       typeof options?.healthCheckPath === 'string'
         ? options.healthCheckPath
         : options?.healthCheckPath === false
-          ? false
-          : '/health'
+        ? false
+        : '/health'
     if (this.healthCheckPath === false && options?.readinessCheckPath != null) {
       this.logger.warn(
         `Readiness check is also disabled because you cannot have readiness check endpoint if health check is disabled.`,
@@ -289,8 +289,8 @@ export class YogaServer<
       typeof options?.readinessCheckPath === 'string'
         ? options.readinessCheckPath
         : options?.readinessCheckPath === false
-          ? false
-          : '/readiness'
+        ? false
+        : '/readiness'
   }
 
   getCORSResponseHeaders(request: Request): Record<string, string> {
@@ -397,9 +397,8 @@ export class YogaServer<
       }
 
       this.logger.debug(`Extracting GraphQL Parameters`)
-      const { query, variables, operationName } = await getGraphQLParameters(
-        request,
-      )
+      const { query, variables, operationName, extensions } =
+        await getGraphQLParameters(request)
 
       const { execute, validate, subscribe, parse, contextFactory, schema } =
         this.getEnveloped<YogaInitialContext>({
@@ -407,6 +406,7 @@ export class YogaServer<
           query,
           variables,
           operationName,
+          extensions,
           ...args[0],
         })
 
