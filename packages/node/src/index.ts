@@ -133,7 +133,6 @@ class YogaNodeServer<
  *
  * - Envelop - Plugin system for GraphQL
  * - GraphiQL - GraphQL IDE for your browser
- * - Pino - Super fast, low overhead Node.js logger
  *
  * Example:
  * ```ts
