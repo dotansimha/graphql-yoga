@@ -331,8 +331,8 @@ export class YogaServer<
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
       }
-      const urlObj = new URL(request.url)
       if (this.healthCheckPath !== false) {
+        const urlObj = new URL(request.url)
         if (urlObj.pathname === this.healthCheckPath) {
           return new Response(`{ "message": "alive" }`, {
             status: 200,
