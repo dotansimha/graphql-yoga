@@ -1,5 +1,11 @@
 # koa-example
 
+## 0.0.1-beta.3
+
+### Patch Changes
+
+- @graphql-yoga/node@0.1.0-beta.6
+
 ## 0.0.1-beta.2
 
 ### Patch Changes

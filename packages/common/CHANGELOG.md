@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 0.1.0-beta.6
+
+### Minor Changes
+
+- 9a9ac0a: enhance(common): remove readiness/health configuration but use endsWith instead to check paths
+
 ## 0.1.0-beta.5
 
 ### Minor Changes
