@@ -1,4 +1,4 @@
-import { createServer, GraphQLYogaError } from 'graphql-yoga'
+import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 import { fetch } from 'cross-undici-fetch'
 
 const users = [

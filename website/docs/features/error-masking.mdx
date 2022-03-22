@@ -139,7 +139,7 @@ When developing locally seeing the original error within your Chrome Dev Tools m
 Instead we recommend enabling the Yoga development mode. (Note: if you don't set `maskedErrors`, it's the default behaviour, and it's good!)
 
 ```ts
-import { createServer } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 import { fetch } from 'cross-undici-fetch'
 
 // Provide your schema
@@ -231,7 +231,7 @@ Sometimes it is feasible to throw errors within your GraphQL resolvers whose mes
 E.g. you want to throw an error if a resource cannot be found by an ID.
 
 ```ts
-import { createServer, GraphQLYogaError } from 'graphql-yoga'
+import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 
 const users = [
   {
@@ -318,7 +318,7 @@ Sometimes it is useful to enrich errors with additional information e.g. an erro
 Error extensions can be passed as the second parameter to the `GraphQLYogaError` constructor.
 
 ```ts
-import { createServer, GraphQLYogaError } from 'graphql-yoga'
+import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 
 const users = [
   {
