@@ -92,7 +92,7 @@ GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it
 `server.ts`
 
 ```ts
-import { createServer, createPubSub } from 'graphql-yoga'
+import { createServer, createPubSub } from '@graphql-yoga/node'
 
 const pubSub = createPubSub()
 
@@ -378,7 +378,13 @@ Yoga has a few utility functions that make this as simple as possible.
 **Example PubSub event stream transform**
 
 ```ts
-import { createServer, createPubSub, pipe, map, filter } from 'graphql-yoga'
+import {
+  createServer,
+  createPubSub,
+  pipe,
+  map,
+  filter,
+} from '@graphql-yoga/node'
 
 const pubSub = createPubSub<{
   randomNumber: [randomNumber: number]
@@ -406,7 +412,7 @@ source.return()
 **Example Random number stream transform**
 
 ```ts
-import { createServer, createPubSub } from 'graphql-yoga'
+import { createServer, createPubSub } from '@graphql-yoga/node'
 
 const pubSub = createPubSub()
 
@@ -465,7 +471,13 @@ GraphQL subscriptions are implemented using [Async Iteration](https://developer.
 Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org/) ("The missing constructor for creating safe async iterators") for providing a friendly developer experience.
 
 ```ts
-import { createServer, createPubSub, Repeater, pipe, map } from 'graphql-yoga'
+import {
+  createServer,
+  createPubSub,
+  Repeater,
+  pipe,
+  map,
+} from '@graphql-yoga/node'
 
 let globalCounter = 0
 const pubSub = createPubSub()
@@ -527,7 +539,7 @@ server.start()
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 
 ```ts
-import { createServer, createPubSub, Repeater } from 'graphql-yoga'
+import { createServer, createPubSub, Repeater } from '@graphql-yoga/node'
 
 type User = {
   id: string

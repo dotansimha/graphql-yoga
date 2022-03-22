@@ -14,7 +14,7 @@ class YogaNodeServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-> extends YogaServer<TServerContext, TUserContext, TRootValue> {
+  > extends YogaServer<TServerContext, TUserContext, TRootValue> {
   /**
    * Address Information for Server
    */
@@ -28,7 +28,28 @@ class YogaNodeServer<
       TRootValue
     >,
   ) {
-    super(options)
+    super({
+      ...options,
+      graphiql: function nodeGraphiQLFactory(request, ...args) {
+        if (typeof options?.graphiql === 'function') {
+          const returnedOptions = options.graphiql(request, ...args)
+          return {
+            endpoint: options?.endpoint,
+            ...returnedOptions,
+          }
+        } else if (typeof options?.graphiql === 'object') {
+          return {
+            endpoint: options?.endpoint,
+            ...options.graphiql,
+          }
+        } else if (options?.graphiql === false) {
+          return false
+        }
+        return {
+          endpoint: options?.endpoint,
+        }
+      },
+    })
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
       hostname:
@@ -39,11 +60,6 @@ class YogaNodeServer<
     }
 
     this.logger.debug('Setting up server.')
-
-    if (this.graphiql) {
-      this.graphiql.endpoint =
-        this.graphiql.endpoint || this.addressInfo.endpoint
-    }
   }
 
   getNodeServer(): NodeServer {
@@ -150,7 +166,7 @@ export function createServer<
   },
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
->(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
+  >(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
   return new YogaNodeServer<TServerContext, TUserContext, TRootValue>(options)
 }
 

@@ -69,13 +69,29 @@ export type YogaServerOptions<
       ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
-  cors?: ((request: Request) => CORSOptions) | CORSOptions | boolean
+  cors?:
+    | ((
+        request: Request,
+        ...args: {} extends TServerContext
+          ? [serverContext?: TServerContext | undefined]
+          : [serverContext: TServerContext]
+      ) => CORSOptions)
+    | CORSOptions
+    | boolean
+
   /**
    * GraphiQL options
    *
    * Default: `true`
    */
-  graphiql?: GraphiQLOptions | false
+  graphiql?:
+    | GraphiQLOptions
+    | ((
+        request: Request,
+        ...args: {} extends TServerContext
+          ? [serverContext?: TServerContext | undefined]
+          : [serverContext: TServerContext]
+      ) => GraphiQLOptions | false)
 
   schema?:
     | GraphQLSchema
@@ -151,9 +167,18 @@ export class YogaServer<
     TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
-  private readonly corsOptionsFactory: (request: Request) => CORSOptions =
-    () => ({})
-  protected readonly graphiql: GraphiQLOptions | false
+  private readonly corsOptionsFactory: (
+    request: Request,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext | undefined]
+      : [serverContext: TServerContext]
+  ) => CORSOptions = () => ({})
+  protected readonly graphiqlOptionsFactory: (
+    request: Request,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext | undefined]
+      : [serverContext: TServerContext]
+  ) => GraphiQLOptions | false
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
@@ -259,14 +284,24 @@ export class YogaServer<
       }
     }
 
-    this.graphiql =
-      options?.graphiql === false || typeof options?.graphiql === 'object'
-        ? options.graphiql
-        : {}
+    if (typeof options?.graphiql === 'function') {
+      this.graphiqlOptionsFactory = options.graphiql
+    } else if (typeof options?.graphiql === 'object') {
+      this.graphiqlOptionsFactory = () => options.graphiql as GraphiQLOptions
+    } else if (options?.graphiql === false) {
+      this.graphiqlOptionsFactory = () => false
+    } else {
+      this.graphiqlOptionsFactory = () => ({})
+    }
   }
 
-  getCORSResponseHeaders(request: Request): Record<string, string> {
-    const corsOptions = this.corsOptionsFactory(request)
+  getCORSResponseHeaders(
+    request: Request,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext | undefined]
+      : [serverContext: TServerContext]
+  ): Record<string, string> {
+    const corsOptions = this.corsOptionsFactory(request, ...args)
 
     const headers: Record<string, string> = {}
 
@@ -301,8 +336,13 @@ export class YogaServer<
     return headers
   }
 
-  handleOptions(request: Request) {
-    const headers = this.getCORSResponseHeaders(request)
+  handleOptions(
+    request: Request,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext | undefined]
+      : [serverContext: TServerContext]
+  ) {
+    const headers = this.getCORSResponseHeaders(request, ...args)
 
     const optionsResponse = new Response(null, {
       status: 204,
@@ -320,9 +360,10 @@ export class YogaServer<
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
   ) => {
+    const serverContext = args[0]
     try {
       if (request.method === 'OPTIONS') {
-        return this.handleOptions(request)
+        return this.handleOptions(request, ...args)
       }
       const requestUrl = new URL(request.url)
       if (requestUrl.pathname.endsWith('/health')) {
@@ -355,33 +396,37 @@ export class YogaServer<
       }
 
       this.logger.debug(`Checking if GraphiQL Request`)
-      if (shouldRenderGraphiQL(request) && this.graphiql) {
-        const graphiQLBody = renderGraphiQL(this.graphiql)
-        return new Response(graphiQLBody, {
-          headers: {
-            'Content-Type': 'text/html',
-          },
-          status: 200,
-        })
+      if (shouldRenderGraphiQL(request)) {
+        const graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
+        if (graphiqlOptions) {
+          const graphiQLBody = renderGraphiQL(graphiqlOptions)
+          return new Response(graphiQLBody, {
+            headers: {
+              'Content-Type': 'text/html',
+            },
+            status: 200,
+          })
+        }
       }
 
       this.logger.debug(`Extracting GraphQL Parameters`)
       const { query, variables, operationName, extensions } =
         await getGraphQLParameters(request)
 
+      const initialContext = {
+        request,
+        query,
+        variables,
+        operationName,
+        extensions,
+        ...serverContext,
+      } as YogaInitialContext & TServerContext
       const { execute, validate, subscribe, parse, contextFactory, schema } =
-        this.getEnveloped<YogaInitialContext>({
-          request,
-          query,
-          variables,
-          operationName,
-          extensions,
-          ...args[0],
-        })
+        this.getEnveloped(initialContext)
 
       this.logger.debug(`Processing Request`)
 
-      const corsHeaders = this.getCORSResponseHeaders(request)
+      const corsHeaders = this.getCORSResponseHeaders(request, initialContext)
       const response = await processRequest({
         request,
         query,
