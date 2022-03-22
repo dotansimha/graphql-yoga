@@ -6,7 +6,7 @@ import {
 } from 'http'
 import { createServer as createHttpsServer } from 'https'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
-import { YogaServer, YogaServerOptions } from '@graphql-yoga/common'
+import { YogaServer } from '@graphql-yoga/common'
 import type { YogaNodeServerOptions, AddressInfo } from './types'
 import { platform } from 'os'
 
@@ -76,12 +76,12 @@ class YogaNodeServer<
     const request = getNodeRequest(nodeRequest, this.addressInfo)
     this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request, serverContext)
-    this.logger.debug('Response returned')
     return response
   }
 
   requestListener = async (req: IncomingMessage, res: ServerResponse) => {
     const response = await this.handleIncomingMessage(req, { req, res } as any)
+    this.logger.debug('Sending response to Node Server')
     sendNodeResponse(response, res)
   }
 
