@@ -1,5 +1,12 @@
 # @graphql-yoga/common
 
+## 0.1.0-beta.7
+
+### Minor Changes
+
+- 14c93a7: enhance: remove pino for Node and use a cross-platform simple logger
+- 8ab60cf: feat: dynamic GraphiQL options
+
 ## 0.1.0-beta.6
 
 ### Minor Changes

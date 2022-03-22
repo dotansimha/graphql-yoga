@@ -1,5 +1,19 @@
 # @graphql-yoga/node
 
+## 0.1.0-beta.7
+
+### Minor Changes
+
+- 14c93a7: enhance: remove pino for Node and use a cross-platform simple logger
+- 8ab60cf: feat: dynamic GraphiQL options
+
+### Patch Changes
+
+- ec777b1: fix(node): remove port identifier from host header if used as hostname to build Request
+- Updated dependencies [14c93a7]
+- Updated dependencies [8ab60cf]
+  - @graphql-yoga/common@0.1.0-beta.7
+
 ## 0.1.0-beta.6
 
 ### Patch Changes
