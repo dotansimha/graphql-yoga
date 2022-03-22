@@ -12,6 +12,7 @@ import 'graphiql/graphiql.css'
 import './styles.css'
 import './dark-mode.css'
 import { YogaLogo } from './YogaLogo'
+import { useUrlSearchParams } from 'use-url-search-params'
 
 const getOperationWithFragments = (
   document: DocumentNode,
@@ -40,6 +41,40 @@ export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
 }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
+  const initialQuery = /* GraphQL */ `
+  # Welcome to ${props.title || 'Yoga GraphiQL'}
+  #
+  # ${
+    props.title || 'Yoga GraphiQL'
+  } is an in-browser tool for writing, validating, and
+  # testing GraphQL queries.
+  #
+  # Type queries into this side of the screen, and you will see intelligent
+  # typeaheads aware of the current GraphQL type schema and live syntax and
+  # validation errors highlighted within the text.
+  #
+  # GraphQL queries typically start with a "{" character. Lines that start
+  # with a # are ignored.
+  #
+  # An example GraphQL query might look like:
+  #
+  #     {
+  #       field(arg: "value") {
+  #         subField
+  #       }
+  #     }
+  #
+  # Keyboard shortcuts:
+  #
+  #  Prettify Query:  Shift-Ctrl-P (or press the prettify button above)
+  #
+  #     Merge Query:  Shift-Ctrl-M (or press the merge button above)
+  #
+  #       Run Query:  Ctrl-Enter (or press the play button above)
+  #
+  #   Auto Complete:  Ctrl-Space (or just start typing)
+  #
+`
   const endpoint = props.endpoint ?? '/graphql'
   const graphiqlRef = React.useRef<GraphiQL | null>(null)
 
@@ -75,16 +110,29 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const [showExplorer, setShowExplorer] = React.useState(false)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
-  const [query, setQuery] = React.useState<string>('')
+  const types = {
+    query: String,
+  }
+  const [params, setParams] = useUrlSearchParams(
+    {
+      query: props.defaultQuery || initialQuery,
+    },
+    types,
+    false,
+  )
   const [showDocs, setShowDocs] = React.useState(false)
 
   return (
     <div className="graphiql-container">
-      {schema ? (
+      {schema && params?.query != null ? (
         <GraphiQLExplorer
           schema={schema}
-          query={query}
-          onEdit={(query: string) => setQuery(query)}
+          query={params.query.toString()}
+          onEdit={(query: string) => {
+            setParams({
+              query,
+            })
+          }}
           explorerIsOpen={showExplorer}
           onToggleExplorer={() => setShowExplorer((isOpen) => !isOpen)}
           colors={{
@@ -102,74 +150,80 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           }}
         />
       ) : null}
-      <GraphiQL
-        ref={graphiqlRef}
-        fetcher={fetcher}
-        headerEditorEnabled={true}
-        defaultVariableEditorOpen={true}
-        docExplorerOpen={showDocs}
-        onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
-        toolbar={{
-          additionalContent: (
-            <>
-              <button
-                className="toolbar-button"
-                onClick={() => {
-                  const state = graphiqlRef.current?.state
+      {params?.query != null ? (
+        <GraphiQL
+          ref={graphiqlRef}
+          fetcher={fetcher}
+          headerEditorEnabled={true}
+          defaultVariableEditorOpen={true}
+          docExplorerOpen={showDocs}
+          onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
+          toolbar={{
+            additionalContent: (
+              <>
+                <button
+                  className="toolbar-button"
+                  onClick={() => {
+                    const state = graphiqlRef.current?.state
 
-                  copyToClipboard(
-                    urlLoader.prepareGETUrl({
-                      baseUrl: window.location.href,
-                      query: state?.query || '',
-                      variables: state?.variables,
-                      operationName: state?.operationName,
-                    }),
-                  )
-                }}
-              >
-                Copy Link
-              </button>
-            </>
-          ),
-        }}
-        onSchemaChange={(schema) => {
-          setSchema(schema)
-        }}
-        query={query}
-        onEditQuery={(query) => typeof query === 'string' && setQuery(query)}
-        beforeTopBarContent={
-          schema ? (
-            showExplorer ? null : (
-              <button
-                className="docExplorerShow docExplorerShowReverse"
-                onClick={() => setShowExplorer((isOpen) => !isOpen)}
-              >
-                Explorer
-              </button>
-            )
-          ) : null
-        }
-        {...props}
-      >
-        <GraphiQL.Logo>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: 40, display: 'flex' }}>
-              <YogaLogo />
+                    copyToClipboard(
+                      urlLoader.prepareGETUrl({
+                        baseUrl: window.location.href,
+                        query: state?.query || '',
+                        variables: state?.variables,
+                        operationName: state?.operationName,
+                      }),
+                    )
+                  }}
+                >
+                  Copy Link
+                </button>
+              </>
+            ),
+          }}
+          onSchemaChange={(schema) => {
+            setSchema(schema)
+          }}
+          query={params.query.toString()}
+          onEditQuery={(query) =>
+            setParams({
+              query,
+            })
+          }
+          beforeTopBarContent={
+            schema ? (
+              showExplorer ? null : (
+                <button
+                  className="docExplorerShow docExplorerShowReverse"
+                  onClick={() => setShowExplorer((isOpen) => !isOpen)}
+                >
+                  Explorer
+                </button>
+              )
+            ) : null
+          }
+          {...props}
+        >
+          <GraphiQL.Logo>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ width: 40, display: 'flex' }}>
+                <YogaLogo />
+              </div>
+              <span>
+                {props?.title ? (
+                  props.title
+                ) : (
+                  <>
+                    {'Yoga Graph'}
+                    <em>{'i'}</em>
+                    {'QL'}
+                  </>
+                )}
+              </span>
             </div>
-            <span>
-              {props?.title ? (
-                props.title
-              ) : (
-                <>
-                  {'Yoga Graph'}
-                  <em>{'i'}</em>
-                  {'QL'}
-                </>
-              )}
-            </span>
-          </div>
-        </GraphiQL.Logo>
-      </GraphiQL>
+          </GraphiQL.Logo>
+        </GraphiQL>
+      ) : null}
     </div>
   )
 }

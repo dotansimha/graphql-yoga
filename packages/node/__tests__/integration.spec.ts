@@ -411,6 +411,7 @@ describe('health checks', () => {
   const healthCheckPath = '/' + Date.now().toString()
   const readinessCheckPath = '/' + (Date.now() + 1).toString()
   const yogaApp = createServer({
+    logging: false,
     healthCheckPath,
     readinessCheckPath,
   })
@@ -469,9 +470,7 @@ it('should expose Node req and res objects in the context', async () => {
 describe('GraphiQL', () => {
   const yogaApp = createServer({
     schema: createTestSchema(),
-    graphiql: {
-      defaultQuery: '',
-    },
+    logging: false,
   })
 
   let browser: puppeteer.Browser
@@ -614,5 +613,26 @@ describe('GraphiQL', () => {
       },
     })
     expect(isShowingPlayButton).toEqual(true)
+  })
+
+  test('show the query provided in the search param', async () => {
+    const query = '{ alwaysTrue }'
+    await page.goto(
+      `http://localhost:4000/graphql?query=${encodeURIComponent(query)}`,
+    )
+    await page.click('.execute-button')
+    const resultContents = await waitForResult()
+
+    expect(resultContents).toEqual(
+      JSON.stringify(
+        {
+          data: {
+            alwaysTrue: true,
+          },
+        },
+        null,
+        2,
+      ),
+    )
   })
 })
