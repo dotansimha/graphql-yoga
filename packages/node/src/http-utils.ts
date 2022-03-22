@@ -63,17 +63,30 @@ export function getNodeRequest(
     return new Request(fullUrl, baseRequestInit)
   }
 
-  if (nodeRequest.headers['content-type'].includes('json')) {
-    const maybeParsedBody = nodeRequest.body
-    if (maybeParsedBody) {
+  const maybeParsedBody = nodeRequest.body
+  if (maybeParsedBody != null) {
+    if (typeof maybeParsedBody === 'string') {
       return new Request(fullUrl, {
         ...baseRequestInit,
-        body:
-          typeof maybeParsedBody === 'string'
-            ? maybeParsedBody
-            : JSON.stringify(maybeParsedBody),
+        body: maybeParsedBody,
       })
     }
+    const request = new Request(fullUrl, {
+      ...baseRequestInit,
+    })
+    if (!request.headers.get('content-type')?.includes('json')) {
+      request.headers.set('content-type', 'application/json')
+    }
+    return new Proxy(request, {
+      get: (target, prop: keyof Request, receiver) => {
+        switch (prop) {
+          case 'json':
+            return async () => maybeParsedBody
+          default:
+            return Reflect.get(target, prop, receiver)
+        }
+      },
+    })
   }
 
   return new Request(fullUrl, {
