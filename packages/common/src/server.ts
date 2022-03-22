@@ -18,12 +18,7 @@ import {
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
-import {
-  CORSOptions,
-  GraphQLServerInject,
-  YogaInitialContext,
-  YogaLogger,
-} from './types'
+import { CORSOptions, GraphQLServerInject, YogaInitialContext } from './types'
 import {
   GraphiQLOptions,
   renderGraphiQL,
@@ -32,6 +27,7 @@ import {
 import { fetch, Request, Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
+import { defaultYogaLogger, YogaLogger } from './logger'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -171,11 +167,11 @@ export class YogaServer<
           })
       : getDefaultSchema()
 
-    const logger = options?.logging ?? true
+    const logger = options?.logging != null ? options.logging : true
     this.logger =
       typeof logger === 'boolean'
         ? logger === true
-          ? console
+          ? defaultYogaLogger
           : {
               debug: () => {},
               error: () => {},
@@ -208,9 +204,10 @@ export class YogaServer<
         ),
         // Log events - useful for debugging purposes
         enableIf(
-          !!logger,
+          logger !== false,
           useLogger({
             logFn: (eventName, events) => {
+              this.logger.debug(eventName)
               switch (eventName) {
                 case 'execute-start':
                   const {
@@ -218,13 +215,11 @@ export class YogaServer<
                     variables,
                     operationName,
                   }: YogaInitialContext = events.args.contextValue
-                  this.logger.debug(eventName)
                   this.logger.debug(query, 'query')
                   this.logger.debug(operationName, 'headers')
                   this.logger.debug(variables, 'variables')
                   break
                 case 'execute-end':
-                  this.logger.debug(eventName)
                   this.logger.debug(events.result, 'response')
                   break
               }

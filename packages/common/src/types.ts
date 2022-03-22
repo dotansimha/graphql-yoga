@@ -114,7 +114,6 @@ export type GraphQLServerInject<
   ? { serverContext?: TServerContext }
   : { serverContext: TServerContext })
 
-export type YogaLogger = Pick<Console, 'debug' | 'error' | 'warn' | 'info'>
 export { EnvelopError as GraphQLYogaError } from '@envelop/core'
 
 declare global {

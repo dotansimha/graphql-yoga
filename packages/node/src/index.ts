@@ -5,54 +5,10 @@ import {
   ServerResponse,
 } from 'http'
 import { createServer as createHttpsServer } from 'https'
-import pino from 'pino'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
-import { YogaServer, YogaServerOptions } from '@graphql-yoga/common'
+import { YogaServer } from '@graphql-yoga/common'
 import type { YogaNodeServerOptions, AddressInfo } from './types'
-import 'pino-pretty'
 import { platform } from 'os'
-
-function getPinoLogger<TServerContext, TUserContext, TRootValue>(
-  options: YogaNodeServerOptions<
-    TServerContext,
-    TUserContext,
-    TRootValue
-  >['logging'] = {},
-): YogaServerOptions<TServerContext, TUserContext, TRootValue>['logging'] {
-  if (options === false) {
-    return false
-  }
-  const optionsIsAnObject = typeof options === 'object'
-  if (optionsIsAnObject && 'debug' in options) {
-    return options
-  }
-  const prettyLog =
-    optionsIsAnObject && 'prettyLog' in options
-      ? options?.prettyLog
-      : process.env.NODE_ENV === 'development'
-
-  const logLevel =
-    (optionsIsAnObject && 'logLevel' in options && options.logLevel) ||
-    (process.env.NODE_ENV === 'development' ? 'debug' : 'info')
-
-  const prettyPrintOptions = prettyLog
-    ? {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            translateTime: true,
-            colorize: true,
-          },
-        },
-      }
-    : {}
-
-  return pino({
-    ...prettyPrintOptions,
-    level: logLevel,
-    enabled: true,
-  })
-}
 
 class YogaNodeServer<
   TServerContext extends Record<string, any>,
@@ -72,10 +28,7 @@ class YogaNodeServer<
       TRootValue
     >,
   ) {
-    super({
-      ...options,
-      logging: getPinoLogger(options?.logging),
-    })
+    super(options)
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
       hostname:
@@ -123,12 +76,12 @@ class YogaNodeServer<
     const request = getNodeRequest(nodeRequest, this.addressInfo)
     this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request, serverContext)
-    this.logger.debug('Response returned')
     return response
   }
 
   requestListener = async (req: IncomingMessage, res: ServerResponse) => {
     const response = await this.handleIncomingMessage(req, { req, res } as any)
+    this.logger.debug('Sending response to Node Server')
     sendNodeResponse(response, res)
   }
 
@@ -180,7 +133,6 @@ class YogaNodeServer<
  *
  * - Envelop - Plugin system for GraphQL
  * - GraphiQL - GraphQL IDE for your browser
- * - Pino - Super fast, low overhead Node.js logger
  *
  * Example:
  * ```ts

@@ -1,18 +1,11 @@
 import type { YogaServerOptions } from '@graphql-yoga/common'
-import type { DocumentNode } from 'graphql'
-import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { IncomingHttpHeaders } from 'http'
-import { OutgoingHttpHeaders } from 'http2'
 import { ServerOptions as HttpsServerOptions } from 'https'
 
 /**
  * Configuration options for the server
  */
 export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
-  Omit<
-    YogaServerOptions<TServerContext, TUserContext, TRootValue>,
-    'logging'
-  > & {
+  YogaServerOptions<TServerContext, TUserContext, TRootValue> & {
     /**
      * GraphQL endpoint
      * Default: `/graphql`
@@ -31,15 +24,6 @@ export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
      * Enable HTTPS
      */
     https?: HttpsServerOptions | boolean
-    /**
-     * Pretty logging with Pino
-     */
-    logging?:
-      | YogaServerOptions<TUserContext, TServerContext, TRootValue>['logging']
-      | {
-          prettyLog?: boolean
-          logLevel?: 'debug' | 'info'
-        }
   }
 
 export interface AddressInfo {

@@ -4,9 +4,6 @@ import { createServer } from '@graphql-yoga/node'
 const server = createServer({
   cors: false,
   endpoint: '/api/graphql',
-  logging: {
-    prettyLog: false,
-  },
 })
 
 export const config = {
