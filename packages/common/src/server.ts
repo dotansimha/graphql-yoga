@@ -180,11 +180,6 @@ export class YogaServer<
             }
         : logger
 
-    console.log({
-      logger,
-      a: logger !== false,
-    })
-
     const maskedErrors = options?.maskedErrors ?? true
 
     this.getEnveloped = envelop({
