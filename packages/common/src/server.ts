@@ -342,7 +342,12 @@ export class YogaServer<
 
   private id = Date.now().toString()
 
-  handleRequest = async (request: Request, serverContext?: TServerContext) => {
+  handleRequest = async (
+    request: Request,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext | undefined]
+      : [serverContext: TServerContext]
+  ) => {
     try {
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request)
@@ -402,7 +407,7 @@ export class YogaServer<
           query,
           variables,
           operationName,
-          ...serverContext,
+          ...args[0],
         })
 
       this.logger.debug(`Processing Request`)
@@ -450,7 +455,8 @@ export class YogaServer<
     variables,
     operationName,
     headers,
-  }: GraphQLServerInject<TData, TVariables>): Promise<{
+    serverContext,
+  }: GraphQLServerInject<TData, TVariables, TServerContext>): Promise<{
     response: Response
     executionResult: ExecutionResult<TData> | null
   }> {
@@ -465,7 +471,10 @@ export class YogaServer<
         operationName,
       }),
     })
-    const response = await this.handleRequest(request)
+    const response = await this.handleRequest(
+      request,
+      serverContext as TServerContext,
+    )
     let executionResult: ExecutionResult<TData> | null = null
     if (response.headers.get('content-type') === 'application/json') {
       executionResult = await response.json()
