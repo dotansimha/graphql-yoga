@@ -267,9 +267,9 @@ export class YogaServer<
       )
     }
     this.readinessCheckPath =
-      typeof options?.healthCheckPath === 'string'
-        ? options.healthCheckPath
-        : options?.healthCheckPath === false
+      typeof options?.readinessCheckPath === 'string'
+        ? options.readinessCheckPath
+        : options?.readinessCheckPath === false
         ? false
         : '/readiness'
   }
@@ -344,7 +344,7 @@ export class YogaServer<
         }
         if (this.readinessCheckPath !== false) {
           if (urlObj.pathname === this.readinessCheckPath) {
-            urlObj.pathname = '/health'
+            urlObj.pathname = this.healthCheckPath
             const readinessResponse = await fetch(urlObj.toString())
             if (
               readinessResponse.status === 200 &&
