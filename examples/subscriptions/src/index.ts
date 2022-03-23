@@ -7,6 +7,7 @@ import {
   map,
   YogaInitialContext,
 } from '@graphql-yoga/node'
+import { Resolvers } from './generated/graphql'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))
@@ -40,7 +41,15 @@ const typeDefs = /* GraphQL */ `
 
 let globalCounter = 0
 
-const resolvers = {
+const pubSub = createPubSub<{
+  'globalCounter:changed': []
+}>()
+
+interface Context extends YogaInitialContext {
+  pubSub: typeof pubSub
+}
+
+const resolvers: Resolvers<Context> = {
   Query: {
     hello: () => `Hello world!`,
   },
@@ -55,7 +64,7 @@ const resolvers = {
           await wait(1000)
         }
       },
-      resolve: (payload) => payload,
+      resolve: (payload: any) => payload,
     },
     globalCounter: {
       // Merge initial value with source stream of new values
@@ -71,7 +80,7 @@ const resolvers = {
           // map all events to the latest globalCounter
           map(() => globalCounter),
         ),
-      resolve: (payload) => payload,
+      resolve: (payload: any) => payload,
     },
   },
   Mutation: {
@@ -81,14 +90,6 @@ const resolvers = {
       return globalCounter
     },
   },
-}
-
-const pubSub = createPubSub<{
-  'globalCounter:changed': []
-}>()
-
-interface Context extends YogaInitialContext {
-  pubSub: typeof pubSub
 }
 
 const server = createServer<Context, any>({
