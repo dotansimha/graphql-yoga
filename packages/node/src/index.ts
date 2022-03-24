@@ -14,7 +14,7 @@ class YogaNodeServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-  > extends YogaServer<TServerContext, TUserContext, TRootValue> {
+> extends YogaServer<TServerContext, TUserContext, TRootValue> {
   /**
    * Address Information for Server
    */
@@ -98,7 +98,7 @@ class YogaNodeServer<
   requestListener = async (req: IncomingMessage, res: ServerResponse) => {
     const response = await this.handleIncomingMessage(req, { req, res } as any)
     this.logger.debug('Sending response to Node Server')
-    sendNodeResponse(response, res)
+    return sendNodeResponse(response, res)
   }
 
   start() {
@@ -166,7 +166,7 @@ export function createServer<
   },
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
-  >(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
+>(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
   return new YogaNodeServer<TServerContext, TUserContext, TRootValue>(options)
 }
 

@@ -90,17 +90,21 @@ function isReadable(responseBody: any): responseBody is Readable {
 export function sendNodeResponse(
   { headers, status, statusText, body }: Response,
   serverResponse: ServerResponse,
-): void {
+) {
   headers.forEach((value, name) => {
     serverResponse.setHeader(name, value)
   })
   serverResponse.statusCode = status
   serverResponse.statusMessage = statusText
-  // Some fetch implementations like `node-fetch`, return `Response.body` as Promise
   if (body == null) {
     serverResponse.end()
+    return Promise.resolve()
   } else {
     const nodeStream = isReadable(body) ? body : Readable.from(body)
+    const promise = new Promise<void>((resolve) =>
+      nodeStream.once('end', resolve),
+    )
     nodeStream.pipe(serverResponse)
+    return promise
   }
 }
