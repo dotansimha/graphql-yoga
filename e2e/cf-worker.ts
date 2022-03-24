@@ -10,10 +10,12 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
   workerUrl: string
 }> = {
   prerequisites: async (stack: Stack) => {
+    console.info('\t\tℹ️ Installing Pulumi CF plugin...')
     // Intall Pulumi CF Plugin
     await stack.workspace.installPlugin('cloudflare', '4.3.0', 'resource')
 
     // Build and bundle the worker
+    console.info('\t\tℹ️ Bundling the CF Worker....')
     execSync('yarn build', {
       cwd: '../examples/cloudflare-worker',
       stdio: 'inherit',
@@ -21,6 +23,8 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
   },
   config: async (stack: Stack) => {
     // Configure the Pulumi environment with the CloudFlare credentials
+    // This will allow Pulummi program to just run without caring about secrets/configs.
+    // See: https://www.pulumi.com/registry/packages/cloudflare/installation-configuration/
     await stack.setConfig('cloudflare:apiToken', {
       value: env('CLOUDFLARE_API_TOKEN'),
     })
@@ -48,11 +52,11 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
       name: workerName,
     })
 
-    const workerRoute = new cf.WorkerRoute('worker-route', {
+    // Create a nice route for easy testing
+    new cf.WorkerRoute('worker-route', {
       scriptName: workerScript.name,
       pattern: workerUrl,
-      // This is graphlq-yoga.com in CF
-      zoneId: 'aa8c5edd66b499ee94821c9263a636e6',
+      zoneId: env('CLOUDFLARE_ZONE_ID'),
     })
 
     return {
