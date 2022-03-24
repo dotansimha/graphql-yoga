@@ -41,26 +41,29 @@ export function getMultipartResponse(
   const readableStream = new ReadableStream({
     start(controller) {
       iterator = asyncExecutionResult[Symbol.asyncIterator]()
-      controller.enqueue(`---`)
+      controller.enqueue(encodeString(`---`))
     },
     async pull(controller) {
       const { done, value } = await iterator.next()
       if (value != null) {
+        controller.enqueue(encodeString('\r\n'))
+        controller.enqueue(
+          encodeString('Content-Type: application/json; charset=utf-8\r\n'),
+        )
+
         const chunk = JSON.stringify(value)
         const encodedChunk = encodeString(chunk)
-        controller.enqueue('\r\n')
-        controller.enqueue('Content-Type: application/json; charset=utf-8\r\n')
         controller.enqueue(
-          'Content-Length: ' + encodedChunk.byteLength + '\r\n',
+          encodeString('Content-Length: ' + encodedChunk.byteLength + '\r\n'),
         )
-        controller.enqueue('\r\n')
+        controller.enqueue(encodeString('\r\n'))
         controller.enqueue(encodedChunk)
         if (value.hasNext) {
-          controller.enqueue('\r\n---')
+          controller.enqueue(encodeString('\r\n---'))
         }
       }
       if (done) {
-        controller.enqueue('\r\n-----\r\n')
+        controller.enqueue(encodeString('\r\n-----\r\n'))
         controller.close()
       }
     },
