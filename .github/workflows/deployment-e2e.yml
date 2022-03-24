@@ -1,0 +1,50 @@
+name: Deployment E2E
+on:
+  pull_request:
+
+jobs:
+  test-deploy:
+    strategy:
+      matrix:
+        plan: ['cf-worker']
+    name: ${{ matrix.plan }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Use Node 16
+        uses: actions/setup-node@master
+        with:
+          node-version: 16
+
+      - name: Get yarn cache
+        uses: c-hive/gha-yarn-cache@v2
+
+      - name: Install Dependencies using Yarn
+        run: yarn --ignore-engines
+
+      - name: Build Packages
+        run: yarn build
+
+      - name: Install Pulumi Dependencies
+        run: yarn
+        working-directory: e2e
+
+      - name: Install pulumi
+        uses: pulumi/setup-pulumi@v2
+        with:
+          pulumi-version: 3.26.1
+
+      - name: Set outputs
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Provision & Test
+        run: yarn start
+        working-directory: e2e
+        env:
+          TEST_PLAN_NAME: ${{ matrix.plan }}
+          COMMIT_ID: ${{ steps.vars.outputs.sha_short }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
