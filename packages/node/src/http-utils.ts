@@ -1,8 +1,9 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import { Request } from 'cross-undici-fetch'
+import { Blob, FormData, Request } from 'cross-undici-fetch'
 import { Readable } from 'stream'
 import type { AddressInfo } from './types'
 import { Socket } from 'net'
+import { isAsyncIterable } from '@graphql-tools/utils'
 
 export interface NodeRequest {
   protocol?: string
@@ -14,6 +15,7 @@ export interface NodeRequest {
   req?: IncomingMessage
   raw?: IncomingMessage
   socket?: Socket
+  query?: any
 }
 
 function getRequestAddressInfo(
@@ -53,7 +55,14 @@ export function getNodeRequest(
 ): Request {
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   const addressInfo = getRequestAddressInfo(rawRequest, defaultAddressInfo)
-  const fullUrl = buildFullUrl(addressInfo)
+  let fullUrl = buildFullUrl(addressInfo)
+  if (nodeRequest.query) {
+    const urlObj = new URL(fullUrl)
+    for (const queryName in nodeRequest.query) {
+      const queryValue = nodeRequest.query[queryName]
+      urlObj.searchParams.set(queryName, queryValue)
+    }
+  }
   const baseRequestInit: RequestInit = {
     method: nodeRequest.method,
     headers: nodeRequest.headers,
@@ -67,11 +76,15 @@ export function getNodeRequest(
   if (maybeParsedBody != null) {
     if (
       typeof maybeParsedBody === 'string' ||
-      maybeParsedBody instanceof Uint8Array
+      maybeParsedBody instanceof Uint8Array ||
+      maybeParsedBody instanceof Blob ||
+      maybeParsedBody instanceof FormData ||
+      maybeParsedBody instanceof URLSearchParams ||
+      isAsyncIterable(maybeParsedBody)
     ) {
       return new Request(fullUrl, {
         ...baseRequestInit,
-        body: maybeParsedBody,
+        body: maybeParsedBody as any,
       })
     }
     const request = new Request(fullUrl, {
