@@ -103,7 +103,6 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         variables: graphQLParams.variables,
         extensions: {
           headers: opts?.headers,
-          credentials: props.credentials,
         },
       })
     }
