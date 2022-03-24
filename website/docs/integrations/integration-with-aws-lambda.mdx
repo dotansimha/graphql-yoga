@@ -1,0 +1,39 @@
+---
+id: integration-with-aws-lambda
+title: Integration with AWS Lambda
+sidebar_label: AWS Lambda
+---
+
+AWS Lambda is a serverless computing platform that makes it easy to build applications that run on the AWS cloud. GraphQL Yoga is platform agnostic so they can fit together easily.
+In order to reduce the boilerplate we prefer to use [Serverless Express from Vendia](https://github.com/vendia/serverless-express).
+
+## Installation
+
+<PackageInstall
+  packages={[
+    'graphql',
+    '@vendia/serverless-express',
+    '@graphql-yoga/node@beta',
+  ]}
+/>
+
+## Example
+
+`graphql.ts`
+
+```ts
+import type { Handler } from '@aws-cdk/aws-lambda'
+import { createServer } from '@graphql-yoga/node'
+import { configure } from '@vendia/serverless-express'
+
+const server = createServer()
+
+export const handler: Handler = configure({
+  // Pass Yoga's Request Listener
+  app: server.requestListener,
+  // Pass Yoga's logger to listen to the logs from Serverless Express as well
+  log: server.logger,
+})
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/aws-lambda)
