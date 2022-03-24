@@ -65,7 +65,10 @@ export function getNodeRequest(
 
   const maybeParsedBody = nodeRequest.body
   if (maybeParsedBody != null) {
-    if (typeof maybeParsedBody === 'string') {
+    if (
+      typeof maybeParsedBody === 'string' ||
+      maybeParsedBody instanceof Uint8Array
+    ) {
       return new Request(fullUrl, {
         ...baseRequestInit,
         body: maybeParsedBody,
