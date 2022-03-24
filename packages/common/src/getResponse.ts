@@ -98,7 +98,7 @@ export function getPushResponse(
       const { done, value } = await iterator.next()
       if (value != null) {
         const chunk = JSON.stringify(value)
-        controller.enqueue(`data: ${chunk}\n\n`)
+        controller.enqueue(encodeString(`data: ${chunk}\n\n`))
       }
       if (done) {
         controller.close()
