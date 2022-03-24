@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import copyToClipboard from 'copy-to-clipboard'
-import { GraphiQL, Fetcher, GraphiQLProps } from 'graphiql'
 import {
-  LoadFromUrlOptions,
-  SubscriptionProtocol,
-  UrlLoader,
-} from '@graphql-tools/url-loader'
+  GraphiQL,
+  Fetcher,
+  GraphiQLProps,
+  FetcherParams,
+  FetcherOpts,
+} from 'graphiql'
+import { SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader'
 import { DocumentNode, GraphQLSchema, Kind, parse } from 'graphql'
 import GraphiQLExplorer from 'graphiql-explorer'
 import 'graphiql/graphiql.css'
@@ -38,64 +40,63 @@ const getOperationWithFragments = (
 export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
   endpoint?: string
   title?: string
+  credentials?: RequestCredentials
 }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
-  const initialQuery = /* GraphQL */ `
-  # Welcome to ${props.title || 'Yoga GraphiQL'}
-  #
-  # ${
+  const initialQuery = /* GraphQL */ `#
+# Welcome to ${props.title || 'Yoga GraphiQL'}
+#
+# ${
     props.title || 'Yoga GraphiQL'
   } is an in-browser tool for writing, validating, and
-  # testing GraphQL queries.
-  #
-  # Type queries into this side of the screen, and you will see intelligent
-  # typeaheads aware of the current GraphQL type schema and live syntax and
-  # validation errors highlighted within the text.
-  #
-  # GraphQL queries typically start with a "{" character. Lines that start
-  # with a # are ignored.
-  #
-  # An example GraphQL query might look like:
-  #
-  #     {
-  #       field(arg: "value") {
-  #         subField
-  #       }
-  #     }
-  #
-  # Keyboard shortcuts:
-  #
-  #  Prettify Query:  Shift-Ctrl-P (or press the prettify button above)
-  #
-  #     Merge Query:  Shift-Ctrl-M (or press the merge button above)
-  #
-  #       Run Query:  Ctrl-Enter (or press the play button above)
-  #
-  #   Auto Complete:  Ctrl-Space (or just start typing)
-  #
+# testing GraphQL queries.
+#
+# Type queries into this side of the screen, and you will see intelligent
+# typeaheads aware of the current GraphQL type schema and live syntax and
+# validation errors highlighted within the text.
+#
+# GraphQL queries typically start with a "{" character. Lines that start
+# with a # are ignored.
+#
+# An example GraphQL query might look like:
+#
+#     {
+#       field(arg: "value") {
+#         subField
+#       }
+#     }
+#
+# Keyboard shortcuts:
+#
+#  Prettify Query:  Shift-Ctrl-P (or press the prettify button above)
+#
+#     Merge Query:  Shift-Ctrl-M (or press the merge button above)
+#
+#       Run Query:  Ctrl-Enter (or press the play button above)
+#
+#   Auto Complete:  Ctrl-Space (or just start typing)
+#
 `
   const endpoint = props.endpoint ?? '/graphql'
+  const credentials = props.credentials ?? 'same-origin'
   const graphiqlRef = React.useRef<GraphiQL | null>(null)
 
-  const [urlLoader] = React.useState(() => new UrlLoader())
+  const urlLoader = useMemo(() => new UrlLoader(), [])
 
-  const fetcher: Fetcher = React.useMemo(() => {
-    const options: LoadFromUrlOptions = {
+  const fetcher: Fetcher = useMemo(() => {
+    const executor = urlLoader.getExecutorAsync(endpoint, {
       subscriptionsProtocol: SubscriptionProtocol.SSE,
       specifiedByUrl: true,
       directiveIsRepeatable: true,
       schemaDescription: true,
-    }
-
-    const executor$ = urlLoader.getExecutorAsync(endpoint, options)
-    return async (graphQLParams, opts) => {
+      credentials,
+    })
+    return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
         parse(graphQLParams.query),
         graphQLParams.operationName,
       )
-
-      const executor = await executor$
 
       return executor({
         document,
@@ -104,9 +105,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         extensions: {
           headers: opts?.headers,
         },
-      }) as ReturnType<Fetcher>
+      })
     }
-  }, [])
+  }, [urlLoader, endpoint, credentials])
 
   const [showExplorer, setShowExplorer] = React.useState(false)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
