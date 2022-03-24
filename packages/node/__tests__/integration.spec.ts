@@ -1,9 +1,9 @@
-import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery } from 'graphql'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
 import puppeteer from 'puppeteer'
-import { createServer, GraphQLYogaError } from '../src'
+import { createServer, GraphQLYogaError, getDefaultPlugins } from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
 
@@ -81,8 +81,11 @@ describe('Masked Error Option', () => {
   it('should mask error', async () => {
     const yoga = createServer({
       schema,
-      maskedErrors: true,
       logging: false,
+      plugins: getDefaultPlugins({
+        logging: false,
+        maskedErrors: true,
+      }),
     })
 
     const response = await request(yoga.getNodeServer()).post('/graphql').send({
@@ -99,7 +102,10 @@ describe('Masked Error Option', () => {
   it('should mask error with custom message', async () => {
     const yoga = createServer({
       schema,
-      maskedErrors: { errorMessage: 'Hahahaha' },
+      plugins: getDefaultPlugins({
+        maskedErrors: { errorMessage: 'Hahahaha' },
+        logging: false,
+      }),
       logging: false,
     })
 
@@ -135,9 +141,12 @@ describe('Masked Error Option', () => {
     const yoga = createServer({
       schema,
       logging: false,
-      maskedErrors: {
-        isDev: true,
-      },
+      plugins: getDefaultPlugins({
+        logging: false,
+        maskedErrors: {
+          isDev: true,
+        },
+      }),
     })
 
     const response = await request(yoga.getNodeServer()).post('/graphql').send({
@@ -185,7 +194,9 @@ describe('Context error', () => {
   it('Error thrown within context factory without error masking is not swallowed and does not include stack trace', async () => {
     const yoga = createServer({
       logging: false,
-      maskedErrors: false,
+      plugins: getDefaultPlugins({
+        maskedErrors: false,
+      }),
       context: () => {
         throw new Error('I like turtles')
       },

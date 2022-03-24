@@ -14,7 +14,7 @@ class YogaNodeServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-  > extends YogaServer<TServerContext, TUserContext, TRootValue> {
+> extends YogaServer<TServerContext, TUserContext, TRootValue> {
   /**
    * Address Information for Server
    */
@@ -166,7 +166,7 @@ export function createServer<
   },
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
-  >(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
+>(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
   return new YogaNodeServer<TServerContext, TUserContext, TRootValue>(options)
 }
 
@@ -179,6 +179,7 @@ export {
   shouldRenderGraphiQL,
   renderGraphiQL,
   GraphiQLOptions,
+  getDefaultPlugins,
 } from '@graphql-yoga/common'
 
 export * from '@envelop/core'

@@ -3,19 +3,10 @@ import {
   Plugin,
   GetEnvelopedFn,
   envelop,
-  useMaskedErrors,
-  UseMaskedErrorsOpts,
   useExtendContext,
   enableIf,
-  useLogger,
   useSchema,
 } from '@envelop/core'
-import {
-  useValidationCache,
-  ValidationCache,
-  ValidationCacheOptions,
-} from '@envelop/validation-cache'
-import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import { CORSOptions, GraphQLServerInject, YogaInitialContext } from './types'
@@ -28,6 +19,7 @@ import { fetch, Request, Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, YogaLogger } from './logger'
+import { getDefaultPlugins } from './getDefaultPlugins'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -50,16 +42,6 @@ export type YogaServerOptions<
    * @default true
    */
   logging?: boolean | YogaLogger
-  /**
-   * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
-   * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
-   *
-   * You can lean more about this here:
-   * @see https://graphql-yoga.vercel.app/docs/features/error-masking
-   *
-   * Default: `true`
-   */
-  maskedErrors?: boolean | UseMaskedErrorsOpts
   /**
    * Context
    */
@@ -109,9 +91,6 @@ export type YogaServerOptions<
               >
             >
       }
-
-  parserCache?: boolean | ParserCacheOptions
-  validationCache?: boolean | ValidationCache
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
@@ -205,58 +184,13 @@ export class YogaServer<
             }
         : logger
 
-    const maskedErrors = options?.maskedErrors ?? true
-
     this.getEnveloped = envelop({
       plugins: [
         // Use the schema provided by the user
         enableIf(schema != null, useSchema(schema!)),
-        // Performance things
-        enableIf(options?.parserCache !== false, () =>
-          useParserCache(
-            typeof options?.parserCache === 'object'
-              ? options?.parserCache
-              : undefined,
-          ),
-        ),
-        enableIf(options?.validationCache !== false, () =>
-          useValidationCache({
-            cache:
-              typeof options?.validationCache === 'object'
-                ? options?.validationCache
-                : undefined,
-          }),
-        ),
-        // Log events - useful for debugging purposes
-        enableIf(
-          logger !== false,
-          useLogger({
-            logFn: (eventName, events) => {
-              this.logger.debug(eventName)
-              switch (eventName) {
-                case 'execute-start':
-                  const {
-                    query,
-                    variables,
-                    operationName,
-                  }: YogaInitialContext = events.args.contextValue
-                  this.logger.debug(query, 'query')
-                  this.logger.debug(operationName, 'headers')
-                  this.logger.debug(variables, 'variables')
-                  break
-                case 'execute-end':
-                  this.logger.debug(events.result, 'response')
-                  break
-              }
-            },
-          }),
-        ),
-        enableIf(
-          !!maskedErrors,
-          useMaskedErrors(
-            typeof maskedErrors === 'object' ? maskedErrors : undefined,
-          ),
-        ),
+        ...(options?.plugins?.length === undefined
+          ? getDefaultPlugins({ logging: this.logger })
+          : options.plugins),
         enableIf(
           options?.context != null,
           useExtendContext(async (initialContext) => {
