@@ -6,6 +6,7 @@ import type {
   OperationDefinitionNode,
 } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { PromiseOrValue } from '@envelop/core'
 
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },
@@ -120,4 +121,9 @@ declare global {
   interface ReadableStream<R = any> {
     [Symbol.asyncIterator]: () => AsyncIterator<R>
   }
+}
+
+export type FetchEvent = Event & {
+  respondWith: (response: PromiseOrValue<Response>) => void
+  request: Request
 }

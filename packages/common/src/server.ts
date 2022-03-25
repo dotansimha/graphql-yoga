@@ -1,4 +1,3 @@
-/// <reference lib="webworker" />
 import { GraphQLSchema, isSchema, print } from 'graphql'
 import {
   Plugin,
@@ -496,10 +495,6 @@ export class YogaServer<
     }
   }
 
-  fetchEventListener = ((event: FetchEvent) =>
-    event.respondWith(
-      this.handleRequest(event.request, event as any),
-    )) as EventListener
   fetch: WindowOrWorkerGlobalScope['fetch'] = (
     input: RequestInfo,
     init: RequestInit,
@@ -513,12 +508,16 @@ export class YogaServer<
     return this.handleRequest(request, init as any)
   }
 
+  // FetchEvent is not available in all envs
+  private fetchEventListener = (event: FetchEvent) =>
+    event.respondWith(this.handleRequest(event.request, event as any))
+
   start() {
-    self.addEventListener('fetch', this.fetchEventListener)
+    self.addEventListener('fetch', this.fetchEventListener as EventListener)
   }
 
   stop() {
-    self.removeEventListener('fetch', this.fetchEventListener)
+    self.removeEventListener('fetch', this.fetchEventListener as EventListener)
   }
 }
 
