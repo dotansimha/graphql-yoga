@@ -132,6 +132,7 @@ export function getErrorResponse({
   isEventStream,
 }: ErrorResponseParams): Response {
   const payload: ExecutionResult = {
+    data: null,
     errors,
   }
   if (isEventStream) {
