@@ -32,6 +32,7 @@ describe('Disable Introspection with plugin', () => {
     })
 
     expect(response.statusCode).toBe(400)
+    expect(response.headers['content-type']).toBe('application/json')
     const body = JSON.parse(response.text)
     expect(body.data).toBeUndefined()
     expect(body.errors![0]).toMatchInlineSnapshot(`
