@@ -3,7 +3,6 @@ import { handlePushRoute } from '@guild-docs/client'
 import { useMemo } from 'react'
 import { ILink } from '@theguild/components/dist/types/components'
 import styled from '@emotion/styled'
-import src from '@chakra-ui/icon/dist/declarations/src'
 
 const Wrapper = styled.div`
   @media only screen and (min-width: 500px) {
@@ -47,7 +46,7 @@ export default function Index() {
     () => [
       {
         title: 'GraphQL over HTTP compliant',
-        description: 'GraphQL over HTTP specification-compliant server.',
+        description: 'Yoga follows the GraphQL over HTTP specification.',
         imageSrc: '/assets/http.svg',
         imageAlt: 'Server over HTTP',
         link: {
@@ -59,9 +58,9 @@ export default function Index() {
         },
       },
       {
-        title: 'Extensible Engines with Envelop Ecosystem',
+        title: 'Extensible GraphQL Engine powered by Envelop',
         description:
-          'Extend GraphQL Engines capabilities with Envelops powerful plugin ecosystem.',
+          'Add authentication, caching, error reporting or rate limiting with ease.',
         imageSrc: '/assets/ecosystem.svg',
         imageAlt: 'Ecosystem',
         flipped: true,
@@ -74,9 +73,9 @@ export default function Index() {
         },
       },
       {
-        title: 'Subscriptions over HTTP in GraphQL',
+        title: 'GraphQL Subscriptions over HTTP',
         description:
-          'Subscriptions over HTTP instead of WebSockets via Server Sent Events.',
+          'Run GraphQL Subscriptions over HTTP instead of WebSockets via Server Sent Events.',
         imageSrc: '/assets/subscriptions.svg',
         imageAlt: 'Subscriptions',
         link: {
@@ -88,9 +87,9 @@ export default function Index() {
         },
       },
       {
-        title: 'Handle file uploads with GraphQL?',
+        title: 'Handle file uploads with GraphQL',
         description:
-          'Simply enable uploads and start accepting files for GraphQL mutations.',
+          'Enable file uploads with GraphQL mutations with no additional packages needed.',
         imageSrc: '/assets/uploads.svg',
         imageAlt: 'Uploads',
         flipped: true,
@@ -110,7 +109,7 @@ export default function Index() {
       <Wrapper>
         <HeroGradient
           title="Time to Relax with GraphQL Yoga"
-          description={`Fully-featured GraphQL Server with focus on easy setup, performance and great developer experience`}
+          description={`The fully-featured GraphQL Server with focus on easy setup, performance and great developer experience.`}
           link={[
             {
               href: '/docs/quick-start',
