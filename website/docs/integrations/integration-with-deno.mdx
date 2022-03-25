@@ -18,7 +18,7 @@ import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/common@beta?
 
 const graphQLServer = createServer()
 
-serve((req) => graphQLServer.handleRequest(req), {
+serve(graphQLServer, {
   addr: ':4000',
 })
 

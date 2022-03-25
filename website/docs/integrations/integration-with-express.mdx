@@ -22,8 +22,7 @@ const app = express()
 const graphQLServer = createServer()
 
 // Bind GraphQL Yoga to `/graphql` endpoint
-// Here it takes the request and response objects and handles them internally
-app.use('/graphql', graphQLServer.requestListener)
+app.use('/graphql', graphQLServer)
 
 app.listen(4000, () => {
   console.log('Running a GraphQL API server at http://localhost:4000/graphql')

@@ -10,7 +10,7 @@ import { createTestSchema } from './__fixtures__/schema'
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
     const yoga = createServer({ schema, logging: false })
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: getIntrospectionQuery(),
     })
 
@@ -27,7 +27,7 @@ describe('Disable Introspection with plugin', () => {
       // @ts-ignore
       plugins: [useDisableIntrospection()],
     })
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: getIntrospectionQuery(),
     })
 
@@ -85,7 +85,7 @@ describe('Masked Error Option', () => {
       logging: false,
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ hi hello }',
     })
 
@@ -103,7 +103,7 @@ describe('Masked Error Option', () => {
       logging: false,
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ hello hi }',
     })
 
@@ -120,7 +120,7 @@ describe('Masked Error Option', () => {
       logging: false,
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ hi hello }',
     })
 
@@ -140,7 +140,7 @@ describe('Masked Error Option', () => {
       },
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ hi hello }',
     })
 
@@ -163,7 +163,7 @@ describe('Masked Error Option', () => {
       logging: false,
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ hi hello }',
     })
 
@@ -191,7 +191,7 @@ describe('Context error', () => {
       },
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ greetings }',
     })
     const body = JSON.parse(response.text)
@@ -215,7 +215,7 @@ describe('Context error', () => {
       },
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ greetings }',
     })
     const body = JSON.parse(response.text)
@@ -239,7 +239,7 @@ describe('Context error', () => {
       },
     })
 
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ greetings }',
     })
     const body = JSON.parse(response.text)
@@ -259,7 +259,7 @@ describe('Context error', () => {
 describe('Requests', () => {
   const yoga = createServer({ schema, logging: false })
   it('should send basic query', async () => {
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ ping }',
     })
 
@@ -270,7 +270,7 @@ describe('Requests', () => {
   })
 
   it('should send basic query with GET', async () => {
-    const response = await request(yoga.getNodeServer())
+    const response = await request(yoga)
       .get('/graphql?query=' + encodeURIComponent('{ ping }'))
       .send()
 
@@ -281,7 +281,7 @@ describe('Requests', () => {
   })
 
   it('should send basic mutation', async () => {
-    const response = await request(yoga.getNodeServer())
+    const response = await request(yoga)
       .post('/graphql')
       .send({
         query: /* GraphQL */ `
@@ -298,7 +298,7 @@ describe('Requests', () => {
   })
 
   it('should send variables', async () => {
-    const response = await request(yoga.getNodeServer())
+    const response = await request(yoga)
       .post('/graphql')
       .send({
         query: /* GraphQL */ `
@@ -318,7 +318,7 @@ describe('Requests', () => {
   })
 
   it('should error on malformed query', async () => {
-    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+    const response = await request(yoga).post('/graphql').send({
       query: '{ query { ping }',
     })
 
@@ -328,7 +328,7 @@ describe('Requests', () => {
   })
 
   it('should error missing query', async () => {
-    const response = await request(yoga.getNodeServer())
+    const response = await request(yoga)
       .post('/graphql')
       .send({
         query: null,
@@ -448,7 +448,7 @@ it('should expose Node req and res objects in the context', async () => {
     },
     logging: false,
   })
-  const response = await request(yoga.getNodeServer())
+  const response = await request(yoga)
     .post('/graphql')
     .send({
       query: /* GraphQL */ `
