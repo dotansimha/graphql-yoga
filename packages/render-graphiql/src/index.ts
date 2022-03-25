@@ -54,6 +54,10 @@ export type YogaGraphiQLOptions = {
    */
   headers?: string
   /**
+   * More info there: https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials
+   */
+  credentials?: RequestCredentials
+  /**
    * Whether the header editor is enabled. Defaults to `true`.
    */
   headerEditorEnabled?: boolean
