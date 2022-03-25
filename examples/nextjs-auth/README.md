@@ -1,3 +1,34 @@
+This is a Next.js example using [next-auth.js](https://next-auth.js.org/).
+
+Before running this example you need to set upa GitHubOAuth App. [Follow the instructions here](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app).
+
+Use `http://localhost:3000/` as the homepage URL.
+
+Use `http://localhost:3000/api/auth/callback/github` as the authorization callback URL.
+
+Afterwards, you must copy the `.env.sample` to `.env` (`cp .env.sample .env`) and fill in the environment variables (`GITHUB_ID` and `GITHUB_SECRET`) you received from your GitHub OAuth application.
+
+Run the app with `yarn dev`.
+
+You can log in on `http://localhost:3000`.
+
+Run the following operation on `http://localhost:3000/api/graphql`.
+
+```graphql
+query Session {
+  session {
+    expires
+    user {
+      id
+      email
+      image
+    }
+  }
+}
+```
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
