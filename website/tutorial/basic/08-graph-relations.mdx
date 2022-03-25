@@ -43,7 +43,7 @@ Notice how you're adding a new _relation field_ called `comments` to the `Link` 
 
 In order to hint this relation to prisma the `link` field on the `Comment` model must be annotated with [the `@relation` attribute](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema/relations#the-relation-attribute). This is a requirement for every relation field in your Prisma schema, and by doing so you define the foreign keys of the affected table.
 
-In this specific case, we have a [one-to-many relationship]9https://www.prisma.io/docs/concepts/components/prisma-schema/relations/one-to-many-relations).
+In this specific case, we have a [one-to-many relationship](https://www.prisma.io/docs/concepts/components/prisma-schema/relations/one-to-many-relations).
 
 A `Link` has many comments.
 
