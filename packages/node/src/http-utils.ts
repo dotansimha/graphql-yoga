@@ -72,6 +72,12 @@ export function getNodeRequest(
     return new Request(fullUrl, baseRequestInit)
   }
 
+  /**
+   * Serverless Express sends a dummy object with body but as a Buffer not string
+   * so we do those checks to see is there something we can use directly as BodyInit
+   * because the presence of body means the request stream is already consumed and,
+   * rawRequest cannot be used as BodyInit/ReadableStream by Fetch API in this case.
+   */
   const maybeParsedBody = nodeRequest.body
   if (maybeParsedBody != null) {
     if (

@@ -33,6 +33,7 @@ export const defaultYogaLogger: YogaLogger = {
     if (isDebug()) {
       const message = getLoggerMessage(...args)
       const fullMessage = `${getPrefix()} 🐛 ${debugColor(message)}`
+      // Some environments don't have other console methods
       if (console.debug) {
         console.debug(fullMessage)
       } else {
