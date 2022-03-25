@@ -203,7 +203,6 @@ export class YogaServer<
             }
           }),
         ),
-        ...(options?.plugins ?? []),
       ],
     }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
