@@ -1,8 +1,9 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import { Request } from 'cross-undici-fetch'
+import { Blob, FormData, Request } from 'cross-undici-fetch'
 import { Readable } from 'stream'
 import type { AddressInfo } from './types'
 import { Socket } from 'net'
+import { isAsyncIterable } from '@graphql-tools/utils'
 
 export interface NodeRequest {
   protocol?: string
@@ -14,6 +15,7 @@ export interface NodeRequest {
   req?: IncomingMessage
   raw?: IncomingMessage
   socket?: Socket
+  query?: any
 }
 
 function getRequestAddressInfo(
@@ -53,7 +55,14 @@ export function getNodeRequest(
 ): Request {
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   const addressInfo = getRequestAddressInfo(rawRequest, defaultAddressInfo)
-  const fullUrl = buildFullUrl(addressInfo)
+  let fullUrl = buildFullUrl(addressInfo)
+  if (nodeRequest.query) {
+    const urlObj = new URL(fullUrl)
+    for (const queryName in nodeRequest.query) {
+      const queryValue = nodeRequest.query[queryName]
+      urlObj.searchParams.set(queryName, queryValue)
+    }
+  }
   const baseRequestInit: RequestInit = {
     method: nodeRequest.method,
     headers: nodeRequest.headers,
@@ -63,17 +72,43 @@ export function getNodeRequest(
     return new Request(fullUrl, baseRequestInit)
   }
 
-  if (nodeRequest.headers['content-type'].includes('json')) {
-    const maybeParsedBody = nodeRequest.body
-    if (maybeParsedBody) {
+  /**
+   * Some Node server frameworks like Serverless Express sends a dummy object with body but as a Buffer not string
+   * so we do those checks to see is there something we can use directly as BodyInit
+   * because the presence of body means the request stream is already consumed and,
+   * rawRequest cannot be used as BodyInit/ReadableStream by Fetch API in this case.
+   */
+  const maybeParsedBody = nodeRequest.body
+  if (maybeParsedBody != null) {
+    if (
+      typeof maybeParsedBody === 'string' ||
+      maybeParsedBody instanceof Uint8Array ||
+      maybeParsedBody instanceof Blob ||
+      maybeParsedBody instanceof FormData ||
+      maybeParsedBody instanceof URLSearchParams ||
+      isAsyncIterable(maybeParsedBody)
+    ) {
       return new Request(fullUrl, {
         ...baseRequestInit,
-        body:
-          typeof maybeParsedBody === 'string'
-            ? maybeParsedBody
-            : JSON.stringify(maybeParsedBody),
+        body: maybeParsedBody as any,
       })
     }
+    const request = new Request(fullUrl, {
+      ...baseRequestInit,
+    })
+    if (!request.headers.get('content-type')?.includes('json')) {
+      request.headers.set('content-type', 'application/json')
+    }
+    return new Proxy(request, {
+      get: (target, prop: keyof Request, receiver) => {
+        switch (prop) {
+          case 'json':
+            return async () => maybeParsedBody
+          default:
+            return Reflect.get(target, prop, receiver)
+        }
+      },
+    })
   }
 
   return new Request(fullUrl, {

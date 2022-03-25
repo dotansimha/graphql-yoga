@@ -32,19 +32,40 @@ export const defaultYogaLogger: YogaLogger = {
   debug(...args: any[]) {
     if (isDebug()) {
       const message = getLoggerMessage(...args)
-      console.debug(`${getPrefix()} 🐛 ${debugColor(message)}`)
+      const fullMessage = `${getPrefix()} 🐛 ${debugColor(message)}`
+      // Some environments don't have other console methods
+      if (console.debug) {
+        console.debug(fullMessage)
+      } else {
+        console.log(fullMessage)
+      }
     }
   },
   info(...args: any[]) {
     const message = getLoggerMessage(...args)
-    console.debug(`${getPrefix()} ${infoColor(message)}`)
+    const fullMessage = `${getPrefix()} 💡 ${infoColor(message)}`
+    if (console.info) {
+      console.info(fullMessage)
+    } else {
+      console.log(fullMessage)
+    }
   },
   warn(...args: any[]) {
     const message = getLoggerMessage(...args)
-    console.debug(`${getPrefix()} ⚠️ ${warnColor(message)}`)
+    const fullMessage = `${getPrefix()} ⚠️ ${warnColor(message)}`
+    if (console.warn) {
+      console.warn(fullMessage)
+    } else {
+      console.log(fullMessage)
+    }
   },
   error(...args: any[]) {
     const message = getLoggerMessage(...args)
-    console.debug(`${getPrefix()} ❌ ${errorColor(message)}`)
+    const fullMessage = `${getPrefix()} ❌ ${errorColor(message)}`
+    if (console.error) {
+      console.error(fullMessage)
+    } else {
+      console.log(fullMessage)
+    }
   },
 }
