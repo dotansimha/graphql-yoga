@@ -1,3 +1,4 @@
+/// <reference lib="webworker" />
 import { GraphQLSchema, isSchema, print } from 'graphql'
 import {
   Plugin,
