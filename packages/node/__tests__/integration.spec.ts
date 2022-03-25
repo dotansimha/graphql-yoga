@@ -1,11 +1,20 @@
-import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery, GraphQLError } from 'graphql'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
 import puppeteer from 'puppeteer'
-import { createServer, GraphQLYogaError } from '../src'
+import {
+  Plugin,
+  createServer,
+  GraphQLYogaError,
+  useMaskedErrors,
+  handleStreamOrSingleExecutionResult,
+  EnvelopError,
+  YogaLogger,
+} from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
+import { defaultYogaLogger } from '@graphql-yoga/common'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -156,6 +165,7 @@ describe('Masked Error Option', () => {
       },
     })
   })
+
   it('includes the original error in the extensions in dev mode (NODE_ENV=development)', async () => {
     process.env.NODE_ENV = 'development'
     const yoga = createServer({
@@ -253,6 +263,146 @@ describe('Context error', () => {
         ],
       }
     `)
+  })
+})
+
+describe('Error handling in user plugin', () => {
+  const useLoggerContext = ({
+    logger,
+  }: {
+    logger: YogaLogger
+  }): Plugin<{ logger: YogaLogger }> => {
+    return {
+      onContextBuilding({ extendContext }) {
+        console.log('useLoggerContext > extendContext')
+        extendContext({
+          logger,
+        })
+      },
+    }
+  }
+
+  const useErrorLogging = (): Plugin<{ logger: YogaLogger }> => {
+    console.log('useErrorLogging')
+    const enrichErrorFn = (
+      gqlError: GraphQLError,
+      correlationId: string,
+    ): GraphQLError => {
+      const extensions = {
+        ...(gqlError.extensions || {}),
+        correlationId,
+      }
+
+      return new GraphQLError(gqlError.message, {
+        nodes: gqlError.nodes,
+        source: gqlError.source,
+        positions: gqlError.positions,
+        path: gqlError.path,
+        originalError: gqlError.originalError,
+        extensions,
+      })
+    }
+
+    return {
+      onExecute({ args }) {
+        console.log('useErrorLogging > onExecute')
+
+        return {
+          onExecuteDone(rawPayload) {
+            console.log('useErrorLogging > onExecuteDone')
+
+            return handleStreamOrSingleExecutionResult(
+              rawPayload,
+              ({ result, setResult }) => {
+                if (result.errors && result.errors.length > 0) {
+                  const modifiedErrors = result.errors.map((gqlError) => {
+                    if (gqlError.originalError instanceof EnvelopError) {
+                      args.contextValue.logger.error({
+                        ...gqlError,
+                        internal: false,
+                        logger: 'kns-graphql',
+                      })
+                      return enrichErrorFn(gqlError, 'abc-123')
+                    } else {
+                      args.contextValue.logger.error({
+                        ...gqlError,
+                        internal: true,
+                        logger: 'kns-graphql',
+                      })
+                      return gqlError
+                    }
+                  })
+
+                  setResult({
+                    ...result,
+                    errors: modifiedErrors,
+                  })
+                }
+              },
+            )
+          },
+        }
+      },
+    }
+  }
+
+  fit('Error thrown during validation should reach user plugins', async () => {
+    const mockInfo = jest.fn()
+    const mockWarn = jest.fn()
+    const mockDebug = jest.fn()
+    const mockError = jest.fn()
+    const logging = {
+      info: (...args: any) => {
+        mockInfo(...args)
+        console.log(...args)
+      },
+      debug: (...args: any) => {
+        mockDebug(...args)
+        console.log(...args)
+      },
+      warn: (...args: any) => {
+        mockWarn(...args)
+        console.warn(...args)
+      },
+      error: (...args: any) => {
+        mockError(...args)
+        console.error(...args)
+      },
+    }
+    const plugins = [
+      useLoggerContext({ logger: logging }),
+      useErrorLogging,
+      useMaskedErrors,
+    ]
+    const yoga = createServer({
+      schema,
+      logging,
+      // App prefers to handle this on their own
+      maskedErrors: false,
+      plugins,
+    })
+
+    const response = await request(yoga.getNodeServer()).post('/graphql').send({
+      query: 'bad developer bad query',
+    })
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        data: null,
+        errors: [
+          {
+            locations: expect.any(Array),
+            message: 'Syntax Error: Unexpected Name "bad".',
+          },
+        ],
+      }),
+    )
+
+    expect(mockError).toHaveBeenCalledWith({
+      logger: 'kns-graphql',
+      message: 'Syntax Error: Unexpected Name "bad".',
+      stack: expect.any(String),
+    })
   })
 })
 
