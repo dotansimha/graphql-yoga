@@ -1,12 +1,18 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { createServer } from '@graphql-yoga/node'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
 
-const server = createServer<{
-  req: NextApiRequest
-  res: NextApiResponse
-}>({
+const server = createServer<
+  {
+    req: NextApiRequest
+    res: NextApiResponse
+  },
+  {
+    session: Session
+  }
+>({
   cors: false,
   endpoint: '/api/graphql',
   context: async ({ req }) => {
