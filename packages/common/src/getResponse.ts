@@ -139,6 +139,9 @@ export function getErrorResponse({
   }
   return new Response(JSON.stringify(payload), {
     status,
-    headers,
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
   })
 }
