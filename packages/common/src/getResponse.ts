@@ -132,6 +132,7 @@ export function getErrorResponse({
   isEventStream,
 }: ErrorResponseParams): Response {
   const payload: ExecutionResult = {
+    data: null,
     errors,
   }
   if (isEventStream) {
@@ -139,6 +140,9 @@ export function getErrorResponse({
   }
   return new Response(JSON.stringify(payload), {
     status,
-    headers,
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
   })
 }
