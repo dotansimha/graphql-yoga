@@ -89,7 +89,7 @@ export default function Index() {
       {
         title: 'Handle file uploads with GraphQL',
         description:
-          'Enable file uploads with GraphQL mutations with no additional packages needed.',
+          'Enable file uploads using GraphQL mutations with no additional packages needed.',
         imageSrc: '/assets/uploads.svg',
         imageAlt: 'Uploads',
         flipped: true,
