@@ -529,7 +529,7 @@ export type YogaServerInstance<TServerContext, TUserContext, TRootValue> =
     )
 
 export function createServer<
-  TServerContext extends Record<string, any> = FetchEvent,
+  TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
 >(
@@ -538,11 +538,12 @@ export function createServer<
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,
   )
-  const fnHandler = (input: { request: Request } | Request) => {
-    if ('request' in input) {
+  // TODO: Will be removed once we get rid of classes
+  const fnHandler = (input: any) => {
+    if (input.request) {
       return server.handleRequest(input.request, input as any)
     } else {
-      return server.handleRequest(input, {} as any)
+      return server.handleRequest(input, undefined as any)
     }
   }
   return new Proxy(fnHandler as any, {
