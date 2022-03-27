@@ -253,12 +253,6 @@ export class YogaServer<
           }),
         ),
         enableIf(
-          !!maskedErrors,
-          useMaskedErrors(
-            typeof maskedErrors === 'object' ? maskedErrors : undefined,
-          ),
-        ),
-        enableIf(
           options?.context != null,
           useExtendContext(async (initialContext) => {
             if (options?.context) {
@@ -271,6 +265,12 @@ export class YogaServer<
           }),
         ),
         ...(options?.plugins ?? []),
+        enableIf(
+          !!maskedErrors,
+          useMaskedErrors(
+            typeof maskedErrors === 'object' ? maskedErrors : undefined,
+          ),
+        ),
       ],
     }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
