@@ -14,7 +14,12 @@ import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
-import { CORSOptions, GraphQLServerInject, YogaInitialContext } from './types'
+import {
+  CORSOptions,
+  GraphQLServerInject,
+  YogaInitialContext,
+  FetchEvent,
+} from './types'
 import {
   GraphiQLOptions,
   renderGraphiQL,
