@@ -10,7 +10,7 @@ const request: Request = null as any
 
 // none results in optional context
 {
-  const server = createServer()
+  const server = createServer<{}>()
   server.handleRequest(request)
 }
 

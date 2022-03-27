@@ -37,11 +37,6 @@ export function buildApp() {
   })
 
   app.use(async (ctx) => {
-    // Keep the socket open
-    ctx.req.socket.setTimeout(0)
-    ctx.req.socket.setNoDelay(true)
-    ctx.req.socket.setKeepAlive(true)
-
     const response = await graphQLServer.handleIncomingMessage(ctx.req, ctx)
 
     // Set status code

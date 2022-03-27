@@ -24,11 +24,6 @@ const graphQLServer = createServer<Koa.ParameterizedContext>()
 
 // Bind GraphQL Yoga to `/graphql` endpoint
 app.use(async (ctx) => {
-  // Keep the socket open
-  ctx.req.socket.setTimeout(0)
-  ctx.req.socket.setNoDelay(true)
-  ctx.req.socket.setKeepAlive(true)
-
   // Second parameter adds Koa's context into GraphQL Context
   const response = await graphQLServer.handleIncomingMessage(ctx.req, ctx)
 

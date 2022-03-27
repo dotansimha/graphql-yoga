@@ -4,21 +4,68 @@ title: Testing
 sidebar_label: Testing
 ---
 
-GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection.
+GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection. You can use any testing framework of your choice.
 
-## Hello world test
-
-Let's write test for our [Hello World GraphQL API](/docs/quick-start#create-a-hello-world-graphql-api). You can use any testing framework of your choice. For this example we will use [`assert`](https://nodejs.org/api/assert.html#assert) from Node.js
+## Using `inject`
 
 ```ts
-import server from './server'
+import { createServer } from '@graphql-yoga/common'
+
+const yoga = createServer()
+
+const response = await yoga.inject({
+  document: '{ greetings }',
+})
+
+console.assert(response.status === 200, 'Response status should be 200')
+const executionResult = await response.json()
+console.assert(
+  executionResult.data.greetings ===
+    'This is the `greetings` field of the root `Query` type',
+  `Expected 'This is the `greetings` field of the root `Query` type' but got ${executionResult.data.greetings}`,
+)
+```
+
+## Using `fetch` to test just like browsers on any JS environment
+
+```ts
+import { createServer } from '@graphql-yoga/common'
+
+const response = await yoga.fetch('http://localhost:4000/graphql', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    query: '{ greetings }',
+  }),
+})
+
+console.assert(response.status === 200, 'Response status should be 200')
+const executionResult = await response.json()
+console.assert(
+  executionResult.data.greetings ===
+    'This is the `greetings` field of the root `Query` type',
+  `Expected 'This is the `greetings` field of the root `Query` type' but got ${executionResult.data.greetings}`,
+)
+```
+
+## Using `supertest` for Node.js
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import request from 'supertest'
 import { deepEqual } from 'assert'
 
-const response = await server.inject({
-  document: '{ hello }',
+const yoga = createServer()
+
+const response = await request(yoga).post('/graphql').send({
+  query: '{ greetings }',
 })
 
 deepEqual(response.status, 200)
-const executionResult = await response.json()
-deepEqual(executionResult.data.hello, 'Hello World')
+deepEqual(
+  response.body.data.greetings,
+  'This is the `greetings` field of the root `Query` type',
+)
 ```

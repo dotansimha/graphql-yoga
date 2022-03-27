@@ -13,4 +13,4 @@ export const config = {
   },
 }
 
-export default server.requestListener
+export default server

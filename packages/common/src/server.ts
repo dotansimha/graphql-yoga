@@ -10,15 +10,16 @@ import {
   useLogger,
   useSchema,
 } from '@envelop/core'
-import {
-  useValidationCache,
-  ValidationCache,
-  ValidationCacheOptions,
-} from '@envelop/validation-cache'
+import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
-import { CORSOptions, GraphQLServerInject, YogaInitialContext } from './types'
+import {
+  CORSOptions,
+  GraphQLServerInject,
+  YogaInitialContext,
+  FetchEvent,
+} from './types'
 import {
   GraphiQLOptions,
   renderGraphiQL,
@@ -498,12 +499,74 @@ export class YogaServer<
       executionResult,
     }
   }
+
+  fetch: WindowOrWorkerGlobalScope['fetch'] = (
+    input: RequestInfo,
+    init: RequestInit,
+  ) => {
+    let request: Request
+    if (typeof input === 'string') {
+      request = new Request(input, init)
+    } else {
+      request = input
+    }
+    return this.handleRequest(request, init as any)
+  }
+
+  // FetchEvent is not available in all envs
+  private fetchEventListener = (event: FetchEvent) =>
+    event.respondWith(this.handleRequest(event.request, event as any))
+
+  start() {
+    self.addEventListener('fetch', this.fetchEventListener as EventListener)
+  }
+
+  stop() {
+    self.removeEventListener('fetch', this.fetchEventListener as EventListener)
+  }
 }
 
+export type YogaServerInstance<TServerContext, TUserContext, TRootValue> =
+  YogaServer<TServerContext, TUserContext, TRootValue> &
+    (
+      | WindowOrWorkerGlobalScope['fetch']
+      | ((context: { request: Request }) => Promise<Response>)
+    )
+
 export function createServer<
-  TServerContext extends Record<string, any> = Record<string, any>,
+  TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
->(options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>) {
-  return new YogaServer<TServerContext, TUserContext, TRootValue>(options)
+>(
+  options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
+  const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
+    options,
+  )
+  // TODO: Will be removed once we get rid of classes
+  const fnHandler = (input: any) => {
+    if (input.request) {
+      return server.handleRequest(input.request, input as any)
+    } else {
+      return server.handleRequest(input, undefined as any)
+    }
+  }
+  return new Proxy(fnHandler as any, {
+    get: (_, prop) => {
+      if (server[prop]) {
+        if (server[prop].bind) {
+          return server[prop].bind(server)
+        }
+        return server[prop]
+      } else if (fnHandler[prop]) {
+        if (fnHandler[prop].bind) {
+          return fnHandler[prop].bind(fnHandler)
+        }
+        return fnHandler[prop]
+      }
+    },
+    apply(_, __, [input]: Parameters<typeof fnHandler>) {
+      return fnHandler(input)
+    },
+  })
 }

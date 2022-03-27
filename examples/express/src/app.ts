@@ -40,7 +40,7 @@ export function buildApp() {
     logging: false,
   })
 
-  app.use('/graphql', graphQLServer.requestListener)
+  app.use('/graphql', graphQLServer)
 
   return app
 }

@@ -1,6 +1,7 @@
 import {
   createServer as createHttpServer,
   IncomingMessage,
+  RequestListener,
   Server as NodeServer,
   ServerResponse,
 } from 'http'
@@ -101,6 +102,8 @@ class YogaNodeServer<
     return sendNodeResponse(response, res)
   }
 
+  handle = this.requestListener
+
   start() {
     const nodeServer = this.getNodeServer()
     return new Promise<void>((resolve, reject) => {
@@ -166,9 +169,32 @@ export function createServer<
   },
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
->(options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>) {
-  return new YogaNodeServer<TServerContext, TUserContext, TRootValue>(options)
+>(
+  options?: YogaNodeServerOptions<TServerContext, TUserContext, TRootValue>,
+): YogaNodeServerInstance<TServerContext, TUserContext, TRootValue> {
+  const server = new YogaNodeServer(options)
+  return new Proxy(server.requestListener as any, {
+    get: (_, prop) => {
+      if (server[prop]) {
+        if (server[prop].bind) {
+          return server[prop].bind(server)
+        }
+        return server[prop]
+      } else if (server.requestListener[prop]) {
+        if (server.requestListener[prop].bind) {
+          return server.requestListener[prop].bind(server.requestListener)
+        }
+        return server.requestListener[prop]
+      }
+    },
+    apply: (_, __, [req, res]: Parameters<RequestListener>) =>
+      server.requestListener(req, res),
+  })
 }
+
+export type YogaNodeServerInstance<TServerContext, TUserContext, TRootValue> =
+  YogaNodeServer<TServerContext, TUserContext, TRootValue> &
+    YogaNodeServer<TServerContext, TUserContext, TRootValue>['requestListener']
 
 export {
   ExecutionPatchResult,

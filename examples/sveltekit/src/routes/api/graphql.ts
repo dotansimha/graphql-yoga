@@ -25,6 +25,4 @@ const yogaApp = createServer({
 	}
 });
 
-const requestEventHandler = (event: RequestEvent) => yogaApp.handleRequest(event.request);
-
-export { requestEventHandler as get, requestEventHandler as post };
+export { yogaApp as get, yogaApp as post };
