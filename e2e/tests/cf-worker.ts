@@ -1,9 +1,9 @@
 import { Stack } from '@pulumi/pulumi/automation'
 import { execSync } from 'child_process'
 import { readFileSync } from 'fs'
-import { DeploymentConfiguration } from './types'
+import { DeploymentConfiguration } from '../types'
 import * as cf from '@pulumi/cloudflare'
-import { assertGraphiQL, assertQuery, env } from './utils'
+import { assertGraphiQL, assertQuery, env } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
 
 export const cloudFlareDeployment: DeploymentConfiguration<{
@@ -34,8 +34,7 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
   },
   program: async () => {
     const stackName = pulumi.getStack()
-    const workerName = `yoga-worker-e2e-${stackName}`
-    const workerUrl = `e2e.graphql-yoga.com/${workerName}`
+    const workerUrl = `e2e.graphql-yoga.com/${stackName}`
 
     // Deploy CF script as Worker
     const workerScript = new cf.WorkerScript('worker', {
@@ -46,10 +45,10 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
       secretTextBindings: [
         {
           name: 'GRAPHQL_ROUTE',
-          text: `/${workerName}`,
+          text: `/${stackName}`,
         },
       ],
-      name: workerName,
+      name: stackName,
     })
 
     // Create a nice route for easy testing
@@ -64,7 +63,7 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
     }
   },
   test: async ({ workerUrl }) => {
-    console.log(`CF Worker URL: ${workerUrl.value}`)
+    console.log(`ℹ️ CloudFlare Worker deployed to URL: ${workerUrl.value}`)
     await assertGraphiQL(workerUrl.value)
     await assertQuery(workerUrl.value)
   },
