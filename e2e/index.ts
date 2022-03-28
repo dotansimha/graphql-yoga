@@ -38,7 +38,7 @@ async function run(
     const info = await stack.info()
     console.info(`ℹ️ Current Pulumi stack status: ${info?.result}`)
 
-    let shouldRefresh = false
+    let shouldRefresh = !process.env.CI
 
     // This is done in order to make sure not to fail on a previously running / zombie
     // jobs in Pulumi. If we had to cancel an existing stack, we want to make sure to wait for the cleanup

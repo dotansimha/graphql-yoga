@@ -2,6 +2,7 @@ import { DeploymentConfiguration } from '../types'
 import { assertGraphiQL, assertQuery, waitForEndpoint } from '../utils'
 import * as docker from '@pulumi/docker'
 import { interpolate } from '@pulumi/pulumi'
+import { resolve } from 'path'
 
 export const dockerDeployment = (
   image: string,
@@ -16,7 +17,14 @@ export const dockerDeployment = (
 
     const container = new docker.Container('container', {
       image: remoteImage.repoDigest,
-      command: ['npx', 'graphql-yoga@beta'],
+      command: [`ls`],
+      volumes: [
+        {
+          containerPath: '/app',
+          hostPath: resolve('../'),
+        },
+      ],
+      workingDir: '/app/',
       ports: [
         {
           internal: 4000,
