@@ -5,11 +5,11 @@ async function main() {
   await build({
     entryPoints: ['./src/index.ts'],
     outfile: 'dist/Yoga/index.js',
-    treeShaking: true,
     format: 'cjs',
+    minify: false,
     bundle: true,
     platform: 'node',
-    target: 'es2020',
+    target: 'node12',
   })
 
   writeFileSync(
