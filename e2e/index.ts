@@ -1,12 +1,14 @@
 import { LocalWorkspace } from '@pulumi/pulumi/automation'
 import { azureFunctionDeployment } from './tests/azure-function'
 import { cloudFlareDeployment } from './tests/cf-worker'
+import { dockerDeployment } from './tests/docker'
 import { DeploymentConfiguration } from './types'
 import { env, getCommitId } from './utils'
 
 const AVAILABLE_TEST_PLANS = {
   'cf-worker': cloudFlareDeployment,
   'azure-function': azureFunctionDeployment,
+  'docker-node-17': dockerDeployment('node:17.8.0-alpine3.14'),
 }
 
 async function run(
@@ -27,10 +29,10 @@ async function run(
     console.info(`ℹ️ Creating new temporary Pulumi environment...`)
     console.info(`\t✅ Successfully initialized stack...`)
     console.info('\tℹ️ Running prerequisites...')
-    await testPlan.prerequisites(stack)
+    testPlan.prerequisites && (await testPlan.prerequisites(stack))
     console.info('\t✅ Done with prerequisites')
     console.info('\tℹ️ Setting up Pulumi config...')
-    await testPlan.config(stack)
+    testPlan.config && (await testPlan.config(stack))
     console.info('\t✅ Pulumi configuration is now set')
     console.info('ℹ️ Running Pulumi program...')
     const info = await stack.info()

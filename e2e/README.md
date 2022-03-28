@@ -13,7 +13,7 @@ On each PR, this workflow runs, and tried to deploy and test an actual environme
 - [x] [CloudFlare Worker](../examples/cloudflare-worker)
 - [ ] [Azure Function](../examples/azure-function/)
 - [ ] AWS Lambda
-- [ ] Docker container
+- [x] [Docker container](./tests/docker.ts)
 - [ ] Vercel API Route
 
 ### Notes

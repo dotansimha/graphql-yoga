@@ -7,6 +7,35 @@ export function getCommitId() {
     .trim()
 }
 
+export async function waitForEndpoint(
+  endpoint: string,
+  retries: number,
+  timeout: number = 10000,
+): Promise<boolean> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    console.info(
+      `Trying to connect to ${endpoint} (attempt ${attempt}/${retries})...`,
+    )
+    try {
+      await request(endpoint, {
+        method: 'GET',
+      })
+
+      return true
+    } catch (e) {
+      console.warn(
+        `Failed to connect to endpoint: ${endpoint}, waiting ${timeout}ms...`,
+      )
+
+      await new Promise((resolve) => setTimeout(resolve, timeout))
+    }
+  }
+
+  throw new Error(
+    `Failed to connect to endpoint: ${endpoint} (attempts: ${retries})`,
+  )
+}
+
 export function env(name: string): string {
   if (!process.env[name]) {
     throw new Error(`Environment variable ${name} not set`)
