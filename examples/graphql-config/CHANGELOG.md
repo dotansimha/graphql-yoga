@@ -1,5 +1,32 @@
 # graphql-config-example
 
+## 0.0.1
+
+### Patch Changes
+
+- de1693e: trigger release
+- Updated dependencies [6750eff]
+- Updated dependencies [6effd5d]
+- Updated dependencies [0edf1f8]
+- Updated dependencies [d414f95]
+- Updated dependencies [b6dd3f1]
+- Updated dependencies [36af58e]
+- Updated dependencies [bea2dcc]
+- Updated dependencies [fc1f2c7]
+- Updated dependencies [fb894da]
+- Updated dependencies [3d54829]
+- Updated dependencies [1a20e1e]
+- Updated dependencies [0edf1f8]
+- Updated dependencies [d078e84]
+- Updated dependencies [6d60ebf]
+- Updated dependencies [9554f81]
+- Updated dependencies [95e0ac0]
+- Updated dependencies [de1693e]
+- Updated dependencies [dcaea56]
+- Updated dependencies [a10a16c]
+- Updated dependencies [5b6f025]
+  - graphql-yoga@2.0.0
+
 ## 0.0.1-beta.8
 
 ### Patch Changes
