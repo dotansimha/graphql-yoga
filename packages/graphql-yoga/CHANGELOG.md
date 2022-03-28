@@ -1,5 +1,78 @@
 # graphql-yoga
 
+## 2.0.0
+
+### Major Changes
+
+- b6dd3f1: The goal is to provide a fully-featured, simple to set up, performant and extendable server. Some key features:
+
+  - [GraphQL-over-HTTP](https://github.com/graphql/graphql-over-http) spec compliant
+  - Extend the GraphQL request flow using [`envelop`](https://www.envelop.dev/)
+  - File uploads (via GraphQL multipart request specification)
+  - GraphQL Subscriptions (using [SSE](https://github.com/enisdenjo/graphql-sse))
+  - Logging using [Pino](https://github.com/pinojs/pino)
+  - Improved TypeScript Support
+  - Try out experimental GraphQL features such as `@defer` and `@stream`
+
+- de1693e: trigger release
+
+### Minor Changes
+
+- 6750eff: rename `GraphQLServerError` to `GraphQLYogaError`.
+- 0edf1f8: feat: options for GraphiQL
+- d414f95: **BREAKING** Set `maskedErrors` value to `true` by default for safer defaults.
+
+  **BREAKING** Remove `disableIntrospection`. [Please use `useDisableIntrospection` from `@envelop/disable-introspection` instead.](https://www.envelop.dev/plugins/use-disable-introspection)
+
+- 36af58e: export renderGraphiQL function
+- bea2dcc: align envelop types
+- fc1f2c7: make options optional
+- fb894da: Rename createGraphQLServer to createServer
+- 1a20e1e: Export everything from @envelop/core and export GraphQLFile scalar
+- d078e84: Drop fastify and use node-http package
+- 6d60ebf: add tabs to GraphiQL
+- 9554f81: Add PubSub utility.
+- 95e0ac0: feat: remove unnecessary Upload scalar types
+- dcaea56: add missing tslib dependency
+
+### Patch Changes
+
+- 6effd5d: fix(node): handle response cancellation correctly
+- 3d54829: enhance: move W3C changes
+- 0edf1f8: feat(cli): binds GraphQL Config to GraphQL Yoga
+- a10a16c: Node Server implementation has been moved to `@graphql-yoga/node` package.
+
+  CLI implementation has been moved to
+  `graphql-yoga` package.
+
+- 5b6f025: feat(yoga-cli): fallback to default schema and add mock parameter
+- Updated dependencies [d414f95]
+- Updated dependencies [133f8e9]
+- Updated dependencies [14c93a7]
+- Updated dependencies [ec777b1]
+- Updated dependencies [dcaea56]
+- Updated dependencies [b0b244b]
+- Updated dependencies [cfec14b]
+- Updated dependencies [433558f]
+- Updated dependencies [3c82b57]
+- Updated dependencies [f5f06f4]
+- Updated dependencies [dcaea56]
+- Updated dependencies [8ab60cf]
+- Updated dependencies [433558f]
+- Updated dependencies [5fba736]
+- Updated dependencies [62e8c07]
+- Updated dependencies [ce60a48]
+- Updated dependencies [a8b619b]
+- Updated dependencies [6d60ebf]
+- Updated dependencies [44ad1b3]
+- Updated dependencies [0424fe3]
+- Updated dependencies [de1693e]
+- Updated dependencies [d60f79f]
+- Updated dependencies [dcaea56]
+- Updated dependencies [daeea82]
+- Updated dependencies [a10a16c]
+  - @graphql-yoga/node@0.1.0
+
 ## 2.0.0-beta.8
 
 ### Minor Changes

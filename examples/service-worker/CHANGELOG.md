@@ -1,5 +1,53 @@
 # service-worker
 
+## 0.0.1
+
+### Patch Changes
+
+- Updated dependencies [6750eff]
+- Updated dependencies [0edf1f8]
+- Updated dependencies [d414f95]
+- Updated dependencies [2b6916f]
+- Updated dependencies [14c93a7]
+- Updated dependencies [b0b244b]
+- Updated dependencies [84091d2]
+- Updated dependencies [d2c2d18]
+- Updated dependencies [4e3129d]
+- Updated dependencies [36af58e]
+- Updated dependencies [433558f]
+- Updated dependencies [9256319]
+- Updated dependencies [bea2dcc]
+- Updated dependencies [fc1f2c7]
+- Updated dependencies [f2f6202]
+- Updated dependencies [11e80ea]
+- Updated dependencies [890e4ec]
+- Updated dependencies [fb894da]
+- Updated dependencies [603ccd8]
+- Updated dependencies [e93e62d]
+- Updated dependencies [3d54829]
+- Updated dependencies [5de1acf]
+- Updated dependencies [8ab60cf]
+- Updated dependencies [b1facf8]
+- Updated dependencies [5fba736]
+- Updated dependencies [b37564e]
+- Updated dependencies [62e8c07]
+- Updated dependencies [d078e84]
+- Updated dependencies [6d60ebf]
+- Updated dependencies [5d840d9]
+- Updated dependencies [95e0ac0]
+- Updated dependencies [2a033fb]
+- Updated dependencies [0424fe3]
+- Updated dependencies [d8f8a81]
+- Updated dependencies [a665e1e]
+- Updated dependencies [de1693e]
+- Updated dependencies [d137445]
+- Updated dependencies [9a9ac0a]
+- Updated dependencies [2b6916f]
+- Updated dependencies [dcaea56]
+- Updated dependencies [daeea82]
+- Updated dependencies [a10a16c]
+  - @graphql-yoga/common@0.1.0
+
 ## 0.0.1-beta.6
 
 ### Patch Changes
