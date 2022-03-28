@@ -10,11 +10,13 @@ On each PR, this workflow runs, and tried to deploy and test an actual environme
 
 ### Tested Enrivonments
 
-- [x] [CloudFlare Worker](../examples/cloudflare-worker)
-- [ ] [Azure Function](../examples/azure-function/)
-- [ ] AWS Lambda
+- [x] [CloudFlare Worker](./tests/cf-worker.ts)
+- [x] [Azure Function](./tests/azure-function.ts)
+- [x] [AWS Lambda](./tests/aws-lambda.ts)
 - [x] [Docker container](./tests/docker.ts)
 - [ ] Vercel API Route
+- [ ] K8s Pod
+- [ ] Docker
 
 ### Notes
 
