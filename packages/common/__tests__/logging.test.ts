@@ -32,7 +32,7 @@ describe('Logging', () => {
     })
     it(`prints debug messages if DEBUG env var is set`, () => {
       process.env.DEBUG = '1'
-      jest.spyOn(console, 'debug')
+      jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
       defaultYogaLogger.debug('TEST')
       expect(console.debug).toHaveBeenCalledWith(
         expect.stringContaining('TEST'),

@@ -107,3 +107,20 @@ const request: Request = null as any
     document: `{ __typename }`,
   })
 }
+
+createServer({
+  graphiql: false,
+})
+
+createServer({
+  // @ts-expect-error This is not allowed:
+  graphiql: true,
+})
+
+createServer({
+  graphiql: {},
+})
+
+createServer({
+  graphiql: () => ({}),
+})
