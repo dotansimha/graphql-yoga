@@ -93,6 +93,7 @@ export type YogaServerOptions<
           ? [serverContext?: TServerContext | undefined]
           : [serverContext: TServerContext]
       ) => GraphiQLOptions | false)
+    | false
 
   schema?:
     | GraphQLSchema
