@@ -17,6 +17,11 @@ export default defineConfig({
       name: 'YogaGraphiQL',
       fileName: (format) => `yoga-graphiql.${format}.js`,
     },
-    rollupOptions: {},
+    rollupOptions: {
+      output: {
+        /** prevent code-splitting */
+        manualChunks: () => '_.js',
+      },
+    },
   },
 })

@@ -47,8 +47,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const initialQuery = /* GraphQL */ `#
 # Welcome to ${props.title || 'Yoga GraphiQL'}
 #
-# ${props.title || 'Yoga GraphiQL'
-    } is an in-browser tool for writing, validating, and
+# ${
+    props.title || 'Yoga GraphiQL'
+  } is an in-browser tool for writing, validating, and
 # testing GraphQL queries.
 #
 # Type queries into this side of the screen, and you will see intelligent
@@ -158,6 +159,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           defaultVariableEditorOpen={true}
           docExplorerOpen={showDocs}
           onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
+          tabs
           toolbar={{
             additionalContent: (
               <>
