@@ -45,7 +45,7 @@ Now, you'll need to import the `contextFactory` function and make sure you add i
 import { createContext } from './context'
 
 async function main() {
-  const server = createServer({ schema, context: createContext as any })
+  const server = createServer({ schema, context: createContext })
   await server.start()
 }
 
