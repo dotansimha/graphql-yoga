@@ -17,14 +17,14 @@ export const dockerDeployment = (
 
     const container = new docker.Container('container', {
       image: remoteImage.repoDigest,
-      command: [`ls`],
+      command: [`npx`, '.'],
       volumes: [
         {
           containerPath: '/app',
           hostPath: resolve('../'),
         },
       ],
-      workingDir: '/app/',
+      workingDir: '/app/packages/graphql-yoga/dist',
       ports: [
         {
           internal: 4000,

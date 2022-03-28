@@ -6,7 +6,7 @@ jobs:
   test-deploy:
     strategy:
       matrix:
-        plan: ['cf-worker']
+        plan: ['cf-worker', 'docker-node-17']
     name: ${{ matrix.plan }}
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
