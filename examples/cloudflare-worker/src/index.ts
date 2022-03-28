@@ -6,6 +6,4 @@ const yoga = createServer({
   },
 })
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(yoga.handleRequest(event.request))
-})
+yoga.start()
