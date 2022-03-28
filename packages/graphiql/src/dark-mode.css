@@ -269,3 +269,32 @@ li.CodeMirror-hint-active {
 .CodeMirror-hint-information .content {
   color: #a4abb7;
 }
+
+.graphiql-container .tabs {
+  background: #21262b;
+}
+
+.graphiql-container .tabs .tab,
+.graphiql-container .tab-add,
+.graphiql-container .tab .close::before {
+  background: #1c2125;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.graphiql-container .tab-add:hover,
+.graphiql-container .tabs .tab:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.graphiql-container .tabs .tab.active,
+.graphiql-container .tab.active .close::before {
+  color: rgba(255, 255, 255, 1);
+}
+
+.graphiql-container .tabs .tab {
+  border-color: rgba(146, 153, 167, 0.3);
+}
+
+.graphiql-container .tabs .tab:first-child {
+  border: none;
+}
