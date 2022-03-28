@@ -33,7 +33,7 @@ export function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
     headersObj[key] = value
   })
 
-  // Let's say your environment needs to return something like below;
+  // Let's say your environment needs to return something like the below;
   return {
     statusCode: response.status,
     body: response.body,
