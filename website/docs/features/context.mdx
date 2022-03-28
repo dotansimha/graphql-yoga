@@ -1,24 +1,24 @@
 ---
 id: context
-title: Context Objects in GraphQL Yoga
-sidebar_label: Context Object
+title: GraphQL Context
+sidebar_label: GraphQL Context
 ---
 
-Context is an object in GraphQL-js that is provided per execution and it is passed to the resolvers as a third argument. You can learn more about [`Context` in GraphQL Tools docs](https://www.graphql-tools.com/docs/connectors).
+A context is an object in GraphQL-js that is provided per execution and it is passed to the resolvers as a third argument. You can learn more about [`Context` in GraphQL Tools docs](https://www.graphql-tools.com/docs/connectors).
 
 In GraphQL Yoga, the context object is generated per HTTP request, and the content of this object differs based on your setup.
 
 There are 4 steps that GraphQL Yoga follows to generate the final context object;
 
-[Initial Standard Context](#initial-standard-context) -> [Server Context](#server-context) -> [User Context](#user-context) -> [Envelop Plugins](#envelop-plugins)
+[Default Context](#default-context) -> [Server Context](#server-context) -> [User Context](#user-context) -> [Envelop Plugins](#envelop-plugins)
 
-## Initial Standard Context
+## Default Context
 
 By default, GraphQL Yoga provides the following values in the context object independently from your environment and setup;
 
-- **_query_**: The DocumentNode that was parsed from the GraphQL query string.
-- **_request_**: [WHATWG `Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request) that represents the incoming HTTP request in platform independent way.
-- **_operationName_**: The operation name selected from the incoming query.
+- **_query_**: The `DocumentNode` that was parsed from the GraphQL query string
+- **_request_**: [WHATWG `Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request) that represents the incoming HTTP request in platform-independent way
+- **_operationName_**: The operation name selected from the incoming query
 - **_variables_**: The variables that were defined in the query
 - **_extensions_**: The extensions that were received from the client
 
@@ -28,7 +28,7 @@ While creating the server instance, GraphQL Yoga accepts an additional object fr
 
 ### For Node.js (`.start()`, Express and Next.js etc)
 
-If you are using GraphQL Yoga as a standalone server with `.start()` method or exposing it as a middleware like we show in our Express and Next.js recipes;
+If you are using GraphQL Yoga as a standalone server with `.start()` method or exposing it as a middleware as we show in our Express and Next.js recipes;
 
 - **_req_**: [Node.js `IncomingMessage` object](https://nodejs.org/api/http.html#http_class_http_incomingmessage)
 - **_res_**: [Node.js `ServerResponse` object](https://nodejs.org/api/http.html#http_class_http_serverresponse)
@@ -65,7 +65,7 @@ const graphQLServer = createServer<{
 ### For WHATWG-compliant environments like Cloudflare Workers and Deno;
 
 If you are using Cloudflare Workers with `.start()` method, it will merge [WHATWG `FetchEvent` object](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent) into the context object.
-And that object is almost similar what GraphQL Yoga provides you with `YogaInitialContext`. Other than that, GraphQL Yoga doesn't add anything specific to the context object because it is not needed like in Node.js.
+And that object is almost similar to what GraphQL Yoga provides you with `YogaInitialContext`. Other than that, GraphQL Yoga doesn't add anything specific to the context object because it is not needed like in Node.js.
 
 ## User Context
 
@@ -87,5 +87,5 @@ In this case your final context object will have an extra `user` property.
 
 ## Envelop Plugins
 
-After all the above, Envelop plugins (if you have) receive the context object and can modify it.
+After all the above, Envelop plugins (if you have some) receive the context object and can modify it.
 See the documentation for [Envelop plugins](/envelop-plugins) for more information.
