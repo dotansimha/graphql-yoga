@@ -1,5 +1,16 @@
 # @graphql-yoga/render-graphiql
 
+## 0.1.0-beta.3
+
+### Minor Changes
+
+- 6d60ebf: add tabs to GraphiQL
+- 9f628e5: enhance(graphiql): better indentation for introduction message
+
+### Patch Changes
+
+- 9f628e5: enhance(graphiql): small refactor by following the improvements in new url-loader
+
 ## 0.1.0-beta.2
 
 ### Minor Changes
