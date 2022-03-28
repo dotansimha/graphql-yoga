@@ -34,7 +34,7 @@ export const dockerDeployment = (
 
     // Since the provider picked a random ephemeral port for this container, export the endpoint.
     const endpoint = container.ports.apply(
-      (ports) => `localhost:${ports![0].external}`,
+      (ports) => `host.docker.internal:${ports![0].external}`,
     )
 
     return {

@@ -28,10 +28,6 @@ jobs:
       - name: Build Packages
         run: yarn build
 
-      - name: Install Pulumi Dependencies
-        run: yarn
-        working-directory: e2e
-
       - name: Install pulumi
         uses: pulumi/setup-pulumi@v2
         with:
