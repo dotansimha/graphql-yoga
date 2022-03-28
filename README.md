@@ -13,7 +13,7 @@ We are working on documentation and examples for the `beta` release. You can che
 ### Installation
 
 ```shell
-npm i @graphql-yoga/node@beta graphql
+npm i @graphql-yoga/node graphql
 ```
 
 ### Basic Usage
