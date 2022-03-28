@@ -33,11 +33,14 @@ async function run(
     await testPlan.config(stack)
     console.info('\t✅ Pulumi configuration is now set')
     console.info('ℹ️ Running Pulumi program...')
-
     const info = await stack.info()
-
     console.info(`ℹ️ Current Pulumi stack status: ${info?.result}`)
 
+    let shouldRefresh = false
+
+    // This is done in order to make sure not to fail on a previously running / zombie
+    // jobs in Pulumi. If we had to cancel an existing stack, we want to make sure to wait for the cleanup
+    // to be done, so we set shouldRefresh=true
     if (info?.result === 'in-progress' || info?.result === 'not-started') {
       console.info('ℹ️ Cancelling in-progress Pulumi update...', {
         version: info.version,
@@ -46,15 +49,13 @@ async function run(
       })
 
       await stack.cancel()
+      shouldRefresh = true
     }
-
-    await stack.destroy({ onOutput: console.log })
-
-    process.exit(1)
 
     // Since we are going to deploy a fresh deployment, we don't really need to run Pulumi refresh.
     // When experimenting locally with e2e testing, this is needed to make sure to get the latest changes.
-    if (!process.env.CI) {
+    // Also, if we had to cancel a zombie/hanging Pulumi jobs.
+    if (shouldRefresh) {
       console.info('ℹ️ Refreshing Pulumi state...')
       await stack.refresh({ onOutput: console.log })
     }
@@ -72,9 +73,19 @@ async function run(
 
     throw e
   } finally {
-    console.info('ℹ️ Destroying stack and removing all resources...')
-    await stack.destroy({ onOutput: console.log })
-    console.info('✅ Destroy done')
+    // In KEEP is set, we can test and experiment with deployment before they are being removed.
+    // DOTAN: If you are using it, please make sure to run it again without `KEEP` set to make sure to remove all resources, or delete manually.
+    if (!process.env.KEEP) {
+      // DOTAN: maybe there is a way to tell Pulumi to start the delete process, but not wait for all resources to be deleted?
+      // This section adds ~30-60s on Azure Functions (because it has ~10 "heavy" resources to delete)
+      console.info(
+        'ℹ️ Destroying stack and removing all resources... this may take a while...',
+      )
+      await stack.destroy({ onOutput: console.log })
+      console.info('✅ Destroy/cleanup done')
+    } else {
+      console.info('<---> KEEPING RESOURCES <--->')
+    }
   }
 }
 

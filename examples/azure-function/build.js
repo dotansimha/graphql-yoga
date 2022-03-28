@@ -1,15 +1,15 @@
 const { build } = require('esbuild')
+const { writeFileSync } = require('fs')
 
-const { cpSync, writeFileSync } = require('fs')
-;(async function main() {
+async function main() {
   await build({
     entryPoints: ['./src/index.ts'],
-    bundle: true,
-    platform: 'node',
-    target: 'node14',
-    minify: true,
     outfile: 'dist/Yoga/index.js',
     treeShaking: true,
+    format: 'cjs',
+    bundle: true,
+    platform: 'node',
+    target: 'es2020',
   })
 
   writeFileSync(
@@ -56,9 +56,13 @@ const { cpSync, writeFileSync } = require('fs')
           name: 'res',
         },
       ],
-      // scriptFile: './index.js',
     }),
   )
 
-  console.info(`Done`)
-})()
+  console.info(`Azure Function build done!`)
+}
+
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})

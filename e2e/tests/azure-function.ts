@@ -92,27 +92,45 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       kind: storage.Kind.StorageV2,
     })
 
-    const codeContainer = new storage.BlobContainer('yogazips', {
-      resourceGroupName: resourceGroup.name,
-      accountName: storageAccount.name,
-    })
-
-    const codeBlob = new storage.Blob('zip', {
-      resourceGroupName: resourceGroup.name,
-      accountName: storageAccount.name,
-      containerName: codeContainer.name,
-      source: new pulumi.asset.FileArchive('../examples/azure-function/dist'),
-    })
-
-    const plan = new web.AppServicePlan('planlinux', {
-      resourceGroupName: resourceGroup.name,
-      sku: {
-        name: 'Y1',
-        tier: 'Dynamic',
+    const codeContainer = new storage.BlobContainer(
+      'yogazips',
+      {
+        resourceGroupName: resourceGroup.name,
+        accountName: storageAccount.name,
       },
-      kind: 'Linux',
-      reserved: true,
-    })
+      {
+        deleteBeforeReplace: true,
+      },
+    )
+
+    const codeBlob = new storage.Blob(
+      'zip',
+      {
+        resourceGroupName: resourceGroup.name,
+        accountName: storageAccount.name,
+        containerName: codeContainer.name,
+        source: new pulumi.asset.FileArchive('../examples/azure-function/dist'),
+      },
+      {
+        deleteBeforeReplace: true,
+      },
+    )
+
+    const plan = new web.AppServicePlan(
+      'planlinux',
+      {
+        resourceGroupName: resourceGroup.name,
+        sku: {
+          name: 'Y1',
+          tier: 'Dynamic',
+        },
+        kind: 'Linux',
+        reserved: true,
+      },
+      {
+        deleteBeforeReplace: true,
+      },
+    )
 
     const storageConnectionString = getConnectionString(
       resourceGroup.name,
@@ -125,23 +143,29 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       resourceGroup,
     )
 
-    const app = new web.WebApp('fa', {
-      resourceGroupName: resourceGroup.name,
-      serverFarmId: plan.id,
-      kind: 'functionapp',
-      siteConfig: {
-        appSettings: [
-          { name: 'AzureWebJobsStorage', value: storageConnectionString },
-          { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~3' },
-          { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' },
-          { name: 'WEBSITE_NODE_DEFAULT_VERSION', value: '~14' },
-          { name: 'WEBSITE_RUN_FROM_PACKAGE', value: codeBlobUrl },
-        ],
-        http20Enabled: true,
-        httpLoggingEnabled: true,
-        nodeVersion: '~14',
+    const app = new web.WebApp(
+      'fa',
+      {
+        resourceGroupName: resourceGroup.name,
+        serverFarmId: plan.id,
+        kind: 'functionapp',
+        siteConfig: {
+          appSettings: [
+            { name: 'AzureWebJobsStorage', value: storageConnectionString },
+            { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~3' },
+            { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' },
+            { name: 'WEBSITE_NODE_DEFAULT_VERSION', value: '~14' },
+            { name: 'WEBSITE_RUN_FROM_PACKAGE', value: codeBlobUrl },
+          ],
+          http20Enabled: true,
+          httpLoggingEnabled: true,
+          nodeVersion: '~14',
+        },
       },
-    })
+      {
+        deleteBeforeReplace: true,
+      },
+    )
 
     return {
       functionUrl: pulumi.interpolate`https://${app.defaultHostName}/api/yoga`,
