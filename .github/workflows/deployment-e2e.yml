@@ -6,7 +6,7 @@ jobs:
   test-deploy:
     strategy:
       matrix:
-        plan: ['cf-worker']
+        plan: ['cf-worker', 'azure-function']
     name: ${{ matrix.plan }}
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
@@ -56,5 +56,3 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          # Docker
-          DOCKER_HOST: ${{ steps.vars.outputs.docker_host }}

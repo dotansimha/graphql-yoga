@@ -154,12 +154,11 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
             { name: 'AzureWebJobsStorage', value: storageConnectionString },
             { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~3' },
             { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' },
-            { name: 'WEBSITE_NODE_DEFAULT_VERSION', value: '~14' },
             { name: 'WEBSITE_RUN_FROM_PACKAGE', value: codeBlobUrl },
           ],
           http20Enabled: true,
           httpLoggingEnabled: true,
-          nodeVersion: '~14',
+          linuxFxVersion: 'node|14',
         },
       },
       {
@@ -173,7 +172,7 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
   },
   test: async ({ functionUrl }) => {
     console.log(`ℹ️ Azure Function deployed to URL: ${functionUrl.value}`)
-    // await assertGraphiQL(functionUrl.value)
-    // await assertQuery(functionUrl.value)
+    await assertGraphiQL(functionUrl.value)
+    await assertQuery(functionUrl.value)
   },
 }

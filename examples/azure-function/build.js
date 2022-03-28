@@ -9,7 +9,7 @@ async function main() {
     minify: false,
     bundle: true,
     platform: 'node',
-    target: 'node12',
+    target: 'node14',
   })
 
   writeFileSync(
