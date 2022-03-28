@@ -2,6 +2,8 @@
 
 Based on: https://tlakomy.com/build-a-simple-graphql-server-with-apollo-and-cdk
 
+> Note: This is a whole Terraform CDK + AWS CDK example project.
+
 ## Useful commands
 
 - `npm run build` compile typescript to js
