@@ -3,6 +3,7 @@ import { hideBin } from 'yargs/helpers'
 import { GraphQLExtensionDeclaration, loadConfig } from 'graphql-config'
 import { CodeFileLoader } from '@graphql-tools/code-file-loader'
 import { createServer } from '@graphql-yoga/node'
+import { addMocksToSchema } from '@graphql-tools/mock'
 
 const terminateEvents = ['SIGINT', 'SIGTERM']
 
@@ -24,7 +25,10 @@ export const YogaExtensions: GraphQLExtensionDeclaration = (api) => {
 }
 
 export function graphqlYoga() {
-  return yargs(hideBin(process.argv)).command<{ project: string }>(
+  return yargs(hideBin(process.argv)).command<{
+    project: string
+    mock: boolean
+  }>(
     '$0',
     'Serves GraphQL over HTTP using your GraphQL Config',
     (builder) => {
@@ -32,18 +36,34 @@ export function graphqlYoga() {
         type: 'string',
         description: 'Project name',
       })
+      builder.option('mock', {
+        type: 'boolean',
+        description: 'Mock the given schema',
+      })
     },
-    async ({ project = 'default' }) => {
+    async ({ project = 'default', mock }) => {
       console.info(`Loading GraphQL Config from ${process.cwd()}`)
       const config = await loadConfig({
         extensions: [YogaExtensions],
+        throwOnMissing: false,
+        throwOnEmpty: false,
       })
       console.log(`Loading project: ${project}`)
       const projectConfig = config?.getProject(project)
       console.log(`Loading GraphQL Schema of ${project}`)
-      const schema = await projectConfig?.getSchema()
+      let schema = await projectConfig?.getSchema()
       if (!schema) {
-        throw new Error(`Could not find schema for project ${project}`)
+        console.warn(
+          `Could not find schema for project ${project} fallback to default schema`,
+        )
+      }
+      if (mock) {
+        if (!schema) {
+          console.warn('No schema found for mocking. Skipping mocking.')
+        } else {
+          console.log(`Adding mocks to the schema`)
+          schema = addMocksToSchema({ schema })
+        }
       }
       console.log(`Building GraphQL Server`)
       const graphQLServer = createServer({
