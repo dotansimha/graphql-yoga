@@ -1,6 +1,6 @@
 import { Stack } from '@pulumi/pulumi/automation'
 import { DeploymentConfiguration } from '../types'
-import { assertGraphiQL, assertQuery, env } from '../utils'
+import { assertQuery, env } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
 import { execSync } from 'child_process'
 import * as aws from '@pulumi/aws'
@@ -20,16 +20,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
   config: async (stack: Stack) => {
     // Configure the Pulumi environment with the Azure credentials
     // This will allow Pulummi program to just run without caring about secrets/configs.
-    // See: https://www.pulumi.com/registry/packages/aws-native/installation-configuration/
-    await stack.setConfig('aws-native:accessKey', {
-      value: env('AWS_ACCESS_KEY'),
-    })
-    await stack.setConfig('aws-native:secretKey', {
-      value: env('AWS_SECRET_KEY'),
-    })
-    await stack.setConfig('aws-native:region', {
-      value: env('AWS_REGION'),
-    })
+    // See: https://www.pulumi.com/registry/packages/aws/installation-configuration/
     await stack.setConfig('aws:accessKey', {
       value: env('AWS_ACCESS_KEY'),
     })
@@ -105,7 +96,8 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
   },
   test: async ({ functionUrl }) => {
     console.log(`ℹ️ AWS Lambda Function deployed to URL: ${functionUrl.value}`)
+    // DOTAN: This is a known issue at the moment, this seems to fail to serve GraphiQL but POST does work.
     // await assertGraphiQL(functionUrl.value)
-    // await assertQuery(functionUrl.value)
+    await assertQuery(functionUrl.value)
   },
 }

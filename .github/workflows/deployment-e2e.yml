@@ -6,7 +6,7 @@ jobs:
   test-deploy:
     strategy:
       matrix:
-        plan: ['cf-worker', 'azure-function']
+        plan: ['cf-worker', 'azure-function', 'aws-lambda']
     name: ${{ matrix.plan }}
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
@@ -56,3 +56,8 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          # AWS
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
