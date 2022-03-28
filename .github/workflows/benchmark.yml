@@ -29,6 +29,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-17-node-modules-
 
+      - name: Install Dependencies using Yarn
+        run: yarn
+
       - name: Build Packages
         run: yarn build
 

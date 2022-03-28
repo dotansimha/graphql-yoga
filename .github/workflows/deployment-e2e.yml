@@ -14,13 +14,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 16
+      - name: Use Node 17
         uses: actions/setup-node@master
         with:
-          node-version: 16
+          node-version: 17
 
-      - name: Get yarn cache
-        uses: c-hive/gha-yarn-cache@v2
+      - name: Cache Yarn
+        id: yarn-cache-17
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            **/node_modules
+          key: ${{ runner.os }}-17-node-modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-17-node-modules-
 
       - name: Install Dependencies using Yarn
         run: yarn --ignore-engines
