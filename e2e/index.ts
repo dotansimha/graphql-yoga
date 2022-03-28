@@ -1,4 +1,5 @@
 import { LocalWorkspace } from '@pulumi/pulumi/automation'
+import { awsLambdaDeployment } from './tests/aws-lambda'
 import { azureFunctionDeployment } from './tests/azure-function'
 import { cloudFlareDeployment } from './tests/cf-worker'
 import { dockerDeployment } from './tests/docker'
@@ -8,6 +9,7 @@ import { env, getCommitId } from './utils'
 const AVAILABLE_TEST_PLANS = {
   'cf-worker': cloudFlareDeployment,
   'azure-function': azureFunctionDeployment,
+  'aws-lambda': awsLambdaDeployment,
   'docker-node-17': dockerDeployment('node:17.8.0-alpine3.14'),
 }
 
