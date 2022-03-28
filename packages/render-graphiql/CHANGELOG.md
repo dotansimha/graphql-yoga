@@ -1,8 +1,8 @@
 # @graphql-yoga/render-graphiql
 
-## 0.1.0
+## 2.0.0
 
-### Minor Changes
+### Major Changes
 
 - f88b30b: feat(graphiql): use query search param for default query
 - a665e1e: feat(graphiql): better colors and ability to change title

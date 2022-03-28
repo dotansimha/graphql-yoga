@@ -1,8 +1,8 @@
 # @graphql-yoga/node
 
-## 0.1.0
+## 2.0.0
 
-### Minor Changes
+### Major Changes
 
 - d414f95: **BREAKING** Set `maskedErrors` value to `true` by default for safer defaults.
 

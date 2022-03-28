@@ -1,8 +1,8 @@
 # @graphql-yoga/common
 
-## 0.1.0
+## 2.0.0
 
-### Minor Changes
+### Major Changes
 
 - 6750eff: rename `GraphQLServerError` to `GraphQLYogaError`.
 - 0edf1f8: feat: options for GraphiQL

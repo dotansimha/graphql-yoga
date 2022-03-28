@@ -1,8 +1,8 @@
 # @graphql-yoga/graphiql
 
-## 0.1.0
+## 2.0.0
 
-### Minor Changes
+### Major Changes
 
 - 799a050: Improve caret color, add hover colors and add some paddings
 - a665e1e: feat(graphiql): better colors and ability to change title

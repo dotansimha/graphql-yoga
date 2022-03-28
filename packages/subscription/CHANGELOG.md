@@ -1,8 +1,8 @@
 # @graphql-yoga/subscription
 
-## 0.1.0
+## 2.0.0
 
-### Minor Changes
+### Major Changes
 
 - 3e771f5: re-export `Repeater` from `@repeaterjs/repeater`
 - e99ec3e: initial subscription package implementation
