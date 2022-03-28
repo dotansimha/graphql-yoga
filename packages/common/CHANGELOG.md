@@ -1,5 +1,22 @@
 # @graphql-yoga/common
 
+## 0.1.0-beta.8
+
+### Minor Changes
+
+- 6d60ebf: add tabs to GraphiQL
+- 0424fe3: feat(common/node): simpler integration
+
+### Patch Changes
+
+- 2b6916f: fix(common): error responses should also have data: null per spec
+- d137445: fix(common): encode string before passing in SSE Responses
+- 2b6916f: fix(common): correct content-type for error responses
+- Updated dependencies [9f628e5]
+- Updated dependencies [6d60ebf]
+- Updated dependencies [9f628e5]
+  - @graphql-yoga/render-graphiql@0.1.0-beta.3
+
 ## 0.1.0-beta.7
 
 ### Minor Changes

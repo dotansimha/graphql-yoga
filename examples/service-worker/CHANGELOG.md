@@ -1,5 +1,16 @@
 # service-worker
 
+## 0.0.1-beta.6
+
+### Patch Changes
+
+- Updated dependencies [2b6916f]
+- Updated dependencies [6d60ebf]
+- Updated dependencies [0424fe3]
+- Updated dependencies [d137445]
+- Updated dependencies [2b6916f]
+  - @graphql-yoga/common@0.1.0-beta.8
+
 ## 0.0.1-beta.5
 
 ### Patch Changes

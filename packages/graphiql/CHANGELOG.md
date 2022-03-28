@@ -1,5 +1,11 @@
 # @graphql-yoga/graphiql
 
+## 0.1.0-beta.3
+
+### Minor Changes
+
+- 6d60ebf: add tabs to GraphiQL
+
 ## 0.1.0-beta.2
 
 ### Minor Changes

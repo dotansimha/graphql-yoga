@@ -1,5 +1,23 @@
 # @graphql-yoga/node
 
+## 0.1.0-beta.8
+
+### Minor Changes
+
+- 3c82b57: feat(node): respect parsed request bodies (e.g. graphql-upload)
+- 6d60ebf: add tabs to GraphiQL
+- 0424fe3: feat(common/node): simpler integration
+
+### Patch Changes
+
+- d60f79f: fix(node): resolve sendNodeResponse correctly when stream has been finished
+- Updated dependencies [2b6916f]
+- Updated dependencies [6d60ebf]
+- Updated dependencies [0424fe3]
+- Updated dependencies [d137445]
+- Updated dependencies [2b6916f]
+  - @graphql-yoga/common@0.1.0-beta.8
+
 ## 0.1.0-beta.7
 
 ### Minor Changes
