@@ -35,7 +35,9 @@ jobs:
 
       - name: Set outputs
         id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          echo "::set-output name=docker_host::$(docker context inspect --format '{{.Endpoints.docker.Host}}')"
 
       - name: Provision & Test
         run: yarn start
@@ -54,3 +56,5 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          # Docker
+          DOCKER_HOST: ${{ steps.vars.outputs.docker_host }}
