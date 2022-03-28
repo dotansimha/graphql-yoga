@@ -62,7 +62,7 @@ const graphQLServer = createServer<{
 }>()
 ```
 
-### For WHATWG-compliant environments like Cloudflare Workers and Deno;
+### For WHATWG-compliant environments like Cloudflare Workers and Deno
 
 If you are using Cloudflare Workers with `.start()` method, it will merge [WHATWG `FetchEvent` object](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent) into the context object.
 And that object is almost similar to what GraphQL Yoga provides you with `YogaInitialContext`. Other than that, GraphQL Yoga doesn't add anything specific to the context object because it is not needed like in Node.js.
