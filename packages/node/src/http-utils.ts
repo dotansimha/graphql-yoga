@@ -49,14 +49,18 @@ function buildFullUrl(addressInfo: AddressInfo) {
   return `${addressInfo.protocol}://${addressInfo.hostname}:${addressInfo.port}${addressInfo.endpoint}`
 }
 
+function configureSocket(rawRequest: NodeRequest) {
+  rawRequest?.socket?.setTimeout?.(0)
+  rawRequest?.socket?.setNoDelay?.(true)
+  rawRequest?.socket?.setKeepAlive?.(true)
+}
+
 export function getNodeRequest(
   nodeRequest: NodeRequest,
   defaultAddressInfo: AddressInfo,
 ): Request {
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
-  rawRequest.socket?.setTimeout(0)
-  rawRequest.socket?.setNoDelay(true)
-  rawRequest.socket?.setKeepAlive(true)
+  configureSocket(rawRequest)
   const addressInfo = getRequestAddressInfo(rawRequest, defaultAddressInfo)
   let fullUrl = buildFullUrl(addressInfo)
   if (nodeRequest.query) {
