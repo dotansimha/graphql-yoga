@@ -6,6 +6,8 @@ import puppeteer from 'puppeteer'
 import { createServer, GraphQLYogaError } from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+import 'json-bigint-patch'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -468,6 +470,7 @@ describe('GraphiQL', () => {
   const yogaApp = createServer({
     schema: createTestSchema(),
     logging: false,
+    renderGraphiQL,
   })
 
   let browser: puppeteer.Browser
@@ -631,5 +634,18 @@ describe('GraphiQL', () => {
         2,
       ),
     )
+  })
+
+  test('should show BigInt correctly', async () => {
+    await page.goto(`http://localhost:4000/graphql`)
+    await typeOperationText(`{ bigint }`)
+    await page.click('.execute-button')
+    const resultContents = await waitForResult()
+
+    expect(resultContents).toEqual(`{
+  "data": {
+    "bigint": ${BigInt('112345667891012345')}
+  }
+}`)
   })
 })

@@ -85,3 +85,23 @@ So if your goal is to avoid unknown actors from reverse-engineering your GraphQL
 Envelop has the plugin [`@envelop/persisted-operations`](https://www.npmjs.com/package/@envelop/persisted-operations) that can be used with GraphQL Yoga.
 
 A more detailed guide and example for adding persisted operations to GraphQL Yoga will follow.
+
+## Offline Usage
+
+By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc).
+If you want to use GraphiQL from a local version, you need to install it manually.
+
+<PackageInstall packages={['@graphql-yoga/render-graphiql']} />
+
+And you need to pass imported `renderGraphiQL` to `createServer` like below;
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+
+const yoga = createServer({
+  renderGraphiQL,
+})
+
+yoga.start()
+```
