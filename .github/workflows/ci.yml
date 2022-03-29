@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -59,6 +60,7 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 17
+          cache: 'yarn'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -94,6 +96,7 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 17
+          cache: 'yarn'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
