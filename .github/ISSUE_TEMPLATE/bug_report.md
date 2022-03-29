@@ -7,7 +7,7 @@ about: Create a bug report to help us improve
 
 _Progress of the issue based on the [Contributor Workflow](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md#a-typical-contributor-workflow)_
 
-- [ ] 1. The issue provides a [minimal reproduction](https://en.wikipedia.org/wiki/Minimal_reproducible_example) available on [Stackblitz](https://stackblitz.com/fork/node).
+- [ ] 1. The issue provides a [minimal reproduction](https://en.wikipedia.org/wiki/Minimal_reproducible_example) available on [Stackblitz using the issue template](https://stackblitz.com/github/dotansimha/graphql-yoga/tree/master/examples/issue-template).
   - _Please install the latest `@graphql-yoga/*` packages that you are using._
   - _Please makee sure the reproduction is as small as possible._
 - [ ] 2. A failing test has been provided
