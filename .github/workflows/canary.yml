@@ -17,9 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 17
-
-      - name: Get yarn cache
-        uses: c-hive/gha-yarn-cache@v2
+          cache: 'yarn'
 
       - name: Install Dependencies using Yarn
         run: yarn
