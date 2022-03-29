@@ -1,6 +1,10 @@
 name: Tests
 on:
   pull_request:
+    paths:
+      - 'packages/**'
+      - 'examples/**'
+      - 'patches/**'
 
 jobs:
   test-node:

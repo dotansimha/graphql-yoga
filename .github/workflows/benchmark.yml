@@ -1,6 +1,10 @@
 name: Benchmark
 on:
   pull_request:
+    paths:
+      - 'packages/**'
+      - 'examples/**'
+      - 'patches/**'
 
 jobs:
   benchmarks:
