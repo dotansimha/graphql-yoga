@@ -2,10 +2,7 @@ name: Benchmark
 on:
   pull_request:
     paths:
-      - 'packages/**'
-      - 'examples/**'
-      - 'patches/**'
-
+      - '!website/**'
 jobs:
   benchmarks:
     runs-on: ubuntu-latest

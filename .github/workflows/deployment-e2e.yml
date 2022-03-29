@@ -2,9 +2,7 @@ name: Deployment E2E
 on:
   pull_request:
     paths:
-      - 'packages/**'
-      - 'examples/**'
-      - 'patches/**'
+      - '!website/**'
 
 jobs:
   test-deploy:

@@ -2,9 +2,7 @@ name: Tests
 on:
   pull_request:
     paths:
-      - 'packages/**'
-      - 'examples/**'
-      - 'patches/**'
+      - '!website/**'
 
 jobs:
   test-node:
