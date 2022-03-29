@@ -19,6 +19,9 @@ export async function waitForEndpoint(
     try {
       const r = await request(endpoint, {
         method: 'GET',
+        headers: {
+          accept: 'text/html',
+        },
       })
 
       if (r.statusCode !== 200) {
