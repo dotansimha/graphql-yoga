@@ -17,14 +17,24 @@ export async function waitForEndpoint(
       `Trying to connect to ${endpoint} (attempt ${attempt}/${retries})...`,
     )
     try {
-      await request(endpoint, {
+      const r = await request(endpoint, {
         method: 'GET',
+        headers: {
+          accept: 'text/html',
+        },
       })
+
+      if (r.statusCode !== 200) {
+        throw new Error(
+          `Endpoint not ready yet, status code is ${r.statusCode}`,
+        )
+      }
 
       return true
     } catch (e) {
       console.warn(
         `Failed to connect to endpoint: ${endpoint}, waiting ${timeout}ms...`,
+        e.message,
       )
 
       await new Promise((resolve) => setTimeout(resolve, timeout))
@@ -45,7 +55,7 @@ export function env(name: string): string {
 }
 
 export async function assertGraphiQL(endpoint: string) {
-  console.log(`ℹ️ Looking for valid Yoga GraphiQL in ${endpoint}...`)
+  console.log(`ℹ️ Looking for valid Yoga GraphiQL in ${endpoint}`)
 
   const { statusCode, body } = await request(endpoint, {
     method: 'GET',
