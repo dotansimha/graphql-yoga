@@ -6,7 +6,7 @@ jobs:
   test-deploy:
     strategy:
       matrix:
-        plan: ['cf-worker', 'azure-function', 'aws-lambda']
+        plan: ['cf-worker', 'azure-function', 'aws-lambda', 'vercel-function']
     name: ${{ matrix.plan }}
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
@@ -59,3 +59,5 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          # Vercel
+          VERCEL_AUTH_TOKEN: ${{ secrets.VERCEL_AUTH_TOKEN }}
