@@ -6,9 +6,7 @@
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
-You can try out the `beta` release today and give us [feedback](https://github.com/dotansimha/graphql-yoga/issues/704)!.
-
-We are working on documentation and examples for the `beta` release. You can check them out https://www.graphql-yoga.com
+Checkout latest docs https://www.graphql-yoga.com
 
 ### Installation
 
@@ -18,7 +16,7 @@ npm i @graphql-yoga/node graphql
 
 ### Basic Usage
 
-We are actively working on API for the library. This is a very simple example of how to use it:
+This is a very simple example of how to use it:
 
 ```js
 const { createServer } = require('@graphql-yoga/node')
