@@ -3,7 +3,7 @@ import { execSync } from 'child_process'
 import { readFileSync } from 'fs'
 import { DeploymentConfiguration } from '../types'
 import * as cf from '@pulumi/cloudflare'
-import { assertGraphiQL, assertQuery, env } from '../utils'
+import { assertGraphiQL, assertQuery, env, waitForEndpoint } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
 
 export const cloudFlareDeployment: DeploymentConfiguration<{
@@ -64,6 +64,7 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
   },
   test: async ({ workerUrl }) => {
     console.log(`ℹ️ CloudFlare Worker deployed to URL: ${workerUrl.value}`)
+    await waitForEndpoint(workerUrl.value, 5, 10000)
     await assertGraphiQL(workerUrl.value)
     await assertQuery(workerUrl.value)
   },
