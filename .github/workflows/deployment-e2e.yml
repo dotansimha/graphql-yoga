@@ -1,6 +1,8 @@
 name: Deployment E2E
 on:
   pull_request:
+    paths:
+      - '!website/**'
 
 jobs:
   test-deploy:

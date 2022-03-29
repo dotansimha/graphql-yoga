@@ -1,6 +1,8 @@
 name: Tests
 on:
   pull_request:
+    paths:
+      - '!website/**'
 
 jobs:
   test-node:
