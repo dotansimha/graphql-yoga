@@ -2,6 +2,8 @@ name: Canary Release
 
 on:
   pull_request:
+    paths:
+      - '.changeset/**/*.md'
 
 jobs:
   publish-canary:
