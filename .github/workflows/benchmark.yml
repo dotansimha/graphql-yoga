@@ -1,8 +1,8 @@
 name: Benchmark
 on:
   pull_request:
-    paths:
-      - '!website/**'
+    paths-ignore:
+      - 'website/**'
 jobs:
   benchmarks:
     runs-on: ubuntu-latest

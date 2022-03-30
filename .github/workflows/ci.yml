@@ -1,8 +1,8 @@
 name: Tests
 on:
   pull_request:
-    paths:
-      - '!website/**'
+    paths-ignore:
+      - 'website/**'
 
 jobs:
   test-node:
