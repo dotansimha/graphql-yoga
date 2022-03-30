@@ -9,6 +9,7 @@ import {
   enableIf,
   useLogger,
   useSchema,
+  PromiseOrValue,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -94,6 +95,8 @@ export type YogaServerOptions<
           : [serverContext: TServerContext]
       ) => GraphiQLOptions | false)
     | false
+
+  renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
   schema?:
     | GraphQLSchema
@@ -181,6 +184,8 @@ export class YogaServer<
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
   ) => GraphiQLOptions | false
+
+  renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
@@ -295,6 +300,8 @@ export class YogaServer<
     } else {
       this.graphiqlOptionsFactory = () => ({})
     }
+
+    this.renderGraphiQL = options?.renderGraphiQL || renderGraphiQL
   }
 
   getCORSResponseHeaders(
@@ -401,7 +408,7 @@ export class YogaServer<
       if (shouldRenderGraphiQL(request)) {
         const graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
         if (graphiqlOptions) {
-          const graphiQLBody = renderGraphiQL(graphiqlOptions)
+          const graphiQLBody = await this.renderGraphiQL(graphiqlOptions)
           return new Response(graphiQLBody, {
             headers: {
               'Content-Type': 'text/html',

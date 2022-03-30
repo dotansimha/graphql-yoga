@@ -15,6 +15,7 @@ import './styles.css'
 import './dark-mode.css'
 import { YogaLogo } from './YogaLogo'
 import { useUrlSearchParams } from 'use-url-search-params'
+import 'json-bigint-patch'
 
 const getOperationWithFragments = (
   document: DocumentNode,

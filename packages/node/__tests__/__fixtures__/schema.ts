@@ -8,6 +8,7 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
+import { GraphQLBigInt } from 'graphql-scalars'
 
 export function createTestSchema() {
   return new GraphQLSchema({
@@ -51,6 +52,10 @@ export function createTestSchema() {
             await new Promise((resolve) => setTimeout(resolve, 1000))
             yield 'C'
           },
+        },
+        bigint: {
+          type: GraphQLBigInt,
+          resolve: () => BigInt('112345667891012345'),
         },
       }),
     }),
