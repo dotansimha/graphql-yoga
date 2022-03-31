@@ -30,7 +30,6 @@ import { fetch, Request, Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, YogaLogger } from './logger'
-import micromatch from 'micromatch'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -326,10 +325,13 @@ export class YogaServer<
     const currentOrigin = request.headers.get('origin') || '*'
     headers['Access-Control-Allow-Origin'] = currentOrigin
 
-    if (corsOptions.origin?.length && currentOrigin !== '*') {
-      if (!micromatch.isMatch(currentOrigin, corsOptions.origin)) {
-        headers['Access-Control-Allow-Origin'] = 'null'
-      }
+    if (
+      corsOptions.origin?.length &&
+      currentOrigin !== '*' &&
+      !corsOptions.origin.includes(currentOrigin) &&
+      !corsOptions.origin.includes('*')
+    ) {
+      headers['Access-Control-Allow-Origin'] = 'null'
     }
 
     headers['Access-Control-Allow-Methods'] = corsOptions.methods
