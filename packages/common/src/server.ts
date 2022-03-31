@@ -388,10 +388,6 @@ export class YogaServer<
       headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
     }
 
-    if (headers['Access-Control-Allow-Origin'] !== '*') {
-      headers['Vary'] = 'Origin'
-    }
-
     headers['Server'] = 'GraphQL Yoga'
 
     return headers
