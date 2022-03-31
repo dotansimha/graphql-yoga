@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.117.0/http/server.ts'
-import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/common?dts'
+import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/common'
 
 const graphQLServer = createServer()
 
