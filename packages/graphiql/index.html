@@ -21,7 +21,9 @@
     <script type="module">
       import * as yogaGraphiQL from './src/bundle.tsx'
       const container = window.document.querySelector('#root')
-      yogaGraphiQL.renderYogaGraphiQL(container)
+      yogaGraphiQL.renderYogaGraphiQL(container, {
+        endpoint: 'http://localhost:4000/graphql',
+      })
     </script>
   </body>
 </html>

@@ -322,35 +322,61 @@ export class YogaServer<
 
     const headers: Record<string, string> = {}
 
-    const currentOrigin = request.headers.get('origin') || '*'
-    headers['Access-Control-Allow-Origin'] = currentOrigin
+    const currentOrigin = request.headers.get('origin')
+
+    headers['Access-Control-Allow-Origin'] = '*'
+
+    if (currentOrigin) {
+      const credentialsAsked = request.headers.get('cookies')
+      if (credentialsAsked) {
+        headers['Access-Control-Allow-Origin'] = currentOrigin
+      }
+    }
 
     if (
+      currentOrigin != null &&
       corsOptions.origin?.length &&
-      currentOrigin !== '*' &&
       !corsOptions.origin.includes(currentOrigin) &&
       !corsOptions.origin.includes('*')
     ) {
       headers['Access-Control-Allow-Origin'] = 'null'
     }
 
-    headers['Access-Control-Allow-Methods'] = corsOptions.methods
-      ? corsOptions.methods.join(', ')
-      : request.headers.get('access-control-request-method') ||
-        'GET, POST, OPTIONS'
+    if (headers['Access-Control-Allow-Origin'] !== '*') {
+      headers['Vary'] = 'Origin'
+    }
 
-    headers['Access-Control-Allow-Headers'] = corsOptions.allowedHeaders
-      ? corsOptions.allowedHeaders.join(', ')
-      : request.headers.get('access-control-request-headers') ||
-        'content-type, content-length, accept-encoding'
+    if (corsOptions.methods?.length) {
+      headers['Access-Control-Allow-Methods'] = corsOptions.methods.join(', ')
+    } else {
+      const requestMethod = request.headers.get('access-control-request-method')
+      if (requestMethod) {
+        headers['Access-Control-Allow-Methods'] = requestMethod
+      }
+    }
+
+    if (corsOptions.allowedHeaders?.length) {
+      headers['Access-Control-Allow-Headers'] =
+        corsOptions.allowedHeaders.join(', ')
+    } else {
+      const requestHeaders = request.headers.get(
+        'access-control-request-headers',
+      )
+      if (requestHeaders) {
+        headers['Access-Control-Allow-Headers'] = requestHeaders
+        if (headers['Vary']) {
+          headers['Vary'] += ', Access-Control-Request-Headers'
+        }
+        headers['Vary'] = 'Access-Control-Request-Headers'
+      }
+    }
 
     if (corsOptions.credentials != null) {
-      headers['Access-Control-Allow-Credentials'] = corsOptions.credentials
-        ? 'true'
-        : 'false'
-    } else {
-      headers['Access-Control-Allow-Credentials'] =
-        currentOrigin === '*' ? 'false' : 'true'
+      if (corsOptions.credentials === true) {
+        headers['Access-Control-Allow-Credentials'] = 'true'
+      }
+    } else if (headers['Access-Control-Allow-Origin'] !== '*') {
+      headers['Access-Control-Allow-Credentials'] = 'true'
     }
 
     if (corsOptions.exposedHeaders) {
@@ -362,11 +388,11 @@ export class YogaServer<
       headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
     }
 
-    headers['Server'] = 'GraphQL Yoga'
-
-    if (corsOptions.cacheByOrigin) {
+    if (headers['Access-Control-Allow-Origin'] !== '*') {
       headers['Vary'] = 'Origin'
     }
+
+    headers['Server'] = 'GraphQL Yoga'
 
     return headers
   }

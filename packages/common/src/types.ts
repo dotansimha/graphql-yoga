@@ -96,7 +96,6 @@ export interface CORSOptions {
   exposedHeaders?: string[]
   credentials?: boolean
   maxAge?: number
-  cacheByOrigin?: boolean
 }
 
 export type GraphQLServerInject<
