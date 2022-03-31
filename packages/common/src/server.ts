@@ -30,6 +30,7 @@ import { fetch, Request, Response } from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, YogaLogger } from './logger'
+import micromatch from 'micromatch'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -322,9 +323,14 @@ export class YogaServer<
 
     const headers: Record<string, string> = {}
 
-    headers['Access-Control-Allow-Origin'] = corsOptions.origin
-      ? corsOptions.origin.join(', ')
-      : request.headers.get('origin') || '*'
+    const currentOrigin = request.headers.get('origin') || '*'
+    headers['Access-Control-Allow-Origin'] = currentOrigin
+
+    if (corsOptions.origin?.length && currentOrigin !== '*') {
+      if (!micromatch.isMatch(currentOrigin, corsOptions.origin)) {
+        headers['Access-Control-Allow-Origin'] = 'null'
+      }
+    }
 
     headers['Access-Control-Allow-Methods'] = corsOptions.methods
       ? corsOptions.methods.join(', ')
@@ -336,8 +342,14 @@ export class YogaServer<
       : request.headers.get('access-control-request-headers') ||
         'content-type, content-length, accept-encoding'
 
-    headers['Access-Control-Allow-Credentials'] =
-      corsOptions.credentials == false ? 'false' : 'true'
+    if (corsOptions.credentials != null) {
+      headers['Access-Control-Allow-Credentials'] = corsOptions.credentials
+        ? 'true'
+        : 'false'
+    } else {
+      headers['Access-Control-Allow-Credentials'] =
+        currentOrigin === '*' ? 'false' : 'true'
+    }
 
     if (corsOptions.exposedHeaders) {
       headers['Access-Control-Expose-Headers'] =
@@ -349,6 +361,10 @@ export class YogaServer<
     }
 
     headers['Server'] = 'GraphQL Yoga'
+
+    if (corsOptions.cacheByOrigin) {
+      headers['Vary'] = 'Origin'
+    }
 
     return headers
   }
