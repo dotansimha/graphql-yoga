@@ -354,7 +354,7 @@ describe('Incremental Delivery', () => {
   })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
-      mutation upload($file: Upload!) {
+      mutation upload($file: File!) {
         singleUpload(file: $file) {
           name
           type
