@@ -15,7 +15,8 @@ You can use any kind of client supports GraphQL Upload specification.
 
 ## Example
 
-You only need to add a scalar type definition for `Upload` in your schema.
+You only need to add a scalar type definition for file uploads in your schema. The name of the scalar doesn't matter.
+Let's use `File` in this example.
 
 `file-upload-example.ts`
 
@@ -26,13 +27,13 @@ import { createServer } from '@graphql-yoga/node'
 const server = createServer({
   schema: {
     typeDefs: /* GraphQL */ `
-      scalar Upload
+      scalar File
 
       type Query {
         greetings: String!
       }
       type Mutation {
-        readTextFile(file: Upload!): String!
+        readTextFile(file: File!): String!
       }
     `,
     resolvers: {
@@ -40,6 +41,11 @@ const server = createServer({
         greetings: () => 'Hello World!',
       },
       Mutation: {
+        /**
+         * TypeScript type `File` is globally available.
+         * You don't need to install/import anything else
+         * for both `File` GraphQL Scalar and this type
+         */
         readTextFile: async (_, { file }: { file: File }) => {
           const textContent = await file.text()
           return textContent
@@ -56,7 +62,7 @@ server.start()
 
 ```sh
 curl localhost:4000/graphql \
-  -F operations='{ "query": "mutation ($file: Upload!) { readTextFile(file: $file) }", "variables": { "file": null } }' \
+  -F operations='{ "query": "mutation ($file: File!) { readTextFile(file: $file) }", "variables": { "file": null } }' \
   -F map='{ "0": ["variables.file"] }' \
   -F 0=@mytext.txt
 ```

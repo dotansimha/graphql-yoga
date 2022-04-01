@@ -46,7 +46,7 @@ export const schema = new GraphQLSchema({
           file: {
             description: 'File to upload',
             type: new GraphQLScalarType({
-              name: 'Upload',
+              name: 'File',
             }),
           },
         },
