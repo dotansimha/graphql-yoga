@@ -14,6 +14,7 @@ export function getRoutes(): IRoutes {
           ['subscriptions', 'Subscriptions'],
           ['file-uploads', 'File Uploads'],
           ['envelop-plugins', 'Envelop Plugins'],
+          ['testing', 'Testing'],
         ],
       },
       integrations: {
@@ -21,9 +22,6 @@ export function getRoutes(): IRoutes {
       },
       migration: {
         $name: 'Migration from',
-      },
-      testing: {
-        $name: 'Testing',
       },
     },
   }
