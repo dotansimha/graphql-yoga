@@ -1,17 +1,15 @@
 diff --git a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
-index 4bbfe2e..8e90921 100644
+index 4bbfe2e..2154232 100644
 --- a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
 +++ b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
-@@ -117,7 +117,8 @@ const DEPENDENCY_TYPES = ["dependencies", "devDependencies", "peerDependencies",
+@@ -116,6 +116,7 @@ function shouldUpdateDependencyBasedOnConfig(release, {
+ const DEPENDENCY_TYPES = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
  function versionPackage(release, versionsToUpdate, {
    updateInternalDependencies,
++  ignoreRange,
    onlyUpdatePeerDependentsWhenOutOfRange,
--  bumpVersionsWithWorkspaceProtocolOnly
-+  bumpVersionsWithWorkspaceProtocolOnly,
-+  ignoreRange
+   bumpVersionsWithWorkspaceProtocolOnly
  }) {
-   let {
-     newVersion,
 @@ -173,7 +174,7 @@ function versionPackage(release, versionsToUpdate, {
          // leaving those as is would leave the package in a non-installable state (wrong dep versions would get installed)
          semver__default['default'].prerelease(version) !== null) {
@@ -21,7 +19,145 @@ index 4bbfe2e..8e90921 100644
            if (usesWorkspaceRange) newNewRange = `workspace:${newNewRange}`;
            deps[name] = newNewRange;
          }
-@@ -287,7 +288,7 @@ async function getCommitsThatAddChangesets(changesetIds, cwd) {
+@@ -210,6 +211,19 @@ async function generateChangesForVersionTypeMarkdown(obj, type) {
+   }
+ } // release is the package and version we are releasing
+ 
++function getRelevantChangesets(
++  releases,
++  changesets
++) {
++  let relevantChangesetIds = new Set();
++  releases.forEach(rel => {
++    rel.changesets.forEach(cs => {
++      relevantChangesetIds.add(cs);
++    });
++  });
++
++  return changesets.filter(cs => relevantChangesetIds.has(cs.id));
++}
+ 
+ async function getChangelogEntry(release, releases, changesets, changelogFuncs, changelogOpts, {
+   updateInternalDependencies,
+@@ -232,32 +246,97 @@ async function getChangelogEntry(release, releases, changesets, changelogFuncs,
+       changelogLines[rls.type].push(changelogFuncs.getReleaseLine(cs, rls.type, changelogOpts));
+     }
+   });
+-  let dependentReleases = releases.filter(rel => {
++
++  let dependentReleases = [];
++  let peerDependentReleasesPatch = [];
++  let peerDependentReleasesMinor = [];
++  let peerDependentReleasesMajor = [];
++
++
++  releases.forEach(rel => {
+     var _release$packageJson$, _release$packageJson$2;
+ 
+     const dependencyVersionRange = (_release$packageJson$ = release.packageJson.dependencies) === null || _release$packageJson$ === void 0 ? void 0 : _release$packageJson$[rel.name];
+     const peerDependencyVersionRange = (_release$packageJson$2 = release.packageJson.peerDependencies) === null || _release$packageJson$2 === void 0 ? void 0 : _release$packageJson$2[rel.name];
+     const versionRange = dependencyVersionRange || peerDependencyVersionRange;
+-    return versionRange && shouldUpdateDependencyBasedOnConfig({
+-      type: rel.type,
+-      version: rel.newVersion
+-    }, {
+-      depVersionRange: versionRange,
+-      depType: dependencyVersionRange ? "dependencies" : "peerDependencies"
+-    }, {
+-      minReleaseType: updateInternalDependencies,
+-      onlyUpdatePeerDependentsWhenOutOfRange
+-    });
+-  });
+-  let relevantChangesetIds = new Set();
+-  dependentReleases.forEach(rel => {
+-    rel.changesets.forEach(cs => {
+-      relevantChangesetIds.add(cs);
+-    });
++    const depType = peerDependencyVersionRange
++      ? "peerDependencies"
++      : "dependencies";
++
++    const shouldUpdate =
++      versionRange 
++      && shouldUpdateDependencyBasedOnConfig({
++        type: rel.type,
++        version: rel.newVersion
++      }, {
++        depVersionRange: versionRange,
++        depType,
++      }, {
++        minReleaseType: updateInternalDependencies,
++        onlyUpdatePeerDependentsWhenOutOfRange
++      });
++
++    if (!shouldUpdate) {
++      return;
++    }
++
++    if (depType === "peerDependencies") {
++      if (rel.type === "patch") {
++        peerDependentReleasesPatch.push(rel)
++      } else if (rel.type === "minor") {
++        peerDependentReleasesMinor.push(rel)
++      } else if (rel.type === "major") {
++        peerDependentReleasesMajor.push(rel)
++      }
++    } else {
++      dependentReleases.push(rel);
++    }
+   });
+-  let relevantChangesets = changesets.filter(cs => relevantChangesetIds.has(cs.id));
+-  changelogLines.patch.push(changelogFuncs.getDependencyReleaseLine(relevantChangesets, dependentReleases, changelogOpts));
+-  return [`## ${release.newVersion}`, await generateChangesForVersionTypeMarkdown(changelogLines, "major"), await generateChangesForVersionTypeMarkdown(changelogLines, "minor"), await generateChangesForVersionTypeMarkdown(changelogLines, "patch")].filter(line => line).join("\n");
++
++  changelogLines.patch.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(peerDependentReleasesPatch, changesets),
++      peerDependentReleasesPatch,
++      changelogOpts,
++      "peerDependencies"
++    )
++  );
++
++  changelogLines.minor.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(peerDependentReleasesMinor, changesets),
++      peerDependentReleasesMinor,
++      changelogOpts,
++      "peerDependencies"
++    )
++  );
++
++  changelogLines.major.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(peerDependentReleasesMajor, changesets),
++      peerDependentReleasesMajor,
++      changelogOpts,
++      "peerDependencies"
++    )
++  );
++
++  changelogLines.patch.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(dependentReleases, changesets),
++      dependentReleases,
++      changelogOpts,
++      "dependencies"
++    )
++  );
++
++  return [
++    `## ${release.newVersion}`,
++    await generateChangesForVersionTypeMarkdown(changelogLines, "major"),
++    await generateChangesForVersionTypeMarkdown(changelogLines, "minor"),
++    await generateChangesForVersionTypeMarkdown(changelogLines, "patch")
++  ]
++    .filter(line => line)
++    .join("\n");
+ }
+ 
+ function stringDefined(s) {
+@@ -287,7 +366,7 @@ async function getCommitsThatAddChangesets(changesetIds, cwd) {
    return commits;
  }
  
@@ -30,11 +166,24 @@ index 4bbfe2e..8e90921 100644
    let cwd = packages.root.dir;
    let touchedFiles = [];
    const packagesByName = new Map(packages.packages.map(x => [x.packageJson.name, x]));
-@@ -325,6 +326,7 @@ async function applyReleasePlan(releasePlan, packages, config$1 = config.default
+@@ -324,6 +403,7 @@ async function applyReleasePlan(releasePlan, packages, config$1 = config.default
+ 
    let finalisedRelease = releaseWithChangelogs.map(release => {
      return versionPackage(release, versionsToUpdate, {
-       updateInternalDependencies: config$1.updateInternalDependencies,
 +      ignoreRange,
+       updateInternalDependencies: config$1.updateInternalDependencies,
        onlyUpdatePeerDependentsWhenOutOfRange: config$1.___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH.onlyUpdatePeerDependentsWhenOutOfRange,
        bumpVersionsWithWorkspaceProtocolOnly: config$1.bumpVersionsWithWorkspaceProtocolOnly
-     });
+diff --git a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
+index d6e3ccb..bb18a6a 100644
+--- a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
++++ b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
+@@ -1,7 +1,3 @@
+ 'use strict';
+ 
+-if (process.env.NODE_ENV === "production") {
+-  module.exports = require("./apply-release-plan.cjs.prod.js");
+-} else {
+-  module.exports = require("./apply-release-plan.cjs.dev.js");
+-}
++module.exports = require("./apply-release-plan.cjs.dev.js");
