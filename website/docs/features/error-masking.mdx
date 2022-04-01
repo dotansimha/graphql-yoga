@@ -168,7 +168,7 @@ This will add a more detailed error with a proper stacktrace to the errors exten
 Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be send to clients instead of being masked.
 This can be achieved by throwing a `GraphQLYogaError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
 
-E.g. you mgiht want to throw an error if a resource cannot be found by an ID.
+E.g. you might want to throw an error if a resource cannot be found by an ID.
 
 ```ts
 import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
