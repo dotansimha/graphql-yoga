@@ -4,9 +4,11 @@ title: Error Masking
 sidebar_label: Error Masking
 ---
 
-Yoga uses [the Envelop `useMaskedErrors`](https://www.envelop.dev/plugins/use-masked-errors) for automatically masking unexpected errors and thus preventing sensitive information leaking to clients.
+Yoga uses [the Envelop `useMaskedErrors`](https://www.envelop.dev/plugins/use-masked-errors) for automatically masking unexpected errors and preventing sensitive information leaking to clients.
 
-Such errors could be caused by failing to establish connection to remote services such as databases or HTTP APIs. Nobody needs to know that your database server is not reachable.
+Such errors could be caused by failing to establish connection to remote services such as databases or HTTP APIs.
+Nobody external needs to know that your database server is not reachable.
+Exposing such information to the outside world can make you vulnerable for targeted attacks.
 
 ## Getting started
 
@@ -18,7 +20,6 @@ import { fetch } from 'cross-undici-fetch'
 
 // Provide your schema
 const server = createServer({
-  maskedErrors: false,
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -44,7 +45,7 @@ const server = createServer({
 server.start()
 ```
 
-Executing the following operation will now result within a leaking error message that exposes information about internal API calls.
+Executing the following operation results in an execution result that does not include any detail from the error raised by the fetch call.
 
 **GraphQL Operation**
 
@@ -55,62 +56,6 @@ query {
 ```
 
 **Execution Result with leaking error message**
-
-```json
-{
-  "errors": [
-    {
-      "message": "request to http://localhost:9876/greeting failed, reason: connect ECONNREFUSED 127.0.0.1:9876",
-      "locations": [
-        {
-          "line": 2,
-          "column": 3
-        }
-      ],
-      "path": ["greeting"]
-    }
-  ],
-  "data": null
-}
-```
-
-By setting the `maskedErrors` configuration option to `true`, we can automatically mask this error.
-
-```ts
-import { createServer } from '@graphql-yoga/node'
-import { fetch } from 'cross-undici-fetch'
-
-// Provide your schema
-const server = createServer({
-  schema: {
-    typeDefs: /* GraphQL */ `
-      type Query {
-        greeting: String!
-      }
-    `,
-    resolvers: {
-      Query: {
-        greeting: async () => {
-          // This service does not exist
-          const greeting = await fetch('http://localhost:9876/greeting').then(
-            (res) => res.text(),
-          )
-
-          return greeting
-        },
-      },
-    },
-  },
-  // Mask unexpected errors
-  // true is the default options. Yoga is safe by default!
-  maskedErrors: true,
-})
-
-// Start the server and explore http://localhost:4000/graphql
-server.start()
-```
-
-**Execution Result with masked error message**
 
 ```json
 {
@@ -130,13 +75,27 @@ server.start()
 }
 ```
 
-You now sucessfully enabled masking of all kinds of unexpected errors within your GraphQL schema!
+As you can see Yoga comes with sensible defaults as error masking is enabled without you needing to configure anything.
 
 ## Receive original error in development
 
-When developing locally seeing the original error within your Chrome Dev Tools might be handy for debugging. You might be tempted to disable the masked errors via the `maskedErrors` config option, however, **we do not recommend that at all!** Having development and production behavior as close as possible is very important for not having any surprises in production.
+When developing locally seeing the original error within your Chrome Dev Tools might be handy for debugging.
+You might be tempted to disable the masked errors via the `maskedErrors` config option, however, **we do not recommend that at all!**.
+Having development and production behavior as close as possible is very important for not having any surprises in production.
 
-Instead we recommend enabling the Yoga development mode. (Note: if you don't set `maskedErrors`, it's the default behaviour, and it's good!)
+Instead we recommend enabling the Yoga development mode.
+
+To do this you need to start Yoga with the `NODE_ENV` environment variable set to `"development"`.
+
+On unix and windows systems the environment variable can be set when starting the server.
+
+```bash
+# Unix (Linux/MacOS)
+NODE_ENV=development node server.js
+# Windows
+set NODE_ENV=development
+node server.js
+```
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -163,14 +122,6 @@ const server = createServer({
       },
     },
   },
-  maskedErrors: {
-    isDev: true, // We don't recommend this.
-  },
-  // // when maskedErrors is not set, the default behavior is:
-  // maskedErrors: {
-  //   isDev: process.env.NODE_ENV === "development"
-  // },
-  // // So, Close to production & with `originalError` only on development. 👍
 })
 
 server.start()
@@ -212,23 +163,12 @@ This will add a more detailed error with a proper stacktrace to the errors exten
 }
 ```
 
-On Node.js the original error is always included when `process.env.NODE_ENV` is set to `"development"`.
-
-On unix and windows systems the environment variable can be set when starting the server.
-
-```bash
-# Unix (Linux/MacOS)
-NODE_ENV=development node server.js
-# Windows
-set NODE_ENV=development
-node server.js
-```
-
 ## Exposing expected errors
 
-Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be send to clients instead of being masked. This can be achieved by using and throwing a `GraphQLYogaError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
+Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be send to clients instead of being masked.
+This can be achieved by throwing a `GraphQLYogaError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
 
-E.g. you want to throw an error if a resource cannot be found by an ID.
+E.g. you might want to throw an error if a resource cannot be found by an ID.
 
 ```ts
 import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
@@ -273,8 +213,6 @@ const server = createServer({
       },
     },
   },
-  // Mask unexpected errors
-  maskedErrors: true,
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -313,7 +251,7 @@ query {
 
 ## Error codes and other extensions
 
-Sometimes it is useful to enrich errors with additional information e.g. an error code that can be interpreted by the client.
+Sometimes it is useful to enrich errors with additional information, such as an error code that can be interpreted by the client.
 
 Error extensions can be passed as the second parameter to the `GraphQLYogaError` constructor.
 
@@ -366,8 +304,6 @@ const server = createServer({
       },
     },
   },
-  // Mask unexpected errors
-  maskedErrors: true,
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -423,4 +359,45 @@ throw new GraphQLYogaError(
     },
   },
 )
+```
+
+## Disabling error masking
+
+We highly recommend using error masking.
+However, you can still disable it using the `maskedErrors` config option.
+
+```ts
+createServer({
+  maskedErrors: false,
+})
+```
+
+Executing the following operation will now result within a leaking error message that exposes information about internal API calls.
+
+**GraphQL Operation**
+
+```graphql
+query {
+  greeting
+}
+```
+
+**Execution Result with leaking error message**
+
+```json
+{
+  "errors": [
+    {
+      "message": "request to http://localhost:9876/greeting failed, reason: connect ECONNREFUSED 127.0.0.1:9876",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": ["greeting"]
+    }
+  ],
+  "data": null
+}
 ```
