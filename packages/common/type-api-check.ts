@@ -113,8 +113,15 @@ createServer({
 })
 
 createServer({
-  // @ts-expect-error This is not allowed:
   graphiql: true,
+})
+
+createServer({
+  graphiql: () => false,
+})
+
+createServer({
+  graphiql: () => true,
 })
 
 createServer({
