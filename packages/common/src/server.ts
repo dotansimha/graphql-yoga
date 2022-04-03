@@ -98,7 +98,7 @@ export type YogaServerOptions<
         ...args: {} extends TServerContext
           ? [serverContext?: TServerContext | undefined]
           : [serverContext: TServerContext]
-      ) => GraphiQLOptions | boolean)
+      ) => GraphiQLOptions | false)
     | boolean
 
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
@@ -297,12 +297,12 @@ export class YogaServer<
       }
     }
 
-    if (typeof options?.graphiql === 'function') {
+    if (options?.graphiql === true) {
+      this.graphiqlOptionsFactory = () => ({})
+    } else if (typeof options?.graphiql === 'function') {
       this.graphiqlOptionsFactory = options.graphiql
     } else if (typeof options?.graphiql === 'object') {
       this.graphiqlOptionsFactory = () => options.graphiql as GraphiQLOptions
-    } else if (options?.graphiql === true) {
-      this.graphiqlOptionsFactory = () => ({})
     } else if (options?.graphiql === false) {
       this.graphiqlOptionsFactory = () => false
     } else {
