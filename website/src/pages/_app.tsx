@@ -90,7 +90,7 @@ function AppContent(appProps: AppProps) {
         product={{
           title: 'Yoga',
           description:
-            'Fully-featured, simple to set up, performant and extendable NodeJS server',
+            'Fully-featured, simple to set up, performant and extendable GraphQL server',
           image: {
             src: '/assets/logo.svg',
             alt: 'Docs',
