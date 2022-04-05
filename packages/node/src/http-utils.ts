@@ -69,6 +69,7 @@ export function getNodeRequest(
       const queryValue = nodeRequest.query[queryName]
       urlObj.searchParams.set(queryName, queryValue)
     }
+    fullUrl = urlObj.toString()
   }
   const baseRequestInit: RequestInit = {
     method: nodeRequest.method,
@@ -87,8 +88,9 @@ export function getNodeRequest(
    */
   const maybeParsedBody = nodeRequest.body
   if (maybeParsedBody != null) {
+    const isString = typeof maybeParsedBody === 'string'
     if (
-      typeof maybeParsedBody === 'string' ||
+      isString ||
       maybeParsedBody instanceof Uint8Array ||
       maybeParsedBody instanceof Blob ||
       maybeParsedBody instanceof FormData ||
@@ -103,7 +105,8 @@ export function getNodeRequest(
     const request = new Request(fullUrl, {
       ...baseRequestInit,
     })
-    if (!request.headers.get('content-type')?.includes('json')) {
+    // It is a probably JSON content if string is passed
+    if (isString && !request.headers.get('content-type')?.includes('json')) {
       request.headers.set('content-type', 'application/json')
     }
     return new Proxy(request, {
