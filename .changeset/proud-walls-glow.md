@@ -1,6 +1,6 @@
 ---
 '@graphql-yoga/common': minor
-'@graphql-yoga/yoga': minor
+'@graphql-yoga/node': minor
 ---
 
 Allow to pass in `graphiql: true` or `graphiql: () => true` as an option to create server.
