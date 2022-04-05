@@ -35,7 +35,7 @@ class YogaNodeServer<
       hostname:
         options?.hostname || (platform() === 'win32' ? '127.0.0.1' : '0.0.0.0'),
       port: options?.port ?? parseInt(process.env.PORT || '4000'),
-      endpoint: '/',
+      endpoint: options?.endpoint || '/graphql',
       protocol: options?.https ? 'https' : 'http',
     }
 
@@ -44,6 +44,7 @@ class YogaNodeServer<
 
   getNodeServer(): NodeServer {
     if (!this.nodeServer) {
+      this.endpoint = this.endpoint || '/graphql'
       if (this.options?.https) {
         this.nodeServer =
           typeof this.options?.https === 'object'
@@ -61,7 +62,7 @@ class YogaNodeServer<
   }
 
   getServerUrl(): string {
-    return `${this.addressInfo.protocol}://${this.addressInfo.hostname}:${this.addressInfo.port}`
+    return `${this.addressInfo.protocol}://${this.addressInfo.hostname}:${this.addressInfo.port}${this.addressInfo.endpoint}`
   }
 
   async handleIncomingMessage(
@@ -137,7 +138,7 @@ class YogaNodeServer<
  *  import { schema } from './schema'
  *   // Provide a GraphQL schema
  *  const server = createServer({ schema })
- *  // Start the server. Defaults to http://localhost:4000
+ *  // Start the server. Defaults to http://localhost:4000/graphql
  *  server.start()
  * ```
  */

@@ -82,6 +82,11 @@ export type YogaServerOptions<
     | boolean
 
   /**
+   * GraphQL endpoint
+   */
+  endpoint?: string
+
+  /**
    * GraphiQL options
    *
    * Default: `true`
@@ -184,6 +189,7 @@ export class YogaServer<
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
   ) => GraphiQLOptions | false
+  protected endpoint?: string
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -302,6 +308,8 @@ export class YogaServer<
     }
 
     this.renderGraphiQL = options?.renderGraphiQL || renderGraphiQL
+
+    this.endpoint = options?.endpoint
   }
 
   getCORSResponseHeaders(
@@ -405,10 +413,29 @@ export class YogaServer<
       }
 
       this.logger.debug(`Checking if GraphiQL Request`)
+      if (
+        this.endpoint != null &&
+        !requestUrl.pathname.endsWith(this.endpoint)
+      ) {
+        return new Response(
+          `Unable to ${request.method} ${requestUrl.pathname}`,
+          {
+            status: 404,
+            statusText: `Not found`,
+            headers: {
+              Location: `${this.endpoint}`,
+            },
+          },
+        )
+      }
+
       if (shouldRenderGraphiQL(request)) {
         const graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
         if (graphiqlOptions) {
-          const graphiQLBody = await this.renderGraphiQL(graphiqlOptions)
+          const graphiQLBody = await this.renderGraphiQL({
+            endpoint: this.endpoint,
+            ...graphiqlOptions,
+          })
           return new Response(graphiQLBody, {
             headers: {
               'Content-Type': 'text/html',
