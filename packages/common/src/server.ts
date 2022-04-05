@@ -98,7 +98,7 @@ export type YogaServerOptions<
         ...args: {} extends TServerContext
           ? [serverContext?: TServerContext | undefined]
           : [serverContext: TServerContext]
-      ) => GraphiQLOptions | false)
+      ) => GraphiQLOptions | boolean)
     | boolean
 
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
