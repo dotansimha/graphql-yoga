@@ -121,7 +121,6 @@ createServer({
 })
 
 createServer({
-  // @ts-expect-error Not allowed to pass true from function
   graphiql: () => true,
 })
 
