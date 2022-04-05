@@ -7,11 +7,6 @@ import { ServerOptions as HttpsServerOptions } from 'https'
 export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
   YogaServerOptions<TServerContext, TUserContext, TRootValue> & {
     /**
-     * GraphQL endpoint
-     * Default: `/graphql`
-     */
-    endpoint?: string
-    /**
      * Port to run server
      */
     port?: number

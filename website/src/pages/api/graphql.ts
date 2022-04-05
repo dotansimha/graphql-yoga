@@ -1,16 +1,8 @@
 import { createServer } from '@graphql-yoga/node'
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
 const server = createServer({
-  cors: false,
-  endpoint: '/api/graphql',
-  logging: false,
+  renderGraphiQL,
 })
-
-export const config = {
-  api: {
-    bodyParser: false,
-    externalResolver: true,
-  },
-}
 
 export default server

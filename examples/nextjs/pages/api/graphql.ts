@@ -5,16 +5,6 @@ import { NextApiRequest, NextApiResponse } from 'next'
 const server = createServer<{
   req: NextApiRequest
   res: NextApiResponse
-}>({
-  cors: false,
-  endpoint: '/api/graphql',
-})
-
-export const config = {
-  api: {
-    bodyParser: false,
-    externalResolver: true,
-  },
-}
+}>()
 
 export default server

@@ -79,7 +79,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 #   Auto Complete:  Ctrl-Space (or just start typing)
 #
 `
-  const endpoint = props.endpoint ?? '/graphql'
+  const endpoint = props.endpoint ?? globalThis.location?.pathname ?? '/graphql'
   const credentials = props.credentials ?? 'same-origin'
   const graphiqlRef = React.useRef<GraphiQL | null>(null)
 

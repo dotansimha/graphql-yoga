@@ -13,8 +13,6 @@ const server = createServer<
     session: Session
   }
 >({
-  cors: false,
-  endpoint: '/api/graphql',
   context: async ({ req }) => {
     return {
       session: await getSession({ req }),
@@ -55,12 +53,5 @@ const server = createServer<
     defaultQuery: `query Session { session { expires user { id email image } } }`,
   },
 })
-
-export const config = {
-  api: {
-    bodyParser: false,
-    externalResolver: true,
-  },
-}
 
 export default server

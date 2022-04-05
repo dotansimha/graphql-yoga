@@ -29,28 +29,7 @@ class YogaNodeServer<
       TRootValue
     >,
   ) {
-    super({
-      ...options,
-      graphiql: function nodeGraphiQLFactory(request, ...args) {
-        if (typeof options?.graphiql === 'function') {
-          const returnedOptions = options.graphiql(request, ...args)
-          return {
-            endpoint: options?.endpoint,
-            ...returnedOptions,
-          }
-        } else if (typeof options?.graphiql === 'object') {
-          return {
-            endpoint: options?.endpoint,
-            ...options.graphiql,
-          }
-        } else if (options?.graphiql === false) {
-          return false
-        }
-        return {
-          endpoint: options?.endpoint,
-        }
-      },
-    })
+    super(options)
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
       hostname:
@@ -65,6 +44,7 @@ class YogaNodeServer<
 
   getNodeServer(): NodeServer {
     if (!this.nodeServer) {
+      this.endpoint = this.endpoint || '/graphql'
       if (this.options?.https) {
         this.nodeServer =
           typeof this.options?.https === 'object'
