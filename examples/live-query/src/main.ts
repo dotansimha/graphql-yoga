@@ -2,7 +2,6 @@ import { createServer } from '@graphql-yoga/node'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'
-import { print } from 'graphql'
 import { astFromDirective } from '@graphql-tools/utils'
 
 const liveQueryStore = new InMemoryLiveQueryStore()
@@ -24,7 +23,7 @@ const server = createServer({
           greetings: [String]!
         }
       `,
-      print(astFromDirective(GraphQLLiveDirective)),
+      astFromDirective(GraphQLLiveDirective),
     ],
     resolvers: {
       Query: {
