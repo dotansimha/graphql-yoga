@@ -421,7 +421,7 @@ export class YogaServer<
           `Unable to ${request.method} ${requestUrl.pathname}`,
           {
             status: 404,
-            statusText: `Not Found`,
+            statusText: `not found`,
           },
         )
       }
