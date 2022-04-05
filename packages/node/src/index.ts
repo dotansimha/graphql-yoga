@@ -29,33 +29,7 @@ class YogaNodeServer<
       TRootValue
     >,
   ) {
-    super({
-      ...options,
-      graphiql: function nodeGraphiQLFactory(request, ...args) {
-        if (typeof options?.graphiql === 'function') {
-          let returnedOptions = options.graphiql(request, ...args)
-          if (returnedOptions === false) {
-            return false
-          } else if (returnedOptions === true) {
-            returnedOptions = {}
-          }
-          return {
-            endpoint: options?.endpoint,
-            ...returnedOptions,
-          }
-        } else if (typeof options?.graphiql === 'object') {
-          return {
-            endpoint: options?.endpoint,
-            ...options.graphiql,
-          }
-        } else if (options?.graphiql === false) {
-          return false
-        }
-        return {
-          endpoint: options?.endpoint,
-        }
-      },
-    })
+    super(options)
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
       hostname:

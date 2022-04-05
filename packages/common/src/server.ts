@@ -297,9 +297,7 @@ export class YogaServer<
       }
     }
 
-    if (options?.graphiql === true) {
-      this.graphiqlOptionsFactory = () => ({})
-    } else if (typeof options?.graphiql === 'function') {
+    if (typeof options?.graphiql === 'function') {
       this.graphiqlOptionsFactory = options.graphiql
     } else if (typeof options?.graphiql === 'object') {
       this.graphiqlOptionsFactory = () => options.graphiql as GraphiQLOptions
