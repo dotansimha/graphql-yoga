@@ -259,9 +259,16 @@ describe('Context error', () => {
 })
 
 describe('Requests', () => {
-  const yoga = createServer({ schema, logging: false })
+  const endpoint = '/test-graphql'
+  const yoga = createServer({ schema, logging: false, endpoint })
+
+  it('should reject other paths if specific endpoint path is provided', async () => {
+    const response = await request(yoga).get('/graphql')
+    expect(response.status).toBe(404)
+  })
+
   it('should send basic query', async () => {
-    const response = await request(yoga).post('/graphql').send({
+    const response = await request(yoga).post(endpoint).send({
       query: '{ ping }',
     })
 
@@ -273,7 +280,7 @@ describe('Requests', () => {
 
   it('should send basic query with GET', async () => {
     const response = await request(yoga)
-      .get('/graphql?query=' + encodeURIComponent('{ ping }'))
+      .get(endpoint + '?query=' + encodeURIComponent('{ ping }'))
       .send()
 
     expect(response.statusCode).toBe(200)
@@ -284,7 +291,7 @@ describe('Requests', () => {
 
   it('should send basic mutation', async () => {
     const response = await request(yoga)
-      .post('/graphql')
+      .post(endpoint)
       .send({
         query: /* GraphQL */ `
           mutation {
@@ -301,7 +308,7 @@ describe('Requests', () => {
 
   it('should send variables', async () => {
     const response = await request(yoga)
-      .post('/graphql')
+      .post(endpoint)
       .send({
         query: /* GraphQL */ `
           mutation ($text: String) {
@@ -320,7 +327,7 @@ describe('Requests', () => {
   })
 
   it('should error on malformed query', async () => {
-    const response = await request(yoga).post('/graphql').send({
+    const response = await request(yoga).post(endpoint).send({
       query: '{ query { ping }',
     })
 
@@ -331,7 +338,7 @@ describe('Requests', () => {
 
   it('should error missing query', async () => {
     const response = await request(yoga)
-      .post('/graphql')
+      .post(endpoint)
       .send({
         query: null,
       } as any)
@@ -467,9 +474,11 @@ it('should expose Node req and res objects in the context', async () => {
 })
 
 describe('GraphiQL', () => {
+  const endpoint = '/test-graphql'
   const yogaApp = createServer({
     schema: createTestSchema(),
     logging: false,
+    endpoint,
     renderGraphiQL,
   })
 
@@ -530,7 +539,7 @@ describe('GraphiQL', () => {
   }
 
   it('execute simple query operation', async () => {
-    await page.goto(`http://localhost:4000/graphql`)
+    await page.goto(`http://localhost:4000${endpoint}`)
     await typeOperationText('{ alwaysTrue }')
 
     await page.click('.execute-button')
@@ -550,7 +559,7 @@ describe('GraphiQL', () => {
   })
 
   it('execute mutation operation', async () => {
-    await page.goto(`http://localhost:4000/graphql`)
+    await page.goto(`http://localhost:4000${endpoint}`)
     await typeOperationText(
       `mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`,
     )
@@ -572,7 +581,7 @@ describe('GraphiQL', () => {
   })
 
   test('execute SSE (subscription) operation', async () => {
-    await page.goto(`http://localhost:4000/graphql`)
+    await page.goto(`http://localhost:4000${endpoint}`)
     await typeOperationText(`subscription { count(to: 2) }`)
     await page.click('.execute-button')
 
@@ -618,7 +627,7 @@ describe('GraphiQL', () => {
   test('show the query provided in the search param', async () => {
     const query = '{ alwaysTrue }'
     await page.goto(
-      `http://localhost:4000/graphql?query=${encodeURIComponent(query)}`,
+      `http://localhost:4000${endpoint}?query=${encodeURIComponent(query)}`,
     )
     await page.click('.execute-button')
     const resultContents = await waitForResult()
@@ -637,7 +646,7 @@ describe('GraphiQL', () => {
   })
 
   test('should show BigInt correctly', async () => {
-    await page.goto(`http://localhost:4000/graphql`)
+    await page.goto(`http://localhost:4000/${endpoint}`)
     await typeOperationText(`{ bigint }`)
     await page.click('.execute-button')
     const resultContents = await waitForResult()
