@@ -7,11 +7,4 @@ const server = createServer<{
   res: NextApiResponse
 }>()
 
-export const config = {
-  api: {
-    bodyParser: false,
-    externalResolver: true,
-  },
-}
-
 export default server
