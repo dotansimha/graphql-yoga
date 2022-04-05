@@ -2,7 +2,7 @@ import { useGraphQlJit } from '@envelop/graphql-jit';
 import { createServer } from '@graphql-yoga/common';
 import type { RequestEvent } from '@sveltejs/kit/types/hooks';
 
-const yogaApp = createServer({
+const yogaApp = createServer<RequestEvent>({
 	logging: false,
 	schema: {
 		typeDefs: `

@@ -8,7 +8,7 @@ export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
   YogaServerOptions<TServerContext, TUserContext, TRootValue> & {
     /**
      * GraphQL endpoint
-     * Default: `/graphql`
+     * Default: `/`
      */
     endpoint?: string
     /**

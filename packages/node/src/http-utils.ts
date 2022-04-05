@@ -40,7 +40,7 @@ function getRequestAddressInfo(
       defaultAddressInfo.protocol ||
       'http') as 'http',
     hostname,
-    endpoint: nodeRequest.url || defaultAddressInfo.endpoint,
+    endpoint: nodeRequest.url || '/',
     port,
   }
 }

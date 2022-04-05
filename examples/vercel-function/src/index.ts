@@ -6,10 +6,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 const app = createServer<{
   req: VercelRequest
   res: VercelResponse
-}>({
-  graphiql: {
-    endpoint: '/api/graphql',
-  },
-})
+}>()
 
 export default app

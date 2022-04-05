@@ -29,34 +29,13 @@ class YogaNodeServer<
       TRootValue
     >,
   ) {
-    super({
-      ...options,
-      graphiql: function nodeGraphiQLFactory(request, ...args) {
-        if (typeof options?.graphiql === 'function') {
-          const returnedOptions = options.graphiql(request, ...args)
-          return {
-            endpoint: options?.endpoint,
-            ...returnedOptions,
-          }
-        } else if (typeof options?.graphiql === 'object') {
-          return {
-            endpoint: options?.endpoint,
-            ...options.graphiql,
-          }
-        } else if (options?.graphiql === false) {
-          return false
-        }
-        return {
-          endpoint: options?.endpoint,
-        }
-      },
-    })
+    super(options)
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
       hostname:
         options?.hostname || (platform() === 'win32' ? '127.0.0.1' : '0.0.0.0'),
       port: options?.port ?? parseInt(process.env.PORT || '4000'),
-      endpoint: options?.endpoint || '/graphql',
+      endpoint: '/',
       protocol: options?.https ? 'https' : 'http',
     }
 
@@ -82,7 +61,7 @@ class YogaNodeServer<
   }
 
   getServerUrl(): string {
-    return `${this.addressInfo.protocol}://${this.addressInfo.hostname}:${this.addressInfo.port}${this.addressInfo.endpoint}`
+    return `${this.addressInfo.protocol}://${this.addressInfo.hostname}:${this.addressInfo.port}`
   }
 
   async handleIncomingMessage(
@@ -158,7 +137,7 @@ class YogaNodeServer<
  *  import { schema } from './schema'
  *   // Provide a GraphQL schema
  *  const server = createServer({ schema })
- *  // Start the server. Defaults to http://localhost:4000/graphql
+ *  // Start the server. Defaults to http://localhost:4000
  *  server.start()
  * ```
  */

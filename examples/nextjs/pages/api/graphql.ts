@@ -5,10 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 const server = createServer<{
   req: NextApiRequest
   res: NextApiResponse
-}>({
-  cors: false,
-  endpoint: '/api/graphql',
-})
+}>()
 
 export const config = {
   api: {
