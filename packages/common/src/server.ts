@@ -98,8 +98,8 @@ export type YogaServerOptions<
         ...args: {} extends TServerContext
           ? [serverContext?: TServerContext | undefined]
           : [serverContext: TServerContext]
-      ) => GraphiQLOptions | false)
-    | false
+      ) => GraphiQLOptions | boolean)
+    | boolean
 
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -188,7 +188,7 @@ export class YogaServer<
     ...args: {} extends TServerContext
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
-  ) => GraphiQLOptions | false
+  ) => GraphiQLOptions | boolean
   protected endpoint?: string
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
@@ -427,12 +427,14 @@ export class YogaServer<
       }
 
       if (shouldRenderGraphiQL(request)) {
-        const graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
+        let graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
+
         if (graphiqlOptions) {
           const graphiQLBody = await this.renderGraphiQL({
             endpoint: this.endpoint,
-            ...graphiqlOptions,
+            ...(graphiqlOptions === true ? {} : graphiqlOptions),
           })
+
           return new Response(graphiQLBody, {
             headers: {
               'Content-Type': 'text/html',
