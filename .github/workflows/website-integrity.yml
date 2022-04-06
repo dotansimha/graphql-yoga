@@ -33,9 +33,8 @@ jobs:
       - name: Diff to file
         if: always()
         id: diff_result
-        run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt --exit-code > website/route-lockfile.diff
         run: |
-          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt --exit-code)
+          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt)
           echo "::set-output name=result::$OUTPUT"
 
       - name: Publish a message
