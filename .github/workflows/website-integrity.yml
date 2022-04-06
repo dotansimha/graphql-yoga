@@ -41,7 +41,6 @@ jobs:
         if: always() && contains(steps.diff_result.outputs.result, 'diff')
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: website/route-lockfile.diff
           message: |
             ```diff
             ${{ steps.diff_result.outputs.result }}
