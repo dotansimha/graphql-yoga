@@ -27,6 +27,17 @@ async function main() {
     routes.push(`${redirect.source} -> ${redirect.destination}`)
   }
 
+  if (redirectsPointingToNonExistingStuff.length) {
+    console.error(
+      `The following routes do not point to a route:\n\n` +
+        redirectsPointingToNonExistingStuff.map(
+          (redirect) => `- "${redirect.source}" -> "${redirect.destination}"`,
+        ) +
+        `\n`,
+    )
+    throw new Error('Redirect pointing to nothing.')
+  }
+
   fs.writeFileSync(lockfilePath, routes.sort().join(`\n`) + `\n`)
 }
 
