@@ -27,7 +27,7 @@ async function main() {
     routes.push(`${redirect.source} -> ${redirect.destination}`)
   }
 
-  fs.writeFileSync(lockfilePath, routes.join(`\n`) + `\n`)
+  fs.writeFileSync(lockfilePath, routes.sort().join(`\n`) + `\n`)
 }
 
 main()
