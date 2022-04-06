@@ -25,11 +25,11 @@ module.exports = withBundleAnalyzer(
           destination: '/docs/quick-start',
           permanent: true,
         },
-        // {
-        //   source: '/tutorial',
-        //   destination: '/tutorial/basic/00-introduction',
-        //   permanent: true,
-        // },
+        {
+          source: '/tutorial',
+          destination: '/tutorial/basic/00-introduction',
+          permanent: true,
+        },
         {
           source: '/docs/testing',
           destination: '/docs/features/testing',
