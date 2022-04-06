@@ -1,0 +1,28 @@
+name: Website Integrity
+on:
+  pull_request:
+    paths:
+      - 'website/**'
+jobs:
+  website-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node 16
+        uses: actions/setup-node@master
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: Install Dependencies using Yarn
+        run: yarn --ignore-engines
+
+      - name: Build Packages
+        run: yarn build
+
+      - name: Typecheck
+        run: yarn workspace @graphql-yoga/website run build
+      - name: Diff
+        run: git diff --exit-code -- website/route-lockfile.txt
