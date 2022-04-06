@@ -38,7 +38,7 @@ jobs:
           echo "::set-output name=result::$OUTPUT"
 
       - name: Publish a message
-        if: contains(steps.diff_result.outputs.result, 'diff')
+        if: always() && contains(steps.diff_result.outputs.result, 'diff')
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: website/route-lockfile.diff
