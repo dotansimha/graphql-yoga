@@ -43,6 +43,6 @@ jobs:
         with:
           path: website/route-lockfile.diff
           message: |
-          ```diff
-          ${{ steps.diff_result.outputs.result }}
-          ```
+            ```diff
+            ${{ steps.diff_result.outputs.result }}
+            ```
