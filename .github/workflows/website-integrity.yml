@@ -27,4 +27,4 @@ jobs:
       - name: Diff
         run: git diff --exit-code -- website/route-lockfile.txt
       - name: Compare
-        run: (git diff origin/$GITHUB_BASE_REF.. -- website/route-lockfile.txt | grep "^-[^-]" && exit 1) || exit 0
+        run: (git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt | grep "^-[^-]" && exit 1) || exit 0
