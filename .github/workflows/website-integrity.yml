@@ -32,10 +32,18 @@ jobs:
 
       - name: Diff to file
         if: always()
+        id: diff_result
         run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt --exit-code > website/route-lockfile.diff
+        run: |
+          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt --exit-code)
+          echo "::set-output name=result::$OUTPUT"
 
       - name: Publish a message
-        if: failure()
+        if: contains(steps.diff_result.outputs.result, 'diff')
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: website/route-lockfile.diff
+          message: |
+          ```diff
+          ${{ steps.diff_result.outputs.result }}
+          ```
