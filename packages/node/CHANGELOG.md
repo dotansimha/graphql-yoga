@@ -1,5 +1,44 @@
 # @graphql-yoga/node
 
+## 2.1.0
+
+### Minor Changes
+
+- 4077773: Allow to pass in `graphiql: true` or `graphiql: () => true` as an option to create server.
+
+  This change makes it easier to please the TypeScript compiler for setups that disable YogaGraphiQL conditionally (e.g.g based on environment variables).
+
+  **Previously you had to write:**
+
+  ```ts
+  createServer({
+    graphiql: process.env.NODE_ENV === "development" ? {} : false
+    // OR
+    graphiql: process.env.NODE_ENV === "development" ? undefined : false
+  });
+  ```
+
+  **Now you can write the following:**
+
+  ```ts
+  createServer({
+    graphiql: process.env.NODE_ENV === 'development',
+  })
+  ```
+
+- 2739db2: Update to latest GraphiQL 1.8.4
+
+### Patch Changes
+
+- cd9394e: Default to endpoint `/graphql` and send 404 if the request endpoint does not match.
+- Updated dependencies [b459c9c]
+- Updated dependencies [4077773]
+- Updated dependencies [f6bcbd1]
+- Updated dependencies [2739db2]
+- Updated dependencies [e207079]
+- Updated dependencies [86edaa3]
+  - @graphql-yoga/common@2.1.0
+
 ## 2.0.0
 
 ### Major Changes

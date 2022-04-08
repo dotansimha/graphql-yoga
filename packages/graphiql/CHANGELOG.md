@@ -1,5 +1,22 @@
 # @graphql-yoga/graphiql
 
+## 2.1.0
+
+### Minor Changes
+
+- 2739db2: Update to latest GraphiQL 1.8.4
+- f6bcbd1: Show BigInt correctly in the result pane.
+
+### Patch Changes
+
+- f6bcbd1: Load GraphiQL from CDN in order to reduce bundle size.
+
+  If you need to use GraphiQL in an offline environment please follow the instructions in the docs for installing `@graphql-yoga/render-graphiql`.
+
+  https://www.graphql-yoga.com/docs/features/graphiql#offline-usage
+
+- e207079: Defaults to the current pathname for the GraphQL endpoint.
+
 ## 2.0.0
 
 ### Major Changes
