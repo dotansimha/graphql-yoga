@@ -688,6 +688,7 @@ describe('Browser', () => {
         stopButtonSelector,
       )
       const resultJson = JSON.parse(resultContents)
+
       expect(resultJson).toEqual({
         data: {
           liveCounter: 1,
