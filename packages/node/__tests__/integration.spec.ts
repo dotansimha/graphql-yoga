@@ -695,7 +695,7 @@ describe('Browser', () => {
       const resultJson = JSON.parse(resultContents)
       const firstDate = new Date(resultJson.data.time)
       expect(isShowingStopButton).toEqual(true)
-      await new Promise((resolve) => setTimeout(resolve, 1200))
+      await new Promise((resolve) => setTimeout(resolve, 1500))
       const [resultContents1] = await page.evaluate((playButtonSelector) => {
         return [
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -706,7 +706,9 @@ describe('Browser', () => {
       }, playButtonSelector)
       const resultJson1 = JSON.parse(resultContents1)
       const secondDate = new Date(resultJson1.data.time)
-      expect(secondDate.getSeconds() - firstDate.getSeconds()).toBeGreaterThan(0)
+      expect(secondDate.getSeconds() - firstDate.getSeconds()).toBeGreaterThan(
+        0,
+      )
     })
   })
 
@@ -799,5 +801,4 @@ describe('Browser', () => {
       expect(result).toEqual('Failed to fetch')
     })
   })
-
 })
