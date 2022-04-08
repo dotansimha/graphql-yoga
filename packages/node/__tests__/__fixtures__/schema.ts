@@ -9,6 +9,7 @@ import {
   GraphQLString,
 } from 'graphql'
 import { GraphQLBigInt } from 'graphql-scalars'
+import { GraphQLLiveDirective } from '@envelop/live-query'
 
 export function createTestSchema() {
   return new GraphQLSchema({
@@ -56,6 +57,10 @@ export function createTestSchema() {
         bigint: {
           type: GraphQLBigInt,
           resolve: () => BigInt('112345667891012345'),
+        },
+        time: {
+          type: GraphQLString,
+          resolve: () => new Date().toISOString(),
         },
       }),
     }),
@@ -107,5 +112,6 @@ export function createTestSchema() {
         },
       }),
     }),
+    directives: [GraphQLLiveDirective],
   })
 }
