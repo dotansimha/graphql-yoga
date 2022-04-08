@@ -1,5 +1,51 @@
 # @graphql-yoga/common
 
+## 2.1.0
+
+### Minor Changes
+
+- 4077773: Allow to pass in `graphiql: true` or `graphiql: () => true` as an option to create server.
+
+  This change makes it easier to please the TypeScript compiler for setups that disable YogaGraphiQL conditionally (e.g.g based on environment variables).
+
+  **Previously you had to write:**
+
+  ```ts
+  createServer({
+    graphiql: process.env.NODE_ENV === "development" ? {} : false
+    // OR
+    graphiql: process.env.NODE_ENV === "development" ? undefined : false
+  });
+  ```
+
+  **Now you can write the following:**
+
+  ```ts
+  createServer({
+    graphiql: process.env.NODE_ENV === 'development',
+  })
+  ```
+
+- f6bcbd1: Load GraphiQL from CDN in order to reduce bundle size.
+
+  If you need to use GraphiQL in an offline environment please follow the instructions in the docs for installing `@graphql-yoga/render-graphiql`.
+
+  https://www.graphql-yoga.com/docs/features/graphiql#offline-usage
+
+- 2739db2: Update to latest GraphiQL 1.8.4
+
+### Patch Changes
+
+- b459c9c: Generate correct multipart response.
+- e207079: Checks if the request url matches with the given endpoint and gives 404 if not.
+- 86edaa3: handle cors headers correctly in case of an explicit definition of the allowed origins;
+
+  - If request origin doesn't match with the provided allowed origins, allowed origin header returns null which will cause the client fail.
+  - If request origin matches with the provided allowed origins, allowed origin header returns the request origin as it is.
+  - - Previously it used to return all origins at once then the client was failing no matter what.
+  - If no request origin is provided by the request, allowed origin header returns '\*'.
+  - - If credentials aren't explicitly allowed and request origin is missing in the headers, credentials header returns 'false' because '\*' and credentials aren't allowed per spec.
+
 ## 2.0.0
 
 ### Major Changes
