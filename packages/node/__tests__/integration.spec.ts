@@ -1,14 +1,16 @@
-import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery } from 'graphql'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
-import puppeteer, { ElementHandle } from 'puppeteer'
+import puppeteer from 'puppeteer'
 import { CORSOptions, createServer, GraphQLYogaError } from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import 'json-bigint-patch'
 import http from 'http'
+import { useLiveQuery } from '@envelop/live-query'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -475,6 +477,7 @@ it('should expose Node req and res objects in the context', async () => {
 })
 
 describe('Browser', () => {
+  const liveQueryStore = new InMemoryLiveQueryStore()
   const endpoint = '/test-graphql'
   let cors: CORSOptions = {}
   const yogaApp = createServer({
@@ -482,6 +485,11 @@ describe('Browser', () => {
     cors: () => cors,
     logging: false,
     endpoint,
+    plugins: [
+      useLiveQuery({
+        liveQueryStore,
+      }),
+    ],
     renderGraphiQL,
   })
 
@@ -660,6 +668,58 @@ describe('Browser', () => {
     "bigint": ${BigInt('112345667891012345')}
   }
 }`)
+    })
+    test('should show live queries correctly', async () => {
+      await page.goto(`http://localhost:4000${endpoint}`)
+      await typeOperationText(`query @live { liveCounter }`)
+      await page.click('.execute-button')
+
+      await new Promise((res) => setTimeout(res, 50))
+
+      const [resultContents, isShowingStopButton] = await page.evaluate(
+        (stopButtonSelector) => {
+          return [
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.g.resultComponent.viewer.getValue(),
+            !!window.document.querySelector(stopButtonSelector),
+          ]
+        },
+        stopButtonSelector,
+      )
+      const resultJson = JSON.parse(resultContents)
+
+      expect(resultJson).toEqual({
+        data: {
+          liveCounter: 1,
+        },
+      })
+      liveQueryStore.invalidate('Query.liveCounter')
+
+      const watchDog = await page.waitForFunction(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const value = window.g.resultComponent.viewer.getValue()
+
+        return value.includes('2')
+      })
+
+      await watchDog
+
+      const [resultContents1] = await page.evaluate((playButtonSelector) => {
+        return [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.g.resultComponent.viewer.getValue(),
+          !!window.document.querySelector(playButtonSelector),
+        ]
+      }, playButtonSelector)
+      const resultJson1 = JSON.parse(resultContents1)
+      expect(resultJson1).toEqual({
+        data: {
+          liveCounter: 2,
+        },
+      })
     })
   })
 

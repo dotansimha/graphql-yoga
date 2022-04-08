@@ -47,20 +47,25 @@ export function getMultipartResponse(
       const { done, value } = await iterator.next()
       if (value != null) {
         controller.enqueue(encodeString('\r\n'))
+
         controller.enqueue(
-          encodeString('Content-Type: application/json; charset=utf-8\r\n'),
+          encodeString('Content-Type: application/json; charset=utf-8'),
         )
+        controller.enqueue(encodeString('\r\n'))
 
         const chunk = JSON.stringify(value)
         const encodedChunk = encodeString(chunk)
+
         controller.enqueue(
-          encodeString('Content-Length: ' + encodedChunk.byteLength + '\r\n'),
+          encodeString('Content-Length: ' + encodedChunk.byteLength),
         )
         controller.enqueue(encodeString('\r\n'))
+
+        controller.enqueue(encodeString('\r\n'))
         controller.enqueue(encodedChunk)
-        if (value.hasNext) {
-          controller.enqueue(encodeString('\r\n---'))
-        }
+        controller.enqueue(encodeString('\r\n'))
+
+        controller.enqueue(encodeString('---'))
       }
       if (done) {
         controller.enqueue(encodeString('\r\n-----\r\n'))

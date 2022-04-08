@@ -9,8 +9,11 @@ import {
   GraphQLString,
 } from 'graphql'
 import { GraphQLBigInt } from 'graphql-scalars'
+import { GraphQLLiveDirective } from '@envelop/live-query'
 
 export function createTestSchema() {
+  let liveQueryCounter = 0
+
   return new GraphQLSchema({
     query: new GraphQLObjectType({
       name: 'Query',
@@ -56,6 +59,13 @@ export function createTestSchema() {
         bigint: {
           type: GraphQLBigInt,
           resolve: () => BigInt('112345667891012345'),
+        },
+        liveCounter: {
+          type: GraphQLInt,
+          resolve: () => {
+            liveQueryCounter++
+            return liveQueryCounter
+          },
         },
       }),
     }),
@@ -107,5 +117,6 @@ export function createTestSchema() {
         },
       }),
     }),
+    directives: [GraphQLLiveDirective],
   })
 }
