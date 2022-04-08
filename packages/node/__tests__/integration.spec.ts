@@ -695,7 +695,7 @@ describe('Browser', () => {
       const resultJson = JSON.parse(resultContents)
       const firstDate = new Date(resultJson.data.time)
       expect(isShowingStopButton).toEqual(true)
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       const [resultContents1] = await page.evaluate((playButtonSelector) => {
         return [
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
