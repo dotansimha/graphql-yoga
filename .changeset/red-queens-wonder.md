@@ -4,4 +4,8 @@
 '@graphql-yoga/render-graphiql': minor
 ---
 
-enhance(common): load graphiql from CDN
+load GraphiQL from CDN in order to reduce bundle size.
+
+If you need to use GraphiQL in an offline environment please follow the instructions in the docs for installing `@graphql-yoga/render-graphiql`.
+
+https://www.graphql-yoga.com/docs/features/graphiql#offline-usage
