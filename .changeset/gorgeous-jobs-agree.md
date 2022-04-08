@@ -2,4 +2,4 @@
 '@graphql-yoga/common': patch
 ---
 
-fix(common): generate multipart response correctly
+Generate correct multipart response.
