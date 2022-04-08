@@ -12,6 +12,8 @@ import { GraphQLBigInt } from 'graphql-scalars'
 import { GraphQLLiveDirective } from '@envelop/live-query'
 
 export function createTestSchema() {
+  let liveQueryCounter = 0
+
   return new GraphQLSchema({
     query: new GraphQLObjectType({
       name: 'Query',
@@ -58,9 +60,12 @@ export function createTestSchema() {
           type: GraphQLBigInt,
           resolve: () => BigInt('112345667891012345'),
         },
-        time: {
-          type: GraphQLString,
-          resolve: () => new Date().toISOString(),
+        liveCounter: {
+          type: GraphQLInt,
+          resolve: () => {
+            liveQueryCounter++
+            return liveQueryCounter
+          },
         },
       }),
     }),

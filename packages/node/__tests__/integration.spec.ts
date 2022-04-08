@@ -1,15 +1,15 @@
-import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery } from 'graphql'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
-import puppeteer, { ElementHandle } from 'puppeteer'
+import puppeteer from 'puppeteer'
 import { CORSOptions, createServer, GraphQLYogaError } from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import 'json-bigint-patch'
 import http from 'http'
-import { GraphQLLiveDirectiveSDL, useLiveQuery } from '@envelop/live-query'
+import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 
 describe('Disable Introspection with plugin', () => {
@@ -477,7 +477,6 @@ it('should expose Node req and res objects in the context', async () => {
 })
 
 describe('Browser', () => {
-  let interval: any
   const liveQueryStore = new InMemoryLiveQueryStore()
   const endpoint = '/test-graphql'
   let cors: CORSOptions = {}
@@ -508,9 +507,6 @@ describe('Browser', () => {
       headless: process.env.PUPPETEER_HEADLESS !== 'false',
       args: ['--incognito'],
     })
-    interval = setInterval(() => {
-      liveQueryStore.invalidate('Query.time')
-    }, 1000)
   })
   beforeEach(async () => {
     if (page !== undefined) {
@@ -522,7 +518,6 @@ describe('Browser', () => {
   afterAll(async () => {
     await browser.close()
     await yogaApp.stop()
-    clearInterval(interval)
   })
 
   const typeOperationText = async (text: string) => {
@@ -676,7 +671,7 @@ describe('Browser', () => {
     })
     test('should show live queries correctly', async () => {
       await page.goto(`http://localhost:4000${endpoint}`)
-      await typeOperationText(`query Time @live { time }`)
+      await typeOperationText(`query @live { liveCounter }`)
       await page.click('.execute-button')
 
       await new Promise((res) => setTimeout(res, 50))
@@ -693,9 +688,23 @@ describe('Browser', () => {
         stopButtonSelector,
       )
       const resultJson = JSON.parse(resultContents)
-      const firstDate = new Date(resultJson.data.time)
-      expect(isShowingStopButton).toEqual(true)
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      expect(resultJson).toEqual({
+        data: {
+          liveCounter: 1,
+        },
+      })
+      liveQueryStore.invalidate('Query.liveCounter')
+
+      const watchDog = await page.waitForFunction(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const value = window.g.resultComponent.viewer.getValue()
+
+        return value.includes('2')
+      })
+
+      await watchDog
+
       const [resultContents1] = await page.evaluate((playButtonSelector) => {
         return [
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -705,10 +714,11 @@ describe('Browser', () => {
         ]
       }, playButtonSelector)
       const resultJson1 = JSON.parse(resultContents1)
-      const secondDate = new Date(resultJson1.data.time)
-      expect(secondDate.getSeconds() - firstDate.getSeconds()).toBeGreaterThan(
-        0,
-      )
+      expect(resultJson1).toEqual({
+        data: {
+          liveCounter: 2,
+        },
+      })
     })
   })
 
