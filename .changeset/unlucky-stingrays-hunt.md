@@ -2,9 +2,7 @@
 '@graphql-yoga/common': patch
 ---
 
-fix(common): handle cors headers correctly
-
-In case of an explicit definition of the allowed origins;
+handle cors headers correctly in case of an explicit definition of the allowed origins;
 
 - If request origin doesn't match with the provided allowed origins, allowed origin header returns null which will cause the client fail.
 - If request origin matches with the provided allowed origins, allowed origin header returns the request origin as it is.

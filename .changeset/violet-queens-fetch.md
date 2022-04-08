@@ -3,4 +3,4 @@
 '@graphql-yoga/render-graphiql': minor
 ---
 
-feat(graphiql): show bigint correctly in the output
+Show BigInt correctly in the result pane.

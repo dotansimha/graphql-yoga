@@ -3,4 +3,4 @@
 '@graphql-yoga/render-graphiql': patch
 ---
 
-fix(graphiql): defaults to the current pathname
+Defaults to the current pathname for the GraphQL endpoint.
