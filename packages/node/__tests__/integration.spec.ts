@@ -2,12 +2,13 @@ import { getIntrospectionQuery, IntrospectionQuery } from 'graphql'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
-import puppeteer from 'puppeteer'
-import { createServer, GraphQLYogaError } from '../src'
+import puppeteer, { ElementHandle } from 'puppeteer'
+import { CORSOptions, createServer, GraphQLYogaError } from '../src'
 import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import 'json-bigint-patch'
+import http from 'http'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -473,10 +474,12 @@ it('should expose Node req and res objects in the context', async () => {
   expect(body.data.isNode).toBe(true)
 })
 
-describe('GraphiQL', () => {
+describe('Browser', () => {
   const endpoint = '/test-graphql'
+  let cors: CORSOptions = {}
   const yogaApp = createServer({
     schema: createTestSchema(),
+    cors: () => cors,
     logging: false,
     endpoint,
     renderGraphiQL,
@@ -538,123 +541,215 @@ describe('GraphiQL', () => {
     return resultContents
   }
 
-  it('execute simple query operation', async () => {
-    await page.goto(`http://localhost:4000${endpoint}`)
-    await typeOperationText('{ alwaysTrue }')
+  describe('GraphiQL', () => {
+    it('execute simple query operation', async () => {
+      await page.goto(`http://localhost:4000${endpoint}`)
+      await typeOperationText('{ alwaysTrue }')
 
-    await page.click('.execute-button')
-    const resultContents = await waitForResult()
+      await page.click('.execute-button')
+      const resultContents = await waitForResult()
 
-    expect(resultContents).toEqual(
-      JSON.stringify(
-        {
-          data: {
-            alwaysTrue: true,
+      expect(resultContents).toEqual(
+        JSON.stringify(
+          {
+            data: {
+              alwaysTrue: true,
+            },
           },
-        },
-        null,
-        2,
-      ),
-    )
-  })
-
-  it('execute mutation operation', async () => {
-    await page.goto(`http://localhost:4000${endpoint}`)
-    await typeOperationText(
-      `mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`,
-    )
-    await typeVariablesText(`{ "number": 3 }`)
-    await page.click('.execute-button')
-    const resultContents = await waitForResult()
-
-    expect(resultContents).toEqual(
-      JSON.stringify(
-        {
-          data: {
-            setFavoriteNumber: 3,
-          },
-        },
-        null,
-        2,
-      ),
-    )
-  })
-
-  test('execute SSE (subscription) operation', async () => {
-    await page.goto(`http://localhost:4000${endpoint}`)
-    await typeOperationText(`subscription { count(to: 2) }`)
-    await page.click('.execute-button')
-
-    await new Promise((res) => setTimeout(res, 50))
-
-    const [resultContents, isShowingStopButton] = await page.evaluate(
-      (stopButtonSelector) => {
-        return [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(stopButtonSelector),
-        ]
-      },
-      stopButtonSelector,
-    )
-    expect(JSON.parse(resultContents)).toEqual({
-      data: {
-        count: 1,
-      },
+          null,
+          2,
+        ),
+      )
     })
-    expect(isShowingStopButton).toEqual(true)
-    await new Promise((resolve) => setTimeout(resolve, 300))
-    const [resultContents1, isShowingPlayButton] = await page.evaluate(
-      (playButtonSelector) => {
-        return [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(playButtonSelector),
-        ]
-      },
-      playButtonSelector,
-    )
-    expect(JSON.parse(resultContents1)).toEqual({
-      data: {
-        count: 2,
-      },
-    })
-    expect(isShowingPlayButton).toEqual(true)
-  })
 
-  test('show the query provided in the search param', async () => {
-    const query = '{ alwaysTrue }'
-    await page.goto(
-      `http://localhost:4000${endpoint}?query=${encodeURIComponent(query)}`,
-    )
-    await page.click('.execute-button')
-    const resultContents = await waitForResult()
+    it('execute mutation operation', async () => {
+      await page.goto(`http://localhost:4000${endpoint}`)
+      await typeOperationText(
+        `mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`,
+      )
+      await typeVariablesText(`{ "number": 3 }`)
+      await page.click('.execute-button')
+      const resultContents = await waitForResult()
 
-    expect(resultContents).toEqual(
-      JSON.stringify(
-        {
-          data: {
-            alwaysTrue: true,
+      expect(resultContents).toEqual(
+        JSON.stringify(
+          {
+            data: {
+              setFavoriteNumber: 3,
+            },
           },
+          null,
+          2,
+        ),
+      )
+    })
+
+    test('execute SSE (subscription) operation', async () => {
+      await page.goto(`http://localhost:4000${endpoint}`)
+      await typeOperationText(`subscription { count(to: 2) }`)
+      await page.click('.execute-button')
+
+      await new Promise((res) => setTimeout(res, 50))
+
+      const [resultContents, isShowingStopButton] = await page.evaluate(
+        (stopButtonSelector) => {
+          return [
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.g.resultComponent.viewer.getValue(),
+            !!window.document.querySelector(stopButtonSelector),
+          ]
         },
-        null,
-        2,
-      ),
-    )
-  })
+        stopButtonSelector,
+      )
+      expect(JSON.parse(resultContents)).toEqual({
+        data: {
+          count: 1,
+        },
+      })
+      expect(isShowingStopButton).toEqual(true)
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      const [resultContents1, isShowingPlayButton] = await page.evaluate(
+        (playButtonSelector) => {
+          return [
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.g.resultComponent.viewer.getValue(),
+            !!window.document.querySelector(playButtonSelector),
+          ]
+        },
+        playButtonSelector,
+      )
+      expect(JSON.parse(resultContents1)).toEqual({
+        data: {
+          count: 2,
+        },
+      })
+      expect(isShowingPlayButton).toEqual(true)
+    })
 
-  test('should show BigInt correctly', async () => {
-    await page.goto(`http://localhost:4000/${endpoint}`)
-    await typeOperationText(`{ bigint }`)
-    await page.click('.execute-button')
-    const resultContents = await waitForResult()
+    test('show the query provided in the search param', async () => {
+      const query = '{ alwaysTrue }'
+      await page.goto(
+        `http://localhost:4000${endpoint}?query=${encodeURIComponent(query)}`,
+      )
+      await page.click('.execute-button')
+      const resultContents = await waitForResult()
 
-    expect(resultContents).toEqual(`{
+      expect(resultContents).toEqual(
+        JSON.stringify(
+          {
+            data: {
+              alwaysTrue: true,
+            },
+          },
+          null,
+          2,
+        ),
+      )
+    })
+
+    test('should show BigInt correctly', async () => {
+      await page.goto(`http://localhost:4000/${endpoint}`)
+      await typeOperationText(`{ bigint }`)
+      await page.click('.execute-button')
+      const resultContents = await waitForResult()
+
+      expect(resultContents).toEqual(`{
   "data": {
     "bigint": ${BigInt('112345667891012345')}
   }
 }`)
+    })
+  })
+
+  describe('CORS', () => {
+    const anotherOriginPort = 4000 + Math.floor(Math.random() * 1000)
+    const anotherServer = http.createServer((req, res) => {
+      res.end(/* HTML */ `
+        <html>
+          <head>
+            <title>Another Origin</title>
+          </head>
+          <body>
+            <h1>Another Origin</h1>
+            <p id="result">RESULT_HERE</p>
+            <script>
+              async function fetchData() {
+                try {
+                  const response = await fetch(
+                    'http://localhost:4000${endpoint}',
+                    {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        query: '{ alwaysTrue }',
+                      }),
+                    },
+                  )
+                  document.getElementById('result').innerHTML =
+                    await response.text()
+                } catch (e) {
+                  document.getElementById('result').innerHTML = e.message
+                }
+              }
+              fetchData()
+            </script>
+          </body>
+        </html>
+      `)
+    })
+    beforeAll(async () => {
+      await new Promise<void>((resolve) =>
+        anotherServer.listen(anotherOriginPort, () => resolve()),
+      )
+    })
+    afterAll(async () => {
+      await new Promise<void>((resolve) => anotherServer.close(() => resolve()))
+    })
+    test('allow other origins by default', async () => {
+      await page.goto(`http://localhost:${anotherOriginPort}`)
+      const result = await page.evaluate(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        return document.getElementById('result')?.innerHTML
+      })
+      expect(result).toEqual(
+        JSON.stringify({
+          data: {
+            alwaysTrue: true,
+          },
+        }),
+      )
+    })
+    test('allow if specified', async () => {
+      cors = {
+        origin: [`http://localhost:${anotherOriginPort}`],
+      }
+      await page.goto(`http://localhost:${anotherOriginPort}`)
+      const result = await page.evaluate(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        return document.getElementById('result')?.innerHTML
+      })
+      expect(result).toEqual(
+        JSON.stringify({
+          data: {
+            alwaysTrue: true,
+          },
+        }),
+      )
+    })
+    test('restrict other origins if provided', async () => {
+      cors = {
+        origin: ['http://localhost:4000'],
+      }
+      await page.goto(`http://localhost:${anotherOriginPort}`)
+      const result = await page.evaluate(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        return document.getElementById('result')?.innerHTML
+      })
+      expect(result).toEqual('Failed to fetch')
+    })
   })
 })
