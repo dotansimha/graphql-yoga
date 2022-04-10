@@ -15,11 +15,12 @@ type RequestParser = {
 export const GETRequestParser: RequestParser = {
   is: (request) => request.method === 'GET',
   parse: async (request) => {
-    const url = new URL(request.url)
-    const operationName = url.searchParams.get('operationName') || undefined
-    const query = url.searchParams.get('query') || undefined
-    const variables = url.searchParams.get('variables') || undefined
-    const extensions = url.searchParams.get('extensions') || undefined
+    const [, searchParamsStr] = request.url.split('?')
+    const searchParams = new URLSearchParams(searchParamsStr)
+    const operationName = searchParams.get('operationName') || undefined
+    const query = searchParams.get('query') || undefined
+    const variables = searchParams.get('variables') || undefined
+    const extensions = searchParams.get('extensions') || undefined
     return {
       operationName,
       query,

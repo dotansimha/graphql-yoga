@@ -10,6 +10,7 @@ import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
 import { YogaServer } from '@graphql-yoga/common'
 import type { YogaNodeServerOptions, AddressInfo } from './types'
 import { platform } from 'os'
+import { create } from 'cross-undici-fetch'
 
 class YogaNodeServer<
   TServerContext extends Record<string, any>,
@@ -29,7 +30,12 @@ class YogaNodeServer<
       TRootValue
     >,
   ) {
-    super(options)
+    super({
+      fetchAPI: create({
+        useNodeFetch: true,
+      }),
+      ...options,
+    })
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
       hostname:
@@ -70,7 +76,11 @@ class YogaNodeServer<
     serverContext: TServerContext,
   ): Promise<Response> {
     this.logger.debug(`Node Request received`)
-    const request = getNodeRequest(nodeRequest, this.addressInfo)
+    const request = getNodeRequest(
+      nodeRequest,
+      this.addressInfo,
+      this.fetchAPI.Request,
+    )
     this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request, serverContext)
     return response

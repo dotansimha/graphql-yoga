@@ -87,6 +87,14 @@ export interface RequestProcessContext<TContext, TRootValue>
    * The extra headers server will send in the request
    */
   extraHeaders: Record<string, string>
+  /**
+   * WHATWG compliant Response constructor
+   */
+  Response: typeof Response
+  /**
+   * WHATWG compliant ReadableStream constructor
+   */
+  ReadableStream: typeof ReadableStream
 }
 
 export interface CORSOptions {
@@ -126,4 +134,31 @@ declare global {
 export type FetchEvent = Event & {
   respondWith: (response: PromiseOrValue<Response>) => void
   request: Request
+}
+
+export type FetchAPI = {
+  /**
+   * WHATWG compliant Request object constructor
+   * Default: `Request` from `cross-undici-fetch`
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request
+   */
+  Request?: typeof Request
+  /**
+   * WHATWG compliant Response object constructor
+   * Default: `Response` from `cross-undici-fetch`
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Response
+   */
+  Response?: typeof Response
+  /**
+   * WHATWG compliant fetch function
+   * Default: `fetch` from `cross-undici-fetch`
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+   */
+  fetch?: typeof fetch
+  /**
+   * WHATWG compliant ReadableStream object constructor
+   * Default: `ReadableStream` from `cross-undici-fetch`
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
+   */
+  ReadableStream?: typeof ReadableStream
 }

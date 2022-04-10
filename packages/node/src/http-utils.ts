@@ -1,5 +1,4 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import { Blob, FormData, Request } from 'cross-undici-fetch'
 import { Readable } from 'stream'
 import type { AddressInfo } from './types'
 import { Socket } from 'net'
@@ -58,6 +57,7 @@ function configureSocket(rawRequest: NodeRequest) {
 export function getNodeRequest(
   nodeRequest: NodeRequest,
   defaultAddressInfo: AddressInfo,
+  RequestCtor: typeof Request,
 ): Request {
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   configureSocket(rawRequest)
@@ -76,7 +76,7 @@ export function getNodeRequest(
   }
 
   if (nodeRequest.method !== 'POST') {
-    return new Request(fullUrl, baseRequestInit)
+    return new RequestCtor(fullUrl, baseRequestInit)
   }
 
   /**
@@ -90,17 +90,17 @@ export function getNodeRequest(
     if (
       typeof maybeParsedBody === 'string' ||
       maybeParsedBody instanceof Uint8Array ||
-      maybeParsedBody instanceof Blob ||
-      maybeParsedBody instanceof FormData ||
+      maybeParsedBody[Symbol.toStringTag] === 'Blob' ||
+      maybeParsedBody[Symbol.toStringTag] === 'FormData' ||
       maybeParsedBody instanceof URLSearchParams ||
       isAsyncIterable(maybeParsedBody)
     ) {
-      return new Request(fullUrl, {
+      return new RequestCtor(fullUrl, {
         ...baseRequestInit,
         body: maybeParsedBody as any,
       })
     }
-    const request = new Request(fullUrl, {
+    const request = new RequestCtor(fullUrl, {
       ...baseRequestInit,
     })
     if (!request.headers.get('content-type')?.includes('json')) {
@@ -118,7 +118,7 @@ export function getNodeRequest(
     })
   }
 
-  return new Request(fullUrl, {
+  return new RequestCtor(fullUrl, {
     headers: nodeRequest.headers,
     method: nodeRequest.method,
     body: rawRequest as any,
