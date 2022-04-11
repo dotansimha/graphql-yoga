@@ -6,7 +6,7 @@
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
-Checkout latest docs https://www.graphql-yoga.com
+[Read the docs](https://www.graphql-yoga.com)
 
 ### Installation
 
@@ -20,6 +20,7 @@ This is a very simple example of how to use it:
 
 ```js
 const { createServer } = require('@graphql-yoga/node')
+
 // Provide your schema
 const server = createServer({
   schema: {
@@ -35,6 +36,7 @@ const server = createServer({
     },
   },
 })
+
 // Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
@@ -70,6 +72,6 @@ of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.m
 
 ### License
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/apollostack/apollo-ios/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/dotansimha/graphql-yoga/master/LICENSE)
 
 MIT
