@@ -2,6 +2,7 @@ import 'remark-admonitions/styles/infima.css'
 import '../../public/style.css'
 
 import { appWithTranslation } from 'next-i18next'
+import Script from 'next/script'
 
 import { Box, extendTheme, theme as chakraTheme } from '@chakra-ui/react'
 import { mode } from '@chakra-ui/theme-tools'
@@ -21,6 +22,8 @@ import {
 
 import type { AppProps } from 'next/app'
 import React from 'react'
+
+import { useGoogleAnalytics } from '../google-analytics'
 
 ExtendComponents({
   Instruction: (props: React.ComponentProps<typeof Instruction>) => (
@@ -78,6 +81,10 @@ const tutorialMdxRoutes = {
 
 function AppContent(appProps: AppProps) {
   const { Component, pageProps, router } = appProps
+  const googleAnalytics = useGoogleAnalytics({
+    router,
+    trackingId: 'G-246BWRER3C',
+  })
 
   const isDocs = router.asPath.startsWith('/docs')
   const isTutorial = router.asPath.startsWith('/tutorial')
@@ -85,6 +92,8 @@ function AppContent(appProps: AppProps) {
   return (
     <>
       <Header accentColor={accentColor} activeLink="/open-source" themeSwitch />
+      <Script {...googleAnalytics.loadScriptProps} />
+      <Script {...googleAnalytics.configScriptProps} />
       <Subheader
         activeLink={router.asPath}
         product={{
