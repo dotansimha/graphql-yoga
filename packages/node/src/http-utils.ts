@@ -139,12 +139,14 @@ export function sendNodeResponse(
   serverResponse.statusCode = status
   serverResponse.statusMessage = statusText
   if (body == null) {
-    serverResponse.end()
-    return Promise.resolve()
+    return new Promise<void>((resolve) => {
+      serverResponse.end(resolve)
+    })
   } else {
     if (body[Symbol.toStringTag] === 'Uint8Array') {
-      serverResponse.end(body)
-      return Promise.resolve()
+      return new Promise<void>((resolve) => {
+        serverResponse.end(body, resolve)
+      })
     }
     const nodeStream = isReadable(body) ? body : Readable.from(body)
     const promise = new Promise<void>((resolve) =>
