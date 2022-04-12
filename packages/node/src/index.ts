@@ -31,10 +31,10 @@ class YogaNodeServer<
     >,
   ) {
     super({
-      fetchAPI: create({
+      ...options,
+      fetchAPI: options.fetchAPI ?? create({
         useNodeFetch: true,
       }),
-      ...options,
     })
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
