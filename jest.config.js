@@ -26,5 +26,6 @@ module.exports = {
   testMatch: [
     '**/?(*.)+(spec|test).[jt]s?(x)',
     '!**/examples/cloudflare-modules/**',
+    '!**/examples/node-esm/**',
   ],
 }
