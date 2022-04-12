@@ -3,4 +3,4 @@
 '@graphql-yoga/node': minor
 ---
 
-Fix cross-undici-fetch to support Node's ESM
+Replace cross-undici-fetch named imports with default import to support Node's ESM
