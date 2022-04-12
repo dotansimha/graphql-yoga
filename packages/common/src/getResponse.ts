@@ -1,6 +1,6 @@
 import { ExecutionResult, GraphQLError } from 'graphql'
 import { ExecutionPatchResult } from './types'
-import { ReadableStream, Response } from 'cross-undici-fetch'
+import crossUndiciFetch from 'cross-undici-fetch'
 import { encodeString } from './encodeString'
 
 export function getRegularResponse(
@@ -18,7 +18,7 @@ export function getRegularResponse(
     headers: headersInit,
     status: 200,
   }
-  return new Response(decodedString, responseInit)
+  return new crossUndiciFetch.Response(decodedString, responseInit)
 }
 
 export function getMultipartResponse(
@@ -38,7 +38,7 @@ export function getMultipartResponse(
 
   let iterator: AsyncIterator<ExecutionResult<any>>
 
-  const readableStream = new ReadableStream({
+  const readableStream = new crossUndiciFetch.ReadableStream({
     start(controller) {
       iterator = asyncExecutionResult[Symbol.asyncIterator]()
       controller.enqueue(encodeString(`---`))
@@ -77,7 +77,7 @@ export function getMultipartResponse(
     },
   })
 
-  return new Response(readableStream, responseInit)
+  return new crossUndiciFetch.Response(readableStream, responseInit)
 }
 
 export function getPushResponse(
@@ -98,7 +98,7 @@ export function getPushResponse(
 
   let iterator: AsyncIterator<ExecutionResult<any>>
 
-  const readableStream = new ReadableStream({
+  const readableStream = new crossUndiciFetch.ReadableStream({
     start() {
       iterator = asyncExecutionResult[Symbol.asyncIterator]()
     },
@@ -116,7 +116,7 @@ export function getPushResponse(
       await iterator.return?.(e)
     },
   })
-  return new Response(readableStream, responseInit)
+  return new crossUndiciFetch.Response(readableStream, responseInit)
 }
 
 interface ErrorResponseParams {
@@ -143,7 +143,7 @@ export function getErrorResponse({
   if (isEventStream) {
     return getPushResponse(getSingleResult(payload), headers)
   }
-  return new Response(JSON.stringify(payload), {
+  return new crossUndiciFetch.Response(JSON.stringify(payload), {
     status,
     headers: {
       ...headers,

@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import { Blob, FormData, Request } from 'cross-undici-fetch'
+import crossUndiciFetch from 'cross-undici-fetch'
 import { Readable } from 'stream'
 import type { AddressInfo } from './types'
 import { Socket } from 'net'
@@ -76,7 +76,7 @@ export function getNodeRequest(
   }
 
   if (nodeRequest.method !== 'POST') {
-    return new Request(fullUrl, baseRequestInit)
+    return new crossUndiciFetch.Request(fullUrl, baseRequestInit)
   }
 
   /**
@@ -90,17 +90,17 @@ export function getNodeRequest(
     if (
       typeof maybeParsedBody === 'string' ||
       maybeParsedBody instanceof Uint8Array ||
-      maybeParsedBody instanceof Blob ||
-      maybeParsedBody instanceof FormData ||
+      maybeParsedBody instanceof crossUndiciFetch.Blob ||
+      maybeParsedBody instanceof crossUndiciFetch.FormData ||
       maybeParsedBody instanceof URLSearchParams ||
       isAsyncIterable(maybeParsedBody)
     ) {
-      return new Request(fullUrl, {
+      return new crossUndiciFetch.Request(fullUrl, {
         ...baseRequestInit,
         body: maybeParsedBody as any,
       })
     }
-    const request = new Request(fullUrl, {
+    const request = new crossUndiciFetch.Request(fullUrl, {
       ...baseRequestInit,
     })
     if (!request.headers.get('content-type')?.includes('json')) {
@@ -118,7 +118,7 @@ export function getNodeRequest(
     })
   }
 
-  return new Request(fullUrl, {
+  return new crossUndiciFetch.Request(fullUrl, {
     headers: nodeRequest.headers,
     method: nodeRequest.method,
     body: rawRequest as any,

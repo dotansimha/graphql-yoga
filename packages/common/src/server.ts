@@ -26,7 +26,7 @@ import {
   renderGraphiQL,
   shouldRenderGraphiQL,
 } from './graphiql'
-import { fetch, Request, Response } from 'cross-undici-fetch'
+import crossUndiciFetch from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, YogaLogger } from './logger'
@@ -401,7 +401,7 @@ export class YogaServer<
   ) {
     const headers = this.getCORSResponseHeaders(request, ...args)
 
-    const optionsResponse = new Response(null, {
+    const optionsResponse = new crossUndiciFetch.Response(null, {
       status: 204,
       headers,
     })
@@ -424,7 +424,7 @@ export class YogaServer<
       }
       const requestUrl = new URL(request.url)
       if (requestUrl.pathname.endsWith('/health')) {
-        return new Response(`{ "message": "alive" }`, {
+        return new crossUndiciFetch.Response(`{ "message": "alive" }`, {
           status: 200,
           headers: {
             'Content-Type': 'application/json',
@@ -433,14 +433,14 @@ export class YogaServer<
         })
       }
       if (requestUrl.pathname.endsWith('/readiness')) {
-        const readinessResponse = await fetch(
+        const readinessResponse = await crossUndiciFetch.fetch(
           request.url.replace('/readiness', '/health'),
         )
         if (
           readinessResponse.status === 200 &&
           readinessResponse.headers.get('x-yoga-id') === this.id
         ) {
-          return new Response(`{ "message": "ready" }`, {
+          return new crossUndiciFetch.Response(`{ "message": "ready" }`, {
             status: 200,
             headers: {
               'Content-Type': 'application/json',
@@ -457,7 +457,7 @@ export class YogaServer<
         this.endpoint != null &&
         !requestUrl.pathname.endsWith(this.endpoint)
       ) {
-        return new Response(
+        return new crossUndiciFetch.Response(
           `Unable to ${request.method} ${requestUrl.pathname}`,
           {
             status: 404,
@@ -475,7 +475,7 @@ export class YogaServer<
             ...(graphiqlOptions === true ? {} : graphiqlOptions),
           })
 
-          return new Response(graphiQLBody, {
+          return new crossUndiciFetch.Response(graphiQLBody, {
             headers: {
               'Content-Type': 'text/html',
             },
@@ -518,7 +518,7 @@ export class YogaServer<
       return response
     } catch (err: any) {
       this.logger.error(err.message, err.stack, err)
-      const response = new Response(err.message, {
+      const response = new crossUndiciFetch.Response(err.message, {
         status: 500,
         statusText: 'Internal Server Error',
       })
@@ -549,7 +549,7 @@ export class YogaServer<
     response: Response
     executionResult: ExecutionResult<TData> | null
   }> {
-    const request = new Request('http://localhost/graphql', {
+    const request = new crossUndiciFetch.Request('http://localhost/graphql', {
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -580,7 +580,7 @@ export class YogaServer<
   ) => {
     let request: Request
     if (typeof input === 'string') {
-      request = new Request(input, init)
+      request = new crossUndiciFetch.Request(input, init)
     } else {
       request = input
     }
