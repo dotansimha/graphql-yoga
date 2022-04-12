@@ -1,10 +1,11 @@
 <p align="center"><img src="./website/public/banner.svg" width="350" /></p>
 
-# graphql-yoga
+# GraphQL Yoga
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
-[Read the docs](https://www.graphql-yoga.com)
+[Read the 2.0 announcement blog post](https://www.the-guild.dev/blog/announcing-graphql-yoga-v2)
+[Read the docs](https://www.graphql-yoga.com/docs/quick-start)
 
 ### Installation
 
