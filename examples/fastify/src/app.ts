@@ -1,5 +1,4 @@
 import { createServer } from '@graphql-yoga/node'
-import { Readable } from 'stream'
 import fastify, { FastifyReply, FastifyRequest } from 'fastify'
 
 export function buildApp(logging = true) {
@@ -61,8 +60,7 @@ export function buildApp(logging = true) {
       }
 
       reply.status(response.status)
-      const nodeStream = Readable.from(response.body!)
-      reply.send(nodeStream)
+      reply.send(response.body)
     },
   })
 

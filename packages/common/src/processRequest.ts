@@ -1,34 +1,30 @@
 import {
   getOperationAST,
-  parse as defaultParse,
   DocumentNode,
   OperationDefinitionNode,
   ExecutionArgs,
+  ExecutionResult,
   GraphQLError,
 } from 'graphql'
 import { isAsyncIterable } from '@graphql-tools/utils'
 import { ExecutionPatchResult, RequestProcessContext } from './types'
-import {
-  getMultipartResponse,
-  getPushResponse,
-  getRegularResponse,
-  getErrorResponse,
-} from './getResponse'
+import { encodeString } from './encodeString'
 
-async function parseQuery(
-  query: string | DocumentNode,
-  parse: typeof defaultParse,
-): Promise<DocumentNode> {
-  if (typeof query !== 'string' && query.kind === 'Document') {
-    return query
-  }
-  return parse(query as string)
+interface ErrorResponseParams {
+  status?: number
+  headers: Record<string, string>
+  errors: GraphQLError[]
+  isEventStream: boolean
 }
 
-const getExecutableOperation = (
+async function* getSingleResult(payload: any) {
+  yield payload
+}
+
+function getExecutableOperation(
   document: DocumentNode,
   operationName?: string,
-): OperationDefinitionNode => {
+): OperationDefinitionNode {
   const operation = getOperationAST(document, operationName)
 
   if (!operation) {
@@ -38,7 +34,7 @@ const getExecutableOperation = (
   return operation
 }
 
-export const processRequest = async <TContext, TRootValue = {}>({
+export async function processRequest<TContext, TRootValue = {}>({
   contextFactory,
   execute,
   operationName,
@@ -50,12 +46,151 @@ export const processRequest = async <TContext, TRootValue = {}>({
   validate,
   variables,
   extraHeaders,
-}: RequestProcessContext<TContext, TRootValue>): Promise<Response> => {
+  Response,
+  ReadableStream,
+}: RequestProcessContext<TContext, TRootValue>): Promise<Response> {
+  function getErrorResponse({
+    status = 500,
+    headers,
+    errors,
+    isEventStream,
+  }: ErrorResponseParams): Response {
+    const payload: ExecutionResult = {
+      data: null,
+      errors,
+    }
+    if (isEventStream) {
+      return getPushResponse(getSingleResult(payload))
+    }
+    const decodedString = encodeString(JSON.stringify(payload))
+    return new Response(decodedString, {
+      status,
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+        'Content-Length': decodedString.byteLength.toString(),
+      },
+    })
+  }
+
+  function getRegularResponse(executionResult: ExecutionResult): Response {
+    const responseBody = JSON.stringify(executionResult)
+    const decodedString = encodeString(responseBody)
+    const headersInit: HeadersInit = {
+      ...extraHeaders,
+      'Content-Type': 'application/json',
+      'Content-Length': decodedString.byteLength.toString(),
+    }
+    const responseInit: ResponseInit = {
+      headers: headersInit,
+      status: 200,
+    }
+    return new Response(decodedString, responseInit)
+  }
+
+  function getMultipartResponse(
+    asyncExecutionResult: AsyncIterable<ExecutionPatchResult<any>>,
+  ): Response {
+    const headersInit: HeadersInit = {
+      ...extraHeaders,
+      Connection: 'keep-alive',
+      'Content-Type': 'multipart/mixed; boundary="-"',
+      'Transfer-Encoding': 'chunked',
+    }
+    const responseInit: ResponseInit = {
+      headers: headersInit,
+      status: 200,
+    }
+
+    let iterator: AsyncIterator<ExecutionResult<any>>
+
+    const readableStream = new ReadableStream({
+      start(controller) {
+        iterator = asyncExecutionResult[Symbol.asyncIterator]()
+        controller.enqueue(encodeString(`---`))
+      },
+      async pull(controller) {
+        const { done, value } = await iterator.next()
+        if (value != null) {
+          controller.enqueue(encodeString('\r\n'))
+
+          controller.enqueue(
+            encodeString('Content-Type: application/json; charset=utf-8'),
+          )
+          controller.enqueue(encodeString('\r\n'))
+
+          const chunk = JSON.stringify(value)
+          const encodedChunk = encodeString(chunk)
+
+          controller.enqueue(
+            encodeString('Content-Length: ' + encodedChunk.byteLength),
+          )
+          controller.enqueue(encodeString('\r\n'))
+
+          controller.enqueue(encodeString('\r\n'))
+          controller.enqueue(encodedChunk)
+          controller.enqueue(encodeString('\r\n'))
+
+          controller.enqueue(encodeString('---'))
+        }
+        if (done) {
+          controller.enqueue(encodeString('\r\n-----\r\n'))
+          controller.close()
+        }
+      },
+      async cancel(e) {
+        await iterator.return?.(e)
+      },
+    })
+
+    return new Response(readableStream, responseInit)
+  }
+
+  function getPushResponse(
+    asyncExecutionResult: AsyncIterable<ExecutionResult<any>>,
+  ): Response {
+    const headersInit: HeadersInit = {
+      ...extraHeaders,
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+      'Content-Encoding': 'none',
+    }
+    const responseInit: ResponseInit = {
+      headers: headersInit,
+      status: 200,
+    }
+
+    let iterator: AsyncIterator<ExecutionResult<any>>
+
+    const readableStream = new ReadableStream({
+      start() {
+        iterator = asyncExecutionResult[Symbol.asyncIterator]()
+      },
+      async pull(controller) {
+        const { done, value } = await iterator.next()
+        if (value != null) {
+          const chunk = JSON.stringify(value)
+          controller.enqueue(encodeString(`data: ${chunk}\n\n`))
+        }
+        if (done) {
+          controller.close()
+        }
+      },
+      async cancel(e) {
+        await iterator.return?.(e)
+      },
+    })
+    return new Response(readableStream, responseInit)
+  }
+
   let contextValue: TContext | undefined
-  let document: DocumentNode | undefined
+  let document: DocumentNode
   let operation: OperationDefinitionNode | undefined
 
-  const isEventStream = request.headers.get('accept') === 'text/event-stream'
+  const isEventStream = !!request.headers
+    .get('accept')
+    ?.includes('text/event-stream')
 
   try {
     if (request.method !== 'GET' && request.method !== 'POST') {
@@ -82,7 +217,11 @@ export const processRequest = async <TContext, TRootValue = {}>({
     }
 
     try {
-      document = await parseQuery(query, parse)
+      if (typeof query !== 'string' && query.kind === 'Document') {
+        document = query
+      } else {
+        document = parse(query)
+      }
     } catch (e: unknown) {
       return getErrorResponse({
         status: 400,
@@ -152,12 +291,12 @@ export const processRequest = async <TContext, TRootValue = {}>({
       // If errors are encountered while subscribing to the operation, an execution result
       // instead of an AsyncIterable.
       if (isAsyncIterable<ExecutionPatchResult>(result)) {
-        return getPushResponse(result, extraHeaders)
+        return getPushResponse(result)
       } else {
         if (isEventStream) {
-          return getPushResponse(result, extraHeaders)
+          return getPushResponse(result)
         } else {
-          return getRegularResponse(result, extraHeaders)
+          return getRegularResponse(result)
         }
       }
     } else {
@@ -167,10 +306,10 @@ export const processRequest = async <TContext, TRootValue = {}>({
       // execution result.
       if (isAsyncIterable<ExecutionPatchResult>(result)) {
         return isEventStream
-          ? getPushResponse(result, extraHeaders)
-          : getMultipartResponse(result, extraHeaders)
+          ? getPushResponse(result)
+          : getMultipartResponse(result)
       } else {
-        return getRegularResponse(result, extraHeaders)
+        return getRegularResponse(result)
       }
     }
   } catch (error: any) {

@@ -1,5 +1,4 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import crossUndiciFetch from 'cross-undici-fetch'
 import { Readable } from 'stream'
 import type { AddressInfo } from './types'
 import { Socket } from 'net'
@@ -58,6 +57,7 @@ function configureSocket(rawRequest: NodeRequest) {
 export function getNodeRequest(
   nodeRequest: NodeRequest,
   defaultAddressInfo: AddressInfo,
+  RequestCtor: typeof Request,
 ): Request {
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   configureSocket(rawRequest)
@@ -76,7 +76,7 @@ export function getNodeRequest(
   }
 
   if (nodeRequest.method !== 'POST') {
-    return new crossUndiciFetch.Request(fullUrl, baseRequestInit)
+    return new RequestCtor(fullUrl, baseRequestInit)
   }
 
   /**
@@ -89,18 +89,18 @@ export function getNodeRequest(
   if (maybeParsedBody != null) {
     if (
       typeof maybeParsedBody === 'string' ||
-      maybeParsedBody instanceof Uint8Array ||
-      maybeParsedBody instanceof crossUndiciFetch.Blob ||
-      maybeParsedBody instanceof crossUndiciFetch.FormData ||
-      maybeParsedBody instanceof URLSearchParams ||
+      maybeParsedBody[Symbol.toStringTag] === 'Uint8Array' ||
+      maybeParsedBody[Symbol.toStringTag] === 'Blob' ||
+      maybeParsedBody[Symbol.toStringTag] === 'FormData' ||
+      maybeParsedBody[Symbol.toStringTag] === 'URLSearchParams' ||
       isAsyncIterable(maybeParsedBody)
     ) {
-      return new crossUndiciFetch.Request(fullUrl, {
+      return new RequestCtor(fullUrl, {
         ...baseRequestInit,
         body: maybeParsedBody as any,
       })
     }
-    const request = new crossUndiciFetch.Request(fullUrl, {
+    const request = new RequestCtor(fullUrl, {
       ...baseRequestInit,
     })
     if (!request.headers.get('content-type')?.includes('json')) {
@@ -118,7 +118,7 @@ export function getNodeRequest(
     })
   }
 
-  return new crossUndiciFetch.Request(fullUrl, {
+  return new RequestCtor(fullUrl, {
     headers: nodeRequest.headers,
     method: nodeRequest.method,
     body: rawRequest as any,
@@ -142,6 +142,10 @@ export function sendNodeResponse(
     serverResponse.end()
     return Promise.resolve()
   } else {
+    if (body[Symbol.toStringTag] === 'Uint8Array') {
+      serverResponse.end(body)
+      return Promise.resolve()
+    }
     const nodeStream = isReadable(body) ? body : Readable.from(body)
     const promise = new Promise<void>((resolve) =>
       nodeStream.once('end', resolve),

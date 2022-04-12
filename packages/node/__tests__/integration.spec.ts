@@ -693,6 +693,7 @@ describe('Browser', () => {
         data: {
           liveCounter: 1,
         },
+        isLive: true,
       })
       liveQueryStore.invalidate('Query.liveCounter')
 
@@ -719,6 +720,7 @@ describe('Browser', () => {
         data: {
           liveCounter: 2,
         },
+        isLive: true,
       })
     })
   })
@@ -752,7 +754,7 @@ describe('Browser', () => {
                   document.getElementById('result').innerHTML =
                     await response.text()
                 } catch (e) {
-                  document.getElementById('result').innerHTML = e.message
+                  document.getElementById('result').innerHTML = e.stack
                 }
               }
               fetchData()
@@ -809,7 +811,7 @@ describe('Browser', () => {
         await new Promise((resolve) => setTimeout(resolve, 100))
         return document.getElementById('result')?.innerHTML
       })
-      expect(result).toEqual('Failed to fetch')
+      expect(result).toContain('Failed to fetch')
     })
   })
 })

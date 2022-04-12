@@ -1,9 +1,13 @@
 let encodeString: (str: string) => Uint8Array
-if ('Buffer' in globalThis) {
-  encodeString = (str) => Buffer.from(str, 'utf-8')
+if (globalThis.Buffer) {
+  encodeString = function encodeStringWithBuffer(str: string) {
+    return Buffer.from(str, 'utf8')
+  }
 } else {
   const textEncoder = new TextEncoder()
-  encodeString = (str) => textEncoder.encode(str)
+  encodeString = function encodeStringWithTextEncoder(str: string) {
+    return textEncoder.encode(str)
+  }
 }
 
 export { encodeString }
