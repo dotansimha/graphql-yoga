@@ -10,6 +10,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
+    "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
     "prepack": "bob prepack",
     "check": "tsc --pretty --noEmit"
   },
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
+    "@minify-html/js": "0.8.0",
     "bob-the-bundler": "^1.5.1"
   },
   "peerDependencies": {

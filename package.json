@@ -6,7 +6,7 @@
     "pretty-quick": "pretty-quick --staged",
     "prebuild": "rimraf packages/*/dist",
     "check": "yarn workspaces run check",
-    "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && tsc --project tsconfig.build.json && bob build",
+    "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace @graphql-yoga/common run generate-graphiql-html && tsc --project tsconfig.build.json && bob build",
     "test": "jest --passWithNoTests",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
