@@ -1,5 +1,14 @@
 # @graphql-yoga/node
 
+## 2.2.1
+
+### Patch Changes
+
+- 32e2e40: Bump fixed cross-undici-fetch version
+- Updated dependencies [32e2e40]
+- Updated dependencies [32e2e40]
+  - @graphql-yoga/common@2.2.1
+
 ## 2.2.0
 
 ### Patch Changes
