@@ -16,14 +16,6 @@ export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
       <noscript>You need to enable JavaScript to run this app.</noscript>
       <div id="root"></div>
 
-      <script>
-        // Polyfills until we can change DataLoader
-        if (globalThis.window?.setImmediate == null) {
-          //@ts-ignore
-          globalThis.window.setImmediate = setTimeout
-          globalThis.global = globalThis
-        }
-      </script>
       <script type="module">
         ${js}
         renderYogaGraphiQL(
