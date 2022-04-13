@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/common': minor
+'@graphql-yoga/common': patch
 '@graphql-yoga/render-graphiql': minor
 '@graphql-yoga/graphiql': minor
 ---
