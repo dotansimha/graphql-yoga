@@ -27,7 +27,7 @@ import {
   renderGraphiQL,
   shouldRenderGraphiQL,
 } from './graphiql'
-import crossUndiciFetch from 'cross-undici-fetch'
+import * as crossUndiciFetch from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, YogaLogger } from './logger'
