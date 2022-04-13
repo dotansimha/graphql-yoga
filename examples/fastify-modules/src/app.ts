@@ -1,6 +1,5 @@
 import 'reflect-metadata'
 import { createServer } from '@graphql-yoga/node'
-import { Readable } from 'stream'
 import fastify, {
   FastifyReply,
   FastifyRequest,
@@ -36,8 +35,7 @@ export const graphqlHandler = (): RouteHandlerMethod => {
 
     reply.status(response.status)
 
-    const nodeStream = Readable.from(response.body)
-    reply.send(nodeStream)
+    reply.send(response.body)
   }
 }
 

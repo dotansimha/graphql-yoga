@@ -1,6 +1,5 @@
 import { createServer } from '@graphql-yoga/node'
 import Koa from 'koa'
-import { Readable } from 'stream'
 
 export function buildApp() {
   const app = new Koa()
@@ -47,9 +46,7 @@ export function buildApp() {
       ctx.append(key, value)
     })
 
-    // Converts ReadableStream to a NodeJS Stream
-    const nodeStream = Readable.from(response.body)
-    ctx.body = nodeStream
+    ctx.body = response.body
   })
 
   return app

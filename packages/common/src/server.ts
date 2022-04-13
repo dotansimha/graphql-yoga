@@ -20,13 +20,14 @@ import {
   GraphQLServerInject,
   YogaInitialContext,
   FetchEvent,
+  FetchAPI,
 } from './types'
 import {
   GraphiQLOptions,
   renderGraphiQL,
   shouldRenderGraphiQL,
 } from './graphiql'
-import crossUndiciFetch from 'cross-undici-fetch'
+import * as crossUndiciFetch from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, YogaLogger } from './logger'
@@ -122,6 +123,7 @@ export type YogaServerOptions<
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
+  fetchAPI?: FetchAPI
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
@@ -190,12 +192,25 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) => GraphiQLOptions | boolean
   protected endpoint?: string
+  protected fetchAPI: {
+    Request: typeof Request
+    Response: typeof Response
+    fetch: typeof fetch
+    ReadableStream: typeof ReadableStream
+  }
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
   ) {
+    this.fetchAPI = {
+      Request: options?.fetchAPI?.Request ?? crossUndiciFetch.Request,
+      Response: options?.fetchAPI?.Response ?? crossUndiciFetch.Response,
+      fetch: options?.fetchAPI?.fetch ?? crossUndiciFetch.fetch,
+      ReadableStream:
+        options?.fetchAPI?.ReadableStream ?? crossUndiciFetch.ReadableStream,
+    }
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
@@ -401,7 +416,7 @@ export class YogaServer<
   ) {
     const headers = this.getCORSResponseHeaders(request, ...args)
 
-    const optionsResponse = new crossUndiciFetch.Response(null, {
+    const optionsResponse = new this.fetchAPI.Response(null, {
       status: 204,
       headers,
     })
@@ -422,9 +437,9 @@ export class YogaServer<
       if (request.method === 'OPTIONS') {
         return this.handleOptions(request, ...args)
       }
-      const requestUrl = new URL(request.url)
-      if (requestUrl.pathname.endsWith('/health')) {
-        return new crossUndiciFetch.Response(`{ "message": "alive" }`, {
+      const requestPath = request.url.split('?')[0]
+      if (requestPath.endsWith('/health')) {
+        return new this.fetchAPI.Response(`{ "message": "alive" }`, {
           status: 200,
           headers: {
             'Content-Type': 'application/json',
@@ -432,15 +447,17 @@ export class YogaServer<
           },
         })
       }
-      if (requestUrl.pathname.endsWith('/readiness')) {
-        const readinessResponse = await crossUndiciFetch.fetch(
+      if (requestPath.endsWith('/readiness')) {
+        const readinessResponse = await this.fetchAPI.fetch(
           request.url.replace('/readiness', '/health'),
         )
+        const { message } = await readinessResponse.json()
         if (
           readinessResponse.status === 200 &&
-          readinessResponse.headers.get('x-yoga-id') === this.id
+          readinessResponse.headers.get('x-yoga-id') === this.id &&
+          message === 'alive'
         ) {
-          return new crossUndiciFetch.Response(`{ "message": "ready" }`, {
+          return new this.fetchAPI.Response(`{ "message": "ready" }`, {
             status: 200,
             headers: {
               'Content-Type': 'application/json',
@@ -453,12 +470,9 @@ export class YogaServer<
       }
 
       this.logger.debug(`Checking if GraphiQL Request`)
-      if (
-        this.endpoint != null &&
-        !requestUrl.pathname.endsWith(this.endpoint)
-      ) {
-        return new crossUndiciFetch.Response(
-          `Unable to ${request.method} ${requestUrl.pathname}`,
+      if (this.endpoint != null && !requestPath.endsWith(this.endpoint)) {
+        return new this.fetchAPI.Response(
+          `Unable to ${request.method} ${requestPath}`,
           {
             status: 404,
             statusText: `Not Found`,
@@ -475,7 +489,7 @@ export class YogaServer<
             ...(graphiqlOptions === true ? {} : graphiqlOptions),
           })
 
-          return new crossUndiciFetch.Response(graphiQLBody, {
+          return new this.fetchAPI.Response(graphiQLBody, {
             headers: {
               'Content-Type': 'text/html',
             },
@@ -514,11 +528,13 @@ export class YogaServer<
         contextFactory,
         schema,
         extraHeaders: corsHeaders,
+        Response: this.fetchAPI.Response,
+        ReadableStream: this.fetchAPI.ReadableStream,
       })
       return response
     } catch (err: any) {
       this.logger.error(err.message, err.stack, err)
-      const response = new crossUndiciFetch.Response(err.message, {
+      const response = new this.fetchAPI.Response(err.message, {
         status: 500,
         statusText: 'Internal Server Error',
       })
@@ -549,7 +565,7 @@ export class YogaServer<
     response: Response
     executionResult: ExecutionResult<TData> | null
   }> {
-    const request = new crossUndiciFetch.Request('http://localhost/graphql', {
+    const request = new this.fetchAPI.Request('http://localhost/graphql', {
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -580,7 +596,7 @@ export class YogaServer<
   ) => {
     let request: Request
     if (typeof input === 'string') {
-      request = new crossUndiciFetch.Request(input, init)
+      request = new this.fetchAPI.Request(input, init)
     } else {
       request = input
     }

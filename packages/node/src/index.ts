@@ -9,7 +9,8 @@ import { createServer as createHttpsServer } from 'https'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
 import { YogaServer } from '@graphql-yoga/common'
 import type { YogaNodeServerOptions, AddressInfo } from './types'
-import { platform } from 'os'
+import { platform, release } from 'os'
+import { create } from 'cross-undici-fetch'
 
 class YogaNodeServer<
   TServerContext extends Record<string, any>,
@@ -29,11 +30,25 @@ class YogaNodeServer<
       TRootValue
     >,
   ) {
-    super(options)
+    super({
+      ...options,
+      fetchAPI:
+        options?.fetchAPI ??
+        create({
+          useNodeFetch: true,
+        }),
+    })
     this.addressInfo = {
       // Windows doesn't support 0.0.0.0 binding
+      // We need to use 127.0.0.1 for Windows and WSL
       hostname:
-        options?.hostname || (platform() === 'win32' ? '127.0.0.1' : '0.0.0.0'),
+        options?.hostname ||
+        // Is Windows?
+        (platform() === 'win32' ||
+        // is WSL?
+        release().toLowerCase().includes('microsoft')
+          ? '127.0.0.1'
+          : '0.0.0.0'),
       port: options?.port ?? parseInt(process.env.PORT || '4000'),
       endpoint: options?.endpoint || '/graphql',
       protocol: options?.https ? 'https' : 'http',
@@ -70,7 +85,11 @@ class YogaNodeServer<
     serverContext: TServerContext,
   ): Promise<Response> {
     this.logger.debug(`Node Request received`)
-    const request = getNodeRequest(nodeRequest, this.addressInfo)
+    const request = getNodeRequest(
+      nodeRequest,
+      this.addressInfo,
+      this.fetchAPI.Request,
+    )
     this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request, serverContext)
     return response
@@ -93,7 +112,7 @@ class YogaNodeServer<
           this.addressInfo.hostname,
           () => {
             const serverUrl = this.getServerUrl()
-            this.logger.info(`GraphQL Server running at ${serverUrl}.`)
+            this.logger.info(`GraphQL Server running at ${serverUrl}`)
             resolve()
           },
         )
@@ -106,12 +125,12 @@ class YogaNodeServer<
 
   stop() {
     const nodeServer = this.getNodeServer()
-    this.logger.info('Shutting down GraphQL Server.')
+    this.logger.info('Shutting down GraphQL Server')
     return new Promise<void>((resolve, reject) => {
       nodeServer.close((err) => {
         if (err != null) {
           this.logger.error(
-            'Something went wrong while trying to shutdown the server.',
+            'Something went wrong while trying to shutdown the server',
             err,
           )
           reject(err)
