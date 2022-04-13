@@ -1,5 +1,12 @@
 # @graphql-yoga/common
 
+## 2.2.1
+
+### Patch Changes
+
+- 32e2e40: Thanks to the recent release of DataLoader, we don't need to setImmediate for browser environments anymore.
+- 32e2e40: Bump fixed cross-undici-fetch version
+
 ## 2.2.0
 
 ### Minor Changes

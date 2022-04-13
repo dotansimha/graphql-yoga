@@ -1,5 +1,17 @@
 # @graphql-yoga/render-graphiql
 
+## 2.3.0
+
+### Minor Changes
+
+- 32e2e40: Thanks to the recent release of DataLoader, we don't need to setImmediate for browser environments anymore.
+
+### Patch Changes
+
+- Updated dependencies [32e2e40]
+- Updated dependencies [32e2e40]
+  - @graphql-yoga/common@2.2.1
+
 ## 2.2.0
 
 ### Minor Changes
