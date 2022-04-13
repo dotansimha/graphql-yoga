@@ -469,10 +469,20 @@ export class YogaServer<
         )
       }
 
-      this.logger.debug(`Checking if GraphiQL Request`)
       if (this.endpoint != null && !requestPath.endsWith(this.endpoint)) {
+        // We need the path only without hostname
+        const { pathname } = new URL(requestPath)
+        if (pathname.length === 0 || pathname === '/') {
+          return new this.fetchAPI.Response(null, {
+            status: 302,
+            statusText: 'Moved Permanently',
+            headers: {
+              Location: this.endpoint,
+            },
+          })
+        }
         return new this.fetchAPI.Response(
-          `Unable to ${request.method} ${requestPath}`,
+          `Unable to ${request.method} ${pathname}`,
           {
             status: 404,
             statusText: `Not Found`,
@@ -480,6 +490,7 @@ export class YogaServer<
         )
       }
 
+      this.logger.debug(`Checking if GraphiQL Request`)
       if (shouldRenderGraphiQL(request)) {
         let graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
 
