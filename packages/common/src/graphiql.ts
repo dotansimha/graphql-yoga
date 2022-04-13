@@ -1,3 +1,5 @@
+import graphiqlHTML from './graphiqlHTML'
+
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
   return method === 'GET' && !!headers?.get('accept')?.includes('text/html')
 }
@@ -35,29 +37,7 @@ export type GraphiQLOptions = {
   title?: string
 }
 
-export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="utf-8" />
-      <title>${opts?.title || 'Yoga GraphiQL'}</title>
-      <link rel="icon" href="https://www.graphql-yoga.com/favicon.ico" />
-      <link
-        rel="stylesheet"
-        href="https://unpkg.com/@graphql-yoga/graphiql/dist/style.css"
-      />
-    </head>
-    <body id="body" class="no-focus-outline">
-      <noscript>You need to enable JavaScript to run this app.</noscript>
-      <div id="root"></div>
-
-      <script type="module">
-        import { renderYogaGraphiQL } from 'https://unpkg.com/@graphql-yoga/graphiql'
-        renderYogaGraphiQL(
-          window.document.querySelector('#root'),
-          ${JSON.stringify(opts ?? {})},
-        )
-      </script>
-    </body>
-  </html>
-`
+export const renderGraphiQL = (opts?: GraphiQLOptions) =>
+  graphiqlHTML
+    .replace('__TITLE__', opts?.title || 'Yoga GraphiQL')
+    .replace('__OPTS__', JSON.stringify(opts ?? {}))

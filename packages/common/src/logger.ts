@@ -1,13 +1,31 @@
-import chalk from 'chalk'
 import { inspect } from '@graphql-tools/utils'
 
 type MessageTransformer = (msg: string) => string
 
-const warnColor: MessageTransformer = chalk.keyword(`orange`)
-const infoColor: MessageTransformer = chalk.cyan
-const errorColor: MessageTransformer = chalk.red
-const debugColor: MessageTransformer = chalk.magenta
-const titleBold: MessageTransformer = chalk.bold
+const ANSI_CODES = {
+  black: '\x1b[30m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  magenta: '\x1b[35m',
+  cyan: '\x1b[36m',
+  white: '\x1b[37m',
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  orange: '\x1b[48:5:166m',
+}
+
+const warnColor: MessageTransformer = (msg) =>
+  ANSI_CODES.orange + msg + ANSI_CODES.reset
+const infoColor: MessageTransformer = (msg) =>
+  ANSI_CODES.cyan + msg + ANSI_CODES.reset
+const errorColor: MessageTransformer = (msg) =>
+  ANSI_CODES.red + msg + ANSI_CODES.reset
+const debugColor: MessageTransformer = (msg) =>
+  ANSI_CODES.magenta + msg + ANSI_CODES.reset
+const titleBold: MessageTransformer = (msg) =>
+  ANSI_CODES.bold + msg + ANSI_CODES.reset
 
 export interface YogaLogger {
   debug: (...args: any[]) => void
