@@ -1,5 +1,25 @@
 # @graphql-yoga/node
 
+## 2.2.0
+
+### Patch Changes
+
+- 1d4fe42: Use node-fetch by default instead of undici. As discussed in https://github.com/nodejs/undici/issues/1203, `undici`'s fetch implementation has some performance issues compared to `node-fetch` v2.
+
+  So Yoga now uses `node-fetch` by default which doesn't affect the existing users. User can configure `cross-undici-fetch` to revert back this behavior;
+
+  ```ts
+  import { create } from 'cross-undici-fetch'
+
+  createServer({
+    fetchAPI: create({ useNodeFetch: false }),
+  })
+  ```
+
+- Updated dependencies [1d4fe42]
+- Updated dependencies [1d4fe42]
+  - @graphql-yoga/common@2.2.0
+
 ## 2.1.0
 
 ### Minor Changes

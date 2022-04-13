@@ -1,5 +1,29 @@
 # @graphql-yoga/common
 
+## 2.2.0
+
+### Minor Changes
+
+- 1d4fe42: new option `fetchAPI` has been added;
+
+  User can provide a custom Fetch implementation to Yoga like below;
+
+  ```ts
+  import { fetch, Request, Response, ReadableStream } from 'my-ponyfill'
+  createServer({
+    fetchAPI: {
+      fetch,
+      Request,
+      Response,
+      ReadableStream,
+    },
+  })
+  ```
+
+### Patch Changes
+
+- 1d4fe42: Avoid extra usages of URL constructor which has some performance implications on Node
+
 ## 2.1.0
 
 ### Minor Changes
