@@ -14,7 +14,11 @@ import {
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
+import type {
+  ExecutionResult,
+  IResolvers,
+  TypeSource,
+} from '@graphql-tools/utils'
 import {
   CORSOptions,
   GraphQLServerInject,
