@@ -8,10 +8,10 @@ import {
 } from 'nexus'
 import { createServer } from '@graphql-yoga/node'
 
-const UploadScalar = scalarType({
-  name: 'Upload',
-  asNexusMethod: 'upload',
-  description: 'The `Upload` scalar type represents a file upload.',
+const FileScalar = scalarType({
+  name: 'File',
+  asNexusMethod: 'file',
+  description: 'The `File` scalar type represents a file upload.',
   sourceType: 'File',
 })
 
@@ -22,7 +22,7 @@ const greetings = queryField('greetings', {
 
 const readTextFile = mutationField('readTextFile', {
   type: 'String',
-  args: { file: nonNull(arg({ type: 'Upload' })) },
+  args: { file: nonNull(arg({ type: 'File' })) },
   resolve: async (parent, { file }, ctx) => {
     const textContent = await file.text()
     return textContent
@@ -30,7 +30,7 @@ const readTextFile = mutationField('readTextFile', {
 })
 
 const schema = makeSchema({
-  types: [UploadScalar, greetings, readTextFile],
+  types: [FileScalar, greetings, readTextFile],
 })
 
 const server = createServer({
