@@ -1,5 +1,12 @@
 # @graphql-yoga/common
 
+## 2.3.0
+
+### Minor Changes
+
+- 3740c12: Remove 'chalk' dependency for lower bundle size
+- 3740c12: Minify YogaGraphiQL HTML in the code
+
 ## 2.2.1
 
 ### Patch Changes
