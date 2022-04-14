@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 2.3.0
+
+### Patch Changes
+
+- @graphql-yoga/node@2.3.0
+
 ## 2.2.1
 
 ### Patch Changes
