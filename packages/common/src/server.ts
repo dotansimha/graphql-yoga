@@ -1,4 +1,4 @@
-import { GraphQLSchema, isSchema, print } from 'graphql'
+import { GraphQLError, GraphQLSchema, isSchema, print } from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
@@ -25,6 +25,7 @@ import {
   YogaInitialContext,
   FetchEvent,
   FetchAPI,
+  PersistedQueriesCache,
 } from './types'
 import {
   GraphiQLOptions,
@@ -35,6 +36,7 @@ import * as crossUndiciFetch from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, YogaLogger } from './logger'
+import lru from 'tiny-lru'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -128,6 +130,13 @@ export type YogaServerOptions<
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: FetchAPI
+  persistedQueries?:
+    | boolean
+    | PersistedQueriesCache
+    | {
+        max?: number
+        ttl?: number
+      }
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
@@ -202,6 +211,7 @@ export class YogaServer<
     fetch: typeof fetch
     ReadableStream: typeof ReadableStream
   }
+  protected persistedQueryStore?: PersistedQueriesCache
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -236,8 +246,6 @@ export class YogaServer<
               info: () => {},
             }
         : logger
-
-    const maskedErrors = options?.maskedErrors ?? true
 
     this.getEnveloped = envelop({
       plugins: [
@@ -297,9 +305,11 @@ export class YogaServer<
         ),
         ...(options?.plugins ?? []),
         enableIf(
-          !!maskedErrors,
+          options?.maskedErrors !== false,
           useMaskedErrors(
-            typeof maskedErrors === 'object' ? maskedErrors : undefined,
+            typeof options?.maskedErrors === 'object'
+              ? options?.maskedErrors
+              : undefined,
           ),
         ),
       ],
@@ -329,6 +339,24 @@ export class YogaServer<
     this.renderGraphiQL = options?.renderGraphiQL || renderGraphiQL
 
     this.endpoint = options?.endpoint
+
+    if (options?.persistedQueries !== false) {
+      if (typeof options?.persistedQueries === 'object') {
+        if ('get' in options.persistedQueries) {
+          this.persistedQueryStore = options.persistedQueries
+        } else if (
+          'max' in options.persistedQueries ||
+          'ttl' in options.persistedQueries
+        ) {
+          this.persistedQueryStore = lru<string>(
+            options.persistedQueries.max ?? 1000,
+            options.persistedQueries.ttl ?? 36000,
+          )
+        }
+      } else {
+        this.persistedQueryStore = lru<string>(1000, 36000)
+      }
+    }
   }
 
   getCORSResponseHeaders(
@@ -519,7 +547,9 @@ export class YogaServer<
 
       this.logger.debug(`Processing Request`)
 
-      const corsHeaders = this.getCORSResponseHeaders(request, initialContext)
+      const corsHeaders = request.headers.get('origin')
+        ? this.getCORSResponseHeaders(request, initialContext)
+        : {}
       const response = await processRequest({
         request,
         query,
@@ -532,17 +562,29 @@ export class YogaServer<
         contextFactory,
         schema,
         extraHeaders: corsHeaders,
+        extensions,
+        persistedQueryStore: this.persistedQueryStore,
         Response: this.fetchAPI.Response,
         ReadableStream: this.fetchAPI.ReadableStream,
       })
       return response
-    } catch (err: any) {
-      this.logger.error(err.message, err.stack, err)
-      const response = new this.fetchAPI.Response(err.message, {
+    } catch (error: any) {
+      if (error instanceof GraphQLError) {
+        return new this.fetchAPI.Response(
+          JSON.stringify({
+            errors: [error],
+          }),
+          {
+            status: 200,
+          },
+        )
+      }
+      const errorMessage = error.stack || JSON.stringify(error)
+      this.logger.error(errorMessage)
+      return new this.fetchAPI.Response(errorMessage, {
         status: 500,
         statusText: 'Internal Server Error',
       })
-      return response
     }
   }
 
@@ -573,9 +615,7 @@ export class YogaServer<
       method: 'POST',
       headers,
       body: JSON.stringify({
-        query:
-          document &&
-          (typeof document === 'string' ? document : print(document)),
+        query: typeof document === 'string' ? document : print(document),
         variables,
         operationName,
       }),

@@ -1,15 +1,9 @@
 import { dset } from 'dset'
-
-type GraphQLRequestPayload = {
-  operationName?: string
-  query?: string
-  variables?: Record<string, unknown>
-  extensions?: Record<string, unknown>
-}
+import { GraphQLParams } from './types'
 
 type RequestParser = {
   is: (request: Request) => boolean
-  parse: (request: Request) => Promise<GraphQLRequestPayload>
+  parse: (request: Request) => Promise<GraphQLParams>
 }
 
 export const GETRequestParser: RequestParser = {
@@ -72,7 +66,7 @@ export const POSTMultipartFormDataRequestParser: RequestParser = {
 export function buildGetGraphQLParameters(parsers: Array<RequestParser>) {
   return async function getGraphQLParameters(
     request: Request,
-  ): Promise<GraphQLRequestPayload> {
+  ): Promise<GraphQLParams> {
     for (const parser of parsers) {
       if (parser.is(request)) {
         return parser.parse(request)

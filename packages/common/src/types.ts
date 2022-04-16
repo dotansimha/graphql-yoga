@@ -20,10 +20,14 @@ export interface ExecutionPatchResult<
   extensions?: TExtensions
 }
 
-export interface GraphQLParams<TVariables = Record<string, any>> {
+export interface GraphQLParams<
+  TVariables = Record<string, any>,
+  TExtensions = Record<string, any>,
+> {
   operationName?: string
   query?: string
-  variables?: string | TVariables
+  variables?: TVariables
+  extensions?: TExtensions
 }
 
 export interface FormatPayloadParams<TContext, TRootValue> {
@@ -38,7 +42,7 @@ export interface YogaInitialContext {
   /**
    * A Document containing GraphQL Operations and Fragments to execute.
    */
-  query?: string | DocumentNode
+  query?: string
   /**
    * An object describing the HTTP request.
    */
@@ -50,15 +54,14 @@ export interface YogaInitialContext {
   /**
    * Values for any Variables defined by the Operation.
    */
-  variables?: string | Record<string, any>
+  variables?: Record<string, any>
   /**
    * Additional extensions object sent by the client.
    */
   extensions?: Record<string, any>
 }
 
-export interface RequestProcessContext<TContext, TRootValue>
-  extends YogaInitialContext {
+export interface RequestProcessContext<TContext> extends YogaInitialContext {
   /**
    * The GraphQL schema used to process the request.
    */
@@ -87,6 +90,10 @@ export interface RequestProcessContext<TContext, TRootValue>
    * The extra headers server will send in the request
    */
   extraHeaders: Record<string, string>
+  /**
+   * Persisted Queries Cache
+   */
+  persistedQueryStore?: PersistedQueriesCache
   /**
    * WHATWG compliant Response constructor
    */
@@ -161,4 +168,9 @@ export type FetchAPI = {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
   ReadableStream?: typeof ReadableStream
+}
+
+export type PersistedQueriesCache = {
+  get(key: string): PromiseOrValue<string | null | undefined>
+  set(key: string, query: string): PromiseOrValue<any>
 }

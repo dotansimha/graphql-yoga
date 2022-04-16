@@ -5,10 +5,12 @@ import {
   ExecutionArgs,
   ExecutionResult,
   GraphQLError,
+  print,
 } from 'graphql'
 import { isAsyncIterable } from '@graphql-tools/utils'
 import { ExecutionPatchResult, RequestProcessContext } from './types'
 import { encodeString } from './encodeString'
+import { crypto } from 'cross-undici-fetch'
 
 interface ErrorResponseParams {
   status?: number
@@ -34,7 +36,7 @@ function getExecutableOperation(
   return operation
 }
 
-export async function processRequest<TContext, TRootValue = {}>({
+export async function processRequest<TContext>({
   contextFactory,
   execute,
   operationName,
@@ -46,9 +48,11 @@ export async function processRequest<TContext, TRootValue = {}>({
   validate,
   variables,
   extraHeaders,
+  extensions,
+  persistedQueryStore,
   Response,
   ReadableStream,
-}: RequestProcessContext<TContext, TRootValue>): Promise<Response> {
+}: RequestProcessContext<TContext>): Promise<Response> {
   function getErrorResponse({
     status = 500,
     headers,
@@ -207,21 +211,71 @@ export async function processRequest<TContext, TRootValue = {}>({
       })
     }
 
-    if (query == null) {
+    if (extensions?.persistedQuery != null && persistedQueryStore == null) {
       return getErrorResponse({
-        status: 400,
-        errors: [new GraphQLError('Must provide query string.')],
+        status: 500,
+        errors: [new GraphQLError('PersistedQueryNotSupported')],
         isEventStream,
         headers: extraHeaders,
       })
     }
 
-    try {
-      if (typeof query !== 'string' && query.kind === 'Document') {
-        document = query
+    if (query == null) {
+      if (
+        extensions?.persistedQuery?.version === 1 &&
+        extensions?.persistedQuery?.sha256Hash != null &&
+        persistedQueryStore != null
+      ) {
+        const persistedQuery = await persistedQueryStore.get(
+          extensions?.persistedQuery?.sha256Hash,
+        )
+        if (persistedQuery == null) {
+          return getErrorResponse({
+            status: 404,
+            errors: [new GraphQLError('PersistedQueryNotFound')],
+            isEventStream,
+            headers: extraHeaders,
+          })
+        } else {
+          query = persistedQuery
+        }
       } else {
-        document = parse(query)
+        return getErrorResponse({
+          status: 400,
+          errors: [new GraphQLError('Must provide query string.')],
+          isEventStream,
+          headers: extraHeaders,
+        })
       }
+    } else if (
+      extensions?.persistedQuery?.version === 1 &&
+      extensions?.persistedQuery?.sha256Hash != null &&
+      persistedQueryStore != null
+    ) {
+      if (crypto) {
+        const encodedQuery = encodeString(query)
+        const hashArrayBuffer = await crypto.subtle.digest(
+          'SHA-256',
+          encodedQuery,
+        )
+        const hashTypedArray = new Uint8Array(hashArrayBuffer)
+        const expectedHashString = [...hashTypedArray]
+          .map((b) => b.toString(16).padStart(2, '0'))
+          .join('')
+        if (extensions.persistedQuery.sha256Hash !== expectedHashString) {
+          return getErrorResponse({
+            status: 400,
+            errors: [new GraphQLError('PersistedQueryInvalidHash')],
+            isEventStream,
+            headers: extraHeaders,
+          })
+        }
+      }
+      await persistedQueryStore.set(extensions.persistedQuery.sha256Hash, query)
+    }
+
+    try {
+      document = parse(query)
     } catch (e: unknown) {
       return getErrorResponse({
         status: 400,
@@ -259,29 +313,13 @@ export async function processRequest<TContext, TRootValue = {}>({
       })
     }
 
-    let variableValues: { [name: string]: any } | undefined
-
-    try {
-      if (variables) {
-        variableValues =
-          typeof variables === 'string' ? JSON.parse(variables) : variables
-      }
-    } catch (_error) {
-      return getErrorResponse({
-        errors: [new GraphQLError('Variables are invalid JSON.')],
-        status: 400,
-        isEventStream,
-        headers: extraHeaders,
-      })
-    }
-
     contextValue = await contextFactory()
 
     const executionArgs: ExecutionArgs = {
       schema,
       document,
       contextValue,
-      variableValues,
+      variableValues: variables,
       operationName,
     }
 

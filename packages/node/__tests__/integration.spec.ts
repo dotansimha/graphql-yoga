@@ -1,4 +1,4 @@
-import { getIntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery, parse } from 'graphql'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
@@ -422,7 +422,7 @@ describe('Incremental Delivery', () => {
   })
 })
 
-describe('health checks', () => {
+describe('Health Checks', () => {
   const yogaApp = createServer({
     logging: false,
   })
@@ -444,36 +444,119 @@ describe('health checks', () => {
   })
 })
 
-it('should expose Node req and res objects in the context', async () => {
-  const yoga = createServer({
-    schema: {
-      typeDefs: /* GraphQL */ `
-        type Query {
-          isNode: Boolean!
-        }
-      `,
-      resolvers: {
-        Query: {
-          isNode: (_, __, { req, res }) => !!req && !!res,
+describe('Context Building', () => {
+  it('should expose Node req and res objects in the context', async () => {
+    const yoga = createServer({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            isNode: Boolean!
+          }
+        `,
+        resolvers: {
+          Query: {
+            isNode: (_, __, { req, res }) => !!req && !!res,
+          },
         },
       },
-    },
+      logging: false,
+    })
+    const response = await request(yoga)
+      .post('/graphql')
+      .send({
+        query: /* GraphQL */ `
+          query {
+            isNode
+          }
+        `,
+      })
+
+    expect(response.statusCode).toBe(200)
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.isNode).toBe(true)
+  })
+})
+
+describe('Persisted Queries', () => {
+  const persistedQueryStore = new Map()
+  const yoga = createServer({
+    schema,
+    persistedQueries: persistedQueryStore,
     logging: false,
   })
-  const response = await request(yoga)
-    .post('/graphql')
-    .send({
-      query: /* GraphQL */ `
-        query {
-          isNode
-        }
-      `,
-    })
+  // TODO: Need to find a way to test using fastify inject
+  beforeAll(async () => {
+    await yoga.start()
+  })
 
-  expect(response.statusCode).toBe(200)
-  const body = JSON.parse(response.text)
-  expect(body.errors).toBeUndefined()
-  expect(body.data.isNode).toBe(true)
+  afterEach(async () => {
+    persistedQueryStore.clear()
+  })
+
+  afterAll(async () => {
+    await yoga.stop()
+  })
+
+  it('should return not found error if persisted query is missing', async () => {
+    const response = await request(yoga)
+      .post('/graphql')
+      .send({
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash:
+              'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+          },
+        },
+      })
+
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeDefined()
+    expect(body.errors[0].message).toBe('PersistedQueryNotFound')
+  })
+  it('should save the persisted query', async () => {
+    const persistedQueryEntry = {
+      version: 1,
+      sha256Hash:
+        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+    }
+    const query = `{__typename}`
+    const response = await request(yoga)
+      .post('/graphql')
+      .send({
+        query,
+        extensions: {
+          persistedQuery: persistedQueryEntry,
+        },
+      })
+
+    const entry = persistedQueryStore.get(persistedQueryEntry.sha256Hash)
+    expect(entry).toBe(query)
+
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.__typename).toBe('Query')
+  })
+  it('should load the persisted query when stored', async () => {
+    const persistedQueryEntry = {
+      version: 1,
+      sha256Hash:
+        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+    }
+    persistedQueryStore.set(persistedQueryEntry.sha256Hash, '{__typename}')
+    const response = await request(yoga)
+      .post('/graphql')
+      .send({
+        extensions: {
+          persistedQuery: persistedQueryEntry,
+        },
+      })
+
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.__typename).toBe('Query')
+  })
 })
 
 describe('Browser', () => {
@@ -689,12 +772,7 @@ describe('Browser', () => {
       )
       const resultJson = JSON.parse(resultContents)
 
-      expect(resultJson).toEqual({
-        data: {
-          liveCounter: 1,
-        },
-        isLive: true,
-      })
+      expect(resultJson?.data?.liveCounter).toBe(1)
       liveQueryStore.invalidate('Query.liveCounter')
 
       const watchDog = await page.waitForFunction(() => {
@@ -716,12 +794,7 @@ describe('Browser', () => {
         ]
       }, playButtonSelector)
       const resultJson1 = JSON.parse(resultContents1)
-      expect(resultJson1).toEqual({
-        data: {
-          liveCounter: 2,
-        },
-        isLive: true,
-      })
+      expect(resultJson1?.data?.liveCounter).toBe(2)
     })
   })
 
