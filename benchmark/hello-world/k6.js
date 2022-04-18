@@ -53,10 +53,11 @@ export function handleSummary(data) {
 }
 
 export default function () {
-  const res = http.get(
-    `http://localhost:4000/graphql?query=${encodeURIComponent(
-      '{ greetings }',
-    )}`,
+  const res = http.post(
+    `http://localhost:4000/graphql`,
+    JSON.stringify({
+      query: '{greetings}',
+    }),
   )
 
   check(res, {
