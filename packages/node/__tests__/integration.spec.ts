@@ -479,10 +479,10 @@ describe('Context Building', () => {
 })
 
 describe('Persisted Queries', () => {
-  const persistedQueryStore = new Map()
+  const persistedQueries = new Map()
   const yoga = createServer({
     schema,
-    persistedQueries: persistedQueryStore,
+    persistedQueries,
     logging: false,
   })
   // TODO: Need to find a way to test using fastify inject
@@ -490,8 +490,8 @@ describe('Persisted Queries', () => {
     await yoga.start()
   })
 
-  afterEach(async () => {
-    persistedQueryStore.clear()
+  afterEach(() => {
+    persistedQueries.clear()
   })
 
   afterAll(async () => {
@@ -531,7 +531,7 @@ describe('Persisted Queries', () => {
         },
       })
 
-    const entry = persistedQueryStore.get(persistedQueryEntry.sha256Hash)
+    const entry = persistedQueries.get(persistedQueryEntry.sha256Hash)
     expect(entry).toBe(query)
 
     const body = JSON.parse(response.text)
@@ -544,7 +544,7 @@ describe('Persisted Queries', () => {
       sha256Hash:
         'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
-    persistedQueryStore.set(persistedQueryEntry.sha256Hash, '{__typename}')
+    persistedQueries.set(persistedQueryEntry.sha256Hash, '{__typename}')
     const response = await request(yoga)
       .post('/graphql')
       .send({
