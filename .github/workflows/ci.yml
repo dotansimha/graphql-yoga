@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12, 14, 17]
+        node-version: [12, 14, 17, 18]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -45,10 +45,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 17
+      - name: Use Node 18
         uses: actions/setup-node@master
         with:
-          node-version: 17
+          node-version: 18
           cache: 'yarn'
 
       - name: Install Dependencies using Yarn
@@ -68,10 +68,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 17
+      - name: Use Node 18
         uses: actions/setup-node@master
         with:
-          node-version: 17
+          node-version: 18
           cache: 'yarn'
 
       - name: Install Dependencies using Yarn
@@ -91,10 +91,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 17
+      - name: Use Node 18
         uses: actions/setup-node@master
         with:
-          node-version: 17
+          node-version: 18
           cache: 'yarn'
 
       - name: Install Dependencies using Yarn

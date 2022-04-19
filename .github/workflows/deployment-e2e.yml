@@ -16,10 +16,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 17
+      - name: Use Node 18
         uses: actions/setup-node@master
         with:
-          node-version: 17
+          node-version: 18
           cache: 'yarn'
 
       - name: Install Dependencies using Yarn
