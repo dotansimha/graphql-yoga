@@ -11,6 +11,7 @@ import 'json-bigint-patch'
 import http, { Server } from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import { fetch, File, FormData } from 'cross-undici-fetch'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -354,11 +355,9 @@ describe('Requests', () => {
 
 describe('Incremental Delivery', () => {
   const yoga = createServer({ schema, logging: false })
-  // TODO: Need to find a way to test using fastify inject
   beforeAll(() => {
     return yoga.start()
   })
-
   afterAll(() => {
     return yoga.stop()
   })
@@ -377,17 +376,17 @@ describe('Incremental Delivery', () => {
     const fileType = 'text/plain'
     const fileContent = 'Hello World'
 
-    const { body } = await request(yoga)
-      .post('/graphql')
-      .field(
-        'operations',
-        JSON.stringify({ query: UPLOAD_MUTATION, variables: { file: null } }),
-      )
-      .field('map', JSON.stringify({ 0: ['variables.file'] }))
-      .attach('0', Buffer.from(fileContent), {
-        filename: fileName,
-        contentType: fileType,
-      })
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
+
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
 
     expect(body.errors).toBeUndefined()
     expect(body.data.singleUpload.name).toBe(fileName)
@@ -423,12 +422,6 @@ describe('Incremental Delivery', () => {
 describe('health checks', () => {
   const yogaApp = createServer({
     logging: false,
-  })
-  beforeAll(() => {
-    return yogaApp.start()
-  })
-  afterAll(() => {
-    return yogaApp.stop()
   })
   it('should return 200 status code for health check endpoint', async () => {
     const result = await request(yogaApp).get('/health')
