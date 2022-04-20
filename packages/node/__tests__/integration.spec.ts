@@ -11,6 +11,7 @@ import 'json-bigint-patch'
 import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import { fetch, File, FormData } from 'cross-undici-fetch'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -354,13 +355,11 @@ describe('Requests', () => {
 
 describe('Incremental Delivery', () => {
   const yoga = createServer({ schema, logging: false })
-  // TODO: Need to find a way to test using fastify inject
-  beforeAll(async () => {
-    await yoga.start()
+  beforeAll(() => {
+    return yoga.start()
   })
-
-  afterAll(async () => {
-    await yoga.stop()
+  afterAll(() => {
+    return yoga.stop()
   })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
@@ -377,19 +376,17 @@ describe('Incremental Delivery', () => {
     const fileType = 'text/plain'
     const fileContent = 'Hello World'
 
-    const nodeServer = yoga.getNodeServer()
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
 
-    const { body } = await request(nodeServer)
-      .post('/graphql')
-      .field(
-        'operations',
-        JSON.stringify({ query: UPLOAD_MUTATION, variables: { file: null } }),
-      )
-      .field('map', JSON.stringify({ 0: ['variables.file'] }))
-      .attach('0', Buffer.from(fileContent), {
-        filename: fileName,
-        contentType: fileType,
-      })
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
 
     expect(body.errors).toBeUndefined()
     expect(body.data.singleUpload.name).toBe(fileName)
@@ -426,19 +423,13 @@ describe('health checks', () => {
   const yogaApp = createServer({
     logging: false,
   })
-  beforeAll(() => {
-    return yogaApp.start()
-  })
-  afterAll(() => {
-    return yogaApp.stop()
-  })
   it('should return 200 status code for health check endpoint', async () => {
-    const result = await request(yogaApp.getNodeServer()).get('/health')
+    const result = await request(yogaApp).get('/health')
     expect(result.status).toBe(200)
     expect(result.body.message).toBe('alive')
   })
   it('should return 200 status code for readiness check endpoint', async () => {
-    const result = await request(yogaApp.getNodeServer()).get('/readiness')
+    const result = await request(yogaApp).get('/readiness')
     expect(result.status).toBe(200)
     expect(result.body.message).toBe('ready')
   })

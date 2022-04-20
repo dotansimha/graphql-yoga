@@ -57,21 +57,6 @@ class YogaNodeServer<
     this.logger.debug('Setting up server.')
   }
 
-  getNodeServer(): NodeServer {
-    if (!this.nodeServer) {
-      this.endpoint = this.endpoint || '/graphql'
-      if (this.options?.https) {
-        this.nodeServer =
-          typeof this.options?.https === 'object'
-            ? createHttpsServer(this.options.https, this.requestListener)
-            : createHttpsServer(this.requestListener)
-      } else {
-        this.nodeServer = createHttpServer(this.requestListener)
-      }
-    }
-    return this.nodeServer
-  }
-
   getAddressInfo(): AddressInfo {
     return this.addressInfo
   }
@@ -103,17 +88,42 @@ class YogaNodeServer<
 
   handle = this.requestListener
 
+  /**
+   * @deprecated Will be removed in the next major. Get the server from `.start()` instead
+   */
+  getNodeServer(): NodeServer {
+    this.logger.warn(
+      `getNodeServer() is deprecated. You should get the server instance from ".start()" method instead`,
+    )
+    return this.getOrCreateNodeServer()
+  }
+
+  // Will be moved to `start` method once `getNodeServer` method is removed completely
+  private getOrCreateNodeServer(): NodeServer {
+    if (!this.nodeServer) {
+      this.endpoint = this.endpoint || '/graphql'
+      if (this.options?.https) {
+        this.nodeServer =
+          typeof this.options?.https === 'object'
+            ? createHttpsServer(this.options.https, this.requestListener)
+            : createHttpsServer(this.requestListener)
+      } else {
+        this.nodeServer = createHttpServer(this.requestListener)
+      }
+    }
+    return this.nodeServer
+  }
+
   start() {
-    const nodeServer = this.getNodeServer()
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<NodeServer>((resolve, reject) => {
       try {
-        nodeServer.listen(
+        this.getOrCreateNodeServer().listen(
           this.addressInfo.port,
           this.addressInfo.hostname,
           () => {
             const serverUrl = this.getServerUrl()
             this.logger.info(`GraphQL Server running at ${serverUrl}`)
-            resolve()
+            resolve(this.nodeServer!)
           },
         )
       } catch (e: any) {
@@ -124,10 +134,13 @@ class YogaNodeServer<
   }
 
   stop() {
-    const nodeServer = this.getNodeServer()
     this.logger.info('Shutting down GraphQL Server')
     return new Promise<void>((resolve, reject) => {
-      nodeServer.close((err) => {
+      if (this.nodeServer == null) {
+        reject(new Error('Server is not running'))
+        return
+      }
+      this.nodeServer.close((err) => {
         if (err != null) {
           this.logger.error(
             'Something went wrong while trying to shutdown the server',
