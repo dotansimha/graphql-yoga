@@ -57,14 +57,6 @@ class YogaNodeServer<
     this.logger.debug('Setting up server.')
   }
 
-  /**
-   * @deprecated Will be removed in the next major. Get the server from `.start()` instead
-   * @returns The underlying Node.js server
-   */
-  getNodeServer(): NodeServer | null {
-    return this.nodeServer
-  }
-
   getAddressInfo(): AddressInfo {
     return this.addressInfo
   }
@@ -96,21 +88,36 @@ class YogaNodeServer<
 
   handle = this.requestListener
 
+  /**
+   * @deprecated Will be removed in the next major. Get the server from `.start()` instead
+   */
+  getNodeServer(): NodeServer {
+    this.logger.warn(
+      `getNodeServer() is deprecated. You should get the server instance from ".start()" method instead`,
+    )
+    return this.getOrCreateNodeServer()
+  }
+
+  // Will be moved to `start` method once `getNodeServer` method is removed completely
+  private getOrCreateNodeServer(): NodeServer {
+    if (!this.nodeServer) {
+      this.endpoint = this.endpoint || '/graphql'
+      if (this.options?.https) {
+        this.nodeServer =
+          typeof this.options?.https === 'object'
+            ? createHttpsServer(this.options.https, this.requestListener)
+            : createHttpsServer(this.requestListener)
+      } else {
+        this.nodeServer = createHttpServer(this.requestListener)
+      }
+    }
+    return this.nodeServer
+  }
+
   start() {
     return new Promise<NodeServer>((resolve, reject) => {
       try {
-        if (!this.nodeServer) {
-          this.endpoint = this.endpoint || '/graphql'
-          if (this.options?.https) {
-            this.nodeServer =
-              typeof this.options?.https === 'object'
-                ? createHttpsServer(this.options.https, this.requestListener)
-                : createHttpsServer(this.requestListener)
-          } else {
-            this.nodeServer = createHttpServer(this.requestListener)
-          }
-        }
-        this.nodeServer.listen(
+        this.getOrCreateNodeServer().listen(
           this.addressInfo.port,
           this.addressInfo.hostname,
           () => {
