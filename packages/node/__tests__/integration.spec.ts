@@ -8,7 +8,7 @@ import { getCounterValue, schema } from '../test-utils/schema'
 import { createTestSchema } from './__fixtures__/schema'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import 'json-bigint-patch'
-import http from 'http'
+import http, { Server } from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 
@@ -355,12 +355,12 @@ describe('Requests', () => {
 describe('Incremental Delivery', () => {
   const yoga = createServer({ schema, logging: false })
   // TODO: Need to find a way to test using fastify inject
-  beforeAll(async () => {
-    await yoga.start()
+  beforeAll(() => {
+    return yoga.start()
   })
 
-  afterAll(async () => {
-    await yoga.stop()
+  afterAll(() => {
+    return yoga.stop()
   })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
@@ -377,9 +377,7 @@ describe('Incremental Delivery', () => {
     const fileType = 'text/plain'
     const fileContent = 'Hello World'
 
-    const nodeServer = yoga.getNodeServer()
-
-    const { body } = await request(nodeServer)
+    const { body } = await request(yoga)
       .post('/graphql')
       .field(
         'operations',
@@ -433,12 +431,12 @@ describe('health checks', () => {
     return yogaApp.stop()
   })
   it('should return 200 status code for health check endpoint', async () => {
-    const result = await request(yogaApp.getNodeServer()).get('/health')
+    const result = await request(yogaApp).get('/health')
     expect(result.status).toBe(200)
     expect(result.body.message).toBe('alive')
   })
   it('should return 200 status code for readiness check endpoint', async () => {
-    const result = await request(yogaApp.getNodeServer()).get('/readiness')
+    const result = await request(yogaApp).get('/readiness')
     expect(result.status).toBe(200)
     expect(result.body.message).toBe('ready')
   })
