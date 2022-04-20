@@ -42,6 +42,7 @@ export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
   endpoint?: string
   title?: string
   credentials?: RequestCredentials
+  subscriptionsProtocol?: 'SSE' | 'WS' | 'LEGACY_WS'
 }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
@@ -79,7 +80,10 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 #   Auto Complete:  Ctrl-Space (or just start typing)
 #
 `
-  const endpoint = props.endpoint ?? globalThis.location?.pathname ?? '/graphql'
+  const endpoint = new URL(
+    props.endpoint ?? location.pathname,
+    location.href,
+  ).toString()
   const credentials = props.credentials ?? 'same-origin'
   const graphiqlRef = React.useRef<GraphiQL | null>(null)
 
@@ -87,7 +91,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const fetcher: Fetcher = useMemo(() => {
     const executor = urlLoader.getExecutorAsync(endpoint, {
-      subscriptionsProtocol: SubscriptionProtocol.SSE,
+      subscriptionsProtocol:
+        (props.subscriptionsProtocol as SubscriptionProtocol) ||
+        SubscriptionProtocol.SSE,
       specifiedByUrl: true,
       directiveIsRepeatable: true,
       schemaDescription: true,

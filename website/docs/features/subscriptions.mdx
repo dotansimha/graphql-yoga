@@ -13,7 +13,7 @@ You don't need any extra packages to use subscriptions.
 
 > Compared to implementing query and mutation resolvers, subscriptions are more complex to implement as they require additional infrastructure for scenarios where you have more than one instance of your GraphQL server running as the event streams must be distributed across all servers.
 
-## Quick start
+## Quick start with Server Sent Events
 
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
@@ -206,6 +206,76 @@ const client = createClient({
   ],
 })
 ```
+
+## Enabling WebSockets instead with `graphql-ws`
+
+If you want to enable `graphql-ws` protocol support with GraphQL Yoga, we can easily integrate GraphQL Yoga and `graphql-ws` libraries by using the knowledge in [Envelop](https://envelop.dev) and [graphql-ws](https://github.com/enisdenjo/graphql-ws) integration docs.
+To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
+Also you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets instead of Server Sent Events within GraphiQL.
+
+`yoga-with-ws.ts`
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import { WebSocketServer } from 'ws'
+import { useServer } from 'graphql-ws/lib/use/ws'
+
+async function main() {
+  const yogaApp = createServer({
+    graphiql: {
+      // Use WebSockets in GraphiQL
+      subscriptionsProtocol: 'WS',
+    },
+  })
+
+  // Get NodeJS Server from Yoga
+  const httpServer = await yogaApp.start()
+  // Create WebSocket server instance from our Node server
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: yogaApp.getAddressInfo().endpoint,
+  })
+
+  // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
+  useServer(
+    {
+      execute: (args: any) => args.rootValue.execute(args),
+      subscribe: (args: any) => args.rootValue.subscribe(args),
+      onSubscribe: async (ctx, msg) => {
+        const { schema, execute, subscribe, contextFactory, parse, validate } =
+          yogaApp.getEnveloped({
+            connectionParams: ctx.connectionParams,
+            socket: ctx.extra.socket,
+            request: ctx.extra.request,
+          })
+        const args = {
+          schema,
+          operationName: msg.payload.operationName,
+          document: parse(msg.payload.query),
+          variableValues: msg.payload.variables,
+          contextValue: await contextFactory(),
+          rootValue: {
+            execute,
+            subscribe,
+          },
+        }
+
+        const errors = validate(args.schema, args.document)
+        if (errors.length) return errors
+        return args
+      },
+    },
+    wsServer,
+  )
+}
+
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})
+```
+
+> Check out [our working example](/examples/graphql-ws) for this integration
 
 ## PubSub
 
