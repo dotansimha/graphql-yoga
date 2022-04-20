@@ -243,11 +243,8 @@ async function main() {
       subscribe: (args: any) => args.rootValue.subscribe(args),
       onSubscribe: async (ctx, msg) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yogaApp.getEnveloped({
-            connectionParams: ctx.connectionParams,
-            socket: ctx.extra.socket,
-            request: ctx.extra.request,
-          })
+          yogaApp.getEnveloped(ctx)
+
         const args = {
           schema,
           operationName: msg.payload.operationName,
