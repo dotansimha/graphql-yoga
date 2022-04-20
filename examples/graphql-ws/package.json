@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "check": "tsc --pretty --noEmit"
   },
   "dependencies": {
     "@graphql-yoga/node": "2.3.0",
