@@ -96,6 +96,9 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
+      
+      - name: Use Deno
+        uses: denoland/setup-deno@v1
 
       - name: Install Dependencies using Yarn
         run: yarn --ignore-engines
