@@ -167,7 +167,7 @@ const resolvers = {
           ) {
             return Promise.reject(
               new GraphQLYogaError(
-                `Cannot post common on non-existing link with id '${args.linkId}'.`,
+                `Cannot post comment on non-existing link with id '${args.linkId}'.`,
               ),
             )
           }
@@ -200,13 +200,13 @@ mutation postCommentOnLink {
 
 </Instruction>
 
-You will receive a response with the `Cannot post common on non-existing link with id '99999999999'.` message.
+You will receive a response with the `Cannot post comment on non-existing link with id '99999999999'.` message.
 
 ```json
 {
   "errors": [
     {
-      "message": "Cannot post common on non-existing link with id '99999999999'.",
+      "message": "Cannot post comment on non-existing link with id '99999999999'.",
       "locations": [
         {
           "line": 2,
@@ -253,7 +253,7 @@ All seems good, right?
 {
   "errors": [
     {
-      "message": "Cannot post common on non-existing link with id '11a'.",
+      "message": "Cannot post comment on non-existing link with id '11a'.",
       "locations": [
         {
           "line": 2,
@@ -359,7 +359,7 @@ const resolvers = {
       if (linkId === null) {
         return Promise.reject(
           new GraphQLYogaError(
-            `Cannot post common on non-existing link with id '${args.linkId}'.`,
+            `Cannot post comment on non-existing link with id '${args.linkId}'.`,
           ),
         )
       }
@@ -376,7 +376,7 @@ const resolvers = {
             if (err.code === 'P2003') {
               return Promise.reject(
                 new GraphQLYogaError(
-                  `Cannot post common on non-existing link with id '${args.linkId}'.`,
+                  `Cannot post comment on non-existing link with id '${args.linkId}'.`,
                 ),
               )
             }
@@ -416,7 +416,7 @@ All good now. 🎉
 {
   "errors": [
     {
-      "message": "Cannot post common on non-existing link with id 'uuuuuu'.",
+      "message": "Cannot post comment on non-existing link with id 'uuuuuu'.",
       "locations": [
         {
           "line": 2,
