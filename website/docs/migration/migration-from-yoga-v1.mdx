@@ -37,6 +37,144 @@ const server = createServer({
 server.start()
 ```
 
+## Context
+
+In GraphQL Yoga v2 you can use the `context` property in the same way as GraphQL Yoga v1.
+The value returned from the `context` factory will be merged with the initial context.
+
+The `request` property within the initial context is now a [Fetch API Request](https://developer.mozilla.org/en-US/docs/Web/API/Request). It can be used for accessing all the HTTP request parameters, such as headers or [the method (POST, GET)](https://developer.mozilla.org/de/docs/Web/HTTP/Methods).
+
+You can learn more about the context within the [`context documentation`](/docs/features/context).
+
+**Yoga v1**
+
+```ts
+import { GraphQLServer } from 'graphql-yoga'
+import { typeDefs, resolvers } from './schema'
+import { db } from './db'
+
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+  context: (initialContext) => {
+    const authHeader = initialContext.request.headers['authorization'] ?? null
+    return { ...initialContext, db, authHeader }
+  },
+})
+server.start()
+```
+
+**Yoga v2**
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import { typeDefs, resolvers } from './schema'
+import { db } from './db'
+
+const server = new GraphQLServer({
+  schema: {
+    typeDefs,
+    resolvers,
+  },
+  context: (initialContext) => {
+    const authHeader =
+      initialContext.request.headers.get('authorization') ?? null
+
+    return { db, authHeader }
+  },
+})
+server.start()
+```
+
+## Middlewares
+
+GraphQL Yoga v1 included [`graphql-middleware`](https://github.com/maticzav/graphql-middleware) for wrapping resolver functions with common logic.
+GraphQL Yoga v2 no longer includes `graphql-middleware` by default as using it can result in bad performance as it wraps all field resolvers within the schema.
+
+If you cannot migrate your `graphql-middleware` code to something like [`graphql-tool` `mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://www.npmjs.com/package/@envelop/graphql-middleware) plugin.
+
+<PackageInstall packages={['@envelop/graphql-middleware']} />
+
+**Yoga v1**
+
+```ts
+import { GraphQLServer } from 'graphql-yoga'
+import { typeDefs, resolvers } from './schema'
+
+// Middleware - Permissions
+
+const code = 'supersecret'
+const isLoggedIn = async (resolve, parent, args, ctx, info) => {
+  // Include your agent code as Authorization: <token> header.
+  const permit = ctx.request.get('Authorization') === code
+
+  if (!permit) {
+    throw new Error(`Not authorised!`)
+  }
+
+  return resolve()
+}
+
+const permissions = {
+  Query: {
+    secured: isLoggedIn,
+  },
+  Me: isLoggedIn,
+}
+
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+  middleware: [permissions],
+})
+server.start()
+```
+
+**Yoga v2**
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import { useGraphQLMiddleware } from '@envelop/graphql-middleware'
+import { typeDefs, resolvers } from './schema'
+
+// Middleware - Permissions
+
+const code = 'supersecret'
+const isLoggedIn = async (resolve, parent, args, ctx, info) => {
+  // Include your agent code as Authorization: <token> header.
+  const permit = ctx.request.get('Authorization') === code
+
+  if (!permit) {
+    throw new Error(`Not authorised!`)
+  }
+
+  return resolve()
+}
+
+const permissions = {
+  Query: {
+    secured: isLoggedIn,
+  },
+  Me: isLoggedIn,
+}
+
+const server = createServer({
+  schema: { typeDefs, resolvers },
+  plugins: [useGraphQLMiddleware([permissions])],
+})
+server.start()
+```
+
+For more details please refer to the
+
+### Replacing GraphQL Shield
+
+If you are using `graphql-shield` you might wanna have a look and see whether the following plugins might replace it:
+
+- **[`@envelop/generic-auth`](https://www.envelop.dev/plugins/use-generic-auth)**: authentication and simple (directive-based) authorization on field level
+- **[`@envelop/operation-field-permissions`](https://www.envelop.dev/plugins/use-operation-field-permissions)**: granular field permission access based on [schema coordinates](https://github.com/graphql/graphql-wg/blob/main/rfcs/SchemaCoordinates.md)
+- **[GraphQL AuthZ](https://www.the-guild.dev/blog/graphql-authz)**: a modern and flexible GraphQL authorization layer
+
 ## Subscriptions
 
 GraphQL Yoga v1 uses the [old and deprecated `subscriptions-transport-ws` protocol](https://github.com/apollographql/subscriptions-transport-ws).
