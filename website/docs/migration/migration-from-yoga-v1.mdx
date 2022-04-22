@@ -39,6 +39,53 @@ server.start()
 
 ## Context
 
+In GraphQL Yoga v2 you can use the `context` property in the same way as GraphQL Yoga v1.
+The value returned from the `context` factory will be merged with the initial context.
+
+The `request` property within the initial context is now a [Fetch API Request](https://developer.mozilla.org/en-US/docs/Web/API/Request). It can be used for accessing all the HTTP request parameters, such as headers or [the method (POST, GET)](https://developer.mozilla.org/de/docs/Web/HTTP/Methods).
+
+You can learn more about the context within the [`context documentation`](/docs/features/context).
+
+**Yoga v1**
+
+```ts
+import { GraphQLServer } from 'graphql-yoga'
+import { typeDefs, resolvers } from './schema'
+import { db } from './db'
+
+const server = new GraphQLServer({
+  typeDefs,
+  resolvers,
+  context: (initialContext) => {
+    const authHeader = initialContext.request.headers['authorization'] ?? null
+    return { ...initialContext, db, authHeader }
+  },
+})
+server.start()
+```
+
+**Yoga v2**
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import { typeDefs, resolvers } from './schema'
+import { db } from './db'
+
+const server = new GraphQLServer({
+  schema: {
+    typeDefs,
+    resolvers,
+  },
+  context: (initialContext) => {
+    const authHeader =
+      initialContext.request.headers.get('authorization') ?? null
+
+    return { db, authHeader }
+  },
+})
+server.start()
+```
+
 ## Middlewares
 
 GraphQL Yoga v1 included [`graphql-middleware`](https://github.com/maticzav/graphql-middleware) for wrapping resolver functions with common logic.
