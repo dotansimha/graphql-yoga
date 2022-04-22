@@ -89,7 +89,7 @@ server.start()
 ## Middlewares
 
 GraphQL Yoga v1 included [`graphql-middleware`](https://github.com/maticzav/graphql-middleware) for wrapping resolver functions with common logic.
-GraphQL Yoga v2 does no longer include `graphql-middleware` by default as using it can result in bad performance as it wraps all field resolvers within the schema.
+GraphQL Yoga v2 no longer includes `graphql-middleware` by default as using it can result in bad performance as it wraps all field resolvers within the schema.
 
 If you cannot migrate your `graphql-middleware` code to something like [`graphql-tool` `mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://www.npmjs.com/package/@envelop/graphql-middleware) plugin.
 
