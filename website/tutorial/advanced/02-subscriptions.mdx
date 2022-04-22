@@ -563,7 +563,7 @@ const resolvers = {
     // ... other Subscription field resolvers ...
     newVote: {
       subscribe: (parent: unknown, args: {}, context: GraphQLContext) => {
-        return context.pubSub.asyncIterator('newVote')
+        return context.pubSub.subscribe('newVote')
       },
     },
   },

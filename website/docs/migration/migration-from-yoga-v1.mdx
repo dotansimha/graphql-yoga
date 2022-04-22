@@ -292,7 +292,7 @@ const server = createServer({
       Subscription: {
         randomNumber: {
           subscribe: (_, _, context) => {
-            return context.asyncIterator('randomNumber')
+            return context.subscribe('randomNumber')
           },
           resolve: (value) => value,
         },
@@ -387,7 +387,7 @@ const server = createServer({
         randomNumber: {
           subscribe: (_, args, context) => {
             return pipe(
-              context.asyncIterator('randomNumber'),
+              context.subscribe('randomNumber'),
               filter((value) => value > args.greaterThan),
             )
           },
