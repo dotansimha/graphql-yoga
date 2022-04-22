@@ -16,15 +16,15 @@ const ANSI_CODES = {
   orange: '\x1b[48:5:166m',
 }
 
-const warnColor: MessageTransformer = (msg) =>
+export const warnColor: MessageTransformer = (msg) =>
   ANSI_CODES.orange + msg + ANSI_CODES.reset
-const infoColor: MessageTransformer = (msg) =>
+export const infoColor: MessageTransformer = (msg) =>
   ANSI_CODES.cyan + msg + ANSI_CODES.reset
-const errorColor: MessageTransformer = (msg) =>
+export const errorColor: MessageTransformer = (msg) =>
   ANSI_CODES.red + msg + ANSI_CODES.reset
-const debugColor: MessageTransformer = (msg) =>
+export const debugColor: MessageTransformer = (msg) =>
   ANSI_CODES.magenta + msg + ANSI_CODES.reset
-const titleBold: MessageTransformer = (msg) =>
+export const titleBold: MessageTransformer = (msg) =>
   ANSI_CODES.bold + msg + ANSI_CODES.reset
 
 export interface YogaLogger {

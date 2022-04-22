@@ -34,7 +34,7 @@ import {
 import * as crossUndiciFetch from 'cross-undici-fetch'
 import { getGraphQLParameters } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
-import { defaultYogaLogger, YogaLogger } from './logger'
+import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -263,21 +263,38 @@ export class YogaServer<
         enableIf(
           logger !== false,
           useLogger({
+            skipIntrospection: true,
             logFn: (eventName, events) => {
-              this.logger.debug(eventName)
               switch (eventName) {
                 case 'execute-start':
+                case 'subscribe-start':
+                  this.logger.debug(titleBold('Execution start'))
                   const {
                     query,
-                    variables,
                     operationName,
+                    variables,
+                    extensions,
                   }: YogaInitialContext = events.args.contextValue
-                  this.logger.debug(query, 'query')
-                  this.logger.debug(operationName, 'headers')
-                  this.logger.debug(variables, 'variables')
+                  if (query) {
+                    this.logger.debug(
+                      '\n' + titleBold('Received GraphQL operation:') + '\n',
+                      query,
+                    )
+                  }
+                  if (operationName) {
+                    this.logger.debug('\t operationName:', operationName)
+                  }
+                  if (variables) {
+                    this.logger.debug('\t variables:', variables)
+                  }
+                  if (extensions) {
+                    this.logger.debug('\t extensions:', extensions)
+                  }
                   break
                 case 'execute-end':
-                  this.logger.debug(events.result, 'response')
+                case 'subscribe-end':
+                  this.logger.debug(titleBold('Execution end'))
+                  this.logger.debug('\t result:', events.result)
                   break
               }
             },
@@ -443,6 +460,7 @@ export class YogaServer<
       }
       const requestPath = request.url.split('?')[0]
       if (requestPath.endsWith('/health')) {
+        this.logger.debug(`Responding Health Check`)
         return new this.fetchAPI.Response(`{ "message": "alive" }`, {
           status: 200,
           headers: {
@@ -452,6 +470,7 @@ export class YogaServer<
         })
       }
       if (requestPath.endsWith('/readiness')) {
+        this.logger.debug(`Responding Readiness Check`)
         const readinessResponse = await this.fetchAPI.fetch(
           request.url.replace('/readiness', '/health'),
         )
@@ -473,8 +492,8 @@ export class YogaServer<
         )
       }
 
-      this.logger.debug(`Checking if GraphiQL Request`)
       if (this.endpoint != null && !requestPath.endsWith(this.endpoint)) {
+        this.logger.debug(`Responding 404 Not Found`)
         return new this.fetchAPI.Response(
           `Unable to ${request.method} ${requestPath}`,
           {
@@ -485,6 +504,7 @@ export class YogaServer<
       }
 
       if (shouldRenderGraphiQL(request)) {
+        this.logger.debug(`Rendering GraphiQL`)
         let graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
 
         if (graphiqlOptions) {
@@ -517,7 +537,7 @@ export class YogaServer<
       const { execute, validate, subscribe, parse, contextFactory, schema } =
         this.getEnveloped(initialContext)
 
-      this.logger.debug(`Processing Request`)
+      this.logger.debug(`Processing GraphQL Parameters`)
 
       const corsHeaders = this.getCORSResponseHeaders(request, initialContext)
       const response = await processRequest({
@@ -536,9 +556,9 @@ export class YogaServer<
         ReadableStream: this.fetchAPI.ReadableStream,
       })
       return response
-    } catch (err: any) {
-      this.logger.error(err.message, err.stack, err)
-      const response = new this.fetchAPI.Response(err.message, {
+    } catch (error: any) {
+      this.logger.error(error.stack || error.message || error)
+      const response = new this.fetchAPI.Response(error.message, {
         status: 500,
         statusText: 'Internal Server Error',
       })
