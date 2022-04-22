@@ -73,7 +73,7 @@ Besides the initial context generated based on your setup, GraphQL Yoga also acc
 You can pass a factory function to `context` parameter of `createServer` configuration. That function will receive the combination of the standard initial context and the server's (if available)`, then the return value will be merged into that.
 
 ```ts
-createContext({
+createServer({
   context: async ({ request }) => {
     const user = await getUserByToken(request.headers.get('authorization'))
     return {
