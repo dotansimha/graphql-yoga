@@ -98,34 +98,36 @@ const pubSub = createPubSub()
 
 // Provide your schema
 const server = createServer({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
+      }
 
-    type Subscription {
-      randomNumber: Float!
-    }
+      type Subscription {
+        randomNumber: Float!
+      }
 
-    type Mutation {
-      broadcastRandomNumber: Boolean
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world',
-    },
-    Subscription: {
-      globalCounter: {
-        // subscribe to the randomNumber event
-        subscribe: () => pubSub.subscribe('randomNumber'),
-        resolve: (payload) => payload,
+      type Mutation {
+        broadcastRandomNumber: Boolean
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'world',
       },
-    },
-    Mutation: {
-      broadcastRandomNumber: (_, args) => {
-        // publish a random number
-        pubSub.publish('randomNumber', Math.random())
+      Subscription: {
+        globalCounter: {
+          // subscribe to the randomNumber event
+          subscribe: () => pubSub.subscribe('randomNumber'),
+          resolve: (payload) => payload,
+        },
+      },
+      Mutation: {
+        broadcastRandomNumber: (_, args) => {
+          // publish a random number
+          pubSub.publish('randomNumber', Math.random())
+        },
       },
     },
   },

@@ -1,0 +1,268 @@
+---
+id: migration-from-yoga-v1
+title: Migration from Yoga V1
+sidebar_label: Yoga v1
+---
+
+## Installation
+
+You can start with installing `@graphql-yoga/node` package.
+
+<PackageInstall packages={['@graphql-yoga/node']} />
+
+## Server setup
+
+Yoga v1 no longer uses a class for constructing the server, the `createServer` function is now used.
+Also the `typeDefs` and `resolvers` config options must now be passed to a `schema` property.
+
+**Yoga v1**
+
+```ts
+import { GraphQLServer } from 'graphql-yoga'
+import { typeDefs, resolvers } from './schema'
+
+const server = new GraphQLServer({ typeDefs, resolvers })
+server.start()
+```
+
+**Yoga v2**
+
+```ts
+import { createServer } from '@graphql-yoga/node'
+import { typeDefs, resolvers } from './schema'
+
+const server = createServer({
+  schema: { typeDefs, resolvers },
+})
+server.start()
+```
+
+## Subscriptions
+
+GraphQL Yoga v1 uses the [old and deprecated `subscriptions-transport-ws` protocol](https://github.com/apollographql/subscriptions-transport-ws).
+GraphQL Yoga v2 comes with built in subscription support over [SSE (Server Sent Events)](https://en.wikipedia.org/wiki/Server-sent_events).
+One benefit of this is that you no longer need an additional library on your frontend as the SSE protocol is just simple HTTP.
+
+Because of the protocol change you must migrate your GraphQL clients that execute GraphQL subscription operations to use the new protocol.
+Please use the code snippets for your GraphQL client as listed on the [handle subscription on the client documentation](/docs/features/subscriptions#handling-subscriptions-on-the-client).
+
+### Advantages of SSE over Websockets
+
+- Transported over simple HTTP instead of a custom protocol
+- Built in support for re-connection and event-id Simpler protocol
+- No trouble with corporate firewalls doing packet inspection
+
+### Advantages of Websockets over SSE
+
+- Real time, two directional communication.
+
+### SSE gotchas
+
+- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x) ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2))
+
+## PubSub
+
+With GraphQL Yoga v1 used the unmaintained package `graphql-subscriptions` for the `PubSub` implementation.
+In GraphQL Yoga v2, a new maintained PubSub implementation is built-in.
+
+**Yoga v1**
+
+```ts
+import { PubSub } from 'graphql-yoga'
+const pubSub = new PubSub()
+```
+
+**Yoga v2**
+
+```ts
+import { createPubSub } from '@graphql-yoga/node'
+const pubSub = createPubSub()
+```
+
+### Type-safe PubSub Usage
+
+The old PubSub implementation was not type-safe. Now it is possible to define all the events and payloads.
+For a full reference please check out the [Subscription PubSub documentation](/docs/features/subscriptions#pubsub).
+
+**Yoga v1**
+
+```ts
+import { GraphQLServer, PubSub } from 'graphql-yoga'
+
+const pubSub = new PubSub()
+
+const server = new GraphQLServer({
+  context: { pubSub },
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: Boolean
+    }
+
+    type Subscription {
+      randomNumber: Int!
+    }
+
+    type Mutation {
+      publishRandomNumber(randomNumber: Int!): Boolean
+    }
+  `,
+  resolvers: {
+    Subscription: {
+      randomNumber: {
+        subscribe: (_, _, context) => {
+          return context.asyncIterator('randomNumber')
+        },
+        resolve: (value) => value,
+      },
+    },
+    Mutation: {
+      publishRandomNumber: (_, args, context) => {
+        context.pubSub.publish('randomNumber', args.randomNumber)
+      },
+    },
+  },
+})
+server.start()
+```
+
+**Yoga v2**
+
+```ts
+import { createPubSub, createServer } from '@graphql-yoga/node'
+
+const pubSub = new PubSub<{
+  randomNumber: [randomNumber: number]
+}>()
+
+const server = createServer({
+  context: { pubSub },
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        _: Boolean
+      }
+
+      type Subscription {
+        randomNumber: Int!
+      }
+
+      type Mutation {
+        publishRandomNumber(randomNumber: Int!): Boolean
+      }
+    `,
+    resolvers: {
+      Subscription: {
+        randomNumber: {
+          subscribe: (_, _, context) => {
+            return context.asyncIterator('randomNumber')
+          },
+          resolve: (value) => value,
+        },
+      },
+      Mutation: {
+        publishRandomNumber: (_, args, context) => {
+          context.pubSub.publish('randomNumber', args.randomNumber)
+        },
+      },
+    },
+  },
+})
+server.start()
+```
+
+### Filtering events
+
+Instead of the `withFilter` function you can now use the more modular `pipe` and `filter` functions exported from `@graphql-yoga/node`.
+You can learn more about filtering and mapping values in the [subscription filter and map values documentation](/docs/features/subscriptions#filter-and-map-values).
+
+**Yoga v1**
+
+```ts
+import { GraphQLServer, PubSub, withFilter } from 'graphql-yoga'
+
+const pubSub = new PubSub()
+
+const server = new GraphQLServer({
+  context: { pubSub },
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: Boolean
+    }
+
+    type Subscription {
+      randomNumber(greaterThan: Int!): Int!
+    }
+
+    type Mutation {
+      publishRandomNumber(randomNumber: Int!): Boolean
+    }
+  `,
+  resolvers: {
+    Subscription: {
+      randomNumber: {
+        subscribe: withFilter(
+          (_, _, context) => {
+            return context.asyncIterator('randomNumber')
+          },
+          (payload, args) => payload > args,
+        ),
+        resolve: (value) => value,
+      },
+    },
+    Mutation: {
+      publishRandomNumber: (_, args, context) => {
+        context.pubSub.publish('randomNumber', args.randomNumber)
+      },
+    },
+  },
+})
+server.start()
+```
+
+**Yoga v2**
+
+```ts
+import { createPubSub, createServer, pipe, filter } from '@graphql-yoga/node'
+
+const pubSub = new PubSub<{
+  randomNumber: [randomNumber: number]
+}>()
+
+const server = createServer({
+  context: { pubSub },
+  schema: {
+    typeDefs: /* GraphQL */ `
+      type Query {
+        _: Boolean
+      }
+
+      type Subscription {
+        randomNumber(greaterThan: Int!): Int!
+      }
+
+      type Mutation {
+        publishRandomNumber(randomNumber: Int!): Boolean
+      }
+    `,
+    resolvers: {
+      Subscription: {
+        randomNumber: {
+          subscribe: (_, args, context) => {
+            return pipe(
+              context.asyncIterator('randomNumber'),
+              filter((value) => value > args.greaterThan),
+            )
+          },
+          resolve: (value) => value,
+        },
+      },
+      Mutation: {
+        publishRandomNumber: (_, args, context) => {
+          context.pubSub.publish('randomNumber', args.randomNumber)
+        },
+      },
+    },
+  },
+})
+server.start()
+```
