@@ -16,15 +16,15 @@ const ANSI_CODES = {
   orange: '\x1b[48:5:166m',
 }
 
-const warnColor: MessageTransformer = (msg) =>
+export const warnColor: MessageTransformer = (msg) =>
   ANSI_CODES.orange + msg + ANSI_CODES.reset
-const infoColor: MessageTransformer = (msg) =>
+export const infoColor: MessageTransformer = (msg) =>
   ANSI_CODES.cyan + msg + ANSI_CODES.reset
-const errorColor: MessageTransformer = (msg) =>
+export const errorColor: MessageTransformer = (msg) =>
   ANSI_CODES.red + msg + ANSI_CODES.reset
-const debugColor: MessageTransformer = (msg) =>
+export const debugColor: MessageTransformer = (msg) =>
   ANSI_CODES.magenta + msg + ANSI_CODES.reset
-const titleBold: MessageTransformer = (msg) =>
+export const titleBold: MessageTransformer = (msg) =>
   ANSI_CODES.bold + msg + ANSI_CODES.reset
 
 export interface YogaLogger {
@@ -50,7 +50,7 @@ export const defaultYogaLogger: YogaLogger = {
   debug(...args: any[]) {
     if (isDebug()) {
       const message = getLoggerMessage(...args)
-      const fullMessage = `${getPrefix()} 🐛 ${debugColor(message)}`
+      const fullMessage = `🐛 ${getPrefix()} ${debugColor(message)}`
       // Some environments don't have other console methods
       if (console.debug) {
         console.debug(fullMessage)
@@ -61,7 +61,7 @@ export const defaultYogaLogger: YogaLogger = {
   },
   info(...args: any[]) {
     const message = getLoggerMessage(...args)
-    const fullMessage = `${getPrefix()} 💡 ${infoColor(message)}`
+    const fullMessage = `💡 ${getPrefix()} ${infoColor(message)}`
     if (console.info) {
       console.info(fullMessage)
     } else {
@@ -70,7 +70,7 @@ export const defaultYogaLogger: YogaLogger = {
   },
   warn(...args: any[]) {
     const message = getLoggerMessage(...args)
-    const fullMessage = `${getPrefix()} ⚠️ ${warnColor(message)}`
+    const fullMessage = `⚠️ ${getPrefix()} ${warnColor(message)}`
     if (console.warn) {
       console.warn(fullMessage)
     } else {
@@ -79,7 +79,7 @@ export const defaultYogaLogger: YogaLogger = {
   },
   error(...args: any[]) {
     const message = getLoggerMessage(...args)
-    const fullMessage = `${getPrefix()} ❌ ${errorColor(message)}`
+    const fullMessage = `❌ ${getPrefix()} ${errorColor(message)}`
     if (console.error) {
       console.error(fullMessage)
     } else {

@@ -69,20 +69,19 @@ class YogaNodeServer<
     nodeRequest: NodeRequest,
     serverContext: TServerContext,
   ): Promise<Response> {
-    this.logger.debug(`Node Request received`)
+    this.logger.debug(`Processing Node Request`)
     const request = getNodeRequest(
       nodeRequest,
       this.addressInfo,
       this.fetchAPI.Request,
     )
-    this.logger.debug('Node Request processed')
     const response = await this.handleRequest(request, serverContext)
     return response
   }
 
   requestListener = async (req: IncomingMessage, res: ServerResponse) => {
     const response = await this.handleIncomingMessage(req, { req, res } as any)
-    this.logger.debug('Sending response to Node Server')
+    this.logger.debug('Passing Response back to Node')
     return sendNodeResponse(response, res)
   }
 
@@ -122,7 +121,7 @@ class YogaNodeServer<
           this.addressInfo.hostname,
           () => {
             const serverUrl = this.getServerUrl()
-            this.logger.info(`GraphQL Server running at ${serverUrl}`)
+            this.logger.info(`Running GraphQL Server at ${serverUrl}`)
             resolve(this.nodeServer!)
           },
         )
@@ -137,7 +136,7 @@ class YogaNodeServer<
     this.logger.info('Shutting down GraphQL Server')
     return new Promise<void>((resolve, reject) => {
       if (this.nodeServer == null) {
-        reject(new Error('Server is not running'))
+        reject(new Error('GraphQL Server is not running'))
         return
       }
       this.nodeServer.close((err) => {
@@ -148,7 +147,7 @@ class YogaNodeServer<
           )
           reject(err)
         } else {
-          this.logger.info(`GraphQL Server stopped successfully`)
+          this.logger.info(`Stopped GraphQL Server successfully`)
           resolve()
         }
       })
