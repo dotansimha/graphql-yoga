@@ -10,6 +10,7 @@ export function getRoutes(): IRoutes {
         $name: 'Features',
         $routes: [
           ['graphiql', 'GraphiQL'],
+          ['context', 'Context'],
           ['error-masking', 'Error Masking'],
           ['subscriptions', 'Subscriptions'],
           ['file-uploads', 'File Uploads'],
