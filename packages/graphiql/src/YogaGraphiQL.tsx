@@ -42,8 +42,22 @@ const getOperationWithFragments = (
   }
 }
 
-export type YogaGraphiQLProps = Partial<GraphiQLProps> &
-  Partial<LoadFromUrlOptions> & {
+export type YogaGraphiQLProps = Omit<
+  GraphiQLProps,
+  | 'ref'
+  | 'fetcher'
+  | 'headerEditorEnabled'
+  | 'defaultVariableEditorOpen'
+  | 'docExplorerOpen'
+  | 'onToggleDocs'
+  | 'tabs'
+  | 'toolbar'
+  | 'onSchemaChange'
+  | 'query'
+  | 'onEditQuery'
+  | 'beforeTopBarContent'
+> &
+  Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
     title?: string
   }
 
@@ -98,6 +112,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       directiveIsRepeatable: true,
       schemaDescription: true,
       ...props,
+      headers: {},
     })
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
