@@ -7,7 +7,11 @@ import {
   FetcherParams,
   FetcherOpts,
 } from 'graphiql'
-import { SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader'
+import {
+  LoadFromUrlOptions,
+  SubscriptionProtocol,
+  UrlLoader,
+} from '@graphql-tools/url-loader'
 import { DocumentNode, GraphQLSchema, Kind, parse } from 'graphql'
 import GraphiQLExplorer from 'graphiql-explorer'
 import 'graphiql/graphiql.css'
@@ -38,12 +42,10 @@ const getOperationWithFragments = (
   }
 }
 
-export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
-  endpoint?: string
-  title?: string
-  credentials?: RequestCredentials
-  subscriptionsProtocol?: 'SSE' | 'WS' | 'LEGACY_WS'
-}
+export type YogaGraphiQLProps = Partial<GraphiQLProps> &
+  Partial<LoadFromUrlOptions> & {
+    title?: string
+  }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const initialQuery = /* GraphQL */ `#
@@ -84,20 +86,18 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     props.endpoint ?? location.pathname,
     location.href,
   ).toString()
-  const credentials = props.credentials ?? 'same-origin'
   const graphiqlRef = React.useRef<GraphiQL | null>(null)
 
   const urlLoader = useMemo(() => new UrlLoader(), [])
 
   const fetcher: Fetcher = useMemo(() => {
     const executor = urlLoader.getExecutorAsync(endpoint, {
-      subscriptionsProtocol:
-        (props.subscriptionsProtocol as SubscriptionProtocol) ||
-        SubscriptionProtocol.SSE,
+      subscriptionsProtocol: SubscriptionProtocol.SSE,
+      credentials: 'same-origin',
       specifiedByUrl: true,
       directiveIsRepeatable: true,
       schemaDescription: true,
-      credentials,
+      ...props,
     })
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
@@ -114,7 +114,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         },
       })
     }
-  }, [urlLoader, endpoint, credentials])
+  }, [urlLoader, endpoint])
 
   const [showExplorer, setShowExplorer] = React.useState(false)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)
