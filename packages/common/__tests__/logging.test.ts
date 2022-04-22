@@ -20,7 +20,7 @@ describe('Logging', () => {
         }
       `,
     })
-    expect(logger.debug).toHaveBeenCalledWith(`Checking if GraphiQL Request`)
+    expect(logger.debug).toHaveBeenCalledWith(`Extracting GraphQL Parameters`)
   })
   describe('Default Logger', () => {
     it(`doesn't print debug messages if DEBUG env var isn't set`, () => {
