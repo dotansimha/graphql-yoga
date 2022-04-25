@@ -1,0 +1,12 @@
+{
+  "name": "netlify-edge",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "netlify dev",
+    "check": "deno cache netlify/edge-functions/graphql.ts"
+  },
+  "devDependencies": {
+    "netlify-cli": "^10.0.0"
+  }
+}

@@ -21,5 +21,12 @@
     "npm": true,
     ".bob": true,
     "**/.next": true
-  }
+  },
+  "deno.enable": true,
+  "deno.enablePaths": [
+    "examples/deno",
+    "examples/netlify-edge/netlify/edge-functions"
+  ],
+  "deno.unstable": true,
+  "deno.importMap": "examples/netlify-edge/.netlify/edge-functions-import-map.json"
 }
