@@ -209,7 +209,7 @@ const client = createClient({
 
 ## Subscriptions over WebSockets with `graphql-ws`
 
-Suppose you want to enable `graphql-ws` protocol support with GraphQL Yoga. In that case, we can easily integrate GraphQL Yoga and `graphql-ws` libraries by using the examples in [Envelop](https://envelop.dev) and [graphql-ws](https://github.com/enisdenjo/graphql-ws) integration docs.
+Suppose you want to enable [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol support with GraphQL Yoga. In that case, we can easily integrate GraphQL Yoga and `graphql-ws` libraries by using the examples in [Envelop](https://envelop.dev) and [graphql-ws](https://github.com/enisdenjo/graphql-ws) integration docs.
 To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
 Also, you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets instead of Server-Sent Events within GraphiQL.
 
@@ -273,6 +273,28 @@ main().catch((e) => {
 ```
 
 > Check out [our working example](/examples/graphql-ws) for this integration
+
+### Client integration
+
+Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/graphql-ws#recipes).
+
+### SSE vs WebSocket
+
+#### Advantages of SSE over Websockets#
+
+- Transported over simple HTTP instead of a custom protocol
+- Built in support for re-connection and event-id Simpler protocol
+- No trouble with corporate firewalls doing packet inspection
+
+#### Advantages of Websockets over SSE
+
+- Real time, two directional communication.
+- Lower latency
+
+#### SSE gotchas
+
+- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x) ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2))
+
 
 ## PubSub
 
