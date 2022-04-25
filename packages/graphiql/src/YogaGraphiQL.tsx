@@ -7,7 +7,11 @@ import {
   FetcherParams,
   FetcherOpts,
 } from 'graphiql'
-import { SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader'
+import {
+  LoadFromUrlOptions,
+  SubscriptionProtocol,
+  UrlLoader,
+} from '@graphql-tools/url-loader'
 import { DocumentNode, GraphQLSchema, Kind, parse } from 'graphql'
 import GraphiQLExplorer from 'graphiql-explorer'
 import 'graphiql/graphiql.css'
@@ -38,11 +42,24 @@ const getOperationWithFragments = (
   }
 }
 
-export type YogaGraphiQLProps = Partial<GraphiQLProps> & {
-  endpoint?: string
-  title?: string
-  credentials?: RequestCredentials
-}
+export type YogaGraphiQLProps = Omit<
+  GraphiQLProps,
+  | 'ref'
+  | 'fetcher'
+  | 'headerEditorEnabled'
+  | 'defaultVariableEditorOpen'
+  | 'docExplorerOpen'
+  | 'onToggleDocs'
+  | 'tabs'
+  | 'toolbar'
+  | 'onSchemaChange'
+  | 'query'
+  | 'onEditQuery'
+  | 'beforeTopBarContent'
+> &
+  Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
+    title?: string
+  }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const initialQuery = /* GraphQL */ `#
@@ -79,8 +96,10 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 #   Auto Complete:  Ctrl-Space (or just start typing)
 #
 `
-  const endpoint = props.endpoint ?? globalThis.location?.pathname ?? '/graphql'
-  const credentials = props.credentials ?? 'same-origin'
+  const endpoint = new URL(
+    props.endpoint ?? location.pathname,
+    location.href,
+  ).toString()
   const graphiqlRef = React.useRef<GraphiQL | null>(null)
 
   const urlLoader = useMemo(() => new UrlLoader(), [])
@@ -88,10 +107,12 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const fetcher: Fetcher = useMemo(() => {
     const executor = urlLoader.getExecutorAsync(endpoint, {
       subscriptionsProtocol: SubscriptionProtocol.SSE,
+      credentials: 'same-origin',
       specifiedByUrl: true,
       directiveIsRepeatable: true,
       schemaDescription: true,
-      credentials,
+      ...props,
+      headers: {},
     })
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
@@ -108,7 +129,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         },
       })
     }
-  }, [urlLoader, endpoint, credentials])
+  }, [urlLoader, endpoint])
 
   const [showExplorer, setShowExplorer] = React.useState(false)
   const [schema, setSchema] = React.useState<GraphQLSchema | null>(null)

@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { YogaGraphiQL } from './YogaGraphiQL'
-import type { GraphiQLOptions } from '@graphql-yoga/common'
+import { YogaGraphiQL, YogaGraphiQLProps } from './YogaGraphiQL'
 
-export function renderYogaGraphiQL(element: Element, opts?: GraphiQLOptions) {
+export function renderYogaGraphiQL(element: Element, opts?: YogaGraphiQLProps) {
   ReactDOM.render(<YogaGraphiQL {...opts} />, element)
 }

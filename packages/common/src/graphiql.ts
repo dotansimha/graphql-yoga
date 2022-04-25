@@ -35,6 +35,10 @@ export type GraphiQLOptions = {
    * The title to display at the top of the page. Defaults to `"YogaGraphiQL"`.
    */
   title?: string
+  /**
+   * Protocol for subscriptions
+   */
+  subscriptionsProtocol?: 'SSE' | 'WS' | 'LEGACY_WS'
 }
 
 export const renderGraphiQL = (opts?: GraphiQLOptions) =>
