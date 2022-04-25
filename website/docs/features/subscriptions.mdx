@@ -209,9 +209,9 @@ const client = createClient({
 
 ## Subscriptions over WebSockets with `graphql-ws`
 
-If you want to enable `graphql-ws` protocol support with GraphQL Yoga, we can easily integrate GraphQL Yoga and `graphql-ws` libraries by using the examples in [Envelop](https://envelop.dev) and [graphql-ws](https://github.com/enisdenjo/graphql-ws) integration docs.
+Suppose you want to enable `graphql-ws` protocol support with GraphQL Yoga. In that case, we can easily integrate GraphQL Yoga and `graphql-ws` libraries by using the examples in [Envelop](https://envelop.dev) and [graphql-ws](https://github.com/enisdenjo/graphql-ws) integration docs.
 To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
-Also you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets instead of Server Sent Events within GraphiQL.
+Also, you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets instead of Server-Sent Events within GraphiQL.
 
 `yoga-with-ws.ts`
 
