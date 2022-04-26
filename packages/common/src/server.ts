@@ -27,11 +27,7 @@ import {
   FetchAPI,
   GraphQLParams,
 } from './types'
-import {
-  getRequestParsePlugins,
-  OnRequestParseDoneHook,
-  Plugin,
-} from './plugins'
+import { OnRequestParseDoneHook, OnRequestParseHook, Plugin } from './plugins'
 import {
   GraphiQLOptions,
   renderGraphiQL,
@@ -218,6 +214,7 @@ export class YogaServer<
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
+  private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -342,6 +339,13 @@ export class YogaServer<
     this.getEnveloped = envelop({
       plugins: this.plugins,
     }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
+
+    this.onRequestParseHooks = []
+    for (const plugin of this.plugins) {
+      if (plugin && plugin.onRequestParse != null) {
+        this.onRequestParseHooks.push(plugin.onRequestParse.bind(plugin))
+      }
+    }
 
     if (options?.cors != null) {
       if (typeof options.cors === 'function') {
@@ -477,19 +481,17 @@ export class YogaServer<
       let requestParser: RequestParser = () => ({})
       let onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
-      for (const { onRequestParse } of getRequestParsePlugins(this.plugins)) {
-        if (onRequestParse != null) {
-          const onRequestParseResult = await onRequestParse({
-            serverContext,
-            request,
-            requestParser,
-            setRequestParser(parser: RequestParser) {
-              requestParser = parser
-            },
-          })
-          if (onRequestParseResult?.onRequestParseDone != null) {
-            onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone)
-          }
+      for (const onRequestParse of this.onRequestParseHooks) {
+        const onRequestParseResult = await onRequestParse({
+          serverContext,
+          request,
+          requestParser,
+          setRequestParser(parser: RequestParser) {
+            requestParser = parser
+          },
+        })
+        if (onRequestParseResult?.onRequestParseDone != null) {
+          onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone)
         }
       }
 
