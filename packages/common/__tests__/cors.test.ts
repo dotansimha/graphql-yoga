@@ -1,6 +1,8 @@
 import { Request } from 'cross-undici-fetch'
-import { getCORSHeadersByRequestAndOptions } from '../src/cors'
-import { CORSOptions } from '../src/types'
+import {
+  getCORSHeadersByRequestAndOptions,
+  CORSOptions,
+} from '../src/plugins/useCORS'
 
 describe('CORS', () => {
   describe('No origins specified', () => {

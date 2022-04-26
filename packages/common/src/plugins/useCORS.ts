@@ -1,4 +1,31 @@
-import { CORSOptions } from './types'
+import { PromiseOrValue } from '@envelop/core'
+import { Plugin } from './types'
+
+export type CORSOptions =
+  | {
+      origin?: string[] | string
+      methods?: string[]
+      allowedHeaders?: string[]
+      exposedHeaders?: string[]
+      credentials?: boolean
+      maxAge?: number
+    }
+  | false
+
+export type CORSPluginOptions<TServerContext> =
+  | ((
+      request: Request,
+      ...args: {} extends TServerContext
+        ? [serverContext?: TServerContext | undefined]
+        : [serverContext: TServerContext]
+    ) => CORSOptions)
+  | CORSOptions
+  | boolean
+
+export type CORSOptionsFactory<TServerContext> = (
+  request: Request,
+  serverContext: TServerContext,
+) => PromiseOrValue<CORSOptions>
 
 export function getCORSHeadersByRequestAndOptions(
   request: Request,
@@ -89,4 +116,59 @@ export function getCORSHeadersByRequestAndOptions(
   }
 
   return headers
+}
+
+async function getCORSResponseHeaders<TServerContext>(
+  request: Request,
+  serverContext: TServerContext,
+  corsOptionsFactory: CORSOptionsFactory<TServerContext>,
+) {
+  const corsOptions = await corsOptionsFactory(request, serverContext)
+
+  return getCORSHeadersByRequestAndOptions(request, corsOptions)
+}
+
+export function useCORS<TServerContext>(
+  options?: CORSPluginOptions<TServerContext>,
+): Plugin {
+  let corsOptionsFactory: CORSOptionsFactory<TServerContext> = () => ({})
+  if (options != null) {
+    if (typeof options === 'function') {
+      corsOptionsFactory = options
+    } else if (typeof options === 'object') {
+      const corsOptions = {
+        ...options,
+      }
+      corsOptionsFactory = () => corsOptions
+    } else if (options === false) {
+      corsOptionsFactory = () => false
+    }
+  }
+  return {
+    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
+      if (request.method.toUpperCase() === 'OPTIONS') {
+        const headers = await getCORSResponseHeaders<any>(
+          request,
+          serverContext,
+          corsOptionsFactory,
+        )
+        const response = new fetchAPI.Response(null, {
+          status: 204,
+          headers,
+        })
+        endResponse(response)
+        return
+      }
+    },
+    async onResponse({ request, serverContext, response }) {
+      const headers = await getCORSResponseHeaders<any>(
+        request,
+        serverContext,
+        corsOptionsFactory,
+      )
+      for (const headerName in headers) {
+        response.headers.set(headerName, headers[headerName])
+      }
+    },
+  }
 }

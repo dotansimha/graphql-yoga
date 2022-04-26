@@ -6,12 +6,13 @@ import type {
   OperationDefinitionNode,
 } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { PromiseOrValue } from '@envelop/core'
+import { GetEnvelopedFn, PromiseOrValue } from '@envelop/core'
+import { OnResultProcess } from './plugins/types'
 
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },
   TExtensions = { [key: string]: any },
-> {
+  > {
   errors?: ReadonlyArray<GraphQLError>
   data?: TData | null
   path?: ReadonlyArray<string | number>
@@ -23,7 +24,7 @@ export interface ExecutionPatchResult<
 export interface GraphQLParams<
   TVariables = Record<string, any>,
   TExtensions = Record<string, any>,
-> {
+  > {
   operationName?: string
   query?: string
   variables?: TVariables
@@ -54,82 +55,40 @@ export interface YogaInitialContext {
   /**
    * Values for any Variables defined by the Operation.
    */
-  variables?: string | Record<string, any>
+  variables?: Record<string, any>
   /**
    * Additional extensions object sent by the client.
    */
   extensions?: Record<string, any>
 }
 
-export interface RequestProcessContext<TContext, TRootValue>
-  extends YogaInitialContext {
+export interface RequestProcessContext<TContext, TRootValue> {
+  request: Request
+  enveloped: ReturnType<GetEnvelopedFn<TContext>>
+  params: GraphQLParams
+  fetchAPI: Required<FetchAPI>
   /**
-   * The GraphQL schema used to process the request.
+   * Response Hooks
    */
-  schema: GraphQLSchema
-  /**
-   * A function whose return value is passed in as the `context` to `execute`.
-   */
-  contextFactory: () => Promise<TContext> | TContext
-  /**
-   * A function which will be used to execute instead of default `execute` from `graphql-js`.
-   */
-  execute: (...args: any[]) => any
-  /**
-   * A function which will be used to create a document instead of the default `parse` from `graphql-js`.
-   */
-  parse: (...args: any[]) => any
-  /**
-   * A function which will be used to subscribe instead of default `subscribe` from `graphql-js`.
-   */
-  subscribe: (...args: any[]) => any
-  /**
-   * A function which will be used to validate instead of default `validate` from `graphql-js`.
-   */
-  validate: (...args: any[]) => any
-  /**
-   * The extra headers server will send in the request
-   */
-  extraHeaders: Record<string, string>
-  /**
-   * WHATWG compliant Response constructor
-   */
-  Response: typeof Response
-  /**
-   * WHATWG compliant ReadableStream constructor
-   */
-  ReadableStream: typeof ReadableStream
+  onResultProcessHooks: OnResultProcess<any>[]
 }
-
-export type CORSOptions =
-  | {
-      origin?: string[] | string
-      methods?: string[]
-      allowedHeaders?: string[]
-      exposedHeaders?: string[]
-      credentials?: boolean
-      maxAge?: number
-    }
-  | false
 
 export type GraphQLServerInject<
   TData = any,
   TVariables = Record<string, any>,
   TServerContext extends Record<string, any> = Record<string, any>,
-> = {
-  /** GraphQL Operation to execute */
-  document: string | TypedDocumentNode<TData, TVariables>
-  /** Variables for GraphQL Operation */
-  variables?: TVariables
-  /** Name for GraphQL Operation */
-  operationName?: string
-  /** Set any headers for the GraphQL request */
-  headers?: HeadersInit
-} & ({} extends TServerContext
-  ? { serverContext?: TServerContext }
-  : { serverContext: TServerContext })
-
-export { EnvelopError as GraphQLYogaError } from '@envelop/core'
+  > = {
+    /** GraphQL Operation to execute */
+    document: string | TypedDocumentNode<TData, TVariables>
+    /** Variables for GraphQL Operation */
+    variables?: TVariables
+    /** Name for GraphQL Operation */
+    operationName?: string
+    /** Set any headers for the GraphQL request */
+    headers?: HeadersInit
+  } & ({} extends TServerContext
+    ? { serverContext?: TServerContext }
+    : { serverContext: TServerContext })
 
 declare global {
   interface ReadableStream<R = any> {

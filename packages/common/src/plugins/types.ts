@@ -1,11 +1,34 @@
 import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
-import { GraphQLParams } from '../types'
+import { ExecutionResult } from 'graphql'
+import {
+  ExecutionPatchResult,
+  FetchAPI,
+  GraphQLParams,
+  YogaInitialContext,
+} from '../types'
 
 export type Plugin<
   PluginContext extends Record<string, any> = {},
   TServerContext = {},
+  TUserContext = {},
 > = EnvelopPlugin<PluginContext> & {
+  onRequest?: OnRequestHook<TServerContext>
   onRequestParse?: OnRequestParseHook<TServerContext>
+  onResultProcess?: OnResultProcess<
+    TServerContext & TUserContext & YogaInitialContext
+  >
+  onResponse?: OnResponseHook<TServerContext>
+}
+
+export type OnRequestHook<TServerContext> = (
+  payload: OnRequestEventPayload<TServerContext>,
+) => PromiseOrValue<void>
+
+export interface OnRequestEventPayload<TServerContext> {
+  request: Request
+  serverContext: TServerContext | undefined
+  fetchAPI: Required<FetchAPI>
+  endResponse(response: Response): void
 }
 
 export type OnRequestParseHook<TServerContext> = (
@@ -32,4 +55,35 @@ export type OnRequestParseDoneHook = (
 export interface OnRequestParseDoneEventPayload {
   params: GraphQLParams
   setParams: (params: GraphQLParams) => void
+}
+
+export type OnResultProcess<TContext> = (
+  payload: OnResultProcessEventPayload<TContext>,
+) => PromiseOrValue<void>
+
+export type ResultProcessorInput = PromiseOrValue<
+  ExecutionResult | AsyncIterable<ExecutionResult | ExecutionPatchResult>
+>
+
+export type ResultProcessor = (
+  result: ResultProcessorInput,
+  fetchAPI: Required<FetchAPI>,
+) => PromiseOrValue<Response>
+
+export interface OnResultProcessEventPayload<TContext> {
+  request: Request
+  context: TContext
+  result: ResultProcessorInput
+  resultProcessor: ResultProcessor
+  setResultProcessor(resultProcessor: ResultProcessor): void
+}
+
+export type OnResponseHook<TServerContext> = (
+  payload: OnResponseEventPayload<TServerContext>,
+) => PromiseOrValue<void>
+
+export interface OnResponseEventPayload<TServerContext> {
+  request: Request
+  serverContext: TServerContext | undefined
+  response: Response
 }
