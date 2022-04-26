@@ -13,12 +13,7 @@ import {
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import {
-  ExecutionResult,
-  IResolvers,
-  memoize1,
-  TypeSource,
-} from '@graphql-tools/utils'
+import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
   CORSOptions,
   GraphQLServerInject,
@@ -27,22 +22,24 @@ import {
   FetchAPI,
   GraphQLParams,
 } from './types'
-import { OnRequestParseDoneHook, OnRequestParseHook, Plugin } from './plugins'
+import {
+  OnRequestParseDoneHook,
+  OnRequestParseHook,
+  Plugin,
+  RequestParser,
+} from './plugins'
 import {
   GraphiQLOptions,
   renderGraphiQL,
   shouldRenderGraphiQL,
 } from './graphiql'
 import * as crossUndiciFetch from 'cross-undici-fetch'
-import {
-  RequestParser,
-  useGETRequestParser,
-  usePOSTJSONRequestParser,
-  usePOSTMultipartFormDataRequestParser,
-} from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
 import { getCORSHeadersByRequestAndOptions } from './cors'
+import { useGETRequestParser } from '@graphql-yoga/plugin-get-request-parser'
+import { usePOSTRequestParser } from '@graphql-yoga/plugin-post-request-parser'
+import { usePOSTMultipartRequestParser } from '@graphql-yoga/plugin-post-multipart-request-parser'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -325,8 +322,9 @@ export class YogaServer<
         }),
       ),
       useGETRequestParser(),
-      usePOSTJSONRequestParser(),
-      enableIf(options?.multipart !== false, () => usePOSTMultipartFormDataRequestParser()),
+      usePOSTRequestParser(),
+      enableIf(options?.multipart !== false, () => usePOSTMultipartRequestParser()),
+      usePOSTMultipartRequestParser(),
       ...(options?.plugins ?? []),
       enableIf(
         !!maskedErrors,

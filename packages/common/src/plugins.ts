@@ -1,6 +1,4 @@
 import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
-import { memoize1 } from '@graphql-tools/utils'
-import { RequestParser } from './getGraphQLParameters'
 import { GraphQLParams } from './types'
 
 export type Plugin<
@@ -13,6 +11,8 @@ export type Plugin<
 export type OnRequestParseHook<TServerContext> = (
   payload: OnRequestParseEventPayload<TServerContext>,
 ) => PromiseOrValue<void | OnRequestParseHookResult>
+
+export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
 
 export interface OnRequestParseEventPayload<TServerContext> {
   serverContext: TServerContext | undefined

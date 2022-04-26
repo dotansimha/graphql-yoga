@@ -1,0 +1,48 @@
+{
+  "name": "@graphql-yoga/plugin-get-request-parser",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/plugins/get-request-parser"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "prepack": "bob prepack",
+    "check": "tsc --pretty --noEmit"
+  },
+  "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
+  "license": "MIT",
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "dependencies": {
+    "tslib": "^2.3.1"
+  },
+  "peerDependencies": {
+    "@graphql-yoga/common": "^2.3.0"
+  },
+  "devDependencies": {
+    "bob-the-bundler": "^1.5.1"
+  }
+}
