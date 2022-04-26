@@ -500,16 +500,12 @@ export class YogaServer<
         })
       }
 
-      const { query, variables, operationName, extensions } = params
-
       const initialContext = {
         request,
-        query,
-        variables,
-        operationName,
-        extensions,
+        ...params,
         ...serverContext,
       } as YogaInitialContext & TServerContext
+
       const { execute, validate, subscribe, parse, contextFactory, schema } =
         this.getEnveloped(initialContext)
 
@@ -518,9 +514,9 @@ export class YogaServer<
       const corsHeaders = this.getCORSResponseHeaders(request, initialContext)
       const response = await processRequest({
         request,
-        query,
-        variables,
-        operationName,
+        query: initialContext.query,
+        variables: initialContext.variables,
+        operationName: initialContext.operationName,
         execute,
         validate,
         subscribe,
