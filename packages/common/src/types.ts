@@ -22,11 +22,11 @@ export interface ExecutionPatchResult<
 
 export interface GraphQLParams<
   TVariables = Record<string, any>,
-  TExtensions = Record<string, unknown>,
+  TExtensions = Record<string, any>,
   > {
   operationName?: string
   query?: string
-  variables?: string | TVariables
+  variables?: TVariables
   extensions?: TExtensions
 }
 
