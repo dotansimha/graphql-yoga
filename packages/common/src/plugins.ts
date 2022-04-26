@@ -1,4 +1,5 @@
 import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
+import { memoize1 } from '@graphql-tools/utils'
 import { RequestParser } from './getGraphQLParameters'
 import { GraphQLParams } from './types'
 
@@ -32,3 +33,10 @@ export interface OnRequestParseDoneEventPayload {
   params: GraphQLParams
   setGraphQLParams: (params: GraphQLParams) => void
 }
+
+export const getRequestParsePlugins = memoize1(function getRequestParsePlugins<
+  T1,
+  T2,
+>(plugins: Plugin<T1, T2>[]) {
+  return plugins.filter((plugin) => plugin.onRequestParse != null)
+})

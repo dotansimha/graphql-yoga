@@ -27,7 +27,11 @@ import {
   FetchAPI,
   GraphQLParams,
 } from './types'
-import { OnRequestParseDoneHook, Plugin } from './plugins'
+import {
+  getRequestParsePlugins,
+  OnRequestParseDoneHook,
+  Plugin,
+} from './plugins'
 import {
   GraphiQLOptions,
   renderGraphiQL,
@@ -473,7 +477,7 @@ export class YogaServer<
       let requestParser: RequestParser = () => ({})
       let onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
-      for (const { onRequestParse } of this.plugins) {
+      for (const { onRequestParse } of getRequestParsePlugins(this.plugins)) {
         if (onRequestParse != null) {
           const onRequestParseResult = await onRequestParse({
             serverContext,
