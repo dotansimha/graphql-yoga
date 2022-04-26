@@ -1,4 +1,4 @@
-import { GraphQLParams, Plugin } from '@graphql-yoga/common'
+import type { GraphQLParams, Plugin } from '@graphql-yoga/common'
 
 async function POSTRequestParser(request: Request): Promise<GraphQLParams> {
   const requestBody = await request.json()

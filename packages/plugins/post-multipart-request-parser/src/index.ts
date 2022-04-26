@@ -1,4 +1,4 @@
-import { GraphQLParams, Plugin } from '@graphql-yoga/common'
+import type { GraphQLParams, Plugin } from '@graphql-yoga/common'
 import { dset } from 'dset'
 
 async function POSTMultipartRequestParser(
