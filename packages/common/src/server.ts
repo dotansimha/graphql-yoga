@@ -211,7 +211,7 @@ export class YogaServer<
     ReadableStream: typeof ReadableStream
   }
   protected plugins: Array<
-    Plugin<TUserContext & TServerContext & YogaInitialContext>
+    Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
@@ -475,6 +475,7 @@ export class YogaServer<
       for (const { onRequestParse } of this.plugins) {
         if (onRequestParse != null) {
           const onRequestParseResult = await onRequestParse({
+            serverContext,
             request,
             requestParser,
             setRequestParser(parser: RequestParser) {

@@ -2,16 +2,19 @@ import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
 import { RequestParser } from './getGraphQLParameters'
 import { GraphQLParams } from './types'
 
-export type Plugin<PluginContext extends Record<string, any> = {}> =
-  EnvelopPlugin<PluginContext> & {
-    onRequestParse?: OnRequestParseHook
-  }
+export type Plugin<
+  PluginContext extends Record<string, any> = {},
+  TServerContext = {},
+> = EnvelopPlugin<PluginContext> & {
+  onRequestParse?: OnRequestParseHook<TServerContext>
+}
 
-export type OnRequestParseHook = (
-  payload: OnRequestParseEventPayload,
+export type OnRequestParseHook<TServerContext> = (
+  payload: OnRequestParseEventPayload<TServerContext>,
 ) => PromiseOrValue<void | OnRequestParseHookResult>
 
-export interface OnRequestParseEventPayload {
+export interface OnRequestParseEventPayload<TServerContext> {
+  serverContext: TServerContext | undefined
   request: Request
   requestParser: RequestParser
   setRequestParser: (parser: RequestParser) => void
