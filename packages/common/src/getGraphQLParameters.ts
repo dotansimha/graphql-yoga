@@ -4,12 +4,10 @@ import { dset } from 'dset'
 import { Plugin } from './plugins'
 import { GraphQLParams } from './types'
 
-const getRequestContentType = memoize1(function (request: Request): string {
-  return (
-    request.headers.get('content-type') ||
-    request.headers['content-type'] ||
-    'application/json'
-  )
+const getRequestContentType = memoize1(function (
+  request: Request,
+): string | undefined | null {
+  return request.headers['content-type'] || request.headers.get('content-type')
 })
 
 export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
@@ -52,10 +50,7 @@ async function POSTJSONRequestParser(request: Request): Promise<GraphQLParams> {
 export function usePOSTJSONRequestParser(): Plugin {
   return {
     onRequestParse({ request, setRequestParser }) {
-      if (
-        request.method === 'POST' &&
-        getRequestContentType(request).includes('json')
-      ) {
+      if (request.method === 'POST') {
         setRequestParser(POSTJSONRequestParser)
       }
     },
@@ -90,7 +85,7 @@ export function usePOSTMultipartFormDataRequestParser(): Plugin {
     onRequestParse({ request, setRequestParser }) {
       if (
         request.method === 'POST' &&
-        getRequestContentType(request).startsWith('multipart/form-data')
+        getRequestContentType(request)?.startsWith('multipart/form-data')
       ) {
         setRequestParser(POSTMultipartFormDataRequestParser)
       }
