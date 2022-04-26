@@ -13,9 +13,10 @@ import {
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import type {
+import {
   ExecutionResult,
   IResolvers,
+  memoize1,
   TypeSource,
 } from '@graphql-tools/utils'
 import {
