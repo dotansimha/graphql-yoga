@@ -1,14 +1,7 @@
 import { PromiseOrValue } from '@envelop/core'
-import { memoize1 } from '@graphql-tools/utils'
 import { dset } from 'dset'
 import { Plugin } from './plugins'
 import { GraphQLParams } from './types'
-
-const getRequestContentType = memoize1(function (
-  request: Request,
-): string | undefined | null {
-  return request.headers['content-type'] || request.headers.get('content-type')
-})
 
 export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
 
@@ -85,7 +78,7 @@ export function usePOSTMultipartFormDataRequestParser(): Plugin {
     onRequestParse({ request, setRequestParser }) {
       if (
         request.method === 'POST' &&
-        getRequestContentType(request)?.startsWith('multipart/form-data')
+        request.headers.get('content-type')?.startsWith('multipart/form-data')
       ) {
         setRequestParser(POSTMultipartFormDataRequestParser)
       }
