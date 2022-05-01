@@ -1,5 +1,13 @@
 # @graphql-yoga/render-graphiql
 
+## 2.5.0
+
+### Minor Changes
+
+- Updated dependencies [4aaf814]
+- Updated dependencies [13f96db]
+  - @graphql-yoga/common@2.4.0
+
 ## 2.4.0
 
 ### Minor Changes

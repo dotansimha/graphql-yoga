@@ -1,5 +1,11 @@
 # @graphql-yoga/graphiql
 
+## 2.3.0
+
+### Minor Changes
+
+- 4aaf814: feat(graphiql): ability to choose WS over SSE
+
 ## 2.2.0
 
 ### Minor Changes
