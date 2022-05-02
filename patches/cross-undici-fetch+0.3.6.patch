@@ -1,0 +1,13 @@
+diff --git a/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js b/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
+index 6788697..6bbf50d 100644
+--- a/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
++++ b/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
+@@ -172,7 +172,7 @@ module.exports = function createNodePonyfill(opts = {}) {
+         return new nodeFetch.Response(body, init);
+       };
+ 
+-      const formDataModule = require("formdata-node");
++      const formDataModule = require("../../formdata-node/lib/cjs/index.js");
+       ponyfills.FormData = formDataModule.FormData
+       ponyfills.File = formDataModule.File
+       addFormDataToRequest(nodeFetch.Request, formDataModule.File, formDataModule.FormData);
