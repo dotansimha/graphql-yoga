@@ -1,5 +1,28 @@
 # @graphql-yoga/node
 
+## 2.4.0
+
+### Minor Changes
+
+- 28e24c3: Return Node Server instance from '.start()' method
+
+  So you can configure Node Server (e.g. timeout) like below;
+
+  ```ts
+  async function main() {
+    const nodeServer = await yoga.start()
+    nodeServer.setTimeout(15000)
+  }
+  ```
+
+- 13f96db: Improve log messages
+
+### Patch Changes
+
+- Updated dependencies [4aaf814]
+- Updated dependencies [13f96db]
+  - @graphql-yoga/common@2.4.0
+
 ## 2.3.0
 
 ### Patch Changes
