@@ -1,5 +1,5 @@
 import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
-import { GraphQLParams } from './types'
+import { GraphQLParams } from '../types'
 
 export type Plugin<
   PluginContext extends Record<string, any> = {},

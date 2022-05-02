@@ -1,7 +1,17 @@
-import type { GraphQLParams, Plugin } from '@graphql-yoga/common'
 import { dset } from 'dset'
+import { GraphQLParams } from '../../types'
+import { Plugin } from '../types'
+import { useRequestParser } from '../useRequestParser'
+import { isPOSTRequest } from './POST'
 
-async function POSTMultipartRequestParser(
+export function isPOSTMultipartRequest(request: Request): boolean {
+  return (
+    isPOSTRequest(request) &&
+    !!request.headers.get('content-type')?.startsWith('multipart/form-data')
+  )
+}
+
+export async function parsePOSTMultipartRequest(
   request: Request,
 ): Promise<GraphQLParams> {
   const requestBody = await request.formData()
@@ -25,14 +35,8 @@ async function POSTMultipartRequestParser(
 }
 
 export function usePOSTMultipartRequestParser(): Plugin {
-  return {
-    onRequestParse({ request, setRequestParser }) {
-      if (
-        request.method === 'POST' &&
-        request.headers.get('content-type')?.startsWith('multipart/form-data')
-      ) {
-        setRequestParser(POSTMultipartRequestParser)
-      }
-    },
-  }
+  return useRequestParser({
+    match: isPOSTMultipartRequest,
+    parse: parsePOSTMultipartRequest,
+  })
 }

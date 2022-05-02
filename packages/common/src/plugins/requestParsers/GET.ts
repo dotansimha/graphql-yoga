@@ -1,6 +1,11 @@
-import type { GraphQLParams, Plugin } from '@graphql-yoga/common'
+import { GraphQLParams } from '../../types'
+import { Plugin } from '../types'
 
-function GETRequestParser(request: Request): GraphQLParams {
+export function isGETRequest(request: Request) {
+  return request.method === 'GET'
+}
+
+export function parseGETRequest(request: Request): GraphQLParams {
   const [, searchParamsStr] = request.url.split('?')
   const searchParams = new URLSearchParams(searchParamsStr)
   const operationName = searchParams.get('operationName') || undefined
@@ -15,11 +20,11 @@ function GETRequestParser(request: Request): GraphQLParams {
   }
 }
 
-export function useGETRequestParser<PluginContext>(): Plugin<PluginContext> {
+export function useGETRequestParser(): Plugin {
   return {
-    onRequestParse({ request, setRequestParser }) {
-      if (request.method === 'GET') {
-        setRequestParser(GETRequestParser)
+    onRequestParse: async ({ request, setRequestParser }) => {
+      if (isGETRequest(request)) {
+        setRequestParser(parseGETRequest)
       }
     },
   }
