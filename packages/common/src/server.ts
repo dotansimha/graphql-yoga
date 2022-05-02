@@ -499,7 +499,7 @@ export class YogaServer<
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({
           params,
-          setGraphQLParams(newParams: GraphQLParams) {
+          setParams(newParams: GraphQLParams) {
             params = newParams
           },
         })

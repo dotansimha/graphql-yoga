@@ -31,5 +31,5 @@ export type OnRequestParseDoneHook = (
 
 export interface OnRequestParseDoneEventPayload {
   params: GraphQLParams
-  setGraphQLParams: (params: GraphQLParams) => void
+  setParams: (params: GraphQLParams) => void
 }
