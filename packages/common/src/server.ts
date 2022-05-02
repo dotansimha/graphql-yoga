@@ -36,16 +36,9 @@ import {
 import * as crossUndiciFetch from 'cross-undici-fetch'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
-<<<<<<< HEAD
-import { getCORSHeadersByRequestAndOptions } from './cors'
-import { useGETRequestParser } from '@graphql-yoga/plugin-get-request-parser'
-import { usePOSTRequestParser } from '@graphql-yoga/plugin-post-request-parser'
-import { usePOSTMultipartRequestParser } from '@graphql-yoga/plugin-post-multipart-request-parser'
-=======
-import { useGETRequestParser } from './plugins/requestParsers/GET'
-import { usePOSTRequestParser } from './plugins/requestParsers/POST'
-import { usePOSTMultipartRequestParser } from './plugins/requestParsers/POSTMultipart'
->>>>>>> Maybe??
+import { useGETRequestParser } from './plugins/requestParser/GET'
+import { usePOSTRequestParser } from './plugins/requestParser/POST'
+import { usePOSTMultipartRequestParser } from './plugins/requestParser/POSTMultipart'
 
 interface OptionsWithPlugins<TContext> {
   /**
