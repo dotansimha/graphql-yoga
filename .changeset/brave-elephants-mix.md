@@ -13,3 +13,11 @@ createServer({
   },
 })
 ```
+
+In `@graphql-yoga/common`'s `createServer`, we can only enable or disable multipart which is enabled by default;
+
+```ts
+createServer({
+  multipart: false, // enabled by default
+})
+```
