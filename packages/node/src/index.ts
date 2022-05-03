@@ -32,11 +32,15 @@ class YogaNodeServer<
   ) {
     super({
       ...options,
+      multipart: options?.multipart !== false,
       fetchAPI:
         options?.fetchAPI ??
         create({
           useNodeFetch: true,
-          formDataLimits: options?.multipartLimits,
+          formDataLimits:
+            typeof options?.multipart === 'object'
+              ? options.multipart
+              : undefined,
         }),
     })
     this.addressInfo = {

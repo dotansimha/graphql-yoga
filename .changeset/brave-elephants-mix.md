@@ -3,11 +3,12 @@
 '@graphql-yoga/node': minor
 ---
 
-Now you can configure multipart request parsing limits for file uploads with `multipartLimits` option in `createServer` of @graphql-yoga/node
+Now you can configure multipart request parsing limits for file uploads with `multipart` option in `createServer` of @graphql-yoga/node
+You can also disable `multipart` processing by passing `false`
 
 ```ts
 createServer({
-  multipartLimits: {
+  multipart: {
     maxFileSize: 2000, // Default: Infinity
   },
 })

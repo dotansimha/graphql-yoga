@@ -6,7 +6,10 @@ import type { ServerOptions as HttpsServerOptions } from 'https'
  * Configuration options for the server
  */
 export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
-  YogaServerOptions<TServerContext, TUserContext, TRootValue> & {
+  Omit<
+    YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+    'multipart'
+  > & {
     /**
      * Port to run server
      */
@@ -23,7 +26,7 @@ export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
     /**
      * Limits for multipart request parsing
      */
-    multipartLimits?: FormDataLimits
+    multipart?: FormDataLimits | boolean
   }
 
 export interface AddressInfo {

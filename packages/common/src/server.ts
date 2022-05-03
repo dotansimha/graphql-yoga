@@ -25,6 +25,7 @@ import {
   YogaInitialContext,
   FetchEvent,
   FetchAPI,
+  GraphQLParams,
 } from './types'
 import {
   GraphiQLOptions,
@@ -32,7 +33,12 @@ import {
   shouldRenderGraphiQL,
 } from './graphiql'
 import * as crossUndiciFetch from 'cross-undici-fetch'
-import { getGraphQLParameters } from './getGraphQLParameters'
+import {
+  buildGetGraphQLParameters,
+  GETRequestParser,
+  POSTMultipartFormDataRequestParser,
+  POSTRequestParser,
+} from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
 
@@ -128,6 +134,7 @@ export type YogaServerOptions<
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: FetchAPI
+  multipart?: boolean
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
@@ -202,6 +209,10 @@ export class YogaServer<
     fetch: typeof fetch
     ReadableStream: typeof ReadableStream
   }
+
+  private getGraphQLParameters: (
+    request: Request,
+  ) => PromiseOrValue<GraphQLParams>
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -346,6 +357,13 @@ export class YogaServer<
     this.renderGraphiQL = options?.renderGraphiQL || renderGraphiQL
 
     this.endpoint = options?.endpoint
+
+    const requestParsers = [GETRequestParser]
+    if (options?.multipart !== false) {
+      requestParsers.push(POSTMultipartFormDataRequestParser)
+    }
+    requestParsers.push(POSTRequestParser)
+    this.getGraphQLParameters = buildGetGraphQLParameters(requestParsers)
   }
 
   getCORSResponseHeaders(
@@ -524,7 +542,7 @@ export class YogaServer<
 
       this.logger.debug(`Extracting GraphQL Parameters`)
       const { query, variables, operationName, extensions } =
-        await getGraphQLParameters(request)
+        await this.getGraphQLParameters(request)
 
       const initialContext = {
         request,
