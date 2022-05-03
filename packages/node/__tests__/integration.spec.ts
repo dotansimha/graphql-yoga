@@ -12,6 +12,7 @@ import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { fetch, File, FormData } from 'cross-undici-fetch'
+import { Readable } from 'stream'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -392,6 +393,60 @@ describe('Incremental Delivery', () => {
     expect(body.data.singleUpload.name).toBe(fileName)
     expect(body.data.singleUpload.type).toBe(fileType)
     expect(body.data.singleUpload.text).toBe(fileContent)
+  })
+
+  it('should provide a correct readable stream', async () => {
+    const UPLOAD_MUTATION = /* GraphQL */ `
+      mutation upload($file: File!) {
+        parseFileStream(file: $file)
+      }
+    `
+
+    const fileName = 'test.txt'
+    const fileType = 'text/plain'
+    const fileContent = 'Hello World'
+
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
+
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
+
+    expect(body.errors).toBeUndefined()
+    expect(body.data.parseFileStream).toBe(fileContent)
+  })
+
+  it('should provide a correct readable stream', async () => {
+    const UPLOAD_MUTATION = /* GraphQL */ `
+      mutation upload($file: File!) {
+        parseArrayBuffer(file: $file)
+      }
+    `
+
+    const fileName = 'test.txt'
+    const fileType = 'text/plain'
+    const fileContent = 'Hello World'
+
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
+
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
+
+    expect(body.errors).toBeUndefined()
+    expect(body.data.parseArrayBuffer).toBe(fileContent)
   })
 
   it('should get subscription', async () => {
