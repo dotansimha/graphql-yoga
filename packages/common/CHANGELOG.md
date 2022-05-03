@@ -1,5 +1,20 @@
 # @graphql-yoga/common
 
+## 2.4.1
+
+### Patch Changes
+
+- 5fd5db4: Send specific origin in CORS instead of wildcard if credentials are allowed explicitly like below;
+
+  ```ts
+  createServer({
+    cors: {
+      origin: ['http://localhost:4000'], // Previously this was ignored even if `credentials` is true
+      credentials: true,
+    },
+  })
+  ```
+
 ## 2.4.0
 
 ### Minor Changes
