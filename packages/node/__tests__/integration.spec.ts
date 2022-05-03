@@ -355,7 +355,13 @@ describe('Requests', () => {
 })
 
 describe('Incremental Delivery', () => {
-  const yoga = createServer({ schema, logging: false })
+  const yoga = createServer({
+    schema,
+    logging: false,
+    multipart: {
+      fileSize: 12,
+    },
+  })
   beforeAll(() => {
     return yoga.start()
   })
@@ -447,6 +453,36 @@ describe('Incremental Delivery', () => {
 
     expect(body.errors).toBeUndefined()
     expect(body.data.parseArrayBuffer).toBe(fileContent)
+  })
+
+  it('should not allow the files that exceed the limit', async () => {
+    const UPLOAD_MUTATION = /* GraphQL */ `
+      mutation upload($file: File!) {
+        singleUpload(file: $file) {
+          name
+          type
+          text
+        }
+      }
+    `
+
+    const fileName = 'test.txt'
+    const fileType = 'text/plain'
+    const fileContent = 'I am a very long string that exceeds the limit'
+
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
+
+    expect(body.errors).toBeDefined()
+    expect(body.errors[0].message).toBe('File size limit exceeded: 12 bytes')
   })
 
   it('should get subscription', async () => {

@@ -1,4 +1,4 @@
-import { GraphQLSchema, isSchema, print } from 'graphql'
+import { GraphQLError, GraphQLSchema, isSchema, print } from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
@@ -541,6 +541,7 @@ export class YogaServer<
       }
 
       this.logger.debug(`Extracting GraphQL Parameters`)
+
       const { query, variables, operationName, extensions } =
         await this.getGraphQLParameters(request)
 
@@ -575,11 +576,21 @@ export class YogaServer<
       })
       return response
     } catch (error: any) {
-      this.logger.error(error.stack || error.message || error)
-      const response = new this.fetchAPI.Response(error.message, {
-        status: 500,
-        statusText: 'Internal Server Error',
-      })
+      const response = new this.fetchAPI.Response(
+        JSON.stringify({
+          errors: [
+            error instanceof GraphQLError
+              ? error
+              : {
+                  message: error.message,
+                },
+          ],
+        }),
+        {
+          status: 500,
+          statusText: 'Internal Server Error',
+        },
+      )
       return response
     }
   }
