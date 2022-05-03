@@ -4,7 +4,7 @@
 ---
 
 Now you can configure multipart request parsing limits for file uploads with `multipart` option in `createServer` of @graphql-yoga/node
-You can also disable `multipart` processing by passing `false`
+You can also disable `multipart` processing by passing `false`.
 
 ```ts
 createServer({
@@ -14,7 +14,7 @@ createServer({
 })
 ```
 
-In `@graphql-yoga/common`'s `createServer`, we can only enable or disable multipart which is enabled by default;
+In `@graphql-yoga/common`'s `createServer`, we can only enable or disable multipart which is enabled by default.
 
 ```ts
 createServer({
