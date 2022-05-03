@@ -364,7 +364,7 @@ export class YogaServer<
 
     if (currentOrigin) {
       const credentialsAsked = request.headers.get('cookies')
-      if (credentialsAsked) {
+      if (credentialsAsked || corsOptions.credentials !== false) {
         headers['Access-Control-Allow-Origin'] = currentOrigin
       }
     }
