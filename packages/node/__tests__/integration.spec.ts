@@ -804,5 +804,23 @@ describe('Browser', () => {
       })
       expect(result).toContain('Failed to fetch')
     })
+    test('send specific origin back to user if credentials are set true', async () => {
+      cors = {
+        origin: [`http://localhost:${anotherOriginPort}`],
+        credentials: true,
+      }
+      await page.goto(`http://localhost:${anotherOriginPort}`)
+      const result = await page.evaluate(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        return document.getElementById('result')?.innerHTML
+      })
+      expect(result).toEqual(
+        JSON.stringify({
+          data: {
+            alwaysTrue: true,
+          },
+        }),
+      )
+    })
   })
 })
