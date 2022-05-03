@@ -36,6 +36,7 @@ class YogaNodeServer<
         options?.fetchAPI ??
         create({
           useNodeFetch: true,
+          formDataLimits: options?.multipartLimits,
         }),
     })
     this.addressInfo = {

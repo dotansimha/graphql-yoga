@@ -38,6 +38,7 @@ export function buildApp() {
       },
     },
     logging: false,
+    maskedErrors: false,
   })
 
   app.use('/graphql', graphQLServer)

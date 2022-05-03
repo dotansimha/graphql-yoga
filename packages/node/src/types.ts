@@ -1,5 +1,6 @@
 import type { YogaServerOptions } from '@graphql-yoga/common'
-import { ServerOptions as HttpsServerOptions } from 'https'
+import type { FormDataLimits } from 'cross-undici-fetch'
+import type { ServerOptions as HttpsServerOptions } from 'https'
 
 /**
  * Configuration options for the server
@@ -19,6 +20,10 @@ export type YogaNodeServerOptions<TServerContext, TUserContext, TRootValue> =
      * Enable HTTPS
      */
     https?: HttpsServerOptions | boolean
+    /**
+     * Limits for multipart request parsing
+     */
+    multipartLimits?: FormDataLimits
   }
 
 export interface AddressInfo {
