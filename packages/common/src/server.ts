@@ -376,28 +376,43 @@ export class YogaServer<
 
     const headers: Record<string, string> = {}
 
-    const currentOrigin = request.headers.get('origin')
-
-    headers['Access-Control-Allow-Origin'] = '*'
-
-    if (currentOrigin) {
-      const credentialsAsked = request.headers.get('cookies')
-      if (credentialsAsked || corsOptions.credentials !== false) {
-        headers['Access-Control-Allow-Origin'] = currentOrigin
-      }
-    }
-
+    // If defined origins have '*' or undefined by any means, we should allow all origins
     if (
-      currentOrigin != null &&
-      corsOptions.origin?.length &&
-      !corsOptions.origin.includes(currentOrigin) &&
-      !corsOptions.origin.includes('*')
+      corsOptions.origin == null ||
+      corsOptions.origin.length === 0 ||
+      corsOptions.origin.includes('*')
     ) {
-      headers['Access-Control-Allow-Origin'] = 'null'
-    }
-
-    if (headers['Access-Control-Allow-Origin'] !== '*') {
-      headers['Vary'] = 'Origin'
+      const currentOrigin = request.headers.get('origin')
+      // If origin is available in the headers, use it
+      if (currentOrigin != null) {
+        headers['Access-Control-Allow-Origin'] = currentOrigin
+        // Vary by origin because there are multiple origins
+        headers['Vary'] = 'Origin'
+      } else {
+        headers['Access-Control-Allow-Origin'] = '*'
+      }
+    } else if (typeof corsOptions.origin === 'string') {
+      // If there is one specific origin is specified, use it directly
+      headers['Access-Control-Allow-Origin'] = corsOptions.origin
+    } else if (Array.isArray(corsOptions.origin)) {
+      // If there is only one origin defined in the array, consider it as a single one
+      if (corsOptions.origin.length === 1) {
+        headers['Access-Control-Allow-Origin'] = corsOptions.origin[0]
+      } else {
+        const currentOrigin = request.headers.get('origin')
+        if (
+          currentOrigin != null &&
+          corsOptions.origin.includes(currentOrigin)
+        ) {
+          // If origin is available in the headers, use it
+          headers['Access-Control-Allow-Origin'] = currentOrigin
+          // Vary by origin because there are multiple origins
+          headers['Vary'] = 'Origin'
+        } else {
+          // There is no origin found in the headers, so we should return null
+          headers['Access-Control-Allow-Origin'] = 'null'
+        }
+      }
     }
 
     if (corsOptions.methods?.length) {
