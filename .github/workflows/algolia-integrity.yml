@@ -29,6 +29,7 @@ jobs:
         run: yarn workspace @graphql-yoga/website run algolia-sync
         env:
           ALGOLIA_DRY_RUN: 1
+          SITE_URL: https://www.graphql-yoga.com/
 
       - name: Diff
         run: git diff --exit-code -- website/algolia-lockfile

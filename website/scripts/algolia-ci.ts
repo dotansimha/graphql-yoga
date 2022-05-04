@@ -6,6 +6,7 @@ import { getRoutes, getTutorialRoutes } from '../routes'
 indexToAlgolia({
   routes: [getRoutes(), getTutorialRoutes()],
   source: 'Yoga',
-  dryMode: !!process.env.ALGOLIA_DRY_RUN,
+  domain: process.env.SITE_URL!,
   lockfilePath: join(__dirname, '..', 'algolia-lockfile.txt'),
+  dryMode: process.env.ALGOLIA_DRY_RUN === 'true',
 })
