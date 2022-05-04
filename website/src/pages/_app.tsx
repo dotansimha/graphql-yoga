@@ -26,7 +26,7 @@ import React from 'react'
 import { useGoogleAnalytics } from '../google-analytics'
 
 import '@algolia/autocomplete-theme-classic'
-import '@theguild/components/dist/static/css/searchbarV2.css'
+import '@theguild/components/dist/static/css/SearchBarV2.css'
 
 ExtendComponents({
   Instruction: (props: React.ComponentProps<typeof Instruction>) => (
