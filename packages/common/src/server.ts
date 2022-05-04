@@ -342,6 +342,8 @@ export class YogaServer<
           ...options.cors,
         }
         this.corsOptionsFactory = () => corsOptions
+      } else if (options.cors === false) {
+        this.corsOptionsFactory = () => false
       }
     }
 
