@@ -41,6 +41,7 @@ import {
 } from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
+import { getCORSHeadersByRequestAndOptions } from './cors'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -373,78 +374,7 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ): Record<string, string> {
     const corsOptions = this.corsOptionsFactory(request, ...args)
-
-    const headers: Record<string, string> = {}
-
-    const currentOrigin = request.headers.get('origin')
-
-    headers['Access-Control-Allow-Origin'] = '*'
-
-    if (currentOrigin) {
-      const credentialsAsked = request.headers.get('cookies')
-      if (credentialsAsked || corsOptions.credentials !== false) {
-        headers['Access-Control-Allow-Origin'] = currentOrigin
-      }
-    }
-
-    if (
-      currentOrigin != null &&
-      corsOptions.origin?.length &&
-      !corsOptions.origin.includes(currentOrigin) &&
-      !corsOptions.origin.includes('*')
-    ) {
-      headers['Access-Control-Allow-Origin'] = 'null'
-    }
-
-    if (headers['Access-Control-Allow-Origin'] !== '*') {
-      headers['Vary'] = 'Origin'
-    }
-
-    if (corsOptions.methods?.length) {
-      headers['Access-Control-Allow-Methods'] = corsOptions.methods.join(', ')
-    } else {
-      const requestMethod = request.headers.get('access-control-request-method')
-      if (requestMethod) {
-        headers['Access-Control-Allow-Methods'] = requestMethod
-      }
-    }
-
-    if (corsOptions.allowedHeaders?.length) {
-      headers['Access-Control-Allow-Headers'] =
-        corsOptions.allowedHeaders.join(', ')
-    } else {
-      const requestHeaders = request.headers.get(
-        'access-control-request-headers',
-      )
-      if (requestHeaders) {
-        headers['Access-Control-Allow-Headers'] = requestHeaders
-        if (headers['Vary']) {
-          headers['Vary'] += ', Access-Control-Request-Headers'
-        }
-        headers['Vary'] = 'Access-Control-Request-Headers'
-      }
-    }
-
-    if (corsOptions.credentials != null) {
-      if (corsOptions.credentials === true) {
-        headers['Access-Control-Allow-Credentials'] = 'true'
-      }
-    } else if (headers['Access-Control-Allow-Origin'] !== '*') {
-      headers['Access-Control-Allow-Credentials'] = 'true'
-    }
-
-    if (corsOptions.exposedHeaders) {
-      headers['Access-Control-Expose-Headers'] =
-        corsOptions.exposedHeaders.join(', ')
-    }
-
-    if (corsOptions.maxAge) {
-      headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
-    }
-
-    headers['Server'] = 'GraphQL Yoga'
-
-    return headers
+    return getCORSHeadersByRequestAndOptions(request, corsOptions)
   }
 
   handleOptions(

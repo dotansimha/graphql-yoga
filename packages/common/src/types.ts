@@ -102,7 +102,7 @@ export interface RequestProcessContext<TContext, TRootValue>
 }
 
 export interface CORSOptions {
-  origin?: string[]
+  origin?: string[] | string
   methods?: string[]
   allowedHeaders?: string[]
   exposedHeaders?: string[]
