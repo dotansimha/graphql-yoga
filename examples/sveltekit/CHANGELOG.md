@@ -1,5 +1,14 @@
 # sveltekit
 
+## 0.5.0
+
+### Patch Changes
+
+- Updated dependencies [8b6d896]
+- Updated dependencies [6bff871]
+- Updated dependencies [f2c9adc]
+  - @graphql-yoga/common@2.5.0
+
 ## 0.4.1
 
 ### Patch Changes
