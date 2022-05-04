@@ -7,6 +7,6 @@ indexToAlgolia({
   routes: [getRoutes(), getTutorialRoutes()],
   source: 'Yoga',
   domain: process.env.SITE_URL!,
-  lockfilePath: join(__dirname, '..', 'algolia-lockfile.txt'),
+  lockfilePath: join(__dirname, '..', 'algolia-lockfile.json'),
   dryMode: process.env.ALGOLIA_DRY_RUN === 'true',
 })
