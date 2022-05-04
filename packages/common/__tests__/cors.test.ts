@@ -90,4 +90,21 @@ describe('CORS', () => {
       expect(headers['Access-Control-Allow-Origin']).toBe('null')
     })
   })
+  describe('Disabled CORS', () => {
+    const corsOptionsWithDisabledCORS: CORSOptions = false
+    it('should return null if the origin is sent', () => {
+      const request = new Request('http://localhost:4001/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          origin: 'http://localhost:4001',
+        },
+      })
+      const headers = getCORSHeadersByRequestAndOptions(
+        request,
+        corsOptionsWithDisabledCORS,
+      )
+      expect(headers['Access-Control-Allow-Origin']).toBeUndefined()
+    })
+  })
 })
