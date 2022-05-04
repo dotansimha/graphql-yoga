@@ -19,17 +19,17 @@ jobs:
           node-version: 18.x
           cache: 'yarn'
 
-      - name: Install Dependencies using Yarn
+      - name: Install Dependencies
         run: yarn
 
       - name: Build Packages
         run: yarn build
 
       - name: Typecheck
-        run: yarn workspace @graphql-yoga/website run build
+        run: yarn workspace website run build
 
       - name: Algolia push
-        run: yarn workspace @graphql-yoga/website run algolia-sync
+        run: yarn workspace website run algolia-sync
         env:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}

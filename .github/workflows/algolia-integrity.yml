@@ -16,17 +16,17 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
-      - name: Install Dependencies using Yarn
+      - name: Install Dependencies
         run: yarn --ignore-engines
 
       - name: Build Packages
         run: yarn build
 
       - name: Typecheck
-        run: yarn workspace @graphql-yoga/website run build
+        run: yarn workspace website run build
 
       - name: Algolia generate
-        run: yarn workspace @graphql-yoga/website run algolia-sync
+        run: yarn workspace website run algolia-sync
         env:
           ALGOLIA_DRY_RUN: 1
           SITE_URL: https://www.graphql-yoga.com/
