@@ -1,10 +1,10 @@
 import { Request } from 'cross-undici-fetch'
-import { request } from 'http'
-import { createServer } from '../src/server'
+import { getCORSHeadersByRequestAndOptions } from '../src/cors'
+import { CORSOptions } from '../src/types'
 
 describe('CORS', () => {
-  describe('Default behavior', () => {
-    const yoga = createServer()
+  describe('No origins specified', () => {
+    const corsOptionsWithNoOrigins = {}
     it('should return the wildcard if no origin is sent with header', () => {
       const request = new Request('http://localhost:4000/graphql', {
         method: 'POST',
@@ -12,7 +12,10 @@ describe('CORS', () => {
           'Content-Type': 'application/json',
         },
       })
-      const headers = yoga.getCORSResponseHeaders(request, {})
+      const headers = getCORSHeadersByRequestAndOptions(
+        request,
+        corsOptionsWithNoOrigins,
+      )
       expect(headers['Access-Control-Allow-Origin']).toBe('*')
     })
     it('should return the origin if it is sent with header', () => {
@@ -24,16 +27,17 @@ describe('CORS', () => {
           origin,
         },
       })
-      const headers = yoga.getCORSResponseHeaders(request, {})
+      const headers = getCORSHeadersByRequestAndOptions(
+        request,
+        corsOptionsWithNoOrigins,
+      )
       expect(headers['Access-Control-Allow-Origin']).toBe(origin)
     })
   })
-  describe('Single origin', () => {
-    const yoga = createServer({
-      cors: {
-        origin: 'http://localhost:4000',
-      },
-    })
+  describe('Single allowed origin', () => {
+    const corsOptionsWithSingleOrigin = {
+      origin: 'http://localhost:4000',
+    }
     it('should return the origin even if it is different than the sent origin', () => {
       const request = new Request('http://localhost:4001/graphql', {
         method: 'POST',
@@ -42,18 +46,19 @@ describe('CORS', () => {
           origin: 'http://localhost:4001',
         },
       })
-      const headers = yoga.getCORSResponseHeaders(request, {})
+      const headers = getCORSHeadersByRequestAndOptions(
+        request,
+        corsOptionsWithSingleOrigin,
+      )
       expect(headers['Access-Control-Allow-Origin']).toBe(
         'http://localhost:4000',
       )
     })
   })
-  describe('Multiple origins', () => {
-    const yoga = createServer({
-      cors: {
-        origin: ['http://localhost:4000', 'http://localhost:4001'],
-      },
-    })
+  describe('Multiple allowed origins', () => {
+    const corsOptionsWithMultipleOrigins: CORSOptions = {
+      origin: ['http://localhost:4000', 'http://localhost:4001'],
+    }
     it('should return the origin itself if it matches', () => {
       const request = new Request('http://localhost:4001/graphql', {
         method: 'POST',
@@ -62,12 +67,15 @@ describe('CORS', () => {
           origin: 'http://localhost:4001',
         },
       })
-      const headers = yoga.getCORSResponseHeaders(request, {})
+      const headers = getCORSHeadersByRequestAndOptions(
+        request,
+        corsOptionsWithMultipleOrigins,
+      )
       expect(headers['Access-Control-Allow-Origin']).toBe(
         'http://localhost:4001',
       )
     })
-    it('should return null even if it does not match', () => {
+    it('should return null if the sent origin does not match', () => {
       const request = new Request('http://localhost:4002/graphql', {
         method: 'POST',
         headers: {
@@ -75,7 +83,10 @@ describe('CORS', () => {
           origin: 'http://localhost:4002',
         },
       })
-      const headers = yoga.getCORSResponseHeaders(request, {})
+      const headers = getCORSHeadersByRequestAndOptions(
+        request,
+        corsOptionsWithMultipleOrigins,
+      )
       expect(headers['Access-Control-Allow-Origin']).toBe('null')
     })
   })

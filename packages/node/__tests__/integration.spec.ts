@@ -352,6 +352,16 @@ describe('Requests', () => {
     expect(body.data).toBeNull()
     expect(body.errors?.[0].message).toBe('Must provide query string.')
   })
+
+  it('should handle preflight requests correctly', () => {
+    return request(yoga)
+      .options(endpoint)
+      .set('Access-Control-Request-Method', 'POST')
+      .set('Origin', 'http://localhost:3000')
+      .expect(204)
+      .expect('Access-Control-Allow-Origin', 'http://localhost:3000')
+      .expect('Access-Control-Allow-Methods', 'POST')
+  })
 })
 
 describe('Incremental Delivery', () => {
