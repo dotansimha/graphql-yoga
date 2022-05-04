@@ -1,5 +1,65 @@
 # @graphql-yoga/node
 
+## 2.5.0
+
+### Minor Changes
+
+- 8b6d896: Now you can configure multipart request parsing limits for file uploads with `multipart` option in `createServer` of @graphql-yoga/node
+  You can also disable `multipart` processing by passing `false`.
+
+  ```ts
+  createServer({
+    multipart: {
+      maxFileSize: 2000, // Default: Infinity
+    },
+  })
+  ```
+
+  In `@graphql-yoga/common`'s `createServer`, we can only enable or disable multipart which is enabled by default.
+
+  ```ts
+  createServer({
+    multipart: false, // enabled by default
+  })
+  ```
+
+### Patch Changes
+
+- Updated dependencies [8b6d896]
+- Updated dependencies [6bff871]
+- Updated dependencies [f2c9adc]
+  - @graphql-yoga/common@2.5.0
+
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [5fd5db4]
+  - @graphql-yoga/common@2.4.1
+
+## 2.4.0
+
+### Minor Changes
+
+- 28e24c3: Return Node Server instance from '.start()' method
+
+  So you can configure Node Server (e.g. timeout) like below;
+
+  ```ts
+  async function main() {
+    const nodeServer = await yoga.start()
+    nodeServer.setTimeout(15000)
+  }
+  ```
+
+- 13f96db: Improve log messages
+
+### Patch Changes
+
+- Updated dependencies [4aaf814]
+- Updated dependencies [13f96db]
+  - @graphql-yoga/common@2.4.0
+
 ## 2.3.0
 
 ### Patch Changes

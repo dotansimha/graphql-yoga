@@ -20,10 +20,14 @@ export interface ExecutionPatchResult<
   extensions?: TExtensions
 }
 
-export interface GraphQLParams<TVariables = Record<string, any>> {
+export interface GraphQLParams<
+  TVariables = Record<string, any>,
+  TExtensions = Record<string, unknown>,
+> {
   operationName?: string
   query?: string
   variables?: string | TVariables
+  extensions?: TExtensions
 }
 
 export interface FormatPayloadParams<TContext, TRootValue> {
@@ -97,14 +101,16 @@ export interface RequestProcessContext<TContext, TRootValue>
   ReadableStream: typeof ReadableStream
 }
 
-export interface CORSOptions {
-  origin?: string[]
-  methods?: string[]
-  allowedHeaders?: string[]
-  exposedHeaders?: string[]
-  credentials?: boolean
-  maxAge?: number
-}
+export type CORSOptions =
+  | {
+      origin?: string[] | string
+      methods?: string[]
+      allowedHeaders?: string[]
+      exposedHeaders?: string[]
+      credentials?: boolean
+      maxAge?: number
+    }
+  | false
 
 export type GraphQLServerInject<
   TData = any,

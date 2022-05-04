@@ -1,4 +1,6 @@
 name: Tests
+env:
+  NODE_NO_WARNINGS: true
 on:
   pull_request:
     paths-ignore:
@@ -10,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12, 14, 17, 18]
+        node-version: [14, 16, 18]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -27,15 +29,7 @@ jobs:
       - name: Build Packages
         run: yarn build
 
-      - if: matrix.node-version == 17
-        name: Run Tests with --experimental-fetch
-        run: yarn test
-        env:
-          NODE_OPTIONS: --experimental-fetch
-          NODE_NO_WARNINGS: true
-
-      - if: matrix.node-version != 17
-        name: Run Tests
+      - name: Run Tests
         run: yarn test
 
   test-cf:
@@ -96,7 +90,7 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
-      
+
       - name: Use Deno
         uses: denoland/setup-deno@v1
 

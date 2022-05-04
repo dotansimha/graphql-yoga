@@ -12,6 +12,7 @@ import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { fetch, File, FormData } from 'cross-undici-fetch'
+import { Readable } from 'stream'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -351,10 +352,26 @@ describe('Requests', () => {
     expect(body.data).toBeNull()
     expect(body.errors?.[0].message).toBe('Must provide query string.')
   })
+
+  it('should handle preflight requests correctly', () => {
+    return request(yoga)
+      .options(endpoint)
+      .set('Access-Control-Request-Method', 'POST')
+      .set('Origin', 'http://localhost:3000')
+      .expect(204)
+      .expect('Access-Control-Allow-Origin', 'http://localhost:3000')
+      .expect('Access-Control-Allow-Methods', 'POST')
+  })
 })
 
 describe('Incremental Delivery', () => {
-  const yoga = createServer({ schema, logging: false })
+  const yoga = createServer({
+    schema,
+    logging: false,
+    multipart: {
+      fileSize: 12,
+    },
+  })
   beforeAll(() => {
     return yoga.start()
   })
@@ -392,6 +409,90 @@ describe('Incremental Delivery', () => {
     expect(body.data.singleUpload.name).toBe(fileName)
     expect(body.data.singleUpload.type).toBe(fileType)
     expect(body.data.singleUpload.text).toBe(fileContent)
+  })
+
+  it('should provide a correct readable stream', async () => {
+    const UPLOAD_MUTATION = /* GraphQL */ `
+      mutation upload($file: File!) {
+        parseFileStream(file: $file)
+      }
+    `
+
+    const fileName = 'test.txt'
+    const fileType = 'text/plain'
+    const fileContent = 'Hello World'
+
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
+
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
+
+    expect(body.errors).toBeUndefined()
+    expect(body.data.parseFileStream).toBe(fileContent)
+  })
+
+  it('should provide a correct readable stream', async () => {
+    const UPLOAD_MUTATION = /* GraphQL */ `
+      mutation upload($file: File!) {
+        parseArrayBuffer(file: $file)
+      }
+    `
+
+    const fileName = 'test.txt'
+    const fileType = 'text/plain'
+    const fileContent = 'Hello World'
+
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
+
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
+
+    expect(body.errors).toBeUndefined()
+    expect(body.data.parseArrayBuffer).toBe(fileContent)
+  })
+
+  it('should not allow the files that exceed the limit', async () => {
+    const UPLOAD_MUTATION = /* GraphQL */ `
+      mutation upload($file: File!) {
+        singleUpload(file: $file) {
+          name
+          type
+          text
+        }
+      }
+    `
+
+    const fileName = 'test.txt'
+    const fileType = 'text/plain'
+    const fileContent = 'I am a very long string that exceeds the limit'
+
+    const formData = new FormData()
+    formData.set('operations', JSON.stringify({ query: UPLOAD_MUTATION }))
+    formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+    formData.set('0', new File([fileContent], fileName, { type: fileType }))
+    const response = await fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = await response.json()
+
+    expect(body.errors).toBeDefined()
+    expect(body.errors[0].message).toBe('File size limit exceeded: 12 bytes')
   })
 
   it('should get subscription', async () => {
@@ -803,6 +904,24 @@ describe('Browser', () => {
         return document.getElementById('result')?.innerHTML
       })
       expect(result).toContain('Failed to fetch')
+    })
+    test('send specific origin back to user if credentials are set true', async () => {
+      cors = {
+        origin: [`http://localhost:${anotherOriginPort}`],
+        credentials: true,
+      }
+      await page.goto(`http://localhost:${anotherOriginPort}`)
+      const result = await page.evaluate(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        return document.getElementById('result')?.innerHTML
+      })
+      expect(result).toEqual(
+        JSON.stringify({
+          data: {
+            alwaysTrue: true,
+          },
+        }),
+      )
     })
   })
 })

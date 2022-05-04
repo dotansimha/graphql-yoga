@@ -1,4 +1,4 @@
-import { GraphQLSchema, isSchema, print } from 'graphql'
+import { GraphQLError, GraphQLSchema, isSchema, print } from 'graphql'
 import {
   Plugin,
   GetEnvelopedFn,
@@ -25,6 +25,7 @@ import {
   YogaInitialContext,
   FetchEvent,
   FetchAPI,
+  GraphQLParams,
 } from './types'
 import {
   GraphiQLOptions,
@@ -32,9 +33,15 @@ import {
   shouldRenderGraphiQL,
 } from './graphiql'
 import * as crossUndiciFetch from 'cross-undici-fetch'
-import { getGraphQLParameters } from './getGraphQLParameters'
+import {
+  buildGetGraphQLParameters,
+  GETRequestParser,
+  POSTMultipartFormDataRequestParser,
+  POSTRequestParser,
+} from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
+import { getCORSHeadersByRequestAndOptions } from './cors'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -128,6 +135,7 @@ export type YogaServerOptions<
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: FetchAPI
+  multipart?: boolean
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
@@ -202,6 +210,10 @@ export class YogaServer<
     fetch: typeof fetch
     ReadableStream: typeof ReadableStream
   }
+
+  private getGraphQLParameters: (
+    request: Request,
+  ) => PromiseOrValue<GraphQLParams>
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -330,6 +342,8 @@ export class YogaServer<
           ...options.cors,
         }
         this.corsOptionsFactory = () => corsOptions
+      } else if (options.cors === false) {
+        this.corsOptionsFactory = () => false
       }
     }
 
@@ -346,6 +360,13 @@ export class YogaServer<
     this.renderGraphiQL = options?.renderGraphiQL || renderGraphiQL
 
     this.endpoint = options?.endpoint
+
+    const requestParsers = [GETRequestParser]
+    if (options?.multipart !== false) {
+      requestParsers.push(POSTMultipartFormDataRequestParser)
+    }
+    requestParsers.push(POSTRequestParser)
+    this.getGraphQLParameters = buildGetGraphQLParameters(requestParsers)
   }
 
   getCORSResponseHeaders(
@@ -355,78 +376,7 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ): Record<string, string> {
     const corsOptions = this.corsOptionsFactory(request, ...args)
-
-    const headers: Record<string, string> = {}
-
-    const currentOrigin = request.headers.get('origin')
-
-    headers['Access-Control-Allow-Origin'] = '*'
-
-    if (currentOrigin) {
-      const credentialsAsked = request.headers.get('cookies')
-      if (credentialsAsked) {
-        headers['Access-Control-Allow-Origin'] = currentOrigin
-      }
-    }
-
-    if (
-      currentOrigin != null &&
-      corsOptions.origin?.length &&
-      !corsOptions.origin.includes(currentOrigin) &&
-      !corsOptions.origin.includes('*')
-    ) {
-      headers['Access-Control-Allow-Origin'] = 'null'
-    }
-
-    if (headers['Access-Control-Allow-Origin'] !== '*') {
-      headers['Vary'] = 'Origin'
-    }
-
-    if (corsOptions.methods?.length) {
-      headers['Access-Control-Allow-Methods'] = corsOptions.methods.join(', ')
-    } else {
-      const requestMethod = request.headers.get('access-control-request-method')
-      if (requestMethod) {
-        headers['Access-Control-Allow-Methods'] = requestMethod
-      }
-    }
-
-    if (corsOptions.allowedHeaders?.length) {
-      headers['Access-Control-Allow-Headers'] =
-        corsOptions.allowedHeaders.join(', ')
-    } else {
-      const requestHeaders = request.headers.get(
-        'access-control-request-headers',
-      )
-      if (requestHeaders) {
-        headers['Access-Control-Allow-Headers'] = requestHeaders
-        if (headers['Vary']) {
-          headers['Vary'] += ', Access-Control-Request-Headers'
-        }
-        headers['Vary'] = 'Access-Control-Request-Headers'
-      }
-    }
-
-    if (corsOptions.credentials != null) {
-      if (corsOptions.credentials === true) {
-        headers['Access-Control-Allow-Credentials'] = 'true'
-      }
-    } else if (headers['Access-Control-Allow-Origin'] !== '*') {
-      headers['Access-Control-Allow-Credentials'] = 'true'
-    }
-
-    if (corsOptions.exposedHeaders) {
-      headers['Access-Control-Expose-Headers'] =
-        corsOptions.exposedHeaders.join(', ')
-    }
-
-    if (corsOptions.maxAge) {
-      headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
-    }
-
-    headers['Server'] = 'GraphQL Yoga'
-
-    return headers
+    return getCORSHeadersByRequestAndOptions(request, corsOptions)
   }
 
   handleOptions(
@@ -523,8 +473,9 @@ export class YogaServer<
       }
 
       this.logger.debug(`Extracting GraphQL Parameters`)
+
       const { query, variables, operationName, extensions } =
-        await getGraphQLParameters(request)
+        await this.getGraphQLParameters(request)
 
       const initialContext = {
         request,
@@ -557,11 +508,21 @@ export class YogaServer<
       })
       return response
     } catch (error: any) {
-      this.logger.error(error.stack || error.message || error)
-      const response = new this.fetchAPI.Response(error.message, {
-        status: 500,
-        statusText: 'Internal Server Error',
-      })
+      const response = new this.fetchAPI.Response(
+        JSON.stringify({
+          errors: [
+            error instanceof GraphQLError
+              ? error
+              : {
+                  message: error.message,
+                },
+          ],
+        }),
+        {
+          status: 500,
+          statusText: 'Internal Server Error',
+        },
+      )
       return response
     }
   }

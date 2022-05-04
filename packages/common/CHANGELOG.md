@@ -1,5 +1,56 @@
 # @graphql-yoga/common
 
+## 2.5.0
+
+### Minor Changes
+
+- f2c9adc: Do not return any CORS headers if CORS options is false
+
+### Patch Changes
+
+- 8b6d896: Now you can configure multipart request parsing limits for file uploads with `multipart` option in `createServer` of @graphql-yoga/node
+  You can also disable `multipart` processing by passing `false`.
+
+  ```ts
+  createServer({
+    multipart: {
+      maxFileSize: 2000, // Default: Infinity
+    },
+  })
+  ```
+
+  In `@graphql-yoga/common`'s `createServer`, we can only enable or disable multipart which is enabled by default.
+
+  ```ts
+  createServer({
+    multipart: false, // enabled by default
+  })
+  ```
+
+- 6bff871: Refactor CORS and return sent origin if possible
+
+## 2.4.1
+
+### Patch Changes
+
+- 5fd5db4: Send specific origin in CORS instead of wildcard if credentials are allowed explicitly like below;
+
+  ```ts
+  createServer({
+    cors: {
+      origin: ['http://localhost:4000'], // Previously this was ignored even if `credentials` is true
+      credentials: true,
+    },
+  })
+  ```
+
+## 2.4.0
+
+### Minor Changes
+
+- 4aaf814: feat(graphiql): ability to choose WS over SSE
+- 13f96db: Improve log messages
+
 ## 2.3.0
 
 ### Minor Changes
