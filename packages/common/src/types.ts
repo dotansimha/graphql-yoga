@@ -20,10 +20,14 @@ export interface ExecutionPatchResult<
   extensions?: TExtensions
 }
 
-export interface GraphQLParams<TVariables = Record<string, any>> {
+export interface GraphQLParams<
+  TVariables = Record<string, any>,
+  TExtensions = Record<string, unknown>,
+> {
   operationName?: string
   query?: string
   variables?: string | TVariables
+  extensions?: TExtensions
 }
 
 export interface FormatPayloadParams<TContext, TRootValue> {
