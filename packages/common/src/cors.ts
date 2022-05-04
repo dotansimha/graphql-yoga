@@ -4,7 +4,13 @@ export function getCORSHeadersByRequestAndOptions(
   request: Request,
   corsOptions: CORSOptions,
 ): Record<string, string> {
-  const headers: Record<string, string> = {}
+  const headers: Record<string, string> = {
+    Server: 'GraphQL Yoga',
+  }
+
+  if (corsOptions === false) {
+    return headers
+  }
 
   // If defined origins have '*' or undefined by any means, we should allow all origins
   if (
@@ -81,8 +87,6 @@ export function getCORSHeadersByRequestAndOptions(
   if (corsOptions.maxAge) {
     headers['Access-Control-Max-Age'] = corsOptions.maxAge.toString()
   }
-
-  headers['Server'] = 'GraphQL Yoga'
 
   return headers
 }
