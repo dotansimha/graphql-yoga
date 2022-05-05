@@ -309,7 +309,7 @@ const resolvers = {
 
 </Instruction>
 
-Similar to our mutation resolver, we first need to parse the integer value of the `id` variable value before using the `comment.finUnique` function for finding one single record with that specific id.
+Similar to our mutation resolver, we first need to parse the integer value of the `id` variable value before using the `comment.findUnique` function for finding one single record with that specific id.
 
 Awesome, let's fetch our comment using a query operation!
 
@@ -418,7 +418,7 @@ const resolvers = {
 
 </Instruction>
 
-As explained before, the first resolver funtion argument is always the parent argument. In case of the context of a `Link` object type resolver it is the type of the `Link` model as exported from the `@prisma/client` package.
+As explained before, the first resolver function argument is always the parent argument. In case of the context of a `Link` object type resolver it is the type of the `Link` model as exported from the `@prisma/client` package.
 
 Within the resolver logic we fetch all the comments that belong to the parent `Link` element by adding a where filter on the `linkId` for the value `parent.id`.
 
