@@ -32,6 +32,8 @@ export type CORSOptions =
 ### Example configuration using CORSOptions
 
 ```
+import { createServer } from '@graphql-yoga/common'
+
 const yogaApp = createServer({
   logging: logger,
   cors: {
@@ -57,6 +59,9 @@ Access-Control-Allow-Headers: X-Custom-Header
 You can also pass a function to the cors property, that takes your request and contructs the options
 
 ```ts
+import { createServer } from '@graphql-yoga/common'
+import { Request } from 'cross-undici-fetch'
+
 const yogaApp = createServer({
   logging: logger,
   cors: (request: Request) => {
@@ -86,6 +91,8 @@ You can disable CORS on your Yoga server by simply passing `false` as the cors p
 **For example:**
 
 ```ts
+import { createServer } from '@graphql-yoga/common'
+
 const yogaApp = createServer({
   logging: logger,
   cors: false,
