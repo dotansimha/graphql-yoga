@@ -1,10 +1,20 @@
 ---
 id: cors
-title: CORS with Yoga
+title: Configuring CORS with Yoga
 sidebar_label: CORS
 ---
 
-Yoga comes with CORS (Cross origin resource sharing) support out of the box - CORS can be configured when creating the server either by passing a CORSOptions object, or a builder function that returns the CORSOptions object.
+CORS stands for Cross Origin Resource Sharing. In a nutshell, as a security measure, browsers aren't allowed to access resources outside their own domain.
+
+If your api and web sides are deployed to different domains (or subdomains), you'll have to worry about CORS. For example, if your web client is deployed to example.com but your Yoga server is api.example.com. For security reasons your browser will not allow XHR requests (like the kind that the GraphQL client makes) to a domain other than the one currently in the browser's address bar.
+
+To deal with this you have two options:
+
+_1. Avoid CORS by proxying your requests_
+e.g. If you setup a proxy or redirect to forward requests from `example.com/api/*` to `api.example.com`, you avoid CORS issues all together.
+
+_2. Configure Yoga to send back CORS headers_
+Yoga comes with CORS support out of the box - CORS can be configured when creating the server either by passing a CORSOptions object, or a builder function that returns the CORSOptions object.
 
 ```ts
 export type CORSOptions =
