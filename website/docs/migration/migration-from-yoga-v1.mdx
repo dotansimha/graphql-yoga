@@ -37,6 +37,45 @@ const server = createServer({
 server.start()
 ```
 
+### Load type definitions from a file
+
+In Yoga v1 it was possible to provide a file path for the `typeDefs`.
+
+**Yoga v1**
+
+```ts
+import * as path from 'path'
+import { GraphQLServer } from 'graphql-yoga'
+import { resolvers } from './schema'
+
+const server = new GraphQLServer({
+  typeDefs: path.join(__dirname, "type-definitions.graphql"),
+  resolvers
+})
+server.start()
+```
+
+In Yoga v2 you now need to use the `fs` module for Node.js.
+
+**Yoga v2**
+
+```ts
+import * as path from 'path'
+import * as fs from 'fs'
+import { createServer } from '@graphql-yoga/node'
+import { resolvers } from './schema'
+
+const server = createServer({
+  schema: {
+    typeDefs: fs.readFileSync(path.join(__dirname, "type-definitions.graphql"), "utf-8"),
+    resolvers
+  },
+})
+server.start()
+```
+
+For more complex loading of type-definitions please refer to [`graphql-tools/load-files` ](https://www.graphql-tools.com/docs/schema-loading#load-typedefsdocumentnode-and-resolvers-from-files).
+
 ## Context
 
 In GraphQL Yoga v2 you can use the `context` property in the same way as GraphQL Yoga v1.
