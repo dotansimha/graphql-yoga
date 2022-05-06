@@ -23,7 +23,7 @@ jobs:
         run: yarn build
 
       - name: Typecheck
-        run: yarn workspace @graphql-yoga/website run build
+        run: yarn workspace website run build
       - name: Diff
         run: git diff --exit-code -- website/route-lockfile.txt
 
