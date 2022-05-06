@@ -1,8 +1,11 @@
 import { XMLParser } from 'fast-xml-parser'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 import * as fs from 'fs'
-import type { Redirect } from 'next/dist/lib/load-custom-routes'
 import * as path from 'path'
-import config from '../next.config.js'
+import config from '../next.config.mjs'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const sitemapPath = path.join(__dirname, '..', 'public', 'sitemap-0.xml')
 const lockfilePath = path.join(__dirname, '..', 'route-lockfile.txt')
@@ -12,13 +15,13 @@ async function main() {
 
   const d = parser.parse(fs.readFileSync(sitemapPath, 'utf-8'))
 
-  const routes: Array<string> = d.urlset.url.map((url: any) =>
+  const routes = d.urlset.url.map((url) =>
     url.loc.replace(`https://graphql-yoga.com`, ``),
   )
 
-  const redirectsPointingToNonExistingStuff: Array<Redirect> = []
+  const redirectsPointingToNonExistingStuff = []
 
-  const redirects: Redirect[] = config.redirects()
+  const redirects = config.redirects()
 
   for (const redirect of redirects) {
     if (routes.includes(redirect.destination) === false) {
