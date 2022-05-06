@@ -2,7 +2,7 @@ import { XMLParser } from 'fast-xml-parser'
 import * as fs from 'fs'
 import type { Redirect } from 'next/dist/lib/load-custom-routes'
 import * as path from 'path'
-import config from '../next.config.js'
+import config from '../next.config.mjs'
 
 const sitemapPath = path.join(__dirname, '..', 'public', 'sitemap-0.xml')
 const lockfilePath = path.join(__dirname, '..', 'route-lockfile.txt')
