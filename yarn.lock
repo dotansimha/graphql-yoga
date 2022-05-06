@@ -2768,10 +2768,29 @@
   dependencies:
     "@envelop/types" "2.2.0"
 
+"@envelop/disable-introspection@^3.0.0":
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/@envelop/disable-introspection/-/disable-introspection-3.3.3.tgz#90b12972efd7f5df65320579e0b885481fae7230"
+  integrity sha512-IMNnciasjCCRAyfvYIi9eZx7fHHeuKouw5yozrgg/xCOb4ibiMczKkq5NmvExNo4GxloHzme5ITPK5Xj50jmiw==
+
 "@envelop/disable-introspection@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@envelop/disable-introspection/-/disable-introspection-3.3.1.tgz#616747a42b28172ff223a7c667a21b70a4bac66f"
   integrity sha512-THR8UnRQQB5nCLmITXvebwXwSHvFjS+ThA3RRVXpFX9EupMbTFN5a4NHty7+BYD798c3VrBZ/InbMlEWqw1c9g==
+
+"@envelop/extended-validation@^1.6.1":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@envelop/extended-validation/-/extended-validation-1.6.2.tgz#e49df67249526ffca806c83725648d9cb1c61e6b"
+  integrity sha512-Ximt65+Jr6pxqizuGW2FrOTtYs3eiFhzFwWgYzPg2xwbqOIKgAPzrNJ+DOEpsIFUBSoONEdfFUuRqoDTfPRmJQ==
+  dependencies:
+    "@graphql-tools/utils" "^8.6.1"
+
+"@envelop/generic-auth@4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@envelop/generic-auth/-/generic-auth-4.2.1.tgz#436c97d5cf4cf50687ebf16ee1b9d72a22987edd"
+  integrity sha512-A/IqpjIFxOaLymY80z6lHqIXJXGUhI6sETt5UrU0sdOXIrXIm2ZVDECZhjiT7kYeZ6dQ4syvIIj1goIXLYljCQ==
+  dependencies:
+    "@envelop/extended-validation" "^1.6.1"
 
 "@envelop/graphql-jit@4.2.3":
   version "4.2.3"
@@ -3258,6 +3277,35 @@
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
+
+"@graphql-yoga/common@2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/common/-/common-2.5.0.tgz#036e28a30d6395678907f80a1e358ecf19494c7e"
+  integrity sha512-fSaTt5JhUvyPcYISEPqRdxb7g7PshN+1reKH5yighRNcX6ouMhNAXWb2MG4kG2pVAg4YCbUAjy1k2TMmN9AYjw==
+  dependencies:
+    "@envelop/core" "^2.0.0"
+    "@envelop/disable-introspection" "^3.0.0"
+    "@envelop/parser-cache" "^4.0.0"
+    "@envelop/validation-cache" "^4.0.0"
+    "@graphql-tools/schema" "^8.3.1"
+    "@graphql-tools/utils" "^8.6.0"
+    "@graphql-typed-document-node/core" "^3.1.1"
+    "@graphql-yoga/subscription" "2.0.0"
+    cross-undici-fetch "^0.4.2"
+    dset "^3.1.1"
+    tslib "^2.3.1"
+
+"@graphql-yoga/node@2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@graphql-yoga/node/-/node-2.5.0.tgz#29726338738ff113da8f5f307f74249a3ce17002"
+  integrity sha512-mhKAGe5rUc4NcMPNcSepQUiVw37w036C4wteLlySntsrQKu3sTkz2+6/KgtR64B/yV3XYoSzQto8OQySkqiDsw==
+  dependencies:
+    "@envelop/core" "^2.0.0"
+    "@graphql-tools/utils" "^8.6.0"
+    "@graphql-yoga/common" "2.5.0"
+    "@graphql-yoga/subscription" "2.0.0"
+    cross-undici-fetch "^0.4.2"
+    tslib "^2.3.1"
 
 "@grpc/grpc-js@~1.3.8":
   version "1.3.8"
