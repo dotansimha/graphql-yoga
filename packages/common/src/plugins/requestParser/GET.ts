@@ -19,13 +19,3 @@ export function parseGETRequest(request: Request): GraphQLParams {
     extensions: extensions ? JSON.parse(extensions) : undefined,
   }
 }
-
-export function useGETRequestParser(): Plugin {
-  return {
-    onRequestParse: async ({ request, setRequestParser }) => {
-      if (isGETRequest(request)) {
-        setRequestParser(parseGETRequest)
-      }
-    },
-  }
-}

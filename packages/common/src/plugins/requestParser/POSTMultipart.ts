@@ -33,10 +33,3 @@ export async function parsePOSTMultipartRequest(
     extensions: operations.extensions,
   }
 }
-
-export function usePOSTMultipartRequestParser(): Plugin {
-  return useRequestParser({
-    match: isPOSTMultipartRequest,
-    parse: parsePOSTMultipartRequest,
-  })
-}

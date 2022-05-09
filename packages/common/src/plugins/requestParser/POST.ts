@@ -17,10 +17,3 @@ export async function parsePOSTRequest(
     extensions: requestBody.extensions,
   }
 }
-
-export function usePOSTRequestParser(): Plugin {
-  return useRequestParser({
-    match: isPOSTRequest,
-    parse: parsePOSTRequest,
-  })
-}
