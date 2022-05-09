@@ -1,4 +1,4 @@
-name: Release
+name: Algolia Publish
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - feat/docs-search--test-master
 
 jobs:
-  release:
+  algolia-push-records:
     name: Release
     runs-on: ubuntu-latest
     steps:
@@ -41,7 +41,7 @@ jobs:
         if: always()
         id: diff_result
         run: |
-          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json)
+          OUTPUT=$(git diff website/algolia-lockfile.json)
           OUTPUT="${OUTPUT//'%'/'%25'}"
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
