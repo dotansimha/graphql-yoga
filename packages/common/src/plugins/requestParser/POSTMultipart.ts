@@ -22,8 +22,10 @@ export async function parsePOSTMultipartRequest(
   const map = JSON.parse(mapStr)
   for (const fileIndex in map) {
     const file = requestBody.get(fileIndex)
-    const [path] = map[fileIndex]
-    dset(operations, path, file)
+    const keys = map[fileIndex]
+    for (const key of keys) {
+      dset(operations, key, file)
+    }
   }
 
   return {

@@ -368,6 +368,7 @@ describe('Incremental Delivery', () => {
   const yoga = createServer({
     schema,
     logging: false,
+    maskedErrors: false,
     multipart: {
       fileSize: 12,
     },
