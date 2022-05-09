@@ -37,6 +37,9 @@ jobs:
           ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
           SITE_URL: https://www.graphql-yoga.com/
 
+      - name: Format
+        run: yarn format
+
       - name: Compare
         run: git diff website/algolia-lockfile.json
 
@@ -54,5 +57,6 @@ jobs:
         if: always() && contains(steps.diff_result.outputs.result, 'diff')
         uses: EndBug/add-and-commit@v9
         with:
+          commit: website/algolia-lockfile.json
           message: Update algolia-lockfile.json
           default_author: github_actions
