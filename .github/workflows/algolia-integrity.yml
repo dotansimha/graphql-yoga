@@ -28,7 +28,7 @@ jobs:
       - name: Algolia generate
         run: yarn workspace website run algolia-sync
         env:
-          ALGOLIA_DRY_RUN: 1
+          ALGOLIA_DRY_RUN: true
           SITE_URL: https://www.graphql-yoga.com/
 
       - name: Diff
