@@ -32,16 +32,16 @@ jobs:
           SITE_URL: https://www.graphql-yoga.com/
 
       - name: Diff
-        run: git diff --exit-code -- website/algolia-lockfile
+        run: git diff --exit-code -- website/algolia-lockfile.json
 
       - name: Compare
-        run: git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile | grep "^-[^-]" && exit 1 || exit 0
+        run: git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json | grep "^-[^-]" && exit 1 || exit 0
 
       - name: Diff to file
         if: always()
         id: diff_result
         run: |
-          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile)
+          OUTPUT=$(git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json)
           OUTPUT="${OUTPUT//'%'/'%25'}"
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
