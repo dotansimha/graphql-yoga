@@ -19,7 +19,7 @@ index 927c0ff..5a6eeb8 100644
  //# sourceMappingURL=GraphiQL.d.ts.map
 \ No newline at end of file
 diff --git a/node_modules/graphiql/src/components/GraphiQL.tsx b/node_modules/graphiql/src/components/GraphiQL.tsx
-index d817c51..1f6cbd0 100644
+index a53a347..20fd84c 100644
 --- a/node_modules/graphiql/src/components/GraphiQL.tsx
 +++ b/node_modules/graphiql/src/components/GraphiQL.tsx
 @@ -302,13 +302,13 @@ export type GraphiQLProps = {
@@ -82,7 +82,7 @@ index d817c51..1f6cbd0 100644
            ? this._storage.get('headerEditorActive') !== 'true'
            : true,
        headerEditorActive: this._storage.get('headerEditorActive') === 'true',
-@@ -763,7 +763,7 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
+@@ -766,7 +766,7 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
          'tabState',
          JSON.stringify(this.state.tabs, (key, value) =>
            key === 'response' ||
@@ -91,7 +91,7 @@ index d817c51..1f6cbd0 100644
              ? undefined
              : value,
          ),
-@@ -806,32 +806,32 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
+@@ -814,32 +814,32 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
      const toolbar = find(children, child =>
        isChildComponentType(child, GraphiQL.Toolbar),
      ) || (
@@ -150,7 +150,7 @@ index d817c51..1f6cbd0 100644
  
      const footer = find(children, child =>
        isChildComponentType(child, GraphiQL.Footer),
-@@ -982,9 +982,8 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
+@@ -990,9 +990,8 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
                    }}
                    onMouseDown={this.handleSecondaryEditorResizeStart}>
                    <div
@@ -162,7 +162,7 @@ index d817c51..1f6cbd0 100644
                      onClick={this.handleOpenVariableEditorTab}
                      onMouseDown={this.handleTabClickPropogation}>
                      {'Query Variables'}
-@@ -994,9 +993,8 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
+@@ -1002,9 +1001,8 @@ export class GraphiQL extends React.Component<GraphiQLProps, GraphiQLState> {
                        style={{
                          marginLeft: '20px',
                        }}

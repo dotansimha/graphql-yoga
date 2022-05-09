@@ -1,6 +1,5 @@
 import { GraphQLError, GraphQLSchema, isSchema, print } from 'graphql'
 import {
-  Plugin,
   GetEnvelopedFn,
   envelop,
   useMaskedErrors,
@@ -14,11 +13,7 @@ import {
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import type {
-  ExecutionResult,
-  IResolvers,
-  TypeSource,
-} from '@graphql-tools/utils'
+import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
   CORSOptions,
   GraphQLServerInject,
@@ -28,19 +23,22 @@ import {
   GraphQLParams,
 } from './types'
 import {
+  OnRequestParseDoneHook,
+  OnRequestParseHook,
+  Plugin,
+  RequestParser,
+} from './plugins/types'
+import {
   GraphiQLOptions,
   renderGraphiQL,
   shouldRenderGraphiQL,
 } from './graphiql'
 import * as crossUndiciFetch from 'cross-undici-fetch'
-import {
-  buildGetGraphQLParameters,
-  GETRequestParser,
-  POSTMultipartFormDataRequestParser,
-  POSTRequestParser,
-} from './getGraphQLParameters'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
+import { useGETRequestParser } from './plugins/requestParser/GET'
+import { usePOSTRequestParser } from './plugins/requestParser/POST'
+import { usePOSTMultipartRequestParser } from './plugins/requestParser/POSTMultipart'
 import { getCORSHeadersByRequestAndOptions } from './cors'
 
 interface OptionsWithPlugins<TContext> {
@@ -210,10 +208,10 @@ export class YogaServer<
     fetch: typeof fetch
     ReadableStream: typeof ReadableStream
   }
-
-  private getGraphQLParameters: (
-    request: Request,
-  ) => PromiseOrValue<GraphQLParams>
+  protected plugins: Array<
+    Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
+  >
+  private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
 
   renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -251,88 +249,103 @@ export class YogaServer<
 
     const maskedErrors = options?.maskedErrors ?? true
 
-    this.getEnveloped = envelop({
-      plugins: [
-        // Use the schema provided by the user
-        enableIf(schema != null, useSchema(schema!)),
-        // Performance things
-        enableIf(options?.parserCache !== false, () =>
-          useParserCache(
-            typeof options?.parserCache === 'object'
-              ? options?.parserCache
+    this.plugins = [
+      // Use the schema provided by the user
+      enableIf(schema != null, useSchema(schema!)),
+      // Performance things
+      enableIf(options?.parserCache !== false, () =>
+        useParserCache(
+          typeof options?.parserCache === 'object'
+            ? options?.parserCache
+            : undefined,
+        ),
+      ),
+      enableIf(options?.validationCache !== false, () =>
+        useValidationCache({
+          cache:
+            typeof options?.validationCache === 'object'
+              ? options?.validationCache
               : undefined,
-          ),
-        ),
-        enableIf(options?.validationCache !== false, () =>
-          useValidationCache({
-            cache:
-              typeof options?.validationCache === 'object'
-                ? options?.validationCache
-                : undefined,
-          }),
-        ),
-        // Log events - useful for debugging purposes
-        enableIf(
-          logger !== false,
-          useLogger({
-            skipIntrospection: true,
-            logFn: (eventName, events) => {
-              switch (eventName) {
-                case 'execute-start':
-                case 'subscribe-start':
-                  this.logger.debug(titleBold('Execution start'))
-                  const {
+        }),
+      ),
+      // Log events - useful for debugging purposes
+      enableIf(
+        logger !== false,
+        useLogger({
+          skipIntrospection: true,
+          logFn: (eventName, events) => {
+            switch (eventName) {
+              case 'execute-start':
+              case 'subscribe-start':
+                this.logger.debug(titleBold('Execution start'))
+                const {
+                  query,
+                  operationName,
+                  variables,
+                  extensions,
+                }: YogaInitialContext = events.args.contextValue
+                if (query) {
+                  this.logger.debug(
+                    '\n' + titleBold('Received GraphQL operation:') + '\n',
                     query,
-                    operationName,
-                    variables,
-                    extensions,
-                  }: YogaInitialContext = events.args.contextValue
-                  if (query) {
-                    this.logger.debug(
-                      '\n' + titleBold('Received GraphQL operation:') + '\n',
-                      query,
-                    )
-                  }
-                  if (operationName) {
-                    this.logger.debug('\t operationName:', operationName)
-                  }
-                  if (variables) {
-                    this.logger.debug('\t variables:', variables)
-                  }
-                  if (extensions) {
-                    this.logger.debug('\t extensions:', extensions)
-                  }
-                  break
-                case 'execute-end':
-                case 'subscribe-end':
-                  this.logger.debug(titleBold('Execution end'))
-                  this.logger.debug('\t result:', events.result)
-                  break
-              }
-            },
-          }),
-        ),
-        enableIf(
-          options?.context != null,
-          useExtendContext(async (initialContext) => {
-            if (options?.context) {
-              if (typeof options.context === 'function') {
-                return (options.context as Function)(initialContext)
-              } else {
-                return options.context
-              }
+                  )
+                }
+                if (operationName) {
+                  this.logger.debug('\t operationName:', operationName)
+                }
+                if (variables) {
+                  this.logger.debug('\t variables:', variables)
+                }
+                if (extensions) {
+                  this.logger.debug('\t extensions:', extensions)
+                }
+                break
+              case 'execute-end':
+              case 'subscribe-end':
+                this.logger.debug(titleBold('Execution end'))
+                this.logger.debug('\t result:', events.result)
+                break
             }
-          }),
+          },
+        }),
+      ),
+      enableIf(
+        options?.context != null,
+        useExtendContext(async (initialContext) => {
+          if (options?.context) {
+            if (typeof options.context === 'function') {
+              return (options.context as Function)(initialContext)
+            } else {
+              return options.context
+            }
+          }
+        }),
+      ),
+      useGETRequestParser(),
+      usePOSTRequestParser(),
+      enableIf(options?.multipart !== false, () =>
+        usePOSTMultipartRequestParser(),
+      ),
+      usePOSTMultipartRequestParser(),
+      ...(options?.plugins ?? []),
+      enableIf(
+        !!maskedErrors,
+        useMaskedErrors(
+          typeof maskedErrors === 'object' ? maskedErrors : undefined,
         ),
-        ...(options?.plugins ?? []),
-        enableIf(
-          !!maskedErrors,
-          useMaskedErrors(
-            typeof maskedErrors === 'object' ? maskedErrors : undefined,
-          ),
-        ),
-      ],
+      ),
+    ]
+
+    this.getEnveloped = envelop({
+      plugins: this.plugins,
     }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
+
+    this.onRequestParseHooks = []
+    for (const plugin of this.plugins) {
+      if (plugin && plugin.onRequestParse != null) {
+        this.onRequestParseHooks.push(plugin.onRequestParse.bind(plugin))
+      }
+    }
 
     if (options?.cors != null) {
       if (typeof options.cors === 'function') {
@@ -360,13 +373,6 @@ export class YogaServer<
     this.renderGraphiQL = options?.renderGraphiQL || renderGraphiQL
 
     this.endpoint = options?.endpoint
-
-    const requestParsers = [GETRequestParser]
-    if (options?.multipart !== false) {
-      requestParsers.push(POSTMultipartFormDataRequestParser)
-    }
-    requestParsers.push(POSTRequestParser)
-    this.getGraphQLParameters = buildGetGraphQLParameters(requestParsers)
   }
 
   getCORSResponseHeaders(
@@ -472,19 +478,41 @@ export class YogaServer<
         }
       }
 
-      this.logger.debug(`Extracting GraphQL Parameters`)
+      let requestParser: RequestParser = () => ({})
+      let onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
-      const { query, variables, operationName, extensions } =
-        await this.getGraphQLParameters(request)
+      for (const onRequestParse of this.onRequestParseHooks) {
+        const onRequestParseResult = await onRequestParse({
+          serverContext,
+          request,
+          requestParser,
+          setRequestParser(parser: RequestParser) {
+            requestParser = parser
+          },
+        })
+        if (onRequestParseResult?.onRequestParseDone != null) {
+          onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone)
+        }
+      }
+
+      this.logger.debug(`Extracting GraphQL Parameters`)
+      let params = await requestParser(request)
+
+      for (const onRequestParseDone of onRequestParseDoneList) {
+        await onRequestParseDone({
+          params,
+          setParams(newParams: GraphQLParams) {
+            params = newParams
+          },
+        })
+      }
 
       const initialContext = {
         request,
-        query,
-        variables,
-        operationName,
-        extensions,
+        ...params,
         ...serverContext,
       } as YogaInitialContext & TServerContext
+
       const { execute, validate, subscribe, parse, contextFactory, schema } =
         this.getEnveloped(initialContext)
 
@@ -493,9 +521,9 @@ export class YogaServer<
       const corsHeaders = this.getCORSResponseHeaders(request, initialContext)
       const response = await processRequest({
         request,
-        query,
-        variables,
-        operationName,
+        query: initialContext.query,
+        variables: initialContext.variables,
+        operationName: initialContext.operationName,
         execute,
         validate,
         subscribe,

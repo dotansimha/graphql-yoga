@@ -1,16 +1,19 @@
-require('bob-tsm')
+import { createRequire } from 'node:module'
+import nextBundleAnalyzer from '@next/bundle-analyzer'
+import { withGuildDocs } from '@guild-docs/server'
+import { register } from 'esbuild-register/dist/node.js'
+import { i18n } from './next-i18next.config.js'
 
-const { i18n } = require('./next-i18next.config.js')
+register({ extensions: ['.ts', '.tsx'] })
 
-const { withGuildDocs } = require('@guild-docs/server')
+const require = createRequire(import.meta.url)
 
 const { getRoutes, getTutorialRoutes } = require('./routes.ts')
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
+const withBundleAnalyzer = nextBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })
-
-module.exports = withBundleAnalyzer(
+export default withBundleAnalyzer(
   withGuildDocs({
     env: {
       // This is a pre-serialized version of the tutorial routes that prevents calculating the routes on production
