@@ -1,0 +1,154 @@
+---
+id: persisted-queries
+title: Persisted Queries
+sidebar_label: Persisted Queries
+---
+
+Persisted Queries allow you to send requests to GraphQL Yoga without having the query itself. There are many benefits of doing that such as;
+
+- Smaller request bodies if the query is "large"
+- Keep the query hidden
+- Restrict the queries in the server side
+
+GraphQL Yoga's Persisted Queries plugin follows [the unofficial APQ Spec of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine)
+
+## Installation
+
+<PackageInstall packages={['@graphql-yoga/plugin-persisted-queries']} />
+
+## Modes
+
+There are different modes of Persisted Queries;
+
+- Automatic (by default)
+- Manual
+- Persisted only
+
+**Automatic**
+At first, the client sends the SHA256 hash of the query string in the request body without the actual query. If the server doesn't have that query cached, it returns an error with `PersistedQueryNotFound`.
+Then, the client send the same hash with the actual query, so the server can verify then save it to the store.
+
+```ts
+import { createYoga } from 'graphql-yoga'
+import { usePersistedQueries } from '@graphql-yoga/plugin-persisted-queries'
+
+const yoga = createYoga({
+  schema,
+  plugins: [
+    usePersistedQueries({
+      mode: PersistedQueriesMode.AUTOMATIC,
+    }),
+  ],
+})
+```
+
+**Manual**
+When the server receives the SHA256 hash of the query from the client but it doesn't have the query cached, it returns an error with `PersistedQueryNotFound`.
+But unlike `Automatic` mode, it doesn't allow you to save a new query so the cache store cannot be updated by the client.
+In this case, you need to create your store with the queries included.
+
+Both `Automatic` and `Manual` modes still allow you to make regular requests to the server.
+
+```ts
+import { createYoga } from 'graphql-yoga'
+import {
+  usePersistedQueries,
+  PersistedQueriesMode,
+  createInMemoryPersistedQueriesStore,
+} from '@graphql-yoga/plugin-persisted-queries'
+
+// We can create a function that returns the hash of the query string.
+async function sha256(text: string) {
+  // encode as UTF-8
+  const msgBuffer = new TextEncoder().encode(text)
+
+  // hash the text
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+
+  // convert ArrayBuffer to Array
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+
+  // convert bytes to hex string
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+  return hashHex
+}
+
+const queries = [
+  /* GraphQL */ `
+    query Greetings {
+      greetings
+    }
+  `,
+  /* GraphQL */ `
+        query UploadFile($file: Upload!) {
+            uploadFile(file: $file): Boolean
+        }
+    `,
+]
+
+const store = createInMemoryPersistedQueriesStore()
+
+for (const query of queries) {
+  const hash = await sha256(query)
+  store.set(hash, query)
+}
+
+const yoga = createYoga({
+  schema,
+  plugins: [
+    usePersistedQueries({
+      mode: PersistedQueriesMode.MANUAL,
+      store,
+    }),
+  ],
+})
+```
+
+**Persisted only**
+Unlike `Manual` and `Automatic` modes, this mode doesn't allow you to make regular requests with the actual query string. So you have to add a store that has all the allowed queries then use their hashes on the client side.
+See the example of `Manual` mode, but with `PersistedOnly` mode.
+
+```ts
+const yoga = createYoga({
+  schema,
+  plugins: [
+    usePersistedQueries({
+      mode: PersistedQueriesMode.PERSISTED_ONLY,
+      store,
+    }),
+  ],
+})
+```
+
+## Custom store
+
+By default, Persisted Queries plugin uses an in-memory store implementation based on `tiny-lru`. And it is exported as `createInMemoryPersistedQueriesStore`.
+But you can use a different store implementation by passing a custom store to the plugin.
+
+```ts
+interface PersistedQueriesStore {
+  get(key: string): PromiseOrValue<string | null | undefined>
+  set?(key: string, query: string): PromiseOrValue<any>
+}
+```
+
+## Integration with GraphQL clients
+
+The request body has an additional `extensions` field that contains the hash of the query string. So the client should hash the query either on runtime or build time.
+
+```json
+{
+  "extensions": {
+    "persistedQueries": {
+      "version": 1,
+      // This is the hash of `{__typename}
+      "sha256Hash": "ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"
+    }
+  }
+}
+```
+
+Major clients like `Apollo Client` and `Urql` support Persisted Queries. So you can take a look their documentation to set it up on the client side.
+
+- [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
+- [Urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
