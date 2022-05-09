@@ -37,6 +37,9 @@ jobs:
           ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
           SITE_URL: https://www.graphql-yoga.com/
 
+      - name: Compare
+        run: git diff website/algolia-lockfile.json
+
       - name: Diff to file
         if: always()
         id: diff_result
