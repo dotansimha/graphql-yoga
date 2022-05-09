@@ -24,6 +24,9 @@ import React from 'react'
 
 import { useGoogleAnalytics } from '../google-analytics'
 
+import '@algolia/autocomplete-theme-classic'
+import '@theguild/components/dist/static/css/SearchBarV2.css'
+
 ExtendComponents({
   Instruction: (props: React.ComponentProps<typeof Instruction>) => (
     <Box mt={4}>
@@ -67,8 +70,7 @@ const theme = extendTheme({
   styles,
 })
 
-const accentColor =
-  'linear-gradient(180deg, #59BDEF 41.15%, #ED2E7E 85.42%, #ED2E7E 88.02%);'
+const accentColor = '#1cc8ee'
 
 const serializedMdx = process.env.SERIALIZED_MDX_ROUTES
 const mdxRoutes = { data: serializedMdx && JSON.parse(serializedMdx) }
@@ -90,7 +92,12 @@ function AppContent(appProps: AppProps) {
 
   return (
     <>
-      <Header accentColor={accentColor} activeLink="/open-source" themeSwitch />
+      <Header
+        accentColor={accentColor}
+        activeLink="/open-source"
+        themeSwitch
+        searchBarProps={{ version: 'v2' }}
+      />
       <Script {...googleAnalytics.loadScriptProps} />
       <Script {...googleAnalytics.configScriptProps} />
       <Subheader

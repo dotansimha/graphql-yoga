@@ -11,7 +11,7 @@ import { PromiseOrValue } from '@envelop/core'
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },
   TExtensions = { [key: string]: any },
-  > {
+> {
   errors?: ReadonlyArray<GraphQLError>
   data?: TData | null
   path?: ReadonlyArray<string | number>
@@ -23,7 +23,7 @@ export interface ExecutionPatchResult<
 export interface GraphQLParams<
   TVariables = Record<string, any>,
   TExtensions = Record<string, any>,
-  > {
+> {
   operationName?: string
   query?: string
   variables?: TVariables
@@ -103,31 +103,31 @@ export interface RequestProcessContext<TContext, TRootValue>
 
 export type CORSOptions =
   | {
-    origin?: string[] | string
-    methods?: string[]
-    allowedHeaders?: string[]
-    exposedHeaders?: string[]
-    credentials?: boolean
-    maxAge?: number
-  }
+      origin?: string[] | string
+      methods?: string[]
+      allowedHeaders?: string[]
+      exposedHeaders?: string[]
+      credentials?: boolean
+      maxAge?: number
+    }
   | false
 
 export type GraphQLServerInject<
   TData = any,
   TVariables = Record<string, any>,
   TServerContext extends Record<string, any> = Record<string, any>,
-  > = {
-    /** GraphQL Operation to execute */
-    document: string | TypedDocumentNode<TData, TVariables>
-    /** Variables for GraphQL Operation */
-    variables?: TVariables
-    /** Name for GraphQL Operation */
-    operationName?: string
-    /** Set any headers for the GraphQL request */
-    headers?: HeadersInit
-  } & ({} extends TServerContext
-    ? { serverContext?: TServerContext }
-    : { serverContext: TServerContext })
+> = {
+  /** GraphQL Operation to execute */
+  document: string | TypedDocumentNode<TData, TVariables>
+  /** Variables for GraphQL Operation */
+  variables?: TVariables
+  /** Name for GraphQL Operation */
+  operationName?: string
+  /** Set any headers for the GraphQL request */
+  headers?: HeadersInit
+} & ({} extends TServerContext
+  ? { serverContext?: TServerContext }
+  : { serverContext: TServerContext })
 
 export { EnvelopError as GraphQLYogaError } from '@envelop/core'
 
