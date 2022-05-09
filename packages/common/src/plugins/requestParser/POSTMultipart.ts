@@ -39,5 +39,10 @@ export async function parsePOSTMultipartRequest(
     }
   }
 
-  return operations
+  return {
+    operationName: operations.operationName,
+    query: operations.query,
+    variables: operations.variables,
+    extensions: operations.extensions,
+  }
 }
