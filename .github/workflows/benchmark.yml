@@ -22,6 +22,13 @@ jobs:
       - name: Build Packages
         run: yarn build
 
+      - name: Start Yoga Server
+        working-directory: ./benchmark/hello-world
+        run: yarn start
+        env:
+          NODE_NO_WARNINGS: true
+          NODE_ENV: production
+
       - name: Setup K6
         run: |
           sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
@@ -29,12 +36,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install k6=0.37.0
 
-      - name: Start Yoga Server
-        working-directory: ./benchmark/hello-world
-        run: yarn start & sleep 5s
-        env:
-          NODE_NO_WARNINGS: true
-          NODE_ENV: production
       - name: Start and Report Yoga Benchmark
         working-directory: ./benchmark/hello-world
         run: k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} run k6.js
