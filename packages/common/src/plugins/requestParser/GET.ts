@@ -1,7 +1,7 @@
 import { GraphQLParams } from '../../types'
 
 export function isGETRequest(request: Request) {
-  return request.method === 'GET'
+  return request.method === 'GET' && request.url.includes('?')
 }
 
 export function parseGETRequest(request: Request): GraphQLParams {
