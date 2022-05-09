@@ -54,7 +54,6 @@ jobs:
         if: always() && contains(steps.diff_result.outputs.result, 'diff')
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          commit: website/algolia-lockfile.json
           message: |
             ```diff
             ${{ steps.diff_result.outputs.result }}
