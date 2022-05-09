@@ -1,8 +1,9 @@
-import { dset } from 'dset'
+import objectPath from 'object-path'
 import { GraphQLParams } from '../../types'
-import { Plugin } from '../types'
-import { useRequestParser } from '../useRequestParser'
 import { isPOSTRequest } from './POST'
+
+const GRAPHQL_MULTIPART_REQUEST_SPEC_URL =
+  'https://github.com/jaydenseric/graphql-multipart-request-spec'
 
 export function isPOSTMultipartRequest(request: Request): boolean {
   return (
@@ -15,23 +16,28 @@ export async function parsePOSTMultipartRequest(
   request: Request,
 ): Promise<GraphQLParams> {
   const requestBody = await request.formData()
-  const operationsStr = requestBody.get('operations')?.toString() || '{}'
+  const operationsStr = requestBody.get('operations')?.toString()
+  if (!operationsStr) {
+    throw new Error(
+      `Missing "operations" field in the multipart request; see ${GRAPHQL_MULTIPART_REQUEST_SPEC_URL}`,
+    )
+  }
   const operations = JSON.parse(operationsStr)
-
-  const mapStr = requestBody.get('map')?.toString() || '{}'
+  const operationsMap = objectPath(operations)
+  const mapStr = requestBody.get('map')?.toString()
+  if (!mapStr) {
+    throw new Error(
+      `Missing "map" field in the multipart request; see ${GRAPHQL_MULTIPART_REQUEST_SPEC_URL}`,
+    )
+  }
   const map = JSON.parse(mapStr)
   for (const fileIndex in map) {
     const file = requestBody.get(fileIndex)
     const keys = map[fileIndex]
     for (const key of keys) {
-      dset(operations, key, file)
+      operationsMap.set(key, file)
     }
   }
 
-  return {
-    operationName: operations.operationName,
-    query: operations.query,
-    variables: operations.variables,
-    extensions: operations.extensions,
-  }
+  return operations
 }
