@@ -36,10 +36,14 @@ import {
 import * as crossUndiciFetch from 'cross-undici-fetch'
 import { processRequest } from './processRequest'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
-import { useGETRequestParser } from './plugins/requestParser/GET'
-import { usePOSTRequestParser } from './plugins/requestParser/POST'
-import { usePOSTMultipartRequestParser } from './plugins/requestParser/POSTMultipart'
+import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET'
+import { isPOSTRequest, parsePOSTRequest } from './plugins/requestParser/POST'
+import {
+  isPOSTMultipartRequest,
+  parsePOSTMultipartRequest,
+} from './plugins/requestParser/POSTMultipart'
 import { getCORSHeadersByRequestAndOptions } from './cors'
+import { useRequestParser } from './plugins/useRequestParser'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -321,12 +325,20 @@ export class YogaServer<
           }
         }),
       ),
-      useGETRequestParser(),
-      usePOSTRequestParser(),
+      useRequestParser({
+        match: isGETRequest,
+        parse: parseGETRequest,
+      }),
+      useRequestParser({
+        match: isPOSTRequest,
+        parse: parsePOSTRequest,
+      }),
       enableIf(options?.multipart !== false, () =>
-        usePOSTMultipartRequestParser(),
+        useRequestParser({
+          match: isPOSTMultipartRequest,
+          parse: parsePOSTMultipartRequest,
+        }),
       ),
-      usePOSTMultipartRequestParser(),
       ...(options?.plugins ?? []),
       enableIf(
         !!maskedErrors,

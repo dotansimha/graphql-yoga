@@ -12,7 +12,6 @@ import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { fetch, File, FormData } from 'cross-undici-fetch'
-import { Readable } from 'stream'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -368,6 +367,7 @@ describe('Incremental Delivery', () => {
   const yoga = createServer({
     schema,
     logging: false,
+    maskedErrors: false,
     multipart: {
       fileSize: 12,
     },

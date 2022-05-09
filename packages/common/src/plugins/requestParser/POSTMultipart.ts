@@ -1,7 +1,5 @@
 import { dset } from 'dset'
 import { GraphQLParams } from '../../types'
-import { Plugin } from '../types'
-import { useRequestParser } from '../useRequestParser'
 import { isPOSTRequest } from './POST'
 
 export function isPOSTMultipartRequest(request: Request): boolean {
@@ -17,13 +15,14 @@ export async function parsePOSTMultipartRequest(
   const requestBody = await request.formData()
   const operationsStr = requestBody.get('operations')?.toString() || '{}'
   const operations = JSON.parse(operationsStr)
-
   const mapStr = requestBody.get('map')?.toString() || '{}'
   const map = JSON.parse(mapStr)
   for (const fileIndex in map) {
     const file = requestBody.get(fileIndex)
-    const [path] = map[fileIndex]
-    dset(operations, path, file)
+    const keys = map[fileIndex]
+    for (const key of keys) {
+      dset(operations, key, file)
+    }
   }
 
   return {
@@ -32,11 +31,4 @@ export async function parsePOSTMultipartRequest(
     variables: operations.variables,
     extensions: operations.extensions,
   }
-}
-
-export function usePOSTMultipartRequestParser(): Plugin {
-  return useRequestParser({
-    match: isPOSTMultipartRequest,
-    parse: parsePOSTMultipartRequest,
-  })
 }
