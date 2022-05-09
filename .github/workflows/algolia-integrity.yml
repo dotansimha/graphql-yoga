@@ -31,6 +31,9 @@ jobs:
           ALGOLIA_DRY_RUN: true
           SITE_URL: https://www.graphql-yoga.com/
 
+      - name: Format
+        run: yarn format
+
       - name: Diff
         run: git diff --exit-code -- website/algolia-lockfile.json
 
@@ -51,6 +54,7 @@ jobs:
         if: always() && contains(steps.diff_result.outputs.result, 'diff')
         uses: marocchino/sticky-pull-request-comment@v2
         with:
+          commit: website/algolia-lockfile.json
           message: |
             ```diff
             ${{ steps.diff_result.outputs.result }}
