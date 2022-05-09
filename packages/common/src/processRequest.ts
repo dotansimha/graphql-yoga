@@ -123,7 +123,10 @@ export async function processRequest<TContext, TRootValue = {}>({
   const result = await executeFn(executionArgs)
 
   let resultProcessor: ResultProcessor = (_, fetchAPI) =>
-    new fetchAPI.Response(null)
+    new fetchAPI.Response(null, {
+      status: 406,
+      statusText: 'Not Acceptable',
+    })
   for (const onResultProcessHook of onResultProcessHooks) {
     await onResultProcessHook({
       request,
