@@ -24,7 +24,7 @@ jobs:
 
       - name: Start Yoga Server
         working-directory: ./benchmark/hello-world
-        run: yarn start
+        run: yarn start & sleep 5s
         env:
           NODE_NO_WARNINGS: true
           NODE_ENV: production
