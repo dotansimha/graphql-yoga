@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "algolia-sync": "ts-node scripts/algolia-ci.ts",
+    "algolia-sync": "node scripts/algolia-ci.mjs",
     "postbuild": "npx next-sitemap && node scripts/sitemap-ci.mjs",
     "dev": "concurrently -r \"next-remote-watch ./docs ./routes.ts ./src/pages/_app.tsx ./src/pages/_document.tsx\" \"wait-on -s 1 http://localhost:3000 && open-cli http://localhost:3000\"",
     "next": "next",
