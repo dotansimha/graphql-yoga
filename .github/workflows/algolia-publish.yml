@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Use Node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
           cache: 'yarn'
@@ -26,10 +26,10 @@ jobs:
         run: yarn build
 
       - name: Typecheck
-        run: yarn workspace website run build
+        run: yarn workspace website build
 
       - name: Algolia push
-        run: yarn workspace website run algolia-sync
+        run: yarn workspace website algolia-sync
         env:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
