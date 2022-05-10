@@ -37,7 +37,8 @@ export interface YogaLogger {
 const isDebug = () =>
   typeof process === 'object'
     ? process.env.DEBUG
-    : typeof DEBUG !== 'undefined'
+    : // @ts-expect-error
+    typeof DEBUG !== 'undefined'
     ? true
     : false
 
