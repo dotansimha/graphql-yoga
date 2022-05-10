@@ -15,7 +15,7 @@ interface ErrorResponseParams {
   status?: number
   headers?: Record<string, string>
   errors: readonly Error[]
-  fetchAPI: Required<FetchAPI>
+  fetchAPI: FetchAPI
 }
 
 export function getErrorResponse({

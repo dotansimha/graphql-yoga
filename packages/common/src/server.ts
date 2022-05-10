@@ -139,7 +139,7 @@ export type YogaServerOptions<
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
-  fetchAPI?: FetchAPI
+  fetchAPI?: Partial<FetchAPI>
   multipart?: boolean
   id?: string
 } & Partial<
@@ -198,12 +198,7 @@ export class YogaServer<
   >
   public logger: YogaLogger
   protected endpoint?: string
-  protected fetchAPI: {
-    Request: typeof Request
-    Response: typeof Response
-    fetch: typeof fetch
-    ReadableStream: typeof ReadableStream
-  }
+  protected fetchAPI: FetchAPI
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
@@ -225,6 +220,8 @@ export class YogaServer<
       fetch: options?.fetchAPI?.fetch ?? crossUndiciFetch.fetch,
       ReadableStream:
         options?.fetchAPI?.ReadableStream ?? crossUndiciFetch.ReadableStream,
+      TransformStream:
+        options?.fetchAPI?.TransformStream ?? crossUndiciFetch.TransformStream,
     }
     const schema = options?.schema
       ? isSchema(options.schema)

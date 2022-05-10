@@ -27,7 +27,7 @@ export type OnRequestHook<TServerContext> = (
 export interface OnRequestEventPayload<TServerContext> {
   request: Request
   serverContext: TServerContext | undefined
-  fetchAPI: Required<FetchAPI>
+  fetchAPI: FetchAPI
   endResponse(response: Response): void
 }
 
@@ -67,7 +67,7 @@ export type ResultProcessorInput = PromiseOrValue<
 
 export type ResultProcessor = (
   result: ResultProcessorInput,
-  fetchAPI: Required<FetchAPI>,
+  fetchAPI: FetchAPI,
 ) => PromiseOrValue<Response>
 
 export interface OnResultProcessEventPayload<TContext> {

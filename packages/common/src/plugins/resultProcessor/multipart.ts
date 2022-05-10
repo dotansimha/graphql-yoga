@@ -16,7 +16,7 @@ export function isMultipartResult(
 
 export function processMultipartResult(
   executionPatchResultIterable: AsyncIterable<ExecutionPatchResult>,
-  fetchAPI: Required<FetchAPI>,
+  fetchAPI: FetchAPI,
 ): Response {
   const headersInit: HeadersInit = {
     Connection: 'keep-alive',

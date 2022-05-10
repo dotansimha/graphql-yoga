@@ -16,7 +16,7 @@ export function isPushResult(
 
 export function processPushResult(
   result: AsyncIterable<ExecutionResult>,
-  fetchAPI: Required<FetchAPI>,
+  fetchAPI: FetchAPI,
 ): Response {
   const headersInit: HeadersInit = {
     'Content-Type': 'text/event-stream',

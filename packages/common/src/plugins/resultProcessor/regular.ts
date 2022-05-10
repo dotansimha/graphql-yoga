@@ -13,7 +13,7 @@ export function isRegularResult(
 
 export function processRegularResult(
   executionResult: ExecutionResult,
-  fetchAPI: Required<FetchAPI>,
+  fetchAPI: FetchAPI,
 ): Response {
   const responseBody = JSON.stringify(executionResult)
   const decodedString = encodeString(responseBody)

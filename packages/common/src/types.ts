@@ -12,7 +12,7 @@ import { OnResultProcess } from './plugins/types'
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },
   TExtensions = { [key: string]: any },
-  > {
+> {
   errors?: ReadonlyArray<GraphQLError>
   data?: TData | null
   path?: ReadonlyArray<string | number>
@@ -24,7 +24,7 @@ export interface ExecutionPatchResult<
 export interface GraphQLParams<
   TVariables = Record<string, any>,
   TExtensions = Record<string, any>,
-  > {
+> {
   operationName?: string
   query?: string
   variables?: TVariables
@@ -66,7 +66,7 @@ export interface RequestProcessContext<TContext, TRootValue> {
   request: Request
   enveloped: ReturnType<GetEnvelopedFn<TContext>>
   params: GraphQLParams
-  fetchAPI: Required<FetchAPI>
+  fetchAPI: FetchAPI
   /**
    * Response Hooks
    */
@@ -77,18 +77,18 @@ export type GraphQLServerInject<
   TData = any,
   TVariables = Record<string, any>,
   TServerContext extends Record<string, any> = Record<string, any>,
-  > = {
-    /** GraphQL Operation to execute */
-    document: string | TypedDocumentNode<TData, TVariables>
-    /** Variables for GraphQL Operation */
-    variables?: TVariables
-    /** Name for GraphQL Operation */
-    operationName?: string
-    /** Set any headers for the GraphQL request */
-    headers?: HeadersInit
-  } & ({} extends TServerContext
-    ? { serverContext?: TServerContext }
-    : { serverContext: TServerContext })
+> = {
+  /** GraphQL Operation to execute */
+  document: string | TypedDocumentNode<TData, TVariables>
+  /** Variables for GraphQL Operation */
+  variables?: TVariables
+  /** Name for GraphQL Operation */
+  operationName?: string
+  /** Set any headers for the GraphQL request */
+  headers?: HeadersInit
+} & ({} extends TServerContext
+  ? { serverContext?: TServerContext }
+  : { serverContext: TServerContext })
 
 declare global {
   interface ReadableStream<R = any> {
@@ -107,23 +107,29 @@ export type FetchAPI = {
    * Default: `Request` from `cross-undici-fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Request
    */
-  Request?: typeof Request
+  Request: typeof Request
   /**
    * WHATWG compliant Response object constructor
    * Default: `Response` from `cross-undici-fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Response
    */
-  Response?: typeof Response
+  Response: typeof Response
   /**
    * WHATWG compliant fetch function
    * Default: `fetch` from `cross-undici-fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
    */
-  fetch?: typeof fetch
+  fetch: typeof fetch
   /**
    * WHATWG compliant ReadableStream object constructor
    * Default: `ReadableStream` from `cross-undici-fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
-  ReadableStream?: typeof ReadableStream
+  ReadableStream: typeof ReadableStream
+  /**
+   * WHATWG compliant TransformStream object constructor
+   * Default: `TransformStream` from `cross-undici-fetch`
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/TransformStream
+   */
+  TransformStream: typeof TransformStream
 }
