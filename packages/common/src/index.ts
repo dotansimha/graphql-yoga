@@ -11,3 +11,4 @@ export {
   renderGraphiQL,
 } from './plugins/useGraphiQL'
 export { GraphQLYogaError } from './GraphQLYogaError'
+export { Plugin } from './plugin/types'

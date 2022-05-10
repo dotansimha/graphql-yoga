@@ -12,11 +12,27 @@ export type Plugin<
   TServerContext = {},
   TUserContext = {},
 > = EnvelopPlugin<PluginContext> & {
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
   onRequest?: OnRequestHook<TServerContext>
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
   onRequestParse?: OnRequestParseHook<TServerContext>
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
   onResultProcess?: OnResultProcess<
     TServerContext & TUserContext & YogaInitialContext
   >
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
   onResponse?: OnResponseHook<TServerContext>
 }
 
