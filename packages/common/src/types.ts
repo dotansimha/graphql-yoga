@@ -126,10 +126,4 @@ export type FetchAPI = {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
   ReadableStream: typeof ReadableStream
-  /**
-   * WHATWG compliant TransformStream object constructor
-   * Default: `TransformStream` from `cross-undici-fetch`
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/TransformStream
-   */
-  TransformStream: typeof TransformStream
 }

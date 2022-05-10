@@ -220,8 +220,6 @@ export class YogaServer<
       fetch: options?.fetchAPI?.fetch ?? crossUndiciFetch.fetch,
       ReadableStream:
         options?.fetchAPI?.ReadableStream ?? crossUndiciFetch.ReadableStream,
-      TransformStream:
-        options?.fetchAPI?.TransformStream ?? crossUndiciFetch.TransformStream,
     }
     const schema = options?.schema
       ? isSchema(options.schema)
