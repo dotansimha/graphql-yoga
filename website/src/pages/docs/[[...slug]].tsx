@@ -22,13 +22,13 @@ export default MDXPage(
         <DocsContent>{content}</DocsContent>
         <DocsTOC>
           <TOC />
+          <EditOnGitHubButton
+            baseDir="website"
+            branch="master"
+            sourceFilePath={sourceFilePath}
+            repo="dotansimha/graphql-yoga"
+          />
         </DocsTOC>
-        <EditOnGitHubButton
-          baseDir="website"
-          branch="master"
-          sourceFilePath={sourceFilePath}
-          repo="dotansimha/graphql-yoga"
-        />
       </>
     )
   },
