@@ -1,7 +1,12 @@
 import Head from 'next/head'
 import * as React from 'react'
 
-import { DocsContent, DocsTOC, MDXPage } from '@guild-docs/client'
+import {
+  DocsContent,
+  DocsTOC,
+  MDXPage,
+  EditOnGitHubButton,
+} from '@guild-docs/client'
 import { MDXPaths, MDXProps } from '@guild-docs/server'
 
 import { getTutorialRoutes } from '../../../routes'
@@ -10,15 +15,20 @@ import { giscus } from '../../giscus-config'
 import type { GetStaticPaths, GetStaticProps } from 'next'
 
 export default MDXPage(
-  function PostPage({ content, TOC, MetaHead, BottomNavigation }) {
+  function PostPage({ content, TOC, MetaHead, sourceFilePath }) {
     return (
       <>
         <Head>{MetaHead}</Head>
         <DocsContent>{content}</DocsContent>
         <DocsTOC>
           <TOC />
-          <BottomNavigation />
         </DocsTOC>
+        <EditOnGitHubButton
+          baseDir="website"
+          branch="master"
+          sourceFilePath={sourceFilePath}
+          repo="dotansimha/graphql-yoga"
+        />
       </>
     )
   },
