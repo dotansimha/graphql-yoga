@@ -3380,10 +3380,10 @@
   dependencies:
     "@types/node" ">=12.12.47"
 
-"@guild-docs/algolia@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@guild-docs/algolia/-/algolia-0.0.3.tgz#914c5ca0bd3de576bb31cd97375d82082ea530de"
-  integrity sha512-3YwOYcqeNOubNM54xUjdPdy4735NOty/b8BfNe2nLB0U+Cep9hxz/vR9t5cJXIYk47NrhlsnzZlVlXyQ121TGw==
+"@guild-docs/algolia@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@guild-docs/algolia/-/algolia-0.0.4.tgz#944f9652475cf5513fa32daaa2996dce5fc7f234"
+  integrity sha512-+fuR3iLvo/M5yZUCnz71K3PnQvUJMoicZgC54x7uXh/Pe64DdpAdi2G7kV+ojLuSZ2KdX/AxMZ4i3f9m5eMoEw==
   dependencies:
     algoliasearch "^4.13.0"
     github-slugger "^1.4.0"
@@ -5593,10 +5593,10 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@theguild/components@1.11.6":
-  version "1.11.6"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.11.6.tgz#6eb16fa52e66836d8810b1c70e1b9311620152be"
-  integrity sha512-37PXhBsVlO0He1Z8iyIjT2X7eMCLSlDHtBCxKKft2sHbayTGhftccLYGJgcQ6yJiUg7Hjc6/K0WHPHSKdkQFCA==
+"@theguild/components@1.11.7":
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-1.11.7.tgz#27c264e0d5db18fa3c1b96ac8c9dc82efaea95bd"
+  integrity sha512-B2qX0unMQ0RJmSUEp4Zi+aXfxGKlV0Vhow5lXNdnzhPUs+kfac6MDIBzfAkTQ2qa6WoN0YcvnJniLqw43DUHWA==
   dependencies:
     "@algolia/autocomplete-js" "^1.6.2"
     "@algolia/autocomplete-plugin-algolia-insights" "^1.6.2"
@@ -8231,12 +8231,7 @@ camelcase@^6.2.0, camelcase@^6.3.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
-caniuse-lite@^1.0.30001202, caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.30001228, caniuse-lite@^1.0.30001283, caniuse-lite@^1.0.30001332:
-  version "1.0.30001338"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001338.tgz#b5dd7a7941a51a16480bdf6ff82bded1628eec0d"
-  integrity sha512-1gLHWyfVoRDsHieO+CaeYe7jSo/MT7D7lhaXUiwwbuR5BwQxORs0f1tAwUSQr3YbxRXJvxHM/PA5FfPQRnsPeQ==
-
-caniuse-lite@^1.0.30001335:
+caniuse-lite@^1.0.30001202, caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.30001228, caniuse-lite@^1.0.30001283, caniuse-lite@^1.0.30001332, caniuse-lite@^1.0.30001335:
   version "1.0.30001339"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001339.tgz#f9aece4ea8156071613b27791547ba0b33f176cf"
   integrity sha512-Es8PiVqCe+uXdms0Gu5xP5PF2bxLR7OBp3wUzUnuO7OHzhOfCyg3hdiGWVPVxhiuniOzng+hTc1u3fEQ0TlkSQ==
@@ -12478,22 +12473,10 @@ glob@7.1.6:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@7.1.7, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6:
+glob@7.1.7, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6, glob@^7.1.7:
   version "7.1.7"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.7.tgz#3b193e9233f01d42d0b3f78294bbeeb418f94a90"
   integrity sha512-OvD9ENzPLbegENnYP5UUfJIirTg4+XwMWGaQfQTY0JenxNvvIKP3U3/tAQSPIu/lHxXYSZmpXlUHeqAIdKzBLQ==
-  dependencies:
-    fs.realpath "^1.0.0"
-    inflight "^1.0.4"
-    inherits "2"
-    minimatch "^3.0.4"
-    once "^1.3.0"
-    path-is-absolute "^1.0.0"
-
-glob@^7.1.7:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.0.tgz#d15535af7732e02e948f4c41628bd910293f6023"
-  integrity sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==
   dependencies:
     fs.realpath "^1.0.0"
     inflight "^1.0.4"
