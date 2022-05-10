@@ -43,6 +43,20 @@ const styles: typeof chakraTheme['styles'] = {
   }),
 }
 
+const font = [
+  '-apple-system',
+  'BlinkMacSystemFont',
+  'Segoe UI',
+  'Roboto',
+  'Oxygen',
+  'Ubuntu',
+  'Cantarell',
+  'Fira Sans',
+  'Droid Sans',
+  'Helvetica Neue',
+  'sans-serif',
+]
+
 const theme = extendTheme({
   colors: {
     gray: {
@@ -60,8 +74,8 @@ const theme = extendTheme({
     },
   },
   fonts: {
-    heading: 'TGCFont, sans-serif',
-    body: 'TGCFont, sans-serif',
+    heading: font,
+    body: font,
   },
   config: {
     initialColorMode: 'light',
@@ -190,6 +204,9 @@ export default function App(appProps: AppProps) {
       theme={theme}
       accentColor={accentColor}
       defaultSeo={defaultSeo}
+      globalStyleProps={{
+        includeFonts: false,
+      }}
     >
       <AppContentWrapper {...appProps} />
     </CombinedThemeProvider>
