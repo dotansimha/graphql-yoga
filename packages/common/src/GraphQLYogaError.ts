@@ -14,8 +14,8 @@ const GraphQLYogaErrorCtor = EnvelopError as {
   ): GraphQLYogaError
 }
 
-interface GraphQLYogaError {
-  extensions?: GraphQLYogaErrorExtensions
+interface GraphQLYogaError extends EnvelopError {
+  extensions: GraphQLYogaErrorExtensions
 }
 
 export { GraphQLYogaErrorCtor as GraphQLYogaError }
