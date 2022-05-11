@@ -34,7 +34,13 @@ export interface YogaLogger {
   error: (...args: any[]) => void
 }
 
-const isDebug = () => (typeof process === 'object' ? process.env.DEBUG : false)
+const isDebug = () =>
+  typeof process === 'object'
+    ? process.env.DEBUG
+    : // @ts-expect-error
+    typeof DEBUG !== 'undefined'
+    ? true
+    : false
 
 function getPrefix() {
   return titleBold(`🧘 Yoga -`)

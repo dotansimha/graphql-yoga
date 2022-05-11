@@ -47,6 +47,10 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
           name: 'GRAPHQL_ROUTE',
           text: `/${stackName}`,
         },
+        {
+          name: 'DEBUG',
+          text: 'true',
+        },
       ],
       name: stackName,
     })

@@ -15,7 +15,6 @@ import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
-  CORSOptions,
   GraphQLServerInject,
   YogaInitialContext,
   FetchEvent,
@@ -23,27 +22,46 @@ import {
   GraphQLParams,
 } from './types'
 import {
+  OnRequestHook,
   OnRequestParseDoneHook,
   OnRequestParseHook,
+  OnResponseHook,
+  OnResultProcess,
   Plugin,
   RequestParser,
+  ResultProcessor,
 } from './plugins/types'
+import * as crossUndiciFetch from 'cross-undici-fetch'
+import {
+  getErrorResponse,
+  processRequest as processGraphQLParams,
+} from './processRequest'
+import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
+import { CORSPluginOptions, useCORS } from './plugins/useCORS'
+import { useHealthCheck } from './plugins/useHealthCheck'
 import {
   GraphiQLOptions,
-  renderGraphiQL,
-  shouldRenderGraphiQL,
-} from './graphiql'
-import * as crossUndiciFetch from 'cross-undici-fetch'
-import { processRequest } from './processRequest'
-import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
+  GraphiQLOptionsOrFactory,
+  useGraphiQL,
+} from './plugins/useGraphiQL'
+import { useRequestParser } from './plugins/useRequestParser'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET'
 import { isPOSTRequest, parsePOSTRequest } from './plugins/requestParser/POST'
 import {
   isPOSTMultipartRequest,
   parsePOSTMultipartRequest,
 } from './plugins/requestParser/POSTMultipart'
-import { getCORSHeadersByRequestAndOptions } from './cors'
-import { useRequestParser } from './plugins/useRequestParser'
+import { useResultProcessor } from './plugins/useResultProcessor'
+import {
+  isRegularResult,
+  processRegularResult,
+} from './plugins/resultProcessor/regular'
+import { isPushResult, processPushResult } from './plugins/resultProcessor/push'
+import {
+  isMultipartResult,
+  processMultipartResult,
+} from './plugins/resultProcessor/multipart'
+import { GraphQLYogaError } from './GraphQLYogaError'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -85,15 +103,8 @@ export type YogaServerOptions<
       ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
-  cors?:
-    | ((
-        request: Request,
-        ...args: {} extends TServerContext
-          ? [serverContext?: TServerContext | undefined]
-          : [serverContext: TServerContext]
-      ) => CORSOptions)
-    | CORSOptions
-    | boolean
+
+  cors?: CORSPluginOptions<TServerContext>
 
   /**
    * GraphQL endpoint
@@ -105,15 +116,7 @@ export type YogaServerOptions<
    *
    * Default: `true`
    */
-  graphiql?:
-    | GraphiQLOptions
-    | ((
-        request: Request,
-        ...args: {} extends TServerContext
-          ? [serverContext?: TServerContext | undefined]
-          : [serverContext: TServerContext]
-      ) => GraphiQLOptions | boolean)
-    | boolean
+  graphiql?: GraphiQLOptionsOrFactory<TServerContext>
 
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
@@ -136,8 +139,9 @@ export type YogaServerOptions<
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
-  fetchAPI?: FetchAPI
+  fetchAPI?: Partial<FetchAPI>
   multipart?: boolean
+  id?: string
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
@@ -193,35 +197,23 @@ export class YogaServer<
     TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
-  private readonly corsOptionsFactory: (
-    request: Request,
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
-  ) => CORSOptions = () => ({})
-  protected readonly graphiqlOptionsFactory: (
-    request: Request,
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
-  ) => GraphiQLOptions | boolean
   protected endpoint?: string
-  protected fetchAPI: {
-    Request: typeof Request
-    Response: typeof Response
-    fetch: typeof fetch
-    ReadableStream: typeof ReadableStream
-  }
+  protected fetchAPI: FetchAPI
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
-
-  renderGraphiQL: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
+  private onRequestHooks: OnRequestHook<TServerContext>[]
+  private onResultProcessHooks: OnResultProcess<
+    TUserContext & TServerContext & YogaInitialContext
+  >[]
+  private onResponseHooks: OnResponseHook<TServerContext>[]
+  private id: string
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
   ) {
+    this.id = options?.id ?? 'yoga'
     this.fetchAPI = {
       Request: options?.fetchAPI?.Request ?? crossUndiciFetch.Request,
       Response: options?.fetchAPI?.Response ?? crossUndiciFetch.Response,
@@ -252,6 +244,9 @@ export class YogaServer<
         : logger
 
     const maskedErrors = options?.maskedErrors ?? true
+
+    const server = this
+    this.endpoint = options?.endpoint
 
     this.plugins = [
       // Use the schema provided by the user
@@ -325,6 +320,23 @@ export class YogaServer<
           }
         }),
       ),
+      // Middlewares before processing the incoming HTTP request
+      useHealthCheck({
+        id: this.id,
+        logger: this.logger,
+      }),
+      enableIf(options?.graphiql !== false, () =>
+        useGraphiQL({
+          get endpoint() {
+            return server.endpoint
+          },
+          options: options?.graphiql,
+          render: options?.renderGraphiQL,
+          logger: this.logger,
+        }),
+      ),
+      enableIf(options?.cors !== false, () => useCORS(options?.cors)),
+      // Middlewares before the GraphQL execution
       useRequestParser({
         match: isGETRequest,
         parse: parseGETRequest,
@@ -339,6 +351,19 @@ export class YogaServer<
           parse: parsePOSTMultipartRequest,
         }),
       ),
+      // Middlewares after the GraphQL execution
+      useResultProcessor({
+        match: isRegularResult,
+        processResult: processRegularResult as ResultProcessor,
+      }),
+      useResultProcessor({
+        match: isPushResult,
+        processResult: processPushResult as ResultProcessor,
+      }),
+      useResultProcessor({
+        match: isMultipartResult,
+        processResult: processMultipartResult as ResultProcessor,
+      }),
       ...(options?.plugins ?? []),
       enableIf(
         !!maskedErrors,
@@ -352,145 +377,57 @@ export class YogaServer<
       plugins: this.plugins,
     }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
+    this.onRequestHooks = []
     this.onRequestParseHooks = []
+    this.onResultProcessHooks = []
+    this.onResponseHooks = []
     for (const plugin of this.plugins) {
-      if (plugin && plugin.onRequestParse != null) {
-        this.onRequestParseHooks.push(plugin.onRequestParse.bind(plugin))
-      }
-    }
-
-    if (options?.cors != null) {
-      if (typeof options.cors === 'function') {
-        this.corsOptionsFactory = options.cors
-      } else if (typeof options.cors === 'object') {
-        const corsOptions = {
-          ...options.cors,
+      if (plugin) {
+        if (plugin.onRequestParse) {
+          this.onRequestParseHooks.push(plugin.onRequestParse)
         }
-        this.corsOptionsFactory = () => corsOptions
-      } else if (options.cors === false) {
-        this.corsOptionsFactory = () => false
+        if (plugin.onRequest) {
+          this.onRequestHooks.push(plugin.onRequest)
+        }
+        if (plugin.onResultProcess) {
+          this.onResultProcessHooks.push(plugin.onResultProcess)
+        }
+        if (plugin.onResponse) {
+          this.onResponseHooks.push(plugin.onResponse)
+        }
       }
     }
-
-    if (typeof options?.graphiql === 'function') {
-      this.graphiqlOptionsFactory = options.graphiql
-    } else if (typeof options?.graphiql === 'object') {
-      this.graphiqlOptionsFactory = () => options.graphiql as GraphiQLOptions
-    } else if (options?.graphiql === false) {
-      this.graphiqlOptionsFactory = () => false
-    } else {
-      this.graphiqlOptionsFactory = () => ({})
-    }
-
-    this.renderGraphiQL = options?.renderGraphiQL || renderGraphiQL
-
-    this.endpoint = options?.endpoint
   }
 
-  getCORSResponseHeaders(
-    request: Request,
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
-  ): Record<string, string> {
-    const corsOptions = this.corsOptionsFactory(request, ...args)
-    return getCORSHeadersByRequestAndOptions(request, corsOptions)
-  }
-
-  handleOptions(
+  async getResponse(
     request: Request,
     ...args: {} extends TServerContext
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
   ) {
-    const headers = this.getCORSResponseHeaders(request, ...args)
-
-    const optionsResponse = new this.fetchAPI.Response(null, {
-      status: 204,
-      headers,
-    })
-
-    return optionsResponse
-  }
-
-  private id = Date.now().toString()
-
-  handleRequest = async (
-    request: Request,
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
-  ) => {
     const serverContext = args[0]
     try {
-      if (request.method === 'OPTIONS') {
-        return this.handleOptions(request, ...args)
-      }
-      const requestPath = request.url.split('?')[0]
-      if (requestPath.endsWith('/health')) {
-        this.logger.debug(`Responding Health Check`)
-        return new this.fetchAPI.Response(`{ "message": "alive" }`, {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            'x-yoga-id': this.id,
+      for (const onRequestHook of this.onRequestHooks) {
+        let response: Response | undefined
+        await onRequestHook({
+          request,
+          serverContext,
+          fetchAPI: this.fetchAPI,
+          endResponse(newResponse) {
+            response = newResponse
           },
         })
-      }
-      if (requestPath.endsWith('/readiness')) {
-        this.logger.debug(`Responding Readiness Check`)
-        const readinessResponse = await this.fetchAPI.fetch(
-          request.url.replace('/readiness', '/health'),
-        )
-        const { message } = await readinessResponse.json()
-        if (
-          readinessResponse.status === 200 &&
-          readinessResponse.headers.get('x-yoga-id') === this.id &&
-          message === 'alive'
-        ) {
-          return new this.fetchAPI.Response(`{ "message": "ready" }`, {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-        }
-        throw new Error(
-          `Readiness check failed with status ${readinessResponse.status}`,
-        )
-      }
-
-      if (this.endpoint != null && !requestPath.endsWith(this.endpoint)) {
-        this.logger.debug(`Responding 404 Not Found`)
-        return new this.fetchAPI.Response(
-          `Unable to ${request.method} ${requestPath}`,
-          {
-            status: 404,
-            statusText: `Not Found`,
-          },
-        )
-      }
-
-      if (shouldRenderGraphiQL(request)) {
-        this.logger.debug(`Rendering GraphiQL`)
-        let graphiqlOptions = this.graphiqlOptionsFactory(request, ...args)
-
-        if (graphiqlOptions) {
-          const graphiQLBody = await this.renderGraphiQL({
-            endpoint: this.endpoint,
-            ...(graphiqlOptions === true ? {} : graphiqlOptions),
-          })
-
-          return new this.fetchAPI.Response(graphiQLBody, {
-            headers: {
-              'Content-Type': 'text/html',
-            },
-            status: 200,
-          })
+        if (response) {
+          return response
         }
       }
 
-      let requestParser: RequestParser = () => ({})
+      let requestParser: RequestParser = () => {
+        throw new GraphQLYogaError('Request is not valid', {
+          status: 400,
+          statusText: 'Bad Request',
+        })
+      }
       let onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
       for (const onRequestParse of this.onRequestParseHooks) {
@@ -507,7 +444,7 @@ export class YogaServer<
         }
       }
 
-      this.logger.debug(`Extracting GraphQL Parameters`)
+      this.logger.debug(`Parsing request to extract GraphQL parameters`)
       let params = await requestParser(request)
 
       for (const onRequestParseDone of onRequestParseDoneList) {
@@ -525,46 +462,53 @@ export class YogaServer<
         ...serverContext,
       } as YogaInitialContext & TServerContext
 
-      const { execute, validate, subscribe, parse, contextFactory, schema } =
-        this.getEnveloped(initialContext)
+      const enveloped = this.getEnveloped(initialContext)
 
       this.logger.debug(`Processing GraphQL Parameters`)
 
-      const corsHeaders = this.getCORSResponseHeaders(request, initialContext)
-      const response = await processRequest({
+      const response = await processGraphQLParams({
         request,
-        query: initialContext.query,
-        variables: initialContext.variables,
-        operationName: initialContext.operationName,
-        execute,
-        validate,
-        subscribe,
-        parse,
-        contextFactory,
-        schema,
-        extraHeaders: corsHeaders,
-        Response: this.fetchAPI.Response,
-        ReadableStream: this.fetchAPI.ReadableStream,
+        params,
+        enveloped,
+        fetchAPI: this.fetchAPI,
+        onResultProcessHooks: this.onResultProcessHooks,
       })
       return response
     } catch (error: any) {
-      const response = new this.fetchAPI.Response(
-        JSON.stringify({
-          errors: [
-            error instanceof GraphQLError
-              ? error
-              : {
-                  message: error.message,
-                },
-          ],
-        }),
-        {
-          status: 500,
-          statusText: 'Internal Server Error',
-        },
-      )
-      return response
+      if (
+        error?.extensions?.status != null ||
+        error?.extensions?.headers != null
+      ) {
+        return getErrorResponse({
+          status: error.extensions.status || 500,
+          headers: error.extensions.headers,
+          errors: error.extensions.errors ?? [error],
+          fetchAPI: this.fetchAPI,
+        })
+      }
+      const errors = error.errors != null ? error.errors : [error]
+      return getErrorResponse({
+        errors,
+        fetchAPI: this.fetchAPI,
+      })
     }
+  }
+
+  handleRequest = async (
+    request: Request,
+    ...args: {} extends TServerContext
+      ? [serverContext?: TServerContext | undefined]
+      : [serverContext: TServerContext]
+  ) => {
+    const response = await this.getResponse(request, ...args)
+    for (const onResponseHook of this.onResponseHooks) {
+      await onResponseHook({
+        request,
+        response,
+        serverContext: args[0],
+      })
+    }
+    return response
   }
 
   /**
