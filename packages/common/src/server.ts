@@ -486,7 +486,7 @@ export class YogaServer<
           fetchAPI: this.fetchAPI,
         })
       }
-      const errors = 'errors' in error ? error.errors : [error]
+      const errors = error.errors != null ? error.errors : [error]
       return getErrorResponse({
         errors,
         fetchAPI: this.fetchAPI,
