@@ -7,10 +7,15 @@ export type GraphQLYogaErrorExtensions = Record<string, any> & {
   errors?: readonly GraphQLError[]
 }
 
-export class GraphQLYogaError extends EnvelopError {
-  public extensions: GraphQLYogaErrorExtensions
-  constructor(message: string, extensions?: GraphQLYogaErrorExtensions) {
-    super(message, extensions)
-    this.extensions = extensions || {}
-  }
+const GraphQLYogaErrorCtor = EnvelopError as {
+  new (
+    message: string,
+    extensions?: GraphQLYogaErrorExtensions,
+  ): GraphQLYogaError
 }
+
+interface GraphQLYogaError {
+  extensions?: GraphQLYogaErrorExtensions
+}
+
+export { GraphQLYogaErrorCtor as GraphQLYogaError }
