@@ -1,5 +1,16 @@
 # @graphql-yoga/common
 
+## 2.6.0
+
+### Minor Changes
+
+- a7834d6: New Yoga-specific hooks for plugins: onRequestParse & onRequestParseDone
+- b8f0680: New Plugin hooks -> onRequest, onResultProcess and onResponse
+
+### Patch Changes
+
+- 0deb5bd: Remove unused dependency
+
 ## 2.5.0
 
 ### Minor Changes

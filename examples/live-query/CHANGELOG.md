@@ -1,5 +1,11 @@
 # example-live-query
 
+## 0.6.0
+
+### Patch Changes
+
+- @graphql-yoga/node@2.6.0
+
 ## 0.5.0
 
 ### Patch Changes
