@@ -314,9 +314,8 @@ export class YogaServer<
           if (options?.context) {
             if (typeof options.context === 'function') {
               return (options.context as Function)(initialContext)
-            } else {
-              return options.context
             }
+            return options.context
           }
         }),
       ),
@@ -606,9 +605,8 @@ export function createServer<
   const fnHandler = (input: any) => {
     if (input.request) {
       return server.handleRequest(input.request, input as any)
-    } else {
-      return server.handleRequest(input, undefined as any)
     }
+    return server.handleRequest(input, undefined as any)
   }
   return new Proxy(fnHandler as any, {
     get: (_, prop) => {
@@ -617,7 +615,8 @@ export function createServer<
           return server[prop].bind(server)
         }
         return server[prop]
-      } else if (fnHandler[prop]) {
+      }
+      if (fnHandler[prop]) {
         if (fnHandler[prop].bind) {
           return fnHandler[prop].bind(fnHandler)
         }

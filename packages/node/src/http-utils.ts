@@ -141,16 +141,15 @@ export function sendNodeResponse(
   if (body == null) {
     serverResponse.end()
     return Promise.resolve()
-  } else {
-    if (body[Symbol.toStringTag] === 'Uint8Array') {
-      serverResponse.end(body)
-      return Promise.resolve()
-    }
-    const nodeStream = isReadable(body) ? body : Readable.from(body)
-    const promise = new Promise<void>((resolve) =>
-      nodeStream.once('end', resolve),
-    )
-    nodeStream.pipe(serverResponse)
-    return promise
   }
+  if (body[Symbol.toStringTag] === 'Uint8Array') {
+    serverResponse.end(body)
+    return Promise.resolve()
+  }
+  const nodeStream = isReadable(body) ? body : Readable.from(body)
+  const promise = new Promise<void>((resolve) =>
+    nodeStream.once('end', resolve),
+  )
+  nodeStream.pipe(serverResponse)
+  return promise
 }

@@ -196,7 +196,8 @@ export function createServer<
           return server[prop].bind(server)
         }
         return server[prop]
-      } else if (server.requestListener[prop]) {
+      }
+      if (server.requestListener[prop]) {
         if (server.requestListener[prop].bind) {
           return server.requestListener[prop].bind(server.requestListener)
         }
