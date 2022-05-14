@@ -31,7 +31,7 @@ export function buildApp(logging = true) {
         },
         Subscription: {
           countdown: {
-            subscribe: async function* (_, { from, interval }) {
+            async *subscribe(_, { from, interval }) {
               for (let i = from; i >= 0; i--) {
                 await new Promise((resolve) =>
                   setTimeout(resolve, interval ?? 1000),

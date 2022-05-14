@@ -34,7 +34,7 @@ const schema = makeSchema({
 })
 
 const server = createServer({
-  schema: schema,
+  schema,
 })
 
 // Start the server and explore http://localhost:4000/graphql

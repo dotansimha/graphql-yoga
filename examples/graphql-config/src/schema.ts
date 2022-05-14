@@ -20,7 +20,7 @@ const resolvers: Resolvers = {
   },
   Subscription: {
     count: {
-      subscribe: async function* (_, { to }) {
+      async *subscribe(_, { to }) {
         for (let i = 0; i <= to; i++) {
           yield { count: i }
           console.log({ count: i })

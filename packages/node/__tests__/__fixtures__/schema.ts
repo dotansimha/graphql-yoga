@@ -48,7 +48,7 @@ export function createTestSchema() {
         },
         stream: {
           type: new GraphQLList(GraphQLString),
-          resolve: async function* () {
+          async *resolve() {
             yield 'A'
             await new Promise((resolve) => setTimeout(resolve, 1000))
             yield 'B'
@@ -91,13 +91,13 @@ export function createTestSchema() {
         error: {
           type: GraphQLBoolean,
           // eslint-disable-next-line require-yield
-          subscribe: async function* () {
+          async *subscribe() {
             throw new Error('This is not okay')
           },
         },
         eventEmitted: {
           type: GraphQLFloat,
-          subscribe: async function* () {
+          async *subscribe() {
             yield { eventEmitted: Date.now() }
           },
         },
@@ -108,7 +108,7 @@ export function createTestSchema() {
               type: new GraphQLNonNull(GraphQLInt),
             },
           },
-          subscribe: async function* (_root, args) {
+          async *subscribe(_root, args) {
             for (let count = 1; count <= args.to; count++) {
               yield { count }
               await new Promise((resolve) => setTimeout(resolve, 100))

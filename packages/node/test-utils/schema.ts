@@ -93,7 +93,7 @@ export const schema = new GraphQLSchema({
     fields: () => ({
       counter: {
         type: GraphQLInt,
-        subscribe: async function* () {
+        async *subscribe() {
           while (true) {
             await new Promise((resolve) => setTimeout(resolve, 100))
             yield counter++

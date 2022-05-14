@@ -61,7 +61,7 @@ const alphabet = [
 
 const resolvers = {
   Query: {
-    alphabet: async function* () {
+    async *alphabet() {
       for (const character of alphabet) {
         yield character
         await wait(1000)

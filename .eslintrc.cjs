@@ -7,5 +7,6 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   rules: {
     'no-else-return': ['error', { allowElseIf: false }],
+    'object-shorthand': ['error', 'always'],
   },
 }
