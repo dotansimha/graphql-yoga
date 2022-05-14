@@ -181,7 +181,12 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           defaultVariableEditorOpen={true}
           docExplorerOpen={showDocs}
           onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
-          tabs
+          tabs={{
+            onTabChange: (tab) => {
+              // recycle the request headers within all tabs
+              tab.tabs.forEach((t) => (t.headers = props.headers))
+            },
+          }}
           toolbar={{
             additionalContent: (
               <>
