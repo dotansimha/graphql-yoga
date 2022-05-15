@@ -55,7 +55,7 @@ const resolvers: Resolvers<Context> = {
   },
   Subscription: {
     counter: {
-      subscribe: async function* () {
+      async *subscribe() {
         let counter = 0
 
         // count up until the subscription is terminated

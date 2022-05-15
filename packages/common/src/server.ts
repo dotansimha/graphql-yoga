@@ -169,7 +169,7 @@ export function getDefaultSchema() {
       },
       Subscription: {
         time: {
-          subscribe: async function* () {
+          async *subscribe() {
             while (true) {
               yield { time: new Date().toISOString() }
               await new Promise((resolve) => setTimeout(resolve, 1000))

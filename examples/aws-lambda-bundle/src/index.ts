@@ -4,6 +4,6 @@ import { configure } from '@vendia/serverless-express'
 const app = createServer()
 
 export const handler = configure({
-  app: app,
+  app,
   log: app.logger,
 })
