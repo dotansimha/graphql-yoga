@@ -23,7 +23,7 @@ const greetings = queryField('greetings', {
 const readTextFile = mutationField('readTextFile', {
   type: 'String',
   args: { file: nonNull(arg({ type: 'File' })) },
-  resolve: async (parent, { file }, ctx) => {
+  resolve: async (parent, { file }) => {
     const textContent = await file.text()
     return textContent
   },

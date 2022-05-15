@@ -2,7 +2,6 @@ import type {
   DocumentNode,
   ExecutionResult,
   GraphQLError,
-  GraphQLSchema,
   OperationDefinitionNode,
 } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
@@ -62,7 +61,7 @@ export interface YogaInitialContext {
   extensions?: Record<string, any>
 }
 
-export interface RequestProcessContext<TContext, TRootValue> {
+export interface RequestProcessContext<TContext> {
   request: Request
   enveloped: ReturnType<GetEnvelopedFn<TContext>>
   params: GraphQLParams

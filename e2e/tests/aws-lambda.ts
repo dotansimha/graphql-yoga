@@ -9,7 +9,7 @@ import * as awsx from '@pulumi/awsx'
 export const awsLambdaDeployment: DeploymentConfiguration<{
   functionUrl: string
 }> = {
-  prerequisites: async (stack: Stack) => {
+  prerequisites: async () => {
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the AWS Lambda Function....')
     execSync('yarn build', {
@@ -35,7 +35,6 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
     })
   },
   program: async () => {
-    const stackName = pulumi.getStack()
     const lambdaRole = new aws.iam.Role('lambda-role', {
       assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({
         Service: 'lambda.amazonaws.com',

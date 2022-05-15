@@ -2,7 +2,6 @@ import * as pulumi from '@pulumi/pulumi'
 import { assertGraphiQL, assertQuery, env, waitForEndpoint } from '../utils'
 import { request } from 'undici'
 import { DeploymentConfiguration } from '../types'
-import { Stack } from '@pulumi/pulumi/automation'
 import { execSync } from 'child_process'
 import { readFileSync } from 'fs'
 
@@ -40,7 +39,7 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
     }
   }
 
-  async delete(id: string, props: VercelProviderInputs) {
+  async delete(id: string) {
     const teamId = this.getTeamId()
     const { statusCode, body } = await request(
       `${this.baseUrl}/v13/deployments/${id}${
@@ -126,8 +125,8 @@ export class VercelDeployment extends pulumi.dynamic.Resource {
 export const vercelDeployment: DeploymentConfiguration<{
   functionUrl: string
 }> = {
-  prerequisites: async (stack: Stack) => {
-    // Build and bundle the funtion
+  prerequisites: async () => {
+    // Build and bundle the function
     console.info('\t\tℹ️ Bundling the Vercel Function....')
     execSync('yarn build', {
       cwd: '../examples/vercel-function',

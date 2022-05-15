@@ -1,4 +1,4 @@
-import { GraphQLError, GraphQLSchema, isSchema, print } from 'graphql'
+import { GraphQLSchema, isSchema, print } from 'graphql'
 import {
   GetEnvelopedFn,
   envelop,

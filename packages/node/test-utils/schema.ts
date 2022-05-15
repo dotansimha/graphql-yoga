@@ -4,7 +4,6 @@ import {
   GraphQLString,
   GraphQLScalarType,
   GraphQLInt,
-  GraphQLBoolean,
 } from 'graphql'
 
 let counter = 0
