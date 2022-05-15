@@ -136,14 +136,15 @@ const resolvers = {
           },
         })
         .catch((err: unknown) => {
-          if (err instanceof PrismaClientKnownRequestError) {
-            if (err.code === 'P2003') {
-              return Promise.reject(
-                new GraphQLYogaError(
-                  `Cannot post common on non-existing link with id '${args.linkId}'.`,
-                ),
-              )
-            }
+          if (
+            err instanceof PrismaClientKnownRequestError &&
+            err.code === 'P2003'
+          ) {
+            return Promise.reject(
+              new GraphQLYogaError(
+                `Cannot post common on non-existing link with id '${args.linkId}'.`,
+              ),
+            )
           }
           return Promise.reject(err)
         })
