@@ -61,7 +61,7 @@ export interface YogaInitialContext {
   extensions?: Record<string, any>
 }
 
-export interface RequestProcessContext<TContext> {
+export interface RequestProcessContext<TContext, TRootValue> {
   request: Request
   enveloped: ReturnType<GetEnvelopedFn<TContext>>
   params: GraphQLParams
