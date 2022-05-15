@@ -48,9 +48,7 @@ export async function processRequest<TContext, TRootValue = {}>({
   fetchAPI,
   onResultProcessHooks,
 }: RequestProcessContext<TContext, TRootValue>): Promise<Response> {
-  let contextValue: TContext | undefined
   let document: DocumentNode
-  let operation: OperationDefinitionNode | undefined
 
   if (request.method !== 'GET' && request.method !== 'POST') {
     throw new GraphQLYogaError('GraphQL only supports GET and POST requests.', {
@@ -82,7 +80,8 @@ export async function processRequest<TContext, TRootValue = {}>({
     })
   }
 
-  operation = getOperationAST(document, params.operationName) ?? undefined
+  const operation: OperationDefinitionNode | undefined =
+    getOperationAST(document, params.operationName) ?? undefined
 
   if (!operation) {
     throw new GraphQLYogaError(
@@ -105,7 +104,8 @@ export async function processRequest<TContext, TRootValue = {}>({
     )
   }
 
-  contextValue = (await enveloped.contextFactory()) as TContext
+  const contextValue: TContext | undefined =
+    (await enveloped.contextFactory()) as TContext
 
   const executionArgs: ExecutionArgs = {
     schema: enveloped.schema,

@@ -427,7 +427,7 @@ export class YogaServer<
           statusText: 'Bad Request',
         })
       }
-      let onRequestParseDoneList: OnRequestParseDoneHook[] = []
+      const onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
       for (const onRequestParse of this.onRequestParseHooks) {
         const onRequestParseResult = await onRequestParse({
