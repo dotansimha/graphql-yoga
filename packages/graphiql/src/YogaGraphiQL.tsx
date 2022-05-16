@@ -188,6 +188,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
           headers={headers}
           onEditHeaders={(newValue) => setHeaders(newValue)}
+          tabs
           toolbar={{
             additionalContent: (
               <>
