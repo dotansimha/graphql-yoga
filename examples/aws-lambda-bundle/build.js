@@ -1,5 +1,4 @@
 const { build } = require('esbuild')
-const { writeFileSync } = require('fs')
 
 async function main() {
   await build({

@@ -7,7 +7,7 @@ const builder = new SchemaBuilder<{
 }>({})
 
 builder.scalarType('File', {
-  serialize: (val) => {
+  serialize: () => {
     throw new Error('Uploads can only be used as input types')
   },
 })

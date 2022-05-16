@@ -2,7 +2,6 @@ import type {
   DocumentNode,
   ExecutionResult,
   GraphQLError,
-  GraphQLSchema,
   OperationDefinitionNode,
 } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'

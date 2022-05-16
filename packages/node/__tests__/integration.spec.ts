@@ -768,7 +768,7 @@ describe('Browser', () => {
 
       await new Promise((res) => setTimeout(res, 50))
 
-      const [resultContents, isShowingStopButton] = await page.evaluate(
+      const [resultContents] = await page.evaluate(
         (stopButtonSelector) => {
           return [
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
