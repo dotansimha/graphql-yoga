@@ -52,6 +52,8 @@ export const renderGraphiQL = (opts?: GraphiQLOptions) =>
   graphiqlHTML
     .replace('__TITLE__', opts?.title || 'Yoga GraphiQL')
     .replace('__OPTS__', JSON.stringify(opts ?? {}))
+    // TODO: replace this with the @graphql-yoga/graphiql version
+    .replace('__GRAPHIQL_VERSION__', '2.3.0')
 
 export type GraphiQLOptionsFactory<TServerContext> = (
   request: Request,
