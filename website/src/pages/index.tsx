@@ -109,7 +109,7 @@ export default function Index() {
       <Wrapper>
         <HeroGradient
           title="Time to Relax with GraphQL Yoga"
-          description={`The fully-featured GraphQL Server with focus on easy setup, performance and great developer experience.`}
+          description="The fully-featured GraphQL Server with focus on easy setup, performance and great developer experience."
           link={[
             {
               href: '/docs/quick-start',

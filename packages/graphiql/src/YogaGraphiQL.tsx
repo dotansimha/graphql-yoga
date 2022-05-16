@@ -159,16 +159,16 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           explorerIsOpen={showExplorer}
           onToggleExplorer={() => setShowExplorer((isOpen) => !isOpen)}
           colors={{
-            keyword: '#FF6D5D',
-            def: '#9F51D9', // OperationName, FragmentName
+            keyword: '#ff6d5d',
+            def: '#9f51d9', // OperationName, FragmentName
             property: '#0083c7', // FieldName
-            qualifier: '#008AED', // FieldAlias
+            qualifier: '#008aed', // FieldAlias
             attribute: '#00b8ff', // ArgumentName and ObjectFieldName
             number: '#97b1aa', // type number
-            string: '#00917D', // type String
+            string: '#00917d', // type String
             string2: '#146574', // Enum
             builtin: '#da8aff', // Boolean
-            variable: '#FF6D5D',
+            variable: '#ff6d5d',
             atom: '#ff9f4c', // Type
           }}
         />
@@ -238,9 +238,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
                   props.title
                 ) : (
                   <>
-                    {'Yoga Graph'}
-                    <em>{'i'}</em>
-                    {'QL'}
+                    Yoga Graph
+                    <em>i</em>
+                    QL
                   </>
                 )}
               </span>
