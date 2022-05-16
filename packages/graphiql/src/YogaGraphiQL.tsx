@@ -60,10 +60,6 @@ export type YogaGraphiQLProps = Omit<
   Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
     title?: string
     /**
-     * Default value you want to have in the headers editor
-     */
-    defaultHeaders?: string
-    /**
      * Extra headers you always want to pass with users' headers input
      */
     additionalHeaders?: LoadFromUrlOptions['headers']
@@ -152,9 +148,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     false,
   )
   const [showDocs, setShowDocs] = React.useState(false)
-  const [headersValue, setHeadersValue] = React.useState(
-    props.defaultHeaders || '{}',
-  )
+  const [headers, setHeaders] = React.useState(props.headers || '{}')
 
   return (
     <div className="graphiql-container">
@@ -188,13 +182,12 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         <GraphiQL
           ref={graphiqlRef}
           fetcher={fetcher}
-          headers={headersValue}
-          onEditHeaders={(newValue) => setHeadersValue(newValue)}
           headerEditorEnabled={true}
           defaultVariableEditorOpen={true}
           docExplorerOpen={showDocs}
           onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
-          tabs
+          headers={headers}
+          onEditHeaders={(newValue) => setHeaders(newValue)}
           toolbar={{
             additionalContent: (
               <>

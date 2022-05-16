@@ -3,4 +3,4 @@
 '@graphql-yoga/common': minor
 ---
 
-New "defaultHeaders" and "additionalHeaders" properties
+New "additionalHeaders" property to GraphiQL and fix headers state

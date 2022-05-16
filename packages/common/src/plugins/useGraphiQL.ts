@@ -43,10 +43,6 @@ export type GraphiQLOptions = {
    */
   subscriptionsProtocol?: 'SSE' | 'WS' | 'LEGACY_WS'
   /**
-   * Default value you want to have in the headers editor
-   */
-  defaultHeaders?: string
-  /**
    * Extra headers you always want to pass with users' headers input
    */
   additionalHeaders?: Record<string, string>
