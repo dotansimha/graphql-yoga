@@ -112,7 +112,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       directiveIsRepeatable: true,
       schemaDescription: true,
       ...props,
-      headers: {},
+      headers: JSON.parse(props.headers ?? '{}'),
     })
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
