@@ -62,7 +62,7 @@ export function getNodeRequest(
   const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest
   configureSocket(rawRequest)
   const addressInfo = getRequestAddressInfo(rawRequest, defaultAddressInfo)
-  let fullUrl = buildFullUrl(addressInfo)
+  const fullUrl = buildFullUrl(addressInfo)
   if (nodeRequest.query) {
     const urlObj = new URL(fullUrl)
     for (const queryName in nodeRequest.query) {
