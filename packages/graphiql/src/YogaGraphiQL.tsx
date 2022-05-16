@@ -26,12 +26,12 @@ const getOperationWithFragments = (
   operationName: string,
 ): DocumentNode => {
   const definitions = document.definitions.filter((definition) => {
-    if (definition.kind === Kind.OPERATION_DEFINITION) {
-      if (operationName) {
-        if (definition.name?.value !== operationName) {
-          return false
-        }
-      }
+    if (
+      definition.kind === Kind.OPERATION_DEFINITION &&
+      operationName &&
+      definition.name?.value !== operationName
+    ) {
+      return false
     }
     return true
   })
