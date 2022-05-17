@@ -148,7 +148,6 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     false,
   )
   const [showDocs, setShowDocs] = React.useState(false)
-  const [headers, setHeaders] = React.useState(props.headers || '{}')
 
   return (
     <div className="graphiql-container">
@@ -186,8 +185,6 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           defaultVariableEditorOpen={true}
           docExplorerOpen={showDocs}
           onToggleDocs={() => setShowDocs((isOpen) => !isOpen)}
-          headers={headers}
-          onEditHeaders={(newValue) => setHeaders(newValue)}
           tabs
           toolbar={{
             additionalContent: (
