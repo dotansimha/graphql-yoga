@@ -199,7 +199,7 @@ Similar to the `feed` resolver, you're simply invoking a function on the `Prisma
 
 You're calling the `create` method on a `link` from your Prisma Client API. As arguments, you're passing the data that the resolvers receive via the `args` parameter.
 
-So, to summarize, Prisma Client exposes a CRUD API for the models in your datamodel for you to read and write in your database. These methods are auto-generated based on your model definitions in
+So, to summarize, Prisma Client exposes a CRUD API for the models in your data model for you to read and write in your database. These methods are auto-generated based on your model definitions in
 `schema.prisma`.
 
 You may also have noticed that `newLink` is an object of type `Promise`. This is because all Prisma CRUD operations are asynchronous. This is not a problem as Fastify Server is capable of detecting, and automatically resolving any `Promise` object that is returned from resolver functions.
