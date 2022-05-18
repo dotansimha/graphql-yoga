@@ -22,6 +22,10 @@ module.exports = {
   },
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
-  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)', '!**/examples/node-esm/**'],
+  testMatch: [
+    '**/?(*.)+(spec|test).[jt]s?(x)',
+    '!**/examples/node-esm/**',
+    '!**/examples/sveltekit/**',
+  ],
   extensionsToTreatAsEsm: ['.ts'],
 }
