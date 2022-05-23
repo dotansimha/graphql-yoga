@@ -1,5 +1,12 @@
 # issue-template
 
+## 1.6.1
+
+### Patch Changes
+
+- Updated dependencies [0224bf9]
+  - @graphql-yoga/node@2.6.1
+
 ## 1.6.0
 
 ### Patch Changes
