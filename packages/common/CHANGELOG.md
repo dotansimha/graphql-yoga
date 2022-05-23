@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.6.1
+
+### Patch Changes
+
+- 0224bf9: prevent exposure of status, header and originalError extensions
+
 ## 2.6.0
 
 ### Minor Changes
