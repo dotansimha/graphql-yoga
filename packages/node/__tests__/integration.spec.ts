@@ -323,7 +323,7 @@ it('validation error is sent to clients', async () => {
               line: 1,
             },
           ],
-          message: `Cannot query field "libl_pls" on type "Query.`,
+          message: `Cannot query field "libl_pls" on type "Query".`,
         },
       ],
     })
