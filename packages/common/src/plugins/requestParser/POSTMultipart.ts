@@ -1,5 +1,5 @@
 import { dset } from 'dset'
-import { FetchAPI, GraphQLParams } from '../../types'
+import { GraphQLParams } from '../../types'
 import { isPOSTRequest } from './POST'
 
 export function isPOSTMultipartRequest(request: Request): boolean {
