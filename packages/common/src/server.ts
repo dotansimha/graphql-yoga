@@ -9,8 +9,6 @@ import {
   useLogger,
   useSchema,
   PromiseOrValue,
-  DEFAULT_ERROR_MESSAGE,
-  formatError,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -341,16 +339,16 @@ export class YogaServer<
       // Middlewares before the GraphQL execution
       useRequestParser({
         match: isGETRequest,
-        parse: (request) => parseGETRequest(request, this.fetchAPI),
+        parse: parseGETRequest,
       }),
       useRequestParser({
         match: isPOSTRequest,
-        parse: (request) => parsePOSTRequest(request, this.fetchAPI),
+        parse: parsePOSTRequest,
       }),
       enableIf(options?.multipart !== false, () =>
         useRequestParser({
           match: isPOSTMultipartRequest,
-          parse: (request) => parsePOSTMultipartRequest(request, this.fetchAPI),
+          parse: parsePOSTMultipartRequest,
         }),
       ),
       // Middlewares after the GraphQL execution
@@ -424,14 +422,7 @@ export class YogaServer<
         }
       }
 
-      let requestParser: RequestParser = () => {
-        return Promise.resolve(
-          new this.fetchAPI.Response('Request is not valid', {
-            status: 400,
-            statusText: 'Bad Request',
-          }),
-        )
-      }
+      let requestParser: RequestParser | undefined
       const onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
       for (const onRequestParse of this.onRequestParseHooks) {
@@ -449,13 +440,26 @@ export class YogaServer<
       }
 
       this.logger.debug(`Parsing request to extract GraphQL parameters`)
-      let params = await requestParser(request)
 
-      if (
-        params instanceof this.fetchAPI.Response ||
-        params.constructor.name === 'Response'
-      ) {
-        return params as Response
+      if (!requestParser) {
+        return new this.fetchAPI.Response('Request is not valid', {
+          status: 400,
+          statusText: 'Bad Request',
+        })
+      }
+
+      let params: GraphQLParams<Record<string, any>, Record<string, any>>
+      try {
+        params = await requestParser(request)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          return getErrorResponse({
+            status: 400,
+            errors: [err],
+            fetchAPI: this.fetchAPI,
+          })
+        }
+        throw err
       }
 
       for (const onRequestParseDone of onRequestParseDoneList) {
@@ -489,25 +493,7 @@ export class YogaServer<
     } catch (error: unknown) {
       return getErrorResponse({
         status: 500,
-        errors: [
-          // Use the same error masking behavior for unexpected errors
-          // TODO: this should be abstracted by a "yoga plugin once we have all necessary hooks".
-          this.maskedErrors
-            ? (
-                (typeof this.maskedErrors === 'object' &&
-                  this.maskedErrors.formatError) ||
-                formatError
-              )(
-                error,
-                (typeof this.maskedErrors === 'object' &&
-                  this.maskedErrors.errorMessage) ||
-                  DEFAULT_ERROR_MESSAGE,
-                (typeof this.maskedErrors === 'object' &&
-                  this.maskedErrors.isDev) ||
-                  defaultIsDev,
-              )
-            : (error as Error),
-        ],
+        errors: [new Error((error as Error)?.message ?? 'Unexpected Error.')],
         fetchAPI: this.fetchAPI,
       })
     }
@@ -649,6 +635,3 @@ export function createServer<
     },
   })
 }
-
-// TODO: import this from @envelop/core
-const defaultIsDev = globalThis.process?.env['NODE_ENV'] === 'development'

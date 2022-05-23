@@ -1,13 +1,10 @@
-import { FetchAPI, GraphQLParams } from '../../types'
+import { GraphQLParams } from '../../types'
 
 export function isGETRequest(request: Request) {
   return request.method === 'GET'
 }
 
-export function parseGETRequest(
-  request: Request,
-  _fetchAPI: FetchAPI,
-): GraphQLParams | Response {
+export function parseGETRequest(request: Request): GraphQLParams {
   const [, searchParamsStr] = request.url.split('?')
   const searchParams = new URLSearchParams(searchParamsStr)
   const operationName = searchParams.get('operationName') || undefined
