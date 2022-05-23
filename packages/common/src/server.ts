@@ -209,7 +209,6 @@ export class YogaServer<
   >[]
   private onResponseHooks: OnResponseHook<TServerContext>[]
   private id: string
-  private maskedErrors: UseMaskedErrorsOpts | boolean
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
@@ -244,7 +243,7 @@ export class YogaServer<
             }
         : logger
 
-    this.maskedErrors = options?.maskedErrors ?? true
+    const maskedErrors = options?.maskedErrors ?? true
 
     const server = this
     this.endpoint = options?.endpoint
@@ -366,9 +365,9 @@ export class YogaServer<
       }),
       ...(options?.plugins ?? []),
       enableIf(
-        !!this.maskedErrors,
+        !!maskedErrors,
         useMaskedErrors(
-          typeof this.maskedErrors === 'object' ? this.maskedErrors : undefined,
+          typeof maskedErrors === 'object' ? maskedErrors : undefined,
         ),
       ),
     ]
