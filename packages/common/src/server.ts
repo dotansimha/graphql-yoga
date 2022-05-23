@@ -9,6 +9,8 @@ import {
   useLogger,
   useSchema,
   PromiseOrValue,
+  DEFAULT_ERROR_MESSAGE,
+  formatError,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -209,6 +211,7 @@ export class YogaServer<
   >[]
   private onResponseHooks: OnResponseHook<TServerContext>[]
   private id: string
+  private maskedErrors: UseMaskedErrorsOpts | boolean
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
@@ -243,7 +246,7 @@ export class YogaServer<
             }
         : logger
 
-    const maskedErrors = options?.maskedErrors ?? true
+    this.maskedErrors = options?.maskedErrors ?? true
 
     const server = this
     this.endpoint = options?.endpoint
@@ -338,16 +341,16 @@ export class YogaServer<
       // Middlewares before the GraphQL execution
       useRequestParser({
         match: isGETRequest,
-        parse: parseGETRequest,
+        parse: (request) => parseGETRequest(request, this.fetchAPI),
       }),
       useRequestParser({
         match: isPOSTRequest,
-        parse: parsePOSTRequest,
+        parse: (request) => parsePOSTRequest(request, this.fetchAPI),
       }),
       enableIf(options?.multipart !== false, () =>
         useRequestParser({
           match: isPOSTMultipartRequest,
-          parse: parsePOSTMultipartRequest,
+          parse: (request) => parsePOSTMultipartRequest(request, this.fetchAPI),
         }),
       ),
       // Middlewares after the GraphQL execution
@@ -365,9 +368,9 @@ export class YogaServer<
       }),
       ...(options?.plugins ?? []),
       enableIf(
-        !!maskedErrors,
+        !!this.maskedErrors,
         useMaskedErrors(
-          typeof maskedErrors === 'object' ? maskedErrors : undefined,
+          typeof this.maskedErrors === 'object' ? this.maskedErrors : undefined,
         ),
       ),
     ]
@@ -422,10 +425,12 @@ export class YogaServer<
       }
 
       let requestParser: RequestParser = () => {
-        throw new GraphQLYogaError('Request is not valid', {
-          status: 400,
-          statusText: 'Bad Request',
-        })
+        return Promise.resolve(
+          new this.fetchAPI.Response('Request is not valid', {
+            status: 400,
+            statusText: 'Bad Request',
+          }),
+        )
       }
       const onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
@@ -446,6 +451,13 @@ export class YogaServer<
       this.logger.debug(`Parsing request to extract GraphQL parameters`)
       let params = await requestParser(request)
 
+      if (
+        params instanceof this.fetchAPI.Response ||
+        params.constructor.name === 'Response'
+      ) {
+        return params as Response
+      }
+
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({
           params,
@@ -465,29 +477,37 @@ export class YogaServer<
 
       this.logger.debug(`Processing GraphQL Parameters`)
 
-      const response = await processGraphQLParams({
+      const result = await processGraphQLParams({
         request,
         params,
         enveloped,
         fetchAPI: this.fetchAPI,
         onResultProcessHooks: this.onResultProcessHooks,
       })
-      return response
-    } catch (error: any) {
-      if (
-        error?.extensions?.status != null ||
-        error?.extensions?.headers != null
-      ) {
-        return getErrorResponse({
-          status: error.extensions.status || 500,
-          headers: error.extensions.headers,
-          errors: error.extensions.errors ?? [error],
-          fetchAPI: this.fetchAPI,
-        })
-      }
-      const errors = error.errors != null ? error.errors : [error]
+
+      return result
+    } catch (error: unknown) {
       return getErrorResponse({
-        errors,
+        status: 500,
+        errors: [
+          // Use the same error masking behavior for unexpected errors
+          // TODO: this should be abstracted by a "yoga plugin once we have all necessary hooks".
+          this.maskedErrors
+            ? (
+                (typeof this.maskedErrors === 'object' &&
+                  this.maskedErrors.formatError) ||
+                formatError
+              )(
+                error,
+                (typeof this.maskedErrors === 'object' &&
+                  this.maskedErrors.errorMessage) ||
+                  DEFAULT_ERROR_MESSAGE,
+                (typeof this.maskedErrors === 'object' &&
+                  this.maskedErrors.isDev) ||
+                  defaultIsDev,
+              )
+            : (error as Error),
+        ],
         fetchAPI: this.fetchAPI,
       })
     }
@@ -500,6 +520,7 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) => {
     const response = await this.getResponse(request, ...args)
+
     for (const onResponseHook of this.onResponseHooks) {
       await onResponseHook({
         request,
@@ -628,3 +649,6 @@ export function createServer<
     },
   })
 }
+
+// TODO: import this from @envelop/core
+const defaultIsDev = globalThis.process?.env['NODE_ENV'] === 'development'

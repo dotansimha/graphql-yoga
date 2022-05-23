@@ -1,4 +1,4 @@
-import { GraphQLParams } from '../../types'
+import { FetchAPI, GraphQLParams } from '../../types'
 
 export function isPOSTRequest(request: Request) {
   return request.method === 'POST'
@@ -6,7 +6,8 @@ export function isPOSTRequest(request: Request) {
 
 export async function parsePOSTRequest(
   request: Request,
-): Promise<GraphQLParams> {
+  _fetchAPI: FetchAPI,
+): Promise<GraphQLParams | Response> {
   const requestBody = await request.json()
   return {
     operationName: requestBody.operationName,

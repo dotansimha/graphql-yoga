@@ -51,7 +51,9 @@ export type OnRequestParseHook<TServerContext> = (
   payload: OnRequestParseEventPayload<TServerContext>,
 ) => PromiseOrValue<void | OnRequestParseHookResult>
 
-export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
+export type RequestParser = (
+  request: Request,
+) => PromiseOrValue<GraphQLParams | Response>
 
 export interface OnRequestParseEventPayload<TServerContext> {
   serverContext: TServerContext | undefined

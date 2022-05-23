@@ -51,32 +51,42 @@ export async function processRequest<TContext, TRootValue = {}>({
   let document: DocumentNode
 
   if (request.method !== 'GET' && request.method !== 'POST') {
-    throw new GraphQLYogaError('GraphQL only supports GET and POST requests.', {
+    return getErrorResponse({
       status: 405,
       headers: {
         Allow: 'GET, POST',
       },
+      errors: [
+        new GraphQLYogaError('GraphQL only supports GET and POST requests.'),
+      ],
+      fetchAPI,
     })
   }
 
   if (params.query == null) {
-    throw new GraphQLYogaError('Must provide query string.', {
+    return getErrorResponse({
       status: 400,
+      errors: [new GraphQLYogaError('Must provide query string.')],
+      fetchAPI,
     })
   }
 
   try {
     document = enveloped.parse(params.query)
-  } catch (e: any) {
-    e.extensions.status = 400
-    throw e
+  } catch (e: unknown) {
+    return getErrorResponse({
+      status: 400,
+      errors: [e as GraphQLError],
+      fetchAPI,
+    })
   }
 
   const validationErrors = enveloped.validate(enveloped.schema, document)
   if (validationErrors.length > 0) {
-    throw new GraphQLYogaError('Validation error', {
+    return getErrorResponse({
       status: 400,
       errors: validationErrors,
+      fetchAPI,
     })
   }
 
@@ -84,24 +94,25 @@ export async function processRequest<TContext, TRootValue = {}>({
     getOperationAST(document, params.operationName) ?? undefined
 
   if (!operation) {
-    throw new GraphQLYogaError(
-      'Could not determine what operation to execute.',
-      {
-        status: 400,
-      },
-    )
+    return getErrorResponse({
+      status: 400,
+      errors: [
+        new GraphQLYogaError('Could not determine what operation to execute.'),
+      ],
+      fetchAPI,
+    })
   }
 
   if (operation.operation === 'mutation' && request.method === 'GET') {
-    throw new GraphQLYogaError(
-      'Can only perform a mutation operation from a POST request.',
-      {
-        status: 405,
-        headers: {
-          Allow: 'POST',
-        },
-      },
-    )
+    return getErrorResponse({
+      status: 400,
+      errors: [
+        new GraphQLYogaError(
+          'Can only perform a mutation operation from a POST request.',
+        ),
+      ],
+      fetchAPI,
+    })
   }
 
   const contextValue: TContext | undefined =
@@ -127,6 +138,7 @@ export async function processRequest<TContext, TRootValue = {}>({
       status: 406,
       statusText: 'Not Acceptable',
     })
+
   for (const onResultProcessHook of onResultProcessHooks) {
     await onResultProcessHook({
       request,
