@@ -421,12 +421,7 @@ export class YogaServer<
         }
       }
 
-      let requestParser: RequestParser = () => {
-        throw new GraphQLYogaError('Request is not valid', {
-          status: 400,
-          statusText: 'Bad Request',
-        })
-      }
+      let requestParser: RequestParser | undefined
       const onRequestParseDoneList: OnRequestParseDoneHook[] = []
 
       for (const onRequestParse of this.onRequestParseHooks) {
@@ -444,7 +439,27 @@ export class YogaServer<
       }
 
       this.logger.debug(`Parsing request to extract GraphQL parameters`)
-      let params = await requestParser(request)
+
+      if (!requestParser) {
+        return new this.fetchAPI.Response('Request is not valid', {
+          status: 400,
+          statusText: 'Bad Request',
+        })
+      }
+
+      let params: GraphQLParams<Record<string, any>, Record<string, any>>
+      try {
+        params = await requestParser(request)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          return getErrorResponse({
+            status: 400,
+            errors: [err],
+            fetchAPI: this.fetchAPI,
+          })
+        }
+        throw err
+      }
 
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({
@@ -465,29 +480,19 @@ export class YogaServer<
 
       this.logger.debug(`Processing GraphQL Parameters`)
 
-      const response = await processGraphQLParams({
+      const result = await processGraphQLParams({
         request,
         params,
         enveloped,
         fetchAPI: this.fetchAPI,
         onResultProcessHooks: this.onResultProcessHooks,
       })
-      return response
-    } catch (error: any) {
-      if (
-        error?.extensions?.status != null ||
-        error?.extensions?.headers != null
-      ) {
-        return getErrorResponse({
-          status: error.extensions.status || 500,
-          headers: error.extensions.headers,
-          errors: error.extensions.errors ?? [error],
-          fetchAPI: this.fetchAPI,
-        })
-      }
-      const errors = error.errors != null ? error.errors : [error]
+
+      return result
+    } catch (error: unknown) {
       return getErrorResponse({
-        errors,
+        status: 500,
+        errors: [new Error((error as Error)?.message ?? 'Unexpected Error.')],
         fetchAPI: this.fetchAPI,
       })
     }
@@ -500,6 +505,7 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) => {
     const response = await this.getResponse(request, ...args)
+
     for (const onResponseHook of this.onResponseHooks) {
       await onResponseHook({
         request,
