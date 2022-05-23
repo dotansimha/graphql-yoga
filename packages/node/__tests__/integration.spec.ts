@@ -262,6 +262,76 @@ describe('Context error', () => {
   })
 })
 
+it('parse error is sent to clients', async () => {
+  const server = createServer({
+    logging: false,
+  })
+
+  try {
+    await server.start()
+
+    const result = await fetch(server.getServerUrl(), {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{libl_pls' }),
+    }).then((_) => _.json())
+
+    expect(result).toEqual({
+      data: null,
+      errors: [
+        {
+          locations: [
+            {
+              column: 10,
+              line: 1,
+            },
+          ],
+          message: `Syntax Error: Expected Name, found <EOF>.`,
+        },
+      ],
+    })
+  } finally {
+    await server.stop()
+  }
+})
+
+it('validation error is sent to clients', async () => {
+  const server = createServer({
+    logging: false,
+  })
+
+  try {
+    await server.start()
+
+    const result = await fetch(server.getServerUrl(), {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{libl_pls}' }),
+    }).then((_) => _.json())
+
+    expect(result).toEqual({
+      data: null,
+      errors: [
+        {
+          locations: [
+            {
+              column: 2,
+              line: 1,
+            },
+          ],
+          message: `Cannot query field "libl_pls" on type "Query.`,
+        },
+      ],
+    })
+  } finally {
+    await server.stop()
+  }
+})
+
 describe('Requests', () => {
   const endpoint = '/test-graphql'
   const yoga = createServer({ schema, logging: false, endpoint })
@@ -768,17 +838,14 @@ describe('Browser', () => {
 
       await new Promise((res) => setTimeout(res, 50))
 
-      const [resultContents] = await page.evaluate(
-        (stopButtonSelector) => {
-          return [
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            window.g.resultComponent.viewer.getValue(),
-            !!window.document.querySelector(stopButtonSelector),
-          ]
-        },
-        stopButtonSelector,
-      )
+      const [resultContents] = await page.evaluate((stopButtonSelector) => {
+        return [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.g.resultComponent.viewer.getValue(),
+          !!window.document.querySelector(stopButtonSelector),
+        ]
+      }, stopButtonSelector)
       const resultJson = JSON.parse(resultContents)
 
       expect(resultJson).toEqual({
