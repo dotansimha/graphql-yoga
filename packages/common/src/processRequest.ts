@@ -106,6 +106,9 @@ export async function processRequest<TContext, TRootValue = {}>({
   if (operation.operation === 'mutation' && request.method === 'GET') {
     return getErrorResponse({
       status: 405,
+      headers: {
+        Allow: 'POST',
+      },
       errors: [
         new GraphQLYogaError(
           'Can only perform a mutation operation from a POST request.',
