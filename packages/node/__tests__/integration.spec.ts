@@ -363,6 +363,22 @@ describe('Requests', () => {
     expect(body.data.ping).toBe('pong')
   })
 
+  it('sending mutation over GET method is prohibited', async () => {
+    const response = await request(yoga)
+      .get(endpoint + '?query=' + encodeURIComponent('mutation { __typename }'))
+      .send()
+
+    expect(response.statusCode).toBe(405)
+    const body = JSON.parse(response.text)
+
+    expect(body.data).toEqual(null)
+    expect(body.errors).toEqual([
+      {
+        message: 'Can only perform a mutation operation from a POST request.',
+      },
+    ])
+  })
+
   it('should send basic mutation', async () => {
     const response = await request(yoga)
       .post(endpoint)
