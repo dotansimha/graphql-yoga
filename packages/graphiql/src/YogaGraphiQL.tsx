@@ -59,6 +59,10 @@ export type YogaGraphiQLProps = Omit<
 > &
   Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
     title?: string
+    /**
+     * Extra headers you always want to pass with users' headers input
+     */
+    additionalHeaders?: LoadFromUrlOptions['headers']
   }
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
@@ -112,7 +116,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       directiveIsRepeatable: true,
       schemaDescription: true,
       ...props,
-      headers: {},
+      headers: props.additionalHeaders || {},
     })
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(

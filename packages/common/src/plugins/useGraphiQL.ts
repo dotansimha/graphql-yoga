@@ -42,6 +42,10 @@ export type GraphiQLOptions = {
    * Protocol for subscriptions
    */
   subscriptionsProtocol?: 'SSE' | 'WS' | 'LEGACY_WS'
+  /**
+   * Extra headers you always want to pass with users' headers input
+   */
+  additionalHeaders?: Record<string, string>
 }
 
 export const renderGraphiQL = (opts?: GraphiQLOptions) =>
