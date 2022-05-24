@@ -1,5 +1,11 @@
 # file-upload-nexus
 
+## 0.7.0
+
+### Patch Changes
+
+- @graphql-yoga/node@2.7.0
+
 ## 0.6.1
 
 ### Patch Changes

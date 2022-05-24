@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.7.0
+
+### Minor Changes
+
+- bcda7fd: New "additionalHeaders" property to GraphiQL
+
 ## 2.6.1
 
 ### Patch Changes
