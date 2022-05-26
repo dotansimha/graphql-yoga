@@ -1,10 +1,9 @@
 import { dset } from 'dset'
 import { GraphQLParams } from '../../types'
-import { isPOSTRequest } from './POST'
 
 export function isPOSTMultipartRequest(request: Request): boolean {
   return (
-    isPOSTRequest(request) &&
+    request.method === 'POST' &&
     !!request.headers.get('content-type')?.startsWith('multipart/form-data')
   )
 }

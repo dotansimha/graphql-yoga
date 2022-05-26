@@ -1,10 +1,13 @@
 import { GraphQLParams } from '../../types'
 
-export function isPOSTRequest(request: Request) {
-  return request.method === 'POST'
+export function isPOSTJsonRequest(request: Request) {
+  return (
+    request.method === 'POST' &&
+    !!request.headers.get('content-type')?.startsWith('application/json')
+  )
 }
 
-export async function parsePOSTRequest(
+export async function parsePOSTJsonRequest(
   request: Request,
 ): Promise<GraphQLParams> {
   const requestBody = await request.json()
