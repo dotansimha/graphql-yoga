@@ -1,0 +1,58 @@
+{
+  "name": "@graphql-yoga/nestjs",
+  "version": "0.0.1",
+  "description": "Yoga driver for Nest GraphQL",
+  "author": "Charly Poly <charly@the-guild.dev>",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "plugin.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test:e2e": "jest --config ./tests/jest-e2e.ts --runInBand",
+    "test:e2e:dev": "jest --config ./tests/jest-e2e.ts --runInBand --watch"
+  },
+  "dependencies": {
+    "@envelop/apollo-server-errors": "^3.3.1",
+    "@graphql-yoga/node": "^2.3.0",
+    "@nestjs/graphql": "^10.0.0"
+  },
+  "devDependencies": {
+    "@apollo/gateway": "0.50.1",
+    "@apollo/subgraph": "^0.4.1",
+    "@envelop/apollo-federation": "^2.3.1",
+    "@nestjs/common": "8.4.4",
+    "@nestjs/core": "8.4.4",
+    "@nestjs/testing": "8.4.4",
+    "fastify": "^3.28.0",
+    "graphql": "15.8.0"
+  },
+  "peerDependencies": {
+    "@apollo/gateway": "^0.44.1 || ^0.46.0 || ^0.48.0 || ^0.49.0 || ^0.50.0",
+    "@apollo/subgraph": "^0.4.1",
+    "@envelop/apollo-federation": "^2.3.1",
+    "@nestjs/common": "^8.2.3",
+    "@nestjs/core": "^8.2.3",
+    "graphql": "^15.8.0 || ^16.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@apollo/gateway": {
+      "optional": true
+    },
+    "@envelop/apollo-federation": {
+      "optional": true
+    },
+    "@apollo/subgraph": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nestjs/graphql"
+  }
+}

@@ -1,0 +1,12 @@
+type Cat {
+  id: Int!
+}
+
+type Mutation {
+  createCat(name: String): Cat
+  returnsQuery: Query
+}
+
+type Query {
+  query: Int
+}
