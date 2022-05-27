@@ -1,5 +1,11 @@
 # hello-world
 
+## 0.8.0
+
+### Patch Changes
+
+- @graphql-yoga/node@2.8.0
+
 ## 0.7.0
 
 ### Patch Changes
