@@ -471,6 +471,19 @@ describe('Requests', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data.ping).toBe('pong')
   })
+
+  it('should handle POST requests as JSON with "application/graphql+json" content type', async () => {
+    const response = await request(yoga)
+      .post(endpoint)
+      .set('Content-Type', 'application/graphql+json')
+      .send(JSON.stringify({ query: '{ ping }' }))
+
+    console.log(response.text)
+    expect(response.statusCode).toBe(200)
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
 })
 
 describe('Incremental Delivery', () => {

@@ -1,9 +1,11 @@
 import { GraphQLParams } from '../../types'
+import { isContentTypeMatch } from './utils'
 
 export function isPOSTJsonRequest(request: Request) {
   return (
     request.method === 'POST' &&
-    !!request.headers.get('content-type')?.startsWith('application/json')
+    (isContentTypeMatch(request, 'application/graphql+json') ||
+      isContentTypeMatch(request, 'application/json'))
   )
 }
 

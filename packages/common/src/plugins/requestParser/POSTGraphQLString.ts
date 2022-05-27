@@ -1,9 +1,10 @@
 import { GraphQLParams } from '../../types'
+import { isContentTypeMatch } from './utils'
 
 export function isPOSTGraphQLStringRequest(request: Request) {
   return (
     request.method === 'POST' &&
-    !!request.headers.get('content-type')?.startsWith('application/graphql')
+    isContentTypeMatch(request, 'application/graphql')
   )
 }
 

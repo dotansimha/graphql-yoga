@@ -1,12 +1,10 @@
 import { GraphQLParams } from '../../types'
-import { parseURLSearchParams } from './utils'
+import { isContentTypeMatch, parseURLSearchParams } from './utils'
 
 export function isPOSTFormUrlEncodedRequest(request: Request) {
   return (
     request.method === 'POST' &&
-    !!request.headers
-      .get('content-type')
-      ?.startsWith('application/x-www-form-urlencoded')
+    isContentTypeMatch(request, 'application/x-www-form-urlencoded')
   )
 }
 
