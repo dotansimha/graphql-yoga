@@ -4,8 +4,8 @@ import { isContentTypeMatch } from './utils'
 export function isPOSTJsonRequest(request: Request) {
   return (
     request.method === 'POST' &&
-    (isContentTypeMatch(request, 'application/graphql+json') ||
-      isContentTypeMatch(request, 'application/json'))
+    (isContentTypeMatch(request, 'application/json') ||
+      isContentTypeMatch(request, 'application/graphql+json'))
   )
 }
 
