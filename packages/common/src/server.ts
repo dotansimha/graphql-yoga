@@ -46,11 +46,18 @@ import {
 } from './plugins/useGraphiQL'
 import { useRequestParser } from './plugins/useRequestParser'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET'
-import { isPOSTRequest, parsePOSTRequest } from './plugins/requestParser/POST'
+import {
+  isPOSTJsonRequest,
+  parsePOSTJsonRequest,
+} from './plugins/requestParser/POSTJson'
 import {
   isPOSTMultipartRequest,
   parsePOSTMultipartRequest,
 } from './plugins/requestParser/POSTMultipart'
+import {
+  isPOSTGraphQLStringRequest,
+  parsePOSTGraphQLStringRequest,
+} from './plugins/requestParser/POSTGraphQLString'
 import { useResultProcessor } from './plugins/useResultProcessor'
 import {
   isRegularResult,
@@ -61,7 +68,10 @@ import {
   isMultipartResult,
   processMultipartResult,
 } from './plugins/resultProcessor/multipart'
-import { GraphQLYogaError } from './GraphQLYogaError'
+import {
+  isPOSTFormUrlEncodedRequest,
+  parsePOSTFormUrlEncodedRequest,
+} from './plugins/requestParser/POSTFormUrlEncoded'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -341,8 +351,8 @@ export class YogaServer<
         parse: parseGETRequest,
       }),
       useRequestParser({
-        match: isPOSTRequest,
-        parse: parsePOSTRequest,
+        match: isPOSTJsonRequest,
+        parse: parsePOSTJsonRequest,
       }),
       enableIf(options?.multipart !== false, () =>
         useRequestParser({
@@ -350,6 +360,14 @@ export class YogaServer<
           parse: parsePOSTMultipartRequest,
         }),
       ),
+      useRequestParser({
+        match: isPOSTGraphQLStringRequest,
+        parse: parsePOSTGraphQLStringRequest,
+      }),
+      useRequestParser({
+        match: isPOSTFormUrlEncodedRequest,
+        parse: parsePOSTFormUrlEncodedRequest,
+      }),
       // Middlewares after the GraphQL execution
       useResultProcessor({
         match: isRegularResult,

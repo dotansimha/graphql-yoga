@@ -1,10 +1,15 @@
 import { GraphQLParams } from '../../types'
+import { isContentTypeMatch } from './utils'
 
-export function isPOSTRequest(request: Request) {
-  return request.method === 'POST'
+export function isPOSTJsonRequest(request: Request) {
+  return (
+    request.method === 'POST' &&
+    (isContentTypeMatch(request, 'application/json') ||
+      isContentTypeMatch(request, 'application/graphql+json'))
+  )
 }
 
-export async function parsePOSTRequest(
+export async function parsePOSTJsonRequest(
   request: Request,
 ): Promise<GraphQLParams> {
   const requestBody = await request.json()

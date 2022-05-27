@@ -447,6 +447,43 @@ describe('Requests', () => {
       .expect('Access-Control-Allow-Origin', 'http://localhost:3000')
       .expect('Access-Control-Allow-Methods', 'POST')
   })
+
+  it('should handle POST requests with a GraphQL operation string', async () => {
+    const response = await request(yoga)
+      .post(endpoint)
+      .set('Content-Type', 'application/graphql')
+      .send(`{ ping }`)
+
+    expect(response.statusCode).toBe(200)
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
+
+  it('should handle POST requests with url encoded string', async () => {
+    const response = await request(yoga)
+      .post(endpoint)
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send(`query=${encodeURIComponent('{ ping }')}`)
+
+    expect(response.statusCode).toBe(200)
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
+
+  it('should handle POST requests as JSON with "application/graphql+json" content type', async () => {
+    const response = await request(yoga)
+      .post(endpoint)
+      .set('Content-Type', 'application/graphql+json')
+      .send(JSON.stringify({ query: '{ ping }' }))
+
+    console.log(response.text)
+    expect(response.statusCode).toBe(200)
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
 })
 
 describe('Incremental Delivery', () => {
