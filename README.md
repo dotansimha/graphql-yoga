@@ -43,19 +43,19 @@ server.start()
 ## Overview
 
 - **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup (we also export a platform/env-agnostic handler so you can build your own wrappers easily).
-- **Includes Subscriptions:** Built-in support for GraphQL subscriptions using **S**erver-**S**ent **E**vents.
-- **Compatible:** Works with all GraphQL clients (Apollo, Relay...) and fits seamless in your GraphQL workflow.
+- **Includes Subscriptions:** Built-in support for GraphQL subscriptions using [**S**erver-**S**ent **E**vents](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
+- **Compatible:** Works with all GraphQL clients ([Apollo](https://www.apollographql.com/docs/react/), [Relay](https://relay.dev/), [Urql](https://formidable.com/open-source/urql/)...) and fits seamless in your GraphQL workflow.
 - **WHATWG Fetch API:** the core package depends on [WHATWG Fetch API](https://fetch.spec.whatwg.org/) so it can run and deploy on any environment (Serverless, Workers, Deno, Node).
 - **Easily Extendable:** New GraphQL-Yoga support all [`envelop`](https://www.envelop.dev) plugins.
 
 ## Features
 
-- GraphQL spec-compliant
+- [GraphQL over HTTP spec compliant](https://github.com/graphql/graphql-over-http)
 - TypeScript
-- File upload
+- File upload with [GraphQL Multipart Request spec](https://github.com/jaydenseric/graphql-multipart-request-spec)
 - Realtime capabilities
-- Accepts both `application/json` and `application/graphql` content-types
-- Supports ESM
+- Accepts `application/json`, `application/graphql+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
+- Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
 
 ### Contributing
