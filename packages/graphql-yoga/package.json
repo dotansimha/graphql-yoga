@@ -37,11 +37,17 @@
   "exports": {
     ".": {
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.ts"
+      }
     },
     "./*": {
       "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
+      "import": {
+        "default": "./dist/*.mjs",
+        "types": "./dist/*.d.ts"
+      }
     }
   },
   "typings": "dist/index.d.ts",
