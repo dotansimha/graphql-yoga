@@ -260,6 +260,31 @@ describe('Context error', () => {
       }
     `)
   })
+
+  it('GraphQLYogaError thrown within context factory has error extensions exposed on the response', async () => {
+    const yoga = createServer({
+      logging: false,
+      context: () => {
+        throw new GraphQLYogaError('I like turtles', { foo: 1 })
+      },
+    })
+
+    const response = await request(yoga).post('/graphql').send({
+      query: '{ greetings }',
+    })
+    const body = JSON.parse(response.text)
+    expect(body).toStrictEqual({
+      data: null,
+      errors: [
+        {
+          message: 'I like turtles',
+          extensions: {
+            foo: 1,
+          },
+        },
+      ],
+    })
+  })
 })
 
 it('parse error is sent to clients', async () => {
