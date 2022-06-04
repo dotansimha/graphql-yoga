@@ -8,17 +8,13 @@ test('index page is showing h1', async ({ page }) => {
 
 test('go to GraphiQL page', async ({ page }) => {
 	// Go the the right route
-	await page.goto('/api/graphql');
+	await page.goto('/api/graphql?query=query+Hello+%7B%0A%09hello%0A%7D');
 
 	// 1/ Wait for the introspection query result getting our type "hello"
 	let res = await page.waitForResponse('/api/graphql', { timeout: 1999 }); // It's the response... It can take a bit of time in the CI... (Magic number to find it easily)
 	let json = await res.json();
 	let str = JSON.stringify(json, null, 0);
 	expect(str).toContain(`\"name\":\"hello\"`);
-
-	// I don't know why, but I think there is 2 time the introspection query!
-	// Maybe this needs to be fixed? And we should do expect no query at this stage
-	res = await page.waitForResponse('/api/graphql', { timeout: 1999 });
 
 	// 2/ Tigger the default request and wait for the response
 	const buttonExecute = page.locator(`button[class="execute-button"]`);
