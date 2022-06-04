@@ -213,6 +213,7 @@ export type YogaNodeServerInstance<TServerContext, TUserContext, TRootValue> =
   YogaNodeServer<TServerContext, TUserContext, TRootValue> &
     YogaNodeServer<TServerContext, TUserContext, TRootValue>['requestListener']
 
+export * from './types'
 export {
   ExecutionPatchResult,
   YogaInitialContext,
