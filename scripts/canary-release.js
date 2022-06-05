@@ -8,9 +8,6 @@ const readChangesets = require('@changesets/read').default
 const assembleReleasePlan = require('@changesets/assemble-release-plan').default
 const applyReleasePlan = require('@changesets/apply-release-plan').default
 const { getPackages } = require('@manypkg/get-packages')
-const {
-  promises: { unlink },
-} = require('fs')
 
 function getNewVersion(version, type) {
   const gitHash = cp
