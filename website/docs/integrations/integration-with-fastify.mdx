@@ -29,7 +29,7 @@ const graphQLServer = createServer<{
   reply: FastifyReply
 }>({
   // Integrate Fastify logger
-  logger: app.log,
+  logging: app.log,
 })
 
 /**
