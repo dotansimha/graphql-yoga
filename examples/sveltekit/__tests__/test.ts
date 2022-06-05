@@ -1,15 +1,15 @@
-import puppeteer from 'puppeteer';
+import { launch, Browser, Page } from 'puppeteer';
 import { spawn, execSync } from 'child_process';
 
-let browser: puppeteer.Browser;
-let page: puppeteer.Page;
+let browser: Browser;
+let page: Page;
 let sveltekitProcess: ReturnType<typeof spawn>;
 
 jest.setTimeout(10000);
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
-		browser = await puppeteer.launch({
+		browser = await launch({
 			// If you wanna run tests with open browser
 			// set your PUPPETEER_HEADLESS env to "false"
 			headless: process.env.PUPPETEER_HEADLESS !== 'false',
