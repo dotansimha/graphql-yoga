@@ -5,7 +5,7 @@
 	"scripts": {
 		"prepare": "svelte-kit sync",
 		"dev": "yarn prepare && svelte-kit dev",
-		"test": "playwright test",
+		"test": "jest",
 		"build": "yarn prepare && svelte-kit build",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview -p 3007",
@@ -15,7 +15,6 @@
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
 	},
 	"devDependencies": {
-		"@playwright/test": "1.22.2",
 		"@sveltejs/adapter-auto": "1.0.0-next.50",
 		"@sveltejs/kit": "1.0.0-next.348",
 		"@typescript-eslint/eslint-plugin": "5.24.0",

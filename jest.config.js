@@ -25,7 +25,6 @@ module.exports = {
   testMatch: [
     '**/?(*.)+(spec|test).[jt]s?(x)',
     '!**/examples/node-esm/**',
-    '!**/examples/sveltekit/**',
   ],
   extensionsToTreatAsEsm: ['.ts'],
 }
