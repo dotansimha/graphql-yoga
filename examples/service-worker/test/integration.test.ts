@@ -1,60 +1,86 @@
-import makeServiceWorkerEnv from 'service-worker-mock'
 import { getIntrospectionQuery } from 'graphql'
-import * as fetchAPI from 'cross-undici-fetch'
+import { createServer } from '@graphql-yoga/common'
+import { Request } from 'cross-undici-fetch'
+
+const listenerMap = new Map<string, Set<EventListenerOrEventListenerObject>>()
+
+globalThis.self = {
+  addEventListener(
+    eventName: string,
+    listener: EventListenerOrEventListenerObject,
+  ) {
+    let listeners = listenerMap.get(eventName)
+    if (!listeners) {
+      listeners = new Set()
+      listenerMap.set(eventName, listeners)
+    }
+    listeners.add(listener)
+  },
+  removeEventListener(
+    eventName: string,
+    listener: EventListenerOrEventListenerObject,
+  ) {
+    const listeners = listenerMap.get(eventName)
+    if (listeners) {
+      listeners.delete(listener)
+    }
+  },
+} as any
+
+function trigger(eventName: string, data: any) {
+  listenerMap.get(eventName)?.forEach((listener) => {
+    const listenerFn =
+      typeof listener === 'function' ? listener : listener.handleEvent
+    listenerFn(data)
+  })
+}
 
 describe('Service worker', () => {
+  const server = createServer()
   beforeEach(() => {
-    const serviceWorkerEnv = makeServiceWorkerEnv()
-    Object.defineProperty(serviceWorkerEnv, 'addEventListener', {
-      value: serviceWorkerEnv.addEventListener,
-      enumerable: true,
-    })
-    Object.assign(global, {
-      ...serviceWorkerEnv,
-      ...fetchAPI,
-    })
-    jest.resetModules()
+    server.start()
   })
-
+  afterEach(() => {
+    server.stop()
+  })
   it('should add fetch listener', async () => {
-    require('../src/index.ts')
-
-    expect(self.listeners.get('fetch')).toBeDefined()
+    expect(listenerMap.get('fetch')?.size).toBe(1)
   })
 
   it('should render GraphiQL', async () => {
-    require('../src/index.ts')
-
-    const response = await self.trigger(
-      'fetch',
-      new Request('http://localhost:3000/graphql', {
-        method: 'GET',
-        headers: {
-          Accept: 'text/html',
-        },
-      }),
-    )
+    const response: Response = await new Promise((respondWith) => {
+      trigger('fetch', {
+        request: new Request('http://localhost:3000/graphql', {
+          method: 'GET',
+          headers: {
+            Accept: 'text/html',
+          },
+        }),
+        respondWith,
+      })
+    })
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toBe('text/html')
     expect(await response.text()).toMatch(/GraphiQL/)
   })
 
   it('succeeds introspection query', async () => {
-    require('../src/index.ts')
-
-    const response = await self.trigger(
-      'fetch',
-      new Request('http://localhost:3000/graphql', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: getIntrospectionQuery(),
+    const response: Response = await new Promise((respondWith) => {
+      trigger('fetch', {
+        request: new Request('http://localhost:3000/graphql', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: getIntrospectionQuery(),
+          }),
         }),
-      }),
-    )
+        respondWith,
+      })
+    })
+
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toBe('application/json')
     expect(await response.json()).toMatchObject({
@@ -69,31 +95,32 @@ describe('Service worker', () => {
   })
 
   it('handles subscriptions', async () => {
-    require('../src/index.ts')
-
-    const response = await self.trigger(
-      'fetch',
-      new Request('http://localhost:3000/graphql', {
-        method: 'POST',
-        headers: {
-          Accept: 'text/event-stream',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: /* GraphQL */ `
-            subscription {
-              time
-            }
-          `,
+    const response: Response = await new Promise((respondWith) => {
+      trigger('fetch', {
+        request: new Request('http://localhost:3000/graphql', {
+          method: 'POST',
+          headers: {
+            Accept: 'text/event-stream',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: /* GraphQL */ `
+              subscription {
+                time
+              }
+            `,
+          }),
         }),
-      }),
-    )
+        respondWith,
+      })
+    })
+
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toBe('text/event-stream')
     const responseBodyIterator = response.body?.[Symbol.asyncIterator]()
-    const { value, done } = await responseBodyIterator.next()
+    const { value, done } = await responseBodyIterator!.next()
     expect(done).toBe(false)
     expect(value.toString()).toMatch(/data: {/)
-    await responseBodyIterator.return?.()
+    await responseBodyIterator!.return?.()
   })
 })
