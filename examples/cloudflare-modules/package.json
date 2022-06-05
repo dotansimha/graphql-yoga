@@ -7,7 +7,7 @@
   "scripts": {
     "build": "wrangler publish --dry-run --outdir=dist",
     "start": "wrangler dev",
-    "test": "npm run build && node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
     "check": "tsc --pretty --noEmit"
   },
   "devDependencies": {
