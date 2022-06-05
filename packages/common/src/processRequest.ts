@@ -118,8 +118,19 @@ export async function processRequest<TContext, TRootValue = {}>({
     })
   }
 
-  const contextValue: TContext | undefined =
-    (await enveloped.contextFactory()) as TContext
+  let contextValue: TContext | undefined
+  try {
+    contextValue = (await enveloped.contextFactory()) as TContext
+  } catch (error) {
+    if (error instanceof GraphQLError) {
+      return getErrorResponse({
+        status: 200,
+        errors: [error],
+        fetchAPI,
+      })
+    }
+    throw error
+  }
 
   const executionArgs: ExecutionArgs = {
     schema: enveloped.schema,
