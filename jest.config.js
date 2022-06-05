@@ -10,7 +10,7 @@ process.env.LC_ALL = 'en_US'
 
 const testMatch = ['**/?(*.)+(spec|test).[jt]s?(x)', '!**/examples/node-esm/**']
 
-if (parseInt(process.versions.node.split('.')[0]) > 14) {
+if (parseInt(process.versions.node.split('.')[0]) <= 14) {
   testMatch.push('!**/examples/sveltekit/**')
 }
 
