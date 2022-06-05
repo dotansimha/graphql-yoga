@@ -1,5 +1,18 @@
 # @graphql-yoga/node
 
+## 2.9.0
+
+### Minor Changes
+
+- 2d3c54c: export node yoga server types
+
+### Patch Changes
+
+- 06652c7: Fix GraphQLYogaError being thrown from contextFactory to be treated as an unexpected error. The bug would previously prevent the GraphQLYogaError `extensions` from being exposed in the result and cause a status code of 500.
+- Updated dependencies [06652c7]
+- Updated dependencies [a4960bd]
+  - @graphql-yoga/common@2.8.1
+
 ## 2.8.0
 
 ### Patch Changes
