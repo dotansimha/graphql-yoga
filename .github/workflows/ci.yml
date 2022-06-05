@@ -32,29 +32,6 @@ jobs:
       - name: Run Tests
         run: yarn test
 
-  test-cf:
-    name: Testing on Cloudflare Workers w/ Modules Approach
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Use Node 18
-        uses: actions/setup-node@master
-        with:
-          node-version: 18
-          cache: 'yarn'
-
-      - name: Install Dependencies using Yarn
-        run: yarn --ignore-engines
-
-      - name: Build Packages
-        run: yarn build
-
-      - name: Run Tests
-        working-directory: ./examples/cloudflare-modules
-        run: yarn test
-
   test-esm:
     name: Testing with Node ESM
     runs-on: ubuntu-latest

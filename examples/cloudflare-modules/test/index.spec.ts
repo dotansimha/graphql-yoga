@@ -1,4 +1,5 @@
 import worker from '../src/index'
+import { Request } from 'cross-undici-fetch'
 import { getIntrospectionQuery } from 'graphql'
 
 test('should render GraphiQL', async () => {
