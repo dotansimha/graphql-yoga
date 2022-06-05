@@ -5,9 +5,9 @@
   "type": "module",
   "module": "./dist/index.mjs",
   "scripts": {
-    "build": "node build.js",
-    "dev": "miniflare --live-reload --debug",
-    "test": "npm run build && node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
+    "build": "wrangler publish --dry-run --outdir=dist",
+    "start": "wrangler dev",
+    "test": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
     "check": "tsc --pretty --noEmit"
   },
   "devDependencies": {
@@ -17,7 +17,6 @@
     "@babel/plugin-transform-runtime": "7.17.0",
     "babel-jest": "^27.3.1",
     "@types/jest": "^27.0.2",
-    "esbuild": "^0.13.13",
     "jest": "^27.3.1",
     "jest-environment-miniflare": "^2.0.0",
     "miniflare": "^2.0.0",

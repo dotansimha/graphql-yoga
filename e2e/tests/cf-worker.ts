@@ -17,7 +17,7 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the CF Worker....')
     execSync('yarn build', {
-      cwd: '../examples/cloudflare-worker',
+      cwd: '../examples/service-worker',
       stdio: 'inherit',
     })
   },
@@ -39,7 +39,7 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
     // Deploy CF script as Worker
     const workerScript = new cf.WorkerScript('worker', {
       content: readFileSync(
-        '../examples/cloudflare-worker/dist/index.js',
+        '../examples/service-worker/dist/index.js',
         'utf-8',
       ),
       secretTextBindings: [

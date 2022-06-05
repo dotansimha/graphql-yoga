@@ -3,4 +3,4 @@ import { createServer } from '@graphql-yoga/common'
 
 const yoga = createServer()
 
-export default yoga
+export default { fetch: yoga.fetch }
