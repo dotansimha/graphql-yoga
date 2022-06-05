@@ -1,6 +1,6 @@
 // src/index.mjs
 import { createServer } from '@graphql-yoga/common'
 
-const { fetch } = createServer()
+const yoga = createServer()
 
-export default { fetch }
+export default { fetch: yoga.fetch }
