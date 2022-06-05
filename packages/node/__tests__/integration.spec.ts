@@ -284,6 +284,7 @@ describe('Context error', () => {
         },
       ],
     })
+    expect(response.status).toEqual(200)
   })
 })
 

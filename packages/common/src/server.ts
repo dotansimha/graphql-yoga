@@ -72,6 +72,7 @@ import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded'
+import { GraphQLYogaError } from './GraphQLYogaError'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -508,6 +509,13 @@ export class YogaServer<
 
       return result
     } catch (error: unknown) {
+      if (error instanceof GraphQLYogaError) {
+        return getErrorResponse({
+          status: 200,
+          errors: [error],
+          fetchAPI: this.fetchAPI,
+        })
+      }
       return getErrorResponse({
         status: 500,
         errors: [new Error((error as Error)?.message ?? 'Unexpected Error.')],
