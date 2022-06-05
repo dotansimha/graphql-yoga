@@ -1,5 +1,6 @@
 import makeServiceWorkerEnv from 'service-worker-mock'
 import { getIntrospectionQuery } from 'graphql'
+import * as fetchAPI from 'cross-undici-fetch'
 
 describe('Service worker', () => {
   beforeEach(() => {
@@ -8,7 +9,10 @@ describe('Service worker', () => {
       value: serviceWorkerEnv.addEventListener,
       enumerable: true,
     })
-    Object.assign(global, serviceWorkerEnv)
+    Object.assign(global, {
+      ...serviceWorkerEnv,
+      ...fetchAPI,
+    })
     jest.resetModules()
   })
 
@@ -23,7 +27,7 @@ describe('Service worker', () => {
 
     const response = await self.trigger(
       'fetch',
-      new Request('/graphql', {
+      new Request('http://localhost:3000/graphql', {
         method: 'GET',
         headers: {
           Accept: 'text/html',
@@ -40,7 +44,7 @@ describe('Service worker', () => {
 
     const response = await self.trigger(
       'fetch',
-      new Request('/graphql', {
+      new Request('http://localhost:3000/graphql', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -69,7 +73,7 @@ describe('Service worker', () => {
 
     const response = await self.trigger(
       'fetch',
-      new Request('/graphql', {
+      new Request('http://localhost:3000/graphql', {
         method: 'POST',
         headers: {
           Accept: 'text/event-stream',

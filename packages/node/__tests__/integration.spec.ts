@@ -478,7 +478,6 @@ describe('Requests', () => {
       .set('Content-Type', 'application/graphql+json')
       .send(JSON.stringify({ query: '{ ping }' }))
 
-    console.log(response.text)
     expect(response.statusCode).toBe(200)
     const body = JSON.parse(response.text)
     expect(body.errors).toBeUndefined()

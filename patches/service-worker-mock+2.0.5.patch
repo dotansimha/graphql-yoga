@@ -1,0 +1,18 @@
+diff --git a/node_modules/service-worker-mock/models/FetchEvent.js b/node_modules/service-worker-mock/models/FetchEvent.js
+index 929493f..3dece0a 100644
+--- a/node_modules/service-worker-mock/models/FetchEvent.js
++++ b/node_modules/service-worker-mock/models/FetchEvent.js
+@@ -11,10 +11,10 @@ class FetchEvent extends ExtendableEvent {
+       this.type = type;
+       this.isReload = init.isReload || false;
+       this.clientId = init.clientId || null;
+-      if (init.request instanceof Request) {
+-        this.request = init.request;
+-      } else if (typeof init.request === 'string') {
++      if (typeof init.request === 'string') {
+         this.request = new Request(init.request);
++      } else {
++         this.request = init.request;
+       }
+    }
+    respondWith(response) {
