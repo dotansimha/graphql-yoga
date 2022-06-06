@@ -21,14 +21,12 @@ export type Plugin<
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
    */
-  onRequestParse?: OnRequestParseHook<TServerContext>
+  onRequestParse?: OnRequestParseHook
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
    */
-  onResultProcess?: OnResultProcess<
-    TServerContext & TUserContext & YogaInitialContext
-  >
+  onResultProcess?: OnResultProcess
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
@@ -47,14 +45,13 @@ export interface OnRequestEventPayload<TServerContext> {
   endResponse(response: Response): void
 }
 
-export type OnRequestParseHook<TServerContext> = (
-  payload: OnRequestParseEventPayload<TServerContext>,
+export type OnRequestParseHook = (
+  payload: OnRequestParseEventPayload,
 ) => PromiseOrValue<void | OnRequestParseHookResult>
 
 export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
 
-export interface OnRequestParseEventPayload<TServerContext> {
-  serverContext: TServerContext | undefined
+export interface OnRequestParseEventPayload {
   request: Request
   requestParser: RequestParser | undefined
   setRequestParser: (parser: RequestParser) => void
@@ -73,8 +70,8 @@ export interface OnRequestParseDoneEventPayload {
   setParams: (params: GraphQLParams) => void
 }
 
-export type OnResultProcess<TContext> = (
-  payload: OnResultProcessEventPayload<TContext>,
+export type OnResultProcess = (
+  payload: OnResultProcessEventPayload,
 ) => PromiseOrValue<void>
 
 export type ResultProcessorInput = PromiseOrValue<
@@ -86,9 +83,8 @@ export type ResultProcessor = (
   fetchAPI: FetchAPI,
 ) => PromiseOrValue<Response>
 
-export interface OnResultProcessEventPayload<TContext> {
+export interface OnResultProcessEventPayload {
   request: Request
-  context: TContext
   result: ResultProcessorInput
   resultProcessor: ResultProcessor
   setResultProcessor(resultProcessor: ResultProcessor): void

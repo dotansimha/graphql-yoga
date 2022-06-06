@@ -74,7 +74,7 @@ export interface GraphiQLPluginConfig<TServerContext> {
 
 export function useGraphiQL<TServerContext>(
   config?: GraphiQLPluginConfig<TServerContext>,
-): Plugin {
+): Plugin<{}, TServerContext> {
   const logger = config?.logger ?? console
   let graphiqlOptionsFactory: GraphiQLOptionsFactory<TServerContext>
   if (typeof config?.options === 'function') {

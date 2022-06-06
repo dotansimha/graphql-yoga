@@ -13,18 +13,15 @@ export type CORSOptions =
   | false
 
 export type CORSPluginOptions<TServerContext> =
-  | ((
-      request: Request,
-      ...args: {} extends TServerContext
-        ? [serverContext?: TServerContext | undefined]
-        : [serverContext: TServerContext]
-    ) => CORSOptions)
+  | CORSOptionsFactory<TServerContext>
   | CORSOptions
   | boolean
 
 export type CORSOptionsFactory<TServerContext> = (
   request: Request,
-  serverContext: TServerContext,
+  ...args: {} extends TServerContext
+    ? [serverContext?: TServerContext | undefined]
+    : [serverContext: TServerContext]
 ) => PromiseOrValue<CORSOptions>
 
 export function getCORSHeadersByRequestAndOptions(
@@ -118,8 +115,8 @@ export function getCORSHeadersByRequestAndOptions(
 
 async function getCORSResponseHeaders<TServerContext>(
   request: Request,
-  serverContext: TServerContext,
   corsOptionsFactory: CORSOptionsFactory<TServerContext>,
+  serverContext: TServerContext,
 ) {
   const corsOptions = await corsOptionsFactory(request, serverContext)
 
@@ -128,7 +125,7 @@ async function getCORSResponseHeaders<TServerContext>(
 
 export function useCORS<TServerContext>(
   options?: CORSPluginOptions<TServerContext>,
-): Plugin {
+): Plugin<{}, TServerContext> {
   let corsOptionsFactory: CORSOptionsFactory<TServerContext> = () => ({})
   if (options != null) {
     if (typeof options === 'function') {
@@ -147,22 +144,21 @@ export function useCORS<TServerContext>(
       if (request.method.toUpperCase() === 'OPTIONS') {
         const headers = await getCORSResponseHeaders<any>(
           request,
-          serverContext,
           corsOptionsFactory,
+          serverContext,
         )
         const response = new fetchAPI.Response(null, {
           status: 204,
           headers,
         })
         endResponse(response)
-        return
       }
     },
     async onResponse({ request, serverContext, response }) {
       const headers = await getCORSResponseHeaders<any>(
         request,
-        serverContext,
         corsOptionsFactory,
+        serverContext,
       )
       for (const headerName in headers) {
         response.headers.set(headerName, headers[headerName])
