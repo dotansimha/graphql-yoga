@@ -49,7 +49,9 @@ describe('SvelteKit integration', () => {
 		await page.goto('http://localhost:3007/api/graphql?query=query+Hello+%7B%0A%09hello%0A%7D');
 
 		// 1/ Wait for the introspection query result getting our type "hello"
-		let res = await page.waitForResponse('http://localhost:3007/api/graphql', { timeout: 1999 }); // It's the response... It can take a bit of time in the CI... (Magic number to find it easily)
+		let res = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
+			timeout: 3000
+		}); // It's the response... It can take a bit of time in the CI... (Magic number to find it easily)
 		let json = await res.json();
 		let str = JSON.stringify(json, null, 0);
 		expect(str).toContain(`"name":"hello"`);
@@ -57,7 +59,9 @@ describe('SvelteKit integration', () => {
 		// 2/ Tigger the default request and wait for the response
 		const buttonExecute = await page.waitForSelector(`button[class="execute-button"]`);
 		buttonExecute?.click();
-		res = await page.waitForResponse('http://localhost:3007/api/graphql', { timeout: 1999 }); // It's the response... It can take a bit of time in the CI... (Magic number to find it easily)
+		res = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
+			timeout: 3000
+		}); // It's the response... It can take a bit of time in the CI... (Magic number to find it easily)
 		json = await res.json();
 		str = JSON.stringify(json, null, 0);
 		expect(str).toContain(`{"data":{"hello":"SvelteKit - GraphQL Yoga"}}`);
