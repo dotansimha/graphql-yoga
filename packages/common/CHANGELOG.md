@@ -1,5 +1,12 @@
 # @graphql-yoga/common
 
+## 2.8.1
+
+### Patch Changes
+
+- 06652c7: Fix GraphQLYogaError being thrown from contextFactory to be treated as an unexpected error. The bug would previously prevent the GraphQLYogaError `extensions` from being exposed in the result and cause a status code of 500.
+- a4960bd: Ensure the GraphiQL version is compatible with the `@graphql-yoga/common` version by hard-coding the version number before publishing/building.
+
 ## 2.8.0
 
 ### Minor Changes
