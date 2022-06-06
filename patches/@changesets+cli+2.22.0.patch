@@ -1,8 +1,8 @@
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-index a7a70dc..677a051 100644
+index 129ae05..9b5daeb 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-@@ -587,7 +587,7 @@ const getLastJsonObjectFromString = str => {
+@@ -639,7 +639,7 @@ const getLastJsonObjectFromString = str => {
    return null;
  };
  
@@ -11,11 +11,24 @@ index a7a70dc..677a051 100644
  const npmPublishLimit = pLimit__default['default'](10);
  
  function jsonParse(input) {
+diff --git a/node_modules/@changesets/cli/dist/cli.cjs.prod.js b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
+index ee3d78e..dc2a8c7 100644
+--- a/node_modules/@changesets/cli/dist/cli.cjs.prod.js
++++ b/node_modules/@changesets/cli/dist/cli.cjs.prod.js
+@@ -354,7 +354,7 @@ const getLastJsonObjectFromString = str => {
+     }
+   }
+   return null;
+-}, npmRequestLimit = pLimit__default.default(40), npmPublishLimit = pLimit__default.default(10);
++}, npmRequestLimit = pLimit__default.default(3), npmPublishLimit = pLimit__default.default(10);
+ 
+ function jsonParse(input) {
+   try {
 diff --git a/node_modules/@changesets/cli/dist/cli.esm.js b/node_modules/@changesets/cli/dist/cli.esm.js
-index 3aaa54c..a153aca 100644
+index 19806a8..72859ff 100644
 --- a/node_modules/@changesets/cli/dist/cli.esm.js
 +++ b/node_modules/@changesets/cli/dist/cli.esm.js
-@@ -565,7 +565,7 @@ const getLastJsonObjectFromString = str => {
+@@ -616,7 +616,7 @@ const getLastJsonObjectFromString = str => {
    return null;
  };
  
