@@ -21,16 +21,11 @@ const users: Record<string, User> = {
   },
 }
 
-const server = createServer<
-  {},
-  {
-    currentUser: User | null
-  }
->({
+const server = createServer<{}, { currentUser: User }>({
   plugins: [
-    useGenericAuth<User, YogaInitialContext>({
+    useGenericAuth({
       mode: 'protect-granular',
-      resolveUserFn: async (context) => {
+      async resolveUserFn(context: YogaInitialContext) {
         let accessToken = context.request.headers.get('x-authorization') ?? null
         if (accessToken === null) {
           const url = new URL(context.request.url)

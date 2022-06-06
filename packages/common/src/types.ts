@@ -39,7 +39,6 @@ export interface FormatPayloadParams<TContext, TRootValue> {
 }
 
 export interface YogaInitialContext {
-  [key: string | symbol]: unknown
   /**
    * A Document containing GraphQL Operations and Fragments to execute.
    */
