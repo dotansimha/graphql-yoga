@@ -1,5 +1,12 @@
 # @graphql-yoga/render-graphiql
 
+## 2.9.2
+
+### Patch Changes
+
+- Updated dependencies [a06091f]
+  - @graphql-yoga/common@2.8.2
+
 ## 2.9.1
 
 ### Patch Changes

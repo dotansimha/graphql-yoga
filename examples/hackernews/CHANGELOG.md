@@ -1,5 +1,11 @@
 # hackernews
 
+## 1.9.1
+
+### Patch Changes
+
+- @graphql-yoga/node@2.9.1
+
 ## 1.9.0
 
 ### Patch Changes
