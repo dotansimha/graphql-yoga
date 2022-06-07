@@ -1,0 +1,26 @@
+{
+  "name": "example-generic-auth",
+  "version": "1.5.0",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
+    "start": "ts-node src/main.ts",
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "16.11.7",
+    "cross-env": "7.0.3",
+    "ts-node": "10.4.0",
+    "ts-node-dev": "1.1.8",
+    "typescript": "4.4.4"
+  },
+  "dependencies": {
+    "@envelop/generic-auth": "4.2.4",
+    "@graphql-yoga/node": "2.9.0",
+    "graphql": "16.5.0"
+  }
+}
