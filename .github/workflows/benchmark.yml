@@ -16,8 +16,17 @@ jobs:
           node-version: 18
           cache: 'yarn'
 
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        id: node-modules-cache-benchmark
+        with:
+          path: '**/node_modules'
+          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
+          restore-keys: |
+            ${{runner.os}}-18-node-modules-
       - name: Install Dependencies using Yarn
-        run: yarn
+        run: yarn install --ignore-engines --frozen-lockfile --immutable
+        if: steps.node-modules-cache-benchmark.outputs.cache-hit != 'true'
 
       - name: Build Packages
         run: yarn build
