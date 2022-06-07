@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.8.2
+
+### Patch Changes
+
+- a06091f: '.inject' should set Content-Type to application/json by default. Previously the user should have set it.
+
 ## 2.8.1
 
 ### Patch Changes
