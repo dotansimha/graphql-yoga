@@ -540,11 +540,11 @@ export class YogaServer<
    *
    * Example - Test a simple query
    * ```ts
-   * const response = await yoga.inject({
+   * const { response, executionResult } = await yoga.inject({
    *  document: "query { ping }",
    * })
-   * expect(response.statusCode).toBe(200)
-   * expect(response.data.ping).toBe('pong')
+   * expect(response.status).toBe(200)
+   * expect(executionResult.data.ping).toBe('pong')
    * ```
    **/
   async inject<TData = any, TVariables = any>({
@@ -559,7 +559,10 @@ export class YogaServer<
   }> {
     const request = new this.fetchAPI.Request('http://localhost/graphql', {
       method: 'POST',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
       body: JSON.stringify({
         query:
           document &&

@@ -13,12 +13,11 @@ import { createServer } from '@graphql-yoga/common'
 
 const yoga = createServer()
 
-const response = await yoga.inject({
+const { response, executionResult } = await yoga.inject({
   document: '{ greetings }',
 })
 
 console.assert(response.status === 200, 'Response status should be 200')
-const executionResult = await response.json()
 console.assert(
   executionResult.data.greetings ===
     'This is the `greetings` field of the root `Query` type',
