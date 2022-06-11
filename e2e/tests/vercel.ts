@@ -1,10 +1,13 @@
 import * as pulumi from '@pulumi/pulumi'
-import { assertGraphiQL, assertQuery, env, waitForEndpoint } from '../utils'
+import {
+  assertGraphiQL,
+  assertQuery,
+  env,
+  execPromise,
+  fsPromises,
+  waitForEndpoint,
+} from '../utils'
 import { DeploymentConfiguration } from '../types'
-import { execSync } from 'child_process'
-import { promises } from 'fs'
-
-const { readFile } = promises
 
 type VercelProviderInputs = {
   name: string
@@ -129,9 +132,8 @@ export const vercelDeployment: DeploymentConfiguration<{
   prerequisites: async () => {
     // Build and bundle the function
     console.info('\t\tℹ️ Bundling the Vercel Function....')
-    execSync('yarn build', {
+    await execPromise('yarn build', {
       cwd: '../examples/vercel-function',
-      stdio: 'inherit',
     })
   },
   program: async () => {
@@ -139,7 +141,7 @@ export const vercelDeployment: DeploymentConfiguration<{
       files: [
         {
           file: '/api/graphql.js',
-          data: await readFile(
+          data: await fsPromises.readFile(
             '../examples/vercel-function/dist/index.js',
             'utf-8',
           ),

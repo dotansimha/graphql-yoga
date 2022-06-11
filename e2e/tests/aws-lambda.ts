@@ -4,11 +4,16 @@ import { assertQuery, env, execPromise } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
+import { version } from '@pulumi/aws/package.json'
 
 export const awsLambdaDeployment: DeploymentConfiguration<{
   functionUrl: string
 }> = {
-  prerequisites: async () => {
+  prerequisites: async (stack: Stack) => {
+    console.info('\t\tℹ️ Installing AWS plugin...')
+    // Intall Pulumi AWS Plugin
+    await stack.workspace.installPlugin('aws', version, 'resource')
+
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the AWS Lambda Function....')
     await execPromise('yarn build', {
@@ -16,7 +21,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
     })
   },
   config: async (stack: Stack) => {
-    // Configure the Pulumi environment with the Azure credentials
+    // Configure the Pulumi environment with the AWS credentials
     // This will allow Pulummi program to just run without caring about secrets/configs.
     // See: https://www.pulumi.com/registry/packages/aws/installation-configuration/
     await stack.setConfig('aws:accessKey', {
