@@ -10,12 +10,15 @@ export function buildApp(logging = true) {
   }>({
     schema: {
       typeDefs: /* GraphQL */ `
+        scalar File
+
         type Query {
           hello: String
           isFastify: Boolean
         }
         type Mutation {
           hello: String
+          getFileName(file: File!): String
         }
         type Subscription {
           countdown(from: Int!, interval: Int!): Int!
@@ -28,6 +31,7 @@ export function buildApp(logging = true) {
         },
         Mutation: {
           hello: () => 'world',
+          getFileName: (root, { file }: { file: File }) => file.name,
         },
         Subscription: {
           countdown: {
@@ -46,6 +50,10 @@ export function buildApp(logging = true) {
     // Integrate Fastify Logger to Yoga
     logging: app.log,
   })
+
+  app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
+    done(null),
+  )
 
   app.route({
     url: '/graphql',
