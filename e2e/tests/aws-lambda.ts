@@ -1,8 +1,7 @@
 import { Stack } from '@pulumi/pulumi/automation'
 import { DeploymentConfiguration } from '../types'
-import { assertQuery, env } from '../utils'
+import { assertQuery, env, execPromise } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
-import { execSync } from 'child_process'
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
 
@@ -12,9 +11,8 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
   prerequisites: async () => {
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the AWS Lambda Function....')
-    execSync('yarn build', {
+    await execPromise('yarn build', {
       cwd: '../examples/aws-lambda-bundle',
-      stdio: 'inherit',
     })
   },
   config: async (stack: Stack) => {

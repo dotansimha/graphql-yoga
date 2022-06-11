@@ -1,10 +1,13 @@
-import { execSync } from 'child_process'
-import { request } from 'undici'
+import { exec } from 'child_process'
+import { promises as fsPromises } from 'fs'
+import { promisify } from 'util'
 
-export function getCommitId() {
-  return (process.env.COMMIT_ID || execSync('git rev-parse --short HEAD'))
-    .toString()
-    .trim()
+export { fsPromises }
+export const execPromise = promisify(exec)
+
+export async function getCommitId() {
+  const { stdout } = await execPromise('git rev-parse HEAD')
+  return (process.env.COMMIT_ID || stdout).toString().trim()
 }
 
 export async function waitForEndpoint(
@@ -17,17 +20,15 @@ export async function waitForEndpoint(
       `Trying to connect to ${endpoint} (attempt ${attempt}/${retries})...`,
     )
     try {
-      const r = await request(endpoint, {
+      const r = await fetch(endpoint, {
         method: 'GET',
         headers: {
           accept: 'text/html',
         },
       })
 
-      if (r.statusCode !== 200) {
-        throw new Error(
-          `Endpoint not ready yet, status code is ${r.statusCode}`,
-        )
+      if (r.status !== 200) {
+        throw new Error(`Endpoint not ready yet, status code is ${r.status}`)
       }
 
       return true
@@ -57,22 +58,22 @@ export function env(name: string): string {
 export async function assertGraphiQL(endpoint: string) {
   console.log(`ℹ️ Looking for valid Yoga GraphiQL in ${endpoint}`)
 
-  const { statusCode, body } = await request(endpoint, {
+  const response = await fetch(endpoint, {
     method: 'GET',
     headers: {
       accept: 'text/html',
     },
   })
 
-  if (statusCode !== 200) {
-    console.warn(`⚠️ Invalid GraphiQL status code:`, statusCode)
+  if (response.status !== 200) {
+    console.warn(`⚠️ Invalid GraphiQL status code:`, response.status)
 
     throw new Error(
-      `Failed to locate GraphiQL: invalid status code (${statusCode})`,
+      `Failed to locate GraphiQL: invalid status code (${response.status})`,
     )
   }
 
-  const html = await body.text()
+  const html = await response.text()
 
   if (!html.includes('<title>Yoga GraphiQL</title>')) {
     console.warn(`⚠️ Invalid GraphiQL body:`, html)
@@ -101,7 +102,7 @@ export async function assertQuery(
   console.log(`\t operation: ${query}`)
   console.log(`\t variables: ${JSON.stringify(variables, null, 2)}`)
 
-  const { statusCode, body } = await request(endpoint, {
+  const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
       accept: 'applications/json',
@@ -113,15 +114,15 @@ export async function assertQuery(
     }),
   })
 
-  if (statusCode !== 200) {
-    console.warn(`⚠️ Invalid GraphQL status code response:`, statusCode)
+  if (response.status !== 200) {
+    console.warn(`⚠️ Invalid GraphQL status code response:`, response.status)
 
     throw new Error(
-      `Failed to run GraphQL request, response error code is: ${statusCode}`,
+      `Failed to run GraphQL request, response error code is: ${response.status}`,
     )
   }
 
-  const responseJson = await body.json()
+  const responseJson = await response.json()
 
   if (responseJson.errors) {
     console.warn(`⚠️ Found GraphQL response with errors:`, responseJson.errors)

@@ -1,11 +1,11 @@
 import { Stack } from '@pulumi/pulumi/automation'
-import { execSync } from 'child_process'
 import { DeploymentConfiguration } from '../types'
-import { assertGraphiQL, assertQuery, env } from '../utils'
+import { assertGraphiQL, assertQuery, env, execPromise } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
 import * as resources from '@pulumi/azure-native/resources'
 import * as storage from '@pulumi/azure-native/storage'
 import * as web from '@pulumi/azure-native/web'
+import { version } from '@pulumi/azure-native/package.json'
 
 export function getConnectionString(
   resourceGroupName: pulumi.Input<string>,
@@ -51,13 +51,12 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
   prerequisites: async (stack: Stack) => {
     console.info('\t\tℹ️ Installing Azure-Native plugin...')
     // Intall Pulumi Azure Plugin
-    await stack.workspace.installPlugin('azure-native', '1.60.0', 'resource')
+    await stack.workspace.installPlugin('azure-native', version, 'resource')
 
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the Azure Function....')
-    execSync('yarn build', {
+    await execPromise('yarn build', {
       cwd: '../examples/azure-function',
-      stdio: 'inherit',
     })
   },
   config: async (stack: Stack) => {
