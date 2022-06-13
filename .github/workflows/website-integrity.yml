@@ -32,11 +32,9 @@ jobs:
 
       - name: Typecheck
         run: yarn workspace website run build
-      - name: Diff
-        run: git diff --exit-code -- website/route-lockfile.txt
 
       - name: Compare
-        run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt | grep "^-[^-]" && exit 1 || exit 0
+        run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt
 
       - name: Diff to file
         if: always()
