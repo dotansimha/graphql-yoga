@@ -31,7 +31,9 @@ export async function waitForEndpoint(
         throw new Error(`Endpoint not ready yet, status code is ${r.status}`)
       }
 
-      return true
+      const response = await r.text()
+
+      return !!response.includes('Login – Vercel')
     } catch (e) {
       console.warn(
         `Failed to connect to endpoint: ${endpoint}, waiting ${timeout}ms...`,

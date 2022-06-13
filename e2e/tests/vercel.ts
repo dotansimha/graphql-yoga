@@ -97,9 +97,6 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
 
     const responseJson = await response.json()
 
-    console.log(responseJson)
-    await new Promise((resolve) => setTimeout(resolve, 5000))
-
     return {
       id: responseJson.id,
       outs: {
