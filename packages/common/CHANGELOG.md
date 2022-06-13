@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.8.3
+
+### Patch Changes
+
+- 2c0bcda: Remove 'Server: GraphQL Yoga' header from the response
+
 ## 2.8.2
 
 ### Patch Changes
