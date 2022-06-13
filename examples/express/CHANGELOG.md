@@ -1,5 +1,11 @@
 # express-example
 
+## 0.9.2
+
+### Patch Changes
+
+- @graphql-yoga/node@2.9.2
+
 ## 0.9.1
 
 ### Patch Changes

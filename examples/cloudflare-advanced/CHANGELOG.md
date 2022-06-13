@@ -1,5 +1,12 @@
 # cloudflare-advanced
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [2c0bcda]
+  - @graphql-yoga/common@2.8.3
+
 ## 0.3.2
 
 ### Patch Changes
