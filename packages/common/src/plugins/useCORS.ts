@@ -31,9 +31,7 @@ export function getCORSHeadersByRequestAndOptions(
   request: Request,
   corsOptions: CORSOptions,
 ): Record<string, string> {
-  const headers: Record<string, string> = {
-    Server: 'GraphQL Yoga',
-  }
+  const headers: Record<string, string> = {}
 
   if (corsOptions === false) {
     return headers
