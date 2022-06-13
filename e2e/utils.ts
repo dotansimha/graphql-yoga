@@ -33,7 +33,7 @@ export async function waitForEndpoint(
 
       const response = await r.text()
 
-      return !response.includes('Login – Vercel')
+      return !response.includes('Vercel')
     } catch (e) {
       console.warn(
         `Failed to connect to endpoint: ${endpoint}, waiting ${timeout}ms...`,
