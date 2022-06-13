@@ -1,9 +1,13 @@
 import * as pulumi from '@pulumi/pulumi'
-import { assertGraphiQL, assertQuery, env, waitForEndpoint } from '../utils'
-import { request } from 'undici'
+import {
+  assertGraphiQL,
+  assertQuery,
+  env,
+  execPromise,
+  fsPromises,
+  waitForEndpoint,
+} from '../utils'
 import { DeploymentConfiguration } from '../types'
-import { execSync } from 'child_process'
-import { readFileSync } from 'fs'
 
 type VercelProviderInputs = {
   name: string
@@ -41,7 +45,7 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
 
   async delete(id: string) {
     const teamId = this.getTeamId()
-    const { statusCode, body } = await request(
+    const response = await fetch(
       `${this.baseUrl}/v13/deployments/${id}${
         teamId ? `?teamId=${teamId}` : ''
       }`,
@@ -50,14 +54,14 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
         headers: {
           Authorization: `Bearer ${this.authToken}`,
         },
-        headersTimeout: 20 * 1000,
-        bodyTimeout: 20 * 1000,
       },
     )
 
-    if (statusCode !== 200) {
+    if (response.status !== 200) {
       throw new Error(
-        `Failed to delete Vercel deployment: invalid status code (${statusCode}), body: ${await body.text()}`,
+        `Failed to delete Vercel deployment: invalid status code (${
+          response.status
+        }), body: ${await response.text()}`,
       )
     }
   }
@@ -66,7 +70,7 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
     inputs: VercelProviderInputs,
   ): Promise<pulumi.dynamic.CreateResult> {
     const teamId = this.getTeamId()
-    const { statusCode, body } = await request(
+    const response = await fetch(
       `${this.baseUrl}/v13/deployments${teamId ? `?teamId=${teamId}` : ''}`,
       {
         method: 'POST',
@@ -80,23 +84,23 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
           functions: inputs.functions,
           projectSettings: inputs.projectSettings,
         }),
-        headersTimeout: 20 * 1000,
-        bodyTimeout: 20 * 1000,
       },
     )
 
-    if (statusCode !== 200) {
+    if (response.status !== 200) {
       throw new Error(
-        `Failed to create Vercel deployment: invalid status code (${statusCode}), body: ${await body.text()}`,
+        `Failed to create Vercel deployment: invalid status code (${
+          response.status
+        }), body: ${await response.text()}`,
       )
     }
 
-    const response = await body.json()
+    const responseJson = await response.json()
 
     return {
-      id: response.id,
+      id: responseJson.id,
       outs: {
-        url: response.url,
+        url: responseJson.url,
       },
     }
   }
@@ -128,9 +132,8 @@ export const vercelDeployment: DeploymentConfiguration<{
   prerequisites: async () => {
     // Build and bundle the function
     console.info('\t\tℹ️ Bundling the Vercel Function....')
-    execSync('yarn build', {
+    await execPromise('yarn build', {
       cwd: '../examples/vercel-function',
-      stdio: 'inherit',
     })
   },
   program: async () => {
@@ -138,7 +141,7 @@ export const vercelDeployment: DeploymentConfiguration<{
       files: [
         {
           file: '/api/graphql.js',
-          data: readFileSync(
+          data: await fsPromises.readFile(
             '../examples/vercel-function/dist/index.js',
             'utf-8',
           ),

@@ -59,4 +59,15 @@ app.route({
 app.listen(4000)
 ```
 
+## Add dummy content type parser for File Uploads
+
+Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requests because otherwise it will throw an error something like `Unsupported media type`.
+
+```ts
+// This will allow Fastify to forward multipart requests to GraphQL Yoga
+app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
+  done(null),
+)
+```
+
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/fastify)

@@ -15,11 +15,16 @@ const AVAILABLE_TEST_PLANS = {
   'docker-node-17': dockerDeployment('node:17.8.0-alpine3.14'),
 }
 
-async function run(
-  identifier: string,
-  testPlanName: string,
-  testPlan: DeploymentConfiguration,
-) {
+async function main() {
+  const commitId = await getCommitId()
+  const testPlaneName = env('TEST_PLAN_NAME')
+  const identifier = `yoga-${testPlaneName}-e2e-${commitId}`
+  const testPlan: DeploymentConfiguration = AVAILABLE_TEST_PLANS[testPlaneName]
+
+  if (!testPlan) {
+    throw new Error(`Test plan ${testPlaneName} not found`)
+  }
+
   const stack = await LocalWorkspace.createOrSelectStack({
     projectName: 'yoga-e2e',
     stackName: identifier,
@@ -28,7 +33,7 @@ async function run(
 
   try {
     console.info(
-      `🚀 Running test plan: ${testPlanName} with identifier: ${identifier}`,
+      `🚀 Running test plan: ${testPlaneName} with identifier: ${identifier}`,
     )
     console.info(`ℹ️ Creating new temporary Pulumi environment...`)
     console.info(`\t✅ Successfully initialized stack...`)
@@ -71,7 +76,7 @@ async function run(
       `✅ Pulumi program execution done, infrastructure is now provisioned. Pulumi outputs:`,
       upRes.outputs,
     )
-    console.info(`🚀 Running "${testPlanName}" tests...`)
+    console.info(`🚀 Running "${testPlaneName}" tests...`)
     await testPlan.test(upRes.outputs)
     console.info('✅ Tests execution is done!')
   } catch (e) {
@@ -95,16 +100,7 @@ async function run(
   }
 }
 
-const commitId = getCommitId()
-const testPlaneName = env('TEST_PLAN_NAME')
-const testPlaneId = `yoga-${testPlaneName}-e2e-${commitId}`
-const testPlane = AVAILABLE_TEST_PLANS[testPlaneName]
-
-if (!testPlane) {
-  throw new Error(`Test plan ${testPlaneName} not found`)
-}
-
-run(testPlaneId, testPlaneName, testPlane).catch((err) => {
+main().catch((err) => {
   console.error(err)
   process.exit(1)
 })

@@ -10,15 +10,12 @@
     "@pulumi/awsx": "0.40.0",
     "@pulumi/aws": "5.8.0",
     "@pulumi/docker": "3.2.0",
-    "@types/node": "^16.11.7",
+    "@types/node": "^17.0.42",
     "typescript": "4.7.3",
-    "tsup": "6.1.2",
-    "undici": "5.4.0"
+    "ts-node": "10.8.1"
   },
   "scripts": {
-    "build": "tsup index.ts",
-    "prestart": "yarn build",
-    "start": "node dist/index.js",
+    "start": "ts-node --transpile-only index.ts",
     "check": "exit 0"
   }
 }

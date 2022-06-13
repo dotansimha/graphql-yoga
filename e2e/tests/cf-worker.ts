@@ -1,10 +1,16 @@
 import { Stack } from '@pulumi/pulumi/automation'
-import { execSync } from 'child_process'
-import { readFileSync } from 'fs'
 import { DeploymentConfiguration } from '../types'
 import * as cf from '@pulumi/cloudflare'
-import { assertGraphiQL, assertQuery, env, waitForEndpoint } from '../utils'
+import {
+  assertGraphiQL,
+  assertQuery,
+  env,
+  execPromise,
+  fsPromises,
+  waitForEndpoint,
+} from '../utils'
 import * as pulumi from '@pulumi/pulumi'
+import { version } from '@pulumi/cloudflare/package.json'
 
 export const cloudFlareDeployment: DeploymentConfiguration<{
   workerUrl: string
@@ -12,13 +18,12 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
   prerequisites: async (stack: Stack) => {
     console.info('\t\tℹ️ Installing Pulumi CF plugin...')
     // Intall Pulumi CF Plugin
-    await stack.workspace.installPlugin('cloudflare', '4.3.0', 'resource')
+    await stack.workspace.installPlugin('cloudflare', version, 'resource')
 
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the CF Worker....')
-    execSync('yarn build', {
+    await execPromise('yarn build', {
       cwd: '../examples/service-worker',
-      stdio: 'inherit',
     })
   },
   config: async (stack: Stack) => {
@@ -38,7 +43,7 @@ export const cloudFlareDeployment: DeploymentConfiguration<{
 
     // Deploy CF script as Worker
     const workerScript = new cf.WorkerScript('worker', {
-      content: readFileSync(
+      content: await fsPromises.readFile(
         '../examples/service-worker/dist/index.js',
         'utf-8',
       ),
