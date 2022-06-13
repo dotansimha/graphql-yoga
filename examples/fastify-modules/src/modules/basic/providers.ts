@@ -16,4 +16,11 @@ export class BasicProvider {
     }
     return Object.keys(this.ctx)
   }
+
+  public async *getCountdown(from: number) {
+    for (let i = from; i >= 0; i--) {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      yield i
+    }
+  }
 }

@@ -3,17 +3,17 @@ import { BasicProvider } from './providers'
 export const resolvers = {
   Query: {
     hello: () => 'world',
-    contextKeys: (root, args, { injector }): string => {
+    contextKeys: (root, args, { injector }: GraphQLModules.AppContext) => {
       return injector.get(BasicProvider).getContextKeys()
     },
   },
   Subscription: {
     countdown: {
-      async *subscribe(_, { from }) {
-        for (let i = from; i >= 0; i--) {
-          await new Promise((resolve) => setTimeout(resolve, 1000))
-          yield { countdown: i }
-        }
+      subscribe(_, { from }, { injector }: GraphQLModules.AppContext) {
+        return injector.get(BasicProvider).getCountdown(from)
+      },
+      resolve(countdown) {
+        return { countdown }
       },
     },
   },

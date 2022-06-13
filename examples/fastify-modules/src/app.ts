@@ -15,7 +15,7 @@ export function createGraphQLApp() {
   })
 }
 
-export const graphqlHandler = (): RouteHandlerMethod => {
+export function createGraphQLHandler(): RouteHandlerMethod {
   const graphQLServer = createServer<{
     req: FastifyRequest
     reply: FastifyReply
@@ -36,6 +36,8 @@ export const graphqlHandler = (): RouteHandlerMethod => {
     reply.status(response.status)
 
     reply.send(response.body)
+
+    return reply
   }
 }
 
@@ -45,7 +47,7 @@ export function buildApp() {
   app.route({
     url: '/graphql',
     method: ['GET', 'POST', 'OPTIONS'],
-    handler: graphqlHandler(),
+    handler: createGraphQLHandler(),
   })
 
   return app
