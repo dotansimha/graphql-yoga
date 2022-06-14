@@ -2,7 +2,14 @@ import { createServer } from '@graphql-yoga/node'
 import fastify, { FastifyReply, FastifyRequest } from 'fastify'
 
 export function buildApp(logging = true) {
-  const app = fastify({ logger: logging })
+  const app = fastify({
+    logger: logging && {
+      transport: {
+        target: 'pino-pretty',
+      },
+      level: 'debug',
+    },
+  })
 
   const graphQLServer = createServer<{
     req: FastifyRequest
