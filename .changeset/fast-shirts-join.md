@@ -1,14 +1,12 @@
 ## Multiple parameters are not recommended (not used internally) for log methods
 
-Previously Yoga used to send data to the provided logger like below;
+Previously sometimes Yoga used to send data to the provided logger like below;
 
 ```js
 yogaLogger.debug(arg1, arg2, arg3)
 ```
 
-This behavior is working fine with JavaScript's native `console` implementation.
-
-Then we realized some logger implementations like Pino only accepts a single parameter for its logging methods. We decided to avoid sending multiple parameters to the logger.
+This behavior is working fine with JavaScript's native `console` implementation but most of the other non native logger implementation like Pino only accept a single parameter for its logging methods. So we decided to avoid sending multiple parameters to the logger.
 However, in order to prevent a breaking change, we kept the signatures of logger methods and they will still accept multiple parameters in a single call. You should keep on mind that eventually we will stop accepting multiple parameters and have the behavior similar to Pino's.
 
 ## Note for custom logger and fastify users
