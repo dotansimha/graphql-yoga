@@ -1,5 +1,3 @@
-import { inspect } from '@graphql-tools/utils'
-
 type MessageTransformer = (msg: string) => string
 
 const ANSI_CODES = {
@@ -27,6 +25,15 @@ export const debugColor: MessageTransformer = (msg) =>
 export const titleBold: MessageTransformer = (msg) =>
   ANSI_CODES.bold + msg + ANSI_CODES.reset
 
+const LEVEL_COLOR = {
+  warn: ANSI_CODES.orange,
+  info: ANSI_CODES.cyan,
+  error: ANSI_CODES.red,
+  debug: ANSI_CODES.magenta,
+  title: ANSI_CODES.bold,
+  reset: ANSI_CODES.reset,
+}
+
 export interface YogaLogger {
   debug: (...args: any[]) => void
   info: (...args: any[]) => void
@@ -42,54 +49,66 @@ const isDebug = () =>
     ? true
     : false
 
-function getPrefix() {
-  return titleBold(`🧘 Yoga -`)
-}
-
-function getLoggerMessage(...args: any[]) {
-  return args
-    .map((arg) => (typeof arg === 'string' ? arg : inspect(arg)))
-    .join(` `)
-}
+const prefix = [LEVEL_COLOR.title, `🧘 Yoga -`, LEVEL_COLOR.reset]
 
 export const defaultYogaLogger: YogaLogger = {
   debug(...args: any[]) {
     if (isDebug()) {
-      const message = getLoggerMessage(...args)
-      const fullMessage = `🐛 ${getPrefix()} ${debugColor(message)}`
+      const fullMessage = [
+        `🐛 `,
+        ...prefix,
+        LEVEL_COLOR.debug,
+        ...args,
+        LEVEL_COLOR.reset,
+      ]
       // Some environments don't have other console methods
       if (console.debug) {
-        console.debug(fullMessage)
+        console.debug(...fullMessage)
       } else {
-        console.log(fullMessage)
+        console.log(...fullMessage)
       }
     }
   },
   info(...args: any[]) {
-    const message = getLoggerMessage(...args)
-    const fullMessage = `💡 ${getPrefix()} ${infoColor(message)}`
+    const fullMessage = [
+      `💡 `,
+      ...prefix,
+      LEVEL_COLOR.info,
+      ...args,
+      LEVEL_COLOR.reset,
+    ]
     if (console.info) {
-      console.info(fullMessage)
+      console.info(...fullMessage)
     } else {
-      console.log(fullMessage)
+      console.log(...fullMessage)
     }
   },
   warn(...args: any[]) {
-    const message = getLoggerMessage(...args)
-    const fullMessage = `⚠️ ${getPrefix()} ${warnColor(message)}`
+    const fullMessage = [
+      `⚠️ `,
+      ...prefix,
+      LEVEL_COLOR.warn,
+      ...args,
+      LEVEL_COLOR.reset,
+    ]
     if (console.warn) {
-      console.warn(fullMessage)
+      console.warn(...fullMessage)
     } else {
-      console.log(fullMessage)
+      console.log(...fullMessage)
     }
   },
   error(...args: any[]) {
-    const message = getLoggerMessage(...args)
-    const fullMessage = `❌ ${getPrefix()} ${errorColor(message)}`
+    const fullMessage = [
+      `❌ `,
+      ...prefix,
+      LEVEL_COLOR.error,
+      ...args,
+      LEVEL_COLOR.reset,
+    ]
     if (console.error) {
-      console.error(fullMessage)
+      console.error(...fullMessage)
     } else {
-      console.log(fullMessage)
+      console.log(...fullMessage)
     }
   },
 }

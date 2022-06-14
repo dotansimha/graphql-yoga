@@ -5,7 +5,7 @@ let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 let sveltekitProcess: ReturnType<typeof spawn>;
 
-jest.setTimeout(10000);
+jest.setTimeout(60000);
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
@@ -50,7 +50,7 @@ describe('SvelteKit integration', () => {
 
 		// 1/ Wait for the introspection query result getting our type "hello"
 		let res = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
-			timeout: 3000
+			timeout: 0
 		}); // It's the response... It can take a bit of time in the CI... (Magic number to find it easily)
 		let json = await res.json();
 		let str = JSON.stringify(json, null, 0);
@@ -60,7 +60,7 @@ describe('SvelteKit integration', () => {
 		const buttonExecute = await page.waitForSelector(`button[class="execute-button"]`);
 		buttonExecute?.click();
 		res = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
-			timeout: 3000
+			timeout: 0
 		}); // It's the response... It can take a bit of time in the CI... (Magic number to find it easily)
 		json = await res.json();
 		str = JSON.stringify(json, null, 0);

@@ -131,7 +131,7 @@ class YogaNodeServer<
           },
         )
       } catch (e: any) {
-        this.logger.error(`GraphQL Server couldn't start`, e)
+        this.logger.error(`GraphQL Server couldn't start;\n${e.stack}`)
         reject(e)
       }
     })
@@ -147,8 +147,7 @@ class YogaNodeServer<
       this.nodeServer.close((err) => {
         if (err != null) {
           this.logger.error(
-            'Something went wrong while trying to shutdown the server',
-            err,
+            `Something went wrong while trying to shutdown the server;\n${err.stack}`,
           )
           reject(err)
         } else {

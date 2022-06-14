@@ -293,26 +293,20 @@ export class YogaServer<
                   variables,
                   extensions,
                 }: YogaInitialContext = events.args.contextValue
-                if (query) {
-                  this.logger.debug(
-                    '\n' + titleBold('Received GraphQL operation:') + '\n',
-                    query,
-                  )
-                }
-                if (operationName) {
-                  this.logger.debug('\t operationName:', operationName)
-                }
-                if (variables) {
-                  this.logger.debug('\t variables:', variables)
-                }
-                if (extensions) {
-                  this.logger.debug('\t extensions:', extensions)
-                }
+                this.logger.debug(titleBold('Received GraphQL operation:'))
+                this.logger.debug({
+                  query,
+                  operationName,
+                  variables,
+                  extensions,
+                })
                 break
               case 'execute-end':
               case 'subscribe-end':
                 this.logger.debug(titleBold('Execution end'))
-                this.logger.debug('\t result:', events.result)
+                this.logger.debug({
+                  result: events.result,
+                })
                 break
             }
           },

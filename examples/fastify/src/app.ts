@@ -2,7 +2,14 @@ import { createServer } from '@graphql-yoga/node'
 import fastify, { FastifyReply, FastifyRequest } from 'fastify'
 
 export function buildApp(logging = true) {
-  const app = fastify({ logger: logging })
+  const app = fastify({
+    logger: logging && {
+      transport: {
+        target: 'pino-pretty',
+      },
+      level: 'debug',
+    },
+  })
 
   const graphQLServer = createServer<{
     req: FastifyRequest
@@ -48,7 +55,12 @@ export function buildApp(logging = true) {
       },
     },
     // Integrate Fastify Logger to Yoga
-    logging: app.log,
+    logging: {
+      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
+      info: (...args) => args.forEach((arg) => app.log.info(arg)),
+      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
+      error: (...args) => args.forEach((arg) => app.log.error(arg)),
+    },
   })
 
   app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>

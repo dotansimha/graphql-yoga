@@ -3,7 +3,9 @@ import { buildApp } from './app'
 const app = buildApp(true)
 
 app
-  .listen(4000)
+  .listen({
+    port: 4000,
+  })
   .then((serverUrl) => {
     app.log.info(`GraphQL API located at ${serverUrl}/graphql`)
   })
