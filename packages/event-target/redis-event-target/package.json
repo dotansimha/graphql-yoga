@@ -1,0 +1,57 @@
+{
+  "name": "@graphql-yoga/redis-event-target",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/event-target/redis-event-target"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "prepack": "bob prepack",
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [
+    "pubsub",
+    "graphql",
+    "event",
+    "subscription"
+  ],
+  "author": "Laurin Quast <laurinquast@googlemail.com>",
+  "license": "MIT",
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "dependencies": {
+    "@graphql-yoga/typed-event-target": "^0.0.0"
+  },
+  "peerDependencies": {
+    "ioredis": "^5.0.6"
+  },
+  "devDependencies": {
+    "@types/ioredis-mock": "5.6.0",
+    "bob-the-bundler": "^1.5.1",
+    "ioredis": "5.0.6",
+    "ioredis-mock": "8.2.2"
+  }
+}

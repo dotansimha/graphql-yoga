@@ -1,5 +1,5 @@
 import { Repeater } from '@repeaterjs/repeater'
-import { TypedEventTarget } from './typed-event-target.js'
+import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]

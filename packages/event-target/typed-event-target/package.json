@@ -1,0 +1,52 @@
+{
+  "name": "@graphql-yoga/typed-event-target",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/event-target/typed-event-target"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "prepack": "bob prepack",
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [
+    "pubsub",
+    "graphql",
+    "event",
+    "subscription"
+  ],
+  "author": "Laurin Quast <laurinquast@googlemail.com>",
+  "license": "MIT",
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "dependencies": {
+    "@repeaterjs/repeater": "^3.0.4",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "bob-the-bundler": "^1.5.1"
+  }
+}
