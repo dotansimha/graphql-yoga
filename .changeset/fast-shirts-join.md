@@ -1,3 +1,8 @@
+---
+'@graphql-yoga/common': patch
+'@graphql-yoga/node': patch
+---
+
 ## Multiple parameters are not recommended (not used internally) for log methods
 
 Previously sometimes Yoga used to send data to the provided logger like below;
