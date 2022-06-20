@@ -26,13 +26,34 @@
   },
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "default": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      }
     },
     "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
+      "require": {
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.js"
+      },
+      "import": {
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.mjs"
+      },
+      "default": {
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.mjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
@@ -48,6 +69,6 @@
   },
   "devDependencies": {
     "event-target-polyfill": "0.0.3",
-    "bob-the-bundler": "^1.5.1"
+    "bob-the-bundler": "2.0.0-canary-730aea6.0"
   }
 }

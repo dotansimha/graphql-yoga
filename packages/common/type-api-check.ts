@@ -1,5 +1,5 @@
 import { IResolvers } from '@graphql-tools/utils'
-import { ClientRequest } from 'http'
+import { ClientRequest } from 'node:http'
 import { createServer } from './src'
 
 const request: Request = null as any
