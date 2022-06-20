@@ -11,27 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
+      - name: Checkout Main
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Use Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'yarn'
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-canary
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-18-node-modules-
       - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-canary.outputs.cache-hit != 'true'
-
+        run: yarn install --ignore-engines --frozen-lockfile
       - name: Setup NPM credentials
         run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
