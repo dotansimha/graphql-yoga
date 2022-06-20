@@ -36,13 +36,26 @@
   },
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      },
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.ts"
+      }
     },
     "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
+      "require": {
+        "default": "./dist/*.js",
+        "types": "./dist/*.d.ts"
+      },
+      "import": {
+        "default": "./dist/*.mjs",
+        "types": "./dist/*.d.ts"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "typings": "dist/index.d.ts",
   "typescript": {

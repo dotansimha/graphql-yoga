@@ -26,13 +26,26 @@
   },
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      },
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.ts"
+      }
     },
     "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
+      "require": {
+        "default": "./dist/*.js",
+        "types": "./dist/*.d.ts"
+      },
+      "import": {
+        "default": "./dist/*.mjs",
+        "types": "./dist/*.d.ts"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
@@ -55,7 +68,7 @@
     "@envelop/live-query": "3.3.3",
     "@types/eventsource": "^1",
     "@types/node": "^16.11.7",
-    "bob-the-bundler": "^1.5.1",
+    "bob-the-bundler": "2.0.0-canary-190c364.0",
     "eventsource": "^2.0.0",
     "graphql": "^16.0.1",
     "graphql-scalars": "^1.16.1",
