@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { Readable } from 'node:stream'
-import type { AddressInfo } from './types'
+import type { AddressInfo } from './types.js'
 import { Socket } from 'node:net'
 import { isAsyncIterable } from '@graphql-tools/utils'
 

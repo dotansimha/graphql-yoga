@@ -36,16 +36,16 @@ import {
   getErrorResponse,
   processRequest as processGraphQLParams,
 } from './processRequest'
-import { defaultYogaLogger, titleBold, YogaLogger } from './logger'
-import { CORSPluginOptions, useCORS } from './plugins/useCORS'
-import { useHealthCheck } from './plugins/useHealthCheck'
+import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
+import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
+import { useHealthCheck } from './plugins/useHealthCheck.js'
 import {
   GraphiQLOptions,
   GraphiQLOptionsOrFactory,
   useGraphiQL,
 } from './plugins/useGraphiQL'
-import { useRequestParser } from './plugins/useRequestParser'
-import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET'
+import { useRequestParser } from './plugins/useRequestParser.js'
+import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
 import {
   isPOSTJsonRequest,
   parsePOSTJsonRequest,
@@ -58,12 +58,15 @@ import {
   isPOSTGraphQLStringRequest,
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString'
-import { useResultProcessor } from './plugins/useResultProcessor'
+import { useResultProcessor } from './plugins/useResultProcessor.js'
 import {
   isRegularResult,
   processRegularResult,
 } from './plugins/resultProcessor/regular'
-import { isPushResult, processPushResult } from './plugins/resultProcessor/push'
+import {
+  isPushResult,
+  processPushResult,
+} from './plugins/resultProcessor/push.js'
 import {
   isMultipartResult,
   processMultipartResult,

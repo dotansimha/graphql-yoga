@@ -6,10 +6,10 @@ import {
   ExecutionResult,
   GraphQLError,
 } from 'graphql'
-import { FetchAPI, RequestProcessContext } from './types'
-import { encodeString } from './encodeString'
-import { ResultProcessor } from './plugins/types'
-import { GraphQLYogaError } from './GraphQLYogaError'
+import { FetchAPI, RequestProcessContext } from './types.js'
+import { encodeString } from './encodeString.js'
+import { ResultProcessor } from './plugins/types.js'
+import { GraphQLYogaError } from './GraphQLYogaError.js'
 
 interface ErrorResponseParams {
   status?: number

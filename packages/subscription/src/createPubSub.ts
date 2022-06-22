@@ -1,5 +1,5 @@
 import { Repeater } from '@repeaterjs/repeater'
-import { TypedEventTarget } from './typed-event-target'
+import { TypedEventTarget } from './typed-event-target.js'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]

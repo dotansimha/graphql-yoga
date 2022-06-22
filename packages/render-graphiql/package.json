@@ -7,10 +7,9 @@
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/render-graphiql"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "scripts": {
-    "prepack": "bob prepack",
     "build": "node scripts/yoga-bundle-string.mjs",
     "check": "tsc --pretty --noEmit"
   },
@@ -28,37 +27,37 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
       },
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
       },
       "default": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
       }
     },
     "./*": {
       "require": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.js"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/cjs/*.js"
       },
       "import": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.mjs"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/esm/*.js"
       },
       "default": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.mjs"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/esm/*.js"
       }
     },
     "./package.json": "./package.json"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "dist/typings/index.d.ts"
   },
   "publishConfig": {
     "directory": "dist",
@@ -66,5 +65,6 @@
   },
   "peerDependencies": {
     "@graphql-yoga/common": "^2.8.3"
-  }
+  },
+  "type": "module"
 }

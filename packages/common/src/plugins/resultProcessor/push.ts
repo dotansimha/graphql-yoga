@@ -1,8 +1,8 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import { encodeString } from '../../encodeString'
-import { FetchAPI } from '../../types'
-import { ResultProcessorInput } from '../types'
+import { encodeString } from '../../encodeString.js'
+import { FetchAPI } from '../../types.js'
+import { ResultProcessorInput } from '../types.js'
 
 export function isPushResult(
   request: Request,

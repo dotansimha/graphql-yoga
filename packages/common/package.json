@@ -7,11 +7,10 @@
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/common"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "scripts": {
     "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
-    "prepack": "bob prepack",
     "check": "tsc --pretty --noEmit"
   },
   "keywords": [
@@ -28,37 +27,37 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
       },
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
       },
       "default": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
       }
     },
     "./*": {
       "require": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.js"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/cjs/*.js"
       },
       "import": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.mjs"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/esm/*.js"
       },
       "default": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.mjs"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/esm/*.js"
       }
     },
     "./package.json": "./package.json"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "dist/typings/index.d.ts"
   },
   "publishConfig": {
     "directory": "dist",
@@ -78,10 +77,11 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
-    "bob-the-bundler": "2.0.0-canary-730aea6.0",
+    "bob-the-bundler": "2.0.0-canary-57a6054.0",
     "html-minifier-terser": "7.0.0-beta.0"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"
-  }
+  },
+  "type": "module"
 }

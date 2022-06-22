@@ -1,4 +1,4 @@
-import { filter } from './filter'
+import { filter } from './filter.js'
 
 async function collectAsyncIterableValues<TType>(
   asyncIterable: AsyncIterable<TType>,

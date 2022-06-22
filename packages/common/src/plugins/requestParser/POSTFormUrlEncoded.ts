@@ -1,5 +1,5 @@
-import { GraphQLParams } from '../../types'
-import { isContentTypeMatch, parseURLSearchParams } from './utils'
+import { GraphQLParams } from '../../types.js'
+import { isContentTypeMatch, parseURLSearchParams } from './utils.js'
 
 export function isPOSTFormUrlEncodedRequest(request: Request) {
   return (

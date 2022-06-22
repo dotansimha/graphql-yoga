@@ -6,9 +6,9 @@ import {
   ServerResponse,
 } from 'node:http'
 import { createServer as createHttpsServer } from 'node:https'
-import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils'
+import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils.js'
 import { YogaServer } from '@graphql-yoga/common'
-import type { YogaNodeServerOptions, AddressInfo } from './types'
+import type { YogaNodeServerOptions, AddressInfo } from './types.js'
 import { platform, release } from 'node:os'
 import { create } from 'cross-undici-fetch'
 
@@ -170,7 +170,7 @@ class YogaNodeServer<
  *
  * Example:
  * ```ts
- *  import { schema } from './schema'
+ *  import { schema } from './schema.js'
  *   // Provide a GraphQL schema
  *  const server = createServer({ schema })
  *  // Start the server. Defaults to http://localhost:4000/graphql
@@ -212,7 +212,7 @@ export type YogaNodeServerInstance<TServerContext, TUserContext, TRootValue> =
   YogaNodeServer<TServerContext, TUserContext, TRootValue> &
     YogaNodeServer<TServerContext, TUserContext, TRootValue>['requestListener']
 
-export * from './types'
+export * from './types.js'
 export {
   ExecutionPatchResult,
   YogaInitialContext,

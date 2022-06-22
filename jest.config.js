@@ -8,7 +8,11 @@ const tsconfig = require(TSCONFIG)
 
 process.env.LC_ALL = 'en_US'
 
-const testMatch = ['**/?(*.)+(spec|test).[jt]s?(x)', '!**/examples/node-esm/**']
+const testMatch = [
+  '**/?(*.)+(spec|test).[jt]s?(x)',
+  '!**/examples/node-esm/**',
+  '!**/.bob/**',
+]
 
 if (parseInt(process.versions.node.split('.')[0]) <= 14) {
   testMatch.push('!**/examples/sveltekit/**')
@@ -29,5 +33,5 @@ module.exports = {
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
-  extensionsToTreatAsEsm: ['.ts'],
+  resolver: '<rootDir>/resolver.js',
 }
