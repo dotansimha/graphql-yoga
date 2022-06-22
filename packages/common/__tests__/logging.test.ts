@@ -1,5 +1,6 @@
-import { defaultYogaLogger } from '../src/logger'
-import { createServer } from '../src/server'
+import { jest } from '@jest/globals'
+import { defaultYogaLogger } from '../src/logger.js'
+import { createServer } from '../src/server.js'
 
 describe('Logging', () => {
   it('Yoga respects custom logger implementations', async () => {

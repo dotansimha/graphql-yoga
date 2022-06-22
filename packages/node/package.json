@@ -7,8 +7,8 @@
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/node"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "scripts": {
     "prepack": "bob prepack",
     "check": "tsc --pretty --noEmit"
@@ -27,37 +27,37 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
       },
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
       },
       "default": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
       }
     },
     "./*": {
       "require": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.js"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/cjs/*.js"
       },
       "import": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.mjs"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/esm/*.js"
       },
       "default": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.mjs"
+        "types": "./dist/typings/*.d.ts",
+        "default": "./dist/esm/*.js"
       }
     },
     "./package.json": "./package.json"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "dist/typings/index.d.ts"
   },
   "publishConfig": {
     "directory": "dist",
@@ -72,17 +72,18 @@
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@envelop/disable-introspection": "^3.3.1",
+    "@envelop/disable-introspection": "3.3.3",
     "@envelop/live-query": "3.3.3",
-    "@types/eventsource": "^1",
-    "@types/node": "^16.11.7",
-    "bob-the-bundler": "2.0.0-canary-730aea6.0",
-    "eventsource": "^2.0.0",
+    "@types/eventsource": "1.1.9",
+    "@types/node": "16.11.7",
+    "bob-the-bundler": "2.0.0-canary-74c1ac2.0",
+    "eventsource": "2.0.2",
     "graphql": "^16.0.1",
-    "graphql-scalars": "^1.16.1",
+    "graphql-scalars": "1.17.0",
     "puppeteer": "15.1.1"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"
-  }
+  },
+  "type": "module"
 }

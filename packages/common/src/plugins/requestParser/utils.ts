@@ -1,4 +1,4 @@
-import { GraphQLParams } from '../../types'
+import { GraphQLParams } from '../../types.js'
 
 export function parseURLSearchParams(requestBody: string): GraphQLParams {
   const searchParams = new URLSearchParams(requestBody)

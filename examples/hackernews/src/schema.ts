@@ -2,7 +2,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema'
 import { GraphQLYogaError } from '@graphql-yoga/node'
 import type { Link } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
-import type { GraphQLContext } from './context'
+import type { GraphQLContext } from './context.js'
 
 const typeDefinitions = /* GraphQL */ `
   type Link {

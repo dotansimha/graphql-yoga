@@ -1,7 +1,7 @@
 import { PromiseOrValue } from '@envelop/core'
-import { YogaLogger } from '../logger'
-import { Plugin } from './types'
-import graphiqlHTML from '../graphiqlHTML'
+import { YogaLogger } from '../logger.js'
+import { Plugin } from './types.js'
+import graphiqlHTML from '../graphiqlHTML.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
   return method === 'GET' && !!headers?.get('accept')?.includes('text/html')

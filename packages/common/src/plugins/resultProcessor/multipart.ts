@@ -1,8 +1,8 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import { encodeString } from '../../encodeString'
-import { ExecutionPatchResult, FetchAPI } from '../../types'
-import { ResultProcessorInput } from '../types'
+import { encodeString } from '../../encodeString.js'
+import { ExecutionPatchResult, FetchAPI } from '../../types.js'
+import { ResultProcessorInput } from '../types.js'
 
 export function isMultipartResult(
   request: Request,

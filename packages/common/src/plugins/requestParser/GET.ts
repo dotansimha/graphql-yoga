@@ -1,5 +1,5 @@
-import { GraphQLParams } from '../../types'
-import { parseURLSearchParams } from './utils'
+import { GraphQLParams } from '../../types.js'
+import { parseURLSearchParams } from './utils.js'
 
 export function isGETRequest(request: Request) {
   return request.method === 'GET'

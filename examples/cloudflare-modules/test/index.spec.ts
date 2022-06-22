@@ -1,4 +1,4 @@
-import worker from '../src/index'
+import worker from '../src/index.js'
 import { Request } from 'cross-undici-fetch'
 import { getIntrospectionQuery } from 'graphql'
 

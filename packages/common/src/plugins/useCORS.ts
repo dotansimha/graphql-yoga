@@ -1,5 +1,5 @@
 import { PromiseOrValue } from '@envelop/core'
-import { Plugin } from './types'
+import { Plugin } from './types.js'
 
 export type CORSOptions =
   | {

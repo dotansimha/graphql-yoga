@@ -1,6 +1,6 @@
-import { GraphQLYogaError } from '../GraphQLYogaError'
-import { YogaLogger } from '../logger'
-import { Plugin } from './types'
+import { GraphQLYogaError } from '../GraphQLYogaError.js'
+import { YogaLogger } from '../logger.js'
+import { Plugin } from './types.js'
 
 export interface HealthCheckPluginOptions {
   id?: string
