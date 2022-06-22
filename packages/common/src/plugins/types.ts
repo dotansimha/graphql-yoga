@@ -5,7 +5,7 @@ import {
   FetchAPI,
   GraphQLParams,
   YogaInitialContext,
-} from '../types'
+} from '../types.js'
 
 export type Plugin<
   PluginContext extends Record<string, any> = {},

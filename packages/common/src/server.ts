@@ -20,7 +20,7 @@ import {
   FetchEvent,
   FetchAPI,
   GraphQLParams,
-} from './types'
+} from './types.js'
 import {
   OnRequestHook,
   OnRequestParseDoneHook,
@@ -30,12 +30,12 @@ import {
   Plugin,
   RequestParser,
   ResultProcessor,
-} from './plugins/types'
+} from './plugins/types.js'
 import * as crossUndiciFetch from 'cross-undici-fetch'
 import {
   getErrorResponse,
   processRequest as processGraphQLParams,
-} from './processRequest'
+} from './processRequest.js'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
@@ -43,26 +43,26 @@ import {
   GraphiQLOptions,
   GraphiQLOptionsOrFactory,
   useGraphiQL,
-} from './plugins/useGraphiQL'
+} from './plugins/useGraphiQL.js'
 import { useRequestParser } from './plugins/useRequestParser.js'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
 import {
   isPOSTJsonRequest,
   parsePOSTJsonRequest,
-} from './plugins/requestParser/POSTJson'
+} from './plugins/requestParser/POSTJson.js'
 import {
   isPOSTMultipartRequest,
   parsePOSTMultipartRequest,
-} from './plugins/requestParser/POSTMultipart'
+} from './plugins/requestParser/POSTMultipart.js'
 import {
   isPOSTGraphQLStringRequest,
   parsePOSTGraphQLStringRequest,
-} from './plugins/requestParser/POSTGraphQLString'
+} from './plugins/requestParser/POSTGraphQLString.js'
 import { useResultProcessor } from './plugins/useResultProcessor.js'
 import {
   isRegularResult,
   processRegularResult,
-} from './plugins/resultProcessor/regular'
+} from './plugins/resultProcessor/regular.js'
 import {
   isPushResult,
   processPushResult,
@@ -70,11 +70,11 @@ import {
 import {
   isMultipartResult,
   processMultipartResult,
-} from './plugins/resultProcessor/multipart'
+} from './plugins/resultProcessor/multipart.js'
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
-} from './plugins/requestParser/POSTFormUrlEncoded'
+} from './plugins/requestParser/POSTFormUrlEncoded.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
