@@ -329,7 +329,7 @@ const server = createServer({
         hello: () => 'world',
       },
       Subscription: {
-        globalCounter: {
+        randomNumber: {
           // subscribe to the randomNumber event
           subscribe: () => pubSub.subscribe('randomNumber'),
           resolve: (payload) => payload,
