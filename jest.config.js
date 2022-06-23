@@ -33,5 +33,5 @@ module.exports = {
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
-  resolver: '<rootDir>/resolver.js',
+  resolver: 'bob-the-bundler/jest-resolver.js',
 }
