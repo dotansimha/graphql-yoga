@@ -1,5 +1,11 @@
 # @graphql-yoga/subscription
 
+## 2.1.0
+
+### Minor Changes
+
+- 7de07cd: Support TypeScript ECMA script resolution. More information on https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js
+
 ## 2.0.0
 
 ### Major Changes
