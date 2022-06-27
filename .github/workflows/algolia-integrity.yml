@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Fetch
+        run: git fetch origin master
       - name: Use Node 18
         uses: actions/setup-node@v3
         with:
