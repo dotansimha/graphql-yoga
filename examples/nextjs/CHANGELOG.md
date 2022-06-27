@@ -1,5 +1,13 @@
 # nextjs
 
+## 0.10.0
+
+### Patch Changes
+
+- Updated dependencies [7de07cd]
+- Updated dependencies [8922c3b]
+  - @graphql-yoga/node@2.10.0
+
 ## 0.9.2
 
 ### Patch Changes

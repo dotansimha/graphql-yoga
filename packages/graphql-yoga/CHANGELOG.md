@@ -1,5 +1,17 @@
 # graphql-yoga
 
+## 2.10.0
+
+### Minor Changes
+
+- 7de07cd: Support TypeScript ECMA script resolution. More information on https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js
+
+### Patch Changes
+
+- Updated dependencies [7de07cd]
+- Updated dependencies [8922c3b]
+  - @graphql-yoga/node@2.10.0
+
 ## 2.9.2
 
 ### Patch Changes
