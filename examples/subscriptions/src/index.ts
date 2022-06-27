@@ -7,7 +7,7 @@ import {
   map,
   YogaInitialContext,
 } from '@graphql-yoga/node'
-import { Resolvers } from './generated/graphql'
+import { Resolvers } from './generated/graphql.js'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))

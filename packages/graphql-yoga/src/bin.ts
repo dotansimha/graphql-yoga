@@ -1,4 +1,5 @@
-import { graphqlYoga } from '.'
+#!/usr/bin/env node
+import { graphqlYoga } from './index.js'
 
 try {
   graphqlYoga()

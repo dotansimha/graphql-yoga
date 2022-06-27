@@ -2,7 +2,7 @@ import { Request } from 'cross-undici-fetch'
 import {
   getCORSHeadersByRequestAndOptions,
   CORSOptions,
-} from '../src/plugins/useCORS'
+} from '../src/plugins/useCORS.js'
 
 describe('CORS', () => {
   describe('No origins specified', () => {

@@ -8,7 +8,6 @@
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/graphiql"
   },
-  "main": "dist/yoga-graphiql.es.js",
   "files": [
     "dist"
   ],
@@ -29,7 +28,7 @@
     "vite": "2.9.12"
   },
   "dependencies": {
-    "@graphql-tools/url-loader": "^7.9.20",
+    "@graphql-tools/url-loader": "^7.11.0",
     "copy-to-clipboard": "^3.3.1",
     "graphiql": "^1.8.8",
     "graphiql-explorer": "^0.9.0",
@@ -38,5 +37,15 @@
     "react-dom": "17.0.2",
     "use-url-search-params": "^2.5.1",
     "json-bigint-patch": "^0.0.8"
+  },
+  "main": "dist/yoga-graphiql.umd.js",
+  "module": "dist/yoga-graphiql.es.js",
+  "exports": {
+    ".": {
+      "require": "./dist/yoga-graphiql.umd.js",
+      "import": "./dist/yoga-graphiql.es.js",
+      "default": "./dist/yoga-graphiql.es.js"
+    },
+    "./package.json": "./package.json"
   }
 }

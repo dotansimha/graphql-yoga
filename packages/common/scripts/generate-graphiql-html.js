@@ -1,22 +1,26 @@
-const { minify } = require('html-minifier-terser')
-const { readFileSync, writeFileSync } = require('fs')
-const { join } = require('path')
-const fs = require('fs')
+import { minify } from 'html-minifier-terser'
+import * as fs from 'fs'
+import * as path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 async function main() {
   const graphiqlVersion = JSON.parse(
     fs.readFileSync(
-      join(__dirname, '..', '..', 'graphiql', 'package.json'),
+      path.join(__dirname, '..', '..', 'graphiql', 'package.json'),
       'utf-8',
     ),
   ).version
 
   const minified = (
     await minify(
-      readFileSync(
-        join(__dirname, '..', 'src', 'graphiql.html'),
-        'utf-8',
-      ).replace(/__GRAPHIQL_VERSION__/g, graphiqlVersion),
+      fs
+        .readFileSync(
+          path.join(__dirname, '..', 'src', 'graphiql.html'),
+          'utf-8',
+        )
+        .replace(/__GRAPHIQL_VERSION__/g, graphiqlVersion),
       {
         minifyJS: true,
         useShortDoctype: false,
@@ -26,8 +30,8 @@ async function main() {
     )
   ).toString('utf-8')
 
-  writeFileSync(
-    join(__dirname, '../src/graphiqlHTML.ts'),
+  fs.writeFileSync(
+    path.join(__dirname, '../src/graphiqlHTML.ts'),
     `export default ${JSON.stringify(minified)}`,
   )
 }

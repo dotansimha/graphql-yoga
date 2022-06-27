@@ -1,4 +1,4 @@
-import { Plugin, ResultProcessor, ResultProcessorInput } from './types'
+import { Plugin, ResultProcessor, ResultProcessorInput } from './types.js'
 
 export interface ResultProcessorPluginOptions {
   processResult: ResultProcessor

@@ -1,14 +1,14 @@
-export * from './types'
-export * from './logger'
-export * from './server'
+export * from './types.js'
+export * from './logger.js'
+export * from './server.js'
 
 export * from '@envelop/core'
 export * from '@graphql-yoga/subscription'
-export { CORSOptions } from './plugins/useCORS'
+export { CORSOptions } from './plugins/useCORS.js'
 export {
   GraphiQLOptions,
   shouldRenderGraphiQL,
   renderGraphiQL,
-} from './plugins/useGraphiQL'
-export { GraphQLYogaError } from './GraphQLYogaError'
-export { Plugin } from './plugins/types'
+} from './plugins/useGraphiQL.js'
+export { GraphQLYogaError } from './GraphQLYogaError.js'
+export { Plugin } from './plugins/types.js'

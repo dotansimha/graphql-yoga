@@ -1,5 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { Resolvers } from './resolver-types'
+import { Resolvers } from './resolver-types.js'
 
 const typeDefs = /* GraphQL */ `
   type Query {

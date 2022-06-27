@@ -1,4 +1,4 @@
-import { BasicProvider } from './providers'
+import { BasicProvider } from './providers.js'
 
 export const resolvers = {
   Query: {

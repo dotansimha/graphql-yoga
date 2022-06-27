@@ -7,12 +7,12 @@
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/graphql-yoga"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "bin": {
-    "gql-yoga": "dist/bin.js",
-    "graphql-yoga": "dist/bin.js",
-    "yoga": "dist/bin.js"
+    "gql-yoga": "dist/cjs/bin.js",
+    "graphql-yoga": "dist/cjs/bin.js",
+    "yoga": "dist/cjs/bin.js"
   },
   "scripts": {
     "prepack": "bob prepack",
@@ -26,36 +26,35 @@
   ],
   "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://saihaj.dev/)",
   "license": "MIT",
-  "buildOptions": {
-    "input": "./src/index.ts",
-    "bin": {
-      "graphql-yoga": {
-        "input": "src/bin.ts"
-      }
-    }
-  },
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
     },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
-    }
+    "./package.json": "./package.json"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "dist/typings/index.d.ts"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
   "dependencies": {
-    "@graphql-tools/code-file-loader": "^7.2.3",
-    "@graphql-tools/mock": "^8.6.3",
-    "@graphql-yoga/node": "2.9.2",
+    "@graphql-tools/code-file-loader": "^7.3.0",
+    "@graphql-tools/mock": "^8.7.0",
+    "@graphql-yoga/node": "^2.9.2",
     "graphql-config": "^4.1.0",
     "tslib": "^2.3.1",
     "yargs": "^17.3.0"
@@ -65,5 +64,6 @@
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"
-  }
+  },
+  "type": "module"
 }

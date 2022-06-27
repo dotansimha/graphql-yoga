@@ -1,4 +1,4 @@
-import { createPubSub } from './createPubSub'
+import { createPubSub } from './createPubSub.js'
 
 async function collectAsyncIterableValues<TType>(
   asyncIterable: AsyncIterable<TType>,

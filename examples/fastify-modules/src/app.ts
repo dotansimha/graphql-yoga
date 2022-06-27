@@ -7,7 +7,7 @@ import fastify, {
 } from 'fastify'
 import { useGraphQLModules } from '@envelop/graphql-modules'
 import { createApplication } from 'graphql-modules'
-import { basicModule } from './modules/basic'
+import { basicModule } from './modules/basic.js'
 
 export function createGraphQLApp() {
   return createApplication({

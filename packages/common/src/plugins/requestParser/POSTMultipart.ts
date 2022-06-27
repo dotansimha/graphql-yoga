@@ -1,6 +1,6 @@
 import { dset } from 'dset'
-import { GraphQLParams } from '../../types'
-import { isContentTypeMatch } from './utils'
+import { GraphQLParams } from '../../types.js'
+import { isContentTypeMatch } from './utils.js'
 
 export function isPOSTMultipartRequest(request: Request): boolean {
   return (

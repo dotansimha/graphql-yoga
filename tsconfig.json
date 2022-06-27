@@ -7,7 +7,7 @@
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "experimentalDecorators": true,
-    "module": "esnext",
+    "module": "node16",
     "target": "es2018",
     "lib": ["es6", "esnext", "es2015", "dom", "webworker"],
     "suppressImplicitAnyIndexErrors": true,
@@ -35,5 +35,5 @@
     "jsx": "preserve"
   },
   "include": ["packages"],
-  "exclude": ["**/dist", "**/temp"]
+  "exclude": ["**/dist", "**/temp", "**/.bob"]
 }
