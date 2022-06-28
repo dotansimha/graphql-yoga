@@ -1,4 +1,4 @@
-import { createGraphQLError } from '@graphql-tools/utils/typings/errors.js'
+import { createGraphQLError } from '@graphql-tools/utils'
 import { dset } from 'dset'
 import { GraphQLParams, GraphQLYogaError } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
