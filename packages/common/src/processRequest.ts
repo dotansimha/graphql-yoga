@@ -28,6 +28,12 @@ export function getErrorResponse({
     data: null,
     errors,
   }
+  if (errors.length === 1) {
+    const error = errors[0]
+    if (error.extensions?.status) {
+      status = error.extensions.status
+    }
+  }
   const decodedString = encodeString(JSON.stringify(payload))
   return new fetchAPI.Response(decodedString, {
     status,

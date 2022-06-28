@@ -639,6 +639,8 @@ describe('Incremental Delivery', () => {
 
     const body = await response.json()
 
+    expect(response.status).toBe(413)
+
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('File size limit exceeded: 12 bytes')
   })

@@ -2,6 +2,12 @@ import { EnvelopError } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
 
+declare module 'graphql' {
+  interface GraphQLErrorExtensions {
+    status?: number
+  }
+}
+
 export { EnvelopError as GraphQLYogaError }
 
 export function handleError(
