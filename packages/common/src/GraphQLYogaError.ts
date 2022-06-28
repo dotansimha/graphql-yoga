@@ -14,11 +14,19 @@ declare module 'graphql' {
 
 export { EnvelopError as GraphQLYogaError }
 
+function isAggregateError(obj: any): obj is AggregateError {
+  return obj != null && typeof obj === 'object' && 'errors' in obj
+}
+
+function hasToString(obj: any): obj is { toString(): string } {
+  return obj != null && typeof obj.toString === 'function'
+}
+
 export function handleError(
-  error: any,
+  error: unknown,
   errors: GraphQLError[] = [],
 ): GraphQLError[] {
-  if (error.errors?.length) {
+  if (isAggregateError(error)) {
     for (const singleError of error.errors) {
       errors.push(...handleError(singleError))
     }
@@ -28,7 +36,7 @@ export function handleError(
     errors.push(createGraphQLError(error.message))
   } else if (typeof error === 'string') {
     errors.push(createGraphQLError(error))
-  } else if ('toString' in error) {
+  } else if (hasToString(error)) {
     errors.push(createGraphQLError(error.toString()))
   } else {
     errors.push(createGraphQLError('Unexpected error!'))

@@ -45,20 +45,13 @@ export async function processRequest<TContext>({
   let document: DocumentNode
   try {
     document = enveloped.parse(params.query)
-  } catch (e: any) {
+  } catch (e: unknown) {
     if (e instanceof GraphQLError) {
       e.extensions.http = {
         status: 400,
       }
-      throw e
     }
-    throw createGraphQLError(e.message, {
-      extensions: {
-        http: {
-          status: 400,
-        },
-      },
-    })
+    throw e
   }
 
   const operation: OperationDefinitionNode | undefined =

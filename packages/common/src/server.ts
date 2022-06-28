@@ -488,7 +488,7 @@ export class YogaServer<
       })
 
       return result
-    } catch (error: any) {
+    } catch (error: unknown) {
       const finalResponseInit = {
         status: 200,
         headers: {
