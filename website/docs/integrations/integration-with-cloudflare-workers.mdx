@@ -6,8 +6,24 @@ type: Guide
 ---
 
 GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
-[Cloudflare Workers provides a serverless execution environment that allows you to create entirely new applications or augment existing ones without configuring or maintaining infrastructure](https://developers.cloudflare.com/workers/).
-But instead of `graphql-yoga` npm package, we will use `@graphql-yoga/common` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects.
+
+[Cloudflare Workers](https://developers.cloudflare.com/workers) provides a serverless execution environment that allows you to create entirely new applications or augment existing ones without configuring or maintaining infrastructure.
+
+You will want to use the package `@graphql-yoga/common` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects when building GraphQL powered Cloudflare Workers.
+
+> Watch [Episode #48 of `graphql.wtf`](https://graphql.wtf/episodes/48-graphql-yoga-cloudflare-workers-kv) for a quick introduction to using GraphQL Yoga with Cloudflare Workers, and KV:
+
+<br />
+
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/1EBphPltkA4"
+  title="Using GraphQL Yoga with Cloudflare Workers, and KV"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
 
 ## Installation
 
@@ -38,6 +54,25 @@ const yoga = createServer()
 
 export default {
   fetch: yoga.fetch,
+}
+```
+
+If you need `env`, or `ctx` inside your resolvers, you can set the `context` on your GraphQL server similar to what you see here:
+
+```ts
+import { createServer } from '@graphql-yoga/common'
+
+interface Env {
+  MY_NAMESPACE: KVNamespace
+}
+
+const yoga = createServer<{ env: Env; ctx: ExecutionContext }>()
+
+const fetch = async (req: Request, env: Env, ctx: ExecutionContext) =>
+  await server.handleRequest(req, { env, ctx })
+
+export default {
+  fetch,
 }
 ```
 
