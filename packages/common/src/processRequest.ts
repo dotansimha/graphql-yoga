@@ -3,47 +3,11 @@ import {
   DocumentNode,
   OperationDefinitionNode,
   ExecutionArgs,
-  ExecutionResult,
   GraphQLError,
 } from 'graphql'
-import { FetchAPI, RequestProcessContext } from './types.js'
-import { encodeString } from './encodeString.js'
+import { RequestProcessContext } from './types.js'
 import { ResultProcessor } from './plugins/types.js'
-import { handleError } from './GraphQLYogaError.js'
-
-interface ErrorResponseParams {
-  status?: number
-  headers?: Record<string, string>
-  errors: readonly GraphQLError[]
-  fetchAPI: FetchAPI
-}
-
-export function getErrorResponse({
-  status = 500,
-  headers = {},
-  errors,
-  fetchAPI,
-}: ErrorResponseParams): Response {
-  const payload: ExecutionResult = {
-    data: null,
-    errors,
-  }
-  if (errors.length === 1) {
-    const error = errors[0]
-    if (error.extensions?.status) {
-      status = error.extensions.status
-    }
-  }
-  const decodedString = encodeString(JSON.stringify(payload))
-  return new fetchAPI.Response(decodedString, {
-    status,
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json',
-      'Content-Length': decodedString.byteLength.toString(),
-    },
-  })
-}
+import { createGraphQLError } from '@graphql-tools/utils'
 
 export async function processRequest<TContext>({
   request,
@@ -53,32 +17,47 @@ export async function processRequest<TContext>({
   onResultProcessHooks,
 }: RequestProcessContext<TContext>): Promise<Response> {
   if (request.method !== 'GET' && request.method !== 'POST') {
-    return getErrorResponse({
-      status: 405,
-      headers: {
-        Allow: 'GET, POST',
+    throw createGraphQLError('GraphQL only supports GET and POST requests.', {
+      extensions: {
+        http: {
+          status: 405,
+          headers: {
+            Allow: 'GET, POST',
+          },
+        },
       },
-      errors: handleError('GraphQL only supports GET and POST requests.'),
-      fetchAPI,
     })
   }
 
   if (params.query == null) {
-    return getErrorResponse({
-      status: 400,
-      errors: handleError('Must provide query string.'),
-      fetchAPI,
+    throw createGraphQLError('Must provide query string.', {
+      extensions: {
+        http: {
+          status: 400,
+          headers: {
+            Allow: 'GET, POST',
+          },
+        },
+      },
     })
   }
 
   let document: DocumentNode
   try {
     document = enveloped.parse(params.query)
-  } catch (e: unknown) {
-    return getErrorResponse({
-      status: 400,
-      errors: handleError(e),
-      fetchAPI,
+  } catch (e: any) {
+    if (e instanceof GraphQLError) {
+      e.extensions.http = {
+        status: 400,
+      }
+      throw e
+    }
+    throw createGraphQLError(e.message, {
+      extensions: {
+        http: {
+          status: 400,
+        },
+      },
     })
   }
 
@@ -86,33 +65,39 @@ export async function processRequest<TContext>({
     getOperationAST(document, params.operationName) ?? undefined
 
   if (!operation) {
-    return getErrorResponse({
-      status: 400,
-      errors: handleError('Could not determine what operation to execute.'),
-      fetchAPI,
+    throw createGraphQLError('Could not determine what operation to execute.', {
+      extensions: {
+        http: {
+          status: 400,
+        },
+      },
     })
   }
 
   if (operation.operation === 'mutation' && request.method === 'GET') {
-    return getErrorResponse({
-      status: 405,
-      headers: {
-        Allow: 'POST',
+    throw createGraphQLError(
+      'Can only perform a mutation operation from a POST request.',
+      {
+        extensions: {
+          http: {
+            status: 405,
+            headers: {
+              Allow: 'POST',
+            },
+          },
+        },
       },
-      errors: handleError(
-        'Can only perform a mutation operation from a POST request.',
-      ),
-      fetchAPI,
-    })
+    )
   }
 
   const validationErrors = enveloped.validate(enveloped.schema, document)
   if (validationErrors.length > 0) {
-    return getErrorResponse({
-      status: 400,
-      errors: validationErrors,
-      fetchAPI,
+    validationErrors.forEach((error) => {
+      error.extensions.http = {
+        status: 400,
+      }
     })
+    throw new AggregateError(validationErrors)
   }
 
   const contextValue = (await enveloped.contextFactory()) as TContext

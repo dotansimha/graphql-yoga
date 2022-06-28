@@ -3,8 +3,12 @@ import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
 
 declare module 'graphql' {
-  interface GraphQLErrorExtensions {
+  interface GraphQLHTTPErrorExtensions {
     status?: number
+    headers?: Record<string, string>
+  }
+  interface GraphQLErrorExtensions {
+    http?: GraphQLHTTPErrorExtensions
   }
 }
 
@@ -15,18 +19,16 @@ export function handleError(
   errors: GraphQLError[] = [],
 ): GraphQLError[] {
   if (error.errors?.length) {
-    errors.push(
-      ...error.errors.map((singleError: any) =>
-        handleError(singleError, errors),
-      ),
-    )
+    for (const singleError of error.errors) {
+      errors.push(...handleError(singleError))
+    }
   } else if (error instanceof GraphQLError) {
     errors.push(error)
   } else if (error instanceof Error) {
     errors.push(createGraphQLError(error.message))
   } else if (typeof error === 'string') {
     errors.push(createGraphQLError(error))
-  } else if (error.toString) {
+  } else if ('toString' in error) {
     errors.push(createGraphQLError(error.toString()))
   } else {
     errors.push(createGraphQLError('Unexpected error!'))

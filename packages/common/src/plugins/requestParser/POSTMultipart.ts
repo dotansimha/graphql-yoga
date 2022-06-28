@@ -40,7 +40,9 @@ export async function parsePOSTMultipartRequest(
       e.message.startsWith('File size limit exceeded: ')
     ) {
       throw new GraphQLYogaError(e.message, {
-        status: 413,
+        http: {
+          status: 413,
+        },
       })
     }
     throw e

@@ -442,12 +442,28 @@ describe('Requests', () => {
     expect(body.data.echo).toBe('hello')
   })
 
-  it('should error on malformed query', async () => {
+  it('should error on malformed JSON parameters', async () => {
+    const response = await request(yoga)
+      .post(endpoint)
+      .send('{ "query": "{ ping }"')
+
+    expect(response.statusCode).toBe(400)
+
+    const body = JSON.parse(response.text)
+
+    expect(body.errors).toBeDefined()
+    expect(body.data).toBeNull()
+  })
+
+  it('should error on malformed query string', async () => {
     const response = await request(yoga).post(endpoint).send({
       query: '{ query { ping }',
     })
 
+    expect(response.statusCode).toBe(400)
+
     const body = JSON.parse(response.text)
+
     expect(body.errors).toBeDefined()
     expect(body.data).toBeNull()
   })
@@ -458,6 +474,8 @@ describe('Requests', () => {
       .send({
         query: null,
       } as any)
+
+    expect(response.statusCode).toBe(400)
 
     const body = JSON.parse(response.text)
     expect(body.data).toBeNull()
