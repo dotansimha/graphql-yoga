@@ -7,7 +7,7 @@ import {
 } from 'graphql'
 import { RequestProcessContext } from './types.js'
 import { ResultProcessor } from './plugins/types.js'
-import { createGraphQLError } from '@graphql-tools/utils'
+import { AggregateError, createGraphQLError } from '@graphql-tools/utils'
 
 export async function processRequest<TContext>({
   request,
