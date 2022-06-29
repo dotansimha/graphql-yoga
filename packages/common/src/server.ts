@@ -512,7 +512,7 @@ export class YogaServer<
             )
           }
           // Remove http extensions from the final response
-          delete error.extensions.http
+          error.extensions.http = undefined
         }
       }
 
