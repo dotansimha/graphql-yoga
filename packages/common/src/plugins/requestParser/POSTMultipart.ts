@@ -1,6 +1,6 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { dset } from 'dset'
-import { GraphQLParams, GraphQLYogaError } from '../../types.js'
+import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 
 export function isPOSTMultipartRequest(request: Request): boolean {
