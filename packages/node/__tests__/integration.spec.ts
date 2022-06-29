@@ -42,6 +42,7 @@ describe('Disable Introspection with plugin', () => {
     expect(response.body.data).toBeNull()
     expect(response.body.errors![0]).toMatchInlineSnapshot(`
       Object {
+        "extensions": Object {},
         "locations": Array [
           Object {
             "column": 7,
@@ -304,20 +305,23 @@ it('parse error is sent to clients', async () => {
       body: JSON.stringify({ query: '{libl_pls' }),
     }).then((_) => _.json())
 
-    expect(result).toEqual({
-      data: null,
-      errors: [
-        {
-          locations: [
-            {
-              column: 10,
-              line: 1,
-            },
-          ],
-          message: `Syntax Error: Expected Name, found <EOF>.`,
-        },
-      ],
-    })
+    expect(result).toMatchInlineSnapshot(`
+      Object {
+        "data": null,
+        "errors": Array [
+          Object {
+            "extensions": Object {},
+            "locations": Array [
+              Object {
+                "column": 10,
+                "line": 1,
+              },
+            ],
+            "message": "Syntax Error: Expected Name, found <EOF>.",
+          },
+        ],
+      }
+    `)
   } finally {
     await server.stop()
   }
@@ -339,20 +343,23 @@ it('validation error is sent to clients', async () => {
       body: JSON.stringify({ query: '{libl_pls}' }),
     }).then((_) => _.json())
 
-    expect(result).toEqual({
-      data: null,
-      errors: [
-        {
-          locations: [
-            {
-              column: 2,
-              line: 1,
-            },
-          ],
-          message: `Cannot query field "libl_pls" on type "Query".`,
-        },
-      ],
-    })
+    expect(result).toMatchInlineSnapshot(`
+      Object {
+        "data": null,
+        "errors": Array [
+          Object {
+            "extensions": Object {},
+            "locations": Array [
+              Object {
+                "column": 2,
+                "line": 1,
+              },
+            ],
+            "message": "Cannot query field \\"libl_pls\\" on type \\"Query\\".",
+          },
+        ],
+      }
+    `)
   } finally {
     await server.stop()
   }
@@ -395,14 +402,15 @@ describe('Requests', () => {
       .send()
 
     expect(response.statusCode).toBe(405)
+
+    expect(response.headers['allow']).toBe('POST')
     const body = JSON.parse(response.text)
 
     expect(body.data).toEqual(null)
-    expect(body.errors).toEqual([
-      {
-        message: 'Can only perform a mutation operation from a POST request.',
-      },
-    ])
+    expect(body.errors).toHaveLength(1)
+    expect(body.errors[0].message).toEqual(
+      'Can only perform a mutation operation from a POST request.',
+    )
   })
 
   it('should send basic mutation', async () => {
