@@ -61,7 +61,7 @@ export interface YogaInitialContext {
   extensions?: Record<string, any>
 }
 
-export interface RequestProcessContext<TContext, TRootValue> {
+export interface RequestProcessContext<TContext> {
   request: Request
   enveloped: ReturnType<GetEnvelopedFn<TContext>>
   params: GraphQLParams
@@ -69,7 +69,7 @@ export interface RequestProcessContext<TContext, TRootValue> {
   /**
    * Response Hooks
    */
-  onResultProcessHooks: OnResultProcess<any>[]
+  onResultProcessHooks: OnResultProcess[]
 }
 
 export type CORSOptions =

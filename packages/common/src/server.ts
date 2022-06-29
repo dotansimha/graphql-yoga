@@ -32,10 +32,7 @@ import {
   ResultProcessor,
 } from './plugins/types.js'
 import * as crossUndiciFetch from 'cross-undici-fetch'
-import {
-  getErrorResponse,
-  processRequest as processGraphQLParams,
-} from './processRequest.js'
+import { processRequest as processGraphQLParams } from './processRequest.js'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
@@ -75,6 +72,8 @@ import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
+import { handleError } from './GraphQLYogaError.js'
+import { encodeString } from './encodeString.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -215,11 +214,9 @@ export class YogaServer<
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
-  private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
+  private onRequestParseHooks: OnRequestParseHook[]
   private onRequestHooks: OnRequestHook<TServerContext>[]
-  private onResultProcessHooks: OnResultProcess<
-    TUserContext & TServerContext & YogaInitialContext
-  >[]
+  private onResultProcessHooks: OnResultProcess[]
   private onResponseHooks: OnResponseHook<TServerContext>[]
   private id: string
 
@@ -441,7 +438,6 @@ export class YogaServer<
 
       for (const onRequestParse of this.onRequestParseHooks) {
         const onRequestParseResult = await onRequestParse({
-          serverContext,
           request,
           requestParser,
           setRequestParser(parser: RequestParser) {
@@ -462,19 +458,7 @@ export class YogaServer<
         })
       }
 
-      let params: GraphQLParams<Record<string, any>, Record<string, any>>
-      try {
-        params = await requestParser(request)
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          return getErrorResponse({
-            status: 400,
-            errors: [err],
-            fetchAPI: this.fetchAPI,
-          })
-        }
-        throw err
-      }
+      let params = await requestParser(request)
 
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({
@@ -489,7 +473,7 @@ export class YogaServer<
         request,
         ...params,
         ...serverContext,
-      } as YogaInitialContext & TServerContext
+      }
 
       const enveloped = this.getEnveloped(initialContext)
 
@@ -505,11 +489,41 @@ export class YogaServer<
 
       return result
     } catch (error: unknown) {
-      return getErrorResponse({
-        status: 500,
-        errors: [new Error((error as Error)?.message ?? 'Unexpected Error.')],
-        fetchAPI: this.fetchAPI,
-      })
+      const finalResponseInit = {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+
+      const errors = handleError(error)
+      for (const error of errors) {
+        if (error.extensions?.http) {
+          if (
+            error.extensions.http.status &&
+            error.extensions?.http.status > finalResponseInit.status
+          ) {
+            finalResponseInit.status = error.extensions.http.status
+          }
+          if (error.extensions.http.headers) {
+            Object.assign(
+              finalResponseInit.headers,
+              error.extensions.http.headers,
+            )
+          }
+          // Remove http extensions from the final response
+          error.extensions.http = undefined
+        }
+      }
+
+      const payload: ExecutionResult = {
+        data: null,
+        errors,
+      }
+      const decodedString = encodeString(JSON.stringify(payload))
+      finalResponseInit.headers['Content-Length'] =
+        decodedString.byteLength.toString()
+      return new this.fetchAPI.Response(decodedString, finalResponseInit)
     }
   }
 

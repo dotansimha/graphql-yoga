@@ -1,3 +1,4 @@
+import { createGraphQLError } from '@graphql-tools/utils'
 import { dset } from 'dset'
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
@@ -12,7 +13,27 @@ export function isPOSTMultipartRequest(request: Request): boolean {
 export async function parsePOSTMultipartRequest(
   request: Request,
 ): Promise<GraphQLParams> {
-  const requestBody = await request.formData()
+  let requestBody: FormData
+  try {
+    requestBody = await request.formData()
+  } catch (e: unknown) {
+    // Trick for cross-undici-fetch errors on Node.js
+    // TODO: This needs a better solution
+    if (
+      e instanceof Error &&
+      e.message.startsWith('File size limit exceeded: ')
+    ) {
+      throw createGraphQLError(e.message, {
+        extensions: {
+          http: {
+            status: 413,
+          },
+        },
+      })
+    }
+    throw e
+  }
+
   const operationsStr = requestBody.get('operations')?.toString() || '{}'
   const operations = JSON.parse(operationsStr)
   const mapStr = requestBody.get('map')?.toString() || '{}'

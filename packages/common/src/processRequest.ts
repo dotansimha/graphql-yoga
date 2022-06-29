@@ -3,134 +3,97 @@ import {
   DocumentNode,
   OperationDefinitionNode,
   ExecutionArgs,
-  ExecutionResult,
   GraphQLError,
 } from 'graphql'
-import { FetchAPI, RequestProcessContext } from './types.js'
-import { encodeString } from './encodeString.js'
+import { RequestProcessContext } from './types.js'
 import { ResultProcessor } from './plugins/types.js'
-import { GraphQLYogaError } from './GraphQLYogaError.js'
+import { AggregateError, createGraphQLError } from '@graphql-tools/utils'
 
-interface ErrorResponseParams {
-  status?: number
-  headers?: Record<string, string>
-  errors: readonly Error[]
-  fetchAPI: FetchAPI
-}
-
-export function getErrorResponse({
-  status = 500,
-  headers = {},
-  errors,
-  fetchAPI,
-}: ErrorResponseParams): Response {
-  const payload: ExecutionResult = {
-    data: null,
-    errors: errors.map((error) =>
-      error instanceof GraphQLError ? error : new GraphQLError(error.message),
-    ),
-  }
-  const decodedString = encodeString(JSON.stringify(payload))
-  return new fetchAPI.Response(decodedString, {
-    status,
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json',
-      'Content-Length': decodedString.byteLength.toString(),
-    },
-  })
-}
-
-export async function processRequest<TContext, TRootValue = {}>({
+export async function processRequest<TContext>({
   request,
   params,
   enveloped,
   fetchAPI,
   onResultProcessHooks,
-}: RequestProcessContext<TContext, TRootValue>): Promise<Response> {
-  let document: DocumentNode
-
+}: RequestProcessContext<TContext>): Promise<Response> {
   if (request.method !== 'GET' && request.method !== 'POST') {
-    return getErrorResponse({
-      status: 405,
-      headers: {
-        Allow: 'GET, POST',
+    throw createGraphQLError('GraphQL only supports GET and POST requests.', {
+      extensions: {
+        http: {
+          status: 405,
+          headers: {
+            Allow: 'GET, POST',
+          },
+        },
       },
-      errors: [
-        new GraphQLYogaError('GraphQL only supports GET and POST requests.'),
-      ],
-      fetchAPI,
     })
   }
 
   if (params.query == null) {
-    return getErrorResponse({
-      status: 400,
-      errors: [new GraphQLYogaError('Must provide query string.')],
-      fetchAPI,
+    throw createGraphQLError('Must provide query string.', {
+      extensions: {
+        http: {
+          status: 400,
+          headers: {
+            Allow: 'GET, POST',
+          },
+        },
+      },
     })
   }
 
+  let document: DocumentNode
   try {
     document = enveloped.parse(params.query)
   } catch (e: unknown) {
-    return getErrorResponse({
-      status: 400,
-      errors: [e as GraphQLError],
-      fetchAPI,
-    })
-  }
-
-  const validationErrors = enveloped.validate(enveloped.schema, document)
-  if (validationErrors.length > 0) {
-    return getErrorResponse({
-      status: 400,
-      errors: validationErrors,
-      fetchAPI,
-    })
+    if (e instanceof GraphQLError) {
+      e.extensions.http = {
+        status: 400,
+      }
+    }
+    throw e
   }
 
   const operation: OperationDefinitionNode | undefined =
     getOperationAST(document, params.operationName) ?? undefined
 
   if (!operation) {
-    return getErrorResponse({
-      status: 400,
-      errors: [
-        new GraphQLYogaError('Could not determine what operation to execute.'),
-      ],
-      fetchAPI,
+    throw createGraphQLError('Could not determine what operation to execute.', {
+      extensions: {
+        http: {
+          status: 400,
+        },
+      },
     })
   }
 
   if (operation.operation === 'mutation' && request.method === 'GET') {
-    return getErrorResponse({
-      status: 405,
-      headers: {
-        Allow: 'POST',
+    throw createGraphQLError(
+      'Can only perform a mutation operation from a POST request.',
+      {
+        extensions: {
+          http: {
+            status: 405,
+            headers: {
+              Allow: 'POST',
+            },
+          },
+        },
       },
-      errors: [
-        new GraphQLYogaError(
-          'Can only perform a mutation operation from a POST request.',
-        ),
-      ],
-      fetchAPI,
-    })
+    )
   }
 
-  let contextValue: TContext | undefined
-  try {
-    contextValue = (await enveloped.contextFactory()) as TContext
-  } catch (error) {
-    if (error instanceof GraphQLError) {
-      return getErrorResponse({
-        status: 200,
-        errors: [error],
-        fetchAPI,
-      })
-    }
-    throw error
+  const validationErrors = enveloped.validate(enveloped.schema, document)
+  if (validationErrors.length > 0) {
+    validationErrors.forEach((error) => {
+      error.extensions.http = {
+        status: 400,
+      }
+    })
+    throw new AggregateError(validationErrors)
   }
+
+  const contextValue = (await enveloped.contextFactory()) as TContext
 
   const executionArgs: ExecutionArgs = {
     schema: enveloped.schema,
@@ -147,21 +110,23 @@ export async function processRequest<TContext, TRootValue = {}>({
 
   const result = await executeFn(executionArgs)
 
-  let resultProcessor: ResultProcessor = (_, fetchAPI) =>
-    new fetchAPI.Response(null, {
-      status: 406,
-      statusText: 'Not Acceptable',
-    })
+  let resultProcessor: ResultProcessor | undefined
 
   for (const onResultProcessHook of onResultProcessHooks) {
     await onResultProcessHook({
       request,
-      context: contextValue,
       result,
       resultProcessor,
       setResultProcessor(newResultProcessor) {
         resultProcessor = newResultProcessor
       },
+    })
+  }
+
+  if (!resultProcessor) {
+    return new fetchAPI.Response(null, {
+      status: 406,
+      statusText: 'Not Acceptable',
     })
   }
 

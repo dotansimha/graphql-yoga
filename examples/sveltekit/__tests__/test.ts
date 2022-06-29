@@ -19,7 +19,7 @@ describe('SvelteKit integration', () => {
 		sveltekitProcess = spawn('yarn', ['workspace', 'sveltekit', 'preview']);
 		await new Promise<void>((resolve) => {
 			sveltekitProcess.stdout?.on('data', (chunk) => {
-				if (chunk.toString('utf-8').includes('http://localhost:3007')) {
+				if (chunk.toString('utf-8').includes(':3007')) {
 					resolve();
 				}
 			});
