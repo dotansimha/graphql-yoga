@@ -74,6 +74,10 @@ import {
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './GraphQLYogaError.js'
 import { encodeString } from './encodeString.js'
+import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
+import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
+import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
+import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -340,6 +344,7 @@ export class YogaServer<
       ),
       enableIf(options?.cors !== false, () => useCORS(options?.cors)),
       // Middlewares before the GraphQL execution
+      useCheckMethodForGraphQL(),
       useRequestParser({
         match: isGETRequest,
         parse: parseGETRequest,
@@ -376,6 +381,14 @@ export class YogaServer<
         processResult: processMultipartResult as ResultProcessor,
       }),
       ...(options?.plugins ?? []),
+
+      // So the user can manipulate the query parameter
+      useCheckGraphQLQueryParam(),
+      // We handle validation errors at the end
+      useHTTPValidationError(),
+      // We make sure that the user doesn't send a mutation with GET
+      usePreventMutationViaGET(),
+
       enableIf(
         !!maskedErrors,
         useMaskedErrors(
