@@ -1,11 +1,7 @@
 import puppeteer from 'puppeteer';
-import { spawn, execSync } from 'child_process';
 
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
-let sveltekitProcess: ReturnType<typeof spawn>;
-
-jest.setTimeout(60000);
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
@@ -14,15 +10,6 @@ describe('SvelteKit integration', () => {
 			// set your PUPPETEER_HEADLESS env to "false"
 			headless: process.env.PUPPETEER_HEADLESS !== 'false',
 			args: ['--incognito']
-		});
-		execSync('"yarn" workspace sveltekit build');
-		sveltekitProcess = spawn('yarn', ['workspace', 'sveltekit', 'preview']);
-		await new Promise<void>((resolve) => {
-			sveltekitProcess.stdout?.on('data', (chunk) => {
-				if (chunk.toString('utf-8').includes(':3007')) {
-					resolve();
-				}
-			});
 		});
 	});
 	beforeEach(async () => {
@@ -34,7 +21,6 @@ describe('SvelteKit integration', () => {
 	});
 	afterAll(async () => {
 		await browser.close();
-		sveltekitProcess.kill();
 	});
 	it('index page is showing h1', async () => {
 		await page.goto('http://localhost:3007/');

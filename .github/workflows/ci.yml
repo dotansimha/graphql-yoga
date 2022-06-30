@@ -38,6 +38,12 @@ jobs:
       - name: Build Packages
         run: yarn build
 
+      - name: Build Sveltekit
+        run: yarn workspace sveltekit build
+
+      - name: Start Sveltekit
+        run: yarn workspace sveltekit preview & sleep 5
+
       - name: Run Tests
         run: yarn test
 
