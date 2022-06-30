@@ -4,12 +4,12 @@ import {
   RequestListener,
   Server as NodeServer,
   ServerResponse,
-} from 'node:http'
-import { createServer as createHttpsServer } from 'node:https'
+} from 'http'
+import { createServer as createHttpsServer } from 'https'
 import { getNodeRequest, NodeRequest, sendNodeResponse } from './http-utils.js'
 import { YogaServer } from '@graphql-yoga/common'
 import type { YogaNodeServerOptions, AddressInfo } from './types.js'
-import { platform, release } from 'node:os'
+import { platform, release } from 'os'
 import { create } from 'cross-undici-fetch'
 
 class YogaNodeServer<
