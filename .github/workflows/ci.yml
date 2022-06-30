@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14, 16, 18]
+        node-version: [12, 14, 16, 18]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -37,6 +37,14 @@ jobs:
 
       - name: Build Packages
         run: yarn build
+
+      - name: Build Sveltekit
+        run: yarn workspace sveltekit build
+        if: matrix.node-version > 12
+
+      - name: Start Sveltekit
+        run: yarn workspace sveltekit preview & sleep 5
+        if: matrix.node-version > 12
 
       - name: Run Tests
         run: yarn test

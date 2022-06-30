@@ -16,6 +16,7 @@ const testMatch = [
 
 if (parseInt(process.versions.node.split('.')[0]) <= 14) {
   testMatch.push('!**/examples/sveltekit/**')
+  testMatch.push('!**/examples/fastify*/**')
 }
 
 module.exports = {
