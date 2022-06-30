@@ -33,5 +33,7 @@ module.exports = {
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
+  // TODO: Remove once we drop Node 12 support
+  transformIgnorePatterns: ['node_modules/(?!fastify)'],
   resolver: 'bob-the-bundler/jest-resolver.js',
 }
