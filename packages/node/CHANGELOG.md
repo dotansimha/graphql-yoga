@@ -1,5 +1,15 @@
 # @graphql-yoga/node
 
+## 2.11.1
+
+### Patch Changes
+
+- 9248df8: Bring back Node 12 support
+
+  Even if Node 12 reached the end of its life, we keep supporting it until the next major release.
+
+  So in the previous release, we broke this support because of the new import names of Node's native packages such as `node:http` instead of `http`.
+
 ## 2.11.0
 
 ### Patch Changes
@@ -58,10 +68,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-      info: (...args) => args.forEach((arg) => app.log.info(arg)),
-      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
+      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
+      info: (...args) => args.forEach(arg => app.log.info(arg)),
+      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
+      error: (...args) => args.forEach(arg => app.log.error(arg)),
     },
   })
   ```

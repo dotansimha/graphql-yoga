@@ -1,5 +1,12 @@
 # express-example
 
+## 0.11.1
+
+### Patch Changes
+
+- Updated dependencies [9248df8]
+  - @graphql-yoga/node@2.11.1
+
 ## 0.11.0
 
 ### Patch Changes
