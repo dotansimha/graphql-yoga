@@ -3,6 +3,10 @@ import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
 import puppeteer from 'puppeteer'
+import * as fs from 'fs'
+import * as path from 'path'
+import * as os from 'os'
+import * as crypto from 'crypto'
 import { CORSOptions, createServer, GraphQLYogaError } from '../src/index.js'
 import { getCounterValue, schema } from '../test-utils/schema.js'
 import { createTestSchema } from './__fixtures__/schema.js'
@@ -693,6 +697,109 @@ describe('Incremental Delivery', () => {
     await new Promise((resolve) => setTimeout(resolve, 300))
 
     expect(getCounterValue()).toBe(counterValue2)
+  })
+})
+
+function md5File(path: string) {
+  return new Promise((resolve, reject) => {
+    const output = crypto.createHash('md5')
+    const input = fs.createReadStream(path)
+
+    input.on('error', (err) => {
+      reject(err)
+    })
+
+    output.once('readable', () => {
+      resolve(output.read().toString('hex'))
+    })
+
+    input.pipe(output)
+  })
+}
+
+describe.only('file uploads', () => {
+  it('uploading and streaming a binary file succeeds', async () => {
+    const sourceFilePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'website',
+      'public',
+      'logo.png',
+    )
+    const sourceMd5 = await md5File(sourceFilePath)
+    const id = crypto.randomBytes(20).toString('hex')
+    const targetFilePath = path.join(os.tmpdir(), `${id}.png`)
+
+    const server = createServer({
+      schema: {
+        resolvers: {
+          Mutation: {
+            uploadFile: async (root, args) => {
+              await fs.promises.writeFile(
+                targetFilePath,
+                Buffer.from(await args.file.arrayBuffer()),
+              )
+              return true
+            },
+          },
+        },
+        typeDefs: /* GraphQL */ `
+          scalar File
+
+          type Query {
+            _: Boolean
+          }
+          type Mutation {
+            uploadFile(file: File!): Boolean
+          }
+        `,
+      },
+      logging: false,
+    })
+
+    try {
+      await server.start()
+
+      const formData = new FormData()
+      formData.set(
+        'operations',
+        JSON.stringify({
+          query: /* GraphQL */ `
+            mutation uploadFile($file: File!) {
+              uploadFile(file: $file)
+            }
+          `,
+        }),
+      )
+      formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
+      formData.set(
+        '0',
+        new File(
+          [await fs.promises.readFile(sourceFilePath)],
+          path.basename(sourceFilePath),
+        ),
+      )
+
+      const response = await fetch(server.getServerUrl(), {
+        method: 'POST',
+        body: formData,
+      })
+
+      const body = await response.json()
+      expect(body.errors).toBeUndefined()
+      expect(body.data).toEqual({
+        uploadFile: true,
+      })
+
+      await fs.promises.stat(targetFilePath)
+      const targetMd5 = await md5File(targetFilePath)
+      console.log(targetMd5, sourceMd5)
+      fs.promises.unlink(targetFilePath)
+    } finally {
+      await server.stop()
+    }
   })
 })
 
