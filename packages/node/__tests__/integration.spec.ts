@@ -717,7 +717,7 @@ function md5File(path: string) {
   })
 }
 
-describe.only('file uploads', () => {
+describe('file uploads', () => {
   it('uploading and streaming a binary file succeeds', async () => {
     const sourceFilePath = path.join(
       __dirname,
