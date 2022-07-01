@@ -15,6 +15,7 @@ export interface NodeRequest {
   raw?: IncomingMessage
   socket?: Socket
   query?: any
+  complete?: boolean
 }
 
 function getRequestAddressInfo(
@@ -86,7 +87,7 @@ export function getNodeRequest(
    * rawRequest cannot be used as BodyInit/ReadableStream by Fetch API in this case.
    */
   const maybeParsedBody = nodeRequest.body
-  if (maybeParsedBody != null) {
+  if (nodeRequest.complete && maybeParsedBody != null) {
     if (
       typeof maybeParsedBody === 'string' ||
       maybeParsedBody[Symbol.toStringTag] === 'Uint8Array' ||
