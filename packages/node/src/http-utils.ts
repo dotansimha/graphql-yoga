@@ -87,7 +87,7 @@ export function getNodeRequest(
    * rawRequest cannot be used as BodyInit/ReadableStream by Fetch API in this case.
    */
   const maybeParsedBody = nodeRequest.body
-  if (rawRequest.complete && maybeParsedBody != null) {
+  if (maybeParsedBody != null && Object.keys(maybeParsedBody).length > 0) {
     if (
       typeof maybeParsedBody === 'string' ||
       maybeParsedBody[Symbol.toStringTag] === 'Uint8Array' ||

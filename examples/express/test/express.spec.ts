@@ -1,6 +1,6 @@
 import { buildApp } from '../src/app.js'
 import request from 'supertest'
-import bodyParser from 'body-parser'
+import express from 'express'
 
 function getTests(app: Express.Application) {
   it('should show GraphiQL', async () => {
@@ -48,15 +48,17 @@ function getTests(app: Express.Application) {
 }
 
 describe('express', () => {
-  const app = buildApp()
+  const app = express()
+  buildApp(app)
+
   getTests(app)
 })
 
 describe('express + body parser', () => {
-  const app = buildApp()
-
-  app.use(bodyParser.urlencoded({ extended: false }))
-  app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }))
+  const app = express()
+  app.use(express.urlencoded({ extended: false }))
+  app.use(express.json({ limit: '50mb' }))
+  buildApp(app)
 
   getTests(app)
 })
