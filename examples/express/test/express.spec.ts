@@ -1,8 +1,8 @@
 import { buildApp } from '../src/app.js'
 import request from 'supertest'
+import express from 'express'
 
-describe('express', () => {
-  const app = buildApp()
+function getTests(app: Express.Application) {
   it('should show GraphiQL', async () => {
     const response = await request(app)
       .get('/graphql')
@@ -45,4 +45,20 @@ describe('express', () => {
       },
     })
   })
+}
+
+describe('express', () => {
+  const app = express()
+  buildApp(app)
+
+  getTests(app)
+})
+
+describe('express + body parser', () => {
+  const app = express()
+  app.use(express.urlencoded({ extended: false }))
+  app.use(express.json({ limit: '50mb' }))
+  buildApp(app)
+
+  getTests(app)
 })
