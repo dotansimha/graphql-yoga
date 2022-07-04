@@ -2,7 +2,7 @@
 '@graphql-yoga/node': patch
 ---
 
-**Use `req.body` only if IncomingMessage/req is completed**
+**Use `req.body` only if it is filled**
 
 Some frameworks use this unofficial `body` field to send the parsed body to the middlewares.
 GraphQL Yoga respects that and uses this `body` as it is like a JSON request.
