@@ -15,7 +15,6 @@ export interface NodeRequest {
   raw?: IncomingMessage
   socket?: Socket
   query?: any
-  complete?: boolean
 }
 
 function getRequestAddressInfo(
