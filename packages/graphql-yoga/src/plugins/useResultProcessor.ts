@@ -1,17 +1,19 @@
 import { Plugin, ResultProcessor, ResultProcessorInput } from './types.js'
 
-export interface ResultProcessorPluginOptions {
-  processResult: ResultProcessor
-  match?(request: Request, result: ResultProcessorInput): boolean
+export interface ResultProcessorPluginOptions<
+  TResult extends ResultProcessorInput,
+> {
+  processResult: ResultProcessor<TResult>
+  match?(request: Request, result: ResultProcessorInput): result is TResult
 }
 
-export function useResultProcessor(
-  options: ResultProcessorPluginOptions,
-): Plugin {
-  const isMatch = options.match || (() => true)
+export function useResultProcessor<
+  TResult extends ResultProcessorInput = ResultProcessorInput,
+>(options: ResultProcessorPluginOptions<TResult>): Plugin {
+  const matchFn = options.match || (() => true)
   return {
     onResultProcess({ request, result, setResultProcessor }) {
-      if (isMatch(request, result)) {
+      if (matchFn(request, result)) {
         setResultProcessor(options.processResult)
       }
     },

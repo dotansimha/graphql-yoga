@@ -30,6 +30,7 @@ import {
   Plugin,
   RequestParser,
   ResultProcessor,
+  ResultProcessorInput,
 } from './plugins/types.js'
 import { createFetch } from '@whatwg-node/fetch'
 import { ServerAdapter, createServerAdapter } from '@whatwg-node/server'
@@ -142,6 +143,7 @@ export type YogaServerOptions<
   /**
    * Whether the landing page should be shown.
    */
+
   landingPage?: boolean
   /**
    * GraphiQL options
@@ -383,15 +385,15 @@ export class YogaServer<
       // Middlewares after the GraphQL execution
       useResultProcessor({
         match: isRegularResult,
-        processResult: processRegularResult as ResultProcessor,
+        processResult: processRegularResult,
       }),
       useResultProcessor({
         match: isPushResult,
-        processResult: processPushResult as ResultProcessor,
+        processResult: processPushResult,
       }),
       useResultProcessor({
         match: isMultipartResult,
-        processResult: processMultipartResult as ResultProcessor,
+        processResult: processMultipartResult,
       }),
       ...(options?.plugins ?? []),
 
@@ -491,34 +493,48 @@ export class YogaServer<
 
       let params = await requestParser(request)
 
+      let result: ResultProcessorInput | undefined
+
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({
           params,
           setParams(newParams: GraphQLParams) {
             params = newParams
           },
+          setResult(earlyResult: ResultProcessorInput) {
+            result = earlyResult
+          },
+        })
+        if (result) {
+          break
+        }
+      }
+
+      if (result == null) {
+        const initialContext = {
+          request,
+          ...params,
+          ...serverContext,
+        }
+
+        const enveloped = this.getEnveloped(initialContext)
+
+        this.logger.debug(`Processing GraphQL Parameters`)
+
+        result = await processGraphQLParams({
+          params,
+          enveloped,
         })
       }
 
-      const initialContext = {
+      const response = await processResult({
         request,
-        ...params,
-        ...serverContext,
-      }
-
-      const enveloped = this.getEnveloped(initialContext)
-
-      this.logger.debug(`Processing GraphQL Parameters`)
-
-      const result = await processGraphQLParams({
-        request,
-        params,
-        enveloped,
+        result,
         fetchAPI: this.fetchAPI,
         onResultProcessHooks: this.onResultProcessHooks,
       })
 
-      return result
+      return response
     } catch (error: unknown) {
       const finalResponseInit = {
         status: 200,
