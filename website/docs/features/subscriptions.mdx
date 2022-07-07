@@ -114,8 +114,8 @@ eventsource.onmessage = function (event) {
 ### Client usage with Apollo
 
 We can create an `SSELink` to use with Apollo Client.
-
-`sse-link.ts`
+In order to send non Subscription operations via the default HTTP protocol, you can use `split` from the Apollo Link package.
+[For more information please refer to the Apollo Link documentation](https://www.apollographql.com/docs/react/api/link/introduction).
 
 ```ts
 import {
@@ -123,20 +123,35 @@ import {
   Operation,
   FetchResult,
   Observable,
+  ApolloClient,
+  InMemoryCache,
+  gql,
 } from '@apollo/client/core'
-import { print } from 'graphql'
+import { split } from '@apollo/client/link/core'
+import { HttpLink } from '@apollo/client/link/http'
+import { print, getOperationAST } from 'graphql'
 
-interface SSELinkOptions {}
+type SSELinkOptions = EventSourceInit & { uri: string }
 
 class SSELink extends ApolloLink {
-  constructor(private options: EventSourceInit & { url: string }) {
+  constructor(private options: SSELinkOptions) {
     super()
   }
 
   public request(operation: Operation): Observable<FetchResult> {
-    const url = new URL(this.options.url)
+    const url = new URL(this.options.uri)
     url.searchParams.append('query', print(operation.query))
+    url.searchParams.append(
+      'extensions',
+      JSON.stringify(operation.operationName),
+    )
     url.searchParams.append('variables', JSON.stringify(operation.variables))
+    if (operation.extensions) {
+      url.searchParams.append(
+        'extensions',
+        JSON.stringify(operation.extensions),
+      )
+    }
 
     return new Observable((sink) => {
       const eventsource = new EventSource(url.toString(), this.options)
@@ -155,9 +170,28 @@ class SSELink extends ApolloLink {
   }
 }
 
-const link = new SSELink({
-  url: 'http://localhost:4000/graphql',
+const uri = 'http://localhost:4000/graphql'
+
+const sseLink = new SSELink({
+  uri,
 })
+
+const httpLink = new HttpLink({
+  uri,
+})
+
+const link = split(
+  ({ query, operationName }) => {
+    const definition = getOperationAST(query, operationName)
+
+    return (
+      definition?.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  sseLink,
+  httpLink,
+)
 ```
 
 ### Client usage with Urql
@@ -170,7 +204,7 @@ Here is an example with Urql's `subscriptionExchange`
 import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
 
 const client = createClient({
-  url: '/graphql',
+  url: 'http://localhost:4000/graphql',
   exchanges: [
     ...defaultExchanges,
     subscriptionExchange({
