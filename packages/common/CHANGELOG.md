@@ -1,5 +1,72 @@
 # @graphql-yoga/common
 
+## 2.11.0
+
+### Minor Changes
+
+- 5bcd8ea: **Improve DX for Cloudflare Workers and other environments like Bun that needs a default export with a fetch method**
+
+  - You no longer need to export fetch specifically in a different object. Instead, you can export Yoga instance directly.
+
+  Before in CF Workers Modules you had to do;
+
+  ```ts
+  import { createServer } from '@graphql-yoga/common'
+
+  const server = createServer()
+
+  export default {
+    fetch: server.fetch,
+  }
+  ```
+
+  Now you can export Yoga instance as-is like below;
+
+  ```ts
+  import { createServer } from '@graphql-yoga/common'
+
+  export default createServer()
+  ```
+
+  - Environment object is now passed as `ServerContext` to the execution. So you can access KV Namespaces and other `Env` variables in the context.
+
+  ```ts
+  import { createServer } from '@graphql-yoga/common'
+
+  interface Env {
+    MY_NAMESPACE: KVNamespace
+    SOME_TOKEN: String // An example environment variable
+  }
+
+  export default createServer<Env>({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        todo(id: ID!): String
+        todos: [String]
+      }
+      type Mutation {
+        createTodo(id: ID!, text: String!): String
+        deleteTodo(id: ID!): String
+      }
+    `,
+    resolvers: {
+      Query: {
+        todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
+        todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list(),
+      },
+      Mutation: {
+        // MY_NAMESPACE is available as a GraphQL context
+        createTodo(_, { id, text }, context) {
+          return context.MY_NAMESPACE.put(id, text)
+        },
+        deleteTodo(_, { id }, context) {
+          return context.MY_NAMESPACE.delete(id)
+        },
+      },
+    },
+  })
+  ```
+
 ## 2.10.0
 
 ### Minor Changes
@@ -55,10 +122,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-      info: (...args) => args.forEach((arg) => app.log.info(arg)),
-      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
+      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
+      info: (...args) => args.forEach(arg => app.log.info(arg)),
+      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
+      error: (...args) => args.forEach(arg => app.log.error(arg)),
     },
   })
   ```

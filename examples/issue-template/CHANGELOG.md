@@ -1,5 +1,11 @@
 # issue-template
 
+## 1.12.0
+
+### Patch Changes
+
+- @graphql-yoga/node@2.12.0
+
 ## 1.11.2
 
 ### Patch Changes

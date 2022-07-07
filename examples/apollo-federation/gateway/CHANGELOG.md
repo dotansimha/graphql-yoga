@@ -1,5 +1,11 @@
 # apollo-federation-gateway-with-yoga
 
+## 0.12.0
+
+### Patch Changes
+
+- @graphql-yoga/node@2.12.0
+
 ## 0.11.2
 
 ### Patch Changes
