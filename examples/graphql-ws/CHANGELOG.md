@@ -1,5 +1,12 @@
 # graphql-ws
 
+## 0.9.0
+
+### Patch Changes
+
+- @graphql-yoga/node@2.12.0
+- graphql-ws@0.9.0
+
 ## 0.8.2
 
 ### Patch Changes
