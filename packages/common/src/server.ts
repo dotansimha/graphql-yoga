@@ -653,13 +653,21 @@ export function createServer<
     options,
   )
   // TODO: Will be removed once we get rid of classes
-  const fnHandler = (input: any) => {
+  const fnHandler = (input: any, ctx: any) => {
+    // Is input a container object over Request?
     if (input.request) {
-      return server.handleRequest(input.request, input as any)
+      // In this input is also the context
+      return server.handleRequest(input.request, input)
     }
-    return server.handleRequest(input, undefined as any)
+    // Or is it Request itself?
+    // Then ctx is present and it is the context
+    return server.handleRequest(input, ctx)
   }
-  return new Proxy(fnHandler as any, {
+  return new Proxy(server as any, {
+    // It should have all the attributes of the handler function and the server instance
+    has: (_, prop) => {
+      return prop in fnHandler || prop in server
+    },
     get: (_, prop) => {
       if (server[prop]) {
         if (server[prop].bind) {
@@ -674,8 +682,8 @@ export function createServer<
         return fnHandler[prop]
       }
     },
-    apply(_, __, [input]: Parameters<typeof fnHandler>) {
-      return fnHandler(input)
+    apply(_, __, [input, ctx]: Parameters<typeof fnHandler>) {
+      return fnHandler(input, ctx)
     },
   })
 }
