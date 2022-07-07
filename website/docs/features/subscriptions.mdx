@@ -179,7 +179,7 @@ const client = createClient({
         url.searchParams.append('query', operation.query)
         url.searchParams.append(
           'variables',
-          JSON.stringify(operation.variables),
+          JSON.stringify(operation.variables || {}),
         )
         return {
           subscribe: (sink) => {
