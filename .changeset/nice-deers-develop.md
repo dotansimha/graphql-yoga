@@ -6,7 +6,7 @@
 
 - You no longer need to export fetch specifically in a different object. Instead, you can export Yoga instance directly.
 
-Before in CF Workers Modules;
+Before in CF Workers Modules you had to do;
 
 ```ts
 import { createServer } from '@graphql-yoga/common'
@@ -18,7 +18,7 @@ export default {
 }
 ```
 
-Now;
+Now you can export Yoga instance as-is like below;
 
 ```ts
 import { createServer } from '@graphql-yoga/common'
@@ -36,8 +36,8 @@ interface Env {
   SOME_TOKEN: String // An example environment variable
 }
 
-export createServer<Env>({
-  typeDefs: /* GraphQL */`
+export default createServer<Env>({
+  typeDefs: /* GraphQL */ `
     type Query {
       todo(id: ID!): String
       todos: [String]
@@ -59,8 +59,8 @@ export createServer<Env>({
       },
       deleteTodo(_, { id }, context) {
         return context.MY_NAMESPACE.delete(id)
-      }
-    }
-  }
+      },
+    },
+  },
 })
 ```
