@@ -177,10 +177,12 @@ const client = createClient({
       forwardSubscription(operation) {
         const url = new URL('http://localhost:4000/graphql')
         url.searchParams.append('query', operation.query)
-        url.searchParams.append(
-          'variables',
-          JSON.stringify(operation.variables || {}),
-        )
+        if (operation.variables) {
+          url.searchParams.append(
+            'variables',
+            JSON.stringify(operation.variables),
+          )
+        }
         return {
           subscribe: (sink) => {
             const eventsource = new EventSource(url.toString(), {
