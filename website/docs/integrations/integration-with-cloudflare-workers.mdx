@@ -50,14 +50,50 @@ server.start()
 ```ts
 import { createServer } from '@graphql-yoga/common'
 
-const yoga = createServer()
-
-export default {
-  fetch: yoga.fetch,
-}
+export default createServer()
 ```
 
-If you need `env`, or `ctx` inside your resolvers, you can set the `context` on your GraphQL server similar to what you see here:
+### Access to environmental values (KV Namespaces etc.)
+
+You can access your KV namespaces etc through the context.
+
+```ts
+import { createServer } from '@graphql-yoga/common'
+
+interface Env {
+  MY_NAMESPACE: KVNamespace
+}
+
+export createServer<Env>({
+  typeDefs: /* GraphQL */`
+    type Query {
+      todo(id: ID!): String
+      todos: [String]
+    }
+    type Mutation {
+      createTodo(id: ID!, text: String!): String
+      deleteTodo(id: ID!): String
+    }
+  `,
+  resolvers: {
+    Query: {
+      todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
+      todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list(),
+    },
+    Mutation: {
+      // MY_NAMESPACE is available as a GraphQL context
+      createTodo(_, { id, text }, context) {
+        return context.MY_NAMESPACE.put(id, text)
+      },
+      deleteTodo(_, { id }, context) {
+        return context.MY_NAMESPACE.delete(id)
+      }
+    }
+  }
+})
+```
+
+If you need `ExecutionContext` as well inside your resolvers, you can set the `context` on your GraphQL server similar to what you see here:
 
 ```ts
 import { createServer } from '@graphql-yoga/common'
@@ -68,11 +104,10 @@ interface Env {
 
 const yoga = createServer<{ env: Env; ctx: ExecutionContext }>()
 
-const fetch = async (req: Request, env: Env, ctx: ExecutionContext) =>
-  await server.handleRequest(req, { env, ctx })
-
 export default {
-  fetch,
+  fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    return yoga.handleRequest(request, { env, ctx })
+  },
 }
 ```
 
