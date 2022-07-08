@@ -1,11 +1,10 @@
-<p align="center"><img src="./website/public/banner.svg" width="350" /></p>
+<p align="center"><img src="./website/public/cover.png" width="350" /></p>
 
 # GraphQL Yoga
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
-[Read the 2.0 announcement blog post](https://www.the-guild.dev/blog/announcing-graphql-yoga-v2)
-[Read the docs](https://www.graphql-yoga.com/docs/quick-start)
+[Docs](https://www.graphql-yoga.com/docs)
 
 ### Installation
 
@@ -13,30 +12,28 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 npm i @graphql-yoga/node graphql
 ```
 
-### Basic Usage
+### Quickstart
 
-This is a very simple example of how to use it:
+You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map:
 
-```js
-const { createServer } = require('@graphql-yoga/node')
+```ts
+import { createServer } from '@graphql-yoga/node'
 
-// Provide your schema
 const server = createServer({
   schema: {
-    typeDefs: `
+    typeDefs: /* GraphQL */ `
       type Query {
-        ping: String
+        hello: String
       }
     `,
     resolvers: {
       Query: {
-        ping: () => 'pong',
+        hello: () => 'Hello from Yoga!',
       },
     },
   },
 })
 
-// Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
 
