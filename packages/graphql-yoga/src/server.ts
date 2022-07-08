@@ -17,9 +17,9 @@ import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
   GraphQLServerInject,
   YogaInitialContext,
-  FetchEvent,
   FetchAPI,
   GraphQLParams,
+  FetchEvent,
 } from './types.js'
 import {
   OnRequestHook,
@@ -31,7 +31,8 @@ import {
   RequestParser,
   ResultProcessor,
 } from './plugins/types.js'
-import * as crossUndiciFetch from '@whatwg-node/fetch'
+import { createFetch } from '@whatwg-node/fetch'
+import { ServerAdapter, createServerAdapter } from '@whatwg-node/server'
 import { processRequest as processGraphQLParams } from './processRequest.js'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
@@ -73,7 +74,7 @@ import {
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './GraphQLYogaError.js'
-import { encodeString } from './encodeString.js'
+import { encodeString } from './utils/encodeString.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
 import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
@@ -94,73 +95,73 @@ export type YogaServerOptions<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-> = {
-  /**
-   * Enable/disable logging or provide a custom logger.
-   * @default true
-   */
-  logging?: boolean | YogaLogger
-  /**
-   * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
-   * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
-   *
-   * You can lean more about this here:
-   * @see https://graphql-yoga.vercel.app/docs/features/error-masking
-   *
-   * Default: `true`
-   */
-  maskedErrors?: boolean | UseMaskedErrorsOpts
-  /**
-   * Context
-   */
-  context?:
+  > = {
+    /**
+     * Enable/disable logging or provide a custom logger.
+     * @default true
+     */
+    logging?: boolean | YogaLogger
+    /**
+     * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
+     * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+     *
+     * You can lean more about this here:
+     * @see https://graphql-yoga.vercel.app/docs/features/error-masking
+     *
+     * Default: `true`
+     */
+    maskedErrors?: boolean | UseMaskedErrorsOpts
+    /**
+     * Context
+     */
+    context?:
     | ((
-        initialContext: YogaInitialContext & TServerContext,
-      ) => Promise<TUserContext> | TUserContext)
+      initialContext: YogaInitialContext & TServerContext,
+    ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
 
-  cors?: CORSPluginOptions<TServerContext>
+    cors?: CORSPluginOptions<TServerContext>
 
-  /**
-   * GraphQL endpoint
-   */
-  endpoint?: string
+    /**
+     * GraphQL endpoint
+     */
+    endpoint?: string
 
-  /**
-   * GraphiQL options
-   *
-   * Default: `true`
-   */
-  graphiql?: GraphiQLOptionsOrFactory<TServerContext>
+    /**
+     * GraphiQL options
+     *
+     * Default: `true`
+     */
+    graphiql?: GraphiQLOptionsOrFactory<TServerContext>
 
-  renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
+    renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
-  schema?:
+    schema?:
     | GraphQLSchema
     | {
-        typeDefs: TypeSource
-        resolvers?:
-          | IResolvers<
-              TRootValue,
-              TUserContext & TServerContext & YogaInitialContext
-            >
-          | Array<
-              IResolvers<
-                TRootValue,
-                TUserContext & TServerContext & YogaInitialContext
-              >
-            >
-      }
+      typeDefs: TypeSource
+      resolvers?:
+      | IResolvers<
+        TRootValue,
+        TUserContext & TServerContext & YogaInitialContext
+      >
+      | Array<
+        IResolvers<
+          TRootValue,
+          TUserContext & TServerContext & YogaInitialContext
+        >
+      >
+    }
 
-  parserCache?: boolean | ParserCacheOptions
-  validationCache?: boolean | ValidationCache
-  fetchAPI?: Partial<FetchAPI>
-  multipart?: boolean
-  id?: string
-} & Partial<
-  OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
->
+    parserCache?: boolean | ParserCacheOptions
+    validationCache?: boolean | ValidationCache
+    fetchAPI?: FetchAPI
+    multipart?: boolean
+    id?: string
+  } & Partial<
+    OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
+  >
 
 export function getDefaultSchema() {
   return makeExecutableSchema({
@@ -205,7 +206,7 @@ export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-> {
+  > {
   /**
    * Instance of envelop
    */
@@ -214,7 +215,7 @@ export class YogaServer<
   >
   public logger: YogaLogger
   protected endpoint?: string
-  protected fetchAPI: FetchAPI
+  public fetchAPI: FetchAPI
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
@@ -228,20 +229,18 @@ export class YogaServer<
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
   ) {
     this.id = options?.id ?? 'yoga'
-    this.fetchAPI = {
-      Request: options?.fetchAPI?.Request ?? crossUndiciFetch.Request,
-      Response: options?.fetchAPI?.Response ?? crossUndiciFetch.Response,
-      fetch: options?.fetchAPI?.fetch ?? crossUndiciFetch.fetch,
-      ReadableStream:
-        options?.fetchAPI?.ReadableStream ?? crossUndiciFetch.ReadableStream,
-    }
+    this.fetchAPI =
+      options?.fetchAPI ??
+      createFetch({
+        useNodeFetch: true,
+      })
     const schema = options?.schema
       ? isSchema(options.schema)
         ? options.schema
         : makeExecutableSchema({
-            typeDefs: options.schema.typeDefs,
-            resolvers: options.schema.resolvers,
-          })
+          typeDefs: options.schema.typeDefs,
+          resolvers: options.schema.resolvers,
+        })
       : getDefaultSchema()
 
     const logger = options?.logging != null ? options.logging : true
@@ -250,11 +249,11 @@ export class YogaServer<
         ? logger === true
           ? defaultYogaLogger
           : {
-              debug: () => {},
-              error: () => {},
-              warn: () => {},
-              info: () => {},
-            }
+            debug: () => { },
+            error: () => { },
+            warn: () => { },
+            info: () => { },
+          }
         : logger
 
     const maskedErrors = options?.maskedErrors ?? true
@@ -608,82 +607,27 @@ export class YogaServer<
       executionResult,
     }
   }
-
-  fetch: WindowOrWorkerGlobalScope['fetch'] = (
-    input: RequestInfo,
-    init: RequestInit,
-  ) => {
-    let request: Request
-    if (typeof input === 'string') {
-      request = new this.fetchAPI.Request(input, init)
-    } else {
-      request = input
-    }
-    return this.handleRequest(request, init as any)
-  }
-
-  // FetchEvent is not available in all envs
-  private fetchEventListener = (event: FetchEvent) =>
-    event.respondWith(this.handleRequest(event.request, event as any))
-
-  start() {
-    self.addEventListener('fetch', this.fetchEventListener as EventListener)
-  }
-
-  stop() {
-    self.removeEventListener('fetch', this.fetchEventListener as EventListener)
-  }
 }
 
 export type YogaServerInstance<TServerContext, TUserContext, TRootValue> =
-  YogaServer<TServerContext, TUserContext, TRootValue> &
-    (
-      | WindowOrWorkerGlobalScope['fetch']
-      | ((context: { request: Request }) => Promise<Response>)
-    )
+  ServerAdapter<
+    TServerContext,
+    YogaServer<TServerContext, TUserContext, TRootValue>
+  >
 
-export function createServer<
+export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
->(
-  options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+  >(
+    options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
 ): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,
   )
-  // TODO: Will be removed once we get rid of classes
-  const fnHandler = (input: any, ctx: any) => {
-    // Is input a container object over Request?
-    if (input.request) {
-      // In this input is also the context
-      return server.handleRequest(input.request, input)
-    }
-    // Or is it Request itself?
-    // Then ctx is present and it is the context
-    return server.handleRequest(input, ctx)
-  }
-  return new Proxy(server as any, {
-    // It should have all the attributes of the handler function and the server instance
-    has: (_, prop) => {
-      return prop in fnHandler || prop in server
-    },
-    get: (_, prop) => {
-      if (server[prop]) {
-        if (server[prop].bind) {
-          return server[prop].bind(server)
-        }
-        return server[prop]
-      }
-      if (fnHandler[prop]) {
-        if (fnHandler[prop].bind) {
-          return fnHandler[prop].bind(fnHandler)
-        }
-        return fnHandler[prop]
-      }
-    },
-    apply(_, __, [input, ctx]: Parameters<typeof fnHandler>) {
-      return fnHandler(input, ctx)
-    },
+  return createServerAdapter({
+    baseObject: server,
+    handleRequest: server.handleRequest as any,
+    Request: server.fetchAPI.Request,
   })
 }

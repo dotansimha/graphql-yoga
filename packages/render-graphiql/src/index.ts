@@ -1,4 +1,4 @@
-import type { GraphiQLOptions } from '@graphql-yoga/common'
+import type { GraphiQLOptions } from 'graphql-yoga'
 import { js, css } from './graphiql.js'
 
 export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `

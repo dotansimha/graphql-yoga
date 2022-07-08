@@ -2,7 +2,7 @@ const { build } = require('esbuild')
 
 async function main() {
   await build({
-    entryPoints: ['./src/index.ts'],
+    entryPoints: ['./lambda/graphql.ts'],
     outfile: 'dist/index.js',
     format: 'cjs',
     minify: false,

@@ -1,12 +1,17 @@
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLParams } from '../../types'
 import { Plugin } from '../types'
+
+export function isValidGraphQLParams(params: any): params is GraphQLParams {
+  return params.query != null
+}
 
 export function useCheckGraphQLQueryParam(): Plugin {
   return {
     onRequestParse() {
       return {
         onRequestParseDone({ params }) {
-          if (params.query == null) {
+          if (!isValidGraphQLParams(params)) {
             throw createGraphQLError('Must provide query string.', {
               extensions: {
                 http: {

@@ -63,9 +63,10 @@ The server returns the following response:
 This is what the [implementation](./index.js) looks like:
 
 ```js
-import { createServer } from '@graphql-yoga/node'
+import { createServer } from 'http'
+import { createYoga } from 'graphql-yoga'
 // ... or using `require()`
-// const { createServer } = require('@graphql-yoga/node')
+// const { createServer } = require('graphql-yoga')
 
 const typeDefs = `
   type Query {
@@ -79,6 +80,13 @@ const resolvers = {
   },
 }
 
-const server = createServer({ typeDefs, resolvers })
-server.start(() => console.log('Server is running on localhost:4000'))
+const yoga = createYoga({
+  schema: {
+    typeDefs,
+    resolvers,
+  },
+})
+
+const server = createServer(yoga)
+server.listen(() => console.log('Server is running on localhost:4000'))
 ```

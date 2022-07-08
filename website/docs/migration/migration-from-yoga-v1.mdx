@@ -7,9 +7,9 @@ type: Guide
 
 ## Installation
 
-You can start with installing `@graphql-yoga/node` package.
+You can start with updating `graphql-yoga` package.
 
-<PackageInstall packages={['@graphql-yoga/node']} />
+<PackageInstall packages={['graphql-yoga']} />
 
 ## Server setup
 
@@ -23,19 +23,23 @@ import { GraphQLServer } from 'graphql-yoga'
 import { typeDefs, resolvers } from './schema'
 
 const server = new GraphQLServer({ typeDefs, resolvers })
+
 server.start()
 ```
 
-**Yoga v2**
+**Yoga v3**
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { typeDefs, resolvers } from './schema'
 
-const server = createServer({
+const yoga = createYoga({
   schema: { typeDefs, resolvers },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ### Load type definitions from a file
@@ -53,20 +57,22 @@ const server = new GraphQLServer({
   typeDefs: path.join(__dirname, 'type-definitions.graphql'),
   resolvers,
 })
+
 server.start()
 ```
 
-In Yoga v2 you now need to use the `fs` module for Node.js.
+In Yoga v3 you now need to use the `fs` module for Node.js.
 
-**Yoga v2**
+**Yoga v3**
 
 ```ts
 import * as path from 'path'
 import * as fs from 'fs'
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { resolvers } from './schema'
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: fs.readFileSync(
       path.join(__dirname, 'type-definitions.graphql'),
@@ -75,7 +81,9 @@ const server = createServer({
     resolvers,
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 For more complex loading of type-definitions please refer to [`graphql-tools/load-files` ](https://www.graphql-tools.com/docs/schema-loading#load-typedefsdocumentnode-and-resolvers-from-files).
@@ -99,19 +107,21 @@ const server = new GraphQLServer({
   `,
   directiveResolvers: uppercaseDirectiveResolverImplementation,
 })
+
 server.start()
 ```
 
 Before deciding upon using schema directives, you should consider whether your custom directive could be instead implemented via a field argument (abstraction).
 
-In Yoga v2 you have to leverage the `mapSchema` API from graphql-tools.
+In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.
 
 <PackageInstall packages={['@graphql-tools/utils', '@graphql-tools/schema']} />
 
-**Yoga v2**
+**Yoga v3**
 
 ```ts
-import { Plugin, createServer } from '@graphql-yoga/node'
+import { Plugin, createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils'
 import { makeExecuteableSchema } from '@graphql-tools/schema'
 import { defaultFieldResolver } from 'graphql'
@@ -146,7 +156,7 @@ schema = mapSchema(schema, {
   },
 })
 
-const server = createServer({
+const yoga = createYoga({
   schema,
 })
 ```
@@ -177,17 +187,20 @@ const server = new GraphQLServer({
     return { ...initialContext, db, authHeader }
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
-**Yoga v2**
+**Yoga v3**
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { typeDefs, resolvers } from './schema'
 import { db } from './db'
 
-const server = new GraphQLServer({
+const yoga = createYoga({
   schema: {
     typeDefs,
     resolvers,
@@ -199,7 +212,9 @@ const server = new GraphQLServer({
     return { db, authHeader }
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ## Middlewares
@@ -243,13 +258,15 @@ const server = new GraphQLServer({
   resolvers,
   middleware: [permissions],
 })
+
 server.start()
 ```
 
-**Yoga v2**
+**Yoga v3**
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { useGraphQLMiddleware } from '@envelop/graphql-middleware'
 import { typeDefs, resolvers } from './schema'
 
@@ -274,11 +291,13 @@ const permissions = {
   Me: isLoggedIn,
 }
 
-const server = createServer({
+const yoga = createYoga({
   schema: { typeDefs, resolvers },
   plugins: [useGraphQLMiddleware([permissions])],
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 For more details please refer to the
@@ -294,7 +313,7 @@ If you are using `graphql-shield` you might wanna have a look and see whether th
 ## Subscriptions
 
 GraphQL Yoga v1 uses the [old and deprecated `subscriptions-transport-ws` protocol](https://github.com/apollographql/subscriptions-transport-ws).
-GraphQL Yoga v2 comes with built in subscription support over [SSE (Server Sent Events)](https://en.wikipedia.org/wiki/Server-sent_events).
+GraphQL Yoga v2+ comes with built in subscription support over [SSE (Server Sent Events)](https://en.wikipedia.org/wiki/Server-sent_events).
 One benefit of this is that you no longer need an additional library on your frontend as the SSE protocol is just simple HTTP.
 
 Because of the protocol change you must migrate your GraphQL clients that execute GraphQL subscription operations to use the new protocol.
@@ -317,7 +336,7 @@ Please use the code snippets for your GraphQL client as listed on the [handle su
 ## PubSub
 
 With GraphQL Yoga v1 used the unmaintained package `graphql-subscriptions` for the `PubSub` implementation.
-In GraphQL Yoga v2, a new maintained PubSub implementation is built-in.
+In GraphQL Yoga v2+, a new maintained PubSub implementation is built-in.
 
 **Yoga v1**
 
@@ -329,7 +348,7 @@ const pubSub = new PubSub()
 **Yoga v2**
 
 ```ts
-import { createPubSub } from '@graphql-yoga/node'
+import { createPubSub } from 'graphql-yoga'
 const pubSub = createPubSub()
 ```
 
@@ -376,19 +395,21 @@ const server = new GraphQLServer({
     },
   },
 })
+
 server.start()
 ```
 
-**Yoga v2**
+**Yoga v3**
 
 ```ts
-import { createPubSub, createServer } from '@graphql-yoga/node'
+import { createPubSub, createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
 const pubSub = new PubSub<{
   randomNumber: [randomNumber: number]
 }>()
 
-const server = createServer({
+const yoga = createYoga({
   context: { pubSub },
   schema: {
     typeDefs: /* GraphQL */ `
@@ -421,12 +442,14 @@ const server = createServer({
     },
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ### Filtering events
 
-Instead of the `withFilter` function you can now use the more modular `pipe` and `filter` functions exported from `@graphql-yoga/node`.
+Instead of the `withFilter` function you can now use the more modular `pipe` and `filter` functions exported from `graphql-yoga`.
 You can learn more about filtering and mapping values in the [subscription filter and map values documentation](/docs/features/subscriptions#filter-and-map-values).
 
 **Yoga v1**
@@ -470,19 +493,21 @@ const server = new GraphQLServer({
     },
   },
 })
+
 server.start()
 ```
 
-**Yoga v2**
+**Yoga v3**
 
 ```ts
-import { createPubSub, createServer, pipe, filter } from '@graphql-yoga/node'
+import { createPubSub, createYoga, pipe, filter } from 'graphql-yoga'
+import { createServer } from 'http'
 
 const pubSub = new PubSub<{
   randomNumber: [randomNumber: number]
 }>()
 
-const server = createServer({
+const yoga = createYoga({
   context: { pubSub },
   schema: {
     typeDefs: /* GraphQL */ `
@@ -518,5 +543,7 @@ const server = createServer({
     },
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```

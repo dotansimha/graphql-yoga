@@ -8,16 +8,17 @@ GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP](https://
 
 ## Installation
 
-<PackageInstall packages={['graphql', '@graphql-yoga/node']} />
+<PackageInstall packages={['graphql', 'graphql-yoga']} />
 
 ## Usage
 
 You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map.
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -32,7 +33,8 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 > Yoga uses GraphQL Tools under the hood so you'll want to follow the [`makeExecutableSchema`](https://www.graphql-tools.com/docs/generate-schema) pattern.
@@ -54,13 +56,16 @@ You can also pass an existing `GraphQLSchema` instance to `createServer`.
 If you're using a library such as [Pothos](https://pothos-graphql.dev/), [GraphQL Nexus](https://nexusjs.org/), [gqtx](https://github.com/sikanhe/gqtx), or vanilla [`graphql-js`](https://graphql.org/graphql-js/type/#graphqlschema), you simply can pass the `GraphQLSchema` to `schema`:
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
 import { schema } from './schema'
 
-const server = createServer({
+const yoga = createYoga({
   schema,
 })
 
-server.start()
+const server = createServer(yoga)
+
+server.listen(4000)
 ```

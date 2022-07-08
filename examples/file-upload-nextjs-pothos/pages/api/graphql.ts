@@ -1,4 +1,4 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import SchemaBuilder from '@pothos/core'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -38,10 +38,9 @@ builder.mutationType({
 
 const schema = builder.toSchema({})
 
-const server = createServer<{
+export default createYoga<{
   req: NextApiRequest
   res: NextApiResponse
 }>({
   schema,
 })
-export default server

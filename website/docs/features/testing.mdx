@@ -9,9 +9,9 @@ GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for
 ## Using `inject`
 
 ```ts
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
-const yoga = createServer()
+const yoga = createYoga()
 
 const { response, executionResult } = await yoga.inject({
   document: '{ greetings }',
@@ -28,7 +28,7 @@ console.assert(
 ## Using `fetch` to test just like browsers on any JS environment
 
 ```ts
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
 const response = await yoga.fetch('http://localhost:4000/graphql', {
   method: 'POST',
@@ -52,11 +52,11 @@ console.assert(
 ## Using `supertest` for Node.js
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import request from 'supertest'
 import { deepEqual } from 'assert'
 
-const yoga = createServer()
+const yoga = createYoga()
 
 const response = await request(yoga).post('/graphql').send({
   query: '{ greetings }',

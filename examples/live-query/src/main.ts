@@ -1,4 +1,5 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'
@@ -14,7 +15,7 @@ setInterval(() => {
 
 const greetings = ['Hi', 'Hello', 'Sup']
 
-const server = createServer({
+const yoga = createYoga({
   context: () => ({ greetings }),
   schema: {
     typeDefs: [
@@ -41,4 +42,5 @@ const server = createServer({
   plugins: [useLiveQuery({ liveQueryStore })],
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)

@@ -108,11 +108,6 @@ declare global {
   }
 }
 
-export type FetchEvent = Event & {
-  respondWith: (response: PromiseOrValue<Response>) => void
-  request: Request
-}
-
 export type FetchAPI = {
   /**
    * WHATWG compliant Request object constructor
@@ -138,4 +133,9 @@ export type FetchAPI = {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
   ReadableStream: typeof ReadableStream
+}
+
+export interface FetchEvent extends Event {
+  request: Request
+  respondWith(response: PromiseOrValue<Response>): void
 }

@@ -1,9 +1,11 @@
-const { createServer } = require('@graphql-yoga/node')
+const { createServer } = require('http')
+const { createYoga } = require('graphql-yoga')
 
-const server = createServer({
+const yoga = createYoga({
   logging: false,
-  hostname: '127.0.0.1',
   multipart: false,
 })
 
-server.start()
+const server = createServer(yoga)
+
+server.listen(4000, '127.0.0.1')

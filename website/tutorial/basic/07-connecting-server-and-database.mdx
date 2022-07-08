@@ -45,12 +45,10 @@ Now, you'll need to import the `createContext` function and make sure you add it
 // ... other imports ...
 import { createContext } from './context'
 
-async function main() {
-  const server = createServer({ schema, context: createContext })
-  await server.start()
-}
+const yoga = createYoga({ schema, context: createContext })
 
-main()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 </Instruction>

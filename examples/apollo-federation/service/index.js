@@ -1,6 +1,7 @@
 const { parse } = require('graphql')
 const { buildSubgraphSchema } = require('@apollo/subgraph')
-const { createServer } = require('@graphql-yoga/node')
+const { createServer } = require('http')
+const { createYoga } = require('graphql-yoga')
 
 const typeDefs = parse(/* GraphQL */ `
   type Query {
@@ -25,11 +26,11 @@ const resolvers = {
     },
   },
 }
-const server = createServer({
+const yoga = createYoga({
   schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
-  port: 4001,
 })
 
-server.start().then(() => {
+const server = createServer(yoga)
+server.listen(4001, () => {
   console.log(`🚀 Server ready at http://localhost:4001`)
 })

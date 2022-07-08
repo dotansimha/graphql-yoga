@@ -1,4 +1,4 @@
 // src/index.mjs
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
-export default createServer()
+export default createYoga()

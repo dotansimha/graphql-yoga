@@ -1,4 +1,5 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
 // 1. Please add the operations that causes your issue here
 const defaultQuery = /* GraphQL */ `
@@ -7,11 +8,12 @@ const defaultQuery = /* GraphQL */ `
   }
 `
 
-// 2. Please adjust the createServer setup for the issue you are experiencing
-const server = createServer({
+// 2. Please adjust the createYoga setup for the issue you are experiencing
+const yoga = createYoga({
   graphiql: {
     defaultQuery,
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
