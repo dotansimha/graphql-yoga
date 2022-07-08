@@ -1,4 +1,4 @@
-<p align="center"><img src="./website/public/cover.png" width="350" /></p>
+<p align="center"><img src="./website/public/cover.png" width="720" /></p>
 
 # GraphQL Yoga
 
