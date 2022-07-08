@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'website/**'
+    branches:
+      - master
 jobs:
   website-check:
     runs-on: ubuntu-latest

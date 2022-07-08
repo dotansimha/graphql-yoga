@@ -1,15 +1,16 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 
 async function main() {
-  const yogaApp = createServer({
+  const yogaApp = createYoga({
     graphiql: {
       subscriptionsProtocol: 'WS',
     },
   })
 
-  const httpServer = await yogaApp.start()
+  const httpServer = createServer(yogaApp)
   const wsServer = new WebSocketServer({
     server: httpServer,
     path: yogaApp.getAddressInfo().endpoint,

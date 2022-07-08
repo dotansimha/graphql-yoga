@@ -8,7 +8,7 @@
     "experimentalDecorators": true,
     "module": "node16",
     "target": "ES2020",
-    "lib": ["es6", "esnext", "es2015", "dom", "webworker"],
+    "lib": ["esnext", "webworker"],
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -22,13 +22,11 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "paths": {
-      "@graphql-yoga/common": ["packages/common/src/index.ts"],
+      "graphql-yoga": ["packages/graphql-yoga/src/index.ts"],
       "@graphql-yoga/subscription": ["packages/subscription/src/index.ts"],
-      "@graphql-yoga/node": ["packages/node/src/index.ts"],
       "@graphql-yoga/render-graphiql": [
         "packages/render-graphiql/src/index.ts"
       ],
-      "graphql-yoga": ["packages/graphql-yoga/src/index.ts"],
       "@graphql-yoga/plugin-*": ["packages/plugins/*/src/index.ts"],
       "@graphql-yoga/typed-event-target": [
         "packages/event-target/typed-event-target/src/index.ts"
@@ -40,5 +38,5 @@
     "jsx": "preserve"
   },
   "include": ["packages"],
-  "exclude": ["**/dist", "**/temp", "**/.bob"]
+  "exclude": ["**/dist", "**/temp", "**/.bob", "**/examples"]
 }

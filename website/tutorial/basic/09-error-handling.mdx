@@ -134,7 +134,7 @@ This is great, but now we never know why our request failed 🤔and the error me
 
 Let's change the implementation to expose the much more helpful message `Cannot post comment on non-existing link with id 'X'.` instead of `Unexpected error.`.
 
-For doing so you will use the `GraphQLYogaError` class that is exported from the `@graphql-yoga/node` package.
+For doing so you will use the `GraphQLYogaError` class that is exported from the `graphql-yoga` package.
 
 <Instruction>
 
@@ -142,7 +142,7 @@ Add the following catch handler for mapping a foreign key error into a `GraphQLY
 
 ```typescript
 // ... other imports ...
-import { GraphQLYogaError } from '@graphql-yoga/node'
+import { GraphQLYogaError } from 'graphql-yoga'
 // ... other imports ...
 
 const resolvers = {

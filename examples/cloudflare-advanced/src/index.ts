@@ -1,8 +1,8 @@
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
 declare const EXAMPLE_KV: KVNamespace
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       scalar File
@@ -102,4 +102,4 @@ const server = createServer({
   },
 })
 
-server.start()
+self.addEventListener('fetch', yoga)

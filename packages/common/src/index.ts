@@ -1,14 +1,5 @@
-export * from './types.js'
-export * from './logger.js'
-export * from './server.js'
-
-export * from '@envelop/core'
-export * from '@graphql-yoga/subscription'
-export { CORSOptions } from './plugins/useCORS.js'
-export {
-  GraphiQLOptions,
-  shouldRenderGraphiQL,
-  renderGraphiQL,
-} from './plugins/useGraphiQL.js'
-export { GraphQLYogaError } from './GraphQLYogaError.js'
-export { Plugin } from './plugins/types.js'
+console.warn(
+  `@graphql-yoga/common package has been deprecated and will no longer receive updates in the next major.`,
+)
+console.warn(`Please use 'graphql-yoga' npm package instead!'`)
+export * from 'graphql-yoga'

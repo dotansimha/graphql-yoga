@@ -13,10 +13,10 @@ The following example adds [GraphQL JIT](https://github.com/zalando-incubator/gr
 
 ```ts
 import { useGraphQlJit } from '@envelop/graphql-jit'
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -33,5 +33,6 @@ const server = createServer({
 })
 
 // Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```

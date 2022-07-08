@@ -1,4 +1,5 @@
-const { createServer } = require('@graphql-yoga/node')
+const { createServer } = require('http')
+const { createYoga } = require('graphql-yoga')
 const { ApolloGateway } = require('@apollo/gateway')
 const { useApolloFederation } = require('@envelop/apollo-federation')
 
@@ -14,7 +15,7 @@ async function main() {
   // Make sure all services are loaded
   await gateway.load()
 
-  const server = createServer({
+  const yoga = createYoga({
     plugins: [
       useApolloFederation({
         gateway,
@@ -23,7 +24,8 @@ async function main() {
   })
 
   // Start the server and explore http://localhost:4000/graphql
-  await server.start()
+  const server = createServer(yoga)
+  server.listen(4000)
 }
 
 main().catch((err) => {

@@ -16,8 +16,8 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
 
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the AWS Lambda Function....')
-    await execPromise('yarn build', {
-      cwd: '../examples/aws-lambda-bundle',
+    await execPromise('yarn bundle', {
+      cwd: '../examples/aws-lambda',
     })
   },
   config: async (stack: Stack) => {
@@ -70,7 +70,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
         handler: 'index.handler',
         code: new pulumi.asset.AssetArchive({
           'index.js': new pulumi.asset.FileAsset(
-            '../examples/aws-lambda-bundle/dist/index.js',
+            '../examples/aws-lambda/dist/index.js',
           ),
         }),
       },

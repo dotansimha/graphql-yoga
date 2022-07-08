@@ -1,10 +1,10 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import Koa from 'koa'
 
 export function buildApp() {
   const app = new Koa()
 
-  const graphQLServer = createServer<Koa.ParameterizedContext>({
+  const yoga = createYoga<Koa.ParameterizedContext>({
     schema: {
       typeDefs: /* GraphQL */ `
         type Query {
@@ -36,7 +36,7 @@ export function buildApp() {
   })
 
   app.use(async (ctx) => {
-    const response = await graphQLServer.handleIncomingMessage(ctx.req, ctx)
+    const response = await yoga.handleNodeRequest(ctx.req, ctx)
 
     // Set status code
     ctx.status = response.status

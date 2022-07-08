@@ -17,7 +17,7 @@ Thanks to [Envelop's Apollo Federation](https://www.envelop.dev/plugins/use-apol
 
 <PackageInstall
   packages={[
-    '@graphql-yoga/node',
+    'graphql-yoga',
     '@apollo/gateway',
     '@envelop/apollo-federation',
     'graphql@15',
@@ -27,7 +27,8 @@ Thanks to [Envelop's Apollo Federation](https://www.envelop.dev/plugins/use-apol
 ### Example Gateway
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { ApolloGateway } from '@apollo/gateway'
 import { useApolloFederation } from '@envelop/apollo-federation'
 
@@ -43,7 +44,7 @@ const gateway = new ApolloGateway({
 // Make sure all services are loaded
 await gateway.load()
 
-const server = createServer({
+const yoga = createYoga({
   plugins: [
     useApolloFederation({
       gateway,
@@ -52,7 +53,8 @@ const server = createServer({
 })
 
 // Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ## Federation Service
@@ -61,16 +63,15 @@ You don't need any extra plugins for Yoga for Federation Service.
 
 ### Installation
 
-<PackageInstall
-  packages={['@graphql-yoga/node', '@apollo/subgraph', 'graphql']}
-/>
+<PackageInstall packages={['graphql-yoga', '@apollo/subgraph', 'graphql']} />
 
 ### Example User Service
 
 ```ts
 const { parse } = require('graphql')
 const { buildSubgraphSchema } = require('@apollo/subgraph')
-const { createServer } = require('@graphql-yoga/node')
+const { createYoga } = require('graphql-yoga')
+const { createServer } = require('http')
 
 const typeDefs = parse(/* GraphQL */ `
   type Query {
@@ -95,12 +96,13 @@ const resolvers = {
     },
   },
 }
-const server = createServer({
+const yoga = createYoga({
   schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
-  port: 4001,
 })
 
-server.start().then(() => {
+const server = createServer(yoga)
+
+server.listen(4001, () => {
   console.log(`🚀 Server ready at http://localhost:4001`)
 })
 ```

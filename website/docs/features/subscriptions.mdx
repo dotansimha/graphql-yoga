@@ -20,10 +20,10 @@ Subscriptions can be added by extending your GraphQL schema with a `Subscription
 `server.ts`
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -53,7 +53,8 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
@@ -252,59 +253,57 @@ Also, you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets 
 `yoga-with-ws.ts`
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 
-async function main() {
-  const yogaApp = createServer({
-    graphiql: {
-      // Use WebSockets in GraphiQL
-      subscriptionsProtocol: 'WS',
+const yogaApp = createYoga({
+  graphiql: {
+    // Use WebSockets in GraphiQL
+    subscriptionsProtocol: 'WS',
+  },
+})
+
+// Get NodeJS Server from Yoga
+const httpServer = createServer(yogaApp)
+// Create WebSocket server instance from our Node server
+const wsServer = new WebSocketServer({
+  server: httpServer,
+  path: yogaApp.getAddressInfo().endpoint,
+})
+
+// Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
+useServer(
+  {
+    execute: (args: any) => args.rootValue.execute(args),
+    subscribe: (args: any) => args.rootValue.subscribe(args),
+    onSubscribe: async (ctx, msg) => {
+      const { schema, execute, subscribe, contextFactory, parse, validate } =
+        yogaApp.getEnveloped(ctx)
+
+      const args = {
+        schema,
+        operationName: msg.payload.operationName,
+        document: parse(msg.payload.query),
+        variableValues: msg.payload.variables,
+        contextValue: await contextFactory(),
+        rootValue: {
+          execute,
+          subscribe,
+        },
+      }
+
+      const errors = validate(args.schema, args.document)
+      if (errors.length) return errors
+      return args
     },
-  })
+  },
+  wsServer,
+)
 
-  // Get NodeJS Server from Yoga
-  const httpServer = await yogaApp.start()
-  // Create WebSocket server instance from our Node server
-  const wsServer = new WebSocketServer({
-    server: httpServer,
-    path: yogaApp.getAddressInfo().endpoint,
-  })
-
-  // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
-  useServer(
-    {
-      execute: (args: any) => args.rootValue.execute(args),
-      subscribe: (args: any) => args.rootValue.subscribe(args),
-      onSubscribe: async (ctx, msg) => {
-        const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yogaApp.getEnveloped(ctx)
-
-        const args = {
-          schema,
-          operationName: msg.payload.operationName,
-          document: parse(msg.payload.query),
-          variableValues: msg.payload.variables,
-          contextValue: await contextFactory(),
-          rootValue: {
-            execute,
-            subscribe,
-          },
-        }
-
-        const errors = validate(args.schema, args.document)
-        if (errors.length) return errors
-        return args
-      },
-    },
-    wsServer,
-  )
-}
-
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
+server.listen(4000, () => {
+  console.log('Server is running on port 4000')
 })
 ```
 
@@ -340,12 +339,12 @@ GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it
 `server.ts`
 
 ```ts
-import { createServer, createPubSub } from '@graphql-yoga/node'
+import { createServer, createPubSub } from 'graphql-yoga'
 
 const pubSub = createPubSub()
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -381,7 +380,8 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ### Topics
@@ -493,7 +493,7 @@ Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redi
 
 ```ts
 import { Redis } from 'ioredis'
-import { createPubSub } from '@graphql-yoga/common'
+import { createPubSub } from 'graphql-yoga'
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
 
 const publishClient = new Redis()
@@ -523,13 +523,7 @@ Yoga has a few utility functions that make this as simple as possible.
 **Example PubSub event stream transform**
 
 ```ts
-import {
-  createServer,
-  createPubSub,
-  pipe,
-  map,
-  filter,
-} from '@graphql-yoga/node'
+import { createServer, createPubSub, pipe, map, filter } from 'graphql-yoga'
 
 const pubSub = createPubSub<{
   randomNumber: [randomNumber: number]
@@ -557,12 +551,12 @@ source.return()
 **Example Random number stream transform**
 
 ```ts
-import { createServer, createPubSub } from '@graphql-yoga/node'
+import { createServer, createPubSub } from 'graphql-yoga'
 
 const pubSub = createPubSub()
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String
@@ -601,7 +595,8 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ### Subscriptions with initial value
@@ -616,19 +611,13 @@ GraphQL subscriptions are implemented using [Async Iteration](https://developer.
 Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org/) ("The missing constructor for creating safe async iterators") for providing a friendly developer experience.
 
 ```ts
-import {
-  createServer,
-  createPubSub,
-  Repeater,
-  pipe,
-  map,
-} from '@graphql-yoga/node'
+import { createServer, createPubSub, Repeater, pipe, map } from 'graphql-yoga'
 
 let globalCounter = 0
 const pubSub = createPubSub()
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String
@@ -676,7 +665,8 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ### Listen to multiple Pub/Sub topics
@@ -684,7 +674,7 @@ server.start()
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 
 ```ts
-import { createServer, createPubSub, Repeater } from '@graphql-yoga/node'
+import { createServer, createPubSub, Repeater } from 'graphql-yoga'
 
 type User = {
   id: string
@@ -702,7 +692,7 @@ const pubSub = createPubSub<{
 }>()
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   typeDefs: /* GraphQL */ `
     type Query {
       hello: String
@@ -760,5 +750,6 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```

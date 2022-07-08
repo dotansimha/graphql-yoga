@@ -1,8 +1,9 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import http from 'http'
 import fs from 'fs'
 import path from 'path'
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       scalar File
@@ -43,4 +44,5 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = http.createServer(yoga)
+server.listen(4000)

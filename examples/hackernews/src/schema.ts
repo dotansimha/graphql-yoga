@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { GraphQLYogaError } from '@graphql-yoga/node'
 import type { Link } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
+import { GraphQLError } from 'graphql'
 import type { GraphQLContext } from './context.js'
 
 const typeDefinitions = /* GraphQL */ `
@@ -42,7 +42,7 @@ const applyTakeConstraints = (params: {
   value: number
 }) => {
   if (params.value < params.min || params.value > params.max) {
-    throw new GraphQLYogaError(
+    throw new GraphQLError(
       `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`,
     )
   }
@@ -122,7 +122,7 @@ const resolvers = {
       const linkId = parseIntSafe(args.linkId)
       if (linkId === null) {
         return Promise.reject(
-          new GraphQLYogaError(
+          new GraphQLError(
             `Cannot post common on non-existing link with id '${args.linkId}'.`,
           ),
         )
@@ -141,7 +141,7 @@ const resolvers = {
             err.code === 'P2003'
           ) {
             return Promise.reject(
-              new GraphQLYogaError(
+              new GraphQLError(
                 `Cannot post common on non-existing link with id '${args.linkId}'.`,
               ),
             )

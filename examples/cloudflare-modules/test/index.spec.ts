@@ -1,5 +1,5 @@
 import worker from '../src/index.js'
-import { Request } from 'cross-undici-fetch'
+import { Request } from '@whatwg-node/fetch'
 import { getIntrospectionQuery } from 'graphql'
 
 test('should render GraphiQL', async () => {

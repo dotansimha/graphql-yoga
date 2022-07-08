@@ -6,7 +6,7 @@
     "pretty-quick": "pretty-quick --staged",
     "prebuild": "rimraf packages/*/dist",
     "check": "yarn workspaces run check",
-    "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace @graphql-yoga/common run generate-graphiql-html && bob build",
+    "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace graphql-yoga run generate-graphiql-html && bob build",
     "test": "jest --passWithNoTests --forceExit",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
@@ -78,7 +78,6 @@
   "resolutions": {
     "@changesets/apply-release-plan": "6.0.0",
     "graphql": "16.5.0",
-    "cross-undici-fetch": "0.4.14",
     "@types/react": "17.0.39",
     "@types/react-dom": "17.0.17",
     "react": "17.0.2",

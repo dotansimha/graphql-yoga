@@ -21,10 +21,10 @@ Let's use `File` in this example.
 `file-upload-example.ts`
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       scalar File
@@ -55,7 +55,8 @@ const server = createServer({
   },
 })
 // Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ### Test your GraphQL Server with `cURL`
@@ -82,7 +83,7 @@ import {
   arg,
   nonNull,
 } from 'nexus'
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 
 const FileScalar = scalarType({
   name: 'File',
@@ -109,12 +110,13 @@ const schema = makeSchema({
   types: [FileScalar, greetings, readTextFile],
 })
 
-const server = createServer({
+const yoga = createYoga({
   schema: schema,
 })
 
 // Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ## Disabling Multipart/File Upload Processing
@@ -122,7 +124,7 @@ server.start()
 If you want to disable multipart request processing for some reason, you can pass `multipart: false` to prevent Yoga from handling multipart requests.
 
 ```ts
-createServer({
+createYoga({
   multipart: false,
 })
 ```
@@ -131,17 +133,27 @@ createServer({
 
 In Node.js, you can configure the limits of the multipart request processing such as maximum allowed file size, maximum numbers of files, etc.
 
+Fetch API's `Request.formData` method doesn't have any options to configure the limits of Multipart request processing.
+Instead we can configure our Fetch API ponyfill to manage that.
+
 ```ts
-createServer({
-  multipart: {
-    // Maximum allowed file size (in bytes)
-    fileSize: 1000000,
-    // Maximum allowed number of files
-    files: 10,
-    // Maximum allowed size of content (operations, variables etc...)
-    fieldSize: 1000000,
-    // Maximum allowed header size for form data
-    headerSize: 1000000,
-  },
+import { createFetch } from '@whatwg-node/fetch'
+import { createYoga } from 'graphql-yoga'
+
+createYoga({
+  fetchAPI: createFetch({
+    // We prefer `node-fetch` over `undici` and current unstable Node's implementation
+    useNodeFetch: true,
+    formDataLimits: {
+      // Maximum allowed file size (in bytes)
+      fileSize: 1000000,
+      // Maximum allowed number of files
+      files: 10,
+      // Maximum allowed size of content (operations, variables etc...)
+      fieldSize: 1000000,
+      // Maximum allowed header size for form data
+      headerSize: 1000000,
+    },
+  }),
 })
 ```

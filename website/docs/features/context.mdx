@@ -24,9 +24,10 @@ By default, GraphQL Yoga provides the following values in the context object ind
 **Context usage example: log headers**
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -42,7 +43,9 @@ const server = createServer({
     },
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ```bash
@@ -59,9 +62,10 @@ You can extend the existing context by using the `context` property.
 **Context extension example: object**
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -78,7 +82,9 @@ const server = createServer({
   },
   context: { someNumber: 13 },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 You can also pass a function as the `context` property. The function will be invoked for each incoming GraphQL request with the initial context as an argument and after the invocation it will be merged with the initial context.
@@ -86,9 +92,10 @@ You can also pass a function as the `context` property. The function will be inv
 **Context extension example: function returning an object**
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -107,7 +114,9 @@ const server = createServer({
     return { someNumber: 13 }
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 The function can either return an object or a Promise that resolves to an object.
@@ -115,9 +124,10 @@ The function can either return an object or a Promise that resolves to an object
 **Context extension example: function returning a Promise**
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -136,7 +146,9 @@ const server = createServer({
     return { someNumber: 13 }
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 ## Advanced context life-cycle
@@ -162,7 +174,7 @@ When creating the server instance, GraphQL Yoga accepts an additional object fro
 
 #### Node.js (standalone, express and Next.js etc.)
 
-If you are using GraphQL Yoga as a standalone server with `.start()` method or exposing it as a middleware as we show in our [express](/docs/integrations/integration-with-express) and [Next.js](/docs/integrations/integration-with-nextjs) recipes.
+If you are using GraphQL Yoga as a standalone server with `node:http` or exposing it as a middleware as we show in our [express](/docs/integrations/integration-with-express) and [Next.js](/docs/integrations/integration-with-nextjs) recipes.
 
 - **_req_**: [Node.js `IncomingMessage` object](https://nodejs.org/api/http.html#http_class_http_incomingmessage)
 - **_res_**: [Node.js `ServerResponse` object](https://nodejs.org/api/http.html#http_class_http_serverresponse)
@@ -173,7 +185,7 @@ The `req` and `res` objects are added to the initial context object.
 const serverContext = { ...defaultContext, req, res }
 ```
 
-Thus when using `@graphql-yoga/node`, it is possible to access `context.req` and `context.res` within the GraphQL resolvers or the user context factory function.
+It is possible to access `context.req` and `context.res` within the GraphQL resolvers or the user context factory function.
 
 However, we recommend avoiding to use `context.req` and `context.res` wherever possible and instead favor `context.request`, as it is more future proof (as Node.js HTTP servers adopt the Fetch Response API).
 
@@ -182,20 +194,20 @@ However, we recommend avoiding to use `context.req` and `context.res` wherever p
 You might notice that the middleware implementation is more complex for server frameworks like [Fastify](/docs/integrations/integration-with-fastify) and [koa](/docs/integrations/integration-with-koa), because of their custom request handling behavior.
 It is not possible to use a basic Node.js [RequestListener](https://nodejs.org/api/http.html#http_class_http_incomingmessage) function.
 
-Since they limit the access to the underlying raw `ServerResponse` object, the recipes use the `.handleIncomingMessage` method and pass the server context as the second parameter.
+Since they limit the access to the underlying raw `ServerResponse` object, the recipes use the `.handleNodeRequest` method and pass the server context as the second parameter.
 
 E.g. for **_Fastify_**, a [`Reply`](<(https://www.fastify.io/docs/latest/Reply/)>) object is attached to the server context instead of the `Request` object, which is an intermediate framework specific response format.
-Also note the generic definition in `createServer` for corretcly typing the server context.
+Also note the generic definition in `createYoga` for correctly typing the server context.
 
 ```ts
-const graphQLServer = createServer<{
+const yoga = createYoga<{
   req: FastifyRequest
   reply: FastifyReply
 }>()
 
 // some where within the request handler
 
-const response = await graphQLServer.handleIncomingMessage(req, {
+const response = await yoga.handleNodeRequest(req, {
   req,
   reply,
 })
@@ -203,7 +215,7 @@ const response = await graphQLServer.handleIncomingMessage(req, {
 
 #### Fetch API Request compliant environments (Cloudflare Workers/Deno)
 
-If you are using [Cloudflare Workers with `@graphql-yoga/common` according to the integration guide](/docs/integrations/integration-with-cloudflare-workers), the [WHATWG `FetchEvent` object](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent) will be added as the server context object.
+If you are using [Cloudflare Workers according to the integration guide](/docs/integrations/integration-with-cloudflare-workers), the [WHATWG `FetchEvent` object](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent) will be added as the server context object.
 That object is almost identical to what GraphQL Yoga provides you within `YogaInitialContext`.
 
 ### User Context
@@ -213,8 +225,8 @@ You can pass a factory function to `context` parameter of `createServer` configu
 That function will receive the combination of the standard initial context and the server's (if available)`, then the return value will be merged into that.
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
-const server = createServer({
+import { createYoga } from 'graphql-yoga'
+const yoga = createYoga({
   context: async ({ request }) => {
     // get custom header value
     const foo = request.headers.get('x-foo') ?? null
@@ -223,7 +235,9 @@ const server = createServer({
     }
   },
 })
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 In this case your final context object will have an extra `foo` property.

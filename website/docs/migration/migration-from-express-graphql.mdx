@@ -9,7 +9,7 @@ type: Guide
 
 You can start with installing `graphql-yoga` package.
 
-<PackageInstall packages={['@graphql-yoga/node']} />
+<PackageInstall packages={['graphql-yoga']} />
 
 ## Replace Express GraphQL's middleware
 
@@ -18,7 +18,7 @@ You should replace Express GraphQL's middleware with GraphQL Yoga's;
 ```diff
 const express = require('express');
 - const { graphqlHTTP } = require('express-graphql');
-+ const { createServer } = require('@graphql-yoga/node');
++ const { createYoga } = require('graphql-yoga');
 const { schema } = require('./schema');
 
 const app = express();
@@ -31,7 +31,7 @@ const app = express();
 -  graphiql: true,
 -})));
 
-+const yoga = createServer({
++const yoga = createYoga({
 +   schema,
 +   context: (req) => ({ // Context factory gets called for every request
 +      myToken: req.headers.get('authorization'),

@@ -1,12 +1,12 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import { createServer } from '@graphql-yoga/common'
-import { Request } from 'cross-undici-fetch'
+import { createYoga } from 'graphql-yoga'
+import { Request } from '@whatwg-node/fetch'
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest,
 ): Promise<void> {
-  const app = createServer({
+  const app = createYoga({
     logging: {
       debug: context.log.verbose,
       error: context.log.error,
@@ -21,7 +21,7 @@ const httpTrigger: AzureFunction = async function (
 
   try {
     const request = new Request(req.url, {
-      method: req.method,
+      method: req.method?.toString(),
       body: req.rawBody,
       headers: req.headers,
     })

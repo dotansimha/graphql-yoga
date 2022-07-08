@@ -132,8 +132,8 @@ export const vercelDeployment: DeploymentConfiguration<{
   prerequisites: async () => {
     // Build and bundle the function
     console.info('\t\tℹ️ Bundling the Vercel Function....')
-    await execPromise('yarn build', {
-      cwd: '../examples/vercel-function',
+    await execPromise('yarn bundle', {
+      cwd: '../examples/nextjs',
     })
   },
   program: async () => {
@@ -142,7 +142,7 @@ export const vercelDeployment: DeploymentConfiguration<{
         {
           file: '/api/graphql.js',
           data: await fsPromises.readFile(
-            '../examples/vercel-function/dist/index.js',
+            '../examples/nextjs/dist/index.js',
             'utf-8',
           ),
         },

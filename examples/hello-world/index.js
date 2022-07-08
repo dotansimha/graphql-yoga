@@ -1,6 +1,7 @@
-const { createServer } = require('@graphql-yoga/node')
+const { createServer } = require('http')
+const { createYoga } = require('graphql-yoga')
 
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -23,4 +24,5 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)

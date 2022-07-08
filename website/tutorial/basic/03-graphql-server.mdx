@@ -11,16 +11,16 @@ You are going to use the HTTP protocol to serve the GraphQL server, but note tha
 
 ### Creating a GraphQL HTTP server with Yoga
 
-In this tutorial, we will be using `@graphql-yoga/node` for building our Node.js GraphQL HTTP server.
+In this tutorial, we will be using `graphql-yoga` for building our Node.js GraphQL HTTP server.
 
 > Yoga can also run on other platforms, such as Cloudflare Workers or deno. [We recommend checking out the integrations section in our documentation after finishing the tutorial.](/docs/integrations/integration-with-cloudflare-workers)
 
 <Instruction>
 
-You'll need the `@graphql-yoga/node` package available in your project, so install it using the following command:
+You'll need the `graphql-yoga` package available in your project, so install it using the following command:
 
 ```bash
-npm install --save-exact @graphql-yoga/node
+npm install --save-exact graphql-yoga
 ```
 
 </Instruction>
@@ -30,15 +30,14 @@ npm install --save-exact @graphql-yoga/node
 Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:
 
 ```typescript
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { schema } from './schema'
 
-async function main() {
-  const server = createServer({ schema })
-  await server.start()
-}
+const yoga = createYoga({ schema })
 
-main()
+const server = createServer(yoga)
+server.listen(4000)
 ```
 
 </Instruction>

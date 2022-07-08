@@ -1,8 +1,8 @@
 import { useGraphQlJit } from '@envelop/graphql-jit';
-import { createServer } from '@graphql-yoga/common';
+import { createYoga } from 'graphql-yoga';
 import type { RequestEvent } from '@sveltejs/kit';
 
-const yogaApp = createServer<RequestEvent>({
+const yogaApp = createYoga<RequestEvent>({
 	logging: false,
 	schema: {
 		typeDefs: `
@@ -28,10 +28,4 @@ const yogaApp = createServer<RequestEvent>({
 	}
 });
 
-export async function get(event: RequestEvent) {
-	return yogaApp.handleRequest(event.request, event);
-}
-
-export async function post(event: RequestEvent) {
-	return yogaApp.handleRequest(event.request, event);
-}
+export { yogaApp as get, yogaApp as post };

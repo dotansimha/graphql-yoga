@@ -1,10 +1,12 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 import { schema } from './schema.js'
 import { createContext } from './context.js'
 
-async function main() {
-  const server = createServer({ schema, context: createContext })
-  await server.start()
+function main() {
+  const yoga = createYoga({ schema, context: createContext })
+  const server = createServer(yoga)
+  server.listen(4000)
 }
 
 main()

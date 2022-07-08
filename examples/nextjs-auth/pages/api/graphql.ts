@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
@@ -11,7 +11,7 @@ export const config = {
   },
 }
 
-export default createServer<
+export default createYoga<
   {
     req: NextApiRequest
     res: NextApiResponse
