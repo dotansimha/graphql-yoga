@@ -4,43 +4,19 @@ title: Quick Start
 sidebar_label: Quick Start
 ---
 
-GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-compliant](https://github.com/graphql/graphql-over-http) GraphQL Server using [Envelop](https://envelop.dev) and [GraphQL Tools](https://graphql-tools.com).
+GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP](https://github.com/graphql/graphql-over-http) spec-compliant GraphQL Server using [Envelop](https://envelop.dev), and [GraphQL Tools](https://graphql-tools.com) that runs anywhere.
 
 ## Installation
 
 <PackageInstall packages={['graphql', '@graphql-yoga/node']} />
 
-## Create a Hello World GraphQL API
+## Usage
 
-The following example shows how to create a simple GraphQL Yoga server that responds to a simple query.
-
-```ts
-import { createServer } from '@graphql-yoga/node'
-
-// Create your server
-const server = createServer({})
-// start the server and explore http://localhost:4000/graphql
-server.start()
-```
-
-That is it!
-
-Now visit `http://localhost:4000/graphql` in your browser and execute the followiing query operation:
-
-```graphql
-query HelloWorld {
-  hello
-}
-```
-
-## Provide your own GraphQL schema
-
-You probably want to write your own schema instead of using the hello world schema that is served by default!
+You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map.
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
 
-// Create your server
 const server = createServer({
   schema: {
     typeDefs: /* GraphQL */ `
@@ -50,29 +26,41 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        hello: () => 'Hello Hello Hello',
+        hello: () => 'Hello from Yoga!',
       },
     },
   },
 })
-// start the server and explore http://localhost:4000/graphql
+
 server.start()
 ```
 
-You can simply provide type definitions and a resolver map based on the popular graphql-tools `makeExecutableSchema` pattern. You can [learn more on the GraphQL Tools documentation](https://www.graphql-tools.com/docs/generate-schema)
+> Yoga uses GraphQL Tools under the hood so you'll want to follow the [`makeExecutableSchema`](https://www.graphql-tools.com/docs/generate-schema) pattern.
 
-## Passing an executable schema created by other tools
+**That is it!**
+
+Now visit [`http://localhost:4000/graphql`](http://localhost:4000/graphql) to execute the followiing query operation:
+
+```graphql
+query HelloWorld {
+  hello
+}
+```
+
+## Using existing schema
 
 You can also pass an existing `GraphQLSchema` instance to `createServer`.
-Use your favorite schema building library such as [Pothos](https://pothos-graphql.dev/), [gqtx](https://github.com/sikanhe/gqtx), [GraphQL Nexus](https://nexusjs.org/) or plain [graphql-js schema classes](https://graphql.org/graphql-js/type/#graphqlschema).
+
+If you're using a library such as [Pothos](https://pothos-graphql.dev/), [GraphQL Nexus](https://nexusjs.org/), [gqtx](https://github.com/sikanhe/gqtx), or vanilla [`graphql-js`](https://graphql.org/graphql-js/type/#graphqlschema), you simply can pass the `GraphQLSchema` to `schema`:
 
 ```ts
-import { schema } from './schema'
 import { createServer } from '@graphql-yoga/node'
+
+import { schema } from './schema'
 
 const server = createServer({
   schema,
 })
-// start the server and explore http://localhost:4000/graphql
+
 server.start()
 ```
