@@ -7,8 +7,6 @@
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/subscription"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
   "scripts": {
     "check": "tsc --pretty --noEmit"
   },
@@ -20,9 +18,8 @@
   ],
   "author": "Laurin Quast <laurinquast@googlemail.com>",
   "license": "MIT",
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
