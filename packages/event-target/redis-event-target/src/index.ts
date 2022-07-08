@@ -72,6 +72,5 @@ export function createRedisEventTarget<TEvent extends Event>(
           : callbackOrOptions
       removeCallback(topic, callback)
     },
-    // destroy() {},
   }
 }
