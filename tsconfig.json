@@ -9,7 +9,7 @@
     "experimentalDecorators": true,
     "module": "node16",
     "target": "es2018",
-    "lib": ["es6", "esnext", "es2015", "dom", "webworker"],
+    "lib": ["esnext", "webworker"],
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -35,5 +35,5 @@
     "jsx": "preserve"
   },
   "include": ["packages"],
-  "exclude": ["**/dist", "**/temp", "**/.bob"]
+  "exclude": ["**/dist", "**/temp", "**/.bob", "**/examples"]
 }

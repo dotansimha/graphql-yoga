@@ -17,7 +17,6 @@ import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
   GraphQLServerInject,
   YogaInitialContext,
-  FetchEvent,
   FetchAPI,
   GraphQLParams,
 } from './types.js'
@@ -205,7 +204,8 @@ export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-> {
+> implements EventListenerObject
+{
   /**
    * Instance of envelop
    */
@@ -611,7 +611,7 @@ export class YogaServer<
 
   fetch: WindowOrWorkerGlobalScope['fetch'] = (
     input: RequestInfo,
-    init: RequestInit,
+    init?: RequestInit,
   ) => {
     let request: Request
     if (typeof input === 'string') {
@@ -623,15 +623,30 @@ export class YogaServer<
   }
 
   // FetchEvent is not available in all envs
-  private fetchEventListener = (event: FetchEvent) =>
-    event.respondWith(this.handleRequest(event.request, event as any))
-
-  start() {
-    self.addEventListener('fetch', this.fetchEventListener as EventListener)
+  handleEvent = (event: FetchEvent) => {
+    if (!event.respondWith || !event.request) {
+      throw new TypeError(`Expected FetchEvent, got ${event}`)
+    }
+    const response$ = this.handleRequest(event.request, event as any)
+    event.respondWith(response$)
   }
 
+  /**
+   * @deprecated
+   * Will be removed in next major version
+   * Use self.addEventListener('fetch', yogaServer) instead
+   */
+  start() {
+    self.addEventListener('fetch', this)
+  }
+
+  /**
+   * @deprecated
+   * Will be removed in next major version
+   * Use self.removeEventListener('fetch', yogaServer) instead
+   */
   stop() {
-    self.removeEventListener('fetch', this.fetchEventListener as EventListener)
+    self.removeEventListener('fetch', this)
   }
 }
 

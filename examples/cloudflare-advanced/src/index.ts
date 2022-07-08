@@ -77,7 +77,7 @@ const server = createServer({
           async *subscribe() {
             while (true) {
               yield { time: new Date().toISOString() }
-              await new Promise((resolve) => setTimeout(resolve, 1000))
+              await new Promise((resolve) => setTimeout(resolve, 1000, {}))
             }
           },
         },
@@ -102,4 +102,4 @@ const server = createServer({
   },
 })
 
-server.start()
+self.addEventListener('fetch', server)

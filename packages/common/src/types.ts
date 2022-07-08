@@ -108,11 +108,6 @@ declare global {
   }
 }
 
-export type FetchEvent = Event & {
-  respondWith: (response: PromiseOrValue<Response>) => void
-  request: Request
-}
-
 export type FetchAPI = {
   /**
    * WHATWG compliant Request object constructor
