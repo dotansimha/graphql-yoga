@@ -1,15 +1,25 @@
-import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
+import {
+  type TypedEventTarget,
+  type EventAPI,
+  resolveGlobalConfig,
+} from '@graphql-yoga/typed-event-target'
 import type { Redis } from 'ioredis'
 
 export type CreateRedisEventTargetArgs = {
   publishClient: Redis
   subscribeClient: Redis
+  /**
+   * Event and EventTarget implementation.
+   * Providing this is mandatory for a Node.js versions below 16.
+   */
+  event?: EventAPI
 }
 
 export function createRedisEventTarget<TEvent extends Event>(
   args: CreateRedisEventTargetArgs,
 ): TypedEventTarget<TEvent> {
   const { publishClient, subscribeClient } = args
+  const eventAPI = resolveGlobalConfig(args.event)
 
   const callbacksForTopic = new Map<string, Set<(event: TEvent) => void>>()
 
@@ -18,7 +28,7 @@ export function createRedisEventTarget<TEvent extends Event>(
     if (callbacks === undefined) {
       return
     }
-    const event = new Event(channel) as TEvent & {
+    const event = new eventAPI.Event(channel) as TEvent & {
       data: unknown
     }
     event.data = JSON.parse(message)

@@ -1,13 +1,12 @@
 import { Repeater } from '@repeaterjs/repeater'
-import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
+import {
+  type TypedEventTarget,
+  type EventAPI,
+  resolveGlobalConfig,
+} from '@graphql-yoga/typed-event-target'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]
-}
-
-type EventAPI = {
-  Event: typeof Event
-  EventTarget: typeof EventTarget
 }
 
 export type PubSubEvent<
@@ -65,37 +64,6 @@ export type PubSub<TPubSubPublishArgsByKey extends PubSubPublishArgsByKey> = {
       ? TPubSubPublishArgsByKey[TKey][0]
       : TPubSubPublishArgsByKey[TKey][1]
   >
-}
-
-const resolveGlobalConfig = (api: EventAPI = globalThis): EventAPI => {
-  if (!api.Event || !api.EventTarget) {
-    throw new Error(`
-[@graphql-yoga/subscription] 'createPubSub' uses the Event and EventTarget APIs.
-
-In modern JavaScript environments those are part of the global scope. However, if you are using an older version of Node.js (< 16.x.x), those APIs must be polyfilled.
-You can provide polyfills to the 'createPubSub' function:
-
-\`\`\`
-// yarn install --exact event-target-polyfill@0.0.3
-import 'event-target-polyfill'
-
-const pubSub = createPubSub()
-\`\`\`
-
-Alternatively, you can provide your own custom implementation.
-
-\`\`\`
-const pubSub = createPubSub({
-  event: {
-    Event,
-    EventTarget,
-  }
-})
-\`\`\`
-`)
-  }
-
-  return globalThis
 }
 
 /**
