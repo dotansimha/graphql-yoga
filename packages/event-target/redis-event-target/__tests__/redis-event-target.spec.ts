@@ -2,6 +2,10 @@ import type { TypedEvent } from '@graphql-yoga/typed-event-target'
 import Redis from 'ioredis-mock'
 import { createRedisEventTarget } from '../src'
 
+if (!globalThis.EventTarget || !globalThis.Event) {
+  require('event-target-polyfill')
+}
+
 describe('createRedisEventTarget', () => {
   it('can listen to a simple publish', (done) => {
     const eventTarget = createRedisEventTarget({
