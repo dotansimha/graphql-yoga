@@ -3,11 +3,11 @@ import {
   type EventAPI,
   resolveGlobalConfig,
 } from '@graphql-yoga/typed-event-target'
-import type { Redis } from 'ioredis'
+import type { Redis, Cluster } from 'ioredis'
 
 export type CreateRedisEventTargetArgs = {
-  publishClient: Redis
-  subscribeClient: Redis
+  publishClient: Redis | Cluster
+  subscribeClient: Redis | Cluster
   /**
    * Event and EventTarget implementation.
    * Providing this is mandatory for a Node.js versions below 16.
