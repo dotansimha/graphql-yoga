@@ -480,19 +480,36 @@ pubSub.publish('user:followerCount', userId2, { followerCount: 12 })
 
 ### Distributed pub/sub for production
 
-If you spin up multiple instances of your GraphQL server each server instance will have their own in-memory pub/sub instance. An event triggered on the one server instance will not be distributed to the other server instances, resulting in subscribers on the other server not receiving any updates.
+If you spin up multiple instances of your GraphQL server each server instance will have their own in-memory pub/sub instance.
+An event triggered on the one server instance will not be distributed to the other server instances, resulting in subscribers on the other server not receiving any updates.
 
 The `createPubSub` function allows you to specify a custom [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) implementation, which can use an external datastore for distributing the events across all server replicas such as [`Redis Pub/Sub`](https://redis.io/topics/pubsub) or [`Kafka`](https://kafka.apache.org/).
 
-The minimal `EventTarget` implementation is described by the [`TypedEventTarget` interface](https://github.com/dotansimha/graphql-yoga/blob/master/packages/subscription/src/typed-event-target.ts).
+The minimal `EventTarget` implementation is described by the [`TypedEventTarget` interface](https://github.com/dotansimha/graphql-yoga/blob/master/packages/event-target/typed-event-target/src/typed-event-target.ts).
+
+Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).
+
+<PackageInstall packages={['@graphql-yoga/redis-event-target ioredis']} />
 
 ```ts
+import { Redis } from 'ioredis'
+import { createPubSub } from '@graphql-yoga/common'
+import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
+
+const publishClient = new Redis()
+const subscribeClient = new Redis()
+
+const eventTarget = createRedisEventTarget({
+  publishClient,
+  subscribeClient,
+})
+
 const pubSub = createPubSub({
-  eventTarget: redisEventTarget,
+  eventTarget,
 })
 ```
 
-Currently GraphQL Yoga does not have any concrete EventTarget implementations other than the default in-memory one. Implementations for Redis and Kafka will follow soon.
+**Please note** that Redis requires a stable long-running connection and thus is not a suitable solution for serverless or edge function environments.
 
 ## Advanced
 
