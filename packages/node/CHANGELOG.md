@@ -1,5 +1,13 @@
 # @graphql-yoga/node
 
+## 2.13.0
+
+### Patch Changes
+
+- Updated dependencies [d024757]
+  - @graphql-yoga/subscription@2.2.0
+  - @graphql-yoga/common@2.12.0
+
 ## 2.12.0
 
 ### Patch Changes
