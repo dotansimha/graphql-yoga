@@ -509,7 +509,9 @@ const pubSub = createPubSub({
 })
 ```
 
-**Please note** that Redis requires a stable long-running connection and thus is not a suitable solution for serverless or edge function environments.
+**Please note** that Redis Pub/Sub requires a stable long-running connection and thus is not a suitable solution for serverless or edge function environments.
+
+**Please also note** that the the event payloads must be JSON serializable. If you want to send complex data structures over the wire you can use tools such as [`superjson`](https://github.com/blitz-js/superjson).
 
 ## Advanced
 
