@@ -85,14 +85,31 @@ describe('SvelteKit integration', () => {
 			const body = await page.goto(
 				'http://localhost:3007/api/graphql?query=query+Hello+%7B%0A%09hello%0A%7D'
 			);
-			const bodyContent = await body?.text();
 
-			// 1/ Check that GraphiQL is showing
-			expect(bodyContent).toContain(
-				`renderYogaGraphiQL(root,{\"endpoint\":\"/api/graphql\",\"defaultQuery\":\"query Hello {\\n\\thello\\n}\"})`
-			);
+			let strIntro = '';
+			try {
+				// A-1/ Wait for the introspection query result getting our type "hello"
+				let resIntro = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
+					timeout: timings.waitForResponse
+				});
+				let jsonIntro = await resIntro.json();
+				strIntro = JSON.stringify(jsonIntro, null, 0);
+			} catch (error) {
+				// We had an issue grabbing the introspection query result!
+				// let's see what is in the html with the finafinally
+			} finally {
+				const bodyContent = await body?.text();
 
-			// 2/ Tigger the default request and wait for the response
+				// B/ Check that GraphiQL is showing
+				expect(bodyContent).toContain(
+					`renderYogaGraphiQL(root,{\"endpoint\":\"/api/graphql\",\"defaultQuery\":\"query Hello {\\n\\thello\\n}\"})`
+				);
+			}
+
+			// A-2/ Finish the test after the body check
+			expect(strIntro).toContain(`"name":"hello"`);
+
+			// C/ Tigger the default request and wait for the response
 			const [res] = await Promise.all([
 				page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
 					timeout: timings.waitForResponse
