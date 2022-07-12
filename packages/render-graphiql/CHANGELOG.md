@@ -1,5 +1,11 @@
 # @graphql-yoga/render-graphiql
 
+## 2.13.0
+
+### Minor Changes
+
+- @graphql-yoga/common@2.12.0
+
 ## 2.12.0
 
 ### Minor Changes

@@ -1,5 +1,16 @@
 # @graphql-yoga/subscription
 
+## 2.2.0
+
+### Minor Changes
+
+- d024757: Use `@graphql-yoga/typed-event-target` as a dependency for the EventTarget implementation.
+
+### Patch Changes
+
+- Updated dependencies [d024757]
+  - @graphql-yoga/typed-event-target@0.1.0
+
 ## 2.1.0
 
 ### Minor Changes
