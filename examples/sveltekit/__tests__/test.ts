@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer';
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
-describe('SvelteKit integration', () => {
+describe.skip('SvelteKit integration', () => {
 	beforeAll(async () => {
 		browser = await puppeteer.launch({
 			// If you wanna run tests with open browser
