@@ -133,5 +133,25 @@ describe('createPubSub', () => {
       expect(result1).toEqual([1, 2, 3])
       expect(result2).toEqual(['1', '2', '3'])
     })
+    it('subscribe to topic without payload', async () => {
+      const pubSub = createPubSub<{
+        a: []
+      }>({
+        eventTarget: createEventTarget(),
+      })
+
+      const sub = pubSub.subscribe('a')
+      const allValues = collectAsyncIterableValues(sub)
+      pubSub.publish('a')
+      pubSub.publish('a')
+      pubSub.publish('a')
+
+      setImmediate(() => {
+        sub.return()
+      })
+
+      const result = await allValues
+      expect(result).toEqual([undefined, undefined, undefined])
+    })
   })
 })
