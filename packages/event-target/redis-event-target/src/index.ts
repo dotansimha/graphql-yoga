@@ -31,7 +31,7 @@ export function createRedisEventTarget<TEvent extends Event>(
     const event = new eventAPI.Event(channel) as TEvent & {
       data: unknown
     }
-    event.data = JSON.parse(message)
+    event.data = message === '' ? undefined : JSON.parse(message)
     for (const callback of callbacks) {
       callback(event)
     }
@@ -72,7 +72,12 @@ export function createRedisEventTarget<TEvent extends Event>(
       addCallback(topic, callback)
     },
     dispatchEvent(event: TEvent) {
-      publishClient.publish(event.type, JSON.stringify((event as any).data))
+      publishClient.publish(
+        event.type,
+        (event as any).data === undefined
+          ? ''
+          : JSON.stringify((event as any).data),
+      )
       return true
     },
     removeEventListener(topic, callbackOrOptions) {
