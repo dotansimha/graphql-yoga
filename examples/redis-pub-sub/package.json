@@ -1,0 +1,28 @@
+{
+  "name": "example-redis-pub-sub",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
+    "start": "ts-node src/main.ts",
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "16.11.7",
+    "cross-env": "7.0.3",
+    "ts-node": "10.8.1",
+    "ts-node-dev": "1.1.8",
+    "typescript": "4.7.4"
+  },
+  "dependencies": {
+    "@graphql-yoga/node": "2.12.0",
+    "@graphql-yoga/redis-event-target": "0.0.0",
+    "graphql": "16.5.0",
+    "ioredis": "5.0.6"
+  },
+  "module": "commonjs"
+}

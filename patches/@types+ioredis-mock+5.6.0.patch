@@ -1,0 +1,14 @@
+diff --git a/node_modules/@types/ioredis-mock/index.d.ts b/node_modules/@types/ioredis-mock/index.d.ts
+index 2da5af1..5b9815b 100755
+--- a/node_modules/@types/ioredis-mock/index.d.ts
++++ b/node_modules/@types/ioredis-mock/index.d.ts
+@@ -4,8 +4,7 @@
+ // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+ 
+ import RealIORedis = require('ioredis');
+-
+-export default RealIORedis;
++export default RealIORedis.default;
+ export type AddressFromResponse = RealIORedis.AddressFromResponse;
+ export type BooleanResponse = RealIORedis.BooleanResponse;
+ export type Callback<T> = RealIORedis.Callback<T>;
