@@ -14,7 +14,7 @@ const timings = {
 	waitForResponse: 1999
 };
 
-describe.skip('SvelteKit integration', () => {
+describe('SvelteKit integration', () => {
 	beforeAll(async () => {
 		console.time('Setup SvelteKit tests');
 
