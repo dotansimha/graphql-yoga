@@ -2,6 +2,9 @@ name: Tests
 env:
   NODE_NO_WARNINGS: true
 on:
+  push:
+    branches:
+      - 'master'
   pull_request:
     paths-ignore:
       - 'website/**'
