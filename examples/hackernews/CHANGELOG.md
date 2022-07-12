@@ -1,5 +1,11 @@
 # hackernews
 
+## 1.13.1
+
+### Patch Changes
+
+- @graphql-yoga/node@2.13.1
+
 ## 1.13.0
 
 ### Patch Changes

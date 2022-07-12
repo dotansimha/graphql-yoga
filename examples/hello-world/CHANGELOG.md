@@ -1,5 +1,11 @@
 # hello-world
 
+## 0.13.1
+
+### Patch Changes
+
+- @graphql-yoga/node@2.13.1
+
 ## 0.13.0
 
 ### Patch Changes
