@@ -28,4 +28,10 @@ const yogaApp = createServer<RequestEvent>({
 	}
 });
 
-export { yogaApp as get, yogaApp as post };
+export async function get(event: RequestEvent) {
+	return yogaApp.handleRequest(event.request, event);
+}
+
+export async function post(event: RequestEvent) {
+	return yogaApp.handleRequest(event.request, event);
+}
