@@ -1,5 +1,11 @@
 # cloudflare
 
+## 0.4.1
+
+### Patch Changes
+
+- @graphql-yoga/common@2.12.1
+
 ## 0.4.0
 
 ### Patch Changes

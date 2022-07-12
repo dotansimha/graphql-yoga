@@ -1,5 +1,11 @@
 # @graphql-yoga/redis-event-target
 
+## 0.1.1
+
+### Patch Changes
+
+- ebddc71: Correctly handle empty ('undefined') payloads.
+
 ## 0.1.0
 
 ### Minor Changes

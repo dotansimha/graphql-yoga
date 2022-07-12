@@ -1,5 +1,11 @@
 # @graphql-yoga/subscription
 
+## 2.2.1
+
+### Patch Changes
+
+- ebddc71: Correctly handle empty ('undefined') payloads.
+
 ## 2.2.0
 
 ### Minor Changes
