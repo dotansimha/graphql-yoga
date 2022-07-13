@@ -795,7 +795,7 @@ describe('file uploads', () => {
 
       await fs.promises.stat(targetFilePath)
       const targetMd5 = await md5File(targetFilePath)
-      console.log(targetMd5, sourceMd5)
+      expect(targetMd5).toEqual(sourceMd5)
       fs.promises.unlink(targetFilePath)
     } finally {
       await server.stop()
