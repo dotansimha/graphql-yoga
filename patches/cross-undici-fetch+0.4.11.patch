@@ -1,0 +1,22 @@
+diff --git a/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js b/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
+index 1466669..56c7baf 100644
+--- a/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
++++ b/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
+@@ -181,6 +181,7 @@ module.exports = function createNodePonyfill(opts = {}) {
+               options.body = streams.Readable.from(encoder.encode());
+             }
+             if (options.body[Symbol.toStringTag] === 'ReadableStream') {
++
+               options.body = streams.Readable.from(options.body);
+             }
+           }
+@@ -208,6 +209,9 @@ module.exports = function createNodePonyfill(opts = {}) {
+       ponyfills.Response = function Response(body, init) {
+         if (body != null && body[Symbol.toStringTag] === 'ReadableStream') {
+           const actualBody = streams.Readable.from(body);
++          actualBody.on("close", () => {
++            body.cancel()
++          })
+           // Polyfill ReadableStream is not working well with node-fetch's Response
+           return new OriginalResponse(actualBody, init);
+         }

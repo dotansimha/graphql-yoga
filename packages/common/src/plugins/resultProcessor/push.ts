@@ -45,9 +45,21 @@ export function processPushResult(
         controller.close()
       }
     },
+    // This is never called...
     async cancel(e) {
       await iterator.return?.(e)
     },
   })
+
+  /**
+   * Okay for some reason the cancel passed to new fetchAPI.ReadableStream
+   * is never called, let's assign it...
+   */
+  let cancel = readableStream.cancel.bind(readableStream)
+  readableStream.cancel = async (e) => {
+    await iterator.return?.(e)
+    cancel(e)
+  }
+
   return new fetchAPI.Response(readableStream, responseInit)
 }
