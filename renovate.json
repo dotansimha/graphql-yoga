@@ -10,5 +10,11 @@
       "matchPackagePrefixes": "@envelop"
     }
   ],
-  "ignoreDeps": ["@types/react"]
+  "ignoreDeps": ["@types/react"],
+  "ignorePaths": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
+  ]
 }
