@@ -1,9 +1,9 @@
 import { Repeater } from '@repeaterjs/repeater'
-import {
-  type TypedEventTarget,
-  type EventAPI,
-  resolveGlobalConfig,
+import type {
+  TypedEventTarget,
+  EventAPI,
 } from '@graphql-yoga/typed-event-target'
+import { resolveGlobalConfig } from '@graphql-yoga/typed-event-target'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]

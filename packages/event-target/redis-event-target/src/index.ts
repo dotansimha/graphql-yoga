@@ -1,8 +1,8 @@
-import {
-  type TypedEventTarget,
-  type EventAPI,
-  resolveGlobalConfig,
+import type {
+  TypedEventTarget,
+  EventAPI,
 } from '@graphql-yoga/typed-event-target'
+import { resolveGlobalConfig } from '@graphql-yoga/typed-event-target'
 import type { Redis, Cluster } from 'ioredis'
 
 export type CreateRedisEventTargetArgs = {
