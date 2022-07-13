@@ -15,7 +15,9 @@ import 'json-bigint-patch'
 import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { fetch, File, FormData } from 'cross-undici-fetch'
+import { fetch, File, FormData, AbortController } from 'cross-undici-fetch'
+import { Plugin } from '@graphql-yoga/common'
+import { ExecutionResult } from '@graphql-tools/utils'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -909,8 +911,94 @@ test.only('Subscription is closed properly', async () => {
     resolve()
 
     // very small timeout to make sure the subscription is closed
-    await new Promise((res) => setTimeout(res, 300))
+    await new Promise((res) => setTimeout(res, 30))
     expect(fakeIterator.return).toHaveBeenCalled()
+  } finally {
+    await server.stop()
+  }
+})
+
+test.only('defer/stream is closed properly', async () => {
+  let counter = 0
+  let resolve: () => void = () => {
+    throw new Error('Noop')
+  }
+
+  const p = new Promise<IteratorResult<ExecutionResult>>((res) => {
+    resolve = () => res({ done: true, value: { data: 'end' } })
+  })
+
+  const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
+    [Symbol.asyncIterator]: () => fakeIterator,
+    next: () => {
+      console.log('LETS GOOO')
+      if (counter === 0) {
+        counter = counter + 1
+        return Promise.resolve({
+          done: false,
+          value: { data: 'turtles' },
+        } as any)
+      }
+      return p
+    },
+    return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
+  }
+  const plugin: Plugin = {
+    onExecute(ctx) {
+      ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as any)
+    },
+    /* skip validation :) */
+    onValidate(ctx) {
+      ctx.setValidationFn(() => [])
+    },
+  }
+
+  const server = createServer({
+    logging: false,
+    plugins: [plugin],
+  })
+
+  try {
+    await server.start()
+    console.log(server.getServerUrl())
+    const abort = new AbortController()
+    const res = await fetch(server.getServerUrl(), {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'multipart/mixed',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query {
+            a
+          }
+        `,
+      }),
+      signal: abort.signal,
+    })
+
+    // Start and Close a HTTP Request
+    const iterator = res.body![Symbol.asyncIterator]()
+    let iteratorResult: IteratorResult<Uint8Array>
+    while ((iteratorResult = await iterator.next())) {
+      console.log(iteratorResult.value.toString())
+      if (
+        iteratorResult.value
+          .toString()
+          .includes(`Content-Type: application/json; charset=utf-8`)
+      ) {
+        await iterator.return!()
+        abort.abort()
+        break
+      }
+
+      await iterator.return!()
+      abort.abort()
+      throw new Error('This should not happen.')
+    }
+    await new Promise((res) => setTimeout(res, 30))
+    expect(fakeIterator.return).toBeCalled()
   } finally {
     await server.stop()
   }
