@@ -1,5 +1,11 @@
 # @graphql-yoga/redis-event-target
 
+## 0.1.2
+
+### Patch Changes
+
+- 3363de2: Use `import type { Foo } from '@pkg'` instead of `import { type Foo } from '@pkg'` as many tools don't yet support this syntax.
+
 ## 0.1.1
 
 ### Patch Changes

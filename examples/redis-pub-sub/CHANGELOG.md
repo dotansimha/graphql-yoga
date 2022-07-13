@@ -1,5 +1,13 @@
 # example-redis-pub-sub
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [3363de2]
+  - @graphql-yoga/redis-event-target@0.1.2
+  - @graphql-yoga/node@2.13.2
+
 ## 0.1.1
 
 ### Patch Changes
