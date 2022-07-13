@@ -1,9 +1,4 @@
-import {
-  getOperationAST,
-  DocumentNode,
-  ExecutionArgs,
-  GraphQLError,
-} from 'graphql'
+import { getOperationAST, ExecutionArgs } from 'graphql'
 import { RequestProcessContext } from './types.js'
 import { ResultProcessor } from './plugins/types.js'
 

@@ -1,11 +1,6 @@
 import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import {
-  ExecutionPatchResult,
-  FetchAPI,
-  GraphQLParams,
-  YogaInitialContext,
-} from '../types.js'
+import { ExecutionPatchResult, FetchAPI, GraphQLParams } from '../types.js'
 
 export type Plugin<
   PluginContext extends Record<string, any> = {},
