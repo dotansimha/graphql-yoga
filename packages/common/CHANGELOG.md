@@ -1,5 +1,13 @@
 # @graphql-yoga/common
 
+## 2.12.2
+
+### Patch Changes
+
+- 3363de2: Use `import type { Foo } from '@pkg'` instead of `import { type Foo } from '@pkg'` as many tools don't yet support this syntax.
+- Updated dependencies [3363de2]
+  - @graphql-yoga/subscription@2.2.2
+
 ## 2.12.1
 
 ### Patch Changes
