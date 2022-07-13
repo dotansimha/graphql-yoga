@@ -851,6 +851,71 @@ it('should expose Node req and res objects in the context', async () => {
   expect(body.data.isNode).toBe(true)
 })
 
+test.only('Subscription is closed properly', async () => {
+  let counter = 0
+  let resolve: () => void = () => {
+    throw new Error('Noop')
+  }
+
+  const p = new Promise<IteratorResult<void>>((res) => {
+    resolve = () => res({ done: true, value: undefined })
+  })
+
+  const fakeIterator: AsyncIterableIterator<unknown> = {
+    [Symbol.asyncIterator]: () => fakeIterator,
+    next: () => {
+      if (counter === 0) {
+        counter = counter + 1
+        return Promise.resolve({ done: false, value: 'a' })
+      }
+      return p
+    },
+    return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
+  }
+  const server = createServer({
+    logging: false,
+    schema: {
+      typeDefs: /* GraphQL */ `
+        type Query {
+          _: Boolean
+        }
+        type Subscription {
+          foo: String
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          foo: {
+            resolve: () => 'bar',
+            subscribe: () => fakeIterator,
+          },
+        },
+      },
+    },
+  })
+  try {
+    await server.start()
+
+    // Start and Close a HTTP SSE subscription
+    await new Promise<void>((res) => {
+      const eventSource = new EventSource(
+        `${server.getServerUrl()}?query=subscription{foo}`,
+      )
+      eventSource.onmessage = (ev) => {
+        eventSource.close()
+        res()
+      }
+    })
+    resolve()
+
+    // very small timeout to make sure the subscription is closed
+    await new Promise((res) => setTimeout(res, 300))
+    expect(fakeIterator.return).toHaveBeenCalled()
+  } finally {
+    await server.stop()
+  }
+})
+
 describe('Browser', () => {
   const liveQueryStore = new InMemoryLiveQueryStore()
   const endpoint = '/test-graphql'
