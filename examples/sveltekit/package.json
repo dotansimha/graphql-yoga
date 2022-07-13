@@ -6,7 +6,7 @@
 		"prepare": "svelte-kit sync",
 		"dev": "yarn prepare && svelte-kit dev",
 		"test": "jest",
-		"build": "yarn prepare && svelte-kit build",
+		"build": "yarn prepare && vite build",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview -p 3007",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -31,7 +31,8 @@
 		"svelte-check": "2.8.0",
 		"svelte-preprocess": "4.10.7",
 		"tslib": "2.4.0",
-		"typescript": "4.7.4"
+		"typescript": "4.7.4",
+		"vite": "2.9.14"
 	},
 	"dependencies": {
 		"@envelop/graphql-jit": "4.3.0",
