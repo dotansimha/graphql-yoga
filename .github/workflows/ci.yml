@@ -42,10 +42,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 18
+      - name: Use Node 16
         uses: actions/setup-node@master
         with:
-          node-version: 18
+          node-version: 16
           cache: 'yarn'
 
       - name: Install Dependencies using Yarn
@@ -65,10 +65,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 18
+      - name: Use Node 16
         uses: actions/setup-node@master
         with:
-          node-version: 18
+          node-version: 16
           cache: 'yarn'
 
       - name: Use Deno
