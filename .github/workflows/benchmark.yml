@@ -21,7 +21,7 @@ jobs:
         id: node-modules-cache-benchmark
         with:
           path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
+          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
           restore-keys: |
             ${{runner.os}}-18-node-modules-
       - name: Install Dependencies using Yarn
