@@ -69,5 +69,19 @@ export function processMultipartResult(
     },
   })
 
+  /**
+   * Okay for some reason the cancel passed to new fetchAPI.ReadableStream
+   * is never called, let's assign it...
+   */
+  let cancel = readableStream.cancel.bind(readableStream)
+  readableStream.cancel = async (e) => {
+    await iterator.return?.(e)
+    try {
+      await cancel(e)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return new fetchAPI.Response(readableStream, responseInit)
 }

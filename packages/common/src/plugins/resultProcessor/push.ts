@@ -58,7 +58,11 @@ export function processPushResult(
   let cancel = readableStream.cancel.bind(readableStream)
   readableStream.cancel = async (e) => {
     await iterator.return?.(e)
-    cancel(e)
+    try {
+      await cancel(e)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return new fetchAPI.Response(readableStream, responseInit)

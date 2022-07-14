@@ -1,8 +1,8 @@
 diff --git a/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js b/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
-index 1466669..79ab0ff 100644
+index 1466669..570a81c 100644
 --- a/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
 +++ b/node_modules/cross-undici-fetch/dist/create-node-ponyfill.js
-@@ -208,8 +208,28 @@ module.exports = function createNodePonyfill(opts = {}) {
+@@ -208,8 +208,29 @@ module.exports = function createNodePonyfill(opts = {}) {
        ponyfills.Response = function Response(body, init) {
          if (body != null && body[Symbol.toStringTag] === 'ReadableStream') {
            const actualBody = streams.Readable.from(body);
@@ -20,10 +20,11 @@ index 1466669..79ab0ff 100644
 +           * We should investigate on wht the close event is never emitted.
 +           */
 +          actualBody.on("pause", () => {
-+            actualBody.destroy()
 +            console.log("PAUSE")
++            actualBody.destroy()
 +            body.cancel()
 +          })
++
            // Polyfill ReadableStream is not working well with node-fetch's Response
 -          return new OriginalResponse(actualBody, init);
 +          const response = new OriginalResponse(actualBody, init);
