@@ -931,7 +931,6 @@ test.only('defer/stream is closed properly', async () => {
   const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
     [Symbol.asyncIterator]: () => fakeIterator,
     next: () => {
-      console.log('LETS GOOO')
       if (counter === 0) {
         counter = counter + 1
         return Promise.resolve({
@@ -960,7 +959,6 @@ test.only('defer/stream is closed properly', async () => {
 
   try {
     await server.start()
-    console.log(server.getServerUrl())
     const abort = new AbortController()
     const res = await fetch(server.getServerUrl(), {
       method: 'POST',
@@ -982,11 +980,13 @@ test.only('defer/stream is closed properly', async () => {
     const iterator = res.body![Symbol.asyncIterator]()
     let iteratorResult: IteratorResult<Uint8Array>
     while ((iteratorResult = await iterator.next())) {
-      console.log(iteratorResult.value.toString())
+      // On Node.js 14 this is a Buffer
+      // On Node.js 16 this is a Uint8Array
+      // By converting it to a Buffer first we get consistent output across versions...
+      // Seems like this is a bug in cross-undici-fetch
+      const valueAsString = Buffer.from(iteratorResult.value).toString()
       if (
-        iteratorResult.value
-          .toString()
-          .includes(`Content-Type: application/json; charset=utf-8`)
+        valueAsString.includes(`Content-Type: application/json; charset=utf-8`)
       ) {
         await iterator.return!()
         abort.abort()
