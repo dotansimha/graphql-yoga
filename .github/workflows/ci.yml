@@ -31,7 +31,7 @@ jobs:
         id: node-modules-cache-test-node
         with:
           path: '**/node_modules'
-          key: ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('yarn.lock')}}
+          key: ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
           restore-keys: |
             ${{runner.os}}-${{ matrix.node-version }}-node-modules-
       - name: Install Dependencies using Yarn
