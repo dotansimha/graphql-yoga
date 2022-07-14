@@ -15,7 +15,7 @@ import 'json-bigint-patch'
 import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { fetch, File, FormData, AbortController } from 'cross-undici-fetch'
+import { fetch, File, FormData } from 'cross-undici-fetch'
 import { Plugin } from '@graphql-yoga/common'
 import { ExecutionResult } from '@graphql-tools/utils'
 
@@ -959,7 +959,6 @@ test.only('defer/stream is closed properly', async () => {
 
   try {
     await server.start()
-    const abort = new AbortController()
     const res = await fetch(server.getServerUrl(), {
       method: 'POST',
       headers: {
@@ -973,28 +972,23 @@ test.only('defer/stream is closed properly', async () => {
           }
         `,
       }),
-      signal: abort.signal,
     })
 
     // Start and Close a HTTP Request
-    const iterator = res.body![Symbol.asyncIterator]()
-    let iteratorResult: IteratorResult<Uint8Array>
-    while ((iteratorResult = await iterator.next())) {
-      // On Node.js 14 this is a Buffer
-      // On Node.js 16 this is a Uint8Array
-      // By converting it to a Buffer first we get consistent output across versions...
-      // Seems like this is a bug in cross-undici-fetch
-      const valueAsString = Buffer.from(iteratorResult.value).toString()
+    const reader = res.body!.getReader()
+    let iteratorResult: ReadableStreamDefaultReadResult<Uint8Array>
+    while ((iteratorResult = await reader.read())) {
+      if (iteratorResult.value === undefined) {
+        break
+      }
+      const valueAsString = Buffer.from(iteratorResult.value!).toString()
       if (
         valueAsString.includes(`Content-Type: application/json; charset=utf-8`)
       ) {
-        await iterator.return!()
-        abort.abort()
-        break
+        await reader.cancel()
+        continue
       }
-
-      await iterator.return!()
-      abort.abort()
+      await reader.cancel()
       throw new Error('This should not happen.')
     }
     await new Promise((res) => setTimeout(res, 30))
