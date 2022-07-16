@@ -138,18 +138,20 @@ export function sendNodeResponse(
   })
   serverResponse.statusCode = status
   serverResponse.statusMessage = statusText
-  if (body == null) {
-    serverResponse.end()
-    return Promise.resolve()
-  }
-  if (body[Symbol.toStringTag] === 'Uint8Array') {
-    serverResponse.end(body)
-    return Promise.resolve()
-  }
-  const nodeStream = isReadable(body) ? body : Readable.from(body)
-  const promise = new Promise<void>((resolve) =>
-    nodeStream.once('end', resolve),
-  )
-  nodeStream.pipe(serverResponse)
-  return promise
+  return new Promise<void>((resolve) => {
+    if (body == null) {
+      serverResponse.end(resolve)
+      return
+    }
+    if (body[Symbol.toStringTag] === 'Uint8Array') {
+      serverResponse.end(body, resolve)
+      return
+    }
+    const nodeStream = isReadable(body) ? body : Readable.from(body)
+    nodeStream.once('end', resolve)
+    serverResponse.once('close', () => {
+      nodeStream.destroy()
+    })
+    nodeStream.pipe(serverResponse)
+  })
 }

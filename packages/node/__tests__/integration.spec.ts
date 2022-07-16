@@ -15,7 +15,7 @@ import 'json-bigint-patch'
 import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { fetch, File, FormData } from 'cross-undici-fetch'
+import { AbortController, fetch, File, FormData } from 'cross-undici-fetch'
 import { Plugin } from '@graphql-yoga/common'
 import { ExecutionResult } from '@graphql-tools/utils'
 
@@ -853,7 +853,7 @@ it('should expose Node req and res objects in the context', async () => {
   expect(body.data.isNode).toBe(true)
 })
 
-test.only('Subscription is closed properly', async () => {
+test('Subscription is closed properly', async () => {
   let counter = 0
   let resolve: () => void = () => {
     throw new Error('Noop')
@@ -894,6 +894,7 @@ test.only('Subscription is closed properly', async () => {
         },
       },
     },
+    port: 9876,
   })
   try {
     await server.start()
@@ -918,7 +919,7 @@ test.only('Subscription is closed properly', async () => {
   }
 })
 
-test.only('defer/stream is closed properly', async () => {
+test('defer/stream is closed properly', async () => {
   let counter = 0
   let resolve: () => void = () => {
     throw new Error('Noop')
@@ -955,10 +956,12 @@ test.only('defer/stream is closed properly', async () => {
   const server = createServer({
     logging: false,
     plugins: [plugin],
+    port: 9875,
   })
 
   try {
     await server.start()
+    const abortCtrl = new AbortController()
     const res = await fetch(server.getServerUrl(), {
       method: 'POST',
       headers: {
@@ -972,26 +975,23 @@ test.only('defer/stream is closed properly', async () => {
           }
         `,
       }),
+      signal: abortCtrl.signal,
     })
 
     // Start and Close a HTTP Request
-    const reader = res.body!.getReader()
-    let iteratorResult: ReadableStreamDefaultReadResult<Uint8Array>
-    while ((iteratorResult = await reader.read())) {
-      if (iteratorResult.value === undefined) {
+    for await (const chunk of res.body!) {
+      if (chunk === undefined) {
         break
       }
-      const valueAsString = Buffer.from(iteratorResult.value!).toString()
+      const valueAsString = Buffer.from(chunk).toString()
       if (
         valueAsString.includes(`Content-Type: application/json; charset=utf-8`)
       ) {
-        await reader.cancel()
-        continue
+        break
       }
-      await reader.cancel()
-      throw new Error('This should not happen.')
     }
-    await new Promise((res) => setTimeout(res, 30))
+    abortCtrl.abort()
+    await new Promise((res) => setTimeout(res, 300))
     expect(fakeIterator.return).toBeCalled()
   } finally {
     await server.stop()
