@@ -15,7 +15,9 @@ import 'json-bigint-patch'
 import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { fetch, File, FormData } from 'cross-undici-fetch'
+import { AbortController, fetch, File, FormData } from 'cross-undici-fetch'
+import { Plugin } from '@graphql-yoga/common'
+import { ExecutionResult } from '@graphql-tools/utils'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -849,6 +851,151 @@ it('should expose Node req and res objects in the context', async () => {
   const body = JSON.parse(response.text)
   expect(body.errors).toBeUndefined()
   expect(body.data.isNode).toBe(true)
+})
+
+test('Subscription is closed properly', async () => {
+  let counter = 0
+  let resolve: () => void = () => {
+    throw new Error('Noop')
+  }
+
+  const p = new Promise<IteratorResult<void>>((res) => {
+    resolve = () => res({ done: true, value: undefined })
+  })
+
+  const fakeIterator: AsyncIterableIterator<unknown> = {
+    [Symbol.asyncIterator]: () => fakeIterator,
+    next: () => {
+      if (counter === 0) {
+        counter = counter + 1
+        return Promise.resolve({ done: false, value: 'a' })
+      }
+      return p
+    },
+    return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
+  }
+  const server = createServer({
+    logging: false,
+    schema: {
+      typeDefs: /* GraphQL */ `
+        type Query {
+          _: Boolean
+        }
+        type Subscription {
+          foo: String
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          foo: {
+            resolve: () => 'bar',
+            subscribe: () => fakeIterator,
+          },
+        },
+      },
+    },
+    port: 9876,
+  })
+  try {
+    await server.start()
+
+    // Start and Close a HTTP SSE subscription
+    await new Promise<void>((res) => {
+      const eventSource = new EventSource(
+        `${server.getServerUrl()}?query=subscription{foo}`,
+      )
+      eventSource.onmessage = (ev) => {
+        eventSource.close()
+        res()
+      }
+    })
+    resolve()
+
+    // very small timeout to make sure the subscription is closed
+    await new Promise((res) => setTimeout(res, 30))
+    expect(fakeIterator.return).toHaveBeenCalled()
+  } finally {
+    await server.stop()
+  }
+})
+
+test('defer/stream is closed properly', async () => {
+  let counter = 0
+  let resolve: () => void = () => {
+    throw new Error('Noop')
+  }
+
+  const p = new Promise<IteratorResult<ExecutionResult>>((res) => {
+    resolve = () => res({ done: true, value: { data: 'end' } })
+  })
+
+  const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
+    [Symbol.asyncIterator]: () => fakeIterator,
+    next: () => {
+      if (counter === 0) {
+        counter = counter + 1
+        return Promise.resolve({
+          done: false,
+          value: { data: 'turtles' },
+        } as any)
+      }
+      return p
+    },
+    return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
+  }
+  const plugin: Plugin = {
+    onExecute(ctx) {
+      ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as any)
+    },
+    /* skip validation :) */
+    onValidate(ctx) {
+      ctx.setValidationFn(() => [])
+    },
+  }
+
+  const server = createServer({
+    logging: false,
+    plugins: [plugin],
+    port: 9875,
+  })
+
+  try {
+    await server.start()
+    const abortCtrl = new AbortController()
+    const res = await fetch(server.getServerUrl(), {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'multipart/mixed',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query {
+            a
+          }
+        `,
+      }),
+      signal: abortCtrl.signal,
+    })
+
+    // Start and Close a HTTP Request
+    for await (const chunk of res.body!) {
+      if (chunk === undefined) {
+        break
+      }
+      const valueAsString = Buffer.from(chunk).toString()
+      if (
+        valueAsString.includes(`Content-Type: application/json; charset=utf-8`)
+      ) {
+        break
+      }
+    }
+    abortCtrl.abort()
+    await new Promise((res) => setTimeout(res, 300))
+    expect(fakeIterator.return).toBeCalled()
+  } finally {
+    await server.stop()
+  }
 })
 
 describe('Browser', () => {
