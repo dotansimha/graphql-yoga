@@ -1,5 +1,11 @@
 # @graphql-yoga/node
 
+## 2.13.3
+
+### Patch Changes
+
+- 639607d: Previously the async iterable returned by GraphQL executor isn't cleaned up properly on Node environments because ReadableStream implementation of Node doesn't call defined "cancel" method in the right time. Now it has been patched in cross-undici-fetch and we ensure "Response.body" is destroyed after Node.js's ServerResponse is ended by any means
+
 ## 2.13.2
 
 ### Patch Changes
@@ -112,10 +118,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
-      info: (...args) => args.forEach(arg => app.log.info(arg)),
-      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
-      error: (...args) => args.forEach(arg => app.log.error(arg)),
+      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
+      info: (...args) => args.forEach((arg) => app.log.info(arg)),
+      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
+      error: (...args) => args.forEach((arg) => app.log.error(arg)),
     },
   })
   ```
