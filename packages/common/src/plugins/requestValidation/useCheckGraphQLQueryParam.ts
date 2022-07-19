@@ -18,6 +18,22 @@ export function useCheckGraphQLQueryParam(): Plugin {
               },
             })
           }
+          const queryParamType = typeof params.query
+          if (queryParamType !== 'string') {
+            throw createGraphQLError(
+              `Expected "query" to be "string" but given "${queryParamType}".`,
+              {
+                extensions: {
+                  http: {
+                    status: 400,
+                    headers: {
+                      Allow: 'GET, POST',
+                    },
+                  },
+                },
+              },
+            )
+          }
         },
       }
     },
