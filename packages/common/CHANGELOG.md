@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.12.3
+
+### Patch Changes
+
+- 889d16d: Now GraphQL Yoga throws a better descriptive error message if the client sends a request with a non-string query parameter instead of expecting graphql.parse to fail and throw a cryptic JS TypeError.
+
 ## 2.12.2
 
 ### Patch Changes
@@ -144,10 +150,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
-      info: (...args) => args.forEach(arg => app.log.info(arg)),
-      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
-      error: (...args) => args.forEach(arg => app.log.error(arg)),
+      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
+      info: (...args) => args.forEach((arg) => app.log.info(arg)),
+      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
+      error: (...args) => args.forEach((arg) => app.log.error(arg)),
     },
   })
   ```
