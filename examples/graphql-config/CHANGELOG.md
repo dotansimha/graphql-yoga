@@ -1,5 +1,11 @@
 # graphql-config-example
 
+## 0.13.4
+
+### Patch Changes
+
+- graphql-yoga@2.13.4
+
 ## 0.13.3
 
 ### Patch Changes
