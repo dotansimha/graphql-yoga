@@ -496,6 +496,22 @@ describe('Requests', () => {
     expect(body.errors?.[0].message).toBe('Must provide query string.')
   })
 
+  it('should error if query is not a string', async () => {
+    const response = await request(yoga)
+      .post(endpoint)
+      .send({
+        query: { ping: 'pong' },
+      } as any)
+
+    expect(response.statusCode).toBe(400)
+
+    const body = JSON.parse(response.text)
+    expect(body.data).toBeNull()
+    expect(body.errors?.[0].message).toBe(
+      'Expected "query" to be "string" but given "object".',
+    )
+  })
+
   it('should handle preflight requests correctly', () => {
     return request(yoga)
       .options(endpoint)
