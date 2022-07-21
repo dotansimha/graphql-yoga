@@ -10,15 +10,13 @@
       "matchPackagePrefixes": "@envelop"
     }
   ],
-  "ignoreDeps": [
-    "@types/react",
-    "@sveltejs/kit"
-  ],
+  "ignoreDeps": ["@types/react", "@sveltejs/kit"],
   "ignorePaths": [
     "**/__tests__/**",
     "**/test/**",
     "**/tests/**",
     "**/__fixtures__/**",
     "examples/defer-stream/**"
-  ]
+  ],
+  "baseBranches": ["master", "v3"]
 }
