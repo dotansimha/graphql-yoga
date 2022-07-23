@@ -42,6 +42,20 @@
         "default": "./dist/esm/index.js"
       }
     },
+    "./schema": {
+      "require": {
+        "types": "./dist/typings/extras/schema.d.ts",
+        "default": "./dist/cjs/extras/schema.js"
+      },
+      "import": {
+        "types": "./dist/typings/extras/schema.d.ts",
+        "default": "./dist/esm/extras/schema.js"
+      },
+      "default": {
+        "types": "./dist/typings/extras/schema.d.ts",
+        "default": "./dist/esm/extras/schema.js"
+      }
+    },
     "./*": {
       "require": {
         "types": "./dist/typings/*.d.ts",

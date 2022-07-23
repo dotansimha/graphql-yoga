@@ -1,4 +1,4 @@
-import { GraphQLSchema, isSchema, print } from 'graphql'
+import { GraphQLSchema, isSchema, print, ExecutionResult } from 'graphql'
 import {
   GetEnvelopedFn,
   envelop,
@@ -12,14 +12,12 @@ import {
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
   GraphQLServerInject,
   YogaInitialContext,
   FetchAPI,
   GraphQLParams,
-  FetchEvent,
+  GraphQLSchemaWithContext,
 } from './types.js'
 import {
   OnRequestHook,
@@ -88,6 +86,10 @@ interface OptionsWithPlugins<TContext> {
   plugins: Array<Plugin<TContext> | Plugin | {}>
 }
 
+interface OptionsWithSchema<TContext> {
+  schema?: GraphQLSchemaWithContext<TContext>
+}
+
 /**
  * Configuration options for the server
  */
@@ -137,66 +139,15 @@ export type YogaServerOptions<
 
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
-  schema?:
-    | GraphQLSchema
-    | {
-        typeDefs: TypeSource
-        resolvers?:
-          | IResolvers<
-              TRootValue,
-              TUserContext & TServerContext & YogaInitialContext
-            >
-          | Array<
-              IResolvers<
-                TRootValue,
-                TUserContext & TServerContext & YogaInitialContext
-              >
-            >
-      }
-
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: FetchAPI
   multipart?: boolean
   id?: string
-} & Partial<
-  OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
->
-
-export function getDefaultSchema() {
-  return makeExecutableSchema({
-    typeDefs: /* GraphQL */ `
-      """
-      Greetings from GraphQL Yoga!
-      """
-      type Query {
-        greetings: String
-      }
-      type Subscription {
-        """
-        Current Time
-        """
-        time: String
-      }
-    `,
-    resolvers: {
-      Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
-      },
-      Subscription: {
-        time: {
-          async *subscribe() {
-            while (true) {
-              yield { time: new Date().toISOString() }
-              await new Promise((resolve) => setTimeout(resolve, 1000))
-            }
-          },
-        },
-      },
-    },
-  })
-}
+} & (
+  | OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
+  | OptionsWithSchema<TUserContext & TServerContext & YogaInitialContext>
+)
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -226,24 +177,16 @@ export class YogaServer<
   private id: string
 
   constructor(
-    options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+    options: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
   ) {
-    this.id = options?.id ?? 'yoga'
+    this.id = options.id ?? 'yoga'
     this.fetchAPI =
-      options?.fetchAPI ??
+      options.fetchAPI ??
       createFetch({
         useNodeFetch: true,
       })
-    const schema = options?.schema
-      ? isSchema(options.schema)
-        ? options.schema
-        : makeExecutableSchema({
-            typeDefs: options.schema.typeDefs,
-            resolvers: options.schema.resolvers,
-          })
-      : getDefaultSchema()
 
-    const logger = options?.logging != null ? options.logging : true
+    const logger = options.logging != null ? options.logging : true
     this.logger =
       typeof logger === 'boolean'
         ? logger === true
@@ -256,27 +199,35 @@ export class YogaServer<
             }
         : logger
 
-    const maskedErrors = options?.maskedErrors ?? true
+    const maskedErrors = options.maskedErrors ?? true
 
     const server = this
-    this.endpoint = options?.endpoint
+    this.endpoint = options.endpoint
 
     this.plugins = [
       // Use the schema provided by the user
-      enableIf(schema != null, useSchema(schema!)),
+      enableIf('schema' in options, () =>
+        useSchema(
+          (
+            options as OptionsWithSchema<
+              TUserContext & TServerContext & YogaInitialContext
+            >
+          ).schema!,
+        ),
+      ),
       // Performance things
-      enableIf(options?.parserCache !== false, () =>
+      enableIf(options.parserCache !== false, () =>
         useParserCache(
-          typeof options?.parserCache === 'object'
-            ? options?.parserCache
+          typeof options.parserCache === 'object'
+            ? options.parserCache
             : undefined,
         ),
       ),
-      enableIf(options?.validationCache !== false, () =>
+      enableIf(options.validationCache !== false, () =>
         useValidationCache({
           cache:
-            typeof options?.validationCache === 'object'
-              ? options?.validationCache
+            typeof options.validationCache === 'object'
+              ? options.validationCache
               : undefined,
         }),
       ),
@@ -316,9 +267,9 @@ export class YogaServer<
         }),
       ),
       enableIf(
-        options?.context != null,
+        options.context != null,
         useExtendContext(async (initialContext) => {
-          if (options?.context) {
+          if (options.context) {
             if (typeof options.context === 'function') {
               return (options.context as Function)(initialContext)
             }
@@ -331,17 +282,17 @@ export class YogaServer<
         id: this.id,
         logger: this.logger,
       }),
-      enableIf(options?.graphiql !== false, () =>
+      enableIf(options.graphiql !== false, () =>
         useGraphiQL({
           get endpoint() {
             return server.endpoint
           },
-          options: options?.graphiql,
-          render: options?.renderGraphiQL,
+          options: options.graphiql,
+          render: options.renderGraphiQL,
           logger: this.logger,
         }),
       ),
-      enableIf(options?.cors !== false, () => useCORS(options?.cors)),
+      enableIf(options.cors !== false, () => useCORS(options.cors)),
       // Middlewares before the GraphQL execution
       useCheckMethodForGraphQL(),
       useRequestParser({
@@ -352,7 +303,7 @@ export class YogaServer<
         match: isPOSTJsonRequest,
         parse: parsePOSTJsonRequest,
       }),
-      enableIf(options?.multipart !== false, () =>
+      enableIf(options.multipart !== false, () =>
         useRequestParser({
           match: isPOSTMultipartRequest,
           parse: parsePOSTMultipartRequest,
@@ -379,7 +330,11 @@ export class YogaServer<
         match: isMultipartResult,
         processResult: processMultipartResult as ResultProcessor,
       }),
-      ...(options?.plugins ?? []),
+      ...((
+        options as OptionsWithPlugins<
+          TUserContext & TServerContext & YogaInitialContext
+        >
+      ).plugins ?? []),
 
       // So the user can manipulate the query parameter
       useCheckGraphQLQueryParam(),
@@ -620,7 +575,7 @@ export function createYoga<
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
 >(
-  options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+  options: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
 ): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,

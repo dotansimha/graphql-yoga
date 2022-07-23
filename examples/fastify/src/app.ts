@@ -1,5 +1,6 @@
 import { createYoga } from 'graphql-yoga'
 import fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import { createSchema } from 'graphql-yoga/schema'
 
 export function buildApp(logging = true) {
   const app = fastify({
@@ -15,7 +16,7 @@ export function buildApp(logging = true) {
     req: FastifyRequest
     reply: FastifyReply
   }>({
-    schema: {
+    schema: createSchema({
       typeDefs: /* GraphQL */ `
         scalar File
 
@@ -53,7 +54,7 @@ export function buildApp(logging = true) {
           },
         },
       },
-    },
+    }),
     // Integrate Fastify Logger to Yoga
     logging: {
       debug: (...args) => args.forEach((arg) => app.log.debug(arg)),

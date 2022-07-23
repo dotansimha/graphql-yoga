@@ -7,6 +7,11 @@ import type {
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { GetEnvelopedFn, PromiseOrValue } from '@envelop/core'
 import { OnResultProcess } from './plugins/types.js'
+import { GraphQLSchema } from 'graphql'
+
+export type GraphQLSchemaWithContext<TContext> = GraphQLSchema & {
+  _context?: TContext
+}
 
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },
