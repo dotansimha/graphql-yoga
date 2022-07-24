@@ -16,9 +16,9 @@ export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
       <noscript>You need to enable JavaScript to run this app.</noscript>
       <div id="root"></div>
 
-      <script type="module">
+      <script>
         ${js}
-        renderYogaGraphiQL(
+        YogaGraphiQL.renderYogaGraphiQL(
           window.document.querySelector('#root'),
           ${JSON.stringify(opts ?? {})},
         )
