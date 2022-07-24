@@ -93,16 +93,9 @@ export function useGraphiQL<TServerContext>(
     async onRequest({ request, serverContext, fetchAPI, endResponse }) {
       const requestPath = request.url.split('?')[0]
       if (config?.endpoint != null && !requestPath.endsWith(config?.endpoint)) {
-        logger.debug(`Responding 404 Not Found`)
-        const response = new fetchAPI.Response(
-          `Unable to ${request.method} ${requestPath}`,
-          {
-            status: 404,
-            statusText: `Not Found`,
-          },
-        )
-        endResponse(response)
-      } else if (shouldRenderGraphiQL(request)) {
+        return
+      }
+      if (shouldRenderGraphiQL(request)) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = graphiqlOptionsFactory(
           request,

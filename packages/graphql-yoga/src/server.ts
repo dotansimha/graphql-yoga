@@ -78,6 +78,7 @@ import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMe
 import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
+import { useCheckEndpoint } from './plugins/useCheckEndpoint.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -342,6 +343,11 @@ export class YogaServer<
       ),
       enableIf(options?.cors !== false, () => useCORS(options?.cors)),
       // Middlewares before the GraphQL execution
+      useCheckEndpoint({
+        get endpoint() {
+          return server.endpoint
+        },
+      }),
       useCheckMethodForGraphQL(),
       useRequestParser({
         match: isGETRequest,

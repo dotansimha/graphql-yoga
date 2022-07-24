@@ -1396,3 +1396,31 @@ describe('Browser', () => {
     })
   })
 })
+
+it('should return 404 if request path does not match with the defined endpoint', async () => {
+  const hostname = '127.0.0.1'
+  const port = 4000 + Math.floor(Math.random() * 1000)
+  const endpoint = '/mypath'
+  const yoga = createServer({
+    endpoint,
+    hostname,
+    port,
+    logging: false,
+  })
+  const url = `http://${hostname}:${port}${endpoint}`
+  try {
+    await yoga.start()
+    const response = await fetch(
+      url + '?query=' + encodeURIComponent('{ __typename }'),
+    )
+    expect(response.status).toEqual(200)
+    const response2 = await fetch(
+      url.replace('mypath', 'yourpath') +
+        '?query=' +
+        encodeURIComponent('{ __typename }'),
+    )
+    expect(response2.status).toEqual(404)
+  } finally {
+    await yoga.stop()
+  }
+})
