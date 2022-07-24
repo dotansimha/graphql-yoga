@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 
 const directoryName = path.dirname(fileURLToPath(import.meta.url))
 const inputPath = path.resolve(directoryName, '..', '..', 'graphiql', 'dist')
-const jsFile = path.resolve(inputPath, 'yoga-graphiql.es.js')
+const jsFile = path.resolve(inputPath, 'yoga-graphiql.umd.js')
 const cssFile = path.resolve(inputPath, 'style.css')
 
 const outFile = path.resolve(directoryName, '..', 'src', 'graphiql.ts')
