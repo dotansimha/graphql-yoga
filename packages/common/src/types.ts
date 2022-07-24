@@ -116,25 +116,25 @@ export type FetchEvent = Event & {
 export type FetchAPI = {
   /**
    * WHATWG compliant Request object constructor
-   * Default: `Request` from `cross-undici-fetch`
+   * Default: `Request` from `@whatwg-node/fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Request
    */
   Request: typeof Request
   /**
    * WHATWG compliant Response object constructor
-   * Default: `Response` from `cross-undici-fetch`
+   * Default: `Response` from `@whatwg-node/fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Response
    */
   Response: typeof Response
   /**
    * WHATWG compliant fetch function
-   * Default: `fetch` from `cross-undici-fetch`
+   * Default: `fetch` from `@whatwg-node/fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
    */
   fetch: typeof fetch
   /**
    * WHATWG compliant ReadableStream object constructor
-   * Default: `ReadableStream` from `cross-undici-fetch`
+   * Default: `ReadableStream` from `@whatwg-node/fetch`
    * @see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
    */
   ReadableStream: typeof ReadableStream

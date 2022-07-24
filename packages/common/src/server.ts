@@ -31,7 +31,7 @@ import {
   RequestParser,
   ResultProcessor,
 } from './plugins/types.js'
-import * as crossUndiciFetch from 'cross-undici-fetch'
+import * as crossUndiciFetch from '@whatwg-node/fetch'
 import { processRequest as processGraphQLParams } from './processRequest.js'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'

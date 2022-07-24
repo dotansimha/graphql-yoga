@@ -286,7 +286,7 @@
   So Yoga now uses `node-fetch` by default which doesn't affect the existing users. User can configure `cross-undici-fetch` to revert back this behavior;
 
   ```ts
-  import { create } from 'cross-undici-fetch'
+  import { create } from '@whatwg-node/fetch'
 
   createServer({
     fetchAPI: create({ useNodeFetch: false }),

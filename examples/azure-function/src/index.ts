@@ -1,6 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import { createServer } from '@graphql-yoga/common'
-import { Request } from 'cross-undici-fetch'
+import { Request } from '@whatwg-node/fetch'
 
 const httpTrigger: AzureFunction = async function (
   context: Context,

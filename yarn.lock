@@ -2972,9 +2972,9 @@
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
 "@graphiql/toolkit@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@graphiql/toolkit/-/toolkit-0.4.3.tgz#2653d045693d902f7faaf87b9047e8786397ec48"
-  integrity sha512-L0l6BezvTXmWZhtdmZxirhYwKzcZToAciQY0A13KRAWSpJ9bb/ZdkBpcz3fOXrsjuJHf0wBr6Vk9kztJ6lV7uA==
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@graphiql/toolkit/-/toolkit-0.4.5.tgz#9fb5020444712562eae9581724695c235f610836"
+  integrity sha512-QXuuMSSK/0GfBS7tltrGZdyhIvm6oe9TK4VW9pfa8dALYttpzyJ64Q4Sx9I1Ng++yOMJWziM/ksa043zkNHsjQ==
   dependencies:
     "@n1ru4l/push-pull-async-iterable-iterator" "^3.1.0"
     meros "^1.1.4"
@@ -3343,6 +3343,27 @@
     tslib "^2.4.0"
     value-or-promise "1.0.11"
 
+"@graphql-tools/url-loader@7.13.0":
+  version "7.13.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.13.0.tgz#f1523ae782b846b0d06dc8488b622ba8ce9a7f33"
+  integrity sha512-hM3yIDij0EqrHrLKNRpFRhQD0tmzt7E5OevOL9O3CLKCcv2Ho4wXQD7gscwVJJdg2Qyr22Pqr/IdtR8QiMScRA==
+  dependencies:
+    "@graphql-tools/delegate" "8.8.0"
+    "@graphql-tools/utils" "8.8.0"
+    "@graphql-tools/wrap" "8.5.0"
+    "@n1ru4l/graphql-live-query" "^0.9.0"
+    "@types/ws" "^8.0.0"
+    "@whatwg-node/fetch" "^0.0.2"
+    dset "^3.1.2"
+    extract-files "^11.0.0"
+    graphql-ws "^5.4.1"
+    isomorphic-ws "^5.0.0"
+    meros "^1.1.4"
+    sync-fetch "^0.4.0"
+    tslib "^2.4.0"
+    value-or-promise "^1.0.11"
+    ws "^8.3.0"
+
 "@graphql-tools/url-loader@7.9.19":
   version "7.9.19"
   resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.9.19.tgz#6f848b71c72d0371582aac11272a759d95c0ef8b"
@@ -3364,7 +3385,7 @@
     value-or-promise "^1.0.11"
     ws "^8.3.0"
 
-"@graphql-tools/url-loader@^7.0.11", "@graphql-tools/url-loader@^7.11.0", "@graphql-tools/url-loader@^7.9.7":
+"@graphql-tools/url-loader@^7.0.11", "@graphql-tools/url-loader@^7.9.7":
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.11.0.tgz#c04d4d9f18af58230b589bdd55e81a003e19e5d6"
   integrity sha512-c3L/NW9MRkYct4FoQQubTf/VeBhPm0lry2EsgDdcdKmV+lOh3RQ4DAYMH61cTX++MPeQiECYEwCCm68J52xlMg==
@@ -6432,6 +6453,19 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
+"@whatwg-node/fetch@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.0.2.tgz#4242c4e36714b5018ccac0ab76f4ab5a208fbc1c"
+  integrity sha512-qiZn8dYRg0POzUvmHBs7blLxl6DPL+b+Z0JUsGaj7/8PFe2BJG9onrUVX6OWh6Z9YhcYw8yu+wtCAme5ZMiCKQ==
+  dependencies:
+    abort-controller "^3.0.0"
+    busboy "^1.6.0"
+    form-data-encoder "^1.7.1"
+    formdata-node "^4.3.1"
+    node-fetch "^2.6.7"
+    undici "5.5.1"
+    web-streams-polyfill "^3.2.0"
+
 "@xobotyi/scrollbar-width@^1.9.5":
   version "1.9.5"
   resolved "https://registry.yarnpkg.com/@xobotyi/scrollbar-width/-/scrollbar-width-1.9.5.tgz#80224a6919272f405b87913ca13b92929bdf3c4d"
@@ -8192,11 +8226,11 @@ code-point-at@^1.0.0:
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
 codemirror-graphql@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-1.3.0.tgz#6ca19eb2735dbfd5ac9db59b8fc4c8fc1e34fe43"
-  integrity sha512-Inqecp/PpUsNFz6+V6jpgQD1m7jjGg3yby60baw2t5yb2stBH8Z/6cHm/IYp9eN0Aq2EWqomd0GkGmiISPi4jQ==
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-1.3.2.tgz#e9d1d18b4a160f0016a28465805284636ee42d2a"
+  integrity sha512-glwFsEVlH5TvxjSKGymZ1sNy37f3Mes58CB4fXOd0zy9+JzDL08Wti1b5ycy4vFZYghMDK1/Or/zRSjMAGtC2w==
   dependencies:
-    graphql-language-service "^5.0.4"
+    graphql-language-service "^5.0.6"
 
 codemirror@^5.65.3:
   version "5.65.3"
@@ -8695,7 +8729,20 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-cross-undici-fetch@0.4.14, cross-undici-fetch@^0.3.5, cross-undici-fetch@^0.4.0, cross-undici-fetch@^0.4.13:
+cross-undici-fetch@^0.3.5:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/cross-undici-fetch/-/cross-undici-fetch-0.3.8.tgz#3f134f33413d28f3adb7b96519e4e92740cd2e3c"
+  integrity sha512-9vhSioFL/OiO3lGIDp4x6ILBUSR+dmKkwF3ZshqY+YSwgw/aMTy5yZLWuOqJLt1qH8nlBMA7+qzVYyPoOIiF0A==
+  dependencies:
+    abort-controller "^3.0.0"
+    busboy "^1.6.0"
+    form-data-encoder "^1.7.1"
+    formdata-node "^4.3.1"
+    node-fetch "^2.6.7"
+    undici "^5.1.0"
+    web-streams-polyfill "^3.2.0"
+
+cross-undici-fetch@^0.4.0:
   version "0.4.14"
   resolved "https://registry.yarnpkg.com/cross-undici-fetch/-/cross-undici-fetch-0.4.14.tgz#c841b4fa3cb12b3c3da13dd09f7be45a7bef5ae7"
   integrity sha512-CCep44A/baoO8kYJBIR1cRO/tRAk29xzb/tH3O85OtgwZGkL5I0tJZ47ccZdrnAJxrl5tlaYhAOx09fJXMcUqQ==
@@ -11847,12 +11894,12 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-graphiql-explorer@^0.9.0:
+graphiql-explorer@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/graphiql-explorer/-/graphiql-explorer-0.9.0.tgz#25f6b990bfc3e04e88c0cf419e28d12abe2c4fbe"
   integrity sha512-fZC/wsuatqiQDO2otchxriFO0LaWIo/ovF/CQJ1yOudmY0P7pzDiP+l9CEHUiWbizk3e99x6DQG4XG1VxA+d6A==
 
-graphiql@^1.8.8:
+graphiql@1.8.8:
   version "1.8.8"
   resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-1.8.8.tgz#eef760097b20901c0427f831ee6403fbdb2711b8"
   integrity sha512-0AwnT7YnLU0Y+rQSZgdL7HxFJtAC2emyQAzsaqTglur/gSqw+4115LYi9tNRLGnFpxGE8giTslYLh9P0RdhiWg==
@@ -11909,10 +11956,10 @@ graphql-jit@^0.7.0:
     lodash.merge "4.6.2"
     lodash.mergewith "4.6.2"
 
-graphql-language-service@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-5.0.4.tgz#068dd4ff5dc6fcc6c8560ccc8f05311d5fd63fcd"
-  integrity sha512-lX+ahYBwvTHJe1N7JqA08moNwbr0RWaFILxVnbciaaeb469TTIhQi87ZgVJ/y9Szre4d0r3vjIt2EstwafzcDA==
+graphql-language-service@^5.0.4, graphql-language-service@^5.0.6:
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/graphql-language-service/-/graphql-language-service-5.0.6.tgz#7fd1e6479e5c3074b070c760fa961d9ad1ed7c72"
+  integrity sha512-FjE23aTy45Lr5metxCv3ZgSKEZOzN7ERR+OFC1isV5mHxI0Ob8XxayLTYjQKrs8b3kOpvgTYmSmu6AyXOzYslg==
   dependencies:
     nullthrows "^1.0.0"
     vscode-languageserver-types "^3.15.1"
@@ -11955,7 +12002,7 @@ graphql-ws@^5.4.1:
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.8.1.tgz#daf72534b8a169a272e730fa4f3ce0e6d04e2883"
   integrity sha512-UVf/fxlHultC1+12tX9ShTIipqQFNZ96g7N51RFQlk7MFPsDUUMCR3QXVEzHEd5xlTp16rs5vCyfBljvcPN3fA==
 
-graphql@16.0.0, graphql@16.0.0-experimental-stream-defer.5, graphql@16.5.0, graphql@^16.0.1, graphql@^16.1.0, graphql@^16.2.0, graphql@^16.3.0, graphql@^16.5.0:
+graphql@16.0.0, graphql@16.0.0-experimental-stream-defer.5, graphql@16.3.0, graphql@16.5.0, graphql@^16.0.1, graphql@^16.1.0, graphql@^16.2.0, graphql@^16.3.0, graphql@^16.5.0:
   version "16.5.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.5.0.tgz#41b5c1182eaac7f3d47164fb247f61e4dfb69c85"
   integrity sha512-qbHgh8Ix+j/qY+a/ZcJnFQ+j8ezakqPiHwPiZhV/3PgGlgf96QMBB5/f2rkiC9sgLoy/xvT6TSiaf2nTHJh5iA==
@@ -13266,6 +13313,11 @@ isomorphic-ws@^4.0.1:
   resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
   integrity sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==
 
+isomorphic-ws@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-5.0.0.tgz#e5529148912ecb9b451b46ed44d53dae1ce04bbf"
+  integrity sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==
+
 istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.0.tgz#189e7909d0a39fa5a3dfad5b03f71947770191d3"
@@ -13832,7 +13884,7 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
 
-json-bigint-patch@^0.0.8:
+json-bigint-patch@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/json-bigint-patch/-/json-bigint-patch-0.0.8.tgz#45d954da1f21c6d4f3ae9ef64c9ac227cd0ab0fe"
   integrity sha512-xa0LTQsyaq8awYyZyuUsporWisZFiyqzxGW8CKM3t7oouf0GFAKYJnqAm6e9NLNBQOCtOLvy614DEiRX/rPbnA==
@@ -20580,6 +20632,11 @@ undici@5.5.1:
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.5.1.tgz#baaf25844a99eaa0b22e1ef8d205bffe587c8f43"
   integrity sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw==
 
+undici@^5.1.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.8.0.tgz#dec9a8ccd90e5a1d81d43c0eab6503146d649a4f"
+  integrity sha512-1F7Vtcez5w/LwH2G2tGnFIihuWUlc58YidwLiCv+jR2Z50x0tNXpRRw7eOIJ+GvqCqIkg9SB7NWAJ/T9TLfv8Q==
+
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-2.0.0.tgz#301acdc525631670d39f6146e0e77ff6bbdebddc"
@@ -20895,7 +20952,7 @@ use-sync-external-store@1.2.0:
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
-use-url-search-params@^2.5.1:
+use-url-search-params@2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/use-url-search-params/-/use-url-search-params-2.5.1.tgz#cb3d435827f70a7433f6045e1aa51b6356ae7096"
   integrity sha512-tzFTatO7b1VJx9rcP1utVU152PAPt5J4uVLCMteOUZFGBe+u8CzFVs3T74yrpZ/bOJLGjRbv46GBrjHq94XlTg==

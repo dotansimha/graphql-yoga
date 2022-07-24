@@ -1,4 +1,4 @@
-require('cross-undici-fetch')
+require('@whatwg-node/fetch')
   .fetch(
     `http://localhost:4000/graphql?query=${encodeURIComponent(
       '{ greetings }',

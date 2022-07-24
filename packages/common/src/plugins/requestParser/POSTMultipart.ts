@@ -17,7 +17,7 @@ export async function parsePOSTMultipartRequest(
   try {
     requestBody = await request.formData()
   } catch (e: unknown) {
-    // Trick for cross-undici-fetch errors on Node.js
+    // Trick for @whatwg-node/fetch errors on Node.js
     // TODO: This needs a better solution
     if (
       e instanceof Error &&

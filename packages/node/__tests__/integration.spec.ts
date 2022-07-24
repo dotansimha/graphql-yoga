@@ -15,7 +15,7 @@ import 'json-bigint-patch'
 import http from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { AbortController, fetch, File, FormData } from 'cross-undici-fetch'
+import { AbortController, fetch, File, FormData } from '@whatwg-node/fetch'
 import { Plugin } from '@graphql-yoga/common'
 import { ExecutionResult } from '@graphql-tools/utils'
 

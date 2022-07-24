@@ -11,7 +11,7 @@ GraphQL Yoga understands [WHATWG `Request` object](https://developer.mozilla.org
 
 ```ts
 import { createServer } from '@graphql-yoga/common'
-import { Request } from 'cross-undici-fetch' // or fetch-like library
+import { Request } from '@whatwg-node/fetch' // or fetch-like library
 
 const yoga = createServer<MyRandomCtx>()
 

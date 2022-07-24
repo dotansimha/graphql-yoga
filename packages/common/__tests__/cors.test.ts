@@ -1,4 +1,4 @@
-import { Request } from 'cross-undici-fetch'
+import { Request } from '@whatwg-node/fetch'
 import {
   getCORSHeadersByRequestAndOptions,
   CORSOptions,

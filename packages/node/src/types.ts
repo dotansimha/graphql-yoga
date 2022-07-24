@@ -1,5 +1,5 @@
 import type { YogaServerOptions } from '@graphql-yoga/common'
-import type { FormDataLimits } from 'cross-undici-fetch'
+import type { FormDataLimits } from '@whatwg-node/fetch'
 import type { ServerOptions as HttpsServerOptions } from 'https'
 
 /**
