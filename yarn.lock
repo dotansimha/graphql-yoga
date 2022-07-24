@@ -172,30 +172,42 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@apollo/core-schema@^0.2.0":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@apollo/core-schema/-/core-schema-0.2.3.tgz#33a64bd2d6516009e1616e556ff0098834d4d29e"
-  integrity sha512-0MXK/rlo2Es6qp4nb5lkMcN8jz3AaXm7TiPENO9Cyyy8kIC6rTKKpHCd1yv/E5aDEIFFq44LJcL+WrLONSy7+g==
-
-"@apollo/federation@^0.36.2":
-  version "0.36.2"
-  resolved "https://registry.yarnpkg.com/@apollo/federation/-/federation-0.36.2.tgz#bc37e668cb541dfdd0d76eeb20e9b39e8a29365c"
-  integrity sha512-2yqHevdz41wR/fZI+OEk7ibDlEWWhHxXg7ABT8KqHHS5VtKGIwbcekf3kxJXQWIHSXNuHu8r2BcEGJO7JqY8ww==
+"@apollo/composition@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@apollo/composition/-/composition-2.0.5.tgz#c82f05575dfd154570e92c3771e7a0d2d9324e28"
+  integrity sha512-8rohdLt6fuYST/4/wC8RV1p0+trHPWI5vgkozwNEXvJ75CpZy/tUdxPYVDjWNb4wiJqH8Xh0ogb59tSk0vD9Rw==
   dependencies:
-    "@apollo/subgraph" "^0.4.2"
-    apollo-server-types "^3.0.2"
-    lodash.xorby "^4.7.0"
+    "@apollo/federation-internals" "^2.0.5"
+    "@apollo/query-graphs" "^2.0.5"
 
-"@apollo/gateway@^0.51.0":
-  version "0.51.0"
-  resolved "https://registry.yarnpkg.com/@apollo/gateway/-/gateway-0.51.0.tgz#b3f44653474f7a5f7771349928bc02ab1660db3b"
-  integrity sha512-itFIAHj7h/r5QQbYe4tsYMfuQUdPC1WEHd9O8UHiIY3lU7Mo4ALpbHPs5W7LEMXHhHaLEvo/MI+sZ7BBRDzb4Q==
+"@apollo/core-schema@~0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@apollo/core-schema/-/core-schema-0.3.0.tgz#c6c1a6821fb326501d73eb85d920bbf57906cc77"
+  integrity sha512-v+Ys6+W1pDQu+XwP++tI5y4oZdzKrEuVXwsEenOmg2FO/3/G08C+qMhQ9YQ9Ug34rvQGQtgbIDssHEVk4YZS7g==
   dependencies:
-    "@apollo/core-schema" "^0.2.0"
-    "@apollo/federation" "^0.36.2"
-    "@apollo/query-planner" "^0.10.2"
+    "@protoplasm/recall" "^0.2"
+
+"@apollo/federation-internals@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@apollo/federation-internals/-/federation-internals-2.0.5.tgz#a96d6d73247e9a3deac6851937c6b8bcc632ced4"
+  integrity sha512-UbkNNOtzp1N14ZR6ynjwctF6rXEvAnlDz527cUYN0mkYkyH8v0RZNA1WfhVdcPWsTpjuvAR7Q5cDEf3e2dYcEQ==
+  dependencies:
+    "@apollo/core-schema" "~0.3.0"
+    chalk "^4.1.0"
+    js-levenshtein "^1.1.6"
+
+"@apollo/gateway@^2.0.0":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@apollo/gateway/-/gateway-2.0.5.tgz#735ebb4a2ab96a7e11077912018d5bee31cd7aab"
+  integrity sha512-bTHZohLqyGw1GDUvV5Kje1dVXDEANWgmwtfHsE1o5dYXx7AfU48ts8b5dzQVUfDQ/PlsWsf1YT6MnY5PWKVl8A==
+  dependencies:
+    "@apollo/composition" "^2.0.5"
+    "@apollo/core-schema" "~0.3.0"
+    "@apollo/federation-internals" "^2.0.5"
+    "@apollo/query-planner" "^2.0.5"
     "@apollo/utils.createhash" "^1.0.0"
     "@apollo/utils.fetcher" "^1.0.0"
+    "@apollo/utils.isnodelike" "^1.0.0"
     "@apollo/utils.logger" "^1.0.0"
     "@josephg/resolvable" "^1.0.1"
     "@opentelemetry/api" "^1.0.1"
@@ -208,7 +220,7 @@
     async-retry "^1.3.3"
     loglevel "^1.6.1"
     make-fetch-happen "^10.1.2"
-    pretty-format "^27.4.6"
+    pretty-format "^27.0.0"
 
 "@apollo/protobufjs@1.2.4":
   version "1.2.4"
@@ -229,19 +241,32 @@
     "@types/node" "^10.1.0"
     long "^4.0.0"
 
-"@apollo/query-planner@^0.10.2":
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/@apollo/query-planner/-/query-planner-0.10.2.tgz#e71d4bf794787229da49f23421a6a9253dcc9775"
-  integrity sha512-A9pqfaoDrfWwewkBcRmXsTxTctRtkiPi+uQ86CJTfxz8ZfNw/KEgr0CdFCzHLcToo4SQDBFLOsb4kDdo2jjxRg==
+"@apollo/query-graphs@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@apollo/query-graphs/-/query-graphs-2.0.5.tgz#3c09d4fdb5f8e7675d386a79fa49d61b40d81bab"
+  integrity sha512-YfPMiskZ8NxSyMeHAeL2jWuOfCf1SFxsZohFra3bVB/TSOrlYmjiNGL8u2lylSXJp5A6J08PCzvZCz6ND1L2Pw==
   dependencies:
+    "@apollo/federation-internals" "^2.0.5"
+    deep-equal "^2.0.5"
+    ts-graphviz "^0.16.0"
+
+"@apollo/query-planner@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@apollo/query-planner/-/query-planner-2.0.5.tgz#cd0e72295a901a248b828f02d1e03f6e4ea2b79e"
+  integrity sha512-9+XiG+tdR41mZEDlSqQlkpznKGTNvJOtBzqiIS4mYX4PqGUVG83paFuIjNA2eihSp0TnxgjxHFX8k2yQMdHaGQ==
+  dependencies:
+    "@apollo/federation-internals" "^2.0.5"
+    "@apollo/query-graphs" "^2.0.5"
     chalk "^4.1.0"
     deep-equal "^2.0.5"
-    pretty-format "^27.4.6"
+    pretty-format "^27.0.0"
 
-"@apollo/subgraph@^0.4.0", "@apollo/subgraph@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@apollo/subgraph/-/subgraph-0.4.2.tgz#f8516f1d5e5fbd57189727497ed9f805fa5017c8"
-  integrity sha512-sIGzqfUryW6tS5RPWp1awtO+5CehjPV6xbDrWS4I2Hsj8rug8Y9oiMpcnNk8GaQ1TF3UEf99ZL16mNa4J++IIQ==
+"@apollo/subgraph@^2.0.0":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@apollo/subgraph/-/subgraph-2.0.5.tgz#79bd284da1b9ba1196e7de9973654c878f21ae88"
+  integrity sha512-bnxxoYmlalYJ5wiE2iOYae6bc9fHKik0zOHGcfTLpIm/T3l+1J0Gj5QIVYOs7u/agduo3VGjm8MQbvrtNHJExg==
+  dependencies:
+    "@apollo/federation-internals" "^2.0.5"
 
 "@apollo/utils.createhash@^1.0.0":
   version "1.1.0"
@@ -261,7 +286,7 @@
   resolved "https://registry.yarnpkg.com/@apollo/utils.fetcher/-/utils.fetcher-1.0.0.tgz#467c99e97c1a81841435280707fcf2fb0b5768b7"
   integrity sha512-SpJH69ffk91BoYSVb12Dt/jFQKVOrm4NE59XUeHXRsha1xBmxjvZNN6qvYySAcGjloW4TtFZYlPkBpwjMRWymw==
 
-"@apollo/utils.isnodelike@^1.1.0":
+"@apollo/utils.isnodelike@^1.0.0", "@apollo/utils.isnodelike@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@apollo/utils.isnodelike/-/utils.isnodelike-1.1.0.tgz#24d3f36276b6ba4b08117925083bc5c5f2513c3d"
   integrity sha512-q/Q82kBUSEcx1ED11JO1TYBY781mWluUnBD8NvhjHVsu1K1C5R9BZVUxShyK/V8XcePcRUB5fdWOcBMGwS0KOA==
@@ -3343,7 +3368,7 @@
     tslib "^2.4.0"
     value-or-promise "1.0.11"
 
-"@graphql-tools/url-loader@7.13.0":
+"@graphql-tools/url-loader@7.13.0", "@graphql-tools/url-loader@^7.0.11", "@graphql-tools/url-loader@^7.9.7":
   version "7.13.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.13.0.tgz#f1523ae782b846b0d06dc8488b622ba8ce9a7f33"
   integrity sha512-hM3yIDij0EqrHrLKNRpFRhQD0tmzt7E5OevOL9O3CLKCcv2Ho4wXQD7gscwVJJdg2Qyr22Pqr/IdtR8QiMScRA==
@@ -3382,27 +3407,6 @@
     meros "^1.1.4"
     sync-fetch "^0.3.1"
     tslib "^2.3.0"
-    value-or-promise "^1.0.11"
-    ws "^8.3.0"
-
-"@graphql-tools/url-loader@^7.0.11", "@graphql-tools/url-loader@^7.9.7":
-  version "7.11.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/url-loader/-/url-loader-7.11.0.tgz#c04d4d9f18af58230b589bdd55e81a003e19e5d6"
-  integrity sha512-c3L/NW9MRkYct4FoQQubTf/VeBhPm0lry2EsgDdcdKmV+lOh3RQ4DAYMH61cTX++MPeQiECYEwCCm68J52xlMg==
-  dependencies:
-    "@graphql-tools/delegate" "8.8.0"
-    "@graphql-tools/utils" "8.8.0"
-    "@graphql-tools/wrap" "8.5.0"
-    "@n1ru4l/graphql-live-query" "^0.9.0"
-    "@types/ws" "^8.0.0"
-    cross-undici-fetch "^0.4.0"
-    dset "^3.1.2"
-    extract-files "^11.0.0"
-    graphql-ws "^5.4.1"
-    isomorphic-ws "^4.0.1"
-    meros "^1.1.4"
-    sync-fetch "^0.4.0"
-    tslib "^2.4.0"
     value-or-promise "^1.0.11"
     ws "^8.3.0"
 
@@ -4933,6 +4937,11 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+
+"@protoplasm/recall@^0.2":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@protoplasm/recall/-/recall-0.2.4.tgz#d7b1a5f1e94481d015e9666bd791e57d51b8cc67"
+  integrity sha512-+w5WCHQwuZ0RZ3+ayJ42ArGPIeew2Wxb+g1rPNA+qiehCc4EDTDjW7DyPPq9FBa4lFUDC4mgDytV8Fkxe/Z3iQ==
 
 "@pulumi/aws@5.10.0":
   version "5.10.0"
@@ -6852,7 +6861,7 @@ apollo-server-plugin-base@^3.6.2:
   dependencies:
     apollo-server-types "^3.6.2"
 
-"apollo-server-types@^0.9.0 || ^3.0.0", apollo-server-types@^3.0.2, apollo-server-types@^3.2.0, apollo-server-types@^3.6.2:
+"apollo-server-types@^0.9.0 || ^3.0.0", apollo-server-types@^3.2.0, apollo-server-types@^3.6.2:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/apollo-server-types/-/apollo-server-types-3.6.2.tgz#34bb0c335fcce3057cbdf72b3b63da182de6fc84"
   integrity sha512-9Z54S7NB+qW1VV+kmiqwU2Q6jxWfX89HlSGCGOo3zrkrperh85LrzABgN9S92+qyeHYd72noMDg2aI039sF3dg==
@@ -8740,19 +8749,6 @@ cross-undici-fetch@^0.3.5:
     formdata-node "^4.3.1"
     node-fetch "^2.6.7"
     undici "^5.1.0"
-    web-streams-polyfill "^3.2.0"
-
-cross-undici-fetch@^0.4.0:
-  version "0.4.14"
-  resolved "https://registry.yarnpkg.com/cross-undici-fetch/-/cross-undici-fetch-0.4.14.tgz#c841b4fa3cb12b3c3da13dd09f7be45a7bef5ae7"
-  integrity sha512-CCep44A/baoO8kYJBIR1cRO/tRAk29xzb/tH3O85OtgwZGkL5I0tJZ47ccZdrnAJxrl5tlaYhAOx09fJXMcUqQ==
-  dependencies:
-    abort-controller "^3.0.0"
-    busboy "^1.6.0"
-    form-data-encoder "^1.7.1"
-    formdata-node "^4.3.1"
-    node-fetch "^2.6.7"
-    undici "5.5.1"
     web-streams-polyfill "^3.2.0"
 
 crypt@0.0.2:
@@ -13824,6 +13820,11 @@ js-cookie@^2.2.1:
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
   integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
 
+js-levenshtein@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/js-levenshtein/-/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"
+  integrity sha512-X2BB11YZtrRqY4EnQcLX5Rh373zbK4alC1FW7D7MBhL2gtcC17cTnr6DmfHZeS0s2rTHjUTMMHfG7gO8SSdw+g==
+
 js-string-escape@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-string-escape/-/js-string-escape-1.0.1.tgz#e2625badbc0d67c7533e9edc1068c587ae4137ef"
@@ -14486,11 +14487,6 @@ lodash.union@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.union/-/lodash.union-4.6.0.tgz#48bb5088409f16f1821666641c44dd1aaae3cd88"
   integrity sha1-SLtQiECfFvGCFmZkHETdGqrjzYg=
-
-lodash.xorby@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/lodash.xorby/-/lodash.xorby-4.7.0.tgz#9c19a6f9f063a6eb53dd03c1b6871799801463d7"
-  integrity sha1-nBmm+fBjputT3QPBtocXmYAUY9c=
 
 lodash@^4.17.12, lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@~4.17.0:
   version "4.17.21"
@@ -17419,7 +17415,7 @@ pretty-format@^25.5.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
-pretty-format@^27.0.0, pretty-format@^27.4.6, pretty-format@^27.5.1:
+pretty-format@^27.0.0, pretty-format@^27.5.1:
   version "27.5.1"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.5.1.tgz#2181879fdea51a7a5851fb39d920faa63f01d88e"
   integrity sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==
@@ -20221,6 +20217,11 @@ ts-easing@^0.2.0:
   resolved "https://registry.yarnpkg.com/ts-easing/-/ts-easing-0.2.0.tgz#c8a8a35025105566588d87dbda05dd7fbfa5a4ec"
   integrity sha512-Z86EW+fFFh/IFB1fqQ3/+7Zpf9t2ebOAxNI/V6Wo7r5gqiqtxmgTlQ1qbqQcjLKYeSHPTsEmvlJUDg/EuL0uHQ==
 
+ts-graphviz@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/ts-graphviz/-/ts-graphviz-0.16.0.tgz#7a6e6b5434854bc90ab861e70d5af0d6d20729a7"
+  integrity sha512-3fTPO+G6bSQNvMh/XQQzyiahVLMMj9kqYO99ivUraNJ3Wp05HZOOVtRhi6w9hq7+laP1MKHjLBtGWqTeb1fcpg==
+
 ts-interface-checker@^0.1.9:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz#784fd3d679722bc103b1b4b8030bcddb5db2a699"
@@ -20627,15 +20628,10 @@ undici@5.0.0:
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.0.0.tgz#3c1e08c7f0df90c485d5d8dbb0517e11e34f2090"
   integrity sha512-VhUpiZ3No1DOPPQVQnsDZyfcbTTcHdcgWej1PdFnSvOeJmOVDgiOHkunJmBLfmjt4CqgPQddPVjSWW0dsTs5Yg==
 
-undici@5.5.1:
+undici@5.5.1, undici@^5.1.0:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.5.1.tgz#baaf25844a99eaa0b22e1ef8d205bffe587c8f43"
   integrity sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw==
-
-undici@^5.1.0:
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.8.0.tgz#dec9a8ccd90e5a1d81d43c0eab6503146d649a4f"
-  integrity sha512-1F7Vtcez5w/LwH2G2tGnFIihuWUlc58YidwLiCv+jR2Z50x0tNXpRRw7eOIJ+GvqCqIkg9SB7NWAJ/T9TLfv8Q==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
