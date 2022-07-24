@@ -17,7 +17,7 @@ let toSkip = false;
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
-		console.time('Setup SvelteKit tests');
+		// console.time('Setup SvelteKit tests');
 
 		const nodeVersion = execSync('node -v').toString();
 		if (nodeVersion.includes('v12')) {
@@ -49,7 +49,7 @@ describe('SvelteKit integration', () => {
 		}
 
 		// How long it took?
-		console.timeEnd('Setup SvelteKit tests');
+		// console.timeEnd('Setup SvelteKit tests');
 	}, timings.setup.total);
 
 	beforeEach(async () => {

@@ -23,7 +23,7 @@ import 'json-bigint-patch'
 
 const getOperationWithFragments = (
   document: DocumentNode,
-  operationName: string,
+  operationName?: string,
 ): DocumentNode => {
   const definitions = document.definitions.filter((definition) => {
     if (
@@ -121,12 +121,11 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
         parse(graphQLParams.query),
-        graphQLParams.operationName,
+        graphQLParams.operationName ?? undefined,
       )
-
       return executor({
         document,
-        operationName: graphQLParams.operationName,
+        operationName: graphQLParams.operationName ?? undefined,
         variables: graphQLParams.variables,
         extensions: {
           headers: opts?.headers,
