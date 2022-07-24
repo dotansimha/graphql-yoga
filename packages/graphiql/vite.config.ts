@@ -11,6 +11,9 @@ export default defineConfig({
       '/graphql': 'http://localhost:4000',
     },
   },
+  define: {
+    'process.env.NODE_ENV': '"production"',
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src', 'bundle.tsx'),
@@ -20,6 +23,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         /** prevent code-splitting */
+        inlineDynamicImports: false,
         manualChunks: () => '_.js',
       },
     },
