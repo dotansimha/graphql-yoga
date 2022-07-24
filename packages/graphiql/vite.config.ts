@@ -19,8 +19,7 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        /** prevent code-splitting */
-        manualChunks: () => '_.js',
+        inlineDynamicImports: true,
       },
     },
   },
