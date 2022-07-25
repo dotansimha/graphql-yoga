@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'website/**'
+    branches:
+      - master
 jobs:
   algolia-records-check:
     runs-on: ubuntu-latest
