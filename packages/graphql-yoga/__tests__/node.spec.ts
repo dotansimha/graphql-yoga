@@ -1401,15 +1401,16 @@ it('should return 404 if request path does not match with the defined endpoint',
   const hostname = '127.0.0.1'
   const port = 4000 + Math.floor(Math.random() * 1000)
   const endpoint = '/mypath'
-  const yoga = createServer({
+  const yoga = createYoga({
     endpoint,
-    hostname,
-    port,
     logging: false,
   })
+  const server = createServer(yoga)
   const url = `http://${hostname}:${port}${endpoint}`
   try {
-    await yoga.start()
+    await new Promise<void>((resolve) =>
+      server.listen(port, hostname, () => resolve()),
+    )
     const response = await fetch(
       url + '?query=' + encodeURIComponent('{ __typename }'),
     )
@@ -1421,6 +1422,8 @@ it('should return 404 if request path does not match with the defined endpoint',
     )
     expect(response2.status).toEqual(404)
   } finally {
-    await yoga.stop()
+    await new Promise<void>((resolve, reject) =>
+      server.close((err) => (err ? reject(err) : resolve())),
+    )
   }
 })
