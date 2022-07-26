@@ -6,5 +6,6 @@ const app = createYoga()
 
 export const handler: Handler = configure({
   app,
+  graphqlEndpoint: '/stage/graphql',
   log: app.logger,
 })
