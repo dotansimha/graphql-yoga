@@ -1,9 +1,9 @@
 import { serve } from 'https://deno.land/std@0.117.0/http/server.ts'
-import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/common'
+import { createYoga } from 'https://cdn.skypack.dev/graphql-yoga'
 
-const graphQLServer = createServer()
+const yoga = createYoga()
 
-serve(graphQLServer, {
+serve(yoga, {
   addr: ':4000',
 })
 

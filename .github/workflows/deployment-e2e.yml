@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         plan: ['cf-worker', 'azure-function', 'aws-lambda', 'vercel-function']
+      fail-fast: false
     name: ${{ matrix.plan }}
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository

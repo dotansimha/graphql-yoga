@@ -6,7 +6,8 @@ import {
   arg,
   nonNull,
 } from 'nexus'
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
 const FileScalar = scalarType({
   name: 'File',
@@ -33,9 +34,11 @@ const schema = makeSchema({
   types: [FileScalar, greetings, readTextFile],
 })
 
-const server = createServer({
+const yoga = createYoga({
   schema,
 })
 
+const server = createServer(yoga)
+
 // Start the server and explore http://localhost:4000/graphql
-server.start()
+server.listen(4000)

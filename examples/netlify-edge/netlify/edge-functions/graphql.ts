@@ -1,5 +1,5 @@
-import { createServer } from 'https://cdn.skypack.dev/@graphql-yoga/common'
+import { createYoga } from 'https://cdn.skypack.dev/graphql-yoga'
 
-const yoga = createServer()
+const yoga = createYoga()
 
 export default yoga

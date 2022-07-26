@@ -1,5 +1,6 @@
-import { createServer, YogaInitialContext } from '@graphql-yoga/node'
+import { createYoga, YogaInitialContext } from 'graphql-yoga'
 import { useGenericAuth } from '@envelop/generic-auth'
+import { createServer } from 'http'
 
 type User = {
   id: string
@@ -21,7 +22,7 @@ const users: Record<string, User> = {
   },
 }
 
-const server = createServer<{}, { currentUser: User }>({
+const yoga = createYoga<{}, { currentUser: User }>({
   plugins: [
     useGenericAuth({
       mode: 'protect-granular',
@@ -76,4 +77,5 @@ const server = createServer<{}, { currentUser: User }>({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)

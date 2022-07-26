@@ -1,6 +1,7 @@
-import { createServer, createPubSub } from '@graphql-yoga/node'
+import { createYoga, createPubSub } from 'graphql-yoga'
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
 import Redis from 'ioredis'
+import { createServer } from 'http'
 
 const publishClient = new Redis()
 const subscribeClient = new Redis()
@@ -14,9 +15,8 @@ const pubSub = createPubSub<{
   }),
 })
 
-const server = createServer<{ pubSub: typeof pubSub }>({
+const yoga = createYoga<{ pubSub: typeof pubSub }>({
   context: () => ({ pubSub }),
-  port: parseInt(process.env.PORT || '4000', 10),
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -47,4 +47,5 @@ const server = createServer<{ pubSub: typeof pubSub }>({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(parseInt(process.env.PORT || '4000', 10))

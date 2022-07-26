@@ -1,9 +1,9 @@
 import supertest from 'supertest'
-import { server } from '../server.mjs'
+import { yoga } from '../yoga.mjs'
 
 describe('Node ESM', () => {
   it('should work', () => {
-    supertest(server)
+    supertest(yoga)
       .post('/graphql')
       .send({
         query: '{ greetings }',
