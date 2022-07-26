@@ -1,4 +1,4 @@
-import { getIntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery, GraphQLError } from 'graphql'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import EventSource from 'eventsource'
 import request from 'supertest'
@@ -7,12 +7,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
 import * as crypto from 'crypto'
-import {
-  CORSOptions,
-  createYoga,
-  GraphQLYogaError,
-  Plugin,
-} from '../src/index.js'
+import { CORSOptions, createYoga, Plugin } from '../src/index.js'
 import { getCounterValue, schema } from '../test-utils/schema.js'
 import { createTestSchema } from './__fixtures__/schema.js'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
@@ -83,7 +78,7 @@ describe('Masked Error Option', () => {
   const resolvers = {
     Query: {
       hello: () => {
-        throw new GraphQLYogaError('This error never gets masked.')
+        throw new GraphQLError('This error never gets masked.')
       },
       hi: () => {
         throw new Error('This error will get mask if you enable maskedError.')
@@ -255,11 +250,11 @@ describe('Context error', () => {
     `)
   })
 
-  it('GraphQLYogaError thrown within context factory with error masking is not masked', async () => {
+  it('GraphQLError thrown within context factory with error masking is not masked', async () => {
     const yoga = createYoga({
       logging: false,
       context: () => {
-        throw new GraphQLYogaError('I like turtles')
+        throw new GraphQLError('I like turtles')
       },
     })
 
@@ -279,11 +274,15 @@ describe('Context error', () => {
     `)
   })
 
-  it('GraphQLYogaError thrown within context factory has error extensions exposed on the response', async () => {
+  it('GraphQLError thrown within context factory has error extensions exposed on the response', async () => {
     const yoga = createYoga({
       logging: false,
       context: () => {
-        throw new GraphQLYogaError('I like turtles', { foo: 1 })
+        throw new GraphQLError('I like turtles', {
+          extensions: {
+            foo: 1,
+          },
+        })
       },
     })
 
