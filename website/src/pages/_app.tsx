@@ -87,8 +87,11 @@ function AppContent(appProps: AppProps) {
     trackingId: 'G-246BWRER3C',
   })
 
-  const isDocs = router.asPath.startsWith('/docs')
-  const isTutorial = router.asPath.startsWith('/tutorial')
+  const isDocs =
+    router.asPath.startsWith('/docs') || router.asPath.startsWith('/v3/docs')
+  const isTutorial =
+    router.asPath.startsWith('/tutorial') ||
+    router.asPath.startsWith('/v3/tutorial')
 
   return (
     <>
