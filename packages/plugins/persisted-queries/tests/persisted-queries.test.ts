@@ -1,17 +1,18 @@
-import { createServer } from 'graphql-yoga'
+import { createYoga, YogaServerInstance } from 'graphql-yoga'
 import request from 'supertest'
 import {
   createInMemoryPersistedQueriesStore,
   PersistedQueriesMode,
+  PersistedQueriesStore,
   usePersistedQueries,
 } from '../src'
 
 describe('Persisted Queries', () => {
-  let yoga: ReturnType<typeof createServer>
+  let yoga: YogaServerInstance<any, any, any>
   let store: ReturnType<typeof createInMemoryPersistedQueriesStore>
   beforeAll(async () => {
     store = createInMemoryPersistedQueriesStore()
-    yoga = createServer({
+    yoga = createYoga({
       plugins: [
         usePersistedQueries({
           store,
@@ -61,7 +62,7 @@ describe('Persisted Queries', () => {
   describe('Automatic', () => {
     beforeAll(async () => {
       store = createInMemoryPersistedQueriesStore()
-      yoga = createServer({
+      yoga = createYoga({
         plugins: [
           usePersistedQueries({
             store,
@@ -97,7 +98,7 @@ describe('Persisted Queries', () => {
   describe('Persisted Only', () => {
     beforeAll(async () => {
       store = createInMemoryPersistedQueriesStore()
-      yoga = createServer({
+      yoga = createYoga({
         plugins: [
           usePersistedQueries({
             store,
@@ -143,7 +144,7 @@ describe('Persisted Queries', () => {
   describe('Manual', () => {
     beforeAll(async () => {
       store = createInMemoryPersistedQueriesStore()
-      yoga = createServer({
+      yoga = createYoga({
         plugins: [
           usePersistedQueries({
             store,

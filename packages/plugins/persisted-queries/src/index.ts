@@ -1,4 +1,5 @@
-import { GraphQLYogaError, Plugin, PromiseOrValue } from '@graphql-yoga/common'
+import { Plugin, PromiseOrValue } from 'graphql-yoga'
+import { GraphQLError } from 'graphql'
 import lru from 'tiny-lru'
 
 export interface PersistedQueriesStoreOptions {
@@ -60,7 +61,7 @@ export function usePersistedQueries<TPluginContext>(
             mode === PersistedQueriesMode.PERSISTED_ONLY &&
             persistedQueryData == null
           ) {
-            throw new GraphQLYogaError('PersistedQueryOnly')
+            throw new GraphQLError('PersistedQueryOnly')
           }
           if (persistedQueryData?.version === 1) {
             if (params.query == null) {
@@ -68,7 +69,7 @@ export function usePersistedQueries<TPluginContext>(
                 persistedQueryData.sha256Hash,
               )
               if (persistedQuery == null) {
-                throw new GraphQLYogaError('PersistedQueryNotFound')
+                throw new GraphQLError('PersistedQueryNotFound')
               }
               setParams({
                 ...params,
@@ -78,7 +79,7 @@ export function usePersistedQueries<TPluginContext>(
               if (hash != null) {
                 const expectedHash = await hash(params.query)
                 if (persistedQueryData.sha256Hash !== expectedHash) {
-                  throw new GraphQLYogaError('PersistedQueryMismatch')
+                  throw new GraphQLError('PersistedQueryMismatch')
                 }
               }
               if (mode === PersistedQueriesMode.AUTOMATIC) {
