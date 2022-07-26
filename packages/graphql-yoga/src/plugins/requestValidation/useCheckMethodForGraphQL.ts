@@ -1,10 +1,16 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { Plugin } from '../types'
 
+export function isValidMethodForGraphQL(
+  method: string,
+): method is 'GET' | 'POST' {
+  return method === 'GET' || method === 'POST'
+}
+
 export function useCheckMethodForGraphQL(): Plugin {
   return {
     onRequest({ request }) {
-      if (request.method !== 'GET' && request.method !== 'POST') {
+      if (!isValidMethodForGraphQL(request.method)) {
         throw createGraphQLError(
           'GraphQL only supports GET and POST requests.',
           {

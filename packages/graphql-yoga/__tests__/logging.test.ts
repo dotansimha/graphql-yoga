@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { defaultYogaLogger } from '../src/logger.js'
-import { createServer } from '../src/server.js'
+import { createYoga } from '../src/server.js'
 
 describe('Logging', () => {
   it('Yoga respects custom logger implementations', async () => {
@@ -10,7 +10,7 @@ describe('Logging', () => {
       warn: jest.fn(),
       error: jest.fn(),
     }
-    const yogaApp = createServer({
+    const yogaApp = createYoga({
       logging: logger,
     })
 

@@ -1,6 +1,6 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
 import { ExecutionResult } from 'graphql'
-import { encodeString } from '../../encodeString.js'
+import { encodeString } from '../../utils/encodeString.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 

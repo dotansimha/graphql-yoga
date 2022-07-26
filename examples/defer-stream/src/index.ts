@@ -1,4 +1,5 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))
@@ -82,9 +83,11 @@ const resolvers = {
   },
 }
 
-const server = createServer({
-  typeDefs,
-  resolvers,
+const yoga = createYoga({
+  schema: {
+    typeDefs,
+    resolvers,
+  },
   graphiql: {
     defaultQuery: /* GraphQL */ `
       # Slow alphabet
@@ -128,4 +131,5 @@ const server = createServer({
   },
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000)

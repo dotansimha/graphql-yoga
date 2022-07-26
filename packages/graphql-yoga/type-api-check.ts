@@ -1,6 +1,6 @@
 import { IResolvers } from '@graphql-tools/utils'
 import { ClientRequest } from 'node:http'
-import { createServer } from './src/index.js'
+import { createYoga } from './src/index.js'
 
 const request: Request = null as any
 
@@ -10,21 +10,21 @@ const request: Request = null as any
 
 // none results in optional context
 {
-  const server = createServer<{}>()
+  const server = createYoga<{}>()
   server.handleRequest(request)
 }
 
 // some results in mandatory context (error)
 
 {
-  const server = createServer<{ req: ClientRequest }>()
+  const server = createYoga<{ req: ClientRequest }>()
   // @ts-expect-error Arguments for the rest parameter 'serverContext' were not provided.
   server.handleRequest(request)
 }
 
 // some results in mandatory context (success)
 {
-  const server = createServer<{ req: ClientRequest }>()
+  const server = createYoga<{ req: ClientRequest }>()
   const clientRequest: ClientRequest = null as any
   server.handleRequest(request, { req: clientRequest })
 }
@@ -35,7 +35,7 @@ const request: Request = null as any
 
 // context can be accessed from within resolvers
 {
-  createServer<{ iAmHere: 1 }>({
+  createYoga<{ iAmHere: 1 }>({
     schema: {
       typeDefs: ``,
       resolvers: {
@@ -51,7 +51,7 @@ const request: Request = null as any
 
 // context can be accessed from within resolvers
 {
-  createServer<{}>({
+  createYoga<{}>({
     schema: {
       typeDefs: ``,
       resolvers: {
@@ -79,7 +79,7 @@ const request: Request = null as any
       },
     },
   }
-  createServer<Context>({
+  createYoga<Context>({
     schema: {
       typeDefs: ``,
       resolvers,
@@ -89,7 +89,7 @@ const request: Request = null as any
 
 // inject usage optional serverContext
 {
-  const server = createServer<{}>()
+  const server = createYoga<{}>()
   server.inject({
     document: `{ __typename }`,
   })
@@ -101,33 +101,33 @@ const request: Request = null as any
     brrt: 1
   }
 
-  const server = createServer<Context>()
+  const server = createYoga<Context>()
   // @ts-expect-error Property 'serverContext' is missing in type '{ document: string; }' but required in type '{ serverContext: Context; }
   server.inject({
     document: `{ __typename }`,
   })
 }
 
-createServer({
+createYoga({
   graphiql: false,
 })
 
-createServer({
+createYoga({
   graphiql: true,
 })
 
-createServer({
+createYoga({
   graphiql: () => false,
 })
 
-createServer({
+createYoga({
   graphiql: () => true,
 })
 
-createServer({
+createYoga({
   graphiql: {},
 })
 
-createServer({
+createYoga({
   graphiql: () => ({}),
 })

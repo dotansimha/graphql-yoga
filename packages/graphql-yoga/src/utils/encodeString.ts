@@ -1,4 +1,5 @@
 let encodeString: (str: string) => Uint8Array
+// In Node, Buffer is faster than TextEncoder.
 if (globalThis.Buffer) {
   encodeString = function encodeStringWithBuffer(str: string) {
     return globalThis.Buffer.from(str, 'utf8')

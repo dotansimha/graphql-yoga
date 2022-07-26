@@ -1,3 +1,3 @@
-# `@graphql-yoga/common`
+This package has been deprecated in favor of [https://npmjs.org/](https://npmjs.com/package/graphql-yoga)
 
-Provides an abstract class that can be used to implement a GraphQL server.
+Please replace this package with `graphql-yoga`.

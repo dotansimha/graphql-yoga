@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import fastify, {
   FastifyReply,
   FastifyRequest,
@@ -16,7 +16,7 @@ export function createGraphQLApp() {
 }
 
 export function createGraphQLHandler(): RouteHandlerMethod {
-  const graphQLServer = createServer<{
+  const graphQLServer = createYoga<{
     req: FastifyRequest
     reply: FastifyReply
   }>({
@@ -25,7 +25,7 @@ export function createGraphQLHandler(): RouteHandlerMethod {
   })
 
   return async (req, reply) => {
-    const response = await graphQLServer.handleIncomingMessage(req, {
+    const response = await graphQLServer.handleNodeRequest(req, {
       req,
       reply,
     })
