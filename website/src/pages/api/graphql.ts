@@ -1,8 +1,8 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
-const server = createServer({
+const yoga = createYoga({
   renderGraphiQL,
 })
 
-export default server
+export default yoga

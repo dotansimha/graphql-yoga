@@ -1,8 +1,8 @@
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import express from 'express'
 
 export function buildApp(app: ReturnType<typeof express>) {
-  const graphQLServer = createServer({
+  const graphQLServer = createYoga({
     schema: {
       typeDefs: /* GraphQL */ `
         scalar File

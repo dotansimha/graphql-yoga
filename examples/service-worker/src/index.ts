@@ -1,5 +1,5 @@
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
-const server = createServer()
+const yoga = createYoga()
 
-server.start()
+self.addEventListener('fetch', yoga)

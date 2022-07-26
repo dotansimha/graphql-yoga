@@ -1,5 +1,7 @@
-import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import { fetch } from '@whatwg-node/fetch'
+import { GraphQLError } from 'graphql'
+import { createServer } from 'http'
 
 const users = [
   {
@@ -17,7 +19,7 @@ const users = [
 ]
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   schema: {
     typeDefs: /* GraphQL */ `
       type User {
@@ -42,15 +44,14 @@ const server = createServer({
         user: async (_, args) => {
           const user = users.find((user) => user.id === args.byId)
           if (!user) {
-            throw new GraphQLYogaError(
-              `User with id '${args.byId}' not found.`,
-              {
+            throw new GraphQLError(`User with id '${args.byId}' not found.`, {
+              extensions: {
                 code: 'USER_NOT_FOUND',
                 someRandomExtensions: {
                   aaaa: 3,
                 },
               },
-            )
+            })
           }
 
           return user
@@ -63,4 +64,5 @@ const server = createServer({
 })
 
 // Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000)

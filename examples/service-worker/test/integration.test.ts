@@ -1,5 +1,5 @@
 import { getIntrospectionQuery } from 'graphql'
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 import { Request } from '@whatwg-node/fetch'
 
 const listenerMap = new Map<string, Set<EventListenerOrEventListenerObject>>()
@@ -28,20 +28,19 @@ globalThis.self = {
 } as any
 
 function trigger(eventName: string, data: any) {
-  listenerMap.get(eventName)?.forEach((listener) => {
-    const listenerFn =
-      typeof listener === 'function' ? listener : listener.handleEvent
+  listenerMap.get(eventName)?.forEach((listener: any) => {
+    const listenerFn = listener.handleEvent ?? listener
     listenerFn(data)
   })
 }
 
 describe('Service worker', () => {
-  const server = createServer()
+  const yoga = createYoga()
   beforeEach(() => {
-    server.start()
+    self.addEventListener('fetch', yoga)
   })
   afterEach(() => {
-    server.stop()
+    self.removeEventListener('fetch', yoga)
   })
   it('should add fetch listener', async () => {
     expect(listenerMap.get('fetch')?.size).toBe(1)

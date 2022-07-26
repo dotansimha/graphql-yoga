@@ -1,12 +1,13 @@
 import {
-  createServer,
+  createYoga,
   useExtendContext,
   createPubSub,
   Repeater,
   pipe,
   map,
   YogaInitialContext,
-} from '@graphql-yoga/node'
+} from 'graphql-yoga'
+import { createServer } from 'http'
 import { Resolvers } from './generated/graphql.js'
 
 const wait = (time: number) =>
@@ -92,7 +93,7 @@ const resolvers: Resolvers<Context> = {
   },
 }
 
-const server = createServer<Context, any>({
+const yoga = createYoga<Context, any>({
   schema: {
     resolvers,
     typeDefs,
@@ -101,4 +102,5 @@ const server = createServer<Context, any>({
   plugins: [useExtendContext(() => ({ pubSub }))],
 })
 
-server.start()
+const server = createServer(yoga)
+server.listen(4000, () => console.log('Server started on port 4000'))

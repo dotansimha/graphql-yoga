@@ -12,8 +12,10 @@ const absoluteGraphqlYogaBinPath = resolve(
   __dirname,
   '..',
   'packages',
-  'cli',
+  'graphql-yoga',
   'dist',
+  'cjs',
+  'cli',
   'bin.js',
 )
 const dir = readdirSync(absoluteExamplesDirPath)
