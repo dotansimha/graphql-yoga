@@ -168,12 +168,13 @@ This will add a more detailed error with a proper stacktrace to the errors exten
 ## Exposing expected errors
 
 Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be send to clients instead of being masked.
-This can be achieved by throwing a `GraphQLYogaError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
+This can be achieved by throwing a `GraphQLError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
 
 E.g. you might want to throw an error if a resource cannot be found by an ID.
 
 ```ts
-import { createServer, GraphQLYogaError } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
+import { GraphQLError } from 'graphql'
 
 const users = [
   {
@@ -207,7 +208,7 @@ const yoga = createYoga({
         user: async (_, args) => {
           const user = users.find((user) => user.id === args.byId)
           if (!user) {
-            throw new GraphQLYogaError(`User with id '${args.byId}' not found.`)
+            throw new GraphQLError(`User with id '${args.byId}' not found.`)
           }
 
           return user
@@ -256,10 +257,11 @@ query {
 
 Sometimes it is useful to enrich errors with additional information, such as an error code that can be interpreted by the client.
 
-Error extensions can be passed as the second parameter to the `GraphQLYogaError` constructor.
+Error extensions can be passed as the second parameter to the `GraphQLError` constructor.
 
 ```ts
-import { createServer, GraphQLYogaError } from 'graphql-yoga'
+import { createServer } from 'graphql-yoga'
+import { GraphQLError }
 
 const users = [
   {
@@ -293,11 +295,13 @@ const yoga = createYoga({
         user: async (_, args) => {
           const user = users.find((user) => user.id === args.byId)
           if (!user) {
-            throw new GraphQLYogaError(
+            throw new GraphQLError(
               `User with id '${args.byId}' not found.`,
               // error extensions
               {
-                code: 'USER_NOT_FOUND',
+                extensions: {
+                  code: 'USER_NOT_FOUND'
+                }
               },
             )
           }
@@ -350,20 +354,46 @@ query {
 The extensions are not only limited to a `code` property. Any JSON serializable value can be passed as extensions.
 
 ```ts
-throw new GraphQLYogaError(
+throw new GraphQLError(
   `User with id '${args.byId}' not found.`,
   // error extensions
   {
-    code: 'USER_NOT_FOUND',
-    userId: args.byId,
-    foo: {
-      some: {
-        complex: ['structure'],
+    extensions: {
+      code: 'USER_NOT_FOUND',
+      userId: args.byId,
+      foo: {
+        some: {
+          complex: ['structure'],
+        },
       },
     },
   },
 )
 ```
+
+### Handling HTTP status codes and headers
+
+With `extensions`, you can pass some additional data to decide the status code and the headers of the error response;
+
+```ts
+new GraphQLError(
+  `User with id '${args.byId}' not found.`,
+  // error extensions
+  {
+      extensions: {
+        http: {
+          status: 400,
+          headers: {
+            'X-Custom-Header': 'some-value',
+          }
+        },
+      },
+    },
+  },
+)
+```
+
+````
 
 ## Disabling error masking
 
@@ -374,7 +404,7 @@ However, you can still disable it using the `maskedErrors` config option.
 createYoga({
   maskedErrors: false,
 })
-```
+````
 
 Executing the following operation will now result within a leaking error message that exposes information about internal API calls.
 

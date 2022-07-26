@@ -134,15 +134,15 @@ This is great, but now we never know why our request failed 🤔and the error me
 
 Let's change the implementation to expose the much more helpful message `Cannot post comment on non-existing link with id 'X'.` instead of `Unexpected error.`.
 
-For doing so you will use the `GraphQLYogaError` class that is exported from the `graphql-yoga` package.
+For doing so you will use the `GraphQLError` class that is exported from the `graphql` package.
 
 <Instruction>
 
-Add the following catch handler for mapping a foreign key error into a `GraphQLYogaError`.
+Add the following catch handler for mapping a foreign key error into a `GraphQLError`.
 
 ```typescript
 // ... other imports ...
-import { GraphQLYogaError } from 'graphql-yoga'
+import { GraphQLError } from 'graphql'
 // ... other imports ...
 
 const resolvers = {
@@ -167,7 +167,7 @@ const resolvers = {
             err.code === 'P2003'
           ) {
             return Promise.reject(
-              new GraphQLYogaError(
+              new GraphQLError(
                 `Cannot post comment on non-existing link with id '${args.linkId}'.`,
               ),
             )
@@ -184,7 +184,7 @@ const resolvers = {
 </Instruction>
 
 The error code `P2003` indicates a foreign key constraint error. [You can learn more about it in the prisma documentation](https://www.prisma.io/docs/reference/api-reference/error-reference#p2003).
-You use that code for identifying this edge case of a missing link and then throw a `GraphQLYogaError` with an useful error message instead.
+You use that code for identifying this edge case of a missing link and then throw a `GraphQLError` with an useful error message instead.
 
 <Instruction>
 
@@ -221,9 +221,9 @@ You will receive a response with the `Cannot post comment on non-existing link w
 }
 ```
 
-As you might have noticed, GraphQLYoga will exclude `GraphQLYogaError` errors thrown within the resolvers from masking the error masking.
+As you might have noticed, GraphQL Yoga will exclude `GraphQLError` errors thrown within the resolvers from masking the error masking.
 
-That means every time you want to expose an error to the outside world you should throw an `GraphQLYogaError` error.
+That means every time you want to expose an error to the outside world you should throw a `GraphQLError` error.
 
 At the same time any other unexpected error will automatically be masked from the outside world, bringing you sensible and safe defaults for a GraphQL Yoga production deployment!
 
@@ -359,7 +359,7 @@ const resolvers = {
       const linkId = parseIntSafe(args.linkId)
       if (linkId === null) {
         return Promise.reject(
-          new GraphQLYogaError(
+          new GraphQLError(
             `Cannot post comment on non-existing link with id '${args.linkId}'.`,
           ),
         )
@@ -376,7 +376,7 @@ const resolvers = {
           if (err instanceof PrismaClientKnownRequestError) {
             if (err.code === 'P2003') {
               return Promise.reject(
-                new GraphQLYogaError(
+                new GraphQLError(
                   `Cannot post comment on non-existing link with id '${args.linkId}'.`,
                 ),
               )
@@ -392,7 +392,7 @@ const resolvers = {
 
 </Instruction>
 
-The regex `/^(\d+)$/` simply verifies that every character within the `value` is a digit. In case the value includes a non digit character, you simply return `null` and then reject the resolver with a `GraphQLYogaError` error.
+The regex `/^(\d+)$/` simply verifies that every character within the `value` is a digit. In case the value includes a non digit character, you simply return `null` and then reject the resolver with a `GraphQLError` error.
 
 Returning `null` instead of returning `NaN` is the better choice here, as it allows nice TypeScript checks (`linkId === null`).
 

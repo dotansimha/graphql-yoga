@@ -107,7 +107,7 @@ export type YogaServerOptions<
   logging?: boolean | YogaLogger
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
-   * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+   * If you throw `EnvelopError`/`GraphQLError` within your GraphQL resolvers then that error will be sent back to the client.
    *
    * You can lean more about this here:
    * @see https://graphql-yoga.vercel.app/docs/features/error-masking

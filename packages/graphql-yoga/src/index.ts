@@ -10,5 +10,4 @@ export {
   shouldRenderGraphiQL,
   renderGraphiQL,
 } from './plugins/useGraphiQL.js'
-export { GraphQLYogaError } from './GraphQLYogaError.js'
 export { Plugin } from './plugins/types.js'
