@@ -34,7 +34,10 @@ import {
 } from './plugins/types.js'
 import { createFetch } from '@whatwg-node/fetch'
 import { ServerAdapter, createServerAdapter } from '@whatwg-node/server'
-import { processRequest as processGraphQLParams } from './processRequest.js'
+import {
+  processRequest as processGraphQLParams,
+  processResult,
+} from './processRequest.js'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'

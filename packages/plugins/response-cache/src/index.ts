@@ -6,12 +6,7 @@ import {
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache'
-import {
-  GraphQLParams,
-  Maybe,
-  Plugin,
-  YogaInitialContext,
-} from '@graphql-yoga/common'
+import { GraphQLParams, Maybe, Plugin, YogaInitialContext } from 'graphql-yoga'
 
 export type UseResponseCacheParameter = Omit<
   UseEnvelopResponseCacheParameter,
