@@ -124,10 +124,20 @@ export type YogaServerOptions<
   cors?: CORSPluginOptions<TServerContext>
 
   /**
-   * GraphQL endpoint (default to '/graphql')
+   * GraphQL endpoint (defaults to '/graphql')
    * So you need to define it explicitly if GraphQL API lives in a different path other than `/graphql`
    */
   graphqlEndpoint?: string
+
+  /**
+   * Readiness check endpoint (defaults to '/readiness')
+   */
+  readinessCheckEndpoint?: string
+
+  /**
+   * Readiness check endpoint (defaults to '/readiness')
+   */
+  healthCheckEndpoint?: string
 
   /**
    * GraphiQL options
@@ -330,7 +340,11 @@ export class YogaServer<
       useHealthCheck({
         id: this.id,
         logger: this.logger,
+        healthCheckEndpoint: options?.healthCheckEndpoint,
+        readinessCheckEndpoint: options?.readinessCheckEndpoint,
       }),
+      enableIf(options?.cors !== false, () => useCORS(options?.cors)),
+      useCheckEndpoint(this.graphqlEndpoint),
       enableIf(options?.graphiql !== false, () =>
         useGraphiQL({
           graphqlEndpoint: this.graphqlEndpoint,
@@ -339,9 +353,7 @@ export class YogaServer<
           logger: this.logger,
         }),
       ),
-      enableIf(options?.cors !== false, () => useCORS(options?.cors)),
       // Middlewares before the GraphQL execution
-      useCheckEndpoint(this.graphqlEndpoint),
       useCheckMethodForGraphQL(),
       useRequestParser({
         match: isGETRequest,
@@ -580,20 +592,23 @@ export class YogaServer<
     response: Response
     executionResult: ExecutionResult<TData> | null
   }> {
-    const request = new this.fetchAPI.Request('http://localhost/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...headers,
+    const request = new this.fetchAPI.Request(
+      'http://localhost' + this.graphqlEndpoint,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers,
+        },
+        body: JSON.stringify({
+          query:
+            document &&
+            (typeof document === 'string' ? document : print(document)),
+          variables,
+          operationName,
+        }),
       },
-      body: JSON.stringify({
-        query:
-          document &&
-          (typeof document === 'string' ? document : print(document)),
-        variables,
-        operationName,
-      }),
-    })
+    )
     const response = await this.handleRequest(
       request,
       serverContext as TServerContext,

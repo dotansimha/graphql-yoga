@@ -95,12 +95,6 @@ export function useGraphiQL<TServerContext>(
   return {
     async onRequest({ request, serverContext, fetchAPI, endResponse }) {
       const requestPath = request.url.split('?')[0]
-      if (
-        config?.graphqlEndpoint != null &&
-        !requestPath.endsWith(config?.graphqlEndpoint)
-      ) {
-        return
-      }
       if (shouldRenderGraphiQL(request)) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = graphiqlOptionsFactory(

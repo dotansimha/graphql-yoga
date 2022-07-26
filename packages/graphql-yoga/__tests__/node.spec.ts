@@ -1224,7 +1224,7 @@ describe('Browser', () => {
     })
 
     test('should show BigInt correctly', async () => {
-      await page.goto(`http://localhost:4000/${endpoint}`)
+      await page.goto(`http://localhost:4000${endpoint}`)
       await typeOperationText(`{ bigint }`)
       await page.click('.execute-button')
       const resultContents = await waitForResult()

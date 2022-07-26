@@ -5,15 +5,20 @@ import { Plugin } from './types.js'
 export interface HealthCheckPluginOptions {
   id?: string
   logger?: YogaLogger
+  healthCheckEndpoint?: string
+  readinessCheckEndpoint?: string
 }
 
-export function useHealthCheck(options?: HealthCheckPluginOptions): Plugin {
-  const id = options?.id || Date.now().toString()
-  const logger = options?.logger || console
+export function useHealthCheck({
+  id = Date.now().toString(),
+  logger = console,
+  healthCheckEndpoint = '/health',
+  readinessCheckEndpoint = '/readiness',
+}: HealthCheckPluginOptions = {}): Plugin {
   return {
     async onRequest({ request, endResponse, fetchAPI }) {
-      const requestPath = request.url.split('?')[0]
-      if (requestPath.endsWith('/health')) {
+      const { pathname: requestPath } = new URL(request.url)
+      if (requestPath === healthCheckEndpoint) {
         logger.debug(`Responding Health Check`)
         const response = new fetchAPI.Response(
           JSON.stringify({
@@ -28,10 +33,10 @@ export function useHealthCheck(options?: HealthCheckPluginOptions): Plugin {
           },
         )
         endResponse(response)
-      } else if (requestPath.endsWith('/readiness')) {
+      } else if (requestPath === readinessCheckEndpoint) {
         logger.debug(`Responding Readiness Check`)
         const readinessResponse = await fetchAPI.fetch(
-          request.url.replace('/readiness', '/health'),
+          request.url.replace(readinessCheckEndpoint, healthCheckEndpoint),
         )
         const { message } = await readinessResponse.json()
         if (
