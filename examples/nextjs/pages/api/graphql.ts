@@ -14,4 +14,6 @@ export const config = {
 export default createYoga<{
   req: NextApiRequest
   res: NextApiResponse
-}>()
+}>({
+  graphqlEndpoint: '/api/graphql',
+})

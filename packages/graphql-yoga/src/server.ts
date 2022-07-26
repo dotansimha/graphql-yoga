@@ -95,73 +95,74 @@ export type YogaServerOptions<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-  > = {
-    /**
-     * Enable/disable logging or provide a custom logger.
-     * @default true
-     */
-    logging?: boolean | YogaLogger
-    /**
-     * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
-     * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
-     *
-     * You can lean more about this here:
-     * @see https://graphql-yoga.vercel.app/docs/features/error-masking
-     *
-     * Default: `true`
-     */
-    maskedErrors?: boolean | UseMaskedErrorsOpts
-    /**
-     * Context
-     */
-    context?:
+> = {
+  /**
+   * Enable/disable logging or provide a custom logger.
+   * @default true
+   */
+  logging?: boolean | YogaLogger
+  /**
+   * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
+   * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+   *
+   * You can lean more about this here:
+   * @see https://graphql-yoga.vercel.app/docs/features/error-masking
+   *
+   * Default: `true`
+   */
+  maskedErrors?: boolean | UseMaskedErrorsOpts
+  /**
+   * Context
+   */
+  context?:
     | ((
-      initialContext: YogaInitialContext & TServerContext,
-    ) => Promise<TUserContext> | TUserContext)
+        initialContext: YogaInitialContext & TServerContext,
+      ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
 
-    cors?: CORSPluginOptions<TServerContext>
+  cors?: CORSPluginOptions<TServerContext>
 
-    /**
-     * GraphQL endpoint
-     */
-    endpoint?: string
+  /**
+   * GraphQL endpoint (default to '/graphql')
+   * So you need to define it explicitly if GraphQL API lives in a different path other than `/graphql`
+   */
+  graphqlEndpoint?: string
 
-    /**
-     * GraphiQL options
-     *
-     * Default: `true`
-     */
-    graphiql?: GraphiQLOptionsOrFactory<TServerContext>
+  /**
+   * GraphiQL options
+   *
+   * Default: `true`
+   */
+  graphiql?: GraphiQLOptionsOrFactory<TServerContext>
 
-    renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
+  renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
-    schema?:
+  schema?:
     | GraphQLSchema
     | {
-      typeDefs: TypeSource
-      resolvers?:
-      | IResolvers<
-        TRootValue,
-        TUserContext & TServerContext & YogaInitialContext
-      >
-      | Array<
-        IResolvers<
-          TRootValue,
-          TUserContext & TServerContext & YogaInitialContext
-        >
-      >
-    }
+        typeDefs: TypeSource
+        resolvers?:
+          | IResolvers<
+              TRootValue,
+              TUserContext & TServerContext & YogaInitialContext
+            >
+          | Array<
+              IResolvers<
+                TRootValue,
+                TUserContext & TServerContext & YogaInitialContext
+              >
+            >
+      }
 
-    parserCache?: boolean | ParserCacheOptions
-    validationCache?: boolean | ValidationCache
-    fetchAPI?: FetchAPI
-    multipart?: boolean
-    id?: string
-  } & Partial<
-    OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
-  >
+  parserCache?: boolean | ParserCacheOptions
+  validationCache?: boolean | ValidationCache
+  fetchAPI?: FetchAPI
+  multipart?: boolean
+  id?: string
+} & Partial<
+  OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
+>
 
 export function getDefaultSchema() {
   return makeExecutableSchema({
@@ -206,7 +207,7 @@ export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-  > {
+> {
   /**
    * Instance of envelop
    */
@@ -214,7 +215,7 @@ export class YogaServer<
     TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
-  protected endpoint?: string
+  protected graphqlEndpoint: string
   public fetchAPI: FetchAPI
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
@@ -238,9 +239,9 @@ export class YogaServer<
       ? isSchema(options.schema)
         ? options.schema
         : makeExecutableSchema({
-          typeDefs: options.schema.typeDefs,
-          resolvers: options.schema.resolvers,
-        })
+            typeDefs: options.schema.typeDefs,
+            resolvers: options.schema.resolvers,
+          })
       : getDefaultSchema()
 
     const logger = options?.logging != null ? options.logging : true
@@ -249,17 +250,16 @@ export class YogaServer<
         ? logger === true
           ? defaultYogaLogger
           : {
-            debug: () => { },
-            error: () => { },
-            warn: () => { },
-            info: () => { },
-          }
+              debug: () => {},
+              error: () => {},
+              warn: () => {},
+              info: () => {},
+            }
         : logger
 
     const maskedErrors = options?.maskedErrors ?? true
 
-    const server = this
-    this.endpoint = options?.endpoint
+    this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
 
     this.plugins = [
       // Use the schema provided by the user
@@ -333,9 +333,7 @@ export class YogaServer<
       }),
       enableIf(options?.graphiql !== false, () =>
         useGraphiQL({
-          get endpoint() {
-            return server.endpoint
-          },
+          graphqlEndpoint: this.graphqlEndpoint,
           options: options?.graphiql,
           render: options?.renderGraphiQL,
           logger: this.logger,
@@ -343,11 +341,7 @@ export class YogaServer<
       ),
       enableIf(options?.cors !== false, () => useCORS(options?.cors)),
       // Middlewares before the GraphQL execution
-      useCheckEndpoint({
-        get endpoint() {
-          return server.endpoint
-        },
-      }),
+      useCheckEndpoint(this.graphqlEndpoint),
       useCheckMethodForGraphQL(),
       useRequestParser({
         match: isGETRequest,
@@ -625,8 +619,8 @@ export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
-  >(
-    options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+>(
+  options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
 ): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,

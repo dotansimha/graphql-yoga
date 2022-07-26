@@ -388,7 +388,7 @@ it('validation error is sent to clients', async () => {
 
 describe('Requests', () => {
   const endpoint = '/test-graphql'
-  const yoga = createYoga({ schema, logging: false, endpoint })
+  const yoga = createYoga({ schema, logging: false, graphqlEndpoint: endpoint })
 
   it('should reject other paths if specific endpoint path is provided', async () => {
     const response = await request(yoga).get('/graphql')
@@ -1048,7 +1048,7 @@ describe('Browser', () => {
     schema: createTestSchema(),
     cors: () => cors,
     logging: false,
-    endpoint,
+    graphqlEndpoint: endpoint,
     plugins: [
       useLiveQuery({
         liveQueryStore,
@@ -1402,7 +1402,7 @@ it('should return 404 if request path does not match with the defined endpoint',
   const port = 4000 + Math.floor(Math.random() * 1000)
   const endpoint = '/mypath'
   const yoga = createYoga({
-    endpoint,
+    graphqlEndpoint: endpoint,
     logging: false,
   })
   const server = createServer(yoga)

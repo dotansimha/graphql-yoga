@@ -13,9 +13,7 @@ const httpTrigger: AzureFunction = async function (
       info: context.log.info,
       warn: context.log.warn,
     },
-    graphiql: {
-      endpoint: '/api/yoga',
-    },
+    graphqlEndpoint: '/api/yoga',
   })
   context.log('HTTP trigger function processed a request.')
 
