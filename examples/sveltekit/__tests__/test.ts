@@ -17,7 +17,6 @@ let toSkip = false;
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
-		// console.time('Setup SvelteKit tests');
 
 		const nodeVersion = execSync('node -v').toString();
 		if (nodeVersion.includes('v12')) {
@@ -28,7 +27,7 @@ describe('SvelteKit integration', () => {
 			// Kill the port if it's used!
 			try {
 				execSync('fuser -k 3007/tcp');
-			} catch (error) {}
+			} catch (error) { }
 
 			// Build svelteKit
 			execSync('yarn workspace sveltekit build');
@@ -49,7 +48,6 @@ describe('SvelteKit integration', () => {
 		}
 
 		// How long it took?
-		// console.timeEnd('Setup SvelteKit tests');
 	}, timings.setup.total);
 
 	beforeEach(async () => {
