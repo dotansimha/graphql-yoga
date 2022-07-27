@@ -22,6 +22,8 @@ Let's use `File` in this example.
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
+import fs from 'fs'
+import path from 'path'
 
 // Provide your schema
 const server = createServer({
@@ -49,6 +51,18 @@ const server = createServer({
         readTextFile: async (_, { file }: { file: File }) => {
           const textContent = await file.text()
           return textContent
+        },
+        saveFile: async (_, { file }: { file: File }) => {
+          try {
+            const fileStream = file.stream()
+            await fs.promises.writeFile(
+              path.join(__dirname, file.name),
+              fileStream,
+            )
+          } catch (e) {
+            return false
+          }
+          return true
         },
       },
     },
