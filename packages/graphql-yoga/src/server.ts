@@ -83,6 +83,7 @@ import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckG
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
+import { formatError } from './utils/formatError.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -99,89 +100,89 @@ export type YogaServerOptions<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-> = {
-  /**
-   * Enable/disable logging or provide a custom logger.
-   * @default true
-   */
-  logging?: boolean | YogaLogger
-  /**
-   * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
-   * If you throw `EnvelopError`/`GraphQLError` within your GraphQL resolvers then that error will be sent back to the client.
-   *
-   * You can lean more about this here:
-   * @see https://graphql-yoga.vercel.app/docs/features/error-masking
-   *
-   * Default: `true`
-   */
-  maskedErrors?: boolean | UseMaskedErrorsOpts
-  /**
-   * Context
-   */
-  context?:
+  > = {
+    /**
+     * Enable/disable logging or provide a custom logger.
+     * @default true
+     */
+    logging?: boolean | YogaLogger
+    /**
+     * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
+     * If you throw `EnvelopError`/`GraphQLError` within your GraphQL resolvers then that error will be sent back to the client.
+     *
+     * You can lean more about this here:
+     * @see https://graphql-yoga.vercel.app/docs/features/error-masking
+     *
+     * Default: `true`
+     */
+    maskedErrors?: boolean | UseMaskedErrorsOpts
+    /**
+     * Context
+     */
+    context?:
     | ((
-        initialContext: YogaInitialContext & TServerContext,
-      ) => Promise<TUserContext> | TUserContext)
+      initialContext: YogaInitialContext & TServerContext,
+    ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
 
-  cors?: CORSPluginOptions<TServerContext>
+    cors?: CORSPluginOptions<TServerContext>
 
-  /**
-   * GraphQL endpoint (defaults to '/graphql')
-   * So you need to define it explicitly if GraphQL API lives in a different path other than `/graphql`
-   */
-  graphqlEndpoint?: string
+    /**
+     * GraphQL endpoint (defaults to '/graphql')
+     * So you need to define it explicitly if GraphQL API lives in a different path other than `/graphql`
+     */
+    graphqlEndpoint?: string
 
-  /**
-   * Readiness check endpoint (defaults to '/readiness')
-   */
-  readinessCheckEndpoint?: string
+    /**
+     * Readiness check endpoint (defaults to '/readiness')
+     */
+    readinessCheckEndpoint?: string
 
-  /**
-   * Readiness check endpoint (defaults to '/readiness')
-   */
-  healthCheckEndpoint?: string
+    /**
+     * Readiness check endpoint (defaults to '/readiness')
+     */
+    healthCheckEndpoint?: string
 
-  /**
-   * Whether the landing page should be shown.
-   */
-  landingPage?: boolean
+    /**
+     * Whether the landing page should be shown.
+     */
+    landingPage?: boolean
 
-  /**
-   * GraphiQL options
-   *
-   * Default: `true`
-   */
-  graphiql?: GraphiQLOptionsOrFactory<TServerContext>
+    /**
+     * GraphiQL options
+     *
+     * Default: `true`
+     */
+    graphiql?: GraphiQLOptionsOrFactory<TServerContext>
 
-  renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
+    renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
-  schema?:
+    schema?:
     | GraphQLSchema
     | {
-        typeDefs: TypeSource
-        resolvers?:
-          | IResolvers<
-              TRootValue,
-              TUserContext & TServerContext & YogaInitialContext
-            >
-          | Array<
-              IResolvers<
-                TRootValue,
-                TUserContext & TServerContext & YogaInitialContext
-              >
-            >
-      }
+      typeDefs: TypeSource
+      resolvers?:
+      | IResolvers<
+        TRootValue,
+        TUserContext & TServerContext & YogaInitialContext
+      >
+      | Array<
+        IResolvers<
+          TRootValue,
+          TUserContext & TServerContext & YogaInitialContext
+        >
+      >
+    }
 
-  parserCache?: boolean | ParserCacheOptions
-  validationCache?: boolean | ValidationCache
-  fetchAPI?: FetchAPI
-  multipart?: boolean
-  id?: string
-} & Partial<
-  OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
->
+    parserCache?: boolean | ParserCacheOptions
+    validationCache?: boolean | ValidationCache
+    fetchAPI?: FetchAPI
+    multipart?: boolean
+    id?: string
+  } & Partial<
+    OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
+  >
 
 export function getDefaultSchema() {
   return makeExecutableSchema({
@@ -226,7 +227,7 @@ export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
   TRootValue,
-> {
+  > {
   /**
    * Instance of envelop
    */
@@ -258,9 +259,9 @@ export class YogaServer<
       ? isSchema(options.schema)
         ? options.schema
         : makeExecutableSchema({
-            typeDefs: options.schema.typeDefs,
-            resolvers: options.schema.resolvers,
-          })
+          typeDefs: options.schema.typeDefs,
+          resolvers: options.schema.resolvers,
+        })
       : getDefaultSchema()
 
     const logger = options?.logging != null ? options.logging : true
@@ -269,14 +270,28 @@ export class YogaServer<
         ? logger === true
           ? defaultYogaLogger
           : {
-              debug: () => {},
-              error: () => {},
-              warn: () => {},
-              info: () => {},
-            }
+            debug: () => { },
+            error: () => { },
+            warn: () => { },
+            info: () => { },
+          }
         : logger
 
-    const maskedErrors = options?.maskedErrors ?? true
+    let maskedErrorsOpts: UseMaskedErrorsOpts | null =
+      options?.maskedErrors === false
+        ? null
+        : {
+          formatError,
+        }
+    if (
+      options?.maskedErrors != null &&
+      typeof options?.maskedErrors === 'object'
+    ) {
+      maskedErrorsOpts = {
+        formatError,
+        ...options.maskedErrors,
+      }
+    }
 
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
 
@@ -407,12 +422,7 @@ export class YogaServer<
       // We make sure that the user doesn't send a mutation with GET
       usePreventMutationViaGET(),
 
-      enableIf(
-        !!maskedErrors,
-        useMaskedErrors(
-          typeof maskedErrors === 'object' ? maskedErrors : undefined,
-        ),
-      ),
+      enableIf(maskedErrorsOpts != null, useMaskedErrors(maskedErrorsOpts!)),
       useUnhandledRoute({
         graphqlEndpoint: this.graphqlEndpoint,
         // TODO: make this a config option
@@ -661,8 +671,8 @@ export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
->(
-  options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+  >(
+    options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
 ): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,
