@@ -101,6 +101,7 @@ export function getDocsV3Routes(): IRoutes {
           ['file-uploads', 'File Uploads'],
           ['envelop-plugins', 'Envelop Plugins'],
           ['testing', 'Testing'],
+          ['persisted-operations', 'Persisted Operations'],
           ['automatic-persisted-queries', 'Automatic Persisted Queries'],
         ],
       },
