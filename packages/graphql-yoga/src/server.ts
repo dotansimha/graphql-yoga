@@ -74,7 +74,6 @@ import {
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './GraphQLYogaError.js'
-import { encodeString } from './utils/encodeString.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
 import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
@@ -532,7 +531,8 @@ export class YogaServer<
         data: null,
         errors,
       }
-      const decodedString = encodeString(JSON.stringify(payload))
+      const textEncoder = new this.fetchAPI.TextEncoder()
+      const decodedString = textEncoder.encode(JSON.stringify(payload))
       finalResponseInit.headers['Content-Length'] =
         decodedString.byteLength.toString()
       return new this.fetchAPI.Response(decodedString, finalResponseInit)

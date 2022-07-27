@@ -3,7 +3,6 @@ import type {
   TypedEventTarget,
   EventAPI,
 } from '@graphql-yoga/typed-event-target'
-import { resolveGlobalConfig } from '@graphql-yoga/typed-event-target'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]
@@ -74,8 +73,6 @@ export const createPubSub = <
 >(
   config?: ChannelPubSubConfig<TPubSubPublishArgsByKey>,
 ): PubSub<TPubSubPublishArgsByKey> => {
-  const { Event, EventTarget } = resolveGlobalConfig(config?.event)
-
   const target = config?.eventTarget ?? new EventTarget()
 
   return {

@@ -1004,7 +1004,7 @@ test('defer/stream is closed properly', async () => {
   try {
     await new Promise<void>((resolve) => server.listen(9876, resolve))
     const abortCtrl = new AbortController()
-    const res = await fetch('http://localhost:9876/graphql', {
+    const res = await yoga.fetchAPI.fetch('http://localhost:9876/graphql', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

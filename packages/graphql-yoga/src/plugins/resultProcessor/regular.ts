@@ -1,6 +1,5 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
 import { ExecutionResult } from 'graphql'
-import { encodeString } from '../../utils/encodeString.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
@@ -15,8 +14,9 @@ export function processRegularResult(
   executionResult: ExecutionResult,
   fetchAPI: FetchAPI,
 ): Response {
+  const textEncoder = new fetchAPI.TextEncoder()
   const responseBody = JSON.stringify(executionResult)
-  const decodedString = encodeString(responseBody)
+  const decodedString = textEncoder.encode(responseBody)
   const headersInit: HeadersInit = {
     'Content-Type': 'application/json',
     'Content-Length': decodedString.byteLength.toString(),

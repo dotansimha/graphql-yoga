@@ -1,37 +1,19 @@
 {
-  "name": "@graphql-yoga/redis-event-target",
-  "version": "0.1.2",
-  "description": "",
+  "name": "@graphql-yoga/plugin-apq",
+  "version": "0.0.0",
+  "description": "APQ plugin for GraphQL Yoga.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
-    "directory": "packages/event-target/redis-event-target"
+    "directory": "packages/plugins/apq"
   },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "scripts": {
     "check": "tsc --pretty --noEmit"
   },
-  "keywords": [
-    "pubsub",
-    "graphql",
-    "event",
-    "subscription"
-  ],
-  "author": "Laurin Quast <laurinquast@googlemail.com>",
+  "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@graphql-yoga/typed-event-target": "^0.1.0"
-  },
-  "peerDependencies": {
-    "ioredis": "^5.0.6"
-  },
-  "devDependencies": {
-    "@types/ioredis-mock": "5.6.0",
-    "ioredis": "5.2.2",
-    "ioredis-mock": "8.2.2"
-  },
-  "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -56,5 +38,13 @@
   "publishConfig": {
     "directory": "dist",
     "access": "public"
-  }
+  },
+  "dependencies": {
+    "@whatwg-node/fetch": "^0.1.1",
+    "tiny-lru": "^8.0.2"
+  },
+  "peerDependencies": {
+    "graphql-yoga": "^2.13.4"
+  },
+  "type": "module"
 }

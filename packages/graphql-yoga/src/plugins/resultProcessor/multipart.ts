@@ -1,6 +1,5 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import { encodeString } from '../../utils/encodeString.js'
 import { ExecutionPatchResult, FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
@@ -30,37 +29,39 @@ export function processMultipartResult(
 
   let iterator: AsyncIterator<ExecutionResult<any>>
 
+  const textEncoder = new fetchAPI.TextEncoder()
+
   const readableStream = new fetchAPI.ReadableStream({
     start(controller) {
       iterator = executionPatchResultIterable[Symbol.asyncIterator]()
-      controller.enqueue(encodeString(`---`))
+      controller.enqueue(textEncoder.encode(`---`))
     },
     async pull(controller) {
       const { done, value } = await iterator.next()
       if (value != null) {
-        controller.enqueue(encodeString('\r\n'))
+        controller.enqueue(textEncoder.encode('\r\n'))
 
         controller.enqueue(
-          encodeString('Content-Type: application/json; charset=utf-8'),
+          textEncoder.encode('Content-Type: application/json; charset=utf-8'),
         )
-        controller.enqueue(encodeString('\r\n'))
+        controller.enqueue(textEncoder.encode('\r\n'))
 
         const chunk = JSON.stringify(value)
-        const encodedChunk = encodeString(chunk)
+        const encodedChunk = textEncoder.encode(chunk)
 
         controller.enqueue(
-          encodeString('Content-Length: ' + encodedChunk.byteLength),
+          textEncoder.encode('Content-Length: ' + encodedChunk.byteLength),
         )
-        controller.enqueue(encodeString('\r\n'))
+        controller.enqueue(textEncoder.encode('\r\n'))
 
-        controller.enqueue(encodeString('\r\n'))
+        controller.enqueue(textEncoder.encode('\r\n'))
         controller.enqueue(encodedChunk)
-        controller.enqueue(encodeString('\r\n'))
+        controller.enqueue(textEncoder.encode('\r\n'))
 
-        controller.enqueue(encodeString('---'))
+        controller.enqueue(textEncoder.encode('---'))
       }
       if (done) {
-        controller.enqueue(encodeString('\r\n-----\r\n'))
+        controller.enqueue(textEncoder.encode('\r\n-----\r\n'))
         controller.close()
       }
     },

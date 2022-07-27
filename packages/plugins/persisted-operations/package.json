@@ -1,16 +1,15 @@
 {
-  "name": "@graphql-yoga/plugin-persisted-queries",
+  "name": "@graphql-yoga/persisted-operations",
   "version": "0.0.0",
-  "description": "",
+  "description": "Persisted Operations plugin for GraphQL Yoga.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
-    "directory": "packages/plugins/persisted-queries"
+    "directory": "packages/plugins/persisted-operations"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "scripts": {
-    "prepack": "bob prepack",
     "check": "tsc --pretty --noEmit"
   },
   "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
@@ -30,20 +29,6 @@
         "default": "./dist/esm/index.js"
       }
     },
-    "./*": {
-      "require": {
-        "types": "./dist/typings/*.d.ts",
-        "default": "./dist/cjs/*.js"
-      },
-      "import": {
-        "types": "./dist/typings/*.d.ts",
-        "default": "./dist/esm/*.js"
-      },
-      "default": {
-        "types": "./dist/typings/*.d.ts",
-        "default": "./dist/esm/*.js"
-      }
-    },
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
@@ -54,15 +39,11 @@
     "directory": "dist",
     "access": "public"
   },
-  "dependencies": {
-    "tiny-lru": "^8.0.2",
-    "tslib": "^2.3.1"
-  },
   "peerDependencies": {
     "graphql-yoga": "^2.13.4"
   },
   "devDependencies": {
-    "bob-the-bundler": "^1.5.1"
+    "@types/lru-cache": "5.1.1"
   },
   "type": "module"
 }

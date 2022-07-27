@@ -52,7 +52,11 @@ describe('graphExchange', () => {
   const url = `http://${hostname}:${port}${endpoint}`
   const client = createClient({
     url,
-    exchanges: [yogaExchange()],
+    exchanges: [
+      yogaExchange({
+        customFetch: yoga.fetchAPI.fetch,
+      }),
+    ],
   })
   beforeAll(async () => {
     await new Promise<void>((resolve) => server.listen(port, hostname, resolve))

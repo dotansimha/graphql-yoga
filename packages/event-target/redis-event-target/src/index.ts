@@ -2,7 +2,6 @@ import type {
   TypedEventTarget,
   EventAPI,
 } from '@graphql-yoga/typed-event-target'
-import { resolveGlobalConfig } from '@graphql-yoga/typed-event-target'
 import type { Redis, Cluster } from 'ioredis'
 
 export type CreateRedisEventTargetArgs = {
@@ -19,7 +18,6 @@ export function createRedisEventTarget<TEvent extends Event>(
   args: CreateRedisEventTargetArgs,
 ): TypedEventTarget<TEvent> {
   const { publishClient, subscribeClient } = args
-  const eventAPI = resolveGlobalConfig(args.event)
 
   const callbacksForTopic = new Map<string, Set<(event: TEvent) => void>>()
 
@@ -28,7 +26,7 @@ export function createRedisEventTarget<TEvent extends Event>(
     if (callbacks === undefined) {
       return
     }
-    const event = new eventAPI.Event(channel) as TEvent & {
+    const event = new Event(channel) as TEvent & {
       data: unknown
     }
     event.data = message === '' ? undefined : JSON.parse(message)
