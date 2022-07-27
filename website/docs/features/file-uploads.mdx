@@ -50,6 +50,18 @@ const server = createServer({
           const textContent = await file.text()
           return textContent
         },
+        saveFile: async (_, { file }: { file: File }) => {
+          try {
+            const fileStream = file.stream()
+            await fs.promises.writeFile(
+              path.join(__dirname, file.name),
+              fileStream,
+            )
+          } catch (e) {
+            return false
+          }
+          return true
+        },
       },
     },
   },
