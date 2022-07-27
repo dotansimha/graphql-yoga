@@ -56,7 +56,7 @@ export function usePersistedOperations<TPluginContext>(
                 ? allowArbitraryOperations
                 : await allowArbitraryOperations(request)) === false
             ) {
-              throw new GraphQLError('PersistedQueryNotFound')
+              throw new GraphQLError('PersistedQueryOnly')
             }
             return
           }

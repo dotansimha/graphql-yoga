@@ -78,7 +78,7 @@ describe('Automatic Persisted Queries', () => {
 
     const body = JSON.parse(response.text)
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toBe('PersistedQueryNotFound')
+    expect(body.errors[0].message).toBe('PersistedQueryOnly')
   })
   it('should allow non-persisted operations via allowArbitraryOperations flag', async () => {
     const store = new Map<string, string>()
