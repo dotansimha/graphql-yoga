@@ -29,8 +29,3 @@ export interface TypedEventTarget<TEvent extends TypedEvent>
     options?: EventListenerOptions | boolean,
   ): void
 }
-
-export type EventAPI = {
-  Event: typeof Event
-  EventTarget: typeof EventTarget
-}

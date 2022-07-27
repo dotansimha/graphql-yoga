@@ -1,17 +1,10 @@
-import type {
-  TypedEventTarget,
-  EventAPI,
-} from '@graphql-yoga/typed-event-target'
+import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
+import { Event } from '@whatwg-node/fetch'
 import type { Redis, Cluster } from 'ioredis'
 
 export type CreateRedisEventTargetArgs = {
   publishClient: Redis | Cluster
   subscribeClient: Redis | Cluster
-  /**
-   * Event and EventTarget implementation.
-   * Providing this is mandatory for a Node.js versions below 16.
-   */
-  event?: EventAPI
 }
 
 export function createRedisEventTarget<TEvent extends Event>(

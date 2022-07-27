@@ -1,8 +1,6 @@
 import { Repeater } from '@repeaterjs/repeater'
-import type {
-  TypedEventTarget,
-  EventAPI,
-} from '@graphql-yoga/typed-event-target'
+import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
+import { Event, EventTarget } from '@whatwg-node/fetch'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]
@@ -36,11 +34,6 @@ export type ChannelPubSubConfig<
    * An event dispatched on the event target MUST have a `data` property.
    */
   eventTarget?: PubSubEventTarget<TPubSubPublishArgsByKey>
-  /**
-   * Event and EventTarget implementation.
-   * Providing this is mandatory for a Node.js versions below 16.
-   */
-  event?: EventAPI
 }
 
 export type PubSub<TPubSubPublishArgsByKey extends PubSubPublishArgsByKey> = {

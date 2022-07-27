@@ -1,6 +1,7 @@
 import type { TypedEvent } from '@graphql-yoga/typed-event-target'
 import Redis from 'ioredis-mock'
 import { createRedisEventTarget } from '../src'
+import { Event, EventTarget } from '@whatwg-node/fetch'
 
 describe('createRedisEventTarget', () => {
   it('can listen to a simple publish', (done) => {

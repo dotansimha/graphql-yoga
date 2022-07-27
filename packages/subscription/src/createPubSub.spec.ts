@@ -1,6 +1,7 @@
 import Redis from 'ioredis-mock'
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
 import { createPubSub } from './createPubSub.js'
+import { EventTarget } from '@whatwg-node/fetch'
 
 async function collectAsyncIterableValues<TType>(
   asyncIterable: AsyncIterable<TType>,
@@ -18,7 +19,7 @@ describe('createPubSub', () => {
   })
 
   describe.each([
-    ['InMemory', () => new globalThis.EventTarget()],
+    ['InMemory', () => new EventTarget()],
     [
       'Redis',
       () =>
