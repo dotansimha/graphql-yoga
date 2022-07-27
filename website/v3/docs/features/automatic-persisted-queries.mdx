@@ -14,19 +14,17 @@ GraphQL Yoga's Automatic Persisted Queries plugin follows [the APQ Specification
 
 ## Installation
 
-<PackageInstall
-  packages={['@graphql-yoga/plugin-automatic-persisted-queries']}
-/>
+<PackageInstall packages={['@graphql-yoga/plugin-apq']} />
 
 ## Quick Start
 
 ```ts
 import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { useAutomaticPersistedQueries } from '@graphql-yoga/plugin-automatic-persisted-queries'
+import { useAPQ } from '@graphql-yoga/plugin-apq'
 
 const yoga = createYoga({
-  plugins: [useAutomaticPersistedQueries()],
+  plugins: [useAPQ()],
 })
 
 const server = createServer(yoga)
@@ -66,13 +64,13 @@ A custom store implementation can be provided via the `store` option.
 ```ts
 import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { useAutomaticPersistedQueries } from '@graphql-yoga/plugin-automatic-persisted-queries'
+import { useAPQ } from '@graphql-yoga/plugin-apq'
 
 // Note: this store grows infinitely, so it is not a good idea to use it in production.
-const store: AutomaticPersistedQueriesStore = new Map()
+const store: APQStore = new Map()
 
 const yoga = createYoga({
-  plugins: [useAutomaticPersistedQueries({ store })],
+  plugins: [useAPQ({ store })],
 })
 
 const server = createServer(yoga)

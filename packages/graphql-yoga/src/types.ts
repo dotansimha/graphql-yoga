@@ -7,6 +7,7 @@ import type {
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { GetEnvelopedFn, PromiseOrValue } from '@envelop/core'
 import { OnResultProcess } from './plugins/types.js'
+import { createFetch } from '@whatwg-node/fetch'
 
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },
@@ -108,32 +109,7 @@ declare global {
   }
 }
 
-export type FetchAPI = {
-  /**
-   * WHATWG compliant Request object constructor
-   * Default: `Request` from `@whatwg-node/fetch`
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request
-   */
-  Request: typeof Request
-  /**
-   * WHATWG compliant Response object constructor
-   * Default: `Response` from `@whatwg-node/fetch`
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Response
-   */
-  Response: typeof Response
-  /**
-   * WHATWG compliant fetch function
-   * Default: `fetch` from `@whatwg-node/fetch`
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-   */
-  fetch: typeof fetch
-  /**
-   * WHATWG compliant ReadableStream object constructor
-   * Default: `ReadableStream` from `@whatwg-node/fetch`
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
-   */
-  ReadableStream: typeof ReadableStream
-}
+export type FetchAPI = ReturnType<typeof createFetch>
 
 export interface FetchEvent extends Event {
   request: Request

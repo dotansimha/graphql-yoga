@@ -5,21 +5,21 @@ export interface PersistedOperationsStore {
   get(key: string): PromiseOrValue<string | null | undefined>
 }
 
-export interface AutomaticPersistedQueryExtension {
+export interface PersistedOperationExtension {
   version: 1
   sha256Hash: string
 }
 
 function decodePersistedOperationsExtension(
   input: Record<string, any> | null | undefined,
-): null | AutomaticPersistedQueryExtension {
+): null | PersistedOperationExtension {
   if (
     input != null &&
     typeof input === 'object' &&
     input?.version === 1 &&
     typeof input?.sha256Hash === 'string'
   ) {
-    return input as AutomaticPersistedQueryExtension
+    return input as PersistedOperationExtension
   }
   return null
 }

@@ -1,11 +1,11 @@
 {
-  "name": "@graphql-yoga/plugin-automatic-persisted-queries",
+  "name": "@graphql-yoga/plugin-apq",
   "version": "0.0.0",
   "description": "APQ plugin for GraphQL Yoga.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
-    "directory": "packages/plugins/automatic-persisted-queries"
+    "directory": "packages/plugins/apq"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -40,13 +40,11 @@
     "access": "public"
   },
   "dependencies": {
+    "@whatwg-node/fetch": "^0.1.1",
     "tiny-lru": "^8.0.2"
   },
   "peerDependencies": {
     "graphql-yoga": "^2.13.4"
-  },
-  "devDependencies": {
-    "@types/lru-cache": "5.1.1"
   },
   "type": "module"
 }

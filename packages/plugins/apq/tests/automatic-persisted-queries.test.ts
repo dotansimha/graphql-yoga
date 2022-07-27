@@ -1,16 +1,13 @@
 import { createYoga, YogaServerInstance } from 'graphql-yoga'
 import request from 'supertest'
-import {
-  createInMemoryAutomaticPersistedQueriesStore,
-  useAutomaticPersistedQueries,
-} from '../src'
+import { createInMemoryAPQStore, useAPQ } from '../src'
 
 describe('Automatic Persisted Queries', () => {
   it('should return not found error if persisted query is missing', async () => {
-    const store = createInMemoryAutomaticPersistedQueriesStore()
+    const store = createInMemoryAPQStore()
     const yoga = createYoga({
       plugins: [
-        useAutomaticPersistedQueries({
+        useAPQ({
           store,
         }),
       ],
@@ -32,10 +29,10 @@ describe('Automatic Persisted Queries', () => {
     expect(body.errors[0].message).toBe('PersistedQueryNotFound')
   })
   it('should load the persisted query when stored', async () => {
-    const store = createInMemoryAutomaticPersistedQueriesStore()
+    const store = createInMemoryAPQStore()
     const yoga = createYoga({
       plugins: [
-        useAutomaticPersistedQueries({
+        useAPQ({
           store,
         }),
       ],
@@ -59,10 +56,10 @@ describe('Automatic Persisted Queries', () => {
     expect(body.data.__typename).toBe('Query')
   })
   it('should save the persisted query', async () => {
-    const store = createInMemoryAutomaticPersistedQueriesStore()
+    const store = createInMemoryAPQStore()
     const yoga = createYoga({
       plugins: [
-        useAutomaticPersistedQueries({
+        useAPQ({
           store,
         }),
       ],
@@ -91,10 +88,10 @@ describe('Automatic Persisted Queries', () => {
     expect(body.data.__typename).toBe('Query')
   })
   it('raises an error when the hash does not match the operation', async () => {
-    const store = createInMemoryAutomaticPersistedQueriesStore()
+    const store = createInMemoryAPQStore()
     const yoga = createYoga({
       plugins: [
-        useAutomaticPersistedQueries({
+        useAPQ({
           store,
         }),
       ],

@@ -1,55 +1,63 @@
 import { Plugin, PromiseOrValue } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
 import lru from 'tiny-lru'
-import { hashSHA256 } from './hash-sha256.js'
+import { crypto, TextEncoder } from '@whatwg-node/fetch'
 
-export interface AutomaticPersistedQueriesStoreOptions {
+const textEncoder = new TextEncoder()
+export async function hashSHA256(str: string) {
+  const utf8 = textEncoder.encode(str)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', utf8)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray
+    .map((bytes) => bytes.toString(16).padStart(2, '0'))
+    .join('')
+  return hashHex
+}
+
+export interface APQStoreOptions {
   max?: number
   ttl?: number
 }
 
-export function createInMemoryAutomaticPersistedQueriesStore(
-  options: AutomaticPersistedQueriesStoreOptions = {},
-): AutomaticPersistedQueriesStore {
+export function createInMemoryAPQStore(
+  options: APQStoreOptions = {},
+): APQStore {
   return lru<string>(options.max ?? 1000, options.ttl ?? 36000)
 }
 
-export interface AutomaticPersistedQueriesOptions {
-  store?: AutomaticPersistedQueriesStore
+export interface APQOptions {
+  store?: APQStore
   hash?: (str: string) => PromiseOrValue<string>
 }
 
-export interface AutomaticPersistedQueriesStore {
+export interface APQStore {
   get(key: string): PromiseOrValue<string | null | undefined>
   set(key: string, query: string): PromiseOrValue<any>
 }
 
-export interface AutomaticPersistedQueryExtension {
+export interface APQExtension {
   version: 1
   sha256Hash: string
 }
 
-function decodeAutomaticPersistedQueryExtension(
+function decodeAPQExtension(
   input: Record<string, any> | null | undefined,
-): null | AutomaticPersistedQueryExtension {
+): null | APQExtension {
   if (
     input != null &&
     typeof input === 'object' &&
     input?.version === 1 &&
     typeof input?.sha256Hash === 'string'
   ) {
-    return input as AutomaticPersistedQueryExtension
+    return input as APQExtension
   }
   return null
 }
 
-export function useAutomaticPersistedQueries<TPluginContext>(
-  options: AutomaticPersistedQueriesOptions = {},
+export function useAPQ<TPluginContext>(
+  options: APQOptions = {},
 ): Plugin<TPluginContext> {
-  const {
-    store = createInMemoryAutomaticPersistedQueriesStore(),
-    hash = hashSHA256,
-  } = options
+  const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options
 
   return {
     onRequestParse() {
@@ -58,7 +66,7 @@ export function useAutomaticPersistedQueries<TPluginContext>(
           params,
           setParams,
         }) {
-          const persistedQueryData = decodeAutomaticPersistedQueryExtension(
+          const persistedQueryData = decodeAPQExtension(
             params.extensions?.persistedQuery,
           )
 

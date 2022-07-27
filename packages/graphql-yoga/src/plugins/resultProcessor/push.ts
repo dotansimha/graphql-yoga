@@ -1,6 +1,5 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import { encodeString } from '../../utils/encodeString.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
@@ -31,6 +30,7 @@ export function processPushResult(
 
   let iterator: AsyncIterator<ExecutionResult<any>>
 
+  const textEncoder = new fetchAPI.TextEncoder()
   const readableStream = new fetchAPI.ReadableStream({
     start() {
       iterator = result[Symbol.asyncIterator]()
@@ -39,7 +39,7 @@ export function processPushResult(
       const { done, value } = await iterator.next()
       if (value != null) {
         const chunk = JSON.stringify(value)
-        controller.enqueue(encodeString(`data: ${chunk}\n\n`))
+        controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
       }
       if (done) {
         controller.close()
