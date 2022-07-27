@@ -1,0 +1,82 @@
+---
+id: automatic-persisted-queries
+title: Automatic Persisted Queries
+sidebar_label: Automatic Persisted Queries
+---
+
+Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL documents to the server over and over again.
+Since the upload speed can be the bottleneck from client to server, reducing the payload size can improve the performance.
+
+GraphQL Yoga's Automatic Persisted Queries plugin follows [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine)
+
+> **NOTE:** Automatic Persisted Queries do not provide any security features, the benefit of using them is to reduce network overhead.
+> If you want to avoid exeucuting arbitary GraphQL operations please use the Persisted Documents plugin.
+
+## Installation
+
+<PackageInstall
+  packages={['@graphql-yoga/plugin-automatic-persisted-queries']}
+/>
+
+## Quick Start
+
+```ts
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { useAutomaticPersistedQueries } from '@graphql-yoga/plugin-automatic-persisted-queries'
+
+const yoga = createYoga({
+  plugins: [useAutomaticPersistedQueries()],
+})
+
+const server = createServer(yoga)
+server.listen(4000)
+```
+
+Start your yoga server and send a request for priming the cache.
+
+```bash
+curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
+-d '{"query":"{__typename}","extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
+```
+
+Then afterwards we can send the same payload againl, but this time omit the `query` field.
+
+```bash
+curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
+-d '{"extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
+```
+
+Especially for big GraphQL document strings, the subsequent payload can be much smaller.
+
+## Client Usage
+
+GraphQL clients such `Apollo Client` and `Urql` support Automatic Persisted Queries out of the box.
+Check the corresponding doucmentation for more information.
+
+- [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
+- [Urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
+
+## Custom Store
+
+By default all the documents strings are stored in memory with an LRU cache that holds up to 1000 unique entries ([`tiny-lru`](https://github.com/avoidwork/tiny-lru)).
+
+A custom store implementation can be provided via the `store` option.
+
+```ts
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { useAutomaticPersistedQueries } from '@graphql-yoga/plugin-automatic-persisted-queries'
+
+// Note: this store grows infinitely, so it is not a good idea to use it in production.
+const store: AutomaticPersistedQueriesStore = new Map()
+
+const yoga = createYoga({
+  plugins: [useAutomaticPersistedQueries({ store })],
+})
+
+const server = createServer(yoga)
+server.listen(4000)
+```
+
+The `set` and `get` properties on the store can also return a `Promise`.
