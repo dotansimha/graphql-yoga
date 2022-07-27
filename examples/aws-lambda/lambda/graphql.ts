@@ -2,10 +2,11 @@ import type { Handler } from '@aws-cdk/aws-lambda'
 import { createYoga } from 'graphql-yoga'
 import { configure } from '@vendia/serverless-express'
 
-const app = createYoga()
+const app = createYoga({
+  graphqlEndpoint: '/stage/graphql',
+})
 
 export const handler: Handler = configure({
   app,
-  graphqlEndpoint: '/stage/graphql',
   log: app.logger,
 })
