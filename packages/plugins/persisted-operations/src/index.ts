@@ -24,40 +24,61 @@ function decodePersistedOperationsExtension(
   return null
 }
 
+type AllowArbitraryOperationsHandler = (
+  request: Request,
+) => PromiseOrValue<boolean>
+
 export interface UsePersistedOperationsOptions {
+  /**
+   * Store for reading persisted operations.
+   */
   store: PersistedOperationsStore
+  /**
+   * Whether to allow execution of arbitrary GraphQL operations aside from persisted operations.
+   */
+  allowArbitraryOperations?: boolean | AllowArbitraryOperationsHandler
 }
 
 export function usePersistedOperations<TPluginContext>(
   args: UsePersistedOperationsOptions,
 ): Plugin<TPluginContext> {
+  const allowArbitraryOperations = args.allowArbitraryOperations ?? false
   return {
-    onRequestParse() {
+    onRequestParse({ request }) {
       return {
         onRequestParseDone: async function persistedQueriesOnRequestParseDone({
           params,
           setParams,
         }) {
+          if (params.query) {
+            if (
+              (typeof allowArbitraryOperations === 'boolean'
+                ? allowArbitraryOperations
+                : await allowArbitraryOperations(request)) === false
+            ) {
+              throw new GraphQLError('PersistedQueryNotFound')
+            }
+            return
+          }
+
           const persistedQueryData = decodePersistedOperationsExtension(
             params.extensions?.persistedQuery,
           )
 
-          if (persistedQueryData === null) {
-            return
+          if (persistedQueryData == null) {
+            throw new GraphQLError('PersistedQueryNotFound')
           }
 
-          if (params.query == null) {
-            const persistedQuery = await args.store.get(
-              persistedQueryData.sha256Hash,
-            )
-            if (persistedQuery == null) {
-              throw new GraphQLError('PersistedQueryNotFound')
-            }
-            setParams({
-              ...params,
-              query: persistedQuery,
-            })
+          const persistedQuery = await args.store.get(
+            persistedQueryData.sha256Hash,
+          )
+          if (persistedQuery == null) {
+            throw new GraphQLError('PersistedQueryNotFound')
           }
+          setParams({
+            ...params,
+            query: persistedQuery,
+          })
         },
       }
     },

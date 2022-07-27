@@ -84,3 +84,20 @@ Check the corresponding doucmentation for more information.
 
 - [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
 - [Urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
+
+## Allowing arbitrary GraphQL operations
+
+Sometimes it is handy to allow non-persisted operations aside from the persisted ones.
+E.g. you want to allow developers to execute arbitrary GraphQL operations on your production server.
+
+This can be achieved using the `allowArbitraryOperations` option.
+
+```ts
+usePersistedOperations({
+  allowArbitraryOperations: (request) =>
+    request.headers.request.headers.get('x-allow-arbitrary-operations') ===
+    'true',
+})
+```
+
+Use this option with caution!
