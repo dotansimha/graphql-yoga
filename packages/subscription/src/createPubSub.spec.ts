@@ -12,10 +12,6 @@ async function collectAsyncIterableValues<TType>(
   return values
 }
 
-if (!globalThis.EventTarget || !globalThis.Event) {
-  require('event-target-polyfill')
-}
-
 describe('createPubSub', () => {
   it('create', () => {
     createPubSub()

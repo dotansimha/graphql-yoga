@@ -53,6 +53,7 @@ describe('Yoga Apollo Link', () => {
   const client = new ApolloClient({
     link: new YogaLink({
       endpoint: url,
+      customFetch: yoga.fetchAPI.fetch,
     }),
     cache: new InMemoryCache(),
   })
