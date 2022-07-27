@@ -78,6 +78,7 @@ import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMe
 import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
+import { useCheckEndpoint } from './plugins/useCheckEndpoint.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -123,9 +124,20 @@ export type YogaServerOptions<
   cors?: CORSPluginOptions<TServerContext>
 
   /**
-   * GraphQL endpoint
+   * GraphQL endpoint (defaults to '/graphql')
+   * So you need to define it explicitly if GraphQL API lives in a different path other than `/graphql`
    */
-  endpoint?: string
+  graphqlEndpoint?: string
+
+  /**
+   * Readiness check endpoint (defaults to '/readiness')
+   */
+  readinessCheckEndpoint?: string
+
+  /**
+   * Readiness check endpoint (defaults to '/readiness')
+   */
+  healthCheckEndpoint?: string
 
   /**
    * GraphiQL options
@@ -213,7 +225,7 @@ export class YogaServer<
     TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
-  protected endpoint?: string
+  protected graphqlEndpoint: string
   public fetchAPI: FetchAPI
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
@@ -257,8 +269,7 @@ export class YogaServer<
 
     const maskedErrors = options?.maskedErrors ?? true
 
-    const server = this
-    this.endpoint = options?.endpoint
+    this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
 
     this.plugins = [
       // Use the schema provided by the user
@@ -329,18 +340,19 @@ export class YogaServer<
       useHealthCheck({
         id: this.id,
         logger: this.logger,
+        healthCheckEndpoint: options?.healthCheckEndpoint,
+        readinessCheckEndpoint: options?.readinessCheckEndpoint,
       }),
+      enableIf(options?.cors !== false, () => useCORS(options?.cors)),
+      useCheckEndpoint(this.graphqlEndpoint),
       enableIf(options?.graphiql !== false, () =>
         useGraphiQL({
-          get endpoint() {
-            return server.endpoint
-          },
+          graphqlEndpoint: this.graphqlEndpoint,
           options: options?.graphiql,
           render: options?.renderGraphiQL,
           logger: this.logger,
         }),
       ),
-      enableIf(options?.cors !== false, () => useCORS(options?.cors)),
       // Middlewares before the GraphQL execution
       useCheckMethodForGraphQL(),
       useRequestParser({
@@ -580,20 +592,23 @@ export class YogaServer<
     response: Response
     executionResult: ExecutionResult<TData> | null
   }> {
-    const request = new this.fetchAPI.Request('http://localhost/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...headers,
+    const request = new this.fetchAPI.Request(
+      'http://localhost' + this.graphqlEndpoint,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers,
+        },
+        body: JSON.stringify({
+          query:
+            document &&
+            (typeof document === 'string' ? document : print(document)),
+          variables,
+          operationName,
+        }),
       },
-      body: JSON.stringify({
-        query:
-          document &&
-          (typeof document === 'string' ? document : print(document)),
-        variables,
-        operationName,
-      }),
-    })
+    )
     const response = await this.handleRequest(
       request,
       serverContext as TServerContext,

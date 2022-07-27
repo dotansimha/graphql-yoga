@@ -30,7 +30,10 @@ export const config = {
 export default createYoga<{
   req: NextApiRequest
   res: NextApiResponse
-}>()
+}>({
+  // Needed to be defined explicitly because our endpoint lives at a different path other than `/graphql`
+  graphqlEndpoint: '/api/graphql',
+})
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/nextjs)

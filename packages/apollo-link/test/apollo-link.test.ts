@@ -11,7 +11,7 @@ describe('Yoga Apollo Link', () => {
   const endpoint = '/graphql'
   const hostname = '127.0.0.1'
   const yoga = createYoga({
-    endpoint,
+    graphqlEndpoint: endpoint,
     logging: false,
     maskedErrors: false,
     schema: {

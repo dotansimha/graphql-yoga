@@ -20,8 +20,8 @@ const yogaApp = createYoga<RequestEvent>({
 		useGraphQlJit()
 		// other plugins: https://www.envelop.dev/plugins
 	],
+	graphqlEndpoint: '/api/graphql',
 	graphiql: {
-		endpoint: '/api/graphql',
 		defaultQuery: `query Hello {
 	hello
 }`

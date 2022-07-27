@@ -19,10 +19,6 @@ export type GraphiQLOptions = {
    */
   defaultVariableEditorOpen?: boolean
   /**
-   * The endpoint requests should be sent. Defaults to `"/graphql"`.
-   */
-  endpoint?: string
-  /**
    * The initial headers to render inside the header editor. Defaults to `"{}"`.
    */
   headers?: string
@@ -48,7 +44,14 @@ export type GraphiQLOptions = {
   additionalHeaders?: Record<string, string>
 }
 
-export const renderGraphiQL = (opts?: GraphiQLOptions) =>
+export type GraphiQLRendererOptions = {
+  /**
+   * The endpoint requests should be sent. Defaults to `"/graphql"`.
+   */
+  endpoint: string
+} & GraphiQLOptions
+
+export const renderGraphiQL = (opts: GraphiQLRendererOptions) =>
   graphiqlHTML
     .replace('__TITLE__', opts?.title || 'Yoga GraphiQL')
     .replace('__OPTS__', JSON.stringify(opts ?? {}))
@@ -66,16 +69,16 @@ export type GraphiQLOptionsOrFactory<TServerContext> =
   | boolean
 
 export interface GraphiQLPluginConfig<TServerContext> {
-  endpoint?: string
+  graphqlEndpoint: string
   options?: GraphiQLOptionsOrFactory<TServerContext>
-  render?(options?: GraphiQLOptions): PromiseOrValue<BodyInit>
+  render?(options: GraphiQLRendererOptions): PromiseOrValue<BodyInit>
   logger?: YogaLogger
 }
 
 export function useGraphiQL<TServerContext>(
-  config?: GraphiQLPluginConfig<TServerContext>,
+  config: GraphiQLPluginConfig<TServerContext>,
 ): Plugin<{}, TServerContext> {
-  const logger = config?.logger ?? console
+  const logger = config.logger ?? console
   let graphiqlOptionsFactory: GraphiQLOptionsFactory<TServerContext>
   if (typeof config?.options === 'function') {
     graphiqlOptionsFactory = config?.options
@@ -92,17 +95,7 @@ export function useGraphiQL<TServerContext>(
   return {
     async onRequest({ request, serverContext, fetchAPI, endResponse }) {
       const requestPath = request.url.split('?')[0]
-      if (config?.endpoint != null && !requestPath.endsWith(config?.endpoint)) {
-        logger.debug(`Responding 404 Not Found`)
-        const response = new fetchAPI.Response(
-          `Unable to ${request.method} ${requestPath}`,
-          {
-            status: 404,
-            statusText: `Not Found`,
-          },
-        )
-        endResponse(response)
-      } else if (shouldRenderGraphiQL(request)) {
+      if (shouldRenderGraphiQL(request)) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = graphiqlOptionsFactory(
           request,
@@ -111,7 +104,7 @@ export function useGraphiQL<TServerContext>(
 
         if (graphiqlOptions) {
           const graphiQLBody = await renderer({
-            endpoint: config?.endpoint,
+            endpoint: config.graphqlEndpoint,
             ...(graphiqlOptions === true ? {} : graphiqlOptions),
           })
 

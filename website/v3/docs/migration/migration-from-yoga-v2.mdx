@@ -88,3 +88,34 @@ Previously it was possible to configure limitations of multipart request process
 +  }),
 })
 ```
+
+**`endpoint` and `graphiql.endpoint` options are now removed**
+In v2, there is `endpoint` option which is used to configure the GraphQL endpoint, and `graphiql.endpoint` to point `GraphiQL` to a different GraphQL API.
+Now they are removed in favor `graphqlEndpoint` option. If you want to use `YogaGraphiQL` for a different GraphQL endpoint, you can use `@graphql-yoga/render-graphiql` package seperately.
+
+```diff
+- import { createServer } from '@graphql-yoga/node'
++ import { createYoga } from 'graphql-yoga'
+- createServer({
++ createYoga({
+-  endpoint: '/mypath',
+-  graphiql: {
+-    endpoint: '/mypath',
+-  },
++  graphqlEndpoint: '/mypath',
+})
+```
+
+**You need to define `graphqlEndpoint` if your GraphQL endpoint is not `/graphql`**
+
+For example, if you use Next.js or Sveltekit, you probably use `/api/graphql` or `/api/somethingelse` which is not `/graphql`.
+In v3, you need to tell Yoga explicitly what is your GraphQL endpoint.
+
+```diff
+- import { createServer } from '@graphql-yoga/node'
++ import { createYoga } from 'graphql-yoga'
+- createServer({
++ createYoga({
++  graphqlEndpoint: '/api/graphql',
+})
+```

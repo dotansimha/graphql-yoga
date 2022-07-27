@@ -388,7 +388,7 @@ it('validation error is sent to clients', async () => {
 
 describe('Requests', () => {
   const endpoint = '/test-graphql'
-  const yoga = createYoga({ schema, logging: false, endpoint })
+  const yoga = createYoga({ schema, logging: false, graphqlEndpoint: endpoint })
 
   it('should reject other paths if specific endpoint path is provided', async () => {
     const response = await request(yoga).get('/graphql')
@@ -1048,7 +1048,7 @@ describe('Browser', () => {
     schema: createTestSchema(),
     cors: () => cors,
     logging: false,
-    endpoint,
+    graphqlEndpoint: endpoint,
     plugins: [
       useLiveQuery({
         liveQueryStore,
@@ -1224,7 +1224,7 @@ describe('Browser', () => {
     })
 
     test('should show BigInt correctly', async () => {
-      await page.goto(`http://localhost:4000/${endpoint}`)
+      await page.goto(`http://localhost:4000${endpoint}`)
       await typeOperationText(`{ bigint }`)
       await page.click('.execute-button')
       const resultContents = await waitForResult()
@@ -1395,4 +1395,35 @@ describe('Browser', () => {
       )
     })
   })
+})
+
+it('should return 404 if request path does not match with the defined endpoint', async () => {
+  const hostname = '127.0.0.1'
+  const port = 4000 + Math.floor(Math.random() * 1000)
+  const endpoint = '/mypath'
+  const yoga = createYoga({
+    graphqlEndpoint: endpoint,
+    logging: false,
+  })
+  const server = createServer(yoga)
+  const url = `http://${hostname}:${port}${endpoint}`
+  try {
+    await new Promise<void>((resolve) =>
+      server.listen(port, hostname, () => resolve()),
+    )
+    const response = await fetch(
+      url + '?query=' + encodeURIComponent('{ __typename }'),
+    )
+    expect(response.status).toEqual(200)
+    const response2 = await fetch(
+      url.replace('mypath', 'yourpath') +
+        '?query=' +
+        encodeURIComponent('{ __typename }'),
+    )
+    expect(response2.status).toEqual(404)
+  } finally {
+    await new Promise<void>((resolve, reject) =>
+      server.close((err) => (err ? reject(err) : resolve())),
+    )
+  }
 })
