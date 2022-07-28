@@ -2,24 +2,27 @@ import {
   BuildResponseCacheKeyFunction,
   createInMemoryCache,
   defaultBuildResponseCacheKey,
-  GetDocumentStringFromContextFunction,
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache'
-import { GraphQLParams, Maybe, Plugin, YogaInitialContext } from 'graphql-yoga'
+import {
+  GraphQLParams,
+  Maybe,
+  Plugin,
+  PromiseOrValue,
+  YogaInitialContext,
+} from 'graphql-yoga'
 
 export type UseResponseCacheParameter = Omit<
   UseEnvelopResponseCacheParameter,
-  'getDocumentStringFromContext' | 'session'
+  'getDocumentString' | 'session'
 > & {
-  session: (params: GraphQLParams, request: Request) => Maybe<string>
+  session: (
+    params: GraphQLParams,
+    request: Request,
+  ) => PromiseOrValue<Maybe<string>>
   enabled?: (params: GraphQLParams, request: Request) => boolean
 }
-
-// Probably this is not used but somehow if Envelop plugin needs that
-const getDocumentStringFromContext: GetDocumentStringFromContextFunction = (
-  context,
-) => context.query as string
 
 const operationIdByRequest = new WeakMap<Request, string>()
 
@@ -27,9 +30,6 @@ const operationIdByRequest = new WeakMap<Request, string>()
 function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
   return operationIdByRequest.get(request)
 }
-const buildResponseCacheKeyForEnvelop: BuildResponseCacheKeyFunction = async ({
-  sessionId,
-}) => sessionId!
 
 export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
@@ -42,9 +42,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         useEnvelopResponseCache({
           ...options,
           cache,
-          getDocumentStringFromContext,
           session: sessionFactoryForEnvelop,
-          buildResponseCacheKey: buildResponseCacheKeyForEnvelop,
         }),
       )
     },
@@ -56,7 +54,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
               documentString: params.query!,
               variableValues: params.variables,
               operationName: params.operationName,
-              sessionId: options.session(params, request),
+              sessionId: await options.session(params, request),
             })
             const cachedResponse = await cache.get(operationId)
             if (cachedResponse) {
