@@ -11,3 +11,4 @@ export {
   renderGraphiQL,
 } from './plugins/useGraphiQL.js'
 export { Plugin } from './plugins/types.js'
+export { useSchema } from './plugins/useSchema.js'
