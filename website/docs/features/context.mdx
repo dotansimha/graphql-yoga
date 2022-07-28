@@ -33,9 +33,9 @@ const server = createServer({
         logHeader: Boolean
       }
     `,
-    resolver: {
+    resolvers: {
       Query: {
-        logHeaders: (_, _args, context) => {
+        logHeader: (_, _args, context) => {
           console.log(context.request.headers.get('x-foo'))
         },
       },
@@ -68,7 +68,7 @@ const server = createServer({
         someNumber: Int!
       }
     `,
-    resolver: {
+    resolvers: {
       Query: {
         someNumber: (_, _args, context) => {
           context.someNumber
@@ -95,7 +95,7 @@ const server = createServer({
         someNumber: Int!
       }
     `,
-    resolver: {
+    resolvers: {
       Query: {
         someNumber: (_, _args, context) => {
           context.someNumber
@@ -124,10 +124,10 @@ const server = createServer({
         someNumber: Int!
       }
     `,
-    resolver: {
+    resolvers: {
       Query: {
         someNumber: (_, _args, context) => {
-          context.someNumber
+          return context.someNumber
         },
       },
     },
