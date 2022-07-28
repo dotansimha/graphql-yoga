@@ -78,7 +78,7 @@ import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMe
 import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
-import { useCheckEndpoint } from './plugins/useCheckEndpoint.js'
+import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -139,6 +139,10 @@ export type YogaServerOptions<
    */
   healthCheckEndpoint?: string
 
+  /**
+   * Whether the landing page should be shown.
+   */
+  landingPage?: boolean
   /**
    * GraphiQL options
    *
@@ -344,7 +348,6 @@ export class YogaServer<
         readinessCheckEndpoint: options?.readinessCheckEndpoint,
       }),
       enableIf(options?.cors !== false, () => useCORS(options?.cors)),
-      useCheckEndpoint(this.graphqlEndpoint),
       enableIf(options?.graphiql !== false, () =>
         useGraphiQL({
           graphqlEndpoint: this.graphqlEndpoint,
@@ -405,6 +408,11 @@ export class YogaServer<
           typeof maskedErrors === 'object' ? maskedErrors : undefined,
         ),
       ),
+      useUnhandledRoute({
+        graphqlEndpoint: this.graphqlEndpoint,
+        // TODO: make this a config option
+        showLandingPage: options?.landingPage ?? true,
+      }),
     ]
 
     this.getEnveloped = envelop({

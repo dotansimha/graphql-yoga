@@ -33,6 +33,18 @@ export function buildApp() {
       },
     },
     logging: false,
+    plugins: [
+      {
+        onRequest(payload) {
+          console.log(payload.request.url)
+          if (payload.request.url.endsWith('kek')) {
+            payload.endResponse(
+              new payload.fetchAPI.Response('kek', { status: 200 }),
+            )
+          }
+        },
+      },
+    ],
   })
 
   app.use(async (ctx) => {
