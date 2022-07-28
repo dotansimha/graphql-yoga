@@ -5,23 +5,14 @@ import {
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache'
-import {
-  GraphQLParams,
-  Maybe,
-  Plugin,
-  PromiseOrValue,
-  YogaInitialContext,
-} from 'graphql-yoga'
+import { Maybe, Plugin, PromiseOrValue, YogaInitialContext } from 'graphql-yoga'
 
 export type UseResponseCacheParameter = Omit<
   UseEnvelopResponseCacheParameter,
   'getDocumentString' | 'session'
 > & {
-  session: (
-    params: GraphQLParams,
-    request: Request,
-  ) => PromiseOrValue<Maybe<string>>
-  enabled?: (params: GraphQLParams, request: Request) => boolean
+  session: (request: Request) => PromiseOrValue<Maybe<string>>
+  enabled?: (request: Request) => boolean
 }
 
 const operationIdByRequest = new WeakMap<Request, string>()
@@ -49,12 +40,12 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
     onRequestParse({ request }) {
       return {
         async onRequestParseDone({ params, setResult }) {
-          if (enabled(params, request)) {
+          if (enabled(request)) {
             const operationId = await buildResponseCacheKey({
               documentString: params.query!,
               variableValues: params.variables,
               operationName: params.operationName,
-              sessionId: await options.session(params, request),
+              sessionId: await options.session(request),
             })
             const cachedResponse = await cache.get(operationId)
             if (cachedResponse) {
@@ -79,3 +70,5 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
     },
   }
 }
+
+export { createInMemoryCache }
