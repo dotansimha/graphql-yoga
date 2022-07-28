@@ -146,8 +146,8 @@ export type YogaServerOptions<
   /**
    * Whether the landing page should be shown.
    */
-
   landingPage?: boolean
+
   /**
    * GraphiQL options
    *
