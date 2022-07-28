@@ -1397,30 +1397,24 @@ describe('Browser', () => {
   })
 })
 
-describe.only('404 Handling', () => {
+describe('404 Handling', () => {
   it('returns 404 if request path does not match with the defined graphql endpoint (POST)', async () => {
-    const endpoint = '/mypath'
     const yoga = createYoga({
-      graphqlEndpoint: endpoint,
       logging: false,
     })
-    const url = `http://localhost:4000${endpoint}`
+    const url = `http://localhost:4000/notgraphql`
     const response = await yoga.fetch(
-      url.replace('mypath', 'yourpath') +
-        '?query=' +
-        encodeURIComponent('{ __typename }'),
+      url + '?query=' + encodeURIComponent('{ __typename }'),
     )
 
     expect(response.status).toEqual(404)
     expect(await response.text()).toEqual('')
   })
   it('returns 404 if request path does not match with the defined graphql endpoint (GET)', async () => {
-    const endpoint = '/mypath'
     const yoga = createYoga({
-      graphqlEndpoint: endpoint,
       logging: false,
     })
-    const url = `http://localhost:4000${endpoint}`
+    const url = `http://localhost:4000/notgraphql`
     const response = await yoga.fetch(
       url.replace('mypath', 'yourpath') +
         '?query=' +
@@ -1432,16 +1426,12 @@ describe.only('404 Handling', () => {
     expect(await response.text()).toEqual('')
   })
   it('returns 404 with landing page when accepting text/html and sending a GET request', async () => {
-    const endpoint = '/mypath'
     const yoga = createYoga({
-      graphqlEndpoint: endpoint,
       logging: false,
     })
-    const url = `http://localhost:4000${endpoint}`
+    const url = `http://localhost:4000/notgraphql`
     const response = await yoga.fetch(
-      url.replace('mypath', 'yourpath') +
-        '?query=' +
-        encodeURIComponent('{ __typename }'),
+      url + '?query=' + encodeURIComponent('{ __typename }'),
       { method: 'GET', headers: { Accept: 'text/html' } },
     )
 
@@ -1451,13 +1441,11 @@ describe.only('404 Handling', () => {
     expect(body).toContain('GraphQL Yoga')
   })
   it('returns 404 without landing page when accepting text/html and sending a GET request but disabled landing page', async () => {
-    const endpoint = '/mypath'
     const yoga = createYoga({
-      graphqlEndpoint: endpoint,
       logging: false,
       landingPage: false,
     })
-    const url = `http://localhost:4000${endpoint}`
+    const url = `http://localhost:4000/notgraphql`
     const response = await yoga.fetch(
       url.replace('mypath', 'yourpath') +
         '?query=' +
