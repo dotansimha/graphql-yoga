@@ -1,7 +1,7 @@
 import { PromiseOrValue } from '@envelop/core'
 import { YogaLogger } from '../logger.js'
 import { Plugin } from './types.js'
-import graphiqlHTML from '../graphiqlHTML.js'
+import graphiqlHTML from '../graphiql-html.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
   return method === 'GET' && !!headers?.get('accept')?.includes('text/html')
@@ -94,8 +94,10 @@ export function useGraphiQL<TServerContext>(
 
   return {
     async onRequest({ request, serverContext, fetchAPI, endResponse }) {
-      const requestPath = request.url.split('?')[0]
-      if (shouldRenderGraphiQL(request)) {
+      if (
+        shouldRenderGraphiQL(request) &&
+        config.graphqlEndpoint === new URL(request.url).pathname
+      ) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = graphiqlOptionsFactory(
           request,
