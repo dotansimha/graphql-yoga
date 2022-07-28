@@ -1003,10 +1003,10 @@ test('defer/stream is closed properly', async () => {
       if (
         valueAsString.includes(`Content-Type: application/json; charset=utf-8`)
       ) {
+        abortCtrl.abort()
         break
       }
     }
-    abortCtrl.abort()
     await new Promise((res) => setTimeout(res, 300))
     expect(fakeIterator.return).toBeCalled()
   } finally {
