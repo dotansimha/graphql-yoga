@@ -63,6 +63,7 @@ export type OnRequestParseDoneHook = (
 export interface OnRequestParseDoneEventPayload {
   params: GraphQLParams
   setParams: (params: GraphQLParams) => void
+  setResult: (result: ResultProcessorInput) => void
 }
 
 export type OnResultProcess = (
@@ -73,16 +74,17 @@ export type ResultProcessorInput = PromiseOrValue<
   ExecutionResult | AsyncIterable<ExecutionResult | ExecutionPatchResult>
 >
 
-export type ResultProcessor = (
-  result: ResultProcessorInput,
-  fetchAPI: FetchAPI,
-) => PromiseOrValue<Response>
+export type ResultProcessor<
+  TResult extends ResultProcessorInput = ResultProcessorInput,
+> = (result: TResult, fetchAPI: FetchAPI) => PromiseOrValue<Response>
 
 export interface OnResultProcessEventPayload {
   request: Request
   result: ResultProcessorInput
   resultProcessor?: ResultProcessor
-  setResultProcessor(resultProcessor: ResultProcessor): void
+  setResultProcessor<TResult extends ResultProcessorInput>(
+    resultProcessor: ResultProcessor<TResult>,
+  ): void
 }
 
 export type OnResponseHook<TServerContext> = (

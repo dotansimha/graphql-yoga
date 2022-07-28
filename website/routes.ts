@@ -103,6 +103,7 @@ export function getDocsV3Routes(): IRoutes {
           ['testing', 'Testing'],
           ['persisted-operations', 'Persisted Operations'],
           ['automatic-persisted-queries', 'Automatic Persisted Queries'],
+          ['response-caching', 'Response Caching'],
         ],
       },
       integrations: {
