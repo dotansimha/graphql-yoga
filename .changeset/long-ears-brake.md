@@ -1,8 +1,10 @@
 ---
-'@graphql-yoga/plugin-persisted-queries': major
+'@graphql-yoga/plugin-persisted-operations': major
+'@graphql-yoga/plugin-apq': major
 ---
 
-New Persisted Queries Plugin
+New Persisted Operations Plugin;
+https://www.graphql-yoga.com/docs/features/persisted-operations
 
-See the docs for more information;
-https://www.graphql-yoga.com/docs/features/persisted-queries
+New Automatic Persisted Queries Plugin;
+https://www.graphql-yoga.com/docs/features/automatic-persisted-queries
