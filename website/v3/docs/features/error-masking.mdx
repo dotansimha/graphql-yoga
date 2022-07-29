@@ -261,7 +261,7 @@ Error extensions can be passed as the second parameter to the `GraphQLError` con
 
 ```ts
 import { createServer } from 'graphql-yoga'
-import { GraphQLError }
+import { GraphQLError } from 'graphql'
 
 const users = [
   {
@@ -300,8 +300,8 @@ const yoga = createYoga({
               // error extensions
               {
                 extensions: {
-                  code: 'USER_NOT_FOUND'
-                }
+                  code: 'USER_NOT_FOUND',
+                },
               },
             )
           }
@@ -393,8 +393,6 @@ new GraphQLError(
 )
 ```
 
-````
-
 ## Disabling error masking
 
 We highly recommend using error masking.
@@ -404,7 +402,7 @@ However, you can still disable it using the `maskedErrors` config option.
 createYoga({
   maskedErrors: false,
 })
-````
+```
 
 Executing the following operation will now result within a leaking error message that exposes information about internal API calls.
 

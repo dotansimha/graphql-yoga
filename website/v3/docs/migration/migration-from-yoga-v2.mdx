@@ -111,12 +111,15 @@ Now they are removed in favor `graphqlEndpoint` option. If you want to use `Yoga
 For example, if you use Next.js or Sveltekit, you probably use `/api/graphql` or `/api/somethingelse` which is not `/graphql`.
 In v3, you need to tell Yoga explicitly what is your GraphQL endpoint.
 
-````diff
+```diff
 - import { createServer } from '@graphql-yoga/node'
 + import { createYoga } from 'graphql-yoga'
 - createServer({
 + createYoga({
 +  graphqlEndpoint: '/api/graphql',
+})
+```
+
 ** No more `GraphQLYogaError` so you can use `GraphQLError` instead **
 
 In v2, we introduced a new error class `GraphQLYogaError` which is a subclass of `GraphQLError` and it is now deprecated in favor of `GraphQLError`.
@@ -134,7 +137,7 @@ You can basically do the following change;
     myCustomField: 'myCustomValue',
 +  },
 })
-````
+```
 
 Also you can change the status code and headers of the error response by using the `extensions` object.
 
