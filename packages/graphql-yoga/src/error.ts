@@ -1,4 +1,3 @@
-import { EnvelopError } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
 
@@ -11,8 +10,6 @@ declare module 'graphql' {
     http?: GraphQLHTTPErrorExtensions
   }
 }
-
-export { EnvelopError as GraphQLYogaError }
 
 function isAggregateError(obj: any): obj is AggregateError {
   return obj != null && typeof obj === 'object' && 'errors' in obj

@@ -206,7 +206,7 @@ const applyTakeConstraints = (params: {
   value: number
 }) => {
   if (params.value < params.min || params.value > params.max) {
-    throw new GraphQLYogaError(
+    throw new GraphQLError(
       `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`,
     )
   }

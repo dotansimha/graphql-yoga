@@ -176,7 +176,7 @@ const resolvers = {
       context: GraphQLContext,
     ) => {
       if (context.currentUser === null) {
-        throw new GraphQLYogaError('Unauthenticated!')
+        throw new GraphQLError('Unauthenticated!')
       }
 
       const newLink = await context.prisma.link.create({
@@ -417,7 +417,7 @@ const resolvers = {
     ) => {
       // 1
       if (!context.currentUser) {
-        throw new GraphQLYogaError('You must login in order to use upvote!')
+        throw new GraphQLError('You must login in order to use upvote!')
       }
 
       // 2

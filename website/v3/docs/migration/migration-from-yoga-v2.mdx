@@ -119,3 +119,39 @@ In v3, you need to tell Yoga explicitly what is your GraphQL endpoint.
 +  graphqlEndpoint: '/api/graphql',
 })
 ```
+
+** No more `GraphQLYogaError` so you can use `GraphQLError` instead **
+
+In v2, we introduced a new error class `GraphQLYogaError` which is a subclass of `GraphQLError` and it is now deprecated in favor of `GraphQLError`.
+So in resolvers, you can use it in the same way but the second parameter of `GraphQLError` constructor is not `extensions` but an object that contains more options for `GraphQLError`.
+You can basically do the following change;
+
+```diff
+- import { GraphQLYogaError } from '@graphql-yoga/node'
++ import { GraphQLError } from 'graphql'
+
+- const myError = new GraphQLYogaError('My error message', {
++ const myError = new GraphQLError('My error message', {
++  extensions: {
+    code: 'MY_CODE',
+    myCustomField: 'myCustomValue',
++  },
+})
+```
+
+Also you can change the status code and headers of the error response by using the `extensions` object.
+
+```ts
+new GraphQLError('My error message', {
+  extensions: {
+    code: 'NOT_LOGGED_IN',
+    message: 'You need to be logged in to do this',
+    http: {
+      status: 401,
+      headers: {
+        'X-Custom-Header': 'my-custom-value',
+      },
+    },
+  },
+})
+```

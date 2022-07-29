@@ -5,7 +5,6 @@ import {
   useMaskedErrors,
   UseMaskedErrorsOpts,
   useExtendContext,
-  enableIf,
   useLogger,
   useSchema,
   PromiseOrValue,
@@ -19,7 +18,6 @@ import {
   YogaInitialContext,
   FetchAPI,
   GraphQLParams,
-  FetchEvent,
 } from './types.js'
 import {
   OnRequestHook,
@@ -77,12 +75,13 @@ import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
-import { handleError } from './GraphQLYogaError.js'
+import { handleError } from './error.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
 import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
+import { formatError } from './utils/formatError.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -107,7 +106,7 @@ export type YogaServerOptions<
   logging?: boolean | YogaLogger
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
-   * If you throw `GraphQLYogaError`/`EnvelopError` within your GraphQL resolvers then that error will be sent back to the client.
+   * If you throw `EnvelopError`/`GraphQLError` within your GraphQL resolvers then that error will be sent back to the client.
    *
    * You can lean more about this here:
    * @see https://graphql-yoga.vercel.app/docs/features/error-masking
@@ -276,32 +275,37 @@ export class YogaServer<
             }
         : logger
 
-    const maskedErrors = options?.maskedErrors ?? true
+    const maskedErrorsOpts: UseMaskedErrorsOpts | null =
+      options?.maskedErrors === false
+        ? null
+        : {
+            formatError,
+            ...(typeof options?.maskedErrors === 'object'
+              ? options.maskedErrors
+              : {}),
+          }
 
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
 
     this.plugins = [
       // Use the schema provided by the user
-      enableIf(schema != null, useSchema(schema!)),
+      schema != null && useSchema(schema),
       // Performance things
-      enableIf(options?.parserCache !== false, () =>
+      options?.parserCache !== false &&
         useParserCache(
           typeof options?.parserCache === 'object'
             ? options?.parserCache
             : undefined,
         ),
-      ),
-      enableIf(options?.validationCache !== false, () =>
+      options?.validationCache !== false &&
         useValidationCache({
           cache:
             typeof options?.validationCache === 'object'
               ? options?.validationCache
               : undefined,
         }),
-      ),
       // Log events - useful for debugging purposes
-      enableIf(
-        logger !== false,
+      logger !== false &&
         useLogger({
           skipIntrospection: true,
           logFn: (eventName, events) => {
@@ -333,9 +337,7 @@ export class YogaServer<
             }
           },
         }),
-      ),
-      enableIf(
-        options?.context != null,
+      options?.context != null &&
         useExtendContext(async (initialContext) => {
           if (options?.context) {
             if (typeof options.context === 'function') {
@@ -344,7 +346,6 @@ export class YogaServer<
             return options.context
           }
         }),
-      ),
       // Middlewares before processing the incoming HTTP request
       useHealthCheck({
         id: this.id,
@@ -352,15 +353,14 @@ export class YogaServer<
         healthCheckEndpoint: options?.healthCheckEndpoint,
         readinessCheckEndpoint: options?.readinessCheckEndpoint,
       }),
-      enableIf(options?.cors !== false, () => useCORS(options?.cors)),
-      enableIf(options?.graphiql !== false, () =>
+      options?.cors !== false && useCORS(options?.cors),
+      options?.graphiql !== false &&
         useGraphiQL({
           graphqlEndpoint: this.graphqlEndpoint,
           options: options?.graphiql,
           render: options?.renderGraphiQL,
           logger: this.logger,
         }),
-      ),
       // Middlewares before the GraphQL execution
       useCheckMethodForGraphQL(),
       useRequestParser({
@@ -371,12 +371,12 @@ export class YogaServer<
         match: isPOSTJsonRequest,
         parse: parsePOSTJsonRequest,
       }),
-      enableIf(options?.multipart !== false, () =>
+      options?.multipart !== false &&
         useRequestParser({
           match: isPOSTMultipartRequest,
           parse: parsePOSTMultipartRequest,
         }),
-      ),
+
       useRequestParser({
         match: isPOSTGraphQLStringRequest,
         parse: parsePOSTGraphQLStringRequest,
@@ -406,16 +406,9 @@ export class YogaServer<
       useHTTPValidationError(),
       // We make sure that the user doesn't send a mutation with GET
       usePreventMutationViaGET(),
-
-      enableIf(
-        !!maskedErrors,
-        useMaskedErrors(
-          typeof maskedErrors === 'object' ? maskedErrors : undefined,
-        ),
-      ),
+      maskedErrorsOpts != null && useMaskedErrors(maskedErrorsOpts),
       useUnhandledRoute({
         graphqlEndpoint: this.graphqlEndpoint,
-        // TODO: make this a config option
         showLandingPage: options?.landingPage ?? true,
       }),
     ]
