@@ -1,4 +1,7 @@
-import { createYoga, createPubSub } from 'graphql-yoga'
+import { createYoga } from 'graphql-yoga'
+import { createPubSub } from 'graphql-yoga/subscription'
+import { createSchema } from 'graphql-yoga/schema'
+
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
 import Redis from 'ioredis'
 import { createServer } from 'http'
@@ -17,7 +20,7 @@ const pubSub = createPubSub<{
 
 const yoga = createYoga<{ pubSub: typeof pubSub }>({
   context: () => ({ pubSub }),
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         _: Boolean
@@ -44,7 +47,7 @@ const yoga = createYoga<{ pubSub: typeof pubSub }>({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)

@@ -1,12 +1,6 @@
-import {
-  createYoga,
-  useExtendContext,
-  createPubSub,
-  Repeater,
-  pipe,
-  map,
-  YogaInitialContext,
-} from 'graphql-yoga'
+import { createYoga, useExtendContext, YogaInitialContext } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
+import { createPubSub, Repeater, pipe, map } from 'graphql-yoga/subscription'
 import { createServer } from 'http'
 import { Resolvers } from './generated/graphql.js'
 
@@ -94,10 +88,10 @@ const resolvers: Resolvers<Context> = {
 }
 
 const yoga = createYoga<Context, any>({
-  schema: {
+  schema: createSchema({
     resolvers,
     typeDefs,
-  },
+  }),
   logging: true,
   plugins: [useExtendContext(() => ({ pubSub }))],
 })

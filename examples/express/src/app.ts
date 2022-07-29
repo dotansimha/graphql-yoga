@@ -1,9 +1,10 @@
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 import express from 'express'
 
 export function buildApp(app: ReturnType<typeof express>) {
   const graphQLServer = createYoga({
-    schema: {
+    schema: createSchema({
       typeDefs: /* GraphQL */ `
         scalar File
         type Query {
@@ -34,7 +35,7 @@ export function buildApp(app: ReturnType<typeof express>) {
           },
         },
       },
-    },
+    }),
     logging: false,
   })
 

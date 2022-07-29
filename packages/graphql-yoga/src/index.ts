@@ -3,7 +3,6 @@ export * from './logger.js'
 export * from './server.js'
 
 export * from '@envelop/core'
-export * from '@graphql-yoga/subscription'
 export { CORSOptions } from './plugins/useCORS.js'
 export {
   GraphiQLOptions,

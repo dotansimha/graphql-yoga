@@ -1,8 +1,9 @@
 import { createClient, OperationResult } from '@urql/core'
-import { yogaExchange } from '../src'
+import { yogaExchange } from '@graphql-yoga/urql-exchange'
 import { observableToAsyncIterable } from '@graphql-tools/utils'
 import { pipe, toObservable } from 'wonka'
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 import { File } from '@whatwg-node/fetch'
 import { createServer } from 'http'
 
@@ -14,7 +15,7 @@ describe('graphExchange', () => {
     graphqlEndpoint: endpoint,
     logging: false,
     maskedErrors: false,
-    schema: {
+    schema: createSchema({
       typeDefs: /* GraphQL */ `
         scalar File
         type Query {
@@ -46,7 +47,7 @@ describe('graphExchange', () => {
           },
         },
       },
-    },
+    }),
   })
   const server = createServer(yoga)
   const url = `http://${hostname}:${port}${endpoint}`

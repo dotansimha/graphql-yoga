@@ -1,9 +1,10 @@
 import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 import { createServer } from 'http'
 import { parse } from 'graphql'
 import { observableToAsyncIterable } from '@graphql-tools/utils'
-import { YogaLink } from '../src'
+import { YogaLink } from '@graphql-yoga/apollo-link'
 import { File } from '@whatwg-node/fetch'
 
 describe('Yoga Apollo Link', () => {
@@ -14,7 +15,7 @@ describe('Yoga Apollo Link', () => {
     graphqlEndpoint: endpoint,
     logging: false,
     maskedErrors: false,
-    schema: {
+    schema: createSchema({
       typeDefs: /* GraphQL */ `
         scalar File
         type Query {
@@ -46,7 +47,7 @@ describe('Yoga Apollo Link', () => {
           },
         },
       },
-    },
+    }),
   })
   const server = createServer(yoga)
   const url = `http://${hostname}:${port}${endpoint}`
