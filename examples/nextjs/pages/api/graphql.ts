@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 // Docs: https://vercel.com/docs/concepts/functions/serverless-functions
@@ -16,4 +17,17 @@ export default createYoga<{
   res: NextApiResponse
 }>({
   graphqlEndpoint: '/api/graphql',
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        greetings: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type',
+      },
+    },
+  }),
 })

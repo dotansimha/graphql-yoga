@@ -1,5 +1,14 @@
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: String
+    }
+  `,
+})
 
 it('cache a query operation', async () => {
   const yoga = createYoga({
@@ -9,6 +18,7 @@ it('cache a query operation', async () => {
         includeExtensionMetadata: true,
       }),
     ],
+    schema,
   })
   function fetch() {
     return yoga.fetch('http://localhost:3000/graphql', {
@@ -60,6 +70,7 @@ it('cache a query operation per session', async () => {
         includeExtensionMetadata: true,
       }),
     ],
+    schema,
   })
   function fetch(sessionId: string) {
     return yoga.fetch('http://localhost:3000/graphql', {

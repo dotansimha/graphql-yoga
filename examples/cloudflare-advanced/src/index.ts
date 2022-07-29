@@ -1,9 +1,10 @@
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 
 declare const EXAMPLE_KV: KVNamespace
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       scalar File
       scalar JSON
@@ -99,7 +100,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
 })
 
 self.addEventListener('fetch', yoga)
