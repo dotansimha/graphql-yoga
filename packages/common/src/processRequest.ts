@@ -1,6 +1,6 @@
 import { getOperationAST, ExecutionArgs } from 'graphql'
 import { RequestProcessContext } from './types.js'
-import { ResultProcessor } from './plugins/types.js'
+import { ResultProcessor, ResultProcessorInput } from './plugins/types.js'
 
 export async function processRequest<TContext>({
   request,
@@ -36,7 +36,7 @@ export async function processRequest<TContext>({
       : enveloped.execute
 
   // Get the result to be processed
-  const result = await executeFn(executionArgs)
+  let result: ResultProcessorInput = await executeFn(executionArgs)
 
   let resultProcessor: ResultProcessor | undefined
 
@@ -45,6 +45,7 @@ export async function processRequest<TContext>({
       request,
       result,
       resultProcessor,
+      setResult: (newResult) => (result = newResult),
       setResultProcessor(newResultProcessor) {
         resultProcessor = newResultProcessor
       },

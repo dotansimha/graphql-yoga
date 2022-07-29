@@ -82,6 +82,7 @@ export interface OnResultProcessEventPayload {
   request: Request
   result: ResultProcessorInput
   resultProcessor?: ResultProcessor
+  setResult(newResult: ResultProcessorInput): void
   setResultProcessor(resultProcessor: ResultProcessor): void
 }
 

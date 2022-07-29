@@ -1014,6 +1014,72 @@ test('defer/stream is closed properly', async () => {
   }
 })
 
+test('plugin: enforce response protocol via plugin', async () => {
+  const { isAsyncIterable, Repeater } = await import('@graphql-yoga/common')
+  const { processMultipartResult } = await import(
+    '@graphql-yoga/common/plugins/resultProcessor/multipart'
+  )
+
+  const yoga = createServer({
+    schema: {
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hello: String
+        }
+      `,
+      resolvers: {
+        Query: {
+          hello: () => 'world',
+        },
+      },
+    },
+    logging: false,
+    plugins: [
+      {
+        onResultProcess(payload) {
+          const { result } = payload
+          if (!isAsyncIterable(result)) {
+            payload.setResult(
+              // create noop iterator
+              new Repeater((push, end) => {
+                push(result as any)
+                end()
+              }),
+            )
+          }
+          payload.setResultProcessor(processMultipartResult as any)
+        },
+      },
+    ],
+  })
+  const response = await yoga.fetch('http://localhost/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: /* GraphQL */ `
+        query {
+          hello
+        }
+      `,
+    }),
+  })
+
+  expect(response.status).toBe(200)
+  const body = await response.text()
+  expect(body).toMatchInlineSnapshot(`
+    "---
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 26
+
+    {\\"data\\":{\\"hello\\":\\"world\\"}}
+    ---
+    -----
+    "
+  `)
+})
+
 describe('Browser', () => {
   const liveQueryStore = new InMemoryLiveQueryStore()
   const endpoint = '/test-graphql'
