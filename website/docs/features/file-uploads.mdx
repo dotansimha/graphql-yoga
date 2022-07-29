@@ -36,6 +36,7 @@ const server = createServer({
       }
       type Mutation {
         readTextFile(file: File!): String!
+        saveFile(file: File!): Boolean
       }
     `,
     resolvers: {
