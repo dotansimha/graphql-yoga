@@ -1,5 +1,12 @@
 # hackernews
 
+## 1.13.5
+
+### Patch Changes
+
+- Updated dependencies [c00dad3]
+  - @graphql-yoga/node@2.13.5
+
 ## 1.13.4
 
 ### Patch Changes
