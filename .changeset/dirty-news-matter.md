@@ -3,4 +3,4 @@
 '@graphql-yoga/node': patch
 ---
 
-Bump @whatwg-node/fetch to get the latest fixes
+Resolve issue where `@whatwg-node/fetch` caused other `fetch` to fail processing HTTP requests.
