@@ -1,5 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
@@ -25,7 +27,7 @@ export default createYoga<
       session: await getSession({ req }),
     }
   },
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type User {
         id: String!
@@ -55,8 +57,9 @@ export default createYoga<
         },
       },
     },
-  },
+  }),
   graphiql: {
     defaultQuery: `query Session { session { expires user { id email image } } }`,
   },
+  graphqlEndpoint: '/api/graphql',
 })

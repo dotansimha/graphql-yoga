@@ -1,4 +1,4 @@
-import { print } from 'graphql'
+import { print, ExecutionResult } from 'graphql'
 import {
   GetEnvelopedFn,
   envelop,
@@ -10,8 +10,6 @@ import {
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import { ExecutionResult, IResolvers, TypeSource } from '@graphql-tools/utils'
 import {
   GraphQLServerInject,
   YogaInitialContext,
@@ -27,7 +25,6 @@ import {
   OnResultProcess,
   Plugin,
   RequestParser,
-  ResultProcessor,
   ResultProcessorInput,
 } from './plugins/types.js'
 import { createFetch } from '@whatwg-node/fetch'
@@ -83,14 +80,6 @@ import { usePreventMutationViaGET } from './plugins/requestValidation/usePrevent
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
-
-interface OptionsWithPlugins<TContext> {
-  /**
-   * Envelop Plugins
-   * @see https://envelop.dev/plugins
-   */
-  plugins: Array<Plugin<TContext> | Plugin | {}>
-}
 
 /**
  * Configuration options for the server
@@ -162,14 +151,20 @@ export type YogaServerOptions<
     TRootValue
   >
 
+  /**
+   * Envelop Plugins
+   * @see https://envelop.dev/plugins
+   */
+  plugins?: Array<
+    Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
+  >
+
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: FetchAPI
   multipart?: boolean
   id?: string
-} & Partial<
-  OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
->
+}
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -238,19 +233,20 @@ export class YogaServer<
 
     this.plugins = [
       // Use the schema provided by the user
-      useSchema(options?.schema),
+      !!options?.schema && useSchema(options.schema),
+
       // Performance things
       options?.parserCache !== false &&
         useParserCache(
           typeof options?.parserCache === 'object'
-            ? options?.parserCache
+            ? options.parserCache
             : undefined,
         ),
       options?.validationCache !== false &&
         useValidationCache({
           cache:
             typeof options?.validationCache === 'object'
-              ? options?.validationCache
+              ? options.validationCache
               : undefined,
         }),
       // Log events - useful for debugging purposes
@@ -586,7 +582,7 @@ export function createYoga<
   TUserContext extends Record<string, any> = {},
   TRootValue = {},
 >(
-  options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
+  options: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
 ): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,

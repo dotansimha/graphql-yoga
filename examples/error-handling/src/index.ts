@@ -1,4 +1,5 @@
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 import { fetch } from '@whatwg-node/fetch'
 import { GraphQLError } from 'graphql'
 import { createServer } from 'http'
@@ -20,7 +21,7 @@ const users = [
 
 // Provide your schema
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type User {
         id: ID!
@@ -58,7 +59,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
   logging: true,
   maskedErrors: true,
 })

@@ -24,6 +24,7 @@ import {
 } from '@whatwg-node/fetch'
 import { createGraphQLError, ExecutionResult } from '@graphql-tools/utils'
 import { ServerResponse, Server } from 'http'
+import { createSchema } from '../src/schema.js'
 
 describe('Disable Introspection with plugin', () => {
   it('succeeds introspection query', async () => {
@@ -85,10 +86,10 @@ describe('Masked Error Option', () => {
     },
   }
 
-  const schema = {
+  const schema = createSchema({
     typeDefs,
     resolvers,
-  }
+  })
 
   const initialEnv = process.env.NODE_ENV
 
@@ -903,7 +904,7 @@ describe('file uploads', () => {
     const targetFilePath = path.join(os.tmpdir(), `${id}.png`)
 
     const yoga = createYoga({
-      schema: {
+      schema: createSchema({
         resolvers: {
           Mutation: {
             uploadFile: async (root, args) => {
@@ -925,7 +926,7 @@ describe('file uploads', () => {
             uploadFile(file: File!): Boolean
           }
         `,
-      },
+      }),
       logging: false,
     })
     const server = createServer(yoga)
@@ -997,7 +998,7 @@ it('should expose Node req and res objects in the context', async () => {
     req: IncomingMessage
     res: ServerResponse
   }>({
-    schema: {
+    schema: createSchema({
       typeDefs: /* GraphQL */ `
         type Query {
           isNode: Boolean!
@@ -1008,7 +1009,7 @@ it('should expose Node req and res objects in the context', async () => {
           isNode: (_, __, { req, res }) => !!req && !!res,
         },
       },
-    },
+    }),
     logging: false,
   })
   const response = await request(yoga)
@@ -1050,7 +1051,7 @@ test('Subscription is closed properly', async () => {
   }
   const yoga = createYoga({
     logging: false,
-    schema: {
+    schema: createSchema({
       typeDefs: /* GraphQL */ `
         type Query {
           _: Boolean
@@ -1067,7 +1068,7 @@ test('Subscription is closed properly', async () => {
           },
         },
       },
-    },
+    }),
   })
   const server = createServer(yoga)
   try {

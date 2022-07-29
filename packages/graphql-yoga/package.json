@@ -42,6 +42,34 @@
         "default": "./dist/esm/index.js"
       }
     },
+    "./schema": {
+      "require": {
+        "types": "./dist/typings/schema.d.ts",
+        "default": "./dist/cjs/schema.js"
+      },
+      "import": {
+        "types": "./dist/typings/schema.d.ts",
+        "default": "./dist/esm/schema.js"
+      },
+      "default": {
+        "types": "./dist/typings/schema.d.ts",
+        "default": "./dist/esm/schema.js"
+      }
+    },
+    "./subscription": {
+      "require": {
+        "types": "./dist/typings/subscription.d.ts",
+        "default": "./dist/cjs/subscription.js"
+      },
+      "import": {
+        "types": "./dist/typings/subscription.d.ts",
+        "default": "./dist/esm/subscription.js"
+      },
+      "default": {
+        "types": "./dist/typings/subscription.d.ts",
+        "default": "./dist/esm/subscription.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",

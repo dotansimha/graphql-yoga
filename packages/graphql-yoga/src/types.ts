@@ -1,7 +1,12 @@
 import type { DocumentNode, GraphQLError } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { FormatErrorHandler, PromiseOrValue } from '@envelop/core'
-import { createFetch } from '@whatwg-node/fetch'
+import type { FormatErrorHandler, PromiseOrValue } from '@envelop/core'
+import type { createFetch } from '@whatwg-node/fetch'
+import type { GraphQLSchema } from 'graphql'
+
+export type GraphQLSchemaWithContext<TContext> = GraphQLSchema & {
+  _context?: TContext
+}
 
 export interface ExecutionPatchResult<
   TData = { [key: string]: any },

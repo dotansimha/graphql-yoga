@@ -1,10 +1,11 @@
 import { useGraphQlJit } from '@envelop/graphql-jit';
 import { createYoga } from 'graphql-yoga';
+import { createSchema } from 'graphql-yoga/schema';
 import type { RequestEvent } from '@sveltejs/kit';
 
 const yogaApp = createYoga<RequestEvent>({
 	logging: false,
-	schema: {
+	schema: createSchema({
 		typeDefs: `
 			type Query {
 				hello: String
@@ -15,7 +16,7 @@ const yogaApp = createYoga<RequestEvent>({
 				hello: () => 'SvelteKit - GraphQL Yoga'
 			}
 		}
-	},
+	}),
 	plugins: [
 		useGraphQlJit()
 		// other plugins: https://www.envelop.dev/plugins
