@@ -621,6 +621,7 @@ describe('Incremental Delivery', () => {
       body: formData,
     })
 
+    expect(response.status).toBe(200)
     const body = await response.json()
 
     expect(body.errors).toBeUndefined()
@@ -1507,11 +1508,9 @@ describe('Respect Accept headers', () => {
     const iterator = response.body![Symbol.asyncIterator]()
     const { value } = await iterator.next()
     const valueStr = Buffer.from(value).toString('utf-8')
-    expect(valueStr).toMatchInlineSnapshot(`
-      "data: {\\"data\\":{\\"ping\\":\\"pong\\"}}
-
-      "
-    `)
+    expect(valueStr).toContain(
+      `data: ${JSON.stringify({ data: { ping: 'pong' } })}`,
+    )
   })
   it('should force the server return multipart even if the result is not', async () => {
     const response = await fetch(`${url}?query=query{ping}`, {
@@ -1525,14 +1524,9 @@ describe('Respect Accept headers', () => {
     const iterator = response.body![Symbol.asyncIterator]()
     const { value } = await iterator.next()
     const valueStr = Buffer.from(value).toString('utf-8')
-    expect(valueStr).toMatchInlineSnapshot(`
-        "---
-        Content-Type: application/json; charset=utf-8
-        Content-Length: 24
-
-        {\\"data\\":{\\"ping\\":\\"pong\\"}}
-        ---"
-      `)
+    expect(valueStr).toContain(`Content-Type: application/json; charset=utf-8`)
+    expect(valueStr).toContain(`Content-Length: 24`)
+    expect(valueStr).toContain(`${JSON.stringify({ data: { ping: 'pong' } })}`)
   })
   it('should not allow to return if the result is an async iterable and accept is just json', async () => {
     const response = await fetch(`${url}?query=subscription{counter}`, {
