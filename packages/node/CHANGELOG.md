@@ -1,5 +1,13 @@
 # @graphql-yoga/node
 
+## 2.13.5
+
+### Patch Changes
+
+- c00dad3: Resolve issue where `@whatwg-node/fetch` caused other `fetch` to fail processing HTTP requests.
+- Updated dependencies [c00dad3]
+  - @graphql-yoga/common@2.12.4
+
 ## 2.13.4
 
 ### Patch Changes

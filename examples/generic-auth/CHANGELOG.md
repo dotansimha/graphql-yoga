@@ -1,5 +1,12 @@
 # example-generic-auth
 
+## 1.9.5
+
+### Patch Changes
+
+- Updated dependencies [c00dad3]
+  - @graphql-yoga/node@2.13.5
+
 ## 1.9.4
 
 ### Patch Changes
