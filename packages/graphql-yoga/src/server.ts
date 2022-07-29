@@ -75,7 +75,7 @@ import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
-import { handleError } from './GraphQLYogaError.js'
+import { handleError } from './error.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
 import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
