@@ -1481,3 +1481,65 @@ describe('404 Handling', () => {
     expect(body).toEqual('Do you really like em?')
   })
 })
+
+describe('Respect Accept headers', () => {
+  const yoga = createYoga({
+    schema,
+  })
+  const server = createServer(yoga)
+  let port: number
+  let url: string
+  beforeAll((done) => {
+    port = Math.floor(Math.random() * 100) + 4000
+    url = `http://localhost:${port}/graphql`
+    server.listen(port, done)
+  })
+  afterAll(() => {
+    server.close()
+  })
+  it('should force the server return event stream even if the result is not', async () => {
+    const response = await fetch(`${url}?query=query{ping}`, {
+      headers: {
+        Accept: 'text/event-stream',
+      },
+    })
+    expect(response.headers.get('content-type')).toEqual('text/event-stream')
+    const iterator = response.body![Symbol.asyncIterator]()
+    const { value } = await iterator.next()
+    const valueStr = Buffer.from(value).toString('utf-8')
+    expect(valueStr).toMatchInlineSnapshot(`
+      "data: {\\"data\\":{\\"ping\\":\\"pong\\"}}
+
+      "
+    `)
+  })
+  it('should force the server return multipart even if the result is not', async () => {
+    const response = await fetch(`${url}?query=query{ping}`, {
+      headers: {
+        Accept: 'multipart/mixed',
+      },
+    })
+    expect(response.headers.get('content-type')).toEqual(
+      'multipart/mixed; boundary="-"',
+    )
+    const iterator = response.body![Symbol.asyncIterator]()
+    const { value } = await iterator.next()
+    const valueStr = Buffer.from(value).toString('utf-8')
+    expect(valueStr).toMatchInlineSnapshot(`
+        "---
+        Content-Type: application/json; charset=utf-8
+        Content-Length: 24
+
+        {\\"data\\":{\\"ping\\":\\"pong\\"}}
+        ---"
+      `)
+  })
+  it('should not allow to return if the result is an async iterable and accept is just json', async () => {
+    const response = await fetch(`${url}?query=subscription{counter}`, {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    expect(response.status).toEqual(406)
+  })
+})

@@ -3,18 +3,13 @@ import { ExecutionResult } from 'graphql'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
-export function isPushResult(
-  request: Request,
-  result: ResultProcessorInput,
-): result is AsyncIterable<ExecutionResult> {
-  return (
-    isAsyncIterable(result) &&
-    !!request.headers.get('accept')?.includes('text/event-stream')
-  )
+export function isPushResult(request: Request): boolean {
+  // There should be an explicit accept header for this result type
+  return !!request.headers.get('accept')?.includes('text/event-stream')
 }
 
 export function processPushResult(
-  result: AsyncIterable<ExecutionResult>,
+  result: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
   const headersInit: HeadersInit = {
@@ -33,7 +28,20 @@ export function processPushResult(
   const textEncoder = new fetchAPI.TextEncoder()
   const readableStream = new fetchAPI.ReadableStream({
     start() {
-      iterator = result[Symbol.asyncIterator]()
+      if (isAsyncIterable(result)) {
+        iterator = result[Symbol.asyncIterator]()
+      } else {
+        let finished = false
+        iterator = {
+          next: () => {
+            if (finished) {
+              return Promise.resolve({ done: true, value: null })
+            }
+            finished = true
+            return Promise.resolve({ done: false, value: result })
+          },
+        }
+      }
     },
     async pull(controller) {
       const { done, value } = await iterator.next()

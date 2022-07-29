@@ -1,17 +1,25 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
-import { ExecutionResult } from 'graphql'
+import { ExecutionResult, GraphQLError } from 'graphql'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
 export function isRegularResult(
   request: Request,
   result: ResultProcessorInput,
-): result is ExecutionResult {
-  return !isAsyncIterable(result)
+): boolean {
+  if (!isAsyncIterable(result)) {
+    const acceptHeader = request.headers.get('accept')
+    if (acceptHeader) {
+      return acceptHeader.includes('application/json')
+    }
+    // If there is no header, assume it's a regular result per spec
+    return true
+  }
+  return false
 }
 
 export function processRegularResult(
-  executionResult: ExecutionResult,
+  executionResult: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
   const textEncoder = new fetchAPI.TextEncoder()
