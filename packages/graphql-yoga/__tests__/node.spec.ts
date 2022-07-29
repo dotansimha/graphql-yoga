@@ -230,10 +230,11 @@ describe('Context error', () => {
       context: () => {
         throw new Error('I like turtles')
       },
+      schema,
     })
 
     const response = await request(yoga).post('/graphql').send({
-      query: '{ greetings }',
+      query: '{ ping }',
     })
     const body = JSON.parse(response.text)
     expect(body).toMatchInlineSnapshot(`
@@ -254,10 +255,11 @@ describe('Context error', () => {
       context: () => {
         throw new Error('I like turtles')
       },
+      schema,
     })
 
     const response = await request(yoga).post('/graphql').send({
-      query: '{ greetings }',
+      query: '{ ping }',
     })
     const body = JSON.parse(response.text)
     expect(body).toMatchInlineSnapshot(`
@@ -278,10 +280,11 @@ describe('Context error', () => {
       context: () => {
         throw new GraphQLError('I like turtles')
       },
+      schema,
     })
 
     const response = await request(yoga).post('/graphql').send({
-      query: '{ greetings }',
+      query: '{ ping }',
     })
     const body = JSON.parse(response.text)
     expect(body).toMatchInlineSnapshot(`
@@ -306,6 +309,13 @@ describe('Context error', () => {
           },
         })
       },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            greetings: String
+          }
+        `,
+      }),
     })
 
     const response = await request(yoga).post('/graphql').send({
@@ -444,6 +454,7 @@ describe('HTTP Error Extensions', () => {
 it('parse error is sent to clients', async () => {
   const yoga = createYoga({
     logging: false,
+    schema,
   })
 
   const server = createServer(yoga)
@@ -483,6 +494,7 @@ it('parse error is sent to clients', async () => {
 it('validation error is sent to clients', async () => {
   const yoga = createYoga({
     logging: false,
+    schema,
   })
 
   const server = createServer(yoga)
@@ -517,6 +529,25 @@ it('validation error is sent to clients', async () => {
   } finally {
     await new Promise((resolve) => server.close(resolve))
   }
+})
+
+it('missing schema causes a error', async () => {
+  const yoga = createYoga({})
+
+  const response = await yoga.fetch('https://localhost/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: '{ __typename }',
+    }),
+  })
+
+  expect(response.status).toEqual(200)
+  expect(await response.text()).toMatchInlineSnapshot(
+    `"{\\"data\\":null,\\"errors\\":[{\\"message\\":\\"Unexpected error.\\"}]}"`,
+  )
 })
 
 describe('Requests', () => {

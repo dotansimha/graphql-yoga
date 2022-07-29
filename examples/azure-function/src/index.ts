@@ -1,5 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
 import { Request } from '@whatwg-node/fetch'
 
 const httpTrigger: AzureFunction = async function (
@@ -14,6 +15,19 @@ const httpTrigger: AzureFunction = async function (
       warn: context.log.warn,
     },
     graphqlEndpoint: '/api/yoga',
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          greetings: String
+        }
+      `,
+      resolvers: {
+        Query: {
+          greetings: () =>
+            'This is the `greetings` field of the root `Query` type',
+        },
+      },
+    }),
   })
   context.log('HTTP trigger function processed a request.')
 

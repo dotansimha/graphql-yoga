@@ -1,5 +1,7 @@
 import { getIntrospectionQuery } from 'graphql'
 import { createYoga } from 'graphql-yoga'
+import { createSchema } from 'graphql-yoga/schema'
+import { Repeater } from 'graphql-yoga/subscription'
 import { Request } from '@whatwg-node/fetch'
 
 const listenerMap = new Map<string, Set<EventListenerOrEventListenerObject>>()
@@ -35,7 +37,37 @@ function trigger(eventName: string, data: any) {
 }
 
 describe('Service worker', () => {
-  const yoga = createYoga()
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          greetings: String
+        }
+
+        type Subscription {
+          time: String
+        }
+      `,
+      resolvers: {
+        Query: {
+          greetings: () => 'Hello world!',
+        },
+        Subscription: {
+          time: {
+            subscribe: () =>
+              new Repeater(async (push, end) => {
+                const interval = setInterval(() => {
+                  push({ currentTime: new Date().toISOString() })
+                }, 1000)
+                end.then(() => clearInterval(interval))
+                await end
+              }),
+          },
+        },
+      },
+    }),
+  })
+
   beforeEach(() => {
     self.addEventListener('fetch', yoga)
   })
