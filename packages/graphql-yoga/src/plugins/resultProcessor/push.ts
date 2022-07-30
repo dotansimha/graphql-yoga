@@ -1,5 +1,6 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
+import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
@@ -12,16 +13,14 @@ export function processPushResult(
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
-  const headersInit: HeadersInit = {
+  const headersInit = {
     'Content-Type': 'text/event-stream',
     Connection: 'keep-alive',
     'Cache-Control': 'no-cache',
     'Content-Encoding': 'none',
   }
-  const responseInit: ResponseInit = {
-    headers: headersInit,
-    status: 200,
-  }
+
+  const responseInit = getResponseInitByRespectingErrors(result, headersInit)
 
   let iterator: AsyncIterator<ExecutionResult<any>>
 

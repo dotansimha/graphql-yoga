@@ -22,7 +22,7 @@ import {
   File,
   FormData,
 } from '@whatwg-node/fetch'
-import { ExecutionResult } from '@graphql-tools/utils'
+import { createGraphQLError, ExecutionResult } from '@graphql-tools/utils'
 import { ServerResponse, Server } from 'http'
 
 describe('Disable Introspection with plugin', () => {
@@ -54,7 +54,6 @@ describe('Disable Introspection with plugin', () => {
     expect(response.body.data).toBeNull()
     expect(response.body.errors![0]).toMatchInlineSnapshot(`
       Object {
-        "extensions": Object {},
         "locations": Array [
           Object {
             "column": 7,
@@ -198,6 +197,28 @@ describe('Masked Error Option', () => {
       },
     })
   })
+  it('should mask errors from onRequestParse(HTTP hook) with 500', async () => {
+    const yoga = createYoga({
+      schema,
+      plugins: [
+        {
+          onRequestParse() {
+            throw new Error('Some random error!')
+          },
+        },
+      ],
+      logging: false,
+    })
+
+    const response = await request(yoga).post('/graphql').send({
+      query: '{ hi hello }',
+    })
+
+    expect(response.statusCode).toBe(500)
+
+    const body = JSON.parse(response.text)
+    expect(body.errors?.[0]?.message).toBe('Unexpected error.')
+  })
 })
 
 describe('Context error', () => {
@@ -305,6 +326,120 @@ describe('Context error', () => {
   })
 })
 
+describe('HTTP Error Extensions', () => {
+  it('should respect the status code and headers given with the thrown error during the execution', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hello: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            hello() {
+              throw new GraphQLError('Some random error!', {
+                extensions: {
+                  http: {
+                    status: 401,
+                    headers: {
+                      'WWW-Authenticate': 'Bearer',
+                    },
+                  },
+                },
+              })
+            },
+          },
+        },
+      },
+      logging: false,
+    })
+
+    const response = await request(yoga).post('/graphql').send({
+      query: '{ hello }',
+    })
+
+    expect(response.statusCode).toBe(401)
+    expect(response.headers['www-authenticate']).toBe('Bearer')
+  })
+  it('should respect the highest status code if there are many errors thrown with different HTTP status codes', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            secret: String
+            inaccessibleOnDb: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            secret: () => {
+              throw createGraphQLError('You cannot access this secret', {
+                extensions: {
+                  http: {
+                    status: 401,
+                  },
+                },
+              })
+            },
+            inaccessibleOnDb: () => {
+              throw createGraphQLError('DB is not available', {
+                extensions: {
+                  http: {
+                    status: 503,
+                  },
+                },
+              })
+            },
+          },
+        },
+      },
+    })
+
+    const response = await request(yoga).post('/graphql').send({
+      query: '{ secret inaccessibleOnDb }',
+    })
+
+    expect(response.statusCode).toBe(503)
+
+    const body = JSON.parse(response.text)
+    expect(body).toMatchInlineSnapshot(`
+      Object {
+        "data": Object {
+          "inaccessibleOnDb": null,
+          "secret": null,
+        },
+        "errors": Array [
+          Object {
+            "locations": Array [
+              Object {
+                "column": 3,
+                "line": 1,
+              },
+            ],
+            "message": "You cannot access this secret",
+            "path": Array [
+              "secret",
+            ],
+          },
+          Object {
+            "locations": Array [
+              Object {
+                "column": 10,
+                "line": 1,
+              },
+            ],
+            "message": "DB is not available",
+            "path": Array [
+              "inaccessibleOnDb",
+            ],
+          },
+        ],
+      }
+    `)
+  })
+})
+
 it('parse error is sent to clients', async () => {
   const yoga = createYoga({
     logging: false,
@@ -328,7 +463,6 @@ it('parse error is sent to clients', async () => {
         "data": null,
         "errors": Array [
           Object {
-            "extensions": Object {},
             "locations": Array [
               Object {
                 "column": 10,
@@ -368,7 +502,6 @@ it('validation error is sent to clients', async () => {
         "data": null,
         "errors": Array [
           Object {
-            "extensions": Object {},
             "locations": Array [
               Object {
                 "column": 2,

@@ -1,4 +1,5 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
+import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
@@ -34,17 +35,21 @@ export function processRegularResult(
   executionResult: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
+  const contentType = acceptHeaderByResult.get(executionResult)
+  const headersInit = {
+    'Content-Type': contentType || 'application/json',
+  }
+
+  const responseInit = getResponseInitByRespectingErrors(
+    executionResult,
+    headersInit,
+  )
+
   const textEncoder = new fetchAPI.TextEncoder()
   const responseBody = JSON.stringify(executionResult)
   const decodedString = textEncoder.encode(responseBody)
-  const contentType = acceptHeaderByResult.get(executionResult)
-  const headersInit: HeadersInit = {
-    'Content-Type': contentType || 'application/json',
-    'Content-Length': decodedString.byteLength.toString(),
-  }
-  const responseInit: ResponseInit = {
-    headers: headersInit,
-    status: 200,
-  }
+
+  headersInit['Content-Length'] = decodedString.byteLength.toString()
+
   return new fetchAPI.Response(decodedString, responseInit)
 }

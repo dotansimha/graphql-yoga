@@ -2,7 +2,11 @@ import { FormatErrorHandler } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
 
-export const formatError: FormatErrorHandler = (err, message, isDev) => {
+export const yogaDefaultFormatError: FormatErrorHandler = (
+  err,
+  message,
+  isDev,
+) => {
   if (err instanceof GraphQLError) {
     if (err.originalError) {
       if (err.originalError.name === 'GraphQLError') {
@@ -28,5 +32,11 @@ export const formatError: FormatErrorHandler = (err, message, isDev) => {
     }
     return err
   }
-  return new GraphQLError(message)
+  return createGraphQLError(message, {
+    extensions: {
+      http: {
+        status: 500,
+      },
+    },
+  })
 }

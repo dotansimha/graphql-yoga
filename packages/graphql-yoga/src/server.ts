@@ -18,6 +18,7 @@ import {
   YogaInitialContext,
   FetchAPI,
   GraphQLParams,
+  YogaMaskedErrorOpts,
 } from './types.js'
 import {
   OnRequestHook,
@@ -81,7 +82,7 @@ import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckG
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
-import { formatError } from './utils/formatError.js'
+import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -242,6 +243,7 @@ export class YogaServer<
   private onRequestHooks: OnRequestHook<TServerContext>[]
   private onResultProcessHooks: OnResultProcess[]
   private onResponseHooks: OnResponseHook<TServerContext>[]
+  private maskedErrorsOpts: YogaMaskedErrorOpts | null
   private id: string
 
   constructor(
@@ -275,11 +277,13 @@ export class YogaServer<
             }
         : logger
 
-    const maskedErrorsOpts: UseMaskedErrorsOpts | null =
+    this.maskedErrorsOpts =
       options?.maskedErrors === false
         ? null
         : {
-            formatError,
+            formatError: yogaDefaultFormatError,
+            errorMessage: 'Unexpected error.',
+            isDev: globalThis.process?.env?.NODE_ENV === 'development',
             ...(typeof options?.maskedErrors === 'object'
               ? options.maskedErrors
               : {}),
@@ -406,7 +410,7 @@ export class YogaServer<
       useHTTPValidationError(),
       // We make sure that the user doesn't send a mutation with GET
       usePreventMutationViaGET(),
-      maskedErrorsOpts != null && useMaskedErrors(maskedErrorsOpts),
+      this.maskedErrorsOpts != null && useMaskedErrors(this.maskedErrorsOpts),
       useUnhandledRoute({
         graphqlEndpoint: this.graphqlEndpoint,
         showLandingPage: options?.landingPage ?? true,
@@ -532,42 +536,18 @@ export class YogaServer<
 
       return response
     } catch (error: unknown) {
-      const finalResponseInit = {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+      const errors = handleError(error, this.maskedErrorsOpts)
 
-      const errors = handleError(error)
-      for (const error of errors) {
-        if (error.extensions?.http) {
-          if (
-            error.extensions.http.status &&
-            error.extensions?.http.status > finalResponseInit.status
-          ) {
-            finalResponseInit.status = error.extensions.http.status
-          }
-          if (error.extensions.http.headers) {
-            Object.assign(
-              finalResponseInit.headers,
-              error.extensions.http.headers,
-            )
-          }
-          // Remove http extensions from the final response
-          error.extensions.http = undefined
-        }
-      }
-
-      const payload: ExecutionResult = {
+      const result: ExecutionResult = {
         data: null,
         errors,
       }
-      const textEncoder = new this.fetchAPI.TextEncoder()
-      const decodedString = textEncoder.encode(JSON.stringify(payload))
-      finalResponseInit.headers['Content-Length'] =
-        decodedString.byteLength.toString()
-      return new this.fetchAPI.Response(decodedString, finalResponseInit)
+      return processResult({
+        request,
+        result,
+        fetchAPI: this.fetchAPI,
+        onResultProcessHooks: this.onResultProcessHooks,
+      })
     }
   }
 
@@ -577,16 +557,22 @@ export class YogaServer<
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
   ) => {
-    const response = await this.getResponse(request, ...args)
+    try {
+      const response = await this.getResponse(request, ...args)
 
-    for (const onResponseHook of this.onResponseHooks) {
-      await onResponseHook({
-        request,
-        response,
-        serverContext: args[0],
+      for (const onResponseHook of this.onResponseHooks) {
+        await onResponseHook({
+          request,
+          response,
+          serverContext: args[0],
+        })
+      }
+      return response
+    } catch (e) {
+      return new this.fetchAPI.Response('Internal Server Error', {
+        status: 500,
       })
     }
-    return response
   }
 
   /**
