@@ -1,0 +1,315 @@
+diff --git a/node_modules/@whatwg-node/server/index.js b/node_modules/@whatwg-node/server/index.js
+index dcb2f65..fc042a7 100644
+--- a/node_modules/@whatwg-node/server/index.js
++++ b/node_modules/@whatwg-node/server/index.js
+@@ -4,6 +4,190 @@ Object.defineProperty(exports, '__esModule', { value: true });
+ 
+ const fetch = require('@whatwg-node/fetch');
+ 
++function getHeadersFromObj(headersObj) {
++    return {
++        get(name) {
++            return headersObj[name.toLowerCase()] || null;
++        },
++        has(name) {
++            return name.toLowerCase() in headersObj;
++        },
++        set(name, value) {
++            headersObj[name.toLowerCase()] = value;
++        },
++        append(name, value) {
++            headersObj[name.toLowerCase()] = (headersObj[name.toLowerCase()] || '') + value;
++        },
++        delete(name) {
++            delete headersObj[name.toLowerCase()];
++        },
++        forEach(callback) {
++            for (const name in headersObj) {
++                callback(headersObj[name], name, this);
++            }
++        }
++    };
++}
++
++function RequestBodyMethodsFromString(str) {
++    const textEncoder = new fetch.TextEncoder();
++    return {
++        async arrayBuffer() {
++            return textEncoder.encode(str).buffer;
++        },
++        async blob() {
++            return new fetch.Blob([str]);
++        },
++        get body() {
++            async function* createAsyncIterable() {
++                yield textEncoder.encode(str);
++            }
++            return createAsyncIterable();
++        },
++        async formData() {
++            throw new Error('Not implemented');
++        },
++        async json() {
++            return JSON.parse(str);
++        },
++        async text() {
++            return str;
++        }
++    };
++}
++function RequestBodyMethodsFromUint8Array(uint8Array) {
++    return {
++        async arrayBuffer() {
++            return uint8Array.buffer;
++        },
++        async blob() {
++            return new fetch.Blob([uint8Array]);
++        },
++        get body() {
++            async function* createAsyncIterable() {
++                yield uint8Array;
++            }
++            return createAsyncIterable();
++        },
++        async formData() {
++            throw new Error('Not implemented');
++        },
++        async json() {
++            return JSON.parse(new TextDecoder().decode(uint8Array));
++        },
++        async text() {
++            return new TextDecoder().decode(uint8Array);
++        },
++    };
++}
++function RequestBodyMethodsFromBlob(blob) {
++    return {
++        arrayBuffer() {
++            return blob.arrayBuffer();
++        },
++        async blob() {
++            return blob;
++        },
++        get body() {
++            return blob.stream();
++        },
++        async formData() {
++            throw new Error('Not implemented');
++        },
++        async json() {
++            const text = await blob.text();
++            return JSON.parse(text);
++        },
++        text() {
++            return blob.text();
++        }
++    };
++}
++function RequestBodyMethodsFromFormData(formData) {
++    return {
++        arrayBuffer() {
++            throw new Error('Not implemented');
++        },
++        async blob() {
++            throw new Error('Not implemented');
++        },
++        get body() {
++            throw new Error('Not implemented');
++        },
++        async formData() {
++            return formData;
++        },
++        async json() {
++            throw new Error('Not implemented');
++        },
++        text() {
++            throw new Error('Not implemented');
++        }
++    };
++}
++function RequestBodyMethodsFromAsyncIterable(asyncIterable) {
++    const textDecoder = new TextDecoder();
++    return {
++        async arrayBuffer() {
++            const chunks = [];
++            for await (const chunk of asyncIterable) {
++                chunks.push(...chunk);
++            }
++            return new Uint8Array(chunks).buffer;
++        },
++        async blob() {
++            const chunks = [];
++            for await (const chunk of asyncIterable) {
++                chunks.push(chunk);
++            }
++            return new fetch.Blob(chunks);
++        },
++        get body() {
++            return asyncIterable;
++        },
++        async formData() {
++            return fetch.Request.prototype.formData.apply(this);
++        },
++        async json() {
++            const text = await this.text();
++            return JSON.parse(text);
++        },
++        async text() {
++            let text = '';
++            for await (const chunk of asyncIterable) {
++                text += textDecoder.decode(chunk);
++            }
++            return text;
++        }
++    };
++}
++function RequestBodyMethodsFromJson(jsonData) {
++    const encoder = new fetch.TextEncoder();
++    return {
++        async arrayBuffer() {
++            return encoder.encode(await this.text()).buffer;
++        },
++        async blob() {
++            return new fetch.Blob([await this.text()]);
++        },
++        get body() {
++            async function* createAsyncIterable() {
++                yield encoder.encode(JSON.stringify(jsonData));
++            }
++            return createAsyncIterable();
++        },
++        async formData() {
++            throw new Error('Not implemented');
++        },
++        async json() {
++            return jsonData;
++        },
++        async text() {
++            return JSON.stringify(jsonData);
++        },
++    };
++}
++
+ function isAsyncIterable(body) {
+     return body != null && typeof body === 'object' && typeof body[Symbol.asyncIterator] === 'function';
+ }
+@@ -24,19 +208,7 @@ function configureSocket(rawRequest) {
+     (_d = (_c = rawRequest === null || rawRequest === void 0 ? void 0 : rawRequest.socket) === null || _c === void 0 ? void 0 : _c.setNoDelay) === null || _d === void 0 ? void 0 : _d.call(_c, true);
+     (_f = (_e = rawRequest === null || rawRequest === void 0 ? void 0 : rawRequest.socket) === null || _e === void 0 ? void 0 : _e.setKeepAlive) === null || _f === void 0 ? void 0 : _f.call(_e, true);
+ }
+-function isRequestBody(body) {
+-    const stringTag = body[Symbol.toStringTag];
+-    if (typeof body === 'string' ||
+-        stringTag === 'Uint8Array' ||
+-        stringTag === 'Blob' ||
+-        stringTag === 'FormData' ||
+-        stringTag === 'URLSearchParams' ||
+-        isAsyncIterable(body)) {
+-        return true;
+-    }
+-    return false;
+-}
+-function normalizeNodeRequest(nodeRequest, RequestCtor) {
++function normalizeNodeRequest(nodeRequest) {
+     var _a;
+     const rawRequest = nodeRequest.raw || nodeRequest.req || nodeRequest;
+     configureSocket(rawRequest);
+@@ -49,12 +221,14 @@ function normalizeNodeRequest(nodeRequest, RequestCtor) {
+         }
+         fullUrl = urlObj.toString();
+     }
+-    const baseRequestInit = {
+-        method: nodeRequest.method,
+-        headers: nodeRequest.headers,
++    const headers = getHeadersFromObj(nodeRequest.headers);
++    const baseRequest = {
++        url: fullUrl,
++        method: nodeRequest.method || 'GET',
++        headers,
+     };
+     if (nodeRequest.method === 'GET' || nodeRequest.method === 'HEAD') {
+-        return new RequestCtor(fullUrl, baseRequestInit);
++        return baseRequest;
+     }
+     /**
+      * Some Node server frameworks like Serverless Express sends a dummy object with body but as a Buffer not string
+@@ -64,34 +238,45 @@ function normalizeNodeRequest(nodeRequest, RequestCtor) {
+      */
+     const maybeParsedBody = nodeRequest.body;
+     if (maybeParsedBody != null && Object.keys(maybeParsedBody).length > 0) {
+-        if (isRequestBody(maybeParsedBody)) {
+-            return new RequestCtor(fullUrl, {
+-                ...baseRequestInit,
+-                body: maybeParsedBody,
+-            });
++        if (typeof maybeParsedBody === 'string') {
++            const requestBodyMethods = RequestBodyMethodsFromString(maybeParsedBody);
++            return {
++                ...baseRequest,
++                ...requestBodyMethods,
++            };
+         }
+-        const request = new RequestCtor(fullUrl, {
+-            ...baseRequestInit,
+-        });
+-        if (!((_a = request.headers.get('content-type')) === null || _a === void 0 ? void 0 : _a.includes('json'))) {
+-            request.headers.set('content-type', 'application/json');
+-        }
+-        return new Proxy(request, {
+-            get: (target, prop, receiver) => {
+-                switch (prop) {
+-                    case 'json':
+-                        return async () => maybeParsedBody;
+-                    default:
+-                        return Reflect.get(target, prop, receiver);
++        let requestBodyMethods;
++        const requestBodyType = maybeParsedBody[Symbol.toStringTag];
++        switch (requestBodyType) {
++            case 'Uint8Array':
++                requestBodyMethods = RequestBodyMethodsFromUint8Array(maybeParsedBody);
++                break;
++            case 'Blob':
++                requestBodyMethods = RequestBodyMethodsFromBlob(maybeParsedBody);
++                break;
++            case 'FormData':
++                requestBodyMethods = RequestBodyMethodsFromFormData(maybeParsedBody);
++                break;
++            default:
++                if (isAsyncIterable(maybeParsedBody)) {
++                    requestBodyMethods = RequestBodyMethodsFromAsyncIterable(maybeParsedBody);
+                 }
+-            },
+-        });
++                else {
++                    requestBodyMethods = RequestBodyMethodsFromJson(maybeParsedBody);
++                    if (!((_a = headers.get('content-type')) === null || _a === void 0 ? void 0 : _a.includes('json'))) {
++                        headers.set('content-type', 'application/json');
++                    }
++                }
++        }
++        return {
++            ...baseRequest,
++            ...requestBodyMethods,
++        };
+     }
+-    return new RequestCtor(fullUrl, {
+-        headers: nodeRequest.headers,
+-        method: nodeRequest.method,
+-        body: rawRequest,
+-    });
++    return {
++        ...baseRequest,
++        ...RequestBodyMethodsFromAsyncIterable(rawRequest)
++    };
+ }
+ function isReadable(stream) {
+     return stream.read != null;
+@@ -144,7 +329,7 @@ function createServerAdapter({ Request: RequestCtor = fetch.Request, handleReque
+         return handleRequest(request, init);
+     }
+     function handleNodeRequest(nodeRequest, serverContext) {
+-        const request = normalizeNodeRequest(nodeRequest, RequestCtor);
++        const request = normalizeNodeRequest(nodeRequest);
+         return handleRequest(request, serverContext);
+     }
+     async function requestListener(nodeRequest, serverResponse) {
