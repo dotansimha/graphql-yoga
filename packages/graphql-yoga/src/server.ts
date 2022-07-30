@@ -523,14 +523,12 @@ export class YogaServer<
         })
       }
 
-      const response = await processResult({
+      return processResult({
         request,
         result,
         fetchAPI: this.fetchAPI,
         onResultProcessHooks: this.onResultProcessHooks,
       })
-
-      return response
     } catch (error: unknown) {
       const finalResponseInit = {
         status: 200,
@@ -559,15 +557,16 @@ export class YogaServer<
         }
       }
 
-      const payload: ExecutionResult = {
+      const result: ExecutionResult = {
         data: null,
         errors,
       }
-      const textEncoder = new this.fetchAPI.TextEncoder()
-      const decodedString = textEncoder.encode(JSON.stringify(payload))
-      finalResponseInit.headers['Content-Length'] =
-        decodedString.byteLength.toString()
-      return new this.fetchAPI.Response(decodedString, finalResponseInit)
+      return processResult({
+        request,
+        result,
+        fetchAPI: this.fetchAPI,
+        onResultProcessHooks: this.onResultProcessHooks,
+      })
     }
   }
 
