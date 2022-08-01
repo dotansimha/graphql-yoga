@@ -1,4 +1,4 @@
-import { GraphQLSchema, isSchema, print } from 'graphql'
+import { print } from 'graphql'
 import {
   GetEnvelopedFn,
   envelop,
@@ -6,7 +6,6 @@ import {
   UseMaskedErrorsOpts,
   useExtendContext,
   useLogger,
-  useSchema,
   PromiseOrValue,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
@@ -83,6 +82,7 @@ import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValid
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
+import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -157,22 +157,10 @@ export type YogaServerOptions<
 
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
-  schema?:
-    | GraphQLSchema
-    | {
-        typeDefs: TypeSource
-        resolvers?:
-          | IResolvers<
-              TRootValue,
-              TUserContext & TServerContext & YogaInitialContext
-            >
-          | Array<
-              IResolvers<
-                TRootValue,
-                TUserContext & TServerContext & YogaInitialContext
-              >
-            >
-      }
+  schema?: YogaSchemaDefinition<
+    TUserContext & TServerContext & YogaInitialContext,
+    TRootValue
+  >
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
@@ -182,41 +170,6 @@ export type YogaServerOptions<
 } & Partial<
   OptionsWithPlugins<TUserContext & TServerContext & YogaInitialContext>
 >
-
-export function getDefaultSchema() {
-  return makeExecutableSchema({
-    typeDefs: /* GraphQL */ `
-      """
-      Greetings from GraphQL Yoga!
-      """
-      type Query {
-        greetings: String
-      }
-      type Subscription {
-        """
-        Current Time
-        """
-        time: String
-      }
-    `,
-    resolvers: {
-      Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
-      },
-      Subscription: {
-        time: {
-          async *subscribe() {
-            while (true) {
-              yield { time: new Date().toISOString() }
-              await new Promise((resolve) => setTimeout(resolve, 1000))
-            }
-          },
-        },
-      },
-    },
-  })
-}
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -255,14 +208,6 @@ export class YogaServer<
       createFetch({
         useNodeFetch: true,
       })
-    const schema = options?.schema
-      ? isSchema(options.schema)
-        ? options.schema
-        : makeExecutableSchema({
-            typeDefs: options.schema.typeDefs,
-            resolvers: options.schema.resolvers,
-          })
-      : getDefaultSchema()
 
     const logger = options?.logging != null ? options.logging : true
     this.logger =
@@ -293,7 +238,7 @@ export class YogaServer<
 
     this.plugins = [
       // Use the schema provided by the user
-      schema != null && useSchema(schema),
+      useSchema(options?.schema),
       // Performance things
       options?.parserCache !== false &&
         useParserCache(
