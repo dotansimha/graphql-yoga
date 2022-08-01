@@ -4,6 +4,7 @@
   "scripts": {
     "format": "prettier . --write",
     "pretty-quick": "pretty-quick --staged",
+    "prettier-check": "prettier --check .",
     "prebuild": "rimraf packages/*/dist",
     "check": "yarn workspaces run check",
     "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace graphql-yoga run generate-graphiql-html && bob build",
@@ -13,7 +14,6 @@
     "start:docs": "yarn workspace website dev",
     "postinstall": "patch-package && husky install",
     "fix-bin": "node scripts/fix-bin.js",
-    "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx .",
     "build-website": "yarn build && cd website && yarn build"
   },
   "repository": {
@@ -30,7 +30,9 @@
   "contributors": [
     "Johannes Schickling <johannes@graph.cool>",
     "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://github.com/saihaj)",
-    "Dotan Simha <dotansimha@gmail.com>"
+    "Dotan Simha <dotansimha@gmail.com>",
+    "Arda TANRIKULU <ardatanrikulu@gmail.com>",
+    "Laurin Quast <laurinquast@googlemail.com>"
   ],
   "license": "MIT",
   "bugs": {
