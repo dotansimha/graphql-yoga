@@ -371,12 +371,22 @@ throw new GraphQLError(
 )
 ```
 
-### Handling HTTP status codes and headers
+### Modifying HTTP status codes and headers
 
-With `extensions`, you can pass some additional data to decide the status code and the headers of the error response;
+The `http` `extensions` field, has special handling within GraphQL Yoga.
+It will always be used for determining what status code and additional headers should be sent to a client.
+The field itself will never be included the the response extensions sent to the user.
+
+The default status code of 200 can be overwritten by specifying the `extensions.http.status` field. In case of multiple errors that try to alter the status code, the highest status code will be used.
+E.g. if the first error has a status code of 404 and the second error has a status code of 400, the status code of the first error will be used.
+
+You can add additional HTTP headers by specifying the `extensions.http.status` field. All the headers specified in that map will be sent to the client. In case multiple errors modify the headers the last error raised during the GraphQL execution phase will overwrite the previous ones.
+
+**Note:** Setting the status code and headers is only possible for the initial payload when sending a multipart operation (defer/stream) and only possible when when subscribing to the event source in a subscription operation (the HTTP status of an ongoing request that already sent a status code can not be changed).
+Please use the `extensions.http` with caution.
 
 ```ts
-new GraphQLError(
+throw new GraphQLError(
   `User with id '${args.byId}' not found.`,
   // error extensions
   {
@@ -384,7 +394,7 @@ new GraphQLError(
         http: {
           status: 400,
           headers: {
-            'X-Custom-Header': 'some-value',
+            'x-custom-header': 'some-value',
           }
         },
       },
