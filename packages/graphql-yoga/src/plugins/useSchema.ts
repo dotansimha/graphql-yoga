@@ -1,7 +1,9 @@
+import { PromiseOrValue } from '@envelop/core'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { IResolvers, TypeSource } from '@graphql-tools/utils'
 import { GraphQLError, GraphQLSchema, isSchema } from 'graphql'
-import { Plugin, PromiseOrValue, YogaInitialContext } from 'graphql-yoga'
+import { GraphQLSchemaWithContext, YogaInitialContext } from '../types'
+import { Plugin } from './types'
 
 // TODO: Will be removed later
 type TypeDefsAndResolvers<TContext, TRootValue = {}> = {
@@ -13,8 +15,8 @@ type TypeDefsAndResolvers<TContext, TRootValue = {}> = {
 
 export type YogaSchemaDefinition<TContext, TRootValue> =
   | TypeDefsAndResolvers<TContext, TRootValue>
-  | PromiseOrValue<GraphQLSchema>
-  | ((request: Request) => PromiseOrValue<GraphQLSchema>)
+  | PromiseOrValue<GraphQLSchemaWithContext<TContext>>
+  | ((request: Request) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>)
 
 // Will be moved to a seperate export later
 export function getDefaultSchema() {
