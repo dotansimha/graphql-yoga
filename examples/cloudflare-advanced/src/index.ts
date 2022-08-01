@@ -90,8 +90,10 @@ const yoga = createYoga({
           subscribe: () =>
             new Repeater((push, end) => {
               const eventListener = (event: ScheduledEvent) => push(event)
-              addEventListener('scheduled', eventListener)
-              end.then(() => removeEventListener('scheduled', eventListener))
+              self.addEventListener('scheduled', eventListener)
+              end.then(() =>
+                self.removeEventListener('scheduled', eventListener),
+              )
             }),
           resolve: (event) => event,
         },
