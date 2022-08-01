@@ -21,7 +21,7 @@ export async function processResult({
    */
   onResultProcessHooks: OnResultProcess[]
 }) {
-  let resultProcessor: ResultProcessor<any> | undefined
+  let resultProcessor: ResultProcessor | undefined
 
   for (const onResultProcessHook of onResultProcessHooks) {
     await onResultProcessHook({
@@ -79,7 +79,5 @@ export async function processRequest<TContext>({
       : enveloped.execute
 
   // Get the result to be processed
-  const result = await executeFn(executionArgs)
-
-  return result
+  return executeFn(executionArgs)
 }

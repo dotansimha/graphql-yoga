@@ -1,20 +1,15 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import { ExecutionPatchResult, FetchAPI } from '../../types.js'
+import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
-export function isMultipartResult(
-  request: Request,
-  result: ResultProcessorInput,
-): result is AsyncIterable<ExecutionPatchResult> {
-  return (
-    isAsyncIterable(result) &&
-    !!request.headers.get('accept')?.includes('multipart/mixed')
-  )
+export function isMultipartResult(request: Request): boolean {
+  // There should be an explicit accept header for this result type
+  return !!request.headers.get('accept')?.includes('multipart/mixed')
 }
 
 export function processMultipartResult(
-  executionPatchResultIterable: AsyncIterable<ExecutionPatchResult>,
+  result: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
   const headersInit: HeadersInit = {
@@ -33,7 +28,20 @@ export function processMultipartResult(
 
   const readableStream = new fetchAPI.ReadableStream({
     start(controller) {
-      iterator = executionPatchResultIterable[Symbol.asyncIterator]()
+      if (isAsyncIterable(result)) {
+        iterator = result[Symbol.asyncIterator]()
+      } else {
+        let finished = false
+        iterator = {
+          next: () => {
+            if (finished) {
+              return Promise.resolve({ done: true, value: null })
+            }
+            finished = true
+            return Promise.resolve({ done: false, value: result })
+          },
+        }
+      }
       controller.enqueue(textEncoder.encode(`---`))
     },
     async pull(controller) {

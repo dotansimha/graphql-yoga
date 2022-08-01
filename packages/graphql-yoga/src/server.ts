@@ -387,16 +387,16 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessor({
-        match: isRegularResult,
-        processResult: processRegularResult,
+        match: isMultipartResult,
+        processResult: processMultipartResult,
       }),
       useResultProcessor({
         match: isPushResult,
         processResult: processPushResult,
       }),
       useResultProcessor({
-        match: isMultipartResult,
-        processResult: processMultipartResult,
+        match: isRegularResult,
+        processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
 

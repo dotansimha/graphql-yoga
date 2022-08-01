@@ -111,7 +111,7 @@ export async function assertQuery(
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
-      accept: 'applications/json',
+      accept: 'application/json',
       'content-type': 'application/json',
     },
     body: JSON.stringify({
