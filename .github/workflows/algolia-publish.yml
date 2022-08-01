@@ -17,13 +17,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: "yarn"
+          cache: 'yarn'
 
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-algolia-publish
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
           restore-keys: |
             ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
