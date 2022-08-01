@@ -544,7 +544,7 @@ it('missing schema causes a error', async () => {
     }),
   })
 
-  expect(response.status).toEqual(200)
+  expect(response.status).toEqual(500)
   expect(await response.text()).toMatchInlineSnapshot(
     `"{\\"data\\":null,\\"errors\\":[{\\"message\\":\\"Unexpected error.\\"}]}"`,
   )
