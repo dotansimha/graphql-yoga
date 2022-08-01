@@ -5,7 +5,7 @@ import type { createFetch } from '@whatwg-node/fetch'
 import type { GraphQLSchema } from 'graphql'
 
 export type GraphQLSchemaWithContext<TContext> = GraphQLSchema & {
-  _context?: TContext
+  ["       ___this_is_a_type_hack_don't_try_to_access_this_property"]?: TContext
 }
 
 export interface ExecutionPatchResult<
