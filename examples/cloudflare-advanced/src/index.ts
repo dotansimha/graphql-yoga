@@ -1,5 +1,6 @@
 import { createYoga } from 'graphql-yoga'
 import { createSchema } from 'graphql-yoga/schema'
+import { Repeater } from 'graphql-yoga/subscription'
 
 declare const EXAMPLE_KV: KVNamespace
 
@@ -75,32 +76,29 @@ const yoga = createYoga({
       },
       Subscription: {
         time: {
-          async *subscribe() {
-            while (true) {
-              yield { time: new Date().toISOString() }
-              await new Promise((resolve) => setTimeout(resolve, 1000))
-            }
-          },
+          subscribe: () =>
+            new Repeater((push, end) => {
+              const interval = setInterval(
+                () => push(new Date().toISOString()),
+                1000,
+              )
+              end.then(() => clearInterval(interval))
+            }),
+          resolve: (value) => value,
         },
         scheduled: {
-          async *subscribe() {
-            let scheduledEvent: Event
-            addEventListener('scheduled', (event) => {
-              scheduledEvent = event
-            })
-            while (true) {
-              if (scheduledEvent) {
-                const event = scheduledEvent
-                scheduledEvent = undefined
-                yield event
-              }
-            }
-          },
+          subscribe: () =>
+            new Repeater((push, end) => {
+              const eventListener = (event: ScheduledEvent) => push(event)
+              addEventListener('scheduled', eventListener)
+              end.then(() => removeEventListener('scheduled', eventListener))
+            }),
           resolve: (event) => event,
         },
       },
     },
   }),
+  maskedErrors: false,
 })
 
 self.addEventListener('fetch', yoga)
