@@ -11,6 +11,8 @@ const yoga = createYoga({
     typeDefs: /* GraphQL */ `
       type Query {
         greetings: String
+      }
+      type Subscription {
         time: String
       }
     `,
@@ -19,14 +21,19 @@ const yoga = createYoga({
         greetings: () =>
           'This is the `greetings` field of the root `Query` type',
       },
-      Subscription: () =>
-        new Repeater(async (push, end) => {
-          const getTime = () => new Date().toISOString()
-          push(getTime())
-          const interval = setInterval(() => push(getTime()), 1000)
-          end.then(() => clearInterval(interval))
-          await end
-        }),
+      Subscription: {
+        time: {
+          subscribe: () =>
+            new Repeater(async (push, end) => {
+              const getTime = () => new Date().toISOString()
+              push(getTime())
+              const interval = setInterval(() => push(getTime()), 1000)
+              end.then(() => clearInterval(interval))
+              await end
+            }),
+          resolve: (value) => value,
+        },
+      },
     },
   }),
 })
