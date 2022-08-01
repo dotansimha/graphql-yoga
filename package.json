@@ -2,9 +2,6 @@
   "name": "graphql-yoga-monorepo",
   "private": true,
   "scripts": {
-    "format": "prettier . --write",
-    "pretty-quick": "pretty-quick --staged",
-    "prettier-check": "prettier --check .",
     "prebuild": "rimraf packages/*/dist",
     "check": "yarn workspaces run check",
     "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace graphql-yoga run generate-graphiql-html && bob build",
@@ -14,7 +11,18 @@
     "start:docs": "yarn workspace website dev",
     "postinstall": "patch-package && husky install",
     "fix-bin": "node scripts/fix-bin.js",
+    "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx .",
+    "prettier": "prettier --ignore-path .prettierignore --write --list-different .",
+    "prettier:check": "prettier --ignore-path .prettierignore --check .",
     "build-website": "yarn build && cd website && yarn build"
+  },
+  "lint-staged": {
+    "packages/**/src/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ],
+    "**/*.{ts,tsx,graphql,yml,md,mdx,json}": [
+      "prettier --write"
+    ]
   },
   "repository": {
     "type": "git",
@@ -66,12 +74,12 @@
     "babel-plugin-transform-typescript-metadata": "0.3.2",
     "bob-the-bundler": "3.0.5",
     "eslint": "^8.15.0",
-    "graphql": "^16.1.0",
+    "graphql": "^16.5.0",
     "husky": "^8.0.0",
     "jest": "^28.0.0",
     "patch-package": "^6.4.7",
     "prettier": "^2.4.1",
-    "pretty-quick": "^3.1.2",
+    "lint-staged": "^13.0.3",
     "rimraf": "^3.0.2",
     "supertest": "^6.1.6",
     "ts-jest": "^28.0.0",

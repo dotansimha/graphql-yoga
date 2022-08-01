@@ -44,7 +44,7 @@ jobs:
           SITE_URL: https://www.graphql-yoga.com/
 
       - name: Format
-        run: yarn format
+        run: yarn prettier
 
       - name: Compare
         run: git diff origin/${{ github.base_ref }}.. -- website/algolia-lockfile.json

@@ -41,13 +41,7 @@ export interface YogaLogger {
   error: (...args: any[]) => void
 }
 
-const isDebug = () =>
-  typeof process === 'object'
-    ? process.env.DEBUG
-    : // @ts-expect-error
-    typeof DEBUG !== 'undefined'
-    ? true
-    : false
+const isDebug = () => !!globalThis.process?.env?.DEBUG
 
 const prefix = [LEVEL_COLOR.title, `🧘 Yoga -`, LEVEL_COLOR.reset]
 

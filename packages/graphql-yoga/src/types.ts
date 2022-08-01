@@ -1,6 +1,6 @@
 import type { DocumentNode, GraphQLError } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import { PromiseOrValue } from '@envelop/core'
+import { FormatErrorHandler, PromiseOrValue } from '@envelop/core'
 import { createFetch } from '@whatwg-node/fetch'
 
 export interface ExecutionPatchResult<
@@ -87,4 +87,10 @@ export type FetchAPI = ReturnType<typeof createFetch>
 export interface FetchEvent extends Event {
   request: Request
   respondWith(response: PromiseOrValue<Response>): void
+}
+
+export type YogaMaskedErrorOpts = {
+  formatError: FormatErrorHandler
+  errorMessage: string
+  isDev: boolean
 }

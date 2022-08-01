@@ -1,5 +1,6 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
+import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 
@@ -12,15 +13,13 @@ export function processMultipartResult(
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
-  const headersInit: HeadersInit = {
+  const headersInit = {
     Connection: 'keep-alive',
     'Content-Type': 'multipart/mixed; boundary="-"',
     'Transfer-Encoding': 'chunked',
   }
-  const responseInit: ResponseInit = {
-    headers: headersInit,
-    status: 200,
-  }
+
+  const responseInit = getResponseInitByRespectingErrors(result, headersInit)
 
   let iterator: AsyncIterator<ExecutionResult<any>>
 
