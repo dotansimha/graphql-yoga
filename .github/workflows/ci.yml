@@ -4,10 +4,10 @@ env:
 on:
   push:
     branches:
-      - "master"
+      - 'master'
   pull_request:
     paths-ignore:
-      - "website/**"
+      - 'website/**'
 
 jobs:
   test-node:
@@ -25,13 +25,13 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          cache: 'yarn'
 
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-test-node
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
           restore-keys: |
             ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
@@ -56,13 +56,13 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 18
-          cache: "yarn"
+          cache: 'yarn'
 
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-test-esm
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
           restore-keys: |
             ${{runner.os}}-18-node-modules-
@@ -88,7 +88,7 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 18
-          cache: "yarn"
+          cache: 'yarn'
 
       - name: Use Deno
         uses: denoland/setup-deno@v1
@@ -97,7 +97,7 @@ jobs:
         uses: actions/cache@v3
         id: node-modules-cache-type-check
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
           restore-keys: |
             ${{runner.os}}-18-node-modules-
@@ -113,3 +113,6 @@ jobs:
 
       - name: Test ESM & CJS exports integrity
         run: yarn bob check
+
+      - name: Prettier
+        run: yarn prettier-check
