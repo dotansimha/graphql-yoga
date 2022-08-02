@@ -1,14 +1,13 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
     "moduleResolution": "node",
     "module": "commonjs",
-    "esModuleInterop": true,
-    "lib": ["esnext"],
-    "strict": true,
-    "alwaysStrict": true,
-    "noEmit": true,
-    "skipLibCheck": true
+    "sourceMap": true,
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["./src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "test"]
 }

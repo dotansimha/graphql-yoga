@@ -5,8 +5,9 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "lib": ["esnext"]
-  }
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "test"]
 }

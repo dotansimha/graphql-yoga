@@ -24,12 +24,12 @@ const yoga = createYoga({
       Subscription: {
         time: {
           subscribe: () =>
-            new Repeater(async (push, end) => {
-              const getTime = () => new Date().toISOString()
-              push(getTime())
-              const interval = setInterval(() => push(getTime()), 1000)
+            new Repeater((push, end) => {
+              const interval = setInterval(
+                () => push(new Date().toISOString()),
+                1000,
+              )
               end.then(() => clearInterval(interval))
-              await end
             }),
           resolve: (value) => value,
         },
