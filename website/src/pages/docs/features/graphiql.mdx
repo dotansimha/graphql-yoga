@@ -1,8 +1,6 @@
----
-id: graphiql
-title: GraphiQL
-sidebar_label: GraphiQL
----
+import { Callout, PackageCmd } from '@theguild/components'
+
+# GraphiQL
 
 [GraphiQL is an in-browser IDE for writing, validating, and testing GraphQL queries.](https://github.com/graphql/graphiql)
 
@@ -30,7 +28,7 @@ server.start()
 
 ## Disabling GraphiQL
 
-You can disable GraphiQL simply setting the `graphiql` option to `false`.
+You can disable GraphiQL by simply setting the `graphiql` option to `false`.
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -43,7 +41,11 @@ const server = createServer({
 server.start()
 ```
 
-> Be aware that this does not really make your GraphQL server more secure. As long as the introspection and/or the "did you mean x" suggestion feature of GraphQL are enabled.
+<Callout type="info">
+  Be aware that this does not make your GraphQL server more secure. As long as
+  the introspection and/or the "did you mean x" suggestion feature of GraphQL
+  are enabled.
+</Callout>
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -60,7 +62,7 @@ server.start()
 
 Disabling the "did you mean x" suggestion feature is not possible at the moment ([see the corresponding graphql-js GitHub issue](https://github.com/graphql/graphql-js/issues/2247)).
 
-As a workaround you can use the `maskedError` option for masking `validation` and `parse` errors.
+As a workaround, you can use the `maskedError` option for masking `validation` and `parse` errors.
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -131,7 +133,7 @@ server.start()
 By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc).
 If you want to use GraphiQL from a local version, you need to install it manually.
 
-<PackageInstall packages={['@graphql-yoga/render-graphiql']} />
+<PackageCmd packages={['@graphql-yoga/render-graphiql']} />
 
 And you need to pass imported `renderGraphiQL` to `createServer` like below;
 

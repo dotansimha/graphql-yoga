@@ -1,8 +1,6 @@
----
-id: subscriptions
-title: Subscriptions
-sidebar_label: Subscriptions
----
+import { Callout, PackageCmd } from '@theguild/components'
+
+# Subscriptions
 
 A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the server to the client that issued the subscription.
 
@@ -11,9 +9,14 @@ Example use cases for subscriptions are applications that require real-time data
 GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for the subscription protocol.
 You don't need any extra packages to use subscriptions.
 
-> Compared to implementing query and mutation resolvers, subscriptions are more complex to implement as they require additional infrastructure for scenarios where you have more than one instance of your GraphQL server running as the event streams must be distributed across all servers.
+<Callout type="info">
+  Compared to implementing query and mutation resolvers, subscriptions are more
+  complex to implement as they require additional infrastructure for scenarios
+  where you have more than one instance of your GraphQL server running as the
+  event streams must be distributed across all servers.
+</Callout>
 
-## Quick start with Server Sent Events
+## Quick start with Server-Sent Events
 
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
@@ -56,7 +59,7 @@ const server = createServer({
 server.start()
 ```
 
-Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
+Start the server, visit `http://localhost:4000/graphql` and paste the following operation into the left panel.
 
 ```graphql
 subscription {
@@ -83,9 +86,14 @@ data: {"data":{"countdown":1}}
 data: {"data":{"countdown":0}}
 ```
 
-> Watch [Episode #52 of `graphql.wtf`](https://graphql.wtf/episodes/52-graphql-subscriptions-with-server-sent-events) for a quick introduction to using GraphQL Subscriptions with Server Sent Events:
+<Callout type="info">
+  Watch [Episode #52 of
+  `graphql.wtf`](https://graphql.wtf/episodes/52-graphql-subscriptions-with-server-sent-events)
+  for a quick introduction to using GraphQL Subscriptions with Server Sent
+  Events:
+</Callout>
 
-<br />
+### GraphQL Subscriptions with Server-Sent Events
 
 <iframe
   width="100%"
@@ -97,7 +105,7 @@ data: {"data":{"countdown":0}}
   allowFullScreen
 ></iframe>
 
-## Handling subscriptions on the client
+## Handling Subscriptions on The Client
 
 WHATWG standard [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) can be used without any extra packages to handle SSE.
 
@@ -125,10 +133,10 @@ eventsource.onmessage = function (event) {
 }
 ```
 
-### Client usage with Apollo
+### Client Usage With Apollo
 
 We can create an `SSELink` to use with Apollo Client.
-In order to send non Subscription operations via the default HTTP protocol, you can use `split` from the Apollo Link package.
+To send non Subscription operations via the default HTTP protocol, you can use `split` from the Apollo Link package.
 [For more information please refer to the Apollo Link documentation](https://www.apollographql.com/docs/react/api/link/introduction).
 
 ```ts
@@ -212,7 +220,7 @@ const link = split(
 )
 ```
 
-### Client usage with Urql
+### Client Usage with Urql
 
 Here is an example with Urql's `subscriptionExchange`
 
@@ -326,7 +334,9 @@ main().catch((e) => {
 })
 ```
 
-> Check out [our working example](/examples/graphql-ws) for this integration
+<Callout type="info">
+  Check out [our working example](/examples/graphql-ws) for this integration
+</Callout>
 
 ### Client integration
 
@@ -334,15 +344,15 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 
 ### SSE vs WebSocket
 
-#### Advantages of SSE over Websockets#
+#### Advantages of SSE over Websockets
 
 - Transported over simple HTTP instead of a custom protocol
-- Built in support for re-connection and event-id Simpler protocol
+- Built-in support for re-connection and event-id Simpler protocol
 - No trouble with corporate firewalls doing packet inspection
 
 #### Advantages of Websockets over SSE
 
-- Real time, two directional communication.
+- Real-time, two-directional communication
 - Lower latency
 
 #### SSE gotchas
@@ -475,7 +485,7 @@ pubSub.publish('event:payload:number', 12)
 pubSub.publish('event:payload:obj', { foo: 1 })
 ```
 
-#### Topic with dynamic ID
+#### Topic with Dynamic ID
 
 Sometimes you only want to emit and listen for events for a specific entity (e.g. user or product).
 You can declare topics scoped to a special identifier.
@@ -496,10 +506,10 @@ pubSub.publish('user:followerCount', userId1, { followerCount: 30 })
 pubSub.publish('user:followerCount', userId2, { followerCount: 12 })
 ```
 
-### Distributed pub/sub for production
+### Distributed Pub/Sub For Production
 
-If you spin up multiple instances of your GraphQL server each server instance will have their own in-memory pub/sub instance.
-An event triggered on the one server instance will not be distributed to the other server instances, resulting in subscribers on the other server not receiving any updates.
+If you spin up multiple instances of your GraphQL server each server instance will have its in-memory pub/sub instance.
+An event triggered on one server instance will not be distributed to the other server instances, resulting in subscribers on the other server not receiving any updates.
 
 The `createPubSub` function allows you to specify a custom [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) implementation, which can use an external datastore for distributing the events across all server replicas such as [`Redis Pub/Sub`](https://redis.io/topics/pubsub) or [`Kafka`](https://kafka.apache.org/).
 
@@ -507,7 +517,7 @@ The minimal `EventTarget` implementation is described by the [`TypedEventTarget`
 
 Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).
 
-<PackageInstall packages={['@graphql-yoga/redis-event-target ioredis']} />
+<PackageCmd packages={['@graphql-yoga/redis-event-target ioredis']} />
 
 ```ts
 import Redis from 'ioredis'
@@ -527,18 +537,25 @@ const pubSub = createPubSub({
 })
 ```
 
-**Please note** that Redis Pub/Sub requires a stable long-running connection and thus is not a suitable solution for serverless or edge function environments.
-
-**Please also note** that the the event payloads must be JSON serializable. If you want to send complex data structures over the wire you can use tools such as [`superjson`](https://github.com/blitz-js/superjson).
+<Callout type="note">
+  **Please note** that Redis Pub/Sub requires a stable long-running connection
+  and thus is not a suitable solution for serverless or edge function
+  environments.
+</Callout>
+<Callout type="note">
+  **Please also note** that the event payloads must be JSON serializable. If you
+  want to send complex data structures over the wire you can use tools such as
+  [`superjson`](https://github.com/blitz-js/superjson).
+</Callout>
 
 ## Advanced
 
-### Filter and map values
+### Filter and Map Values
 
 Sometimes it is useful to filter or map events for an individual subscription set up by a client based on subscription field arguments.
 Yoga has a few utility functions that make this as simple as possible.
 
-**Example PubSub event stream transform**
+### Example PubSub Event Stream Transform
 
 ```ts
 import {
@@ -572,7 +589,7 @@ pubSub.publish('randomNumber', 3) // logs 6
 source.return()
 ```
 
-**Example Random number stream transform**
+### Example Random Number Stream Transform
 
 ```ts
 import { createServer, createPubSub } from '@graphql-yoga/node'
@@ -622,12 +639,12 @@ const server = createServer({
 server.start()
 ```
 
-### Subscriptions with initial value
+### Subscriptions with Initial Value
 
 GraphQL subscriptions are primarily designed to send a stream of events to the client.
 Sometimes it is useful to send an initial value to a client as soon as the GraphQL subscription is set up.
 
-An example for this would be a `Subscription.globalCounter` field that syncs a counter with all clients by streaming the initial counter value to a client that sets up the subscription and then, furthermore, streams the updated counter value to the clients every time it changes.
+An example of this would be a `Subscription.globalCounter` field that syncs a counter with all clients by streaming the initial counter value to a client that sets up the subscription and then, furthermore, streams the updated counter value to the clients every time it changes.
 
 GraphQL subscriptions are implemented using [Async Iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator), which in itself is a very complex topic with a lot of pitfalls that can cause memory leaks if not treated with caution.
 
@@ -697,7 +714,7 @@ const server = createServer({
 server.start()
 ```
 
-### Listen to multiple Pub/Sub topics
+### Listen to Multiple Pub/Sub Topics
 
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 

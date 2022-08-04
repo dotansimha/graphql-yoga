@@ -1,16 +1,12 @@
----
-id: file-uploads
-title: Enable File Uploads in GraphQL Yoga
-sidebar_label: File Uploads
----
+# Enable File Uploads in GraphQL Yoga
 
-GraphQL Yoga supports [GraphQL Multipart Request Specification](https://github.com/jaydenseric/graphql-multipart-request-spec) which basically allows you to upload files via HTTP and consume the binary data inside GraphQL Resolvers.
+GraphQL Yoga supports [GraphQL Multipart Request Specification](https://github.com/jaydenseric/graphql-multipart-request-spec) which allows you to upload files via HTTP and consume the binary data inside GraphQL Resolvers.
 
 In GraphQL Yoga, you consume uploaded files or blobs as WHATWG standard [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) or [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) objects you might be familiar from the browser's API.
 
 [Check out MDN documentation to learn more about `File` objects](https://developer.mozilla.org/en-US/docs/Web/API/File)
 
-You can use any kind of client supports GraphQL Upload specification.
+You can use any kind of client to support GraphQL Upload specification.
 [Check out here to find GraphQL Client solutions](https://github.com/jaydenseric/graphql-multipart-request-spec#client)
 
 ## Example
@@ -73,7 +69,7 @@ const server = createServer({
 server.start()
 ```
 
-### Test your GraphQL Server with `cURL`
+### Test Your GraphQL Server with `cURL`
 
 ```sh
 curl localhost:4000/graphql \
