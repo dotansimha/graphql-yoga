@@ -1,5 +1,4 @@
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema } from 'graphql-yoga'
 import request from 'supertest'
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 

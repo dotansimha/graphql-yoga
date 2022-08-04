@@ -1,7 +1,5 @@
 import { getIntrospectionQuery } from 'graphql'
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
-import { Repeater } from 'graphql-yoga/subscription'
+import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 import { Request } from '@whatwg-node/fetch'
 
 const listenerMap = new Map<string, Set<EventListenerOrEventListenerObject>>()

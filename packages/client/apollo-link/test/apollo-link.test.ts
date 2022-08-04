@@ -1,6 +1,5 @@
 import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { parse } from 'graphql'
 import { observableToAsyncIterable } from '@graphql-tools/utils'

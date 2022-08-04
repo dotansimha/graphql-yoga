@@ -1,6 +1,4 @@
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
-import { Repeater } from 'graphql-yoga/subscription'
+import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 
 // We can define GraphQL Route dynamically using env vars.
 declare var GRAPHQL_ROUTE: string

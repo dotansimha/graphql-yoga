@@ -1,9 +1,8 @@
 import { IResolvers } from '@graphql-tools/utils'
 import { ClientRequest } from 'node:http'
 
-import { createYoga, YogaInitialContext } from 'graphql-yoga'
+import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
 import type { GraphQLSchema } from 'graphql'
-import { createSchema } from 'graphql-yoga/schema'
 
 const schema: GraphQLSchema = null as any
 const request: Request = null as any

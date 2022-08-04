@@ -1,6 +1,13 @@
-import { createYoga, useExtendContext, YogaInitialContext } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
-import { createPubSub, Repeater, pipe, map } from 'graphql-yoga/subscription'
+import {
+  createYoga,
+  createSchema,
+  useExtendContext,
+  YogaInitialContext,
+  createPubSub,
+  Repeater,
+  pipe,
+  map,
+} from 'graphql-yoga'
 import { createServer } from 'http'
 import { Resolvers } from './generated/graphql.js'
 

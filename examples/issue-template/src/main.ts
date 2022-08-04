@@ -1,5 +1,4 @@
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 
 // 1. Please add the schema that causes your issue here

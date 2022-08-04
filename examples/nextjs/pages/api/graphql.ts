@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema } from 'graphql-yoga'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 // Docs: https://vercel.com/docs/concepts/functions/serverless-functions

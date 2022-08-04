@@ -1,6 +1,4 @@
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
-import { Repeater } from 'graphql-yoga/subscription'
+import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 
 declare const EXAMPLE_KV: KVNamespace
 

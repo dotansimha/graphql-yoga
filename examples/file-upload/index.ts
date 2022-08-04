@@ -1,5 +1,4 @@
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema } from 'graphql-yoga'
 import http from 'http'
 import fs from 'fs'
 import path from 'path'

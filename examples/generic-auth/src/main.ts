@@ -1,5 +1,4 @@
-import { createYoga, YogaInitialContext } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
 import { useGenericAuth } from '@envelop/generic-auth'
 import { createServer } from 'http'
 

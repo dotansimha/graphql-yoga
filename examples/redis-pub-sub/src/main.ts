@@ -1,6 +1,4 @@
-import { createYoga } from 'graphql-yoga'
-import { createPubSub } from 'graphql-yoga/subscription'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema, createPubSub } from 'graphql-yoga'
 
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
 import Redis from 'ioredis'

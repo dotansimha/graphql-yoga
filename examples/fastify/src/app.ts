@@ -1,6 +1,5 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import fastify, { FastifyReply, FastifyRequest } from 'fastify'
-import { createSchema } from 'graphql-yoga/schema'
 
 export function buildApp(logging = true) {
   const app = fastify({

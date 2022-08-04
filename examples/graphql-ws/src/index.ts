@@ -1,6 +1,4 @@
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
-import { Repeater } from 'graphql-yoga/subscription'
+import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 import { createServer } from 'http'
 import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'

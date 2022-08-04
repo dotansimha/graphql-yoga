@@ -1,6 +1,5 @@
 import type { Handler } from '@aws-cdk/aws-lambda'
-import { createYoga } from 'graphql-yoga'
-import { createSchema } from 'graphql-yoga/schema'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { configure } from '@vendia/serverless-express'
 
 const app = createYoga({

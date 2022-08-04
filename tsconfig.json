@@ -23,10 +23,6 @@
     "skipLibCheck": true,
     "paths": {
       "graphql-yoga": ["packages/graphql-yoga/src/index.ts"],
-      "graphql-yoga/schema": ["packages/graphql-yoga/src/schema.ts"],
-      "graphql-yoga/subscription": [
-        "packages/graphql-yoga/src/subscription.ts"
-      ],
       "@graphql-yoga/subscription": ["packages/subscription/src/index.ts"],
       "@graphql-yoga/render-graphiql": [
         "packages/render-graphiql/src/index.ts"
@@ -34,6 +30,10 @@
       "@graphql-yoga/plugin-*": ["packages/plugins/*/src/index.ts"],
       "@graphql-yoga/*-event-target": [
         "packages/event-target/*-event-target/src/index.ts"
+      ],
+      "@graphql-yoga/apollo-link": ["packages/client/apollo-link/src/index.ts"],
+      "@graphql-yoga/urql-exchange": [
+        "packages/client/urql-exchange/src/index.ts"
       ],
       "@graphql-yoga/*": ["packages/*/src/index.ts"]
     },
