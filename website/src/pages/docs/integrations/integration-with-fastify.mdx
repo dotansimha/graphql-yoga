@@ -1,19 +1,16 @@
----
-id: integration-with-fastify
-title: Integration with Fastify
-sidebar_label: Fastify
-type: Guide
----
+import { PackageCmd, Callout } from '@theguild/components'
+
+# Integration with Fastify
 
 [Fastify is one of the popular HTTP server frameworks for Node.js.](https://www.fastify.io/) It is a very simple, yet powerful framework that is easy to learn and use.
 You can easily integrate GraphQL Yoga with Fastify.
 
-So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Yoga.
+So you can benefit from the powerful plugins of the Fastify ecosystem with GraphQL Yoga.
 [See the ecosystem](https://www.fastify.io/docs/latest/Guides/Ecosystem/)
 
 ## Installation
 
-<PackageInstall packages={['fastify', 'graphql', '@graphql-yoga/node']} />
+<PackageCmd packages={['fastify', 'graphql', '@graphql-yoga/node']} />
 
 ## Example
 
@@ -66,9 +63,9 @@ app.route({
 app.listen(4000)
 ```
 
-## Add dummy content type parser for File Uploads
+## Add Dummy Content Type Parser for File Uploads
 
-Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requests because otherwise it will throw an error something like `Unsupported media type`.
+Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requests because otherwise, it will throw an error something like `Unsupported media type`.
 
 ```ts
 // This will allow Fastify to forward multipart requests to GraphQL Yoga
@@ -77,4 +74,7 @@ app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
 )
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/fastify)
+<Callout type="info">
+  You can also check a full example on our GitHub repository
+  [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/fastify)
+</Callout>
