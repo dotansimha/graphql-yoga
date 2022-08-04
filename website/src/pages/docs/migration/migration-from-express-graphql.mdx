@@ -1,17 +1,14 @@
----
-id: migration-from-express-graphql
-title: Migration from Express GraphQL
-sidebar_label: Express GraphQL
-type: Guide
----
+import { PackageCmd, Callout } from '@theguild/components'
+
+# Migration from Express GraphQL
 
 ## Installation
 
-You can start with installing `graphql-yoga` package.
+You can start by installing `graphql-yoga` package.
 
-<PackageInstall packages={['@graphql-yoga/node']} />
+<PackageCmd packages={['@graphql-yoga/node']} />
 
-## Replace Express GraphQL's middleware
+## Replace Express GraphQL's Middleware
 
 You should replace Express GraphQL's middleware with GraphQL Yoga's;
 
@@ -45,4 +42,10 @@ app.listen(4000);
 console.log('Running a GraphQL API server at http://localhost:4000/graphql');
 ```
 
-> `schema`, `context` and other parameters can be passed dynamically per HTTP request. `context` parameter of GraphQL Yoga can be a factory function but `schema` cannot. So you should use [@envelop/use-lazy-loaded-schema](https://www.envelop.dev/plugins/use-lazy-loaded-schema) for the same behavior.
+<Callout type="info">
+  `schema`, `context` and other parameters can be passed dynamically per HTTP
+  request. `context` parameter of GraphQL Yoga can be a factory function but
+  `schema` cannot. So you should use
+  [@envelop/use-lazy-loaded-schema](https://www.envelop.dev/plugins/use-lazy-loaded-schema)
+  for the same behavior.
+</Callout>

@@ -1,17 +1,14 @@
----
-id: migration-from-apollo-server
-title: Migration from Apollo Server
-sidebar_label: Apollo Server
-type: Guide
----
+import { PackageCmd, Callout } from '@theguild/components'
+
+# Migration from Apollo Server
 
 ## Installation
 
-You can start with installing `graphql-yoga` package.
+You can start by installing `graphql-yoga` package.
 
-<PackageInstall packages={['@graphql-yoga/node']} />
+<PackageCmd packages={['@graphql-yoga/node']} />
 
-### Install equivalent **Envelop** plugins of the Apollo Server
+### Install Equivalent **Envelop** Plugins of The Apollo Server
 
 Some features that are included within apollo-server by default must be installed as envelop plugins ([Learn more about envelop plugins here](/docs/features/envelop-plugins)).
 
@@ -26,9 +23,9 @@ Some features that are included within apollo-server by default must be installe
 
 [Check out more plugins on Envelop Plugin Hub](https://www.envelop.dev/plugins)
 
-## Example initial usage of GraphQL Yoga
+## Example Initial Usage of GraphQL Yoga
 
-For example if you are using Apollo Server Errors;
+For example, if you are using Apollo Server Errors;
 
 `apollo-server-errors-example.ts`
 
@@ -49,11 +46,11 @@ import { schema } from './schema'
 server.start()
 ```
 
-## Migration from standalone `apollo-server`
+## Migration From Standalone `apollo-server`
 
 You don't need anything special. You can just use GraphQL Yoga as in the example above.
 
-## Migration from `apollo-server-*`
+## Migration From `apollo-server-*`
 
 Check the integration section to choose the server framework you are using with Apollo Server.
 

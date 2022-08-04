@@ -1,18 +1,16 @@
----
-id: quick-start
-title: Quick Start
-sidebar_label: Quick Start
----
+import { PackageCmd, Callout } from '@theguild/components'
+
+# Quick Start
 
 GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP](https://github.com/graphql/graphql-over-http) spec-compliant GraphQL Server using [Envelop](https://envelop.dev), and [GraphQL Tools](https://graphql-tools.com) that runs anywhere.
 
 ## Installation
 
-<PackageInstall packages={['graphql', '@graphql-yoga/node']} />
+<PackageCmd packages={['graphql', '@graphql-yoga/node']} />
 
 ## Usage
 
-You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map.
+You will need to provide a schema to Yoga, either by an existing executable schema or by providing your type definitions and resolver map.
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -35,11 +33,15 @@ const server = createServer({
 server.start()
 ```
 
-> Yoga uses GraphQL Tools under the hood so you'll want to follow the [`makeExecutableSchema`](https://www.graphql-tools.com/docs/generate-schema) pattern.
+<Callout type="info">
+  Yoga uses GraphQL Tools under the hood so you'll want to follow the
+  [`makeExecutableSchema`](https://www.graphql-tools.com/docs/generate-schema)
+  pattern.
+</Callout>
 
 **That is it!**
 
-Now visit [`http://localhost:4000/graphql`](http://localhost:4000/graphql) to execute the followiing query operation:
+Now visit [`http://localhost:4000/graphql`](http://localhost:4000/graphql) to execute the following query operation:
 
 ```graphql
 query HelloWorld {
@@ -47,7 +49,7 @@ query HelloWorld {
 }
 ```
 
-## Using existing schema
+## Using Existing Schema
 
 You can also pass an existing `GraphQLSchema` instance to `createServer`.
 
@@ -64,6 +66,8 @@ const server = createServer({
 
 server.start()
 ```
+
+## GraphQL Yoga 2
 
 <iframe
   width="100%"
