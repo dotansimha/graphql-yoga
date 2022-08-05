@@ -1,5 +1,13 @@
 # graphql-yoga
 
+## 2.13.6
+
+### Patch Changes
+
+- eecf24c: Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+- Updated dependencies [eecf24c]
+  - @graphql-yoga/node@2.13.6
+
 ## 2.13.5
 
 ### Patch Changes

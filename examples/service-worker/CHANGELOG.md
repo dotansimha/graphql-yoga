@@ -1,5 +1,12 @@
 # service-worker
 
+## 0.12.5
+
+### Patch Changes
+
+- Updated dependencies [eecf24c]
+  - @graphql-yoga/common@2.12.5
+
 ## 0.12.4
 
 ### Patch Changes
