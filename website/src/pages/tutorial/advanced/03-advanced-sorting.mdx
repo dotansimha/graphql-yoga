@@ -1,11 +1,8 @@
----
-id: 03-advanced-sorting
-title: Advanced Sorting
-sidebar_label: Advanced Sorting
-type: Tutorial
----
+import { Instruction } from '@theguild/components'
 
-### Sorting
+# Advanced Sorting
+
+## Sorting
 
 With Prisma, it is possible to return lists of elements that are sorted (_ordered_) according to specific criteria. For example, you can order the list of `Link`s alphabetically by their `url` or `description`. For the Hacker News API, you'll leave it up to the client to decide how exactly it should be sorted and thus include all the ordering options from the Prisma API in the API of your GraphQL server. You can do so by creating an [`input`](https://graphql.org/graphql-js/mutations-and-input-types/) type and an enum to represent the ordering options.
 
@@ -55,7 +52,7 @@ The implementation of the resolver is similar to what you just did with the pagi
 
 Update the implementation of the `feed` resolver, change the imports and pass the `orderBy` argument along to Prisma:
 
-```typescript
+```ts
 import { Link, User, Prisma } from '@prisma/client'
 
 const resolvers = {

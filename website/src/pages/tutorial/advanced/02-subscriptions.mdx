@@ -1,16 +1,13 @@
----
-id: 02-subscriptions
-title: Subscriptions
-sidebar_label: Subscriptions
-type: Tutorial
----
+import { Callout, Instruction } from '@theguild/components'
 
-In this section, you'll learn how you can bring realtime functionality into your app by implementing GraphQL subscriptions. The goal is to implement two subscriptions to be exposed by your GraphQL server:
+# Subscriptions
 
-- Send realtime updates to subscribed clients when a new `Link` element is _created_
-- Send realtime updates to subscribed clients when an existing `Link` element is _upvoted_
+In this section, you'll learn how you can bring real-time functionality into your app by implementing GraphQL subscriptions. The goal is to implement two subscriptions to be exposed by your GraphQL server:
 
-### What are GraphQL subscriptions?
+- Send real-time updates to subscribed clients when a new `Link` element is _created_
+- Send real-time updates to subscribed clients when an existing `Link` element is _upvoted_
+
+## What are GraphQL Subscriptions?
 
 Subscriptions are a GraphQL feature that allows a server to stream data to its clients when a specific _event_ happens. Subscriptions are just part of your GraphQL contract, and they refer to _events_. To be able to send these _events_ in real-time, you need to choose a transport that has support for that.
 
@@ -18,7 +15,7 @@ In this chapter of the tutorial, you are about to add GraphQL Subscriptions to y
 
 Sever-Sent Events are a way to "upgrade" a basic HTTP request into a long-living request that will emit multiple data items. This is a perfect fit for GraphQL Subscriptions, and implementing and scaling is just simpler than WebSockets.
 
-### Implementing GraphQL subscriptions
+## Implementing GraphQL Subscriptions
 
 You'll be using a simple `PubSub` implementation from the `@graphql-yoga/node` library to implement subscriptions to the following _events_:
 
@@ -26,17 +23,23 @@ You'll be using a simple `PubSub` implementation from the `@graphql-yoga/node` l
 - An existing model **updated**
 - An existing model is **deleted**
 
-> `Pub/Sub` refers to a technique used to create a messaging pattern, where some parts of the code publishes events/messages, and other parts of the code subscribes and being notified about the events/messages. You are going to use that technique in order to create a simple subscription for the GraphQL Subscriptions, based on events published by the GraphQL mutations.
+<Callout type="info">
+  `Pub/Sub` refers to a technique used to create a messaging pattern, where some
+  parts of the code publish events/messages, and other parts of the code
+  subscribe and are notified about the events/messages. You are going to use
+  that technique to create a simple subscription for the GraphQL Subscriptions,
+  based on events published by the GraphQL mutations.
+</Callout>
 
 You will do this by first adding an instance of `PubSub` to the context, just as you did with `PrismaClient`, and then calling its methods in the resolvers that handle each of the above events.
 
-### Setting up our `PubSub` instance
+## Setting up our `PubSub` instance
 
 <Instruction>
 
-To get start with an instance of your `PubSub`, create a new file called `src/pubsub.ts` with the following:
+To get started with an instance of your `PubSub`, create a new file called `src/pubsub.ts` with the following:
 
-```typescript
+```ts
 import { createPubSub } from '@graphql-yoga/subscription'
 
 // 1
@@ -49,15 +52,15 @@ export const pubSub = createPubSub<PubSubChannels>()
 </Instruction>
 
 1. First, you declare a TypeScript `type PubSubChannels`, you'll later use that to define your type-safe events.
-1. Then, create an instance of `PubSub` and combine it with the type-safe events wrapper to form a fully-typed Pub/Sub instance.
+2. Then, create an instance of `PubSub` and combine it with the type-safe events wrapper to form a fully-typed Pub/Sub instance.
 
-Now, you're adding the global instance of your `PubSub` and make sure it's available for your during your GraphQL execution, by injecting it to your `context`, just as you stored an instance of `PrismaClient` in the variable `prisma`.
+Now, you're adding the global instance of your `PubSub` and making sure it's available for you during your GraphQL execution, by injecting it to your `context`, just as you stored an instance of `PrismaClient` in the variable `prisma`.
 
 <Instruction>
 
 Now, in `src/context.ts`, add `pubsub` to the context, just as did with `prisma`:
 
-```typescript
+```ts
 import { PrismaClient, User } from '@prisma/client'
 import { YogaInitialContext } from '@graphql-yoga/node'
 import { authenticateUser } from './auth'
@@ -90,7 +93,7 @@ Great! Now you can access the methods you need to implement our subscriptions fr
 
 Alright – let's go ahead and implement the subscription that allows your clients to subscribe to newly created `Link` elements.
 
-Just like with queries and mutations, the first step to implement a subscription is to extend your GraphQL schema definition.
+Just like with queries and mutations, the first step to implementing a subscription is to extend your GraphQL schema definition.
 
 <Instruction>
 
@@ -111,13 +114,13 @@ Next, go ahead and implement the resolver for the `newLink` field. Resolvers for
 
 > Iterators in JavaScript bring the concept of iteration directly into the core language and provide a mechanism for customizing the behavior of loops. `AsyncIterator` is a built-in JavaScript types, that allow to to write iterators that might get the values updates in an `async` way ([you can find more information here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators)).
 
-To get started with a new event, first make sure it's declared correctly by the `PubSubChannels`. In this case, you are going to declare an event called `newLink`, and use the created `Link` object as payload.
+To get started with a new event. First, make sure it's declared correctly by the `PubSubChannels`. In this case, you are going to declare an event called `newLink`, and use the created `Link` object as payload.
 
 <Instruction>
 
 Open `src/pubsub.ts` and delcare the new event:
 
-```typescript
+```ts
 import { createPubSub } from '@graphql-yoga/node'
 import { Link } from '@prisma/client'
 
@@ -130,7 +133,7 @@ export const pubSub = createPubSub<PubSubChannels>()
 
 </Instruction>
 
-Now that the PubSub knows our events and their payload, you can connect it to your GraphQL subscription resolver.
+Now that PubSub knows our events and their payload, you can connect it to your GraphQL subscription resolver.
 
 <Instruction>
 
@@ -161,13 +164,13 @@ Then, on every value emitted for that event, you'll get our `resolve` function c
 
 ### Emitting PubSub events in mutation resolvers
 
-The last thing you need to do for our subscription implementation itself is to actually trigger that `newLink` event from within our code!
+The last thing you need to do for our subscription implementation itself is to trigger that `newLink` event from within our code!
 
 <Instruction>
 
 Still in `src/schema.ts`, locate your `post` resolver function, adding the following call to `pubSub.publish()` right before you return the `newLink`:
 
-```typescript
+```ts
 const resolvers = {
   Mutation: {
     post: async (
@@ -202,11 +205,11 @@ argument!
 
 Ok, I'm sure you're dying to test out your brand-spanking new Subscription! All you need to do now is make sure your GraphQL server knows about your changes.
 
-All you need to do in order to test your GraphQL Subscription is to open GraphiQL and try it!
+All you need to do to test your GraphQL Subscription is to open GraphiQL and try it!
 
 ### Testing subscriptions
 
-With all the code in place, it's time to test your realtime API ⚡️ You can do so by using two instances (i.e. browser windows) of the GraphiQL at once.
+With all the code in place, it's time to test your real-time API ⚡️ You can do so by using two instances (i.e. browser windows) of the GraphiQL at once.
 
 <Instruction>
 
@@ -268,15 +271,15 @@ mutation {
 
 </Instruction>
 
-Now observe the GraphiQL where the subscription was running (left side is the subscription, and right side the mutation)
+Now observe the GraphiQL where the subscription was running (the left side is the subscription, and the right side the mutation)
 
 ![subscription running](https://i.imgur.com/6n0JdHh.png)
 
-> **Note**: If you see a loading spinner indefinitely, it maybe because of SSE disconnecting when the tab goes idle. Ensure that both the tabs are active.
+> **Note**: If you see a loading spinner indefinitely, it may be because of SSE disconnecting when the tab goes idle. Ensure that both the tabs are active.
 
 ### Execute a Subscription using `curl`
 
-Similar to mutation and query operations over HTTP, subscriptions also result in a HTTP response. However, compared to thsoe other two oepration types the HTTP response is a long-lived connection that must be terminated by the user.
+Similar to mutation and query operations over HTTP, subscriptions also result in an HTTP response. However, compared to those other two operation types the HTTP response is a long-lived connection that must be terminated by the user.
 
 It is also possible to set up a subscription using a command line utility such as `curl`.
 
@@ -306,7 +309,7 @@ data: {"data":{"newLink":{"id":"10","url":"http://lo1l.de","description":"brrtas
 
 #### Implementing a `vote` mutation root field
 
-The next feature to be added is a voting feature which lets users _upvote_ certain links. The very first step here is to extend your Prisma data model to represent votes in the
+The next feature to be added is a voting feature that lets users _upvote_ certain links. The very first step here is to extend your Prisma data model to represent votes in the
 database.
 
 <Instruction>
@@ -417,7 +420,7 @@ const resolvers = {
     ) => {
       // 1
       if (!context.currentUser) {
-        throw new GraphQLYogaError('You must login in order to use upvote!')
+        throw new GraphQLYogaError('You must login to use upvote!')
       }
 
       // 2
@@ -458,7 +461,7 @@ const resolvers = {
 
 Here is what's going on:
 
-1. Make sure that our server don't allow upvote without being authenticated.
+1. Make sure that our server doesn't allow upvotes without being authenticated.
 1. Similar to what you're doing in the `post` resolver, the first step is to validate the incoming JWT with the `getUserId` helper function. If it's valid, the function will return
    the `userId` of the `User` who is making the request. If the JWT is not valid, the function will throw an exception.
 1. To protect against those pesky "double voters" (or honest folks who accidentally click twice), you need to check if the vote already exists or not. First, you try to fetch a
@@ -512,7 +515,7 @@ const resolvers = {
 
 </Instruction>
 
-Finally you need to resolve the relations from the `Vote` type.
+Finally, you need to resolve the relations from the `Vote` type.
 
 <Instruction>
 
