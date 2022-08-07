@@ -6,9 +6,9 @@ const SITE_NAME = 'GraphQL Yoga'
 
 const config: DocsThemeConfig = {
   titleSuffix: ` – ${SITE_NAME}`,
-  projectLink: 'https://github.com/Urigo/graphql-modules', // GitHub link in the navbar
+  projectLink: 'https://github.com/dotansimha/graphql-yoga', // GitHub link in the navbar
   docsRepositoryBase:
-    'https://github.com/Urigo/graphql-modules/tree/master/website/src/pages', // base URL for the docs repository
+    'https://github.com/dotansimha/graphql-yoga/tree/master/website/src/pages', // base URL for the docs repository
   nextLinks: true,
   prevLinks: true,
   search: false,
