@@ -1,11 +1,8 @@
----
-id: 06-adding-a-database
-title: Adding a Database
-sidebar_label: Adding a Database
-type: Tutorial
----
+import { Callout, Instruction, PackageCmd } from '@theguild/components'
 
-Your GraphQL API can connect to any kind of data source, such as a remote REST (or even GraphQL) API or database. In this chapter we are covering connecting to an relational SQL database.
+# Adding a Database
+
+Your GraphQL API can connect to any kind of data source, such as a remote REST (or even GraphQL) API or database. In this chapter, we are covering connecting to a relational SQL database.
 
 You're going to set up a [SQLite](https://www.sqlite.org/index.html) to persist the data of incoming GraphQL mutations. Instead of writing SQL directly, you will
 use [Prisma](https://www.prisma.io/) to access your database.
@@ -22,17 +19,17 @@ It mainly consists of three tools:
 - **Prisma Studio** (experimental): A GUI to view and edit data in your database.
 
 In this tutorial, you will be setting everything up from scratch and taking full advantage of these three tools. We want to get you building stuff right away, so explanations of
-Prisma concepts will be kept light but we have included links to [Prisma docs](https://www.prisma.io/docs/) in case you want to dive deeper on any particular concept.
+Prisma concepts will be kept light but we have included links to [Prisma docs](https://www.prisma.io/docs/) in case you want to dive deeper into any particular concept.
 
 ### Why Prisma?
 
-You've now understood the basic mechanics of how GraphQL servers work under the hood and the beauty of GraphQL itself – it actually only follows a few very simple rules. The
+You've now understood the basic mechanics of how GraphQL servers work under the hood and the beauty of GraphQL itself – it only follows a few very simple rules. The
 statically typed schema and the GraphQL engine that resolves the queries inside the server take away major pain points commonly dealt with in API development.
 
 Well, in real-world applications you're likely to encounter many scenarios where implementing the resolvers can become extremely complex. Especially because GraphQL queries can be
 nested multiple levels deep, the implementation often becomes tricky and can easily lead to performance problems.
 
-Most of the time, you also need to take care of many additional workflows such as authentication, authorization (permissions), pagination, filtering, realtime, integrating with
+Most of the time, you also need to take care of many additional workflows such as authentication, authorization (permissions), pagination, filtering, real-time, integrating with
 3rd-party services or legacy systems, and so on.
 
 Prisma is focused on addressing that issue and [making developers more productive](https://www.prisma.io/docs/understand-prisma/why-prisma#prisma-makes-developers-productive) when
@@ -46,9 +43,7 @@ Speaking of being productive and building awesome stuff, let's jump back in and 
 
 First, let's install the Prisma CLI and Prisma Client by running the following command in your terminal:
 
-```bash
-npm install --save-dev --save-exact prisma @prisma/client
-```
+<PackageCmd packages={['--save-dev --save-exact prisma @prisma/client']} />
 
 </Instruction>
 
@@ -58,7 +53,7 @@ Next, use the Prisma CLI to initialize Prisma in the project.
 
 From your project root, run the following commands in your terminal:
 
-```bash
+```
 npx prisma init
 ```
 
@@ -68,8 +63,8 @@ Remember the GraphQL schema that you've been working with until now? Well, Prism
 file called `schema.prisma`. You can think of the `schema.prisma` file as a _database schema_. It has three components:
 
 1. **Data source**: Specifies your database connection.
-1. **Generator**: Indicates that you want to generate Prisma Client.
-1. **Data model**: Defines your application _models_. Each model will be mapped to a table in the underlying database.
+2. **Generator**: Indicates that you want to generate Prisma Client.
+3. **Data model**: Defines your application _models_. Each model will be mapped to a table in the underlying database.
 
 Prisma's unique data model bridges the gap to help you reason about your data in a way that maps very well to the underlying database, while still providing an abstraction that
 allows you to be productive with type safety and auto-completion.
@@ -80,7 +75,7 @@ Let's see it in action with your project!
 
 Open `schema.prisma` and replace the existing contents with the following code:
 
-```prisma
+```prisma filename="schema.prisma"
 // 1
 datasource db {
   provider = "sqlite"
@@ -106,14 +101,14 @@ model Link {
 Let's break down the three parts:
 
 1. **Data source**: Tells Prisma you'll be using SQLite for your database connection.
-1. **Generator**: Indicates that you want to generate Prisma Client.
-1. **Data model**: Here, we have written out our `Link` as a model.
+2. **Generator**: Indicates that you want to generate Prisma Client.
+3. **Data model**: Here, we have written out our `Link` as a model.
 
 The `Link` model defines the structure of the `Link` database table that Prisma is going to create for you in a bit.
 
 ## Getting Started with SQLite
 
-It's finally time to actually create our [SQLite](https://www.sqlite.org/index.html) database. In case you aren't familiar with SQLite, it is an in-process library that implements
+It's finally time to create our [SQLite](https://www.sqlite.org/index.html) database. In case you aren't familiar with SQLite, it is an in-process library that implements
 a self-contained, serverless, zero-configuration, transactional SQL database engine.
 
 The great thing is that, unlike most other SQL databases, SQLite does not have a separate server process. SQLite reads and writes directly to ordinary disk files. A complete SQL
@@ -142,24 +137,25 @@ above command.
 
 For now, the important thing to understand is that we have told Prisma with our data model, "I want to create a `Link` table to store data about _links_, and here's what that data
 will look like. Prisma then generates the necessary migration and packages it into a dedicated directory with its own `README.md` file containing detailed information about the
-specific migration. This is then put inside that `prisma/migrations` directory, which becomes a historical reference of how your database evolves over time with each individual
-migration you make!
+specific migration. This is then put inside that `prisma/migrations` directory, which becomes a historical reference of how your database evolves with each migration you make!
 
-Boom! 💥 You now have a database with a `Link` table! 🎉
+<Callout title="Note">
+  Boom! 💥 You now have a database with a `Link` table! 🎉
+</Callout>
 
 Check out the [Prisma Migrate docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-migrate) for a deeper dive on this.
 
-### Generated Prisma Client
+## Generated Prisma Client
 
-Behind the scenes, when you are using Prisma, it generates files to `/node_modules/@prisma/client`, so every time you use the `PrismaClient`, you get a tailer-made types that matches your models.
+Behind the scenes, when you are using Prisma, it generates files to `/node_modules/@prisma/client`, so every time you use the `PrismaClient`, you get a tailor-made type that matches your models.
 
-You can also generate the _Prisma Client_ manually if it not up-to-date, by running the following command in your terminal:
+You can also generate the _Prisma Client_ manually if it is not up-to-date, by running the following command in your terminal:
 
 ```bash
 npx prisma generate
 ```
 
-### Updating the Prisma models
+## Updating the Prisma models
 
 Let's write your first query with Prisma Client and break everything down. You'll do that in a separate file to not mess with your current GraphQL server implementation.
 
@@ -167,7 +163,7 @@ Let's write your first query with Prisma Client and break everything down. You'l
 
 Create a new file in the `src/` directory called `script.ts` and add the following code:
 
-```typescript
+```ts filename="script.ts"
 // 1
 import { PrismaClient } from '@prisma/client'
 
@@ -193,10 +189,10 @@ main()
 Let's break down what's going on here with the numbered comments:
 
 1. Import the `PrismaClient` constructor from the `@prisma/client` node module.
-1. Instantiate `PrismaClient`.
-1. Define an `async` function called `main` to send queries to the database. You will write all your queries inside this function.
-1. Call the `main` function.
-1. Close the database connections when the script terminates.
+2. Instantiate `PrismaClient`.
+3. Define an `async` function called `main` to send queries to the database. You will write all your queries inside this function.
+4. Call the `main` function.
+5. Close the database connections when the script terminates.
 
 Take a moment to re-type the query line and notice the helpful autocompletion you get after typing `prisma.` and `prisma.link.` which lets us see all of the possible models we can
 access and operations we can use to query that data:
@@ -221,9 +217,9 @@ script.
 <Instruction>
 
 Type out the following lines of code yourself inside the temporary `src/script.ts`, right above the `allLinks` query and pay close attention to the incredibly helpful autocompletion.
-First, it helps us understand that `.create()` is the operation we need (just scroll through the options) and then it actually shows us exactly how to construct the mutation!
+First, it helps us understand that `.create()` is the operation we need (just scroll through the options) and then it shows us exactly how to construct the mutation!
 
-```typescript
+```ts
 const newLink = await prisma.link.create({
   data: {
     description: 'Fullstack tutorial for GraphQL',
@@ -238,9 +234,9 @@ const newLink = await prisma.link.create({
 
 Great! Re-run the previous command and this time you should now see your newly created link print in the terminal output! Much more satisfying ✨
 
-For each additional run you will see one more item within the list. That is great, as it means our data is persisted outside of the Node.js memory!
+For each additional run, you will see one more item within the list. That is great, as it means our data is persisted outside of the Node.js memory!
 
-### Summary of your workflow
+## Summary of Your Workflow
 
 To recap, this is the typical workflow you will follow when updating your data:
 

@@ -1,24 +1,21 @@
----
-id: 01-project-setup
-title: Project Setup
-sidebar_label: Project Setup
-type: Tutorial
----
+import { Callout, Instruction, PackageCmd } from '@theguild/components'
+
+# Project Setup
 
 In this section, you will learn how to create a basic NodeJS project with TypeScript.
 
 This step will cover the initial NodeJS setup required, basic configuration for TypeScript projects, and how to setup the development scripts.
 
-### Requirements
+## Requirements
 
 - Have NodeJS installed on your operation system ([instructions](https://nodejs.org/en/download/package-manager/)). You can use any recent version (14/16/17), but, we highly recommend using the stable Node.js 16 LTS release.
 - Your favorite terminal configured (you are going to use it a lot!)
 - Run `node -v`, `npm -v`, `npx -v` in your terminal and make sure these commands are available for use.
 
-### Creating Node.js & TypeScript project
+## Creating Node.js & TypeScript Project
 
 This tutorial teaches you how to build a NodeJS project from scratch, so the first thing you need to do is create the
-directory that'll hold the files for your project:
+the directory that'll hold the files for your project:
 
 <Instruction>
 
@@ -42,9 +39,11 @@ To add TypeScript support for your NodeJS project, do the following:
 
 In your project directory, install the packages required to run a TypeScript project:
 
-```bash
-npm install --save-dev --save-exact typescript @types/node ts-node ts-node-dev cross-env
-```
+<PackageCmd
+  packages={[
+    '--save-dev --save-exact typescript @types/node ts-node ts-node-dev cross-env',
+  ]}
+/>
 
 </Instruction>
 
@@ -53,9 +52,9 @@ This will add the dependencies to your project under the `node_modules` folder, 
 The command above installs the following libraries:
 
 - `typescript` is the basic TypeScript language support and compiler.
-- `@types/node` is a package that contains the basic TypeScript types for NodeJS environment.
-- `ts-node` and `ts-node-dev` are libraries that allows you to run `.ts` files directly, without a compilation step to JavaScript and automatically re-run your files after you apply file changes.
-- `cross-env` allows providing environment variables cross platform (windows environment variables are different 🤷).
+- `@types/node` is a package that contains the basic TypeScript types for the NodeJS environment.
+- `ts-node` and `ts-node-dev` are libraries that allow you to run `.ts` files directly, without a compilation step to JavaScript and automatically re-run your files after you apply file changes.
+- `cross-env` allows providing environment variables cross-platform (windows environment variables are different 🤷).
 
 <Instruction>
 
@@ -73,7 +72,7 @@ This will create a `tsconfig.json` file in your project. The [`tsconfig.json` is
 
 To make it easier to run your project, replace the `"scripts"` section in your `package.json` file with the following:
 
-```json
+```json filename="package.json"
 {
   "name": "hackernews-node-ts",
   "version": "1.0.0",
@@ -95,14 +94,14 @@ To make it easier to run your project, replace the `"scripts"` section in your `
 
 This will allow you to run the following scripts in your project directory:
 
-- `npm run start` - will start the server.
-- `npm run dev` - will start the server and restarts it on every change.
+- `npm run start` - Will start the server.
+- `npm run dev` - Will start the server and restarts it on every change.
 
 <Instruction>
 
 Now create the root entry point for your project, by creating a file under `src/main.ts` with the following:
 
-```typescript
+```ts filename="main.ts"
 console.log('Hello World!')
 ```
 
@@ -114,15 +113,21 @@ And to run your server in watch mode, run in your terminal:
 npm run dev
 ```
 
-> Watch mode tracks your project's files, and re-runs your project automatically on a file change.
+<Callout type="info">
+  Watch mode tracks your project's files and re-runs your project automatically
+  on a file change.
+</Callout>
 
 You should now see some log output regarding your build process, followed by:
 
-```(nocopy)
+```
 Hello World!
 ```
 
-> You can try to change the script, and notice that the server restarts automatically on every change!
+<Callout type="info">
+  You can try to change the script, and notice that the server restarts
+  automatically on every change!
+</Callout>
 
 The `main.ts` is the project entrypoint - this is where your NodeJS project starts and this runs the rest of the code.
 

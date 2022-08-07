@@ -1,27 +1,29 @@
----
-id: 03-graphql-server
-title: GraphQL Server
-sidebar_label: GraphQL Server
-type: Tutorial
----
+import { Callout, Instruction, PackageCmd } from '@theguild/components'
+
+# GraphQL Server
 
 Now that you have a GraphQL schema, and you understand the concept of GraphQL schema and a GraphQL query, it's time to create a real GraphQL server.
 
 You are going to use the HTTP protocol to serve the GraphQL server, but note that there are other options for serving GraphQL - you can use WebSocket, SSE (Server-Sent Events) and basically any network transport protocol that you wish! (You can find a list of transport implementations at the end of this page)
 
-### Creating a GraphQL HTTP server with Yoga
+## Creating a GraphQL HTTP Server With Yoga
 
 In this tutorial, we will be using `@graphql-yoga/node` for building our Node.js GraphQL HTTP server.
 
-> Yoga can also run on other platforms, such as Cloudflare Workers or deno. [We recommend checking out the integrations section in our documentation after finishing the tutorial.](/docs/integrations/integration-with-cloudflare-workers)
+<Callout type="info">
+  Yoga can also run on other platforms, such as Cloudflare Workers or DENO. [We
+  recommend checking out the integrations section in our documentation after
+  finishing the
+  tutorial.](/docs/integrations/integration-with-cloudflare-workers)
+</Callout>
+
+<br />
 
 <Instruction>
 
 You'll need the `@graphql-yoga/node` package available in your project, so install it using the following command:
 
-```bash
-npm install --save-exact @graphql-yoga/node
-```
+<PackageCmd packages={['--save-exact @graphql-yoga/node']} />
 
 </Instruction>
 
@@ -29,7 +31,7 @@ npm install --save-exact @graphql-yoga/node
 
 Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:
 
-```typescript
+```ts filename="main.ts"
 import { createServer } from '@graphql-yoga/node'
 import { schema } from './schema'
 
@@ -74,7 +76,7 @@ Unsurprisingly, the result looks like the following:
 { "data": { "hello": "Hello World!" } }
 ```
 
-Of course it is also possible to send requests to the service without GraphiQL, e.g. by using `curl`.
+Of course, it is also possible to send requests to the service without GraphiQL, e.g. by using `curl`.
 
 <Instruction>
 
