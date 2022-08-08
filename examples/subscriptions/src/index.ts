@@ -9,7 +9,7 @@ import {
   map,
 } from 'graphql-yoga'
 import { createServer } from 'http'
-import { Resolvers } from './generated/graphql.js'
+import { Resolvers } from './generated/graphql'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))
