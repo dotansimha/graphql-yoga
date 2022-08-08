@@ -2,10 +2,14 @@ import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
 import { ExecutionPatchResult, FetchAPI, GraphQLParams } from '../types.js'
 
+export type OperationResult =
+  | ExecutionResult
+  | AsyncIterable<ExecutionResult>
+  | AsyncIterable<ExecutionPatchResult>
+
 export type Plugin<
   PluginContext extends Record<string, any> = {},
   TServerContext = {},
-  TUserContext = {},
 > = EnvelopPlugin<PluginContext> & {
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
@@ -17,11 +21,6 @@ export type Plugin<
    * @internal
    */
   onRequestParse?: OnRequestParseHook
-  /**
-   * Use this hook with your own risk. It is still experimental and may change in the future.
-   * @internal
-   */
-  onResultProcess?: OnResultProcess
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
@@ -63,28 +62,7 @@ export type OnRequestParseDoneHook = (
 export interface OnRequestParseDoneEventPayload {
   params: GraphQLParams
   setParams: (params: GraphQLParams) => void
-  setResult: (result: ResultProcessorInput) => void
-}
-
-export type OnResultProcess = (
-  payload: OnResultProcessEventPayload,
-) => PromiseOrValue<void>
-
-export type ResultProcessorInput =
-  | ExecutionResult
-  | AsyncIterable<ExecutionResult>
-  | AsyncIterable<ExecutionPatchResult>
-
-export type ResultProcessor = (
-  result: ResultProcessorInput,
-  fetchAPI: FetchAPI,
-) => PromiseOrValue<Response>
-
-export interface OnResultProcessEventPayload {
-  request: Request
-  result: ResultProcessorInput
-  resultProcessor?: ResultProcessor
-  setResultProcessor(resultProcessor: ResultProcessor): void
+  setResult: (result: OperationResult) => void
 }
 
 export type OnResponseHook<TServerContext> = (

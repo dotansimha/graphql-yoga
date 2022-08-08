@@ -2,7 +2,7 @@ import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
-import { ResultProcessorInput } from '../types.js'
+import { OperationResult } from '../types.js'
 
 export function isMultipartResult(request: Request): boolean {
   // There should be an explicit accept header for this result type
@@ -10,7 +10,7 @@ export function isMultipartResult(request: Request): boolean {
 }
 
 export function processMultipartResult(
-  result: ResultProcessorInput,
+  result: OperationResult,
   fetchAPI: FetchAPI,
 ): Response {
   const headersInit = {

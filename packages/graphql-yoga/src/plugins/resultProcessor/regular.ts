@@ -1,13 +1,13 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
-import { ResultProcessorInput } from '../types.js'
+import { OperationResult } from '../types.js'
 
-const acceptHeaderByResult = new WeakMap<ResultProcessorInput, string>()
+const acceptHeaderByResult = new WeakMap<OperationResult, string>()
 
 export function isRegularResult(
   request: Request,
-  result: ResultProcessorInput,
+  result: OperationResult,
 ): boolean {
   if (!isAsyncIterable(result)) {
     const acceptHeader = request.headers.get('accept')
@@ -32,7 +32,7 @@ export function isRegularResult(
 }
 
 export function processRegularResult(
-  executionResult: ResultProcessorInput,
+  executionResult: OperationResult,
   fetchAPI: FetchAPI,
 ): Response {
   const contentType = acceptHeaderByResult.get(executionResult)
