@@ -8,15 +8,18 @@ const tsconfig = require(TSCONFIG)
 
 process.env.LC_ALL = 'en_US'
 
-const testMatch = [
-  '**/?(*.)+(spec|test).[jt]s?(x)',
-  '!**/examples/node-esm/**',
-  '!**/.bob/**',
-]
+const testMatch = ['<rootDir>/packages/**/?(*.)+(spec|test).[jt]s?(x)']
 
-if (parseInt(process.versions.node.split('.')[0]) <= 14) {
-  testMatch.push('!**/examples/sveltekit/**')
-  testMatch.push('!**/examples/fastify*/**')
+if (process.env.INTEGRATION_TEST === 'true') {
+  testMatch.pop()
+  testMatch.push(
+    '<rootDir>/examples/**/?(*.)+(spec|test).[jt]s?(x)',
+    '!**/examples/node-esm/**',
+  )
+  if (parseInt(process.versions.node.split('.')[0]) <= 14) {
+    testMatch.push('!**/examples/sveltekit/**')
+    testMatch.push('!**/examples/fastify*/**')
+  }
 }
 
 module.exports = {
