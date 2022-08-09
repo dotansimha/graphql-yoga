@@ -17,7 +17,6 @@ let toSkip = false;
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
-
 		const nodeVersion = execSync('node -v').toString();
 		if (nodeVersion.includes('v12')) {
 			toSkip = true;
@@ -27,13 +26,13 @@ describe('SvelteKit integration', () => {
 			// Kill the port if it's used!
 			try {
 				execSync('fuser -k 3007/tcp');
-			} catch (error) { }
+			} catch (error) {}
 
 			// Build svelteKit
-			execSync('yarn workspace sveltekit build');
+			execSync('yarn workspace example-sveltekit build');
 
 			// Start sveltekit
-			sveltekitProcess = spawn('yarn', ['workspace', 'sveltekit', 'preview']);
+			sveltekitProcess = spawn('yarn', ['workspace', 'example-sveltekit', 'preview']);
 
 			// Wait for sveltekit to start
 			await new Promise((resolve) => setTimeout(resolve, timings.setup.waitAfterPreview));

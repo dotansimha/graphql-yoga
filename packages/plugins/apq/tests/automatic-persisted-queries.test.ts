@@ -1,6 +1,15 @@
-import { createYoga, YogaServerInstance } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
+
 import request from 'supertest'
-import { createInMemoryAPQStore, useAPQ } from '../src'
+import { createInMemoryAPQStore, useAPQ } from '@graphql-yoga/plugin-apq'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: String
+    }
+  `,
+})
 
 describe('Automatic Persisted Queries', () => {
   it('should return not found error if persisted query is missing', async () => {
@@ -11,6 +20,7 @@ describe('Automatic Persisted Queries', () => {
           store,
         }),
       ],
+      schema,
     })
     const response = await request(yoga)
       .post('/graphql')
@@ -36,6 +46,7 @@ describe('Automatic Persisted Queries', () => {
           store,
         }),
       ],
+      schema,
     })
     const persistedQueryEntry = {
       version: 1,
@@ -63,6 +74,7 @@ describe('Automatic Persisted Queries', () => {
           store,
         }),
       ],
+      schema,
     })
 
     const persistedQueryEntry = {
@@ -95,6 +107,7 @@ describe('Automatic Persisted Queries', () => {
           store,
         }),
       ],
+      schema,
     })
     const query = `{__typename}`
     const response = await request(yoga)

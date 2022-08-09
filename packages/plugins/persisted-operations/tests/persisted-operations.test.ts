@@ -1,6 +1,14 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import request from 'supertest'
-import { usePersistedOperations } from '../src'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: String
+    }
+  `,
+})
 
 describe('Automatic Persisted Queries', () => {
   it('should return not found error if persisted query is missing', async () => {
@@ -11,6 +19,7 @@ describe('Automatic Persisted Queries', () => {
           store,
         }),
       ],
+      schema,
     })
     const response = await request(yoga)
       .post('/graphql')
@@ -36,6 +45,7 @@ describe('Automatic Persisted Queries', () => {
           store,
         }),
       ],
+      schema,
     })
     const persistedQueryEntry = {
       version: 1,
@@ -64,6 +74,7 @@ describe('Automatic Persisted Queries', () => {
           store,
         }),
       ],
+      schema,
     })
     const persistedQueryEntry = {
       version: 1,
@@ -90,6 +101,7 @@ describe('Automatic Persisted Queries', () => {
           allowArbitraryOperations: true,
         }),
       ],
+      schema,
     })
     const persistedQueryEntry = {
       version: 1,
@@ -117,6 +129,7 @@ describe('Automatic Persisted Queries', () => {
             request.headers.get('foo') === 'bar',
         }),
       ],
+      schema,
     })
     const persistedQueryEntry = {
       version: 1,

@@ -1,11 +1,11 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import Koa from 'koa'
 
 export function buildApp() {
   const app = new Koa()
 
   const yoga = createYoga<Koa.ParameterizedContext>({
-    schema: {
+    schema: createSchema({
       typeDefs: /* GraphQL */ `
         type Query {
           hello: String
@@ -31,7 +31,7 @@ export function buildApp() {
           },
         },
       },
-    },
+    }),
     logging: false,
   })
 

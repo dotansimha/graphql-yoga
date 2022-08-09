@@ -12,7 +12,7 @@ export function isPOSTJsonRequest(request: Request) {
 export async function parsePOSTJsonRequest(
   request: Request,
 ): Promise<GraphQLParams> {
-  const requestBody = await request.json()
+  const requestBody: any = await request.json()
   return {
     operationName: requestBody.operationName,
     query: requestBody.query,

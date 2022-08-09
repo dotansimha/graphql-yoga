@@ -1,14 +1,15 @@
 import {
   createYoga,
+  createSchema,
   useExtendContext,
+  YogaInitialContext,
   createPubSub,
   Repeater,
   pipe,
   map,
-  YogaInitialContext,
 } from 'graphql-yoga'
 import { createServer } from 'http'
-import { Resolvers } from './generated/graphql.js'
+import { Resolvers } from './generated/graphql'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))
@@ -94,10 +95,10 @@ const resolvers: Resolvers<Context> = {
 }
 
 const yoga = createYoga<Context, any>({
-  schema: {
+  schema: createSchema({
     resolvers,
     typeDefs,
-  },
+  }),
   logging: true,
   plugins: [useExtendContext(() => ({ pubSub }))],
 })

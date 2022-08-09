@@ -3,7 +3,6 @@ export * from './logger.js'
 export * from './server.js'
 
 export * from '@envelop/core'
-export * from '@graphql-yoga/subscription'
 export { CORSOptions } from './plugins/useCORS.js'
 export {
   GraphiQLOptions,
@@ -12,3 +11,5 @@ export {
 } from './plugins/useGraphiQL.js'
 export { Plugin } from './plugins/types.js'
 export { useSchema } from './plugins/useSchema.js'
+export * from './schema.js'
+export * from './subscription.js'

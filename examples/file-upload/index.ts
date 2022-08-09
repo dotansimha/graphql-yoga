@@ -1,10 +1,10 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import http from 'http'
 import fs from 'fs'
 import path from 'path'
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       scalar File
       type Query {
@@ -38,7 +38,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
   graphiql: {
     title: 'Hello World',
   },
