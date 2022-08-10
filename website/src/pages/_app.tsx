@@ -4,32 +4,44 @@ import { FooterExtended, Header, ThemeProvider } from '@theguild/components'
 import { useGoogleAnalytics } from 'guild-docs'
 import 'guild-docs/style.css'
 
-const accentColor = '#1cc8ee'
-
 export default function App({ Component, pageProps, router }: AppProps) {
   const googleAnalytics = useGoogleAnalytics({
     router,
     trackingId: 'G-246BWRER3C',
   })
 
-  const isDocs = router.asPath.startsWith('/docs')
-  const isTutorial = router.asPath.startsWith('/tutorial')
-
-  // @ts-expect-error -- getLayout is custom function from nextra
-  const { getLayout = (page) => page } = Component
   return (
     <ThemeProvider>
       <Script async src="https://the-guild.dev/static/crisp.js" />
       <Header
-        accentColor={accentColor}
+        accentColor="#1cc8ee"
         themeSwitch
         searchBarProps={{ version: 'v2' }}
       />
       <Script {...googleAnalytics.loadScriptProps} />
       <Script {...googleAnalytics.configScriptProps} />
-      {/* @ts-ignore */}
-      {getLayout(<Component {...pageProps} />)}
+      <Component {...pageProps} />
       <FooterExtended />
     </ThemeProvider>
   )
 }
+
+// const defaultSeo: AppSeoProps = {
+//   title: 'GraphQL Yoga',
+//   description:
+//     'Fully-featured, simple to set up, performant and extendable GraphQL NodeJS (JavaScript/TypeScript) server',
+//   logo: {
+//     url: 'https://www.graphql-yoga.com/banner.svg',
+//     width: 200,
+//     height: 350,
+//   },
+//   openGraph: {
+//     images: [
+//       {
+//         url: 'https://www.graphql-yoga.com/cover.png',
+//         width: 1280,
+//         height: 720,
+//       },
+//     ],
+//   },
+// }

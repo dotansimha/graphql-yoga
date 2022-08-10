@@ -9,7 +9,7 @@ Example use cases for subscriptions are applications that require real-time data
 GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for the subscription protocol.
 You don't need any extra packages to use subscriptions.
 
-<Callout type="info">
+<Callout type='warning' emoji='⚠️'>
   Compared to implementing query and mutation resolvers, subscriptions are more
   complex to implement as they require additional infrastructure for scenarios
   where you have more than one instance of your GraphQL server running as the
@@ -20,9 +20,7 @@ You don't need any extra packages to use subscriptions.
 
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
-`server.ts`
-
-```ts
+```ts filename="server.ts"
 import { createServer } from '@graphql-yoga/node'
 
 // Provide your schema
@@ -71,8 +69,9 @@ Then press the Play (Execute Query) button.
 
 Alternatively, you can also send the subscription operation via curl.
 
-```bash
-$ curl -N -H "accept:text/event-stream" http://localhost:4000/graphql?query=subscription%20%7B%0A%20%20countdown%28from%3A%205%29%0A%7D
+```sh
+curl -N -H "accept:text/event-stream" http://localhost:4000/graphql?query=subscription%20%7B%0A%20%20countdown%28from%3A%205%29%0A%7D
+
 data: {"data":{"countdown":5}}
 
 data: {"data":{"countdown":4}}
@@ -96,23 +95,20 @@ data: {"data":{"countdown":0}}
 ### GraphQL Subscriptions with Server-Sent Events
 
 <iframe
-  width="100%"
-  height="400"
+  className="mt-6 h-[400px] w-full"
   src="https://www.youtube.com/embed/oZtTut7QsZ8"
   title="GraphQL Subscriptions with Server Sent Events"
-  frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
   allowFullScreen
-></iframe>
+/>
 
-## Handling Subscriptions on The Client
+## Handling Subscriptions on the Client
 
 WHATWG standard [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) can be used without any extra packages to handle SSE.
 
-`eventsource.ts`
-
-```ts
+```ts filename="eventsource.ts"
 const url = new URL('http://localhost:4000/graphql')
+
 url.searchParams.append(
   'query',
   /* GraphQL */ `
@@ -123,21 +119,21 @@ url.searchParams.append(
 )
 url.searchParams.append('variables', JSON.stringify({ from: 10 }))
 
-const eventsource = new EventSource(url.toString(), {
+const eventsource = new EventSource(url.href, {
   withCredentials: true, // This is required for cookies
 })
 
-eventsource.onmessage = function (event) {
+eventsource.onmessage = (event) => {
   const data = JSON.parse(event.data)
   console.log(data) // This will result something like `{ "data": { "countdown": 0 } }`
 }
 ```
 
-### Client Usage With Apollo
+### Client Usage with Apollo
 
 We can create an `SSELink` to use with Apollo Client.
 To send non Subscription operations via the default HTTP protocol, you can use `split` from the Apollo Link package.
-[For more information please refer to the Apollo Link documentation](https://www.apollographql.com/docs/react/api/link/introduction).
+[For more information please refer to the Apollo Link documentation](https://apollographql.com/docs/react/api/link/introduction).
 
 ```ts
 import {
@@ -160,7 +156,7 @@ class SSELink extends ApolloLink {
     super()
   }
 
-  public request(operation: Operation): Observable<FetchResult> {
+  request(operation: Operation): Observable<FetchResult> {
     const url = new URL(this.options.uri)
     url.searchParams.append('query', print(operation.query))
     if (operation.operationName) {
@@ -197,14 +193,8 @@ class SSELink extends ApolloLink {
 }
 
 const uri = 'http://localhost:4000/graphql'
-
-const sseLink = new SSELink({
-  uri,
-})
-
-const httpLink = new HttpLink({
-  uri,
-})
+const sseLink = new SSELink({ uri })
+const httpLink = new HttpLink({ uri })
 
 const link = split(
   ({ query, operationName }) => {
@@ -220,13 +210,11 @@ const link = split(
 )
 ```
 
-### Client Usage with Urql
+### Client Usage with urql
 
-Here is an example with Urql's `subscriptionExchange`
+Here is an example with urql's `subscriptionExchange`:
 
-`urql-sse.ts`
-
-```ts
+```ts filename="urql-sse.ts"
 import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
 
 const client = createClient({
@@ -244,18 +232,18 @@ const client = createClient({
           )
         }
         return {
-          subscribe: (sink) => {
+          subscribe(sink) {
             const eventsource = new EventSource(url.toString(), {
               withCredentials: true, // This is required for cookies
             })
-            eventsource.onmessage = function (event) {
+            eventsource.onmessage = (event) => {
               const data = JSON.parse(event.data)
               sink.next(data)
               if (eventsource.readyState === 2) {
                 sink.complete()
               }
             }
-            eventsource.onerror = function (error) {
+            eventsource.onerror = (error) => {
               sink.error(error)
             }
             return {
@@ -275,9 +263,7 @@ Suppose you want to use the [`graphql-transport-ws`](https://github.com/enisdenj
 To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
 Also, you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets instead of Server-Sent Events within GraphiQL.
 
-`yoga-with-ws.ts`
-
-```ts
+```ts filename="yoga-with-ws.ts"
 import { createServer } from '@graphql-yoga/node'
 import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
@@ -365,9 +351,7 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 
 GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it easy to send new events to the client from within your mutation resolvers.
 
-`server.ts`
-
-```ts
+```ts filename="server.ts"
 import { createServer, createPubSub } from '@graphql-yoga/node'
 
 const pubSub = createPubSub()
@@ -400,7 +384,7 @@ const server = createServer({
         },
       },
       Mutation: {
-        broadcastRandomNumber: (_, args) => {
+        broadcastRandomNumber(_, args) {
           // publish a random number
           pubSub.publish('randomNumber', Math.random())
         },
@@ -506,7 +490,7 @@ pubSub.publish('user:followerCount', userId1, { followerCount: 30 })
 pubSub.publish('user:followerCount', userId2, { followerCount: 12 })
 ```
 
-### Distributed Pub/Sub For Production
+### Distributed Pub/Sub for Production
 
 If you spin up multiple instances of your GraphQL server each server instance will have its in-memory pub/sub instance.
 An event triggered on one server instance will not be distributed to the other server instances, resulting in subscribers on the other server not receiving any updates.
@@ -532,9 +516,7 @@ const eventTarget = createRedisEventTarget({
   subscribeClient,
 })
 
-const pubSub = createPubSub({
-  eventTarget,
-})
+const pubSub = createPubSub({ eventTarget })
 ```
 
 <Callout type="note">
@@ -628,7 +610,7 @@ const server = createServer({
       },
     },
     Mutation: {
-      broadcastRandomNumber: (_, args) => {
+      broadcastRandomNumber(_, args) {
         // publish a random number
         pubSub.publish('randomNumber', Math.random())
       },
@@ -641,14 +623,14 @@ server.start()
 
 ### Subscriptions with Initial Value
 
-GraphQL subscriptions are primarily designed to send a stream of events to the client.
+GraphQL's subscriptions are primarily designed to send a stream of events to the client.
 Sometimes it is useful to send an initial value to a client as soon as the GraphQL subscription is set up.
 
 An example of this would be a `Subscription.globalCounter` field that syncs a counter with all clients by streaming the initial counter value to a client that sets up the subscription and then, furthermore, streams the updated counter value to the clients every time it changes.
 
-GraphQL subscriptions are implemented using [Async Iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator), which in itself is a very complex topic with a lot of pitfalls that can cause memory leaks if not treated with caution.
+GraphQL's subscriptions are implemented using [Async Iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator), which in itself is a very complex topic with a lot of pitfalls that can cause memory leaks if not treated with caution.
 
-Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org/) ("The missing constructor for creating safe async iterators") for providing a friendly developer experience.
+Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org) ("The missing constructor for creating safe async iterators") for providing a friendly developer experience.
 
 ```ts
 import {
@@ -701,7 +683,7 @@ const server = createServer({
       },
     },
     Mutation: {
-      incrementGlobalCounter: () => {
+      incrementGlobalCounter() {
         globalCounter = globalCounter + 1
         // publish a global counter increment event
         pubSub.publish('globalCounter:change')
@@ -778,12 +760,12 @@ const server = createServer({
       },
     },
     Mutation: {
-      deleteUser: () => {
+      deleteUser() {
         user = null
         pubSub.publish('userDeleted')
         return true
       },
-      updateUserLogin: (_, args) => {
+      updateUserLogin(_, args) {
         if (!user) {
           return false
         }

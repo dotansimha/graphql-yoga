@@ -2,35 +2,29 @@ import { Callout, PackageCmd } from '@theguild/components'
 
 # Apollo Federation with GraphQL Yoga
 
-[Apollo Federation is a specification that applies microservice architecture through GraphQL APIs.](https://www.apollographql.com/docs/federation/)
+[Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies microservice architecture through GraphQL APIs.
 
-Thanks to [Envelop's Apollo Federation](https://www.envelop.dev/plugins/use-apollo-federation) plugin, we can use GraphQL Yoga to build our gateway server.
+Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-federation) plugin, we can use GraphQL Yoga to build our gateway server.
 
-<Callout type="info">
+<Callout>
   As documented in the [Apollo Federation
   docs](https://www.apollographql.com/docs/federation/gateway/#setup),
   `@apollo/gateway` package doesn't support GraphQL v16 so you have to install
-  `graphql@15`
+  `graphql@15`.
 </Callout>
 
-<Callout type="info">
+<Callout>
   Please note that Apollo Federation implementation doesn't support GraphQL
   Subscriptions. If you need to use Subscriptions with a Federated Gateway you
-  can use [Schema
-  Stitching](https://www.graphql-tools.com/docs/schema-stitching/stitch-federation)
+  can use [Schema Stitching](https://graphql-tools.com/docs/schema-stitching/stitch-federation).
 </Callout>
 
 ## Gateway
 
-### Installation For Gateway
+### Installation for Gateway
 
 <PackageCmd
-  packages={[
-    '@graphql-yoga/node',
-    '@apollo/gateway',
-    '@envelop/apollo-federation',
-    'graphql@15',
-  ]}
+  packages={['@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15']}
 />
 
 ### Example Gateway
@@ -53,11 +47,7 @@ const gateway = new ApolloGateway({
 await gateway.load()
 
 const server = createServer({
-  plugins: [
-    useApolloFederation({
-      gateway,
-    }),
-  ],
+  plugins: [useApolloFederation({ gateway })],
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -70,7 +60,7 @@ You don't need any extra plugins for Yoga for Federation Service.
 
 ### Installation
 
-<PackageCmd packages={['@graphql-yoga/node', '@apollo/subgraph', 'graphql']} />
+<PackageCmd packages={['@graphql-yoga/node @apollo/subgraph graphql']} />
 
 ### Example User Service
 

@@ -2,7 +2,7 @@ import { Callout, PackageCmd } from '@theguild/components'
 
 # GraphiQL
 
-[GraphiQL is an in-browser IDE for writing, validating, and testing GraphQL queries.](https://github.com/graphql/graphiql)
+[GraphiQL](https://github.com/graphql/graphiql) is an in-browser IDE for writing, validating, and testing GraphQL queries.
 
 You can configure or completely disable GraphiQL with the `graphiql` option.
 By default, GraphiQL is only enabled.
@@ -34,14 +34,13 @@ You can disable GraphiQL by simply setting the `graphiql` option to `false`.
 import { createServer } from '@graphql-yoga/node'
 
 // Provide your schema
-const server = createServer({
-  graphiql: false,
-})
+const server = createServer({ graphiql: false })
+
 // Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
 
-<Callout type="info">
+<Callout type="warning" emoji='⚠️'>
   Be aware that this does not make your GraphQL server more secure. As long as
   the introspection and/or the "did you mean x" suggestion feature of GraphQL
   are enabled.
@@ -56,6 +55,7 @@ const server = createServer({
   graphiql: false,
   plugins: [useDisableIntrospection()],
 })
+
 // Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
@@ -77,6 +77,7 @@ const server = createServer({
     handleValidationErrors: true,
   },
 })
+
 // Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
@@ -96,13 +97,14 @@ import { createServer } from '@graphql-yoga/node'
 
 // Provide your schema
 const server = createServer({
-  graphiql: (request) => {
+  graphiql(request) {
     if (request.headers.get('graphiql-enabled')) {
       return true
     }
     return false
   },
 })
+
 // Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
@@ -115,35 +117,34 @@ import { createServer } from '@graphql-yoga/node'
 
 // Provide your schema
 const server = createServer({
-  graphiql: (request, { req, res }) => {
+  graphiql(request, { req, res }) {
     // access something attached to the request object
     // e.g. an user object added by an auth middleware.
     if (req.user.role === 'admin') {
       return true
     }
     return false
-  },
+  }
 })
+
 // Start the server and explore http://localhost:4000/graphql
 server.start()
 ```
 
 ## Offline Usage
 
-By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc).
+By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc.).
 If you want to use GraphiQL from a local version, you need to install it manually.
 
 <PackageCmd packages={['@graphql-yoga/render-graphiql']} />
 
-And you need to pass imported `renderGraphiQL` to `createServer` like below;
+And you need to pass imported `renderGraphiQL` to `createServer` like below:
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
-const yoga = createServer({
-  renderGraphiQL,
-})
+const yoga = createServer({ renderGraphiQL })
 
 yoga.start()
 ```

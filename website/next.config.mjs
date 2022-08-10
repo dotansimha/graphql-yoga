@@ -6,8 +6,18 @@ export default withGuildDocs({
   },
   redirects: () => [
     {
-      source: '/docs/introduction',
-      destination: '/docs',
+      source: '/docs',
+      destination: '/docs/quick-start',
+      permanent: true,
+    },
+    {
+      source: '/tutorial',
+      destination: '/tutorial/basic/00-introduction',
+      permanent: true,
+    },
+    {
+      source: '/docs/testing',
+      destination: '/docs/features/testing',
       permanent: true,
     },
   ],

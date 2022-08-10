@@ -1,21 +1,21 @@
-import { Callout, Instruction, PackageCmd } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
 
 # Getting Started
 
 In this chapter, you will learn about the GraphQL schema:
 
-1. How it performs as an API contract between the consumer and the provider,
+1. How it performs as an API contract between the consumer and the provider
 2. How you can use `graphql` library as a basic GraphQL execution mechanism
 3. What is a GraphQL operation and how you can use it?
 
 ## Getting Started with GraphQL
 
-To get a better understanding of how GraphQL works, you can start by [reading this tutorial about GraphQL basics](https://www.howtographql.com/basics/0-introduction/).
+To get a better understanding of how GraphQL works, you can start by [reading this tutorial about GraphQL basics](https://howtographql.com/basics/0-introduction).
 
 If you are already familiar with the basics of GraphQL, here's a quick overview:
 
 1. The GraphQL schema is where your GraphQL types are defined.
-2. GraphQL types are connected using fields, and they form a graph.
+2. GraphQL's types are connected using fields, and they form a graph.
 3. The `Query`, `Mutation` and `Subscription` types are special since they act as an entry point to the graph.
 4. The GraphQL schema acts as the data provider, and it offers a set of capabilities the consumer can use.
 5. To get data from a GraphQL schema, you need to write a GraphQL operation (often referred to as `query`) that selects the data and fields you need.
@@ -28,30 +28,24 @@ Later, you'll replace the direct execution with a GraphQL server (based on HTTP 
 
 There are many ways to create a GraphQL schema - in this tutorial, you are going to use the schema-first approach, and build the schema with the `@graphql-tools/schema` library (take a look at the end of this chapter for different solutions for creating your GraphQL schema).
 
-<Instruction>
-
 Start by installing `graphql` and `@graphql-tools/schema` library in your project, using the following command:
 
-<PackageCmd packages={['--save graphql @graphql-tools/schema']} />
+<PackageCmd packages={['@graphql-tools/schema graphql']} />
 
 The command above will get you the following libraries installed in the project:
 
 - `graphql` is the GraphQL engine implementation.
 - `@graphql-tools/schema` is a library for creating GraphQL executable schemas.
 
-</Instruction>
-
-A GraphQL schema can be written with GraphQL SDL (*S*chema *D*efinition *L*anguage), which is the GraphQL language for defining your API/contract. The actual code and business logic of each field are called a GraphQL _resolver_.
+A GraphQL schema can be written with GraphQL SDL (*S*chema *D*efinition *L*anguage), which is the GraphQL language for defining your API/contract. The actual code and business logic of each field is called a GraphQL _resolver_.
 
 So let's get started by creating your first, very-simple, GraphQL schema.
 
-To get started with a simple GraphQL schema, you need to create an SDL file defining our contract:
-
-<Instruction>
+To get started with a simple GraphQL schema, you need to create a SDL file defining our contract:
 
 Create a `src/schema.ts` file with the following content:
 
-```ts filename="schema.ts"
+```ts filename="src/schema.ts"
 const typeDefinitions = /* GraphQL */ `
   type Query {
     hello: String!
@@ -59,15 +53,11 @@ const typeDefinitions = /* GraphQL */ `
 `
 ```
 
-</Instruction>
-
 These are our type definitions that describe what data can be retrieved from the schema.
-
-<Instruction>
 
 Up next you define the corresponding resolver functions that are used for resolving the data.
 
-```typescript
+```ts
 const typeDefinitions = /* GraphQL */ `
   type Query {
     hello: String!
@@ -81,17 +71,13 @@ const resolvers = {
 }
 ```
 
-</Instruction>
-
 As you can see the resolver map follows the same structure as the type definitions.
 
 The typename (`Query`) is an object in which the fields (`hello`) are functions that return the corresponding data of that field.
 
-<Instruction>
-
 Now you still need to glue together the type definitions and the resolver map.
 
-```typescript
+```ts
 import { makeExecutableSchema } from '@graphql-tools/schema'
 
 const typeDefinitions = /* GraphQL */ `
@@ -108,17 +94,15 @@ const resolvers = {
 
 export const schema = makeExecutableSchema({
   resolvers: [resolvers],
-  typeDefs: [typeDefinitions],
+  typeDefs: [typeDefinitions]
 })
 ```
 
-</Instruction>
-
 In the code snippet above, you've created or used the following variables:
 
-- `typeDefinitions` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `hello`, of type `String`.
-- `resolvers` - the resolver functions are part of the GraphQL schema, and they are the actual implementation (code/logic) of the GraphQL schema.
-- `schema` - a combination of the GraphQL SDL and the resolvers. `makeExecutableSchema` function is in charge of gluing them together into an executable schema we can later use.
+- `typeDefinitions` - this is your GraphQL schema definition. You've created a `Query` type that exposes a field called `hello`, of type `String`
+- `resolvers` - the resolver functions are part of the GraphQL schema, and they are the actual implementation (code/logic) of the GraphQL schema
+- `schema` - a combination of the GraphQL SDL and the resolvers. `makeExecutableSchema` function is in charge of gluing them together into an executable schema we can later use
 
 Now that you have a GraphQL schema, you can use that to fetch data using a GraphQL `query` operation!
 
@@ -140,11 +124,9 @@ So you don't have to get into all the complexity of running a GraphQL server - y
 
 To query our local schema, even without any fancy GraphQL client or even a GraphQL server, you can use GraphQL's `execute` function to just run the schema with the query.
 
-<Instruction>
-
 Update the code in `src/main.ts` to contain the following snippet:
 
-```ts filename="main.ts"
+```ts filename="src/main.ts"
 import { execute, parse } from 'graphql'
 import { schema } from './schema'
 
@@ -166,15 +148,13 @@ async function main() {
 main()
 ```
 
-</Instruction>
-
 Now, try to run our project again (either with `npm run dev` or `npm run start`), you should see in the output log the following:
 
-```
+```text
 { data: [Object: null prototype] { hello: 'Hello World' } }
 ```
 
-You can ignore the `[Object: null prototype]`. It just means that the object does not inherit any properties from the global Object prototype and is a security measure that is insignificant for this tutorial.
+You can ignore the `[Object: null prototype]`. It is just means that the object does not inherit any properties from the global Object prototype and is a security measure that is insignificant for this tutorial.
 
 ### So What Happened Here?
 
@@ -221,20 +201,20 @@ The GraphQL engine takes the query, and based on the fields you selected (called
 
 The next chapter will teach you how to use your GraphQL schema to create a GraphQL server!
 
-## A Word on The GraphQL Schema
+## A Word on the GraphQL Schema
 
 At the core of every GraphQL API, there is a GraphQL schema. So, let's quickly talk about it.
 
-<Callout type="info">
-  **Note**: In this tutorial, we'll only scratch the surface of this topic. If
+<Callout>
+  Note: In this tutorial, we'll only scratch the surface of this topic. If
   you want to go a bit more in-depth and learn more about the GraphQL schema as
   well as its role in a GraphQL API, be sure to check out
-  [this](https://www.prisma.io/blog/graphql-server-basics-the-schema-ac5e2950214e)
+  [this](https://prisma.io/blog/graphql-server-basics-the-schema-ac5e2950214e)
   excellent article.
 </Callout>
 
-GraphQL schemas are usually written in the GraphQL
-[Schema Definition Language](https://www.prisma.io/blog/graphql-sdl-schema-definition-language-6755bcb9ce51) (SDL). SDL
+GraphQL's schemas are usually written in the GraphQL
+[Schema Definition Language](https://prisma.io/blog/graphql-sdl-schema-definition-language-6755bcb9ce51) (SDL). SDL
 has a type system that allows you to define data structures (just like other strongly typed programming languages such
 as Java, TypeScript, Swift, Go, etc.).
 
@@ -273,16 +253,16 @@ type User {
 }
 ```
 
-In this case, we have three root fields: `users` and `user` on `Query` as well as `createUser` on `Mutation`. The
+In this case, we have three root fields: `users` and `user` on `Query` as well as `createUser` on `Mutation`.
 An additional definition of the `User` type is required because otherwise, the schema definition would be incomplete.
 
 What are the API operations that can be derived from this schema definition? Well, we know that each API operation
-always needs to start with a root field. However, we haven't learned yet what it looks like when the _type_ of a root
+always needs to start with a root field. However, we haven't learned yet what it looks like when the _type_ of root
 field is itself another [object type](http://graphql.org/learn/schema/#object-types-and-fields). This is the case here,
 where the types of the root fields are `[User!]!`, `User` and `User!`. In the `hello` example from before, the type of
 the root field was a `String`, which is a [scalar type](http://graphql.org/learn/schema/#scalar-types).
 
-When the type of a root field is an object type, you can further expand the query (or mutation/subscription) with fields
+When the type of root field is an object type, you can further expand the query (or mutation/subscription) with fields
 of that object type.
 
 Here are the operations that are accepted by a GraphQL API that implements the above schema:
@@ -325,7 +305,7 @@ mutation {
 }
 ```
 
-There Are a Few Things To Note:
+There are a few things to note:
 
 - In these examples, we always query `id` and `name` of the returned `User` objects. We could potentially omit either of
   them. Note, however, that when querying an object type, it is required that you query at least one of its fields in a
@@ -349,10 +329,10 @@ As mentioned at the beginning of this chapter, there are many ways to build and 
 
 Here are a few popular open-source libraries:
 
-- [`graphql`](https://graphql.org/graphql-js/type/) - you can use raw `graphql` using object classes to create your schema
-- [`@graphql-tools/schema`](https://www.graphql-tools.com/docs/generate-schema) - schema-first library for creating executable schemas
+- [`graphql`](https://graphql.org/graphql-js/type) - you can use raw `graphql` using object classes to create your schema
+- [`@graphql-tools/schema`](https://graphql-tools.com/docs/generate-schema) - schema-first library for creating executable schemas
 - [`pothos`](https://github.com/hayes/pothos) - library for creating GraphQL schemas in typescript using a strongly typed code first approach and a built-in plugin system
 - [`gqtx`](https://github.com/sikanhe/gqtx) - library for creating GraphQL schemas in typescript using a strongly typed code first approach
-- [`nexus-graphql`](https://nexusjs.org/) - Declarative, Code-First GraphQL Schemas for JavaScript/TypeScript
+- [`nexus-graphql`](https://nexusjs.org) - Declarative, Code-First GraphQL Schemas for JavaScript/TypeScript
 - [`typegraphql`](https://github.com/MichalLytek/type-graphql) - GraphQL schema and resolvers with TypeScript, using classes and decorators
-- [`graphql-modules`](https://www.graphql-modules.com/) - schema first library for creating strict, reusable GraphQL schema modules
+- [`graphql-modules`](https://graphql-modules.com) - schema first library for creating strict, reusable GraphQL schema modules

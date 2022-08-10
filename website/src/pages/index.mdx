@@ -1,11 +1,65 @@
-import { FC } from 'react'
-import Image from 'next/image'
-import {
-  HeroGradient,
-  HeroIllustration,
-  NPMBadge,
-  handlePushRoute,
-} from '@theguild/components'
+---
+title: Home
+---
+
+import { HeroGradient, HeroIllustration } from '@theguild/components'
+import { handlePushRoute } from 'guild-docs'
+
+export const ITEMS = [
+  {
+    title: 'GraphQL over HTTP compliant',
+    description: 'Yoga follows the GraphQL over HTTP specification.',
+    imageSrc: '/assets/http.svg',
+    imageAlt: 'Server over HTTP',
+    link: {
+      children: 'Learn more',
+      title: 'Learn more',
+      href: '/docs/quick-start',
+      onClick: (e) => handlePushRoute('/docs/quick-start', e),
+    },
+  },
+  {
+    title: 'Extensible GraphQL Engine powered by Envelop',
+    description:
+      'Add authentication, caching, error reporting or rate limiting with ease.',
+    imageSrc: '/assets/ecosystem.svg',
+    imageAlt: 'Ecosystem',
+    flipped: true,
+    link: {
+      children: 'Learn more',
+      title: 'Learn more',
+      href: '/docs/features/envelop-plugins',
+      onClick: (e) => handlePushRoute('/docs/features/envelop-plugins', e),
+    },
+  },
+  {
+    title: 'GraphQL Subscriptions over HTTP',
+    description:
+      'Run GraphQL Subscriptions over HTTP instead of WebSockets via Server Sent Events.',
+    imageSrc: '/assets/subscriptions.svg',
+    imageAlt: 'Subscriptions',
+    link: {
+      children: 'Learn more',
+      title: 'Learn more',
+      href: '/docs/features/subscriptions',
+      onClick: (e) => handlePushRoute('/docs/features/subscriptions', e),
+    },
+  },
+  {
+    title: 'Handle file uploads with GraphQL',
+    description:
+      'Enable file uploads using GraphQL mutations with no additional packages needed.',
+    imageSrc: '/assets/uploads.svg',
+    imageAlt: 'Uploads',
+    flipped: true,
+    link: {
+      children: 'Learn more',
+      title: 'Learn more',
+      href: '/docs/features/file-uploads',
+      onClick: (e) => handlePushRoute('/docs/features/file-uploads', e),
+    },
+  },
+]
 
 <HeroGradient
   title="Time to Relax with GraphQL Yoga"
@@ -29,71 +83,24 @@ import {
       },
     },
   ]}
-  colors={['#7433FF', '#1CC8EE']}
+  colors={['#7433ff', '#1cc8ee']}
   image={{
-    src: './assets/yogaHome.svg',
+    src: '/assets/yogaHome.svg',
     alt: 'Yoga',
   }}
 />
+
+{ITEMS.map((option) => (
+
 <HeroIllustration
-  flipped
-  title="GraphQL over HTTP compliant"
-  description="Yoga follows the GraphQL over HTTP specification."
+  key={option.title}
+  title={option.title}
+  description={option.description}
   image={{
-    src: '/assets/http.svg',
-    alt: 'Server over HTTP',
-    loading: 'lazy',
+    src: option.imageSrc,
+    alt: option.imageAlt,
   }}
-  link={{
-    children: 'Learn more',
-    title: 'Learn more',
-    href: '/docs/quick-start',
-    onClick: (e) => handlePushRoute('/docs/quick-start', e),
-  }}
+  flipped={option.flipped}
+  link={option.link}
 />
-<HeroIllustration
-  title="Extensible GraphQL Engine powered by Envelop"
-  description="Add authentication, caching, error reporting or rate limiting with ease."
-  image={{
-    src: '/assets/ecosystem.svg',
-    alt: 'Ecosystem',
-    loading: 'lazy',
-  }}
-  link={{
-    children: 'Learn more',
-    title: 'Learn more',
-    href: '/docs/features/envelop-plugins',
-    onClick: (e) => handlePushRoute('/docs/features/envelop-plugins', e),
-  }}
-/>
-<HeroIllustration
-  title="GraphQL Subscriptions over HTTP"
-  description="Run GraphQL Subscriptions over HTTP instead of WebSockets via Server Sent Events."
-  flipped
-  image={{
-    src: '/assets/subscriptions.svg',
-    alt: 'Subscriptions',
-    loading: 'lazy',
-  }}
-  link={{
-    children: 'Learn more',
-    title: 'Learn more',
-    href: '/docs/features/subscriptions',
-    onClick: (e) => handlePushRoute('/docs/features/subscriptions', e),
-  }}
-/>
-<HeroIllustration
-  title="Handle file uploads with GraphQL"
-  description="Enable file uploads using GraphQL mutations with no additional packages needed."
-  image={{
-    src: '/assets/uploads.svg',
-    alt: 'Uploads',
-    loading: 'lazy',
-  }}
-  link={{
-    children: 'Learn more',
-    title: 'Learn more',
-    href: '/docs/features/file-uploads',
-    onClick: (e) => handlePushRoute('/docs/features/file-uploads', e),
-  }}
-/>
+))}

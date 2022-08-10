@@ -1,6 +1,4 @@
-import { YogaLogo } from '@theguild/components'
-// @ts-ignore
-import { DocsThemeConfig } from 'nextra-theme-docs'
+import { YogaLogo, DocsThemeConfig } from '@theguild/components'
 
 const SITE_NAME = 'GraphQL Yoga'
 
@@ -23,7 +21,7 @@ const config: DocsThemeConfig = {
         <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
         <h2 className="hidden text-xs sm:!block">
           Fully-featured, simple to set up, performant and extendable GraphQL
-          JavaScript server Home
+          JavaScript server
         </h2>
       </div>
     </>

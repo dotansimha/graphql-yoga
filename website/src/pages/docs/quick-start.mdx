@@ -6,7 +6,7 @@ GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP](https://
 
 ## Installation
 
-<PackageCmd packages={['graphql', '@graphql-yoga/node']} />
+<PackageCmd packages={['@graphql-yoga/node graphql']} />
 
 ## Usage
 
@@ -33,9 +33,9 @@ const server = createServer({
 server.start()
 ```
 
-<Callout type="info">
+<Callout>
   Yoga uses GraphQL Tools under the hood so you'll want to follow the
-  [`makeExecutableSchema`](https://www.graphql-tools.com/docs/generate-schema)
+  [`makeExecutableSchema`](https://graphql-tools.com/docs/generate-schema)
   pattern.
 </Callout>
 
@@ -53,28 +53,21 @@ query HelloWorld {
 
 You can also pass an existing `GraphQLSchema` instance to `createServer`.
 
-If you're using a library such as [Pothos](https://pothos-graphql.dev/), [GraphQL Nexus](https://nexusjs.org/), [gqtx](https://github.com/sikanhe/gqtx), or vanilla [`graphql-js`](https://graphql.org/graphql-js/type/#graphqlschema), you simply can pass the `GraphQLSchema` to `schema`:
+If you're using a library such as [Pothos](https://pothos-graphql.dev), [GraphQL Nexus](https://nexusjs.org), [gqtx](https://github.com/sikanhe/gqtx), or vanilla [`graphql-js`](https://graphql.org/graphql-js/type/#graphqlschema), you simply can pass the `GraphQLSchema` to `schema`:
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
-
 import { schema } from './schema'
 
-const server = createServer({
-  schema,
-})
+const server = createServer({ schema })
 
 server.start()
 ```
 
-## GraphQL Yoga 2
-
 <iframe
-  width="100%"
-  height="400"
-  src="https://www.youtube.com/embed/_-B6QIFSSwo"
+  className="mt-6 h-[400px] w-full"
+  src="https://youtube.com/embed/_-B6QIFSSwo"
   title="GraphQL Yoga 2"
-  frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
   allowFullScreen
-></iframe>
+/>

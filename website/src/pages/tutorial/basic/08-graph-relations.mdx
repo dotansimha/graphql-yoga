@@ -1,10 +1,8 @@
-import { Instruction, Callout } from '@theguild/components'
-
 # Graph Relations
 
 So far you built a simple GraphQL API for creating and retrieving links.
 
-Another popular feature of Hackernews is to comment on links for attacking and criticizing the original poster. We don't want to miss out on that comment feature!
+Another popular feature of Hackernews is to comment on links for attacking and criticizing the original poster. We definetly don't want to miss out on that comment feature!
 
 In this chapter, you will introduce a new object type `Comment` (and the corresponding Prisma model) in your code and also write a `Link.comments` field for retrieving all the comments that belong to a `Link`.
 
@@ -14,11 +12,9 @@ The first thing you need is a way to represent the comment data in the database.
 
 You'll also want to add a _relation_ between the `Comment` and the existing `Link` type to express that `Comments`s are _posted_ on `Links`s.
 
-<Instruction>
-
 Open `prisma/schema.prisma` and add the following code, making sure to also update your existing `Link` model accordingly:
 
-```prisma filename="schema.prisma"
+```prisma filename="prisma/schema.prisma"
 model Link {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
@@ -35,19 +31,15 @@ model Comment {
 }
 ```
 
-</Instruction>
-
 Notice how you're adding a new _relation field_ called `comments` to the `Link` model that points to a list of `Comment` instances. The `Comment` model then has a `link` field that point's to the associated `Link` instance.
 
-To hint this relation to Prisma the `link` field on the `Comment` model must be annotated with [the `@relation` attribute](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema/relations#the-relation-attribute). This is a requirement for every related field in your Prisma schema, and by doing so you define the foreign keys of the affected table.
+To hint this relation to Prisma, the `link` field on the `Comment` model must be annotated with [the `@relation` attribute](https://prisma.io/docs/reference/tools-and-interfaces/prisma-schema/relations#the-relation-attribute). This is a requirement for every relation field in your Prisma schema, and by doing so you define the foreign keys of the affected table.
 
-In this specific case, we have a [one-to-many relationship](https://www.prisma.io/docs/concepts/components/prisma-schema/relations/one-to-many-relations).
+In this specific case, we have a [one-to-many relationship](https://prisma.io/docs/concepts/components/prisma-schema/relations/one-to-many-relations).
 
-A `Link` has many comments.
+A `Link` has many comments. A `Comment` belongs to one `Link`.
 
-A `Comment` belongs to one `Link`.
-
-If this is quite new to you, don't worry! We're going to be adding a few of these relational fields and you'll get the hang of it as you go! For a deeper dive on relations with Prisma, check out these [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema/relations).
+If this is quite new to you, don't worry! We're going to be adding a few of these relational fields, and you'll get the hang of it as you go! For a deeper dive on relations with Prisma, check out these [docs](https://prisma.io/docs/reference/tools-and-interfaces/prisma-schema/relations).
 
 ## Updating Prisma Client
 
@@ -55,17 +47,14 @@ This is a great time to refresh your memory on the workflow we described for you
 
 After every change you make to the data model, you need to migrate your database and then re-generate Prisma Client.
 
-<Instruction>
-
 In the root directory of the project, run the following command:
 
-```bash
+```sh
 npx prisma migrate dev --name "add-user-model"
 ```
 
-</Instruction>
-
-This command has now generated your second migration inside of `prisma/migrations`, and you can start to see how this becomes a historical record of how your database evolves. This script also runs the Prisma migration, so your new models and types are ready-to-use.
+This command has now generated your second migration inside of `prisma/migrations`, and you can start to see how this becomes a historical record of how your database evolves over
+time. This script also runs the Prisma migration, so your new models and types are ready-to-use.
 
 That might feel like a lot of steps, but the workflow will become automatic by the end of this tutorial!
 
@@ -107,42 +96,36 @@ type Mutation {
 
 Let's start with the `Mutation.postCommentOnLink` resolver, so you can post comments on a link.
 
-<Instruction>
-
 Within the `Mutation` object type resolver maps create a new `postCommentOnLink` field resolver function.
 
-```typescript
+```ts
 const resolvers = {
   // ... other resolver maps ...
   Mutation: {
     // ... other field resolver functions
-    postCommentOnLink: async (
+    async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
       context: GraphQLContext,
-    ) => {},
+    ) {},
   },
 }
 ```
 
-</Instruction>
-
 This is the skeleton of your new field resolver. As you might notice, it looks a lot familiar to the `Mutation.postLink` field resolver function. Since it will write to the database, the implementation will also look pretty familiar!
 
-<Instruction>
+Add the following business logic within the resolver, that uses the newly generated Prisma functions:
 
-Add the following business logic within the resolver, that uses the newly generated Prisma functions.
-
-```typescript
+```ts
 const resolvers = {
   // ... other resolver maps ...
   Mutation: {
     // ... other field resolver functions
-    postCommentOnLink: async (
+    async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
       context: GraphQLContext,
-    ) => {
+    ) {
       const newComment = await context.prisma.comment.create({
         data: {
           linkId: parseInt(args.linkId),
@@ -156,23 +139,19 @@ const resolvers = {
 }
 ```
 
-</Instruction>
-
 You pass two arguments for creating the new comment to the `comment.create` call.
 
-1. **`linkId`**. This is the id of the link to the comment belongs to. GraphQL has a special scalar for describing ids that you used before, called `ID`. In general, it is the best practice to use it. The downside is that a GraphQL `ID` is always a string. Thus, within the resolver function, you must parse the actual integer value of the `ID`, as the SQLite database uses integer values for IDs.
-2. **`body`**. This is the comment body, there is nothing special about it.
+1. **`linkId`** - this is the id of the link to the comment belongs to. GraphQL has a special scalar for describing ids that you used before, called `ID`. In general, it is the best practice to use it. The downside is that a GraphQL `ID` is always a string. Thus, within the resolver function, you must parse the actual integer value of the `ID`, as the SQLite database uses integer values for IDs.
+2. **`body`** - this is the comment body, there is nothing special about it.
 
 You probably can't wait to try sending a mutation for creating your first comment.
 
 So let's do it!
 
-<Instruction>
-
 You already created some links before, so there should be a link with the id `1` within your database.
 Use that id for creating a new comment that references the link with the id `1`.
 
-Execute the following mutation operation.
+Execute the following mutation operation:
 
 ```graphql
 mutation postCommentOnLink {
@@ -183,9 +162,7 @@ mutation postCommentOnLink {
 }
 ```
 
-</Instruction>
-
-The response will look identical to this.
+The response will look identical to this:
 
 ```json
 {
@@ -200,9 +177,7 @@ The response will look identical to this.
 
 Up next let's also try to create a comment with a `linkId` with no corresponding link in the database.
 
-<Instruction>
-
-Executing the following mutation operation.
+Executing the following mutation operation:
 
 ```graphql
 mutation postCommentOnLink {
@@ -213,9 +188,7 @@ mutation postCommentOnLink {
 }
 ```
 
-</Instruction>
-
-Assuming that you did not already create 99999999999 link elements before - The response will now look a bit different.
+Assuming that you did not already create 99999999999 link elements before, the response will now look a bit different:
 
 ```json
 {
@@ -241,9 +214,9 @@ Assuming that you did not already create 99999999999 link elements before - The 
 }
 ```
 
-Let's try to analyze this error.
+Let's try to analyze this error:
 
-```
+```text
 Invalid `context.prisma.comment.create()` invocation
 Foreign key constraint failed on the field: `foreign key`
 ```
@@ -258,43 +231,37 @@ Instead, you will first create a resolver for retrieving a comment via its id.
 
 ### `Query.comment` resolver
 
-<Instruction>
-
 Within the `Query` object type resolver map create a new `comment` field resolver function.
 
-```typescript
+```ts
 const resolvers = {
   // ... other resolver maps ...
   Query: {
     // ... other field resolver functions
-    comment: async (
+    async comment(
       parent: unknown,
       args: { id: string },
       context: GraphQLContext,
-    ) => {},
+    ) {},
   },
   // ... other resolver maps ...
 }
 ```
 
-</Instruction>
-
 Within the resolver, you want to fetch the comment by its id.
-
-<Instruction>
 
 Add the corresponding logic for retrieving a comment by its id.
 
-```typescript
+```ts
 const resolvers = {
   // ... other resolver maps ...
   Query: {
     // ... other field resolver functions
-    comment: async (
+    async comment(
       parent: unknown,
       args: { id: string },
       context: GraphQLContext,
-    ) => {
+    ) {
       return context.prisma.comment.findUnique({
         where: { id: parseInt(args.id) },
       })
@@ -304,15 +271,11 @@ const resolvers = {
 }
 ```
 
-</Instruction>
-
 Similar to our mutation resolver, we first need to parse the integer value of the `id` variable value before using the `comment.findUnique` function for finding one single record with that specific id.
 
 Awesome, let's fetch our comment using a query operation!
 
-<Instruction>
-
-Execute the following operation on GraphiQL.
+Execute the following operation on GraphiQL:
 
 ```graphql
 query comment {
@@ -322,8 +285,6 @@ query comment {
   }
 }
 ```
-
-</Instruction>
 
 Awesome! 🎉 Now you can fetch the newly created comment!
 
@@ -340,9 +301,7 @@ Awesome! 🎉 Now you can fetch the newly created comment!
 
 Let's also try to fetch a comment by an `id` that does not exist.
 
-<Instruction>
-
-Execute the following operation on GraphiQL.
+Execute the following operation on GraphiQL:
 
 ```graphql
 query comment {
@@ -353,9 +312,7 @@ query comment {
 }
 ```
 
-</Instruction>
-
-As expected, the comment does not exist and we receive the following response.
+As expected, the comment does not exist, and we receive the following response:
 
 ```json
 {
@@ -375,8 +332,6 @@ So far you only fetched single entities within your GraphQL operations.
 
 Let's also add a one-to-many connection from the Link to Comment object types within the GraphQL schema.
 
-<Instruction>
-
 Add the `Link.comments` field to the GraphQL schema definition.
 
 ```graphql
@@ -388,20 +343,16 @@ type Link {
 }
 ```
 
-</Instruction>
+Up next, you implement the corresponding `Link.comments` resolver. For this, you need to touch the `Link` object types resolver map.
 
-Up next you implement the corresponding `Link.comments` resolver. For this, you need to touch the `Link` object types resolver map.
+Add the following `Link.resolvers` implementation:
 
-<Instruction>
-
-Add the following `Link.resolvers` implementation.
-
-```typescript
+```ts
 const resolvers = {
   // ... other resolver maps ...
   Link: {
     // ... other field resolver functions
-    comments: (parent: Link, args: {}, context: GraphQLContext) => {
+    comments(parent: Link, args: {}, context: GraphQLContext) {
       return context.prisma.comment.findMany({
         where: {
           linkId: parent.id,
@@ -413,17 +364,13 @@ const resolvers = {
 }
 ```
 
-</Instruction>
-
 As explained before, the first resolver function argument is always the parent argument. In the case of the context of a `Link` object type resolver, it is the type of the `Link` model as exported from the `@prisma/client` package.
 
 Within the resolver logic, we fetch all the comments that belong to the parent `Link` element by adding a where filter on the `linkId` for the value `parent.id`.
 
 Let's see that in action!
 
-<Instruction>
-
-Execute the following operation on GraphiQL.
+Execute the following operation on GraphiQL:
 
 ```graphql
 query feed {
@@ -436,8 +383,6 @@ query feed {
   }
 }
 ```
-
-</Instruction>
 
 Congratulations! You just fetched the feed of Link elements and the comments that belong to those Link elements within a single query operation!
 

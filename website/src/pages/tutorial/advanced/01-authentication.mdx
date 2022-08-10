@@ -1,4 +1,4 @@
-import { Instruction } from '@theguild/components'
+import { PackageCmd, Callout } from '@theguild/components'
 
 # Authentication
 
@@ -10,11 +10,9 @@ The first thing you need is a way to represent user data in the database. To do 
 
 You'll also want to add a _relation_ between the `User` and the existing `Link` type to express that `Link`s are _posted_ by `User`s.
 
-<Instruction>
-
 Open `prisma/schema.prisma` and add the following code, making sure to also update your existing `Link` model accordingly:
 
-```prisma
+```prisma filename="prisma/schema.prisma"
 model Link {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
@@ -32,8 +30,6 @@ model User {
   links     Link[]
 }
 ```
-
-</Instruction>
 
 Now you see even more how Prisma helps you to reason about your data in a way that is more aligned with how it is represented in the underlying database.
 
@@ -54,15 +50,11 @@ This is a great time to refresh your memory on the workflow we described for you
 
 After every change you make to the data model, you need to migrate your database and then re-generate Prisma Client.
 
-<Instruction>
-
 In the root directory of the project, run the following command:
 
-```bash
+```sh
 npx prisma migrate dev --name "add-user-model"
 ```
-
-</Instruction>
 
 This command has now generated your second migration inside of `prisma/migrations`, and you can start to see how this becomes a historical record of how your database evolves over
 time. This script also run the Prisma migration, so your new models and types are ready-to-use.
@@ -75,8 +67,6 @@ Your database is ready and Prisma Client is now updated to expose all the CRUD q
 
 Remember back when we were setting up your GraphQL server and discussed the process of schema-driven development? It all starts with extending your schema definition with the new
 operations that you want to add to the API - in this case a `signup` and `login` mutation.
-
-<Instruction>
 
 Open the application schema in `src/schema.ts` and update schema types as follows:
 
@@ -111,12 +101,8 @@ type User {
 }
 ```
 
-</Instruction>
-
 The `signup` and `login` mutations behave very similarly: both return information about the `User` who's signing up (or logging in) as well as a `token` which can be used to
 authenticate subsequent requests against your GraphQL API. This information is bundled in the `AuthPayload` type.
-
-<Instruction>
 
 Finally, you need to reflect that the relation between `User` and `Link` should be bi-directional by adding the `postedBy` field to the existing `Link` model definition in
 `schema.ts`:
@@ -130,8 +116,6 @@ type Link {
 }
 ```
 
-</Instruction>
-
 ### Implementing the resolver functions
 
 After extending the schema definition with the new operations, you need to implement resolver functions for them.
@@ -142,43 +126,25 @@ In this tutorial, you will implement simple, naive implementation of a JWT (Json
 
 You'll also use `bcryptjs` for simple encryption for the user's password.
 
-<Instruction>
-
 Start by installing `jsonwebtoken` library from NPM:
 
-```bash
-npm install --save ---exact jsonwebtoken bcryptjs
-```
-
-</Instruction>
-
-<Instruction>
+<PackageCmd packages={['--save-exact jsonwebtoken bcryptjs']} />
 
 And to get better integration with TypeScript, you need to install the typing libraries:
 
-```bash
-npm install --save-dev --exact @types/jsonwebtoken @types/bcryptjs
-```
-
-</Instruction>
-
-<Instruction>
+<PackageCmd packages={['-D --save-exact @types/jsonwebtoken @types/bcryptjs']} />
 
 Create a new file called `src/auth.ts`, and for now just app a simple variable to hold our signing secret (you'll later use that as the base for our encryption):
 
-```typescript
+```ts filename="src/auth.ts"
 export const APP_SECRET = 'this is my secret'
 ```
 
-</Instruction>
-
 #### Implementing signup resolvers
-
-<Instruction>
 
 Open `src/schema.ts` and add the new `signup` resolver, under `Mutation`:
 
-```typescript
+```ts filename="src/schema.ts"
 // ... other imports ...
 import { APP_SECRET } from './auth'
 import { hash } from 'bcryptjs'
@@ -188,11 +154,11 @@ const resolvers = {
   // ... other resolver maps ...
   Mutation: {
     // ... other Mutation field resolvers ...
-    signup: async (
+     async signup(
       parent: unknown,
       args: { email: string; password: string; name: string },
       context: GraphQLContext,
-    ) => {
+    ) {
       // 1
       const password = await hash(args.password, 10)
 
@@ -205,16 +171,11 @@ const resolvers = {
       const token = sign({ userId: user.id }, APP_SECRET)
 
       // 4
-      return {
-        token,
-        user,
-      }
-    },
-  },
+      return { token, user }
+    }
+  }
 }
 ```
-
-</Instruction>
 
 Let's use the good ol' numbered comments again to understand what's going on here – starting with `signup`.
 
@@ -244,11 +205,9 @@ mutation {
 
 Now, the `login` mutation, add it under the `signup` resolvers.
 
-<Instruction>
-
 Add the following right under the `signup` mutation:
 
-```typescript
+```ts
 // ... other imports ...
 import { hash, compare } from 'bcryptjs'
 
@@ -256,11 +215,11 @@ const resolvers = {
   // ... other resolver maps ...
   Mutation: {
     // ... other Mutation field resolvers ...
-    login: async (
+    async login(
       parent: unknown,
       args: { email: string; password: string },
       context: GraphQLContext,
-    ) => {
+    ) {
       // 1
       const user = await context.prisma.user.findUnique({
         where: { email: args.email },
@@ -278,16 +237,11 @@ const resolvers = {
       const token = sign({ userId: user.id }, APP_SECRET)
 
       // 3
-      return {
-        token,
-        user,
-      }
+      return { token, user }
     },
   },
 }
 ```
-
-</Instruction>
 
 And if you'll open Playground, you should be able to login with the user you previously created:
 
@@ -306,7 +260,11 @@ mutation {
 
 ![login mutation](https://i.imgur.com/mEy6vqY.png)
 
-> You should be able to get the information of the user. **Please save the authentication token you get, we'll need that on the next step!**
+<Callout type='warning' emoji='⚠️'>
+You should be able to get the information of the user.
+
+**Please save the authentication token you get, we'll need that on the next step!**
+</Callout>
 
 Now on the `login` mutation!
 
@@ -317,7 +275,7 @@ Now on the `login` mutation!
 
 ### Detecting the current user
 
-Now, you have our users database ready to use, and our next step is to be able to detect who's the current user that queries the server.
+Now, you have our users' database ready to use, and our next step is to be able to detect who's the current user that queries the server.
 
 To do that, you'll need to add the option to pass the authentication token along with our GraphQL operation.
 
@@ -325,7 +283,7 @@ You are not going to use the GraphQL schema in this case, since you don't want t
 
 The authentication token will be passed as a HTTP header, in the following form:
 
-```
+```text
 Authorization: "Bearer MY_TOKEN_HERE"
 ```
 
@@ -335,11 +293,9 @@ You also want to be able to tell who's the current authenticated user within our
 
 So let's do that:
 
-<Instruction>
-
 You'll now modify the context building phase of your GraphQL server, by detecting the current authenticated user. Use the following code in `src/auth.ts` and add a function for that:
 
-```typescript
+```ts filename="src/auth.ts"
 import { PrismaClient, User } from '@prisma/client'
 import { FastifyRequest } from 'fastify'
 import { JwtPayload, verify } from 'jsonwebtoken'
@@ -366,8 +322,6 @@ export async function authenticateUser(
 }
 ```
 
-</Instruction>
-
 So what happened here?
 
 1. Take the `Authorization` for the incoming HTTP request headers.
@@ -375,11 +329,9 @@ So what happened here?
 3. Use Prisma API to fetch the user from the database.
 4. Return the current user, or `null` in case of missing/invalid token.
 
-<Instruction>
-
 Now, modify your `createContext` function in `src/context.ts` function to call this function:
 
-```typescript
+```ts filename="src/context.ts"
 import { PrismaClient, User } from '@prisma/client'
 import { YogaInitialContext } from '@graphql-yoga/node'
 import { authenticateUser } from './auth'
@@ -401,13 +353,9 @@ export async function createContext(
 }
 ```
 
-</Instruction>
-
 Now, every incoming GraphQL request that has a valid token and a user, will also have the `context.currentUser` available with the authenticated user details. If an incoming request doesn't have that, the `context.currentUser` will be set to `null`.
 
 So that's really cool, and to test that, you can add a new GraphQL field under `type Query` called `me` that just exposes the current user information.
-
-<Instruction>
 
 Start by adding the `me` field to the GraphQL schema under `Query`:
 
@@ -421,23 +369,21 @@ type Query {
 
 And then implement the resolver for this new field:
 
-```typescript
+```ts
 const resolvers = {
   // ... other resolver maps ...
   Query: {
     // ... other Query Object Type field resolver functions ...
-    me: (parent: unknown, args: {}, context: GraphQLContext) => {
+    me(parent: unknown, args: {}, context: GraphQLContext) {
       if (context.currentUser === null) {
         throw new Error('Unauthenticated!')
       }
 
       return context.currentUser
-    },
-  },
+    }
+  }
 }
 ```
-
-</Instruction>
 
 You can now try it in GraphiQL with the following query:
 
@@ -472,18 +418,16 @@ To make sure our server knows how to identify the creator of each `Link`, let's 
 
 Let's go and finish up the implementation, and connect everything together with the rest of the resolvers.
 
-<Instruction>
-
 Modify `src/schema.ts` and change the resolver of `post` field to the following:
 
-```typescript
+```ts filename="src/schema.ts"
 const resolvers = {
   Mutation: {
-    post: async (
+    async post(
       parent: unknown,
       args: { url: string; description: string },
       context: GraphQLContext,
-    ) => {
+    ) {
       if (context.currentUser === null) {
         throw new Error('Unauthenticated!')
       }
@@ -497,12 +441,10 @@ const resolvers = {
       })
 
       return newLink
-    },
-  },
+    }
+  }
 }
 ```
-
-</Instruction>
 
 You can now try it from GraphiQL:
 
@@ -524,17 +466,15 @@ mutation {
 There's one more thing you need to do before you can launch the GraphQL server again and test the new functionality: ensuring the relation between `User` and `Link` gets properly
 resolved.
 
-<Instruction>
-
 To resolve the `postedBy` relation, open `src/schema.ts` and add the following code to your resolvers:
 
-```typescript
+```ts filename="src/schema.ts"
 const resolvers = {
   Link: {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
-    postedBy: async (parent: Link, args: {}, context: GraphQLContext) => {
+    postedBy(parent: Link, args: {}, context: GraphQLContext) {
       if (!parent.postedById) {
         return null
       }
@@ -542,23 +482,19 @@ const resolvers = {
       return context.prisma.link
         .findUnique({ where: { id: parent.id } })
         .postedBy()
-    },
-  },
+    }
+  }
 }
 ```
-
-</Instruction>
 
 In the `postedBy` resolver, you're first fetching the `Link` from the database using the `prisma` instance and then invoke `postedBy` on it. Notice that the resolver needs to be
 called `postedBy` because it resolves the `postedBy` field from the `Link` type in our type-definitions.
 
 You can resolve the `links` relation in a similar way.
 
-<Instruction>
-
 In `src/schema.ts`, add a field resolvers for `User.links` to your `resolvers` variable:
 
-```typescript
+```ts filename="src/schema.ts"
 // ... other imports ...
 import { Link, User } from '@prisma/client'
 
@@ -572,9 +508,7 @@ const resolvers = {
 }
 ```
 
-</Instruction>
-
-That's all! Now you have resolvers for all fields, and you can signup, login, identify the user as part of our GraphQL server!
+That's all! Now you have resolvers for all fields, and you can sign up, login, identify the user as part of our GraphQL server!
 
 You should be able to run complex GraphQL queries, for example:
 

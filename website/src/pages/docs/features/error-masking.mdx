@@ -1,6 +1,6 @@
 # Error Masking
 
-Yoga uses [the Envelop `useMaskedErrors`](https://www.envelop.dev/plugins/use-masked-errors) for automatically masking unexpected errors and preventing sensitive information from leaking to clients.
+Yoga uses [the Envelop `useMaskedErrors`](https://envelop.dev/plugins/use-masked-errors) for automatically masking unexpected errors and preventing sensitive information from leaking to clients.
 
 Such errors could be caused by failing to establish connections to remote services such as databases or HTTP APIs.
 Nobody external needs to know that your database server is not reachable.
@@ -8,7 +8,7 @@ Exposing such information to the outside world can make you vulnerable to target
 
 ## Getting Started
 
-Let's setup a simple schema that calls a remote service that is unavailable.
+Lets setup a simple schema that calls a remote service that is unavailable.
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -24,12 +24,10 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        greeting: async () => {
+        async greeting() {
           // This service does not exist
-          const greeting = await fetch('http://localhost:9876/greeting').then(
-            (res) => res.text(),
-          )
-
+          const response = await fetch('http://localhost:9876/greeting')
+          const greeting = await response.text()
           return greeting
         },
       },
@@ -43,7 +41,7 @@ server.start()
 
 Executing the following operation results in an execution result that does not include any detail from the error raised by the fetch call.
 
-### GraphQL Operation
+**GraphQL Operation**
 
 ```graphql
 query {
@@ -51,7 +49,7 @@ query {
 }
 ```
 
-### Execution Result With Leaking Error Message
+**Execution Result with Leaking Error Message**
 
 ```json
 {
@@ -81,9 +79,9 @@ Having development and production behavior as close as possible is very importan
 
 Instead, we recommend enabling the Yoga development mode.
 
-To do this you need to start Yoga with the `NODE_ENV` environment variable set to `"development"`.
+To do this you need to start Yoga with the `NODE_ENV` environment variable set to `development`.
 
-On UNIX and windows systems the environment variable can be set when starting the server.
+On UNIX and Windows systems the environment variable can be set when starting the server.
 
 ```bash
 # Unix (Linux/MacOS)
@@ -107,12 +105,10 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        greeting: async () => {
+        async greeting() {
           // This service does not exist
-          const greeting = await fetch('http://localhost:9876/greeting').then(
-            (res) => res.text(),
-          )
-
+          const response = await fetch('http://localhost:9876/greeting')
+          const greeting = await response.text()
           return greeting
         },
       },
@@ -123,7 +119,7 @@ const server = createServer({
 server.start()
 ```
 
-### GraphQL Operation
+**GraphQL Operation**
 
 ```graphql
 query {
@@ -131,9 +127,9 @@ query {
 }
 ```
 
-This will add a more detailed error with a proper stack trace to the error extensions.
+This will add a more detailed error with a proper stacktrace to the errors extensions.
 
-### GraphQL Error Response With Original Error Extensions
+**GraphQL Error Response with Original Error Extensions**
 
 ```json
 {
@@ -170,18 +166,9 @@ For example, you might want to throw an error if a resource cannot be found by a
 import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 
 const users = [
-  {
-    id: '1',
-    login: 'Laurin',
-  },
-  {
-    id: '2',
-    login: 'Saihaj',
-  },
-  {
-    id: '3',
-    login: 'Dotan',
-  },
+  { id: '1', login: 'Laurin' },
+  { id: '2', login: 'Saihaj' },
+  { id: '3', login: 'Dotan' },
 ]
 
 // Provide your schema
@@ -198,7 +185,7 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        user: async (_, args) => {
+        async user(_, args) {
           const user = users.find((user) => user.id === args.byId)
           if (!user) {
             throw new GraphQLYogaError(`User with id '${args.byId}' not found.`)
@@ -215,7 +202,7 @@ const server = createServer({
 server.start()
 ```
 
-### Query For Non-Existing User
+**Query for Non-Existing User**
 
 ```graphql
 query {
@@ -225,7 +212,7 @@ query {
 }
 ```
 
-### Execution Result With Error Message
+**Execution Result with Error Message**
 
 ```json
 {
@@ -255,18 +242,9 @@ Error extensions can be passed as the second parameter to the `GraphQLYogaError`
 import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 
 const users = [
-  {
-    id: '1',
-    login: 'Laurin',
-  },
-  {
-    id: '2',
-    login: 'Saihaj',
-  },
-  {
-    id: '3',
-    login: 'Dotan',
-  },
+  { id: '1', login: 'Laurin' },
+  { id: '2', login: 'Saihaj' },
+  { id: '3', login: 'Dotan' },
 ]
 
 // Provide your schema
@@ -283,15 +261,13 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        user: async (_, args) => {
+        async user(_, args) {
           const user = users.find((user) => user.id === args.byId)
           if (!user) {
             throw new GraphQLYogaError(
               `User with id '${args.byId}' not found.`,
               // error extensions
-              {
-                code: 'USER_NOT_FOUND',
-              },
+              { code: 'USER_NOT_FOUND' },
             )
           }
 
@@ -306,7 +282,7 @@ const server = createServer({
 server.start()
 ```
 
-### Query For Non-Existing User
+**Query for Non-Existing User**
 
 ```graphql
 query {
@@ -316,7 +292,7 @@ query {
 }
 ```
 
-### Execution Result With Error Message
+**Execution Result with Error Message**
 
 ```json
 {
@@ -362,15 +338,13 @@ throw new GraphQLYogaError(
 We highly recommend using error masking.
 However, you can still disable it using the `maskedErrors` config option.
 
-```ts
-createServer({
-  maskedErrors: false,
-})
+```ts /maskedErrors: false/
+createServer({ maskedErrors: false })
 ```
 
 Executing the following operation will now result in a leaking error message that exposes information about internal API calls.
 
-### GraphQL Operation
+**GraphQL Operation**
 
 ```graphql
 query {
@@ -378,7 +352,7 @@ query {
 }
 ```
 
-### Execution Result With Leaking Error Message
+**Execution Result with Leaking Error Message**
 
 ```json
 {
