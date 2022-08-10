@@ -53,13 +53,11 @@ describe('accept header', () => {
     expect(response.headers.get('content-type')).toEqual(
       'multipart/mixed; boundary="-"',
     )
-    const iterator = response.body![Symbol.asyncIterator]()
-    const { value } = await iterator.next()
-    const valueStr = Buffer.from(value).toString('utf-8')
+    const valueStr = await response.text()
     // TODO: This test started failing after I replaced request(yoga) with yoga.fetch()
     expect(valueStr).toContain(`Content-Type: application/json; charset=utf-8`)
     expect(valueStr).toContain(`Content-Length: 24`)
-    expect(valueStr).toContain(`${JSON.stringify({ data: { ping: null } })}`)
+    expect(valueStr).toContain(`${JSON.stringify({ data: { ping: 'pong' } })}`)
   })
 
   it('server rejects request for AsyncIterable source (subscription) when client only accepts application/json', async () => {
