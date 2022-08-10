@@ -29,7 +29,7 @@ describe('graphExchange', () => {
       `,
       resolvers: {
         Query: {
-          hello: () => 'Hello Apollo Client!',
+          hello: () => 'Hello Urql Client!',
         },
         Mutation: {
           readFile: (_, args: { file: File }) => args.file.text(),
@@ -82,7 +82,7 @@ describe('graphExchange', () => {
       .toPromise()
     expect(result.error).toBeUndefined()
     expect(result.data).toEqual({
-      hello: 'Hello Apollo Client!',
+      hello: 'Hello Urql Client!',
     })
   })
   it('should handle subscriptions correctly', async () => {
