@@ -109,8 +109,7 @@ jobs:
         run: yarn build
 
       - name: Run Tests
-        working-directory: ./examples/node-esm
-        run: yarn test
+        run: yarn workspace example-node-esm run test
 
   typecheck:
     name: Typecheck

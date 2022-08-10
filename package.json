@@ -6,7 +6,7 @@
     "check": "yarn workspaces run check",
     "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace graphql-yoga run generate-graphiql-html && bob build",
     "test": "jest --passWithNoTests --forceExit",
-    "test:integration": "cross-env INTEGRATION_TEST=true jest --passWithNoTests --forceExit",
+    "test:integration": "cross-env INTEGRATION_TEST=true jest --passWithNoTests --forceExit --runInBand",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
     "start:docs": "yarn workspace website dev",

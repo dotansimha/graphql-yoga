@@ -1,6 +1,5 @@
-import { UseMaskedErrorsOpts } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLError, GraphQLHTTPErrorExtensions } from 'graphql'
+import { GraphQLError } from 'graphql'
 import { ResultProcessorInput } from './plugins/types'
 import { YogaMaskedErrorOpts } from './types'
 

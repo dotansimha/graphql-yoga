@@ -1,8 +1,5 @@
 import { Request } from '@whatwg-node/fetch'
-import {
-  getCORSHeadersByRequestAndOptions,
-  CORSOptions,
-} from '../src/plugins/useCORS.js'
+import { getCORSHeadersByRequestAndOptions, CORSOptions } from './useCORS.js'
 
 describe('CORS', () => {
   describe('No origins specified', () => {
