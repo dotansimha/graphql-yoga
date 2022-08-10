@@ -15,8 +15,8 @@ if (process.env.INTEGRATION_TEST === 'true') {
     '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
   )
   if (parseInt(process.versions.node.split('.')[0]) <= 14) {
-    testMatch.push('!<rootDir>/**/examples/sveltekit/**')
-    testMatch.push('!<rootDir>/**/examples/fastify*/**')
+    testMatch.push('!examples/sveltekit/**')
+    testMatch.push('!examples/fastify*/**')
   }
 } else {
   testMatch.push(
