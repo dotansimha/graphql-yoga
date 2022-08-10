@@ -1,13 +1,13 @@
-import { createClient, OperationResult } from '@urql/core'
+import { Client, createClient, OperationResult } from '@urql/core'
 import { yogaExchange } from '@graphql-yoga/urql-exchange'
 import { observableToAsyncIterable } from '@graphql-tools/utils'
 import { pipe, toObservable } from 'wonka'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { File } from '@whatwg-node/fetch'
-import { createServer } from 'http'
+import { createServer, Server } from 'http'
+import getPort from 'get-port'
 
 describe('graphExchange', () => {
-  const port = 4000 + Math.floor(Math.random() * 1000)
   const endpoint = '/graphql'
   const hostname = '127.0.0.1'
   const yoga = createYoga({
@@ -29,7 +29,7 @@ describe('graphExchange', () => {
       `,
       resolvers: {
         Query: {
-          hello: () => 'Hello Urql Client!',
+          hello: () => 'Hello Apollo Client!',
         },
         Mutation: {
           readFile: (_, args: { file: File }) => args.file.text(),
@@ -48,17 +48,23 @@ describe('graphExchange', () => {
       },
     }),
   })
-  const server = createServer(yoga)
-  const url = `http://${hostname}:${port}${endpoint}`
-  const client = createClient({
-    url,
-    exchanges: [
-      yogaExchange({
-        customFetch: yoga.fetchAPI.fetch,
-      }),
-    ],
-  })
+
+  let server: Server
+  let url: string
+  let client: Client
+
   beforeAll(async () => {
+    const port = await getPort()
+    server = createServer(yoga)
+    url = `http://${hostname}:${port}${endpoint}`
+    client = createClient({
+      url,
+      exchanges: [
+        yogaExchange({
+          customFetch: yoga.fetchAPI.fetch,
+        }),
+      ],
+    })
     await new Promise<void>((resolve) => server.listen(port, hostname, resolve))
   })
   afterAll(async () => {
@@ -76,7 +82,7 @@ describe('graphExchange', () => {
       .toPromise()
     expect(result.error).toBeUndefined()
     expect(result.data).toEqual({
-      hello: 'Hello Urql Client!',
+      hello: 'Hello Apollo Client!',
     })
   })
   it('should handle subscriptions correctly', async () => {

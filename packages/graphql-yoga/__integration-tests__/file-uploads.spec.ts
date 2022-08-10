@@ -5,6 +5,7 @@ import * as os from 'os'
 import { createServer } from 'http'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { fetch, File, FormData } from '@whatwg-node/fetch'
+import getPort from 'get-port'
 
 function md5File(path: string) {
   return new Promise((resolve, reject) => {
@@ -67,7 +68,8 @@ describe('file uploads', () => {
     const server = createServer(yoga)
 
     try {
-      await new Promise<void>((resolve) => server.listen(9876, resolve))
+      const port = await getPort()
+      await new Promise<void>((resolve) => server.listen(port, resolve))
 
       const formData = new FormData()
       formData.set(
@@ -90,7 +92,7 @@ describe('file uploads', () => {
         ),
       )
 
-      const response = await fetch('http://localhost:9876/graphql', {
+      const response = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
         body: formData,
       })

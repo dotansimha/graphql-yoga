@@ -15,6 +15,7 @@ import {
   File,
   FormData,
 } from '@whatwg-node/fetch'
+import getPort from 'get-port'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
@@ -214,7 +215,7 @@ describe('incremental delivery: node-fetch', () => {
   let url: string
   beforeEach(async () => {
     server = createServer(yoga)
-    const port = 4000 + Math.floor(Math.random() * 10)
+    const port = await getPort()
     url = `http://localhost:${port}/graphql`
     await new Promise<void>((resolve) => server.listen(port, resolve))
   })

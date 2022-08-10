@@ -3,7 +3,7 @@ import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
 import { CORSOptions, createYoga } from 'graphql-yoga'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import puppeteer from 'puppeteer'
-import { createServer } from 'http'
+import { createServer, Server } from 'http'
 import {
   GraphQLObjectType,
   GraphQLSchema,
@@ -16,6 +16,7 @@ import {
 } from 'graphql'
 import { GraphQLBigInt } from 'graphql-scalars'
 import 'json-bigint-patch'
+import getPort from 'get-port'
 
 export function createTestSchema() {
   let liveQueryCounter = 0
@@ -150,10 +151,12 @@ describe('browser', () => {
   const playButtonSelector = `[d="M 11 9 L 24 16 L 11 23 z"]`
   const stopButtonSelector = `[d="M 10 10 L 23 10 L 23 23 L 10 23 z"]`
 
+  let port: number
   const server = createServer(yogaApp)
 
   beforeAll(async () => {
-    await new Promise<void>((resolve) => server.listen(4000, resolve))
+    port = await getPort()
+    await new Promise<void>((resolve) => server.listen(port, resolve))
     browser = await puppeteer.launch({
       // If you wanna run tests with open browser
       // set your PUPPETEER_HEADLESS env to "false"
@@ -204,7 +207,7 @@ describe('browser', () => {
 
   describe('GraphiQL', () => {
     it('execute simple query operation', async () => {
-      await page.goto(`http://localhost:4000${endpoint}`)
+      await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText('{ alwaysTrue }')
 
       await page.click('.execute-button')
@@ -224,7 +227,7 @@ describe('browser', () => {
     })
 
     it('execute mutation operation', async () => {
-      await page.goto(`http://localhost:4000${endpoint}`)
+      await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText(
         `mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`,
       )
@@ -246,7 +249,7 @@ describe('browser', () => {
     })
 
     test('execute SSE (subscription) operation', async () => {
-      await page.goto(`http://localhost:4000${endpoint}`)
+      await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText(`subscription { count(to: 2) }`)
       await page.click('.execute-button')
 
@@ -292,7 +295,9 @@ describe('browser', () => {
     test('show the query provided in the search param', async () => {
       const query = '{ alwaysTrue }'
       await page.goto(
-        `http://localhost:4000${endpoint}?query=${encodeURIComponent(query)}`,
+        `http://localhost:${port}${endpoint}?query=${encodeURIComponent(
+          query,
+        )}`,
       )
       await page.click('.execute-button')
       const resultContents = await waitForResult()
@@ -311,7 +316,7 @@ describe('browser', () => {
     })
 
     test('should show BigInt correctly', async () => {
-      await page.goto(`http://localhost:4000${endpoint}`)
+      await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText(`{ bigint }`)
       await page.click('.execute-button')
       const resultContents = await waitForResult()
@@ -323,7 +328,7 @@ describe('browser', () => {
 }`)
     })
     test('should show live queries correctly', async () => {
-      await page.goto(`http://localhost:4000${endpoint}`)
+      await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText(`query @live { liveCounter }`)
       await page.click('.execute-button')
 
@@ -376,44 +381,46 @@ describe('browser', () => {
   })
 
   describe('CORS', () => {
-    const anotherOriginPort = 4000 + Math.floor(Math.random() * 1000)
-    const anotherServer = createServer((req, res) => {
-      res.end(/* HTML */ `
-        <html>
-          <head>
-            <title>Another Origin</title>
-          </head>
-          <body>
-            <h1>Another Origin</h1>
-            <p id="result">RESULT_HERE</p>
-            <script>
-              async function fetchData() {
-                try {
-                  const response = await fetch(
-                    'http://localhost:4000${endpoint}',
-                    {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        query: '{ alwaysTrue }',
-                      }),
-                    },
-                  )
-                  document.getElementById('result').innerHTML =
-                    await response.text()
-                } catch (e) {
-                  document.getElementById('result').innerHTML = e.stack
-                }
-              }
-              fetchData()
-            </script>
-          </body>
-        </html>
-      `)
-    })
+    let anotherServer: Server
+    let anotherOriginPort: number
     beforeAll(async () => {
+      anotherOriginPort = await getPort()
+      anotherServer = createServer((_req, res) => {
+        res.end(/* HTML */ `
+          <html>
+            <head>
+              <title>Another Origin</title>
+            </head>
+            <body>
+              <h1>Another Origin</h1>
+              <p id="result">RESULT_HERE</p>
+              <script>
+                async function fetchData() {
+                  try {
+                    const response = await fetch(
+                      'http://localhost:${port}${endpoint}',
+                      {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          query: '{ alwaysTrue }',
+                        }),
+                      },
+                    )
+                    document.getElementById('result').innerHTML =
+                      await response.text()
+                  } catch (e) {
+                    document.getElementById('result').innerHTML = e.stack
+                  }
+                }
+                fetchData()
+              </script>
+            </body>
+          </html>
+        `)
+      })
       await new Promise<void>((resolve) =>
         anotherServer.listen(anotherOriginPort, () => resolve()),
       )
@@ -454,7 +461,7 @@ describe('browser', () => {
     })
     test('restrict other origins if provided', async () => {
       cors = {
-        origin: ['http://localhost:4000'],
+        origin: ['http://localhost:${port}'],
       }
       await page.goto(`http://localhost:${anotherOriginPort}`)
       const result = await page.evaluate(async () => {

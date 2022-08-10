@@ -1,13 +1,13 @@
 import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
 import { createYoga, createSchema } from 'graphql-yoga'
-import { createServer } from 'http'
+import { createServer, Server } from 'http'
 import { parse } from 'graphql'
 import { observableToAsyncIterable } from '@graphql-tools/utils'
 import { YogaLink } from '@graphql-yoga/apollo-link'
 import { File } from '@whatwg-node/fetch'
+import getPort from 'get-port'
 
 describe('Yoga Apollo Link', () => {
-  const port = 4000 + Math.floor(Math.random() * 1000)
   const endpoint = '/graphql'
   const hostname = '127.0.0.1'
   const yoga = createYoga({
@@ -48,16 +48,22 @@ describe('Yoga Apollo Link', () => {
       },
     }),
   })
-  const server = createServer(yoga)
-  const url = `http://${hostname}:${port}${endpoint}`
-  const client = new ApolloClient({
-    link: new YogaLink({
-      endpoint: url,
-      customFetch: yoga.fetchAPI.fetch,
-    }),
-    cache: new InMemoryCache(),
-  })
+
+  let server: Server
+  let url: string
+  let client: ApolloClient<any>
+
   beforeAll(async () => {
+    const port = await getPort()
+    server = createServer(yoga)
+    url = `http://${hostname}:${port}${endpoint}`
+    client = new ApolloClient({
+      link: new YogaLink({
+        endpoint: url,
+        customFetch: yoga.fetchAPI.fetch,
+      }),
+      cache: new InMemoryCache(),
+    })
     await new Promise<void>((resolve) => server.listen(port, hostname, resolve))
   })
   afterAll(async () => {

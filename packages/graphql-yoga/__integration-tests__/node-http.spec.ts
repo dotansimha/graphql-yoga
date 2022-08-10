@@ -1,6 +1,7 @@
 import { IncomingMessage, ServerResponse, createServer, Server } from 'http'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { fetch } from '@whatwg-node/fetch'
+import getPort from 'get-port'
 
 it('should expose Node req and res objects in the context', async () => {
   let server: Server
@@ -23,10 +24,11 @@ it('should expose Node req and res objects in the context', async () => {
       }),
       logging: false,
     })
+    const port = await getPort()
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(9876, resolve))
+    await new Promise<void>((resolve) => server.listen(port, resolve))
     const response = await fetch(
-      'http://localhost:9876/graphql?query=query{isNode}',
+      `http://localhost:${port}/graphql?query=query{isNode}`,
     )
     expect(response.status).toBe(200)
     const body = JSON.parse(await response.text())

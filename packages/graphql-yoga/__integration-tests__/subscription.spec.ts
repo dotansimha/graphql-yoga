@@ -1,6 +1,7 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import EventSource from 'eventsource'
+import getPort from 'get-port'
 
 describe('subscription', () => {
   test('Subscription is closed properly', async () => {
@@ -47,12 +48,13 @@ describe('subscription', () => {
     })
     const server = createServer(yoga)
     try {
-      await new Promise<void>((resolve) => server.listen(9876, resolve))
+      const port = await getPort()
+      await new Promise<void>((resolve) => server.listen(port, resolve))
 
       // Start and Close a HTTP SSE subscription
       await new Promise<void>((res) => {
         const eventSource = new EventSource(
-          `http://localhost:9876/graphql?query=subscription{foo}`,
+          `http://localhost:${port}/graphql?query=subscription{foo}`,
         )
         eventSource.onmessage = (ev) => {
           eventSource.close()
