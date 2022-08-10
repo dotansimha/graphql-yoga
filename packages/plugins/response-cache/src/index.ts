@@ -37,35 +37,31 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }),
       )
     },
-    onRequestParse({ request }) {
-      return {
-        async onRequestParseDone({ params, setResult }) {
-          if (enabled(request)) {
-            const operationId = await buildResponseCacheKey({
-              documentString: params.query!,
-              variableValues: params.variables,
-              operationName: params.operationName,
-              sessionId: await options.session(request),
+    async onPrepare({ request, params, setResult }) {
+      if (enabled(request)) {
+        const operationId = await buildResponseCacheKey({
+          documentString: params.query!,
+          variableValues: params.variables,
+          operationName: params.operationName,
+          sessionId: await options.session(request),
+        })
+        const cachedResponse = await cache.get(operationId)
+        if (cachedResponse) {
+          if (options.includeExtensionMetadata) {
+            setResult({
+              ...cachedResponse,
+              extensions: {
+                responseCache: {
+                  hit: true,
+                },
+              },
             })
-            const cachedResponse = await cache.get(operationId)
-            if (cachedResponse) {
-              if (options.includeExtensionMetadata) {
-                setResult({
-                  ...cachedResponse,
-                  extensions: {
-                    responseCache: {
-                      hit: true,
-                    },
-                  },
-                })
-              } else {
-                setResult(cachedResponse)
-              }
-              return
-            }
-            operationIdByRequest.set(request, operationId)
+          } else {
+            setResult(cachedResponse)
           }
-        },
+          return
+        }
+        operationIdByRequest.set(request, operationId)
       }
     },
   }

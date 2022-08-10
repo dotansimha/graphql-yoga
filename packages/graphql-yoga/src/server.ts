@@ -1,4 +1,4 @@
-import { ExecutionArgs, GraphQLError, print } from 'graphql'
+import { ExecutionArgs, getOperationAST, GraphQLError, print } from 'graphql'
 import {
   GetEnvelopedFn,
   envelop,
@@ -8,6 +8,7 @@ import {
   useLogger,
   PromiseOrValue,
   ExecuteFunction,
+  SubscribeFunction,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -22,17 +23,18 @@ import {
 import {
   OperationResult,
   OnRequestHook,
-  OnRequestParseDoneHook,
-  OnRequestParseHook,
+  OnPrepareHook,
   OnResponseHook,
   Plugin,
-  RequestParser,
 } from './plugins/types.js'
 import { createFetch } from '@whatwg-node/fetch'
 import { ServerAdapter, createServerAdapter } from '@whatwg-node/server'
 import {
+  getAcceptableMediaType,
   createHandler as createHttpHandler,
   Handler as HttpHandler,
+  makeResponse as makeHttpResponse,
+  AcceptableMediaType,
 } from '/Users/enisdenjo/Develop/src/github.com/enisdenjo/graphql-http/src' // from 'graphql-http'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
@@ -171,8 +173,8 @@ export class YogaServer<
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
-  private onRequestParseHooks: OnRequestParseHook[]
   private onRequestHooks: OnRequestHook<TServerContext>[]
+  private onPrepareHooks: OnPrepareHook[]
   private onResponseHooks: OnResponseHook<TServerContext>[]
   private maskedErrorsOpts: YogaMaskedErrorOpts | null
   private id: string
@@ -308,15 +310,15 @@ export class YogaServer<
     }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
     this.onRequestHooks = []
-    this.onRequestParseHooks = []
+    this.onPrepareHooks = []
     this.onResponseHooks = []
     for (const plugin of this.plugins) {
       if (plugin) {
-        if (plugin.onRequestParse) {
-          this.onRequestParseHooks.push(plugin.onRequestParse)
-        }
         if (plugin.onRequest) {
           this.onRequestHooks.push(plugin.onRequest)
+        }
+        if (plugin.onPrepare) {
+          this.onPrepareHooks.push(plugin.onPrepare)
         }
         if (plugin.onResponse) {
           this.onResponseHooks.push(plugin.onResponse)
@@ -324,67 +326,19 @@ export class YogaServer<
       }
     }
 
-    // yoga's envelop may augment the `execute` operation
-    // so we need to make sure we always use the freshest instance
-    type EnvelopedExecutionArgs = ExecutionArgs & {
-      rootValue: {
-        execute: ExecuteFunction
-      }
-    }
-
-    // graphql over http handler for single result operations
     this.httpHandler = createHttpHandler<Request>({
-      execute: (args) =>
-        (args as EnvelopedExecutionArgs).rootValue.execute(args),
-      onSubscribe: async (req, requestParams) => {
-        const { params: parsedParams, result } = await this.handleRequestParse(
-          req.raw,
-        )
-
-        if (result) {
-          if (isAsyncIterable(result)) {
-            throw new Error('Subscriptions not supported')
-          }
-          return result
+      execute: (args) => (args as any).rootValue.execute(args),
+      onSubscribe: async (req, params) => {
+        const errsArgsOrResult = await this.handlePrepare(req.raw, params)
+        if (isAsyncIterable(errsArgsOrResult)) {
+          return [new GraphQLError('Subscriptions not supported')]
         }
-
-        const params = parsedParams || requestParams
-        if (!params.query) {
-          return [new GraphQLError('Missing query')]
-        }
-
-        const { schema, execute, contextFactory, parse, validate } =
-          this.getEnveloped({
-            request: req.raw,
-            ...params,
-            // TODO: include serverContext
-          })
-
-        let document
-        try {
-          document = parse(params.query)
-        } catch (err) {
-          return [err as GraphQLError]
-        }
-
-        const args: EnvelopedExecutionArgs = {
-          schema,
-          operationName: params.operationName,
-          document,
-          variableValues: params.variables,
-          contextValue: await contextFactory(),
-          rootValue: { execute },
-        }
-
-        const errors = validate(args.schema, args.document)
-        if (errors.length) return errors
-
-        return args
+        return errsArgsOrResult
       },
     })
   }
 
-  handleRequest = async (
+  public handleRequest = async (
     request: Request,
     ...args: {} extends TServerContext
       ? [serverContext?: TServerContext | undefined]
@@ -408,44 +362,84 @@ export class YogaServer<
       }
 
       const response = await (async () => {
-        // unofficial but has spec (https://github.com/jaydenseric/graphql-multipart-request-spec)
+        let params: GraphQLParams,
+          resultToResponse: (
+            result: OperationResult,
+            acceptedMediaType: AcceptableMediaType | null,
+          ) => Response
         if (this.multipartEnabled && isPOSTMultipartRequest(request)) {
-          // TODO
-          return new this.fetchAPI.Response(null, { status: 501 })
+          // unofficial but has spec (https://github.com/jaydenseric/graphql-multipart-request-spec)
+          params = await parsePOSTMultipartRequest(request)
+          resultToResponse = this.resultToMultipartResponse
+        } else if (isPOSTGraphQLStringRequest(request)) {
+          // unofficial
+          params = await parsePOSTGraphQLStringRequest(request)
+          resultToResponse = this.resultToRegularResponse
+        } else if (isPOSTFormUrlEncodedRequest(request)) {
+          // unofficial
+          params = await parsePOSTFormUrlEncodedRequest(request)
+          resultToResponse = this.resultToRegularResponse
+        } else if (isGETEventStreamRequest(request)) {
+          // unofficial
+          params = await parseGETEventStreamRequest(request)
+          resultToResponse = this.resultToEventStreamResponse
+        } else {
+          // official (or invalid)
+          const headers = {}
+          request.headers.forEach((value, key) => (headers[key] = value))
+          const [body, init] = await this.httpHandler({
+            url: request.url,
+            method: request.method,
+            headers,
+            body: await request.text(),
+            raw: request,
+          })
+          // TODO: text encoder with content-length necessary?
+          return new this.fetchAPI.Response(body, init)
         }
 
-        // unofficial
-        if (isPOSTGraphQLStringRequest(request)) {
-          // TODO
-          return new this.fetchAPI.Response(null, { status: 501 })
+        // TODO: nothing acceptable when not official graphql request
+        const acceptedMediaType = getAcceptableMediaType(
+          request.headers.get('accept'),
+        )
+        if (!acceptedMediaType) {
+          return new this.fetchAPI.Response(null, {
+            status: 406,
+            statusText: 'Not Acceptable',
+            headers: {
+              accept:
+                'application/graphql+json; charset=utf-8, application/json; charset=utf-8',
+            },
+          })
         }
 
-        // unofficial
-        if (isPOSTFormUrlEncodedRequest(request)) {
-          // TODO
-          return new this.fetchAPI.Response(null, { status: 501 })
+        const { errors, result, args } = await this.handlePrepare(
+          request,
+          params,
+        )
+        if (errors.length) {
+          return resultToResponse({ errors }, acceptedMediaType)
+        }
+        if (result) {
+          return resultToResponse(result, acceptedMediaType)
         }
 
-        // unofficial
-        if (isGETEventStreamRequest(request)) {
-          // TODO
-          return new this.fetchAPI.Response(null, { status: 501 })
+        if (!args) {
+          // should never happen at this point
+          throw new Error('Missing operation arguments')
         }
 
-        // official
-        const headers = {}
-        request.headers.forEach((value, key) => (headers[key] = value))
-        const [body, init] = await this.httpHandler({
-          url: request.url,
-          method: request.method,
-          headers,
-          body: await request.text(),
-          raw: request,
-        })
-
-        // TODO: text encoder with content-length necessary?
-
-        return new this.fetchAPI.Response(body, init)
+        const operation = getOperationAST(args.document, args.operationName)
+        if (operation?.operation === 'subscription') {
+          return resultToResponse(
+            await args.rootValue.subscribe(args),
+            acceptedMediaType,
+          )
+        }
+        return resultToResponse(
+          await args.rootValue.execute(args),
+          acceptedMediaType,
+        )
       })()
 
       for (const onResponseHook of this.onResponseHooks) {
@@ -457,41 +451,33 @@ export class YogaServer<
       }
       return response
     } catch (e) {
+      console.log(e)
+      this.logger.error('Internal error while handling request', e)
       return new this.fetchAPI.Response('Internal Server Error', {
         status: 500,
       })
     }
   }
 
-  private async handleRequestParse(request: Request): Promise<{
-    params: GraphQLParams | null
+  private handlePrepare = async (
+    request: Request,
+    params: GraphQLParams,
+  ): Promise<{
+    errors: readonly GraphQLError[]
     result: OperationResult | null
-  }> {
-    // onRequestParse
-    let requestParser: RequestParser | undefined
-    const onRequestParseDoneHooks: OnRequestParseDoneHook[] = []
-    for (const onRequestParse of this.onRequestParseHooks) {
-      const onRequestParseResult = await onRequestParse({
-        request,
-        requestParser,
-        setRequestParser(parser) {
-          requestParser = parser
-        },
-      })
-      if (onRequestParseResult?.onRequestParseDone != null) {
-        onRequestParseDoneHooks.push(onRequestParseResult.onRequestParseDone)
-      }
-    }
-    if (!requestParser) {
-      return { params: null, result: null }
-    }
-
-    let params = await requestParser(request)
-
-    // onRequestParseDone
+    args:
+      | (ExecutionArgs & {
+          rootValue: {
+            execute: ExecuteFunction
+            subscribe: SubscribeFunction
+          }
+        })
+      | null
+  }> => {
     let result: OperationResult | null = null
-    for (const onRequestParseDone of onRequestParseDoneHooks) {
-      await onRequestParseDone({
+    for (const onPrepare of this.onPrepareHooks) {
+      await onPrepare({
+        request,
         params,
         setParams(newParams) {
           params = newParams
@@ -501,11 +487,188 @@ export class YogaServer<
         },
       })
       if (result) {
-        break
+        return {
+          errors: [],
+          result,
+          args: null,
+        }
       }
     }
 
-    return { params, result }
+    if (!params.query) {
+      return {
+        errors: [new GraphQLError('Missing query')],
+        result: null,
+        args: null,
+      }
+    }
+
+    const { schema, execute, subscribe, contextFactory, parse, validate } =
+      this.getEnveloped({
+        request,
+        ...params,
+        // TODO: include serverContext
+      })
+
+    const document = parse(params.query)
+
+    const errors = validate(schema, document)
+    if (errors.length) {
+      return {
+        errors,
+        result: null,
+        args: null,
+      }
+    }
+
+    return {
+      errors: [],
+      result: null,
+      args: {
+        schema,
+        operationName: params.operationName,
+        document,
+        variableValues: params.variables,
+        contextValue: await contextFactory(),
+        rootValue: {
+          execute,
+          subscribe,
+        },
+      },
+    }
+  }
+
+  private resultToEventStreamResponse = (result: OperationResult): Response => {
+    let iterator: AsyncIterator<ExecutionResult<any>>
+    const textEncoder = new this.fetchAPI.TextEncoder()
+    const readableStream = new this.fetchAPI.ReadableStream({
+      start() {
+        if (isAsyncIterable(result)) {
+          iterator = result[Symbol.asyncIterator]()
+        } else {
+          let finished = false
+          iterator = {
+            next: () => {
+              if (finished) {
+                return Promise.resolve({ done: true, value: null })
+              }
+              finished = true
+              return Promise.resolve({ done: false, value: result })
+            },
+          }
+        }
+      },
+      async pull(controller) {
+        const { done, value } = await iterator.next()
+        if (value != null) {
+          const chunk = JSON.stringify(value)
+          controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
+        }
+        if (done) {
+          controller.close()
+        }
+      },
+      async cancel(e) {
+        await iterator.return?.(e)
+      },
+    })
+    return new this.fetchAPI.Response(readableStream, {
+      status: 200,
+      headers: {
+        'content-type': 'text/event-stream',
+        connection: 'keep-alive',
+        'cache-control': 'no-cache',
+        'content-encoding': 'none',
+      },
+    })
+  }
+
+  private resultToMultipartResponse = (result: OperationResult): Response => {
+    let iterator: AsyncIterator<ExecutionResult<any>>
+    const textEncoder = new this.fetchAPI.TextEncoder()
+    const readableStream = new this.fetchAPI.ReadableStream({
+      start(controller) {
+        if (isAsyncIterable(result)) {
+          iterator = result[Symbol.asyncIterator]()
+        } else {
+          let finished = false
+          iterator = {
+            next: () => {
+              if (finished) {
+                return Promise.resolve({ done: true, value: null })
+              }
+              finished = true
+              return Promise.resolve({ done: false, value: result })
+            },
+          }
+        }
+        controller.enqueue(textEncoder.encode(`---`))
+      },
+      async pull(controller) {
+        const { done, value } = await iterator.next()
+        if (value != null) {
+          controller.enqueue(textEncoder.encode('\r\n'))
+
+          controller.enqueue(
+            textEncoder.encode('Content-Type: application/json; charset=utf-8'),
+          )
+          controller.enqueue(textEncoder.encode('\r\n'))
+
+          const chunk = JSON.stringify(value)
+          const encodedChunk = textEncoder.encode(chunk)
+
+          controller.enqueue(
+            textEncoder.encode('Content-Length: ' + encodedChunk.byteLength),
+          )
+          controller.enqueue(textEncoder.encode('\r\n'))
+
+          controller.enqueue(textEncoder.encode('\r\n'))
+          controller.enqueue(encodedChunk)
+          controller.enqueue(textEncoder.encode('\r\n'))
+
+          controller.enqueue(textEncoder.encode('---'))
+        }
+        if (done) {
+          controller.enqueue(textEncoder.encode('\r\n-----\r\n'))
+          controller.close()
+        }
+      },
+      async cancel(e) {
+        await iterator.return?.(e)
+      },
+    })
+    return new this.fetchAPI.Response(readableStream, {
+      status: 200,
+      headers: {
+        connection: 'keep-alive',
+        'content-type': 'multipart/mixed; boundary="-"',
+        'transfer-encoding': 'chunked',
+      },
+    })
+  }
+
+  private resultToRegularResponse = (
+    result: OperationResult,
+    acceptedMediaType: AcceptableMediaType | null,
+  ): Response => {
+    if (isAsyncIterable(result)) {
+      return new this.fetchAPI.Response(
+        ...makeHttpResponse(
+          [new GraphQLError('Subscriptions not supported')],
+          acceptedMediaType ||
+            // TODO: better approach if no acceptable media type?s
+            'application/graphql+json',
+        ),
+      )
+    }
+    return new this.fetchAPI.Response(
+      ...makeHttpResponse(
+        result,
+        acceptedMediaType ||
+          // TODO: better approach if no acceptable media type?s
+          'application/graphql+json',
+      ),
+    )
   }
 
   /**
@@ -521,7 +684,7 @@ export class YogaServer<
    * expect(executionResult.data.ping).toBe('pong')
    * ```
    **/
-  async inject<TData = any, TVariables = any>({
+  public async inject<TData = any, TVariables = any>({
     document,
     variables,
     operationName,

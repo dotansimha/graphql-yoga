@@ -1,7 +1,7 @@
 import { UseMaskedErrorsOpts } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError, GraphQLHTTPErrorExtensions } from 'graphql'
-import { ResultProcessorInput } from './plugins/types'
+import { OperationResult } from './plugins/types'
 import { YogaMaskedErrorOpts } from './types'
 
 declare module 'graphql' {
@@ -56,7 +56,7 @@ export function handleError(
 }
 
 export function getResponseInitByRespectingErrors(
-  result: ResultProcessorInput,
+  result: OperationResult,
   headers: Record<string, string> = {},
 ) {
   let status: number | undefined

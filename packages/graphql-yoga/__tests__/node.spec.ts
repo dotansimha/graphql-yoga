@@ -654,7 +654,7 @@ describe.only('Requests', () => {
     expect(body.data.ping).toBe('pong')
   })
 
-  it.only('should handle POST requests with url encoded string', async () => {
+  it('should handle POST requests with url encoded string', async () => {
     const response = await request(yoga)
       .post(endpoint)
       .set('Content-Type', 'application/x-www-form-urlencoded')

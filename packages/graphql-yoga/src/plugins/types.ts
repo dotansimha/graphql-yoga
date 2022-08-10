@@ -20,7 +20,7 @@ export type Plugin<
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
    */
-  onRequestParse?: OnRequestParseHook
+  onPrepare?: OnPrepareHook
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
@@ -39,27 +39,12 @@ export interface OnRequestEventPayload<TServerContext> {
   endResponse(response: Response): void
 }
 
-export type OnRequestParseHook = (
-  payload: OnRequestParseEventPayload,
-) => PromiseOrValue<void | OnRequestParseHookResult>
-
-export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
-
-export interface OnRequestParseEventPayload {
-  request: Request
-  requestParser: RequestParser | undefined
-  setRequestParser: (parser: RequestParser) => void
-}
-
-export type OnRequestParseHookResult = {
-  onRequestParseDone?: OnRequestParseDoneHook
-}
-
-export type OnRequestParseDoneHook = (
-  payload: OnRequestParseDoneEventPayload,
+export type OnPrepareHook = (
+  payload: OnPrepareEventPayload,
 ) => PromiseOrValue<void>
 
-export interface OnRequestParseDoneEventPayload {
+export interface OnPrepareEventPayload {
+  request: Request
   params: GraphQLParams
   setParams: (params: GraphQLParams) => void
   setResult: (result: OperationResult) => void
