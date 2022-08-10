@@ -137,6 +137,21 @@ describe('requests', () => {
     expect(body.data).toBeNull()
   })
 
+  it('should error on invalid JSON parameters', async () => {
+    const response = await yoga.fetch(`http://yoga/test-graphql`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: 'null',
+    })
+    expect(response.status).toBe(400)
+
+    const body = JSON.parse(await response.text())
+    expect(body.errors).toBeDefined()
+    expect(body.errors[0].message).toEqual('POST body sent invalid JSON.')
+
+    expect(body.data).toBeNull()
+  })
+
   it('should error on malformed query string', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
