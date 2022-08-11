@@ -19,9 +19,7 @@ describe('accept header', () => {
       },
     })
     expect(response.headers.get('content-type')).toEqual('text/event-stream')
-    const iterator = response.body![Symbol.asyncIterator]()
-    const { value } = await iterator.next()
-    const valueStr = Buffer.from(value).toString('utf-8')
+    const valueStr = await response.text()
     expect(valueStr).toContain(
       `data: ${JSON.stringify({ data: { ping: null } })}`,
     )
@@ -47,9 +45,7 @@ describe('accept header', () => {
       body: JSON.stringify({ query: '{ping}' }),
     })
     expect(response.headers.get('content-type')).toEqual('text/event-stream')
-    const iterator = response.body![Symbol.asyncIterator]()
-    const { value } = await iterator.next()
-    const valueStr = Buffer.from(value).toString('utf-8')
+    const valueStr = await response.text()
     expect(valueStr).toContain(
       `data: ${JSON.stringify({ data: { ping: null } })}`,
     )
@@ -77,10 +73,20 @@ describe('accept header', () => {
     expect(response.headers.get('content-type')).toEqual(
       'multipart/mixed; boundary="-"',
     )
-    const valueStr = await response.text()
-    expect(valueStr).toContain(`Content-Type: application/json; charset=utf-8`)
-    expect(valueStr).toContain(`Content-Length: 24`)
-    expect(valueStr).toContain(`${JSON.stringify({ data: { ping: 'pong' } })}`)
+    const expectedStrs = [
+      `Content-Type: application/json; charset=utf-8`,
+      `Content-Length: 24`,
+      `${JSON.stringify({ data: { ping: 'pong' } })}`,
+    ]
+    for await (const chunk of response.body!) {
+      const valueStr = Buffer.from(chunk).toString('utf-8')
+      if (expectedStrs.includes(valueStr)) {
+        expectedStrs.splice(expectedStrs.indexOf(valueStr), 1)
+      }
+      if (expectedStrs.length === 0) {
+        break
+      }
+    }
   })
 
   it('instruct server to return a multipart result with POST body', async () => {
@@ -108,10 +114,21 @@ describe('accept header', () => {
     expect(response.headers.get('content-type')).toEqual(
       'multipart/mixed; boundary="-"',
     )
-    const valueStr = await response.text()
-    expect(valueStr).toContain(`Content-Type: application/json; charset=utf-8`)
-    expect(valueStr).toContain(`Content-Length: 24`)
-    expect(valueStr).toContain(`${JSON.stringify({ data: { ping: 'pong' } })}`)
+    const expectedStrs = [
+      `Content-Type: application/json; charset=utf-8`,
+      `Content-Length: 24`,
+      `${JSON.stringify({ data: { ping: 'pong' } })}`,
+    ]
+    for await (const chunk of response.body!) {
+      const valueStr = Buffer.from(chunk).toString('utf-8')
+      if (expectedStrs.includes(valueStr)) {
+        expectedStrs.splice(expectedStrs.indexOf(valueStr), 1)
+      }
+      if (expectedStrs.length === 0) {
+        break
+      }
+    }
+    expect(expectedStrs.length).toEqual(0)
   })
 
   it('server rejects request for AsyncIterable source (subscription) when client only accepts application/json', async () => {
