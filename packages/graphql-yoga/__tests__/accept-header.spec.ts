@@ -2,7 +2,7 @@ import { ExecutionResult } from 'graphql'
 import { createSchema, createYoga, Repeater, Plugin } from 'graphql-yoga'
 
 describe('accept header', () => {
-  it('instruct server to return an event-stream', async () => {
+  it('instruct server to return an event-stream with GET parameters', async () => {
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
@@ -13,8 +13,6 @@ describe('accept header', () => {
       }),
     })
 
-    // NOTE: this fails with content-type: application/json and body instead of query params
-    // is that intended?
     const response = await yoga.fetch(`http://yoga/graphql?query=query{ping}`, {
       headers: {
         accept: 'text/event-stream',
@@ -29,7 +27,64 @@ describe('accept header', () => {
     )
   })
 
-  it('instruct server to return a multipart result', async () => {
+  it('instruct server to return an event-stream with POST body', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            ping: String
+          }
+        `,
+      }),
+    })
+
+    const response = await yoga.fetch(`http://yoga/graphql`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({ query: '{ping}' }),
+    })
+    expect(response.headers.get('content-type')).toEqual('text/event-stream')
+    const iterator = response.body![Symbol.asyncIterator]()
+    const { value } = await iterator.next()
+    const valueStr = Buffer.from(value).toString('utf-8')
+    expect(valueStr).toContain(
+      `data: ${JSON.stringify({ data: { ping: null } })}`,
+    )
+  })
+
+  it('instruct server to return a multipart result with GET parameters', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            ping: String
+          }
+        `,
+        resolvers: {
+          Query: { ping: () => 'pong' },
+        },
+      }),
+    })
+
+    const response = await yoga.fetch(`http://yoga/graphql?query=query{ping}`, {
+      headers: {
+        accept: 'multipart/mixed',
+      },
+    })
+    expect(response.headers.get('content-type')).toEqual(
+      'multipart/mixed; boundary="-"',
+    )
+    const valueStr = await response.text()
+    // TODO: This test started failing after I replaced request(yoga) with yoga.fetch()
+    expect(valueStr).toContain(`Content-Type: application/json; charset=utf-8`)
+    expect(valueStr).toContain(`Content-Length: 24`)
+    expect(valueStr).toContain(`${JSON.stringify({ data: { ping: 'pong' } })}`)
+  })
+
+  it('instruct server to return a multipart result with POST body', async () => {
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
@@ -45,10 +100,13 @@ describe('accept header', () => {
 
     // NOTE: this fails with content-type: application/json and body instead of query params
     // is that intended?
-    const response = await yoga.fetch(`http://yoga/graphql?query=query{ping}`, {
+    const response = await yoga.fetch(`http://yoga/graphql`, {
+      method: 'POST',
       headers: {
+        'content-type': 'application/json',
         accept: 'multipart/mixed',
       },
+      body: JSON.stringify({ query: '{ping}' }),
     })
     expect(response.headers.get('content-type')).toEqual(
       'multipart/mixed; boundary="-"',
