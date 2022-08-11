@@ -6,7 +6,8 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { createYoga, Plugin } from 'graphql-yoga'
+import { createYoga, Plugin, Repeater } from 'graphql-yoga'
+import { Push } from '@repeaterjs/repeater'
 import { createServer, Server } from 'http'
 import {
   createFetch,
@@ -16,6 +17,7 @@ import {
   FormData,
 } from '@whatwg-node/fetch'
 import getPort from 'get-port'
+import EventSource from 'eventsource'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
@@ -102,103 +104,100 @@ describe('incremental delivery', () => {
 })
 
 describe('incremental delivery: node-fetch', () => {
-  function createTestSchema(): GraphQLSchema {
-    let counter = 0
+  let push: undefined | Push<number, unknown>
+  let stop: undefined | (() => void)
 
-    const GraphQLFile = new GraphQLScalarType({
-      name: 'File',
-      description: 'A file',
-    })
+  const GraphQLFile = new GraphQLScalarType({
+    name: 'File',
+    description: 'A file',
+  })
 
-    const schema = new GraphQLSchema({
-      query: new GraphQLObjectType({
-        name: 'Query',
-        fields: () => ({
-          ping: {
-            type: GraphQLString,
-            resolve: () => 'pong',
-          },
-        }),
+  const schema = new GraphQLSchema({
+    query: new GraphQLObjectType({
+      name: 'Query',
+      fields: () => ({
+        ping: {
+          type: GraphQLString,
+          resolve: () => 'pong',
+        },
       }),
-      mutation: new GraphQLObjectType({
-        name: 'Mutation',
-        fields: () => ({
-          echo: {
-            type: GraphQLString,
-            args: {
-              message: { type: GraphQLString },
-            },
-            resolve: (_, { message }) => message,
+    }),
+    mutation: new GraphQLObjectType({
+      name: 'Mutation',
+      fields: () => ({
+        echo: {
+          type: GraphQLString,
+          args: {
+            message: { type: GraphQLString },
           },
-          singleUpload: {
-            type: new GraphQLObjectType({
-              name: 'FileInfo',
-              fields: () => ({
-                name: { type: GraphQLString },
-                type: { type: GraphQLString },
-                text: { type: GraphQLString },
-              }),
+          resolve: (_, { message }) => message,
+        },
+        singleUpload: {
+          type: new GraphQLObjectType({
+            name: 'FileInfo',
+            fields: () => ({
+              name: { type: GraphQLString },
+              type: { type: GraphQLString },
+              text: { type: GraphQLString },
             }),
-            description: 'Upload a single file',
-            args: {
-              file: {
-                description: 'File to upload',
-                type: GraphQLFile,
-              },
-            },
-            resolve: async (_, { file }: { file: File }) => file,
-          },
-          parseFileStream: {
-            type: GraphQLString,
-            description: 'Check if the file stream is valid',
-            args: {
-              file: {
-                description: 'File to check',
-                type: GraphQLFile,
-              },
-            },
-            resolve: async (_, { file }: { file: File }) => {
-              const chunks = []
-              for await (const chunk of file.stream()) {
-                chunks.push(Buffer.from(chunk))
-              }
-              return Buffer.concat(chunks).toString('utf8')
+          }),
+          description: 'Upload a single file',
+          args: {
+            file: {
+              description: 'File to upload',
+              type: GraphQLFile,
             },
           },
-          parseArrayBuffer: {
-            type: GraphQLString,
-            description: 'Check if the array buffer is valid',
-            args: {
-              file: {
-                description: 'File to check',
-                type: GraphQLFile,
-              },
-            },
-            resolve: async (_, { file }: { file: File }) => {
-              return Buffer.from(await file.arrayBuffer()).toString('utf8')
+          resolve: async (_, { file }: { file: File }) => file,
+        },
+        parseFileStream: {
+          type: GraphQLString,
+          description: 'Check if the file stream is valid',
+          args: {
+            file: {
+              description: 'File to check',
+              type: GraphQLFile,
             },
           },
-        }),
+          resolve: async (_, { file }: { file: File }) => {
+            const chunks = []
+            for await (const chunk of file.stream()) {
+              chunks.push(Buffer.from(chunk))
+            }
+            return Buffer.concat(chunks).toString('utf8')
+          },
+        },
+        parseArrayBuffer: {
+          type: GraphQLString,
+          description: 'Check if the array buffer is valid',
+          args: {
+            file: {
+              description: 'File to check',
+              type: GraphQLFile,
+            },
+          },
+          resolve: async (_, { file }: { file: File }) => {
+            return Buffer.from(await file.arrayBuffer()).toString('utf8')
+          },
+        },
       }),
-      subscription: new GraphQLObjectType({
-        name: 'Subscription',
-        fields: () => ({
-          counter: {
-            type: GraphQLInt,
-            async *subscribe() {
-              while (true) {
-                await new Promise((resolve) => setTimeout(resolve, 100))
-                yield counter++
-              }
-            },
-            resolve: (counter) => counter,
-          },
-        }),
+    }),
+    subscription: new GraphQLObjectType({
+      name: 'Subscription',
+      fields: () => ({
+        counter: {
+          type: GraphQLInt,
+          subscribe: () =>
+            new Repeater<number>((ppush, sstop) => {
+              push = ppush
+              stop = sstop
+            }),
+          resolve: (counter) => counter,
+        },
       }),
-    })
+    }),
+  })
 
-    return schema
-  }
   const yoga = createYoga({
     logging: false,
     maskedErrors: false,
@@ -208,7 +207,7 @@ describe('incremental delivery: node-fetch', () => {
         fileSize: 12,
       },
     }),
-    schema: createTestSchema(),
+    schema,
   })
 
   let server: Server
@@ -221,6 +220,9 @@ describe('incremental delivery: node-fetch', () => {
   })
   afterEach(async () => {
     await new Promise((resolve) => server.close(resolve))
+    stop?.()
+    stop = undefined
+    push = undefined
   })
   it('should upload a file', async () => {
     const UPLOAD_MUTATION = /* GraphQL */ `
@@ -342,15 +344,29 @@ describe('incremental delivery: node-fetch', () => {
     expect(body.errors[0].message).toBe('File size limit exceeded: 12 bytes')
   })
 
-  it.skip('should get subscription', async () => {
-    // const eventSource = new EventSource(`${url}?query=subscription{counter}`)
-    // const counterValue1 = getCounterValue()
-    // await new Promise((resolve) => setTimeout(resolve, 300))
-    // expect(getCounterValue() > counterValue1).toBe(true)
-    // eventSource.close()
-    // await new Promise((resolve) => setTimeout(resolve, 300))
-    // const counterValue2 = getCounterValue()
-    // await new Promise((resolve) => setTimeout(resolve, 300))
-    // expect(getCounterValue()).toBe(counterValue2)
+  it('should get subscription', (done) => {
+    expect.assertions(3)
+    const eventSource = new EventSource(`${url}?query=subscription{counter}`)
+    let counter = 0
+    eventSource.onmessage = (event) => {
+      const result = JSON.parse(event.data)
+      if (counter === 0) {
+        expect(result.data.counter).toBe(0)
+        counter++
+        push?.(counter)
+      } else if (counter === 1) {
+        expect(result.data.counter).toBe(1)
+        counter++
+        push?.(counter)
+      } else if (counter === 2) {
+        expect(result.data.counter).toBe(2)
+        counter++
+        stop?.()
+        done()
+      }
+    }
+    new Promise((resolve) => setTimeout(resolve, 100)).then(() => {
+      push?.(counter)
+    })
   })
 })
