@@ -10,7 +10,7 @@ process.env.LC_ALL = 'en_US'
 
 const testMatch = []
 
-const testTimeout = undefined
+let testTimeout = undefined
 
 if (process.env.INTEGRATION_TEST === 'true') {
   testTimeout = 10000
