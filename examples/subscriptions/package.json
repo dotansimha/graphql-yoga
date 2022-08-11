@@ -3,8 +3,10 @@
   "private": true,
   "version": "0.13.4",
   "scripts": {
-    "postinstall": "graphql-codegen --config codegen.yml",
+    "codegen": "graphql-codegen --config codegen.yml",
+    "postinstall": "yarn run codegen",
     "start": "ts-node src/index.ts",
+    "precheck": "yarn run codegen",
     "check": "tsc --pretty --noEmit"
   },
   "dependencies": {

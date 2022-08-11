@@ -1,7 +1,6 @@
 import {
   createYoga,
   createSchema,
-  useExtendContext,
   YogaInitialContext,
   createPubSub,
   Repeater,
@@ -57,15 +56,20 @@ const resolvers: Resolvers<Context> = {
   },
   Subscription: {
     counter: {
-      async *subscribe() {
-        let counter = 0
-
-        // count up until the subscription is terminated
-        while (true) {
-          yield counter++
-          await wait(1000)
-        }
-      },
+      subscribe: () =>
+        new Repeater((push, stop) => {
+          let counter = 0
+          function increment() {
+            push(counter++)
+            console.log('push')
+          }
+          increment()
+          let interval = setInterval(increment, 1000)
+          stop.then(() => {
+            clearInterval(interval)
+            console.log('stop')
+          })
+        }),
       resolve: (payload: any) => payload,
     },
     globalCounter: {
@@ -100,7 +104,7 @@ const yoga = createYoga<Context, any>({
     typeDefs,
   }),
   logging: true,
-  plugins: [useExtendContext(() => ({ pubSub }))],
+  context: () => ({ pubSub }),
 })
 
 const server = createServer(yoga)
