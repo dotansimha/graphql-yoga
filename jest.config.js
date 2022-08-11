@@ -10,7 +10,10 @@ process.env.LC_ALL = 'en_US'
 
 const testMatch = []
 
+const testTimeout = undefined
+
 if (process.env.INTEGRATION_TEST === 'true') {
+  testTimeout = 10000
   testMatch.push(
     '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
   )
@@ -42,5 +45,6 @@ module.exports = {
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
+  testTimeout,
   resolver: 'bob-the-bundler/jest-resolver.js',
 }
