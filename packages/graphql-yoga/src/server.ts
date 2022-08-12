@@ -338,7 +338,9 @@ export class YogaServer<
           return errors
         }
         if (isAsyncIterable(result)) {
-          return [new GraphQLError('Subscriptions not supported')]
+          return [
+            new GraphQLError('Subscriptions not supported on regular requests'),
+          ]
         }
         if (!args) {
           // should never happen at this point
@@ -376,8 +378,9 @@ export class YogaServer<
         let params: GraphQLParams,
           resultToResponse: (
             result: OperationResult,
-            acceptedMediaType: AcceptableMediaType | null,
-          ) => Response
+            acceptedMediaType: AcceptableMediaType | 'text/event-stream',
+          ) => Response,
+          isSSE = false
         if (this.multipartEnabled && isPOSTMultipartRequest(request)) {
           // unofficial but has spec (https://github.com/jaydenseric/graphql-multipart-request-spec)
           params = await parsePOSTMultipartRequest(request)
@@ -394,6 +397,7 @@ export class YogaServer<
           // unofficial
           params = await parseGETEventStreamRequest(request)
           resultToResponse = this.resultToEventStreamResponse
+          isSSE = true
         } else {
           // official (or invalid)
           const headers = {}
@@ -410,17 +414,16 @@ export class YogaServer<
           return new this.fetchAPI.Response(body, init)
         }
 
-        // TODO: nothing acceptable when not official graphql request
-        const acceptedMediaType = getAcceptableMediaType(
-          request.headers.get('accept'),
-        )
+        const acceptedMediaType = isSSE
+          ? 'text/event-stream'
+          : getAcceptableMediaType(request.headers.get('accept'))
         if (!acceptedMediaType) {
           return new this.fetchAPI.Response(null, {
             status: 406,
             statusText: 'Not Acceptable',
             headers: {
               accept:
-                'application/graphql+json; charset=utf-8, application/json; charset=utf-8',
+                'application/graphql+json; charset=utf-8, application/json; charset=utf-8, text/event-stream; charset=utf-8',
             },
           })
         }
@@ -672,25 +675,23 @@ export class YogaServer<
 
   private resultToRegularResponse = (
     result: OperationResult,
-    acceptedMediaType: AcceptableMediaType | null,
+    acceptedMediaType: AcceptableMediaType | 'text/event-stream',
   ): Response => {
+    if (acceptedMediaType === 'text/event-stream') {
+      throw new Error(
+        'Cannot respond with an event stream to a regular request',
+      )
+    }
     if (isAsyncIterable(result)) {
       return new this.fetchAPI.Response(
         ...makeHttpResponse(
-          [new GraphQLError('Subscriptions not supported')],
-          acceptedMediaType ||
-            // TODO: better approach if no acceptable media types?
-            'application/graphql+json',
+          [new GraphQLError('Subscriptions not supported on regular requests')],
+          acceptedMediaType,
         ),
       )
     }
     return new this.fetchAPI.Response(
-      ...makeHttpResponse(
-        result,
-        acceptedMediaType ||
-          // TODO: better approach if no acceptable media types?
-          'application/graphql+json',
-      ),
+      ...makeHttpResponse(result, acceptedMediaType),
     )
   }
 
