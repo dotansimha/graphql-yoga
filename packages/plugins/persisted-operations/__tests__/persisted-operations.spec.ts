@@ -10,7 +10,7 @@ const schema = createSchema({
   `,
 })
 
-describe('Automatic Persisted Queries', () => {
+describe('Persisted Queries', () => {
   it('should return not found error if persisted query is missing', async () => {
     const store = new Map<string, string>()
     const yoga = createYoga({
@@ -24,6 +24,7 @@ describe('Automatic Persisted Queries', () => {
     const response = await request(yoga)
       .post('/graphql')
       .send({
+        query: '',
         extensions: {
           persistedQuery: {
             version: 1,
@@ -56,6 +57,7 @@ describe('Automatic Persisted Queries', () => {
     const response = await request(yoga)
       .post('/graphql')
       .send({
+        query: '',
         extensions: {
           persistedQuery: persistedQueryEntry,
         },

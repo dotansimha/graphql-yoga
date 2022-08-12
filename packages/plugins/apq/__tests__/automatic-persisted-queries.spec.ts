@@ -25,6 +25,7 @@ describe('Automatic Persisted Queries', () => {
     const response = await request(yoga)
       .post('/graphql')
       .send({
+        query: '',
         extensions: {
           persistedQuery: {
             version: 1,
@@ -57,6 +58,7 @@ describe('Automatic Persisted Queries', () => {
     const response = await request(yoga)
       .post('/graphql')
       .send({
+        query: '',
         extensions: {
           persistedQuery: persistedQueryEntry,
         },
@@ -121,9 +123,8 @@ describe('Automatic Persisted Queries', () => {
           },
         },
       })
-    expect(response.status).toEqual(200)
+    expect(response.status).toEqual(400)
     expect(JSON.parse(response.text)).toEqual({
-      data: null,
       errors: [{ message: 'PersistedQueryMismatch' }],
     })
   })

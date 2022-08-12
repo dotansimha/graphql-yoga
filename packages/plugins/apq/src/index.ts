@@ -69,7 +69,7 @@ export function useAPQ<TPluginContext>(
         return
       }
 
-      if (params.query == null) {
+      if (!params.query) {
         const persistedQuery = await store.get(persistedQueryData.sha256Hash)
         if (persistedQuery == null) {
           throw new GraphQLError('PersistedQueryNotFound')
