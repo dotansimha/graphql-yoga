@@ -50,8 +50,10 @@ describe('Disable Introspection with plugin', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    expect(response.headers['content-type']).toBe('application/json')
-    expect(response.body.data).toBeNull()
+    expect(response.headers['content-type']).toBe(
+      'application/graphql+json; charset=utf-8',
+    )
+    expect(response.body.data).not.toBeDefined()
     expect(response.body.errors![0]).toMatchInlineSnapshot(`
       Object {
         "locations": Array [
@@ -460,7 +462,6 @@ it('parse error is sent to clients', async () => {
 
     expect(result).toMatchInlineSnapshot(`
       Object {
-        "data": null,
         "errors": Array [
           Object {
             "locations": Array [
@@ -499,7 +500,6 @@ it('validation error is sent to clients', async () => {
 
     expect(result).toMatchInlineSnapshot(`
       Object {
-        "data": null,
         "errors": Array [
           Object {
             "locations": Array [
@@ -518,7 +518,7 @@ it('validation error is sent to clients', async () => {
   }
 })
 
-describe.only('Requests', () => {
+describe('Requests', () => {
   const endpoint = '/test-graphql'
   const yoga = createYoga({ schema, logging: false, graphqlEndpoint: endpoint })
 
