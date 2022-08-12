@@ -32,11 +32,5 @@ export const yogaDefaultFormatError: FormatErrorHandler = (
     }
     return err
   }
-  return createGraphQLError(message, {
-    extensions: {
-      http: {
-        status: 500,
-      },
-    },
-  })
+  return createGraphQLError(message)
 }

@@ -227,7 +227,7 @@ export class YogaServer<
 
     this.plugins = [
       // Use the schema provided by the user
-      useSchema(options?.schema),
+      !!options?.schema && useSchema(options?.schema),
       // Performance things
       options?.parserCache !== false &&
         useParserCache(
@@ -487,11 +487,20 @@ export class YogaServer<
       }
       return response
     } catch (e) {
-      console.log(e)
       this.logger.error('Internal error while handling request', e)
-      return new this.fetchAPI.Response('Internal Server Error', {
-        status: 500,
-      })
+      return new this.fetchAPI.Response(
+        JSON.stringify({ errors: handleError(e, this.maskedErrorsOpts, []) }),
+        {
+          status: 500,
+          headers: {
+            'content-type':
+              getAcceptableMediaType(request.headers.get('accept')) ===
+              'application/graphql+json'
+                ? 'application/graphql+json; charset=utf-8'
+                : 'application/json; charset=utf-8',
+          },
+        },
+      )
     }
   }
 
@@ -546,6 +555,10 @@ export class YogaServer<
         ...params,
         ...serverContext,
       })
+
+    if (!schema) {
+      throw new Error('Missing schema')
+    }
 
     let document
     try {

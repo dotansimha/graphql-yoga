@@ -314,7 +314,6 @@ describe('error masking', () => {
     const body = JSON.parse(await response.text())
 
     expect(body).toEqual({
-      data: null,
       errors: [
         {
           locations: [
@@ -353,7 +352,6 @@ describe('error masking', () => {
     const body = JSON.parse(await response.text())
 
     expect(body).toEqual({
-      data: null,
       errors: [
         {
           locations: [

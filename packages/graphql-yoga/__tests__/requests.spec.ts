@@ -77,11 +77,9 @@ describe('requests', () => {
     expect(response.headers.get('allow')).toEqual('POST')
     const body = JSON.parse(await response.text())
 
-    expect(body.data).toEqual(null)
+    expect(body.data).not.toBeDefined()
     expect(body.errors).toHaveLength(1)
-    expect(body.errors[0].message).toEqual(
-      'Can only perform a mutation operation from a POST request.',
-    )
+    expect(body.errors[0].message).toEqual('Cannot perform mutations over GET')
   })
 
   it('should send basic mutation', async () => {
@@ -134,7 +132,7 @@ describe('requests', () => {
     const body = JSON.parse(await response.text())
 
     expect(body.errors).toBeDefined()
-    expect(body.data).toBeNull()
+    expect(body.data).not.toBeDefined()
   })
 
   it('should error on invalid JSON parameters', async () => {
@@ -147,9 +145,9 @@ describe('requests', () => {
 
     const body = JSON.parse(await response.text())
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toEqual('POST body sent invalid JSON.')
+    expect(body.errors[0].message).toEqual('Unparsable JSON body')
 
-    expect(body.data).toBeNull()
+    expect(body.data).not.toBeDefined()
   })
 
   it('should error on malformed query string', async () => {
@@ -164,7 +162,7 @@ describe('requests', () => {
     const body = JSON.parse(await response.text())
 
     expect(body.errors).toBeDefined()
-    expect(body.data).toBeNull()
+    expect(body.data).not.toBeDefined()
   })
 
   it('should error missing query', async () => {
@@ -177,8 +175,8 @@ describe('requests', () => {
     expect(response.status).toBe(400)
 
     const body = JSON.parse(await response.text())
-    expect(body.data).toBeNull()
-    expect(body.errors?.[0].message).toBe('Must provide query string.')
+    expect(body.data).not.toBeDefined()
+    expect(body.errors?.[0].message).toBe('Missing query')
   })
 
   it('should error if query is not a string', async () => {
@@ -191,10 +189,8 @@ describe('requests', () => {
     expect(response.status).toBe(400)
 
     const body = JSON.parse(await response.text())
-    expect(body.data).toBeNull()
-    expect(body.errors?.[0].message).toBe(
-      'Expected "query" to be "string" but given "object".',
-    )
+    expect(body.data).not.toBeDefined()
+    expect(body.errors?.[0].message).toBe('Invalid query')
   })
 
   it('should handle preflight requests correctly', async () => {
@@ -236,21 +232,6 @@ describe('requests', () => {
         'content-type': 'application/x-www-form-urlencoded',
       },
       body: `query=${encodeURIComponent('{ ping }')}`,
-    })
-
-    expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
-    expect(body.errors).toBeUndefined()
-    expect(body.data.ping).toBe('pong')
-  })
-
-  it('should handle POST requests as JSON with "application/graphql+json" content type', async () => {
-    const response = await yoga.fetch(`http://yoga/test-graphql`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/graphql+json',
-      },
-      body: JSON.stringify({ query: '{ ping }' }),
     })
 
     expect(response.status).toBe(200)
