@@ -555,7 +555,13 @@ describe.only('Requests', () => {
       .send()
 
     expect(response.statusCode).toBe(405)
+
     expect(response.headers['allow']).toBe('POST')
+    const body = JSON.parse(response.text)
+
+    expect(body.data).not.toBeDefined()
+    expect(body.errors).toHaveLength(1)
+    expect(body.errors[0].message).toEqual('Cannot perform mutations over GET')
   })
 
   it('should send basic mutation', async () => {
@@ -598,10 +604,14 @@ describe.only('Requests', () => {
   it('should error on malformed JSON parameters', async () => {
     const response = await request(yoga)
       .post(endpoint)
-      .set('content-type', 'application/json')
       .send('{ "query": "{ ping }"')
 
     expect(response.statusCode).toBe(400)
+
+    const body = JSON.parse(response.text)
+
+    expect(body.errors).toBeDefined()
+    expect(body.data).not.toBeDefined()
   })
 
   it('should error on malformed query string', async () => {
@@ -610,6 +620,11 @@ describe.only('Requests', () => {
     })
 
     expect(response.statusCode).toBe(400)
+
+    const body = JSON.parse(response.text)
+
+    expect(body.errors).toBeDefined()
+    expect(body.data).not.toBeDefined()
   })
 
   it('should error missing query', async () => {
@@ -620,6 +635,10 @@ describe.only('Requests', () => {
       } as any)
 
     expect(response.statusCode).toBe(400)
+
+    const body = JSON.parse(response.text)
+    expect(body.data).not.toBeDefined()
+    expect(body.errors?.[0].message).toBe('Missing query')
   })
 
   it('should error if query is not a string', async () => {
@@ -630,6 +649,10 @@ describe.only('Requests', () => {
       } as any)
 
     expect(response.statusCode).toBe(400)
+
+    const body = JSON.parse(response.text)
+    expect(body.data).not.toBeDefined()
+    expect(body.errors?.[0].message).toBe('Invalid query')
   })
 
   it('should handle preflight requests correctly', () => {
