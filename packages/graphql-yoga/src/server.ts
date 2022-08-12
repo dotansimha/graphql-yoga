@@ -487,15 +487,23 @@ export class YogaServer<
       }
       return response
     } catch (e) {
-      this.logger.error('Internal error while handling request', e)
+      const acceptedMediaType = getAcceptableMediaType(
+        request.headers.get('accept'),
+      )
       return new this.fetchAPI.Response(
         JSON.stringify({ errors: handleError(e, this.maskedErrorsOpts, []) }),
         {
-          status: 500,
+          status:
+            e instanceof GraphQLError
+              ? // graphql errors are considered as client's fault
+                acceptedMediaType === 'application/json'
+                ? 200
+                : 400
+              : // all other errors are probably unhandled and are the server's fault
+                500,
           headers: {
             'content-type':
-              getAcceptableMediaType(request.headers.get('accept')) ===
-              'application/graphql+json'
+              acceptedMediaType === 'application/graphql+json'
                 ? 'application/graphql+json; charset=utf-8'
                 : 'application/json; charset=utf-8',
           },
