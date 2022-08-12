@@ -329,11 +329,21 @@ export class YogaServer<
     this.httpHandler = createHttpHandler<Request>({
       execute: (args) => (args as any).rootValue.execute(args),
       onSubscribe: async (req, params) => {
-        const errsArgsOrResult = await this.handlePrepare(req.raw, params)
-        if (isAsyncIterable(errsArgsOrResult)) {
+        const { errors, args, result } = await this.handlePrepare(
+          req.raw,
+          params,
+        )
+        if (errors) {
+          return errors
+        }
+        if (isAsyncIterable(result)) {
           return [new GraphQLError('Subscriptions not supported')]
         }
-        return errsArgsOrResult
+        if (!args) {
+          // should never happen at this point
+          throw new Error('Missing operation arguments')
+        }
+        return args
       },
     })
   }
@@ -417,7 +427,7 @@ export class YogaServer<
           request,
           params,
         )
-        if (errors.length) {
+        if (errors) {
           return resultToResponse({ errors }, acceptedMediaType)
         }
         if (result) {
@@ -463,7 +473,7 @@ export class YogaServer<
     request: Request,
     params: GraphQLParams,
   ): Promise<{
-    errors: readonly GraphQLError[]
+    errors: readonly GraphQLError[] | null
     result: OperationResult | null
     args:
       | (ExecutionArgs & {
@@ -488,7 +498,7 @@ export class YogaServer<
       })
       if (result) {
         return {
-          errors: [],
+          errors: null,
           result,
           args: null,
         }
@@ -510,7 +520,16 @@ export class YogaServer<
         // TODO: include serverContext
       })
 
-    const document = parse(params.query)
+    let document
+    try {
+      document = parse(params.query)
+    } catch (err) {
+      return {
+        errors: [err as GraphQLError],
+        result: null,
+        args: null,
+      }
+    }
 
     const errors = validate(schema, document)
     if (errors.length) {
@@ -522,7 +541,7 @@ export class YogaServer<
     }
 
     return {
-      errors: [],
+      errors: null,
       result: null,
       args: {
         schema,
