@@ -145,12 +145,12 @@ describe('error masking', () => {
     }
   })
 
-  it('non GraphQLError raised in onRequestParse is masked with the correct status code 500', async () => {
+  it('non GraphQLError raised in onPrepare is masked with the correct status code 500', async () => {
     const yoga = createYoga({
       schema: createTestSchema(),
       plugins: [
         {
-          onRequestParse() {
+          onPrepare() {
             throw new Error('Some random error!')
           },
         },
@@ -160,6 +160,9 @@ describe('error masking', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ hi hello }' }),
     })
 
@@ -186,15 +189,14 @@ describe('error masking', () => {
     })
     const body = JSON.parse(await response.text())
     expect(body).toMatchInlineSnapshot(`
-            Object {
-              "data": null,
-              "errors": Array [
-                Object {
-                  "message": "I like turtles",
-                },
-              ],
-            }
-          `)
+      Object {
+        "errors": Array [
+          Object {
+            "message": "I like turtles",
+          },
+        ],
+      }
+    `)
   })
 
   it('error thrown within context factory is masked', async () => {
@@ -213,15 +215,14 @@ describe('error masking', () => {
     })
     const body = JSON.parse(await response.text())
     expect(body).toMatchInlineSnapshot(`
-            Object {
-              "data": null,
-              "errors": Array [
-                Object {
-                  "message": "Unexpected error.",
-                },
-              ],
-            }
-          `)
+      Object {
+        "errors": Array [
+          Object {
+            "message": "Unexpected error.",
+          },
+        ],
+      }
+    `)
   })
 
   it('GraphQLError thrown within context factory with error masking is not masked', async () => {
@@ -240,15 +241,14 @@ describe('error masking', () => {
     })
     const body = JSON.parse(await response.text())
     expect(body).toMatchInlineSnapshot(`
-            Object {
-              "data": null,
-              "errors": Array [
-                Object {
-                  "message": "I like turtles",
-                },
-              ],
-            }
-          `)
+      Object {
+        "errors": Array [
+          Object {
+            "message": "I like turtles",
+          },
+        ],
+      }
+    `)
   })
 
   it('GraphQLError thrown within context factory has error extensions exposed on the response', async () => {
@@ -277,7 +277,6 @@ describe('error masking', () => {
     })
     const body = JSON.parse(await response.text())
     expect(body).toStrictEqual({
-      data: null,
       errors: [
         {
           message: 'I like turtles',
@@ -287,7 +286,7 @@ describe('error masking', () => {
         },
       ],
     })
-    expect(response.status).toEqual(200)
+    expect(response.status).toEqual(500)
   })
 
   it('parse error is not masked', async () => {
