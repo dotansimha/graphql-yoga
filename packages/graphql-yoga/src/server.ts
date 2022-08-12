@@ -363,6 +363,8 @@ export class YogaServer<
       }
 
       const response = await (async () => {
+        this.logger.debug('Parsing request to extract GraphQL parameters')
+
         let params: GraphQLParams | null,
           acceptedMediaType:
             | AcceptableMediaType
