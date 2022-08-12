@@ -20,14 +20,14 @@ You only need to search for [`apollo-server-` on NPM](https://www.npmjs.com/sear
 
 ### Run anywhere
 
-As mentioned in the above paragraph graphql-yoga is built around W3C Request/Response which is supported in all major serverless/worker/"serverful" JavaScript environments.
+As mentioned in the above paragraph `graphql-yoga` is built around W3C Request/Response which is supported in all major serverless/worker/"serverful" JavaScript environments.
 Apollo Server plans to drop active support for cloudflare workers and [pushes it onto the community](https://github.com/apollographql/apollo-server/issues/6034).
 GraphQL Yoga will continuously support all platforms and runtimes and
-Furthermore, Yoga has a full end2end testing suite that actually deploys to all those runtimes in order to ensure integrity and prevent unexpected issues.
+Furthermore, Yoga has a full end to end testing suite that actually deploys to all those runtimes in order to ensure integrity and prevent unexpected issues.
 
 ### Powerful Plugin System
 
-Envelopis a powerful GraphQL plugin system, that is unfortunately not fully compatible with Apollo Server.
+Envelop’s powerful GraphQL plugin system, that is unfortunately not fully compatible with Apollo Server.
 There is still no further follow-up from the apollo maintainers over [on the Apollo Server and envelop discussion](https://github.com/apollographql/apollo-server/discussions/5541).
 
 GraphQL Yoga builds upon envelop and, futhrermore, has a default plugin preset enabled for ensuring best practices for a performant (parse and validation caching) and secure GraphQL (e.g. though error masking) server by default.
@@ -60,27 +60,27 @@ Here you can see a comparison of bundle sizes:
 
 GraphQL Yoga only has a fraction of the dependencies of Apollo Server, and in general is much smaller.
 
-- [Dependency visualizer graphql-yoga](https://npm.anvaka.com/#/view/2d/graphql-yoga)
-- [Dependency visualizer apollo-server-micro](https://npm.anvaka.com/#/view/2d/apollo-server-micro)
+- [Dependency visualizer `graphql-yoga`](https://npm.anvaka.com/#/view/2d/graphql-yoga)
+- [Dependency visualizer `apollo-server-micro`](https://npm.anvaka.com/#/view/2d/apollo-server-micro)
 
-GraphQL Yogas APIs are designed for code-splitting as supported by popular bundlers.
+GraphQL Yogas APIs are designed for code-splitting and supported by popular bundlers.
 
 ## GraphQL Yoga and GraphQL Helix
 
 We are maintainers of both libraries today.
 
-The Guild initially adopted, improved, and recommended graphql-helix.
+The Guild initially adopted, improved, and recommended `graphql-helix`.
 
 While working on it, we realized that it to some extent allowed building more extensible GraphQL server set-ups, but on the other hand, required boilerplate code and isn't easily adoptable by new GraphQL developers.
 We also tried adding support for other environments such as cloudflare workers, but adding it as an after-thought wasn't that straightforward.
 Eventually, after a lot of trying we figured that the approach of adding it as an after-thought is the actual limitation, and instead of the other way around (W3C Request/Response first, Node.js HTTP Response/Request as a light-weight layer on top) might be a better solution.
 
 This put us in a difficult position.
-The Guild does not own graphql-helix and we did not want to do drastic changes to it, without verifying that it actually works.
-At the same time we were already building graphql-yoga based on helix. So we decided to actually do this experiment within graphql-yoga and remove helix as a dependency from yoga.
+The Guild does not own `graphql-helix` and we did not want to do drastic changes to it, without verifying that it actually works.
+At the same time we were already building `graphql-yoga` based on helix. So we decided to actually do this experiment within graphql-yoga and remove helix as a dependency from yoga.
 
 Today we can happily say that it worked out fine!
 
-Today we recommend graphql-yoga over graphql-helix, if you want a batteries-included solution for GraphQL server development.
+Today we recommend `graphql-yoga` over `graphql-helix`, if you want a batteries-included solution for GraphQL server development.
 
-GraphQL Yoga is easier to get started, has nicer defaults, and requires less boilerplate while giving you the same extensibility as graphql-helix!
+GraphQL Yoga is easier to get started, has nicer defaults, and requires less boilerplate while giving you the same extensibility as `graphql-helix`!
