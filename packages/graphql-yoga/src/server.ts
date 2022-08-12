@@ -36,7 +36,7 @@ import {
   Handler as HttpHandler,
   makeResponse as makeHttpResponse,
   AcceptableMediaType,
-} from '/Users/enisdenjo/Develop/src/github.com/enisdenjo/graphql-http/src' // from 'graphql-http'
+} from 'graphql-http'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
