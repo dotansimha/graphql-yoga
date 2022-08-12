@@ -12,11 +12,7 @@ import {
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
-import {
-  ExecutionResult,
-  isAsyncIterable,
-  parseSelectionSet,
-} from '@graphql-tools/utils'
+import { ExecutionResult, isAsyncIterable } from '@graphql-tools/utils'
 import { dset } from 'dset'
 import {
   GraphQLServerInject,
