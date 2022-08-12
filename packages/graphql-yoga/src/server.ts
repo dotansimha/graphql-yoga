@@ -346,23 +346,24 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) => {
     const serverContext = args[0]
-    try {
-      for (const onRequestHook of this.onRequestHooks) {
-        let response: Response | undefined
-        await onRequestHook({
-          request,
-          serverContext,
-          fetchAPI: this.fetchAPI,
-          endResponse(newResponse) {
-            response = newResponse
-          },
-        })
-        if (response) {
-          return response
-        }
-      }
 
-      const response = await (async () => {
+    const response = await (async () => {
+      try {
+        for (const onRequestHook of this.onRequestHooks) {
+          let response: Response | undefined
+          await onRequestHook({
+            request,
+            serverContext,
+            fetchAPI: this.fetchAPI,
+            endResponse(newResponse) {
+              response = newResponse
+            },
+          })
+          if (response) {
+            return response
+          }
+        }
+
         this.logger.debug('Parsing request to extract GraphQL parameters')
 
         let params: GraphQLParams | null,
@@ -453,8 +454,34 @@ export class YogaServer<
           await args.rootValue.execute(args),
           acceptedMediaType,
         )
-      })()
+      } catch (err) {
+        const errors = handleError(err, this.maskedErrorsOpts, [])
+        const { status, headers } = getResponseInitFromErrors(errors)
+        const acceptedMediaType = getAcceptableMediaType(
+          request.headers.get('accept'),
+        )
+        return new this.fetchAPI.Response(JSON.stringify({ errors }), {
+          status:
+            status ||
+            (err instanceof GraphQLError
+              ? // graphql errors are considered as client's fault
+                acceptedMediaType === 'application/json'
+                ? 200
+                : 400
+              : // all other errors are probably unhandled and are the server's fault
+                500),
+          headers: {
+            ...headers,
+            'content-type':
+              acceptedMediaType === 'application/graphql+json'
+                ? 'application/graphql+json; charset=utf-8'
+                : 'application/json; charset=utf-8',
+          },
+        })
+      }
+    })()
 
+    try {
       for (const onResponseHook of this.onResponseHooks) {
         await onResponseHook({
           request,
@@ -463,30 +490,9 @@ export class YogaServer<
         })
       }
       return response
-    } catch (e) {
-      const errors = handleError(e, this.maskedErrorsOpts, [])
-      const { status, headers } = getResponseInitFromErrors(errors)
-      const acceptedMediaType = getAcceptableMediaType(
-        request.headers.get('accept'),
-      )
-      return new this.fetchAPI.Response(JSON.stringify({ errors }), {
-        status:
-          status ||
-          (e instanceof GraphQLError
-            ? // graphql errors are considered as client's fault
-              acceptedMediaType === 'application/json'
-              ? 200
-              : 400
-            : // all other errors are probably unhandled and are the server's fault
-              500),
-        headers: {
-          ...headers,
-          'content-type':
-            acceptedMediaType === 'application/graphql+json'
-              ? 'application/graphql+json; charset=utf-8'
-              : 'application/json; charset=utf-8',
-        },
-      })
+    } catch (err) {
+      this.logger.error('Internal error while executing response hooks', err)
+      return new this.fetchAPI.Response(null, { status: 500 })
     }
   }
 
@@ -633,16 +639,16 @@ export class YogaServer<
     let requestBody: FormData
     try {
       requestBody = await request.formData()
-    } catch (e: unknown) {
+    } catch (err: unknown) {
       // Trick for @whatwg-node/fetch errors on Node.js
       // TODO: This needs a better solution
       if (
-        e instanceof Error &&
-        e.message.startsWith('File size limit exceeded: ')
+        err instanceof Error &&
+        err.message.startsWith('File size limit exceeded: ')
       ) {
-        throw new GraphQLError(e.message)
+        throw new GraphQLError(err.message)
       }
-      throw e
+      throw err
     }
 
     const operationsStr = requestBody.get('operations')?.toString() || '{}'
