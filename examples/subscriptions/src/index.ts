@@ -1,14 +1,14 @@
 import {
   createYoga,
-  useExtendContext,
+  createSchema,
+  YogaInitialContext,
   createPubSub,
   Repeater,
   pipe,
   map,
-  YogaInitialContext,
 } from 'graphql-yoga'
 import { createServer } from 'http'
-import { Resolvers } from './generated/graphql.js'
+import { Resolvers } from './generated/graphql'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))
@@ -56,15 +56,20 @@ const resolvers: Resolvers<Context> = {
   },
   Subscription: {
     counter: {
-      async *subscribe() {
-        let counter = 0
-
-        // count up until the subscription is terminated
-        while (true) {
-          yield counter++
-          await wait(1000)
-        }
-      },
+      subscribe: () =>
+        new Repeater((push, stop) => {
+          let counter = 0
+          function increment() {
+            push(counter++)
+            console.log('push')
+          }
+          increment()
+          let interval = setInterval(increment, 1000)
+          stop.then(() => {
+            clearInterval(interval)
+            console.log('stop')
+          })
+        }),
       resolve: (payload: any) => payload,
     },
     globalCounter: {
@@ -94,12 +99,12 @@ const resolvers: Resolvers<Context> = {
 }
 
 const yoga = createYoga<Context, any>({
-  schema: {
+  schema: createSchema({
     resolvers,
     typeDefs,
-  },
+  }),
   logging: true,
-  plugins: [useExtendContext(() => ({ pubSub }))],
+  context: () => ({ pubSub }),
 })
 
 const server = createServer(yoga)

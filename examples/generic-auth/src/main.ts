@@ -1,4 +1,4 @@
-import { createYoga, YogaInitialContext } from 'graphql-yoga'
+import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
 import { useGenericAuth } from '@envelop/generic-auth'
 import { createServer } from 'http'
 
@@ -40,7 +40,7 @@ const yoga = createYoga<{}, { currentUser: User }>({
       },
     }),
   ],
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       directive @auth on FIELD_DEFINITION
 
@@ -74,7 +74,7 @@ const yoga = createYoga<{}, { currentUser: User }>({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)

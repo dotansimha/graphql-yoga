@@ -30,7 +30,7 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/typings/index.d.ts",
+        "types": "./dist/typings/index.d.cts",
         "default": "./dist/cjs/index.js"
       },
       "import": {
@@ -59,11 +59,11 @@
     "@envelop/parser-cache": "^4.4.0",
     "@envelop/validation-cache": "^4.4.0",
     "@graphql-typed-document-node/core": "^3.1.1",
-    "@graphql-tools/schema": "^8.5.0",
+    "@graphql-tools/schema": "^9.0.0",
     "@graphql-tools/utils": "^8.8.0",
     "@graphql-yoga/subscription": "^2.2.2",
     "@whatwg-node/fetch": "^0.2.3",
-    "@whatwg-node/server": "^0.0.5",
+    "@whatwg-node/server": "^0.0.6",
     "dset": "^3.1.1",
     "graphql-config": "^4.1.0",
     "tslib": "^2.3.1",
@@ -77,12 +77,13 @@
     "@types/eventsource": "1.1.9",
     "eventsource": "2.0.2",
     "graphql": "^16.0.1",
-    "graphql-scalars": "1.17.0",
-    "puppeteer": "16.0.0",
+    "graphql-scalars": "1.18.0",
+    "puppeteer": "16.1.0",
     "@types/yargs": "17.0.11"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "sideEffects": false
 }

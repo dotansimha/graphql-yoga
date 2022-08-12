@@ -1,4 +1,4 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
@@ -15,9 +15,9 @@ setInterval(() => {
 
 const greetings = ['Hi', 'Hello', 'Sup']
 
-const yoga = createYoga({
+const yoga = createYoga<{ greetings: Array<string> }>({
   context: () => ({ greetings }),
-  schema: {
+  schema: createSchema({
     typeDefs: [
       /* GraphQL */ `
         type Query {
@@ -31,7 +31,7 @@ const yoga = createYoga({
         greetings: (_, __, context) => context.greetings,
       },
     },
-  },
+  }),
   graphiql: {
     defaultQuery: /* GraphQL */ `
       query @live {

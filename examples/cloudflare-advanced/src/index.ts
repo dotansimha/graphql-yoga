@@ -1,9 +1,9 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 
 declare const EXAMPLE_KV: KVNamespace
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       scalar File
       scalar JSON
@@ -74,32 +74,31 @@ const yoga = createYoga({
       },
       Subscription: {
         time: {
-          async *subscribe() {
-            while (true) {
-              yield { time: new Date().toISOString() }
-              await new Promise((resolve) => setTimeout(resolve, 1000))
-            }
-          },
+          subscribe: () =>
+            new Repeater((push, end) => {
+              const interval = setInterval(
+                () => push(new Date().toISOString()),
+                1000,
+              )
+              end.then(() => clearInterval(interval))
+            }),
+          resolve: (value) => value,
         },
         scheduled: {
-          async *subscribe() {
-            let scheduledEvent: Event
-            addEventListener('scheduled', (event) => {
-              scheduledEvent = event
-            })
-            while (true) {
-              if (scheduledEvent) {
-                const event = scheduledEvent
-                scheduledEvent = undefined
-                yield event
-              }
-            }
-          },
+          subscribe: () =>
+            new Repeater((push, end) => {
+              const eventListener = (event: ScheduledEvent) => push(event)
+              self.addEventListener('scheduled', eventListener)
+              end.then(() =>
+                self.removeEventListener('scheduled', eventListener),
+              )
+            }),
           resolve: (event) => event,
         },
       },
     },
-  },
+  }),
+  maskedErrors: false,
 })
 
 self.addEventListener('fetch', yoga)

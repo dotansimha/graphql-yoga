@@ -43,4 +43,5 @@ export default createYoga<{
   res: NextApiResponse
 }>({
   schema,
+  graphqlEndpoint: '/api/graphql',
 })

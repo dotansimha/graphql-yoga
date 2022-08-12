@@ -8,16 +8,27 @@ const tsconfig = require(TSCONFIG)
 
 process.env.LC_ALL = 'en_US'
 
-const testMatch = [
-  '**/?(*.)+(spec|test).[jt]s?(x)',
-  '!**/examples/node-esm/**',
-  '!**/.bob/**',
-]
+const testMatch = []
 
-if (parseInt(process.versions.node.split('.')[0]) <= 14) {
-  testMatch.push('!**/examples/sveltekit/**')
-  testMatch.push('!**/examples/fastify*/**')
+let testTimeout = undefined
+
+if (process.env.INTEGRATION_TEST === 'true') {
+  testTimeout = 10000
+  testMatch.push(
+    '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
+  )
+  if (parseInt(process.versions.node.split('.')[0]) <= 14) {
+    testMatch.push('!**/examples/sveltekit/**')
+    testMatch.push('!**/examples/fastify*/**')
+  }
+} else {
+  testMatch.push(
+    '<rootDir>/packages/**/?(*.)+(spec|test).[jt]s?(x)',
+    '!**/__integration-tests__/**',
+  )
 }
+
+testMatch.push('!**/dist/**', '!**/.bob/**')
 
 module.exports = {
   testEnvironment: 'node',
@@ -34,5 +45,6 @@ module.exports = {
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
+  testTimeout,
   resolver: 'bob-the-bundler/jest-resolver.js',
 }

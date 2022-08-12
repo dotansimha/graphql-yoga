@@ -23,7 +23,7 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/typings/index.d.ts",
+        "types": "./dist/typings/index.d.cts",
         "default": "./dist/cjs/index.js"
       },
       "import": {
@@ -64,5 +64,6 @@
     "@repeaterjs/repeater": "^3.0.4",
     "tslib": "^2.3.1"
   },
-  "type": "module"
+  "type": "module",
+  "sideEffects": true
 }
