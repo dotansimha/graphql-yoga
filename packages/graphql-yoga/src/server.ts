@@ -679,7 +679,7 @@ export class YogaServer<
         ...makeHttpResponse(
           [new GraphQLError('Subscriptions not supported')],
           acceptedMediaType ||
-            // TODO: better approach if no acceptable media type?s
+            // TODO: better approach if no acceptable media types?
             'application/graphql+json',
         ),
       )
@@ -688,7 +688,7 @@ export class YogaServer<
       ...makeHttpResponse(
         result,
         acceptedMediaType ||
-          // TODO: better approach if no acceptable media type?s
+          // TODO: better approach if no acceptable media types?
           'application/graphql+json',
       ),
     )
