@@ -12,7 +12,12 @@ import {
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
-import { ExecutionResult, isAsyncIterable } from '@graphql-tools/utils'
+import {
+  ExecutionResult,
+  isAsyncIterable,
+  parseSelectionSet,
+} from '@graphql-tools/utils'
+import { dset } from 'dset'
 import {
   GraphQLServerInject,
   YogaInitialContext,
@@ -44,30 +49,11 @@ import {
   GraphiQLOptionsOrFactory,
   useGraphiQL,
 } from './plugins/useGraphiQL.js'
-import {
-  isPOSTMultipartFormRequest,
-  parsePOSTMultipartFormRequest,
-} from './plugins/requestParser/POSTMultipartForm'
-import {
-  isPOSTMultipartJSONRequest,
-  parsePOSTMultipartJSONRequest,
-} from './plugins/requestParser/POSTMultipartJSON'
-import {
-  isPOSTGraphQLStringRequest,
-  parsePOSTGraphQLStringRequest,
-} from './plugins/requestParser/POSTGraphQLString.js'
-import {
-  isPOSTFormUrlEncodedRequest,
-  parsePOSTFormUrlEncodedRequest,
-} from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './error.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
-import {
-  isGETEventStreamRequest,
-  parseGETEventStreamRequest,
-} from './plugins/requestParser/GETEventStream.js'
+import { isContentTypeMatch, parseURLSearchParams } from './utils/request.js'
 
 interface OptionsWithPlugins<TContext> {
   /**
@@ -342,9 +328,7 @@ export class YogaServer<
           return errors
         }
         if (isAsyncIterable(result)) {
-          return [
-            new GraphQLError('Subscriptions not supported on regular requests'),
-          ]
+          return [new GraphQLError('Subscriptions are not supported')]
         }
         if (!args) {
           // should never happen at this point
@@ -379,7 +363,7 @@ export class YogaServer<
       }
 
       const response = await (async () => {
-        let params: GraphQLParams,
+        let params: GraphQLParams | null,
           acceptedMediaType:
             | AcceptableMediaType
             | 'multipart/mixed'
@@ -392,33 +376,24 @@ export class YogaServer<
               | 'multipart/mixed'
               | 'text/event-stream',
           ) => Response
-        if (this.multipartEnabled && isPOSTMultipartFormRequest(request)) {
-          // unofficial but has spec (https://github.com/jaydenseric/graphql-multipart-request-spec)
-          params = await parsePOSTMultipartFormRequest(request)
-          resultToResponse = this.resultToMultipartResponse
-          acceptedMediaType = 'multipart/mixed'
-        } else if (isPOSTMultipartJSONRequest(request)) {
+        if ((params = await this.parseUrlEncodedInBodyRequest(request))) {
           // unofficial
-          params = await parsePOSTMultipartJSONRequest(request)
-          resultToResponse = this.resultToMultipartResponse
-          acceptedMediaType = 'multipart/mixed'
-        } else if (isPOSTGraphQLStringRequest(request)) {
-          // unofficial
-          params = await parsePOSTGraphQLStringRequest(request)
           resultToResponse = this.resultToRegularResponse
           acceptedMediaType = getAcceptableMediaType(
             request.headers.get('accept'),
           )
-        } else if (isPOSTFormUrlEncodedRequest(request)) {
+        } else if ((params = await this.parseGraphQLStringRequest(request))) {
           // unofficial
-          params = await parsePOSTFormUrlEncodedRequest(request)
           resultToResponse = this.resultToRegularResponse
           acceptedMediaType = getAcceptableMediaType(
             request.headers.get('accept'),
           )
-        } else if (isGETEventStreamRequest(request)) {
+        } else if ((params = await this.parseMultipartRequest(request))) {
           // unofficial
-          params = await parseGETEventStreamRequest(request)
+          resultToResponse = this.resultToMultipartResponse
+          acceptedMediaType = 'multipart/mixed'
+        } else if ((params = await this.parseEventStreamRequest(request))) {
+          // unofficial
           resultToResponse = this.resultToEventStreamResponse
           acceptedMediaType = 'text/event-stream'
         } else {
@@ -605,6 +580,106 @@ export class YogaServer<
     }
   }
 
+  private parseUrlEncodedInBodyRequest = async (
+    request: Request,
+  ): Promise<GraphQLParams | null> => {
+    if (
+      request.method === 'POST' &&
+      isContentTypeMatch(request, 'application/x-www-form-urlencoded')
+    ) {
+      const requestBody = await request.text()
+      return parseURLSearchParams(requestBody)
+    }
+    return null
+  }
+
+  private parseGraphQLStringRequest = async (
+    request: Request,
+  ): Promise<GraphQLParams | null> => {
+    if (
+      request.method === 'POST' &&
+      isContentTypeMatch(request, 'application/graphql')
+    ) {
+      return {
+        query: await request.text(),
+      }
+    }
+    return null
+  }
+
+  private parseMultipartRequest = async (
+    request: Request,
+  ): Promise<GraphQLParams | null> => {
+    if (!request.headers.get('accept')?.includes('multipart/mixed')) {
+      return null
+    }
+    if (request.method === 'GET') {
+      return parseURLSearchParams(request.url.split('?')[1])
+    }
+    if (
+      request.method === 'POST' &&
+      isContentTypeMatch(request, 'application/json')
+    ) {
+      return await request.json()
+    }
+
+    // https://github.com/jaydenseric/graphql-multipart-request-spec
+    if (!this.multipartEnabled) {
+      return null
+    }
+    let requestBody: FormData
+    try {
+      requestBody = await request.formData()
+    } catch (e: unknown) {
+      // Trick for @whatwg-node/fetch errors on Node.js
+      // TODO: This needs a better solution
+      if (
+        e instanceof Error &&
+        e.message.startsWith('File size limit exceeded: ')
+      ) {
+        throw new GraphQLError(e.message)
+      }
+      throw e
+    }
+
+    const operationsStr = requestBody.get('operations')?.toString() || '{}'
+    const operations = JSON.parse(operationsStr)
+    const mapStr = requestBody.get('map')?.toString() || '{}'
+    const map = JSON.parse(mapStr)
+    for (const fileIndex in map) {
+      const file = requestBody.get(fileIndex)
+      const keys = map[fileIndex]
+      for (const key of keys) {
+        dset(operations, key, file)
+      }
+    }
+
+    return {
+      operationName: operations.operationName,
+      query: operations.query,
+      variables: operations.variables,
+      extensions: operations.extensions,
+    }
+  }
+
+  private parseEventStreamRequest = async (
+    request: Request,
+  ): Promise<GraphQLParams | null> => {
+    if (!request.headers.get('accept')?.includes('text/event-stream')) {
+      return null
+    }
+    if (request.method === 'GET') {
+      return parseURLSearchParams(request.url.split('?')[1])
+    }
+    if (
+      request.method === 'POST' &&
+      isContentTypeMatch(request, 'application/json')
+    ) {
+      return await request.json()
+    }
+    return null
+  }
+
   private resultToEventStreamResponse = (result: OperationResult): Response => {
     let iterator: AsyncIterator<ExecutionResult<any>>
     const textEncoder = new this.fetchAPI.TextEncoder()
@@ -732,7 +807,7 @@ export class YogaServer<
     if (isAsyncIterable(result)) {
       return new this.fetchAPI.Response(
         ...makeHttpResponse(
-          [new GraphQLError('Subscriptions not supported on regular requests')],
+          [new GraphQLError('Subscriptions are not supported')],
           acceptedMediaType,
         ),
       )

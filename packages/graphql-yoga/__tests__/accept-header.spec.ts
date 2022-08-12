@@ -166,7 +166,11 @@ describe('accept header', () => {
         },
       },
     )
-    expect(response.status).toEqual(406)
+    expect(response.status).toEqual(200)
+    const body = await response.json()
+    expect(body.errors).toEqual([
+      { message: 'Subscriptions are not supported' },
+    ])
   })
 
   it('server rejects request for AsyncIterable source (defer/stream) when client only accepts application/json', async () => {
@@ -202,6 +206,10 @@ describe('accept header', () => {
         accept: 'application/json',
       },
     })
-    expect(response.status).toEqual(406)
+    expect(response.status).toEqual(200)
+    const body = await response.json()
+    expect(body.errors).toEqual([
+      { message: 'Subscriptions are not supported' },
+    ])
   })
 })
