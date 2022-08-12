@@ -1,9 +1,8 @@
 import { jest } from '@jest/globals'
-import { defaultYogaLogger } from '../src/logger.js'
-import { createYoga } from '../src/server.js'
+import { defaultYogaLogger, createYoga } from 'graphql-yoga'
 
-describe('Logging', () => {
-  it('Yoga respects custom logger implementations', async () => {
+describe('logging', () => {
+  it('use custom logger', async () => {
     const logger = {
       debug: jest.fn(),
       info: jest.fn(),
@@ -25,17 +24,22 @@ describe('Logging', () => {
       `Parsing request to extract GraphQL parameters`,
     )
   })
-  describe('Default Logger', () => {
+  describe('default logger', () => {
     it(`doesn't print debug messages if DEBUG env var isn't set`, () => {
       jest.spyOn(console, 'debug')
       defaultYogaLogger.debug('TEST')
       expect(console.debug).not.toHaveBeenCalled()
     })
     it(`prints debug messages if DEBUG env var is set`, () => {
-      process.env.DEBUG = '1'
-      jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
-      defaultYogaLogger.debug('TEST')
-      expect(console.debug).toHaveBeenCalled()
+      const originalValue = process.env.DEBUG
+      try {
+        process.env.DEBUG = '1'
+        jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
+        defaultYogaLogger.debug('TEST')
+        expect(console.debug).toHaveBeenCalled()
+      } finally {
+        process.env.DEBUG = originalValue
+      }
     })
   })
 })

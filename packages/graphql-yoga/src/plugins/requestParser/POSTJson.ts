@@ -1,3 +1,4 @@
+import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 
@@ -12,11 +13,32 @@ export function isPOSTJsonRequest(request: Request) {
 export async function parsePOSTJsonRequest(
   request: Request,
 ): Promise<GraphQLParams> {
-  const requestBody: any = await request.json()
-  return {
-    operationName: requestBody.operationName,
-    query: requestBody.query,
-    variables: requestBody.variables,
-    extensions: requestBody.extensions,
+  try {
+    const requestBody: any = await request.json()
+
+    if (typeof requestBody !== 'object' || requestBody == null) {
+      throw createGraphQLError('POST body sent invalid JSON.', {
+        extensions: {
+          http: {
+            status: 400,
+          },
+        },
+      })
+    }
+
+    return {
+      operationName: requestBody.operationName,
+      query: requestBody.query,
+      variables: requestBody.variables,
+      extensions: requestBody.extensions,
+    }
+  } catch (err) {
+    throw createGraphQLError('POST body sent invalid JSON.', {
+      extensions: {
+        http: {
+          status: 400,
+        },
+      },
+    })
   }
 }

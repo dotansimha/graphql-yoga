@@ -1,13 +1,13 @@
-import { createClient, OperationResult } from '@urql/core'
-import { yogaExchange } from '@graphql-yoga/urql-exchange'
-import { observableToAsyncIterable } from '@graphql-tools/utils'
-import { pipe, toObservable } from 'wonka'
+import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
 import { createYoga, createSchema } from 'graphql-yoga'
+import { createServer, Server } from 'http'
+import { parse } from 'graphql'
+import { observableToAsyncIterable } from '@graphql-tools/utils'
+import { YogaLink } from '@graphql-yoga/apollo-link'
 import { File } from '@whatwg-node/fetch'
-import { createServer } from 'http'
+import getPort from 'get-port'
 
-describe('graphExchange', () => {
-  const port = 4000 + Math.floor(Math.random() * 1000)
+describe('Yoga Apollo Link', () => {
   const endpoint = '/graphql'
   const hostname = '127.0.0.1'
   const yoga = createYoga({
@@ -29,7 +29,7 @@ describe('graphExchange', () => {
       `,
       resolvers: {
         Query: {
-          hello: () => 'Hello Urql Client!',
+          hello: () => 'Hello Apollo Client!',
         },
         Mutation: {
           readFile: (_, args: { file: File }) => args.file.text(),
@@ -48,73 +48,77 @@ describe('graphExchange', () => {
       },
     }),
   })
-  const server = createServer(yoga)
-  const url = `http://${hostname}:${port}${endpoint}`
-  const client = createClient({
-    url,
-    exchanges: [
-      yogaExchange({
+
+  let server: Server
+  let url: string
+  let client: ApolloClient<any>
+
+  beforeAll(async () => {
+    const port = await getPort()
+    server = createServer(yoga)
+    url = `http://${hostname}:${port}${endpoint}`
+    client = new ApolloClient({
+      link: new YogaLink({
+        endpoint: url,
         customFetch: yoga.fetchAPI.fetch,
       }),
-    ],
-  })
-  beforeAll(async () => {
+      cache: new InMemoryCache(),
+    })
     await new Promise<void>((resolve) => server.listen(port, hostname, resolve))
   })
   afterAll(async () => {
     await new Promise((resolve) => server.close(resolve))
   })
   it('should handle queries correctly', async () => {
-    const result = await client
-      .query(
-        /* GraphQL */ `
-          query Greetings {
-            hello
-          }
-        `,
-      )
-      .toPromise()
+    const result = await client.query({
+      query: parse(/* GraphQL */ `
+        query Greetings {
+          hello
+        }
+      `),
+    })
     expect(result.error).toBeUndefined()
+    expect(result.errors?.length).toBeFalsy()
     expect(result.data).toEqual({
-      hello: 'Hello Urql Client!',
+      hello: 'Hello Apollo Client!',
     })
   })
   it('should handle subscriptions correctly', async () => {
-    const observable = pipe(
-      client.subscription(/* GraphQL */ `
+    const observable = client.subscribe({
+      query: parse(/* GraphQL */ `
         subscription Time {
           time
         }
       `),
-      toObservable,
-    )
-
+    })
     const asyncIterable =
-      observableToAsyncIterable<OperationResult<any>>(observable)
+      observableToAsyncIterable<
+        FetchResult<any, Record<string, any>, Record<string, any>>
+      >(observable)
     let i = 0
     for await (const result of asyncIterable) {
       i++
       if (i === 2) {
         break
       }
-      expect(result.error).toBeFalsy()
+      expect(result.errors?.length).toBeFalsy()
       const date = new Date(result?.data?.time)
       expect(date.getFullYear()).toBe(new Date().getFullYear())
     }
     expect(i).toBe(2)
   })
   it('should handle file uploads correctly', async () => {
-    const query = /* GraphQL */ `
-      mutation readFile($file: File!) {
-        readFile(file: $file)
-      }
-    `
-    const result = await client
-      .mutation(query, {
+    const result = await client.mutate({
+      mutation: parse(/* GraphQL */ `
+        mutation readFile($file: File!) {
+          readFile(file: $file)
+        }
+      `),
+      variables: {
         file: new File(['Hello World'], 'file.txt', { type: 'text/plain' }),
-      })
-      .toPromise()
-    expect(result.error).toBeFalsy()
+      },
+    })
+    expect(result.errors?.length).toBeFalsy()
     expect(result.data).toEqual({
       readFile: 'Hello World',
     })
