@@ -11,5 +11,5 @@ export function isGETEventStreamRequest(request: Request) {
 export async function parseGETEventStreamRequest(
   request: Request,
 ): Promise<GraphQLParams> {
-  return parseURLSearchParams(request.url)
+  return parseURLSearchParams(request.url.split('?')[1])
 }
