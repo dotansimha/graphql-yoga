@@ -180,7 +180,7 @@ export class YogaServer<
   private id: string
 
   private multipartEnabled: boolean
-  private httpHandler: HttpHandler<Request>
+  private httpHandler: HttpHandler<Request, TServerContext>
 
   constructor(
     options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
@@ -326,12 +326,13 @@ export class YogaServer<
       }
     }
 
-    this.httpHandler = createHttpHandler<Request>({
+    this.httpHandler = createHttpHandler<Request, TServerContext>({
       execute: (args) => (args as any).rootValue.execute(args),
       onSubscribe: async (req, params) => {
         const { errors, args, result } = await this.handlePrepare(
           req.raw,
           params,
+          req.context,
         )
         if (errors) {
           return errors
@@ -403,6 +404,7 @@ export class YogaServer<
             headers,
             body: await request.text(),
             raw: request,
+            context: serverContext as TServerContext,
           })
           // TODO: text encoder with content-length necessary?
           return new this.fetchAPI.Response(body, init)
@@ -426,6 +428,7 @@ export class YogaServer<
         const { errors, result, args } = await this.handlePrepare(
           request,
           params,
+          serverContext as TServerContext,
         )
         if (errors) {
           return resultToResponse({ errors }, acceptedMediaType)
@@ -472,6 +475,7 @@ export class YogaServer<
   private handlePrepare = async (
     request: Request,
     params: GraphQLParams,
+    serverContext: TServerContext,
   ): Promise<{
     errors: readonly GraphQLError[] | null
     result: OperationResult | null
@@ -517,7 +521,7 @@ export class YogaServer<
       this.getEnveloped({
         request,
         ...params,
-        // TODO: include serverContext
+        ...serverContext,
       })
 
     let document
