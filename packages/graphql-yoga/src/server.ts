@@ -45,9 +45,13 @@ import {
   useGraphiQL,
 } from './plugins/useGraphiQL.js'
 import {
-  isPOSTMultipartRequest,
-  parsePOSTMultipartRequest,
-} from './plugins/requestParser/POSTMultipart.js'
+  isPOSTMultipartFormRequest,
+  parsePOSTMultipartFormRequest,
+} from './plugins/requestParser/POSTMultipartForm'
+import {
+  isPOSTMultipartJSONRequest,
+  parsePOSTMultipartJSONRequest,
+} from './plugins/requestParser/POSTMultipartJSON'
 import {
   isPOSTGraphQLStringRequest,
   parsePOSTGraphQLStringRequest,
@@ -376,28 +380,47 @@ export class YogaServer<
 
       const response = await (async () => {
         let params: GraphQLParams,
+          acceptedMediaType:
+            | AcceptableMediaType
+            | 'multipart/mixed'
+            | 'text/event-stream'
+            | null,
           resultToResponse: (
             result: OperationResult,
-            acceptedMediaType: AcceptableMediaType | 'text/event-stream',
-          ) => Response,
-          isSSE = false
-        if (this.multipartEnabled && isPOSTMultipartRequest(request)) {
+            acceptedMediaType:
+              | AcceptableMediaType
+              | 'multipart/mixed'
+              | 'text/event-stream',
+          ) => Response
+        if (this.multipartEnabled && isPOSTMultipartFormRequest(request)) {
           // unofficial but has spec (https://github.com/jaydenseric/graphql-multipart-request-spec)
-          params = await parsePOSTMultipartRequest(request)
+          params = await parsePOSTMultipartFormRequest(request)
           resultToResponse = this.resultToMultipartResponse
+          acceptedMediaType = 'multipart/mixed'
+        } else if (isPOSTMultipartJSONRequest(request)) {
+          // unofficial
+          params = await parsePOSTMultipartJSONRequest(request)
+          resultToResponse = this.resultToMultipartResponse
+          acceptedMediaType = 'multipart/mixed'
         } else if (isPOSTGraphQLStringRequest(request)) {
           // unofficial
           params = await parsePOSTGraphQLStringRequest(request)
           resultToResponse = this.resultToRegularResponse
+          acceptedMediaType = getAcceptableMediaType(
+            request.headers.get('accept'),
+          )
         } else if (isPOSTFormUrlEncodedRequest(request)) {
           // unofficial
           params = await parsePOSTFormUrlEncodedRequest(request)
           resultToResponse = this.resultToRegularResponse
+          acceptedMediaType = getAcceptableMediaType(
+            request.headers.get('accept'),
+          )
         } else if (isGETEventStreamRequest(request)) {
           // unofficial
           params = await parseGETEventStreamRequest(request)
           resultToResponse = this.resultToEventStreamResponse
-          isSSE = true
+          acceptedMediaType = 'text/event-stream'
         } else {
           // official (or invalid)
           const headers = {}
@@ -414,9 +437,6 @@ export class YogaServer<
           return new this.fetchAPI.Response(body, init)
         }
 
-        const acceptedMediaType = isSSE
-          ? 'text/event-stream'
-          : getAcceptableMediaType(request.headers.get('accept'))
         if (!acceptedMediaType) {
           return new this.fetchAPI.Response(null, {
             status: 406,
@@ -675,11 +695,17 @@ export class YogaServer<
 
   private resultToRegularResponse = (
     result: OperationResult,
-    acceptedMediaType: AcceptableMediaType | 'text/event-stream',
+    acceptedMediaType:
+      | AcceptableMediaType
+      | 'multipart/mixed'
+      | 'text/event-stream',
   ): Response => {
-    if (acceptedMediaType === 'text/event-stream') {
+    if (
+      acceptedMediaType === 'multipart/mixed' ||
+      acceptedMediaType === 'text/event-stream'
+    ) {
       throw new Error(
-        'Cannot respond with an event stream to a regular request',
+        `Unaccaptable media-type ${acceptedMediaType} to a regular request`,
       )
     }
     if (isAsyncIterable(result)) {

@@ -3,14 +3,14 @@ import { dset } from 'dset'
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 
-export function isPOSTMultipartRequest(request: Request): boolean {
+export function isPOSTMultipartFormRequest(request: Request): boolean {
   return (
     request.method === 'POST' &&
     isContentTypeMatch(request, 'multipart/form-data')
   )
 }
 
-export async function parsePOSTMultipartRequest(
+export async function parsePOSTMultipartFormRequest(
   request: Request,
 ): Promise<GraphQLParams> {
   let requestBody: FormData
