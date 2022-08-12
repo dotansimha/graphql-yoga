@@ -54,14 +54,11 @@ export function handleError(
   return errors
 }
 
-export function getResponseInitByRespectingErrors(
-  result: OperationResult,
-  headers: Record<string, string> = {},
-) {
+export function getResponseInitFromErrors(errors: GraphQLError[]) {
   let status: number | undefined
-
-  if ('errors' in result && result.errors?.length) {
-    for (const error of result.errors) {
+  const headers: Record<string, string> = {}
+  if (errors.length) {
+    for (const error of errors) {
       if (error.extensions?.http) {
         if (
           error.extensions.http.status &&
@@ -74,15 +71,9 @@ export function getResponseInitByRespectingErrors(
         }
         // Remove http extensions from the final response
         delete error.extensions.http
-        //TODO: avoid slow "delete"
+        // TODO: avoid slow "delete"
       }
     }
-  } else {
-    status = 200
   }
-
-  return {
-    status,
-    headers,
-  }
+  return { status, headers }
 }

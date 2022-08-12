@@ -49,7 +49,7 @@ import {
   GraphiQLOptionsOrFactory,
   useGraphiQL,
 } from './plugins/useGraphiQL.js'
-import { handleError } from './error.js'
+import { getResponseInitFromErrors, handleError } from './error.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
@@ -462,28 +462,29 @@ export class YogaServer<
       }
       return response
     } catch (e) {
+      const errors = handleError(e, this.maskedErrorsOpts, [])
+      const { status, headers } = getResponseInitFromErrors(errors)
       const acceptedMediaType = getAcceptableMediaType(
         request.headers.get('accept'),
       )
-      return new this.fetchAPI.Response(
-        JSON.stringify({ errors: handleError(e, this.maskedErrorsOpts, []) }),
-        {
-          status:
-            e instanceof GraphQLError
-              ? // graphql errors are considered as client's fault
-                acceptedMediaType === 'application/json'
-                ? 200
-                : 400
-              : // all other errors are probably unhandled and are the server's fault
-                500,
-          headers: {
-            'content-type':
-              acceptedMediaType === 'application/graphql+json'
-                ? 'application/graphql+json; charset=utf-8'
-                : 'application/json; charset=utf-8',
-          },
+      return new this.fetchAPI.Response(JSON.stringify({ errors }), {
+        status:
+          status ||
+          (e instanceof GraphQLError
+            ? // graphql errors are considered as client's fault
+              acceptedMediaType === 'application/json'
+              ? 200
+              : 400
+            : // all other errors are probably unhandled and are the server's fault
+              500),
+        headers: {
+          ...headers,
+          'content-type':
+            acceptedMediaType === 'application/graphql+json'
+              ? 'application/graphql+json; charset=utf-8'
+              : 'application/json; charset=utf-8',
         },
-      )
+      })
     }
   }
 
