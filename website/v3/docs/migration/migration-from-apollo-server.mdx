@@ -66,3 +66,73 @@ For example, if you are using **Express**, you should remove the standalone HTTP
 - server.applyMiddleware({ app })
 + app.use('/graphql', yoga)
 ```
+
+## Batched Queries/Requests
+
+Batched queries is a practice first supported and made popular by the Apollo ecosystem.
+The idea of batched query operations is to reduce the number of network requests by grouping them together.
+This is achieved by slightly delaying the HTTP request in order to gather all the query operations that are executed shortly after each other.
+
+GraphQL Yoga does not support batched queries for the following reasons:
+
+**_All batched queries are as slow as the longest running individual query._**
+
+Because the GraphQL server does not start sending a response to the client until all the queries are completed, a slow query will prevent a faster query result to be already processed/shown to the end user.
+
+**_Batched queries can ba achieved by componsing multiple GraphQL fragments/operation into a single one._**
+
+Instead of having two operations:
+
+```graphql
+query A {
+  viewer {
+    id
+    name
+  }
+}
+```
+
+```graphql
+query B($postId: ID!) {
+  post(id: $postId) {
+    id
+    title
+  }
+}
+```
+
+These operations can be combined into a single operation:
+
+```graphql
+query AB($postId: ID!) {
+  viewer {
+    id
+    name
+  }
+  post(id: $postId) {
+    id
+    title
+  }
+}
+```
+
+Furthermore, if you want a partial of the GraphQL operation to arrive at the client as soon as possible, you can use the `@defer` directive.
+
+```graphql
+query AB($postId: ID!) {
+  ... on Query @defer(label: "A") {
+    viewer {
+      id
+      name
+    }
+  }
+  ... on Query @defer(label: "A") {
+    post(id: $postId) {
+      id
+      title
+    }
+  }
+}
+```
+
+You can learn more on how to get the best out of this in our ["Unlease the power of Fragments with GraphQL Codegen" article](https://the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen).
