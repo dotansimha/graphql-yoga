@@ -258,4 +258,21 @@ describe('requests', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data.ping).toBe('pong')
   })
+
+  it('errors if there is an invalid parameter in the request body', async () => {
+    const response = await yoga.fetch(`http://yoga/test-graphql`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/graphql+json',
+      },
+      body: JSON.stringify({ query: '{ ping }', test: 'a' }),
+    })
+
+    expect(response.status).toBe(400)
+    const body = JSON.parse(await response.text())
+    expect(body.data).toBe(null)
+    expect(body.errors?.[0].message).toBe(
+      'Unexpected parameter "test" in the request body.',
+    )
+  })
 })

@@ -4,13 +4,23 @@ import { Plugin } from '../types'
 
 const EXPECTED_PARAMS = ['query', 'variables', 'operationName', 'extensions']
 
-export function isValidGraphQLParams(params: any): params is GraphQLParams {
+export function assertInvalidParams(
+  params: any,
+): asserts params is GraphQLParams {
   for (const paramKey in params) {
     if (!EXPECTED_PARAMS.includes(paramKey)) {
-      return false
+      throw createGraphQLError(
+        `Unexpected parameter "${paramKey}" in the request body.`,
+        {
+          extensions: {
+            http: {
+              status: 400,
+            },
+          },
+        },
+      )
     }
   }
-  return true
 }
 
 export function useCheckGraphQLParams(): Plugin {
@@ -18,7 +28,7 @@ export function useCheckGraphQLParams(): Plugin {
     onRequestParse() {
       return {
         onRequestParseDone({ params }) {
-          if (!('query' in params)) {
+          if (params.query == null) {
             throw createGraphQLError('Must provide query string.', {
               extensions: {
                 http: {
@@ -30,15 +40,7 @@ export function useCheckGraphQLParams(): Plugin {
               },
             })
           }
-          if (!isValidGraphQLParams(params)) {
-            throw createGraphQLError('Invalid query params.', {
-              extensions: {
-                http: {
-                  status: 400,
-                },
-              },
-            })
-          }
+          assertInvalidParams(params)
           const queryParamType = typeof params.query
           if (queryParamType !== 'string') {
             throw createGraphQLError(
