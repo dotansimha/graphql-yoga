@@ -205,7 +205,7 @@ export class YogaServer<
 
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
 
-    this.multipartEnabled = !!options?.multipart
+    this.multipartEnabled = options?.multipart !== false
 
     this.plugins = [
       // Use the schema provided by the user
