@@ -1,5 +1,16 @@
 # @graphql-yoga/node
 
+## 2.13.7
+
+### Patch Changes
+
+- [#1603](https://github.com/dotansimha/graphql-yoga/pull/1603) [`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Update `@envelop/core` which resolves swallowed context errors with error masking.
+
+* [#1600](https://github.com/dotansimha/graphql-yoga/pull/1600) [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Apply the HTTP validation error plugin last in order to not interfere error masking when using the `handleValidationErrors` option.
+
+* Updated dependencies [[`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b), [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10)]:
+  - @graphql-yoga/common@2.12.6
+
 ## 2.13.6
 
 ### Patch Changes
