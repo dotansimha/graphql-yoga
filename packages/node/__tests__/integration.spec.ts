@@ -192,6 +192,45 @@ describe('Masked Error Option', () => {
       },
     })
   })
+
+  it('can mask validation error', async () => {
+    const yoga = createServer({
+      schema,
+      logging: false,
+      maskedErrors: {
+        handleValidationErrors: true,
+        isDev: true,
+      },
+    })
+
+    const response = await request(yoga).post('/graphql').send({
+      query: '{ bubatzbieber }',
+    })
+    const body = JSON.parse(response.text)
+    expect(body).toMatchObject({
+      data: null,
+      errors: [
+        {
+          locations: [
+            {
+              column: 3,
+              line: 1,
+            },
+          ],
+          message: 'Unexpected error.',
+        },
+      ],
+    })
+    const { extensions } = body.errors![0]
+    expect(extensions).toMatchObject({
+      originalError: {
+        message: 'Cannot query field "bubatzbieber" on type "Query".',
+        stack: expect.stringContaining(
+          'GraphQLError: Cannot query field "bubatzbieber" on type "Query"',
+        ),
+      },
+    })
+  })
 })
 
 describe('Context error', () => {
