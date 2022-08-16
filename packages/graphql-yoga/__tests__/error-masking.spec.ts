@@ -367,4 +367,47 @@ describe('error masking', () => {
       }
     `)
   })
+
+  it('error thrown within context factory is exposed via originalError extension field in dev mode', async () => {
+    const yoga = createYoga({
+      logging: false,
+      context: () => {
+        throw new Error('I am the original error.')
+      },
+      maskedErrors: {
+        isDev: true,
+      },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+    })
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{a}' }),
+    })
+
+    const body = JSON.parse(await response.text())
+    expect(body).toStrictEqual({
+      data: null,
+      errors: [
+        {
+          message: 'Unexpected error.',
+          extensions: {
+            originalError: {
+              message: 'I am the original error.',
+              stack: expect.stringContaining('Error: I am the original error.'),
+            },
+          },
+        },
+      ],
+    })
+    expect(response.status).toEqual(200)
+  })
 })
