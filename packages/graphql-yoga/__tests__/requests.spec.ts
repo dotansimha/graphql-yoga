@@ -139,13 +139,13 @@ describe('requests', () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: 'null',
+      body: 'null', // valid JSON, but not valid parameters
     })
     expect(response.status).toBe(400)
 
     const body = JSON.parse(await response.text())
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toEqual('Unparsable JSON body')
+    expect(body.errors[0].message).toEqual('JSON body must be an object')
 
     expect(body.data).not.toBeDefined()
   })
