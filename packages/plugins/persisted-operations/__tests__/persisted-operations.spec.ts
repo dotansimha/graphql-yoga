@@ -1,4 +1,4 @@
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createYoga, createSchema, GraphQLParams } from 'graphql-yoga'
 import request from 'supertest'
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 
@@ -10,13 +10,14 @@ const schema = createSchema({
   `,
 })
 
-describe('Automatic Persisted Queries', () => {
+describe('Persisted Operations', () => {
   it('should return not found error if persisted query is missing', async () => {
-    const store = new Map<string, string>()
     const yoga = createYoga({
       plugins: [
         usePersistedOperations({
-          store,
+          getPersistedOperation() {
+            return null
+          },
         }),
       ],
       schema,
@@ -42,7 +43,9 @@ describe('Automatic Persisted Queries', () => {
     const yoga = createYoga({
       plugins: [
         usePersistedOperations({
-          store,
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
         }),
       ],
       schema,
@@ -71,7 +74,9 @@ describe('Automatic Persisted Queries', () => {
     const yoga = createYoga({
       plugins: [
         usePersistedOperations({
-          store,
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
         }),
       ],
       schema,
@@ -97,7 +102,9 @@ describe('Automatic Persisted Queries', () => {
     const yoga = createYoga({
       plugins: [
         usePersistedOperations({
-          store,
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
           allowArbitraryOperations: true,
         }),
       ],
@@ -124,7 +131,9 @@ describe('Automatic Persisted Queries', () => {
     const yoga = createYoga({
       plugins: [
         usePersistedOperations({
-          store,
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
           allowArbitraryOperations: (request) =>
             request.headers.get('foo') === 'bar',
         }),
@@ -148,5 +157,30 @@ describe('Automatic Persisted Queries', () => {
     const body = JSON.parse(response.text)
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
+  })
+  it('should respect the custom getPersistedQueryKey implementation (Relay)', async () => {
+    const store = new Map<string, string>()
+    const yoga = createYoga({
+      plugins: [
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
+          getPersistedOperationKey(params: GraphQLParams & { doc_id: string }) {
+            return params.doc_id ?? null
+          },
+        }),
+      ],
+      schema,
+    })
+    const persistedOperationKey = 'my-persisted-operation'
+    store.set(persistedOperationKey, '{__typename}')
+    const response = await request(yoga).post('/graphql').send({
+      doc_id: persistedOperationKey,
+    })
+
+    const body = JSON.parse(response.text)
+    expect(body.errors).toBeUndefined()
+    expect(body.data.__typename).toBe('Query')
   })
 })

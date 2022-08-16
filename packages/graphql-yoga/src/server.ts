@@ -74,7 +74,7 @@ import {
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './error.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
-import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
+import { useCheckGraphQLParams } from './plugins/requestValidation/useCheckGraphQLParams.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
@@ -346,7 +346,7 @@ export class YogaServer<
       ...(options?.plugins ?? []),
 
       // So the user can manipulate the query parameter
-      useCheckGraphQLQueryParam(),
+      useCheckGraphQLParams(),
       // We handle validation errors at the end
       useHTTPValidationError(),
       // We make sure that the user doesn't send a mutation with GET

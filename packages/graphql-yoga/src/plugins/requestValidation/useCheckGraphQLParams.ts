@@ -2,16 +2,23 @@ import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLParams } from '../../types'
 import { Plugin } from '../types'
 
+const EXPECTED_PARAMS = ['query', 'variables', 'operationName', 'extensions']
+
 export function isValidGraphQLParams(params: any): params is GraphQLParams {
-  return params.query != null
+  for (const paramKey in params) {
+    if (!EXPECTED_PARAMS.includes(paramKey)) {
+      return false
+    }
+  }
+  return true
 }
 
-export function useCheckGraphQLQueryParam(): Plugin {
+export function useCheckGraphQLParams(): Plugin {
   return {
     onRequestParse() {
       return {
         onRequestParseDone({ params }) {
-          if (!isValidGraphQLParams(params)) {
+          if (!('query' in params)) {
             throw createGraphQLError('Must provide query string.', {
               extensions: {
                 http: {
@@ -19,6 +26,15 @@ export function useCheckGraphQLQueryParam(): Plugin {
                   headers: {
                     Allow: 'GET, POST',
                   },
+                },
+              },
+            })
+          }
+          if (!isValidGraphQLParams(params)) {
+            throw createGraphQLError('Invalid query params.', {
+              extensions: {
+                http: {
+                  status: 400,
                 },
               },
             })

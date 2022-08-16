@@ -5,7 +5,8 @@ sidebar_label: Persisted Operations
 ---
 
 Persisted operations is a mechanism for preventing the execution of arbitary GraphQL operation documents.
-The persisted operations plugin follows the [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine) for **SENDING** hashes to the server.
+By default, the persisted operations plugin follows the [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine) for **SENDING** hashes to the server.
+However, you can change this behavior by overriding the `getPersistedOperationKey` option to support Relay's specification for example.
 
 ## Installation
 
@@ -18,15 +19,19 @@ import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 
-const store = new Map<string, string>()
-
-store.set(
-  'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
-  '{__typename}',
-)
+const store = {
+  ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38:
+    '{__typename}',
+}
 
 const yoga = createYoga({
-  plugins: [usePersistedOperations()],
+  plugins: [
+    usePersistedOperations({
+      getPersistedOperation(sha256Hash: string) {
+        return store[sha256Hash]
+      },
+    }),
+  ],
 })
 
 const server = createServer(yoga)
@@ -65,10 +70,14 @@ import { createServer } from 'node:http'
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 import persistedOperations from './persistedOperations.json'
 
-const store = new Map<string, string>(Object.entries(persistedOperations))
-
 const yoga = createYoga({
-  plugins: [usePersistedOperations()],
+  plugins: [
+    usePersistedOperations({
+      getPersistedOperation(key: string) {
+        return persistedOperations[key]
+      },
+    }),
+  ],
 })
 
 const server = createServer(yoga)
@@ -101,3 +110,30 @@ usePersistedOperations({
 ```
 
 Use this option with caution!
+
+## Using Relay's Persisted Queries Specification
+
+If you are using [Relay's Persisted Queries specification](https://relay.dev/docs/guides/persisted-queries/#example-implemetation-of-relaylocalpersistingjs), you can configure the plugin like below;
+
+```ts
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+import persistedOperations from './persistedOperations.json'
+
+const yoga = createYoga({
+  plugins: [
+    usePersistedOperations({
+      getPersistedOperationKey(params: GraphQLParams & { doc_id: string }) {
+        return params.doc_id
+      }
+      getPersistedOperation(key: string) {
+        return persistedOperations[key]
+      },
+    }),
+  ],
+})
+
+const server = createServer(yoga)
+server.listen(4000)
+```
