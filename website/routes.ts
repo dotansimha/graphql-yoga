@@ -109,6 +109,9 @@ export function getDocsV3Routes(): IRoutes {
       integrations: {
         $name: 'Integrations',
       },
+      comparison: {
+        $name: 'Comparison',
+      },
       migration: {
         $name: 'Migration from',
       },
