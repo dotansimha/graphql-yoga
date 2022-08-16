@@ -405,11 +405,12 @@ export class YogaServer<
             url: request.url,
             method: request.method,
             headers,
-            // some servers (like fastify) like parsing the body for you and
-            // @whatwg-node/server fill inject the body into the .json() method
-            body: isContentTypeMatch(request, 'application/json')
-              ? await request.json()
-              : await request.text(),
+            // some servers (like fastify) like parsing the body for you.
+            // @whatwg-node/server will inject the body into the .json() method
+            body: () =>
+              isContentTypeMatch(request, 'application/json')
+                ? request.json()
+                : request.text(),
             raw: request,
             context: serverContext as TServerContext,
           })
