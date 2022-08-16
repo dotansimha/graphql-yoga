@@ -50,16 +50,9 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
     onParse() {
       // We should improve this by getting Yoga stuff from the hook params directly instead of the context
       return ({ result, context: { request, operationName } }) => {
-        if (result instanceof Error) {
-          if (result instanceof GraphQLError) {
-            result.extensions.http = {
-              status: 400,
-            }
-          }
-          throw result
+        if (!(result instanceof Error)) {
+          assertMutationViaGet(request.method, result, operationName)
         }
-
-        assertMutationViaGet(request.method, result, operationName)
       }
     },
   }

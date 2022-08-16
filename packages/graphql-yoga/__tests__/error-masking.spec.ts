@@ -381,6 +381,7 @@ describe('error masking', () => {
       }),
       maskedErrors: {
         handleValidationErrors: true,
+        isDev: true,
       },
     })
 
@@ -392,19 +393,13 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{bubatzbieber}' }),
     })
 
-    expect(response.status).toEqual(400)
+    expect(response.status).toEqual(200)
     const body = JSON.parse(await response.text())
 
     expect(body).toMatchObject({
       data: null,
       errors: [
         {
-          locations: [
-            {
-              column: 2,
-              line: 1,
-            },
-          ],
           message: 'Unexpected error.',
         },
       ],
@@ -432,6 +427,7 @@ describe('error masking', () => {
       }),
       maskedErrors: {
         handleParseErrors: true,
+        isDev: true,
       },
     })
 
@@ -443,19 +439,13 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{' }),
     })
 
-    expect(response.status).toEqual(400)
+    expect(response.status).toEqual(200)
     const body = JSON.parse(await response.text())
 
     expect(body).toMatchObject({
       data: null,
       errors: [
         {
-          locations: [
-            {
-              column: 2,
-              line: 1,
-            },
-          ],
           message: 'Unexpected error.',
         },
       ],
