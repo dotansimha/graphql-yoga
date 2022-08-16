@@ -1,16 +1,16 @@
-name: Deployment E2E
+name: test
 on:
   pull_request:
     paths-ignore:
       - 'website/**'
 
 jobs:
-  test-deploy:
+  e2e:
     strategy:
       fail-fast: false
       matrix:
         plan: ['cf-worker', 'azure-function', 'aws-lambda', 'vercel-function']
-    name: ${{ matrix.plan }}
+    name: e2e / ${{ matrix.plan }}
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:

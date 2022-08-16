@@ -1,25 +1,8 @@
 diff --git a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
-index 94500b3..6329d53 100644
+index 4c476cb..80b0df6 100644
 --- a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
 +++ b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
-@@ -114,6 +114,7 @@ function shouldUpdateDependencyBasedOnConfig(release, {
- const DEPENDENCY_TYPES = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
- function versionPackage(release, versionsToUpdate, {
-   updateInternalDependencies,
-+  ignoreRange,
-   onlyUpdatePeerDependentsWhenOutOfRange,
-   bumpVersionsWithWorkspaceProtocolOnly
- }) {
-@@ -171,7 +172,7 @@ function versionPackage(release, versionsToUpdate, {
-         // leaving those as is would leave the package in a non-installable state (wrong dep versions would get installed)
-         semver__default['default'].prerelease(version) !== null) {
-           let rangeType = getVersionRangeType__default['default'](depCurrentVersion);
--          let newNewRange = `${rangeType}${version}`;
-+          let newNewRange = ignoreRange ? version : `${rangeType}${version}`;
-           if (usesWorkspaceRange) newNewRange = `workspace:${newNewRange}`;
-           deps[name] = newNewRange;
-         }
-@@ -193,6 +194,19 @@ async function generateChangesForVersionTypeMarkdown(obj, type) {
+@@ -193,6 +193,19 @@ async function generateChangesForVersionTypeMarkdown(obj, type) {
    }
  } // release is the package and version we are releasing
  
@@ -39,7 +22,7 @@ index 94500b3..6329d53 100644
  
  async function getChangelogEntry(release, releases, changesets, changelogFuncs, changelogOpts, {
    updateInternalDependencies,
-@@ -215,32 +229,97 @@ async function getChangelogEntry(release, releases, changesets, changelogFuncs,
+@@ -215,32 +228,96 @@ async function getChangelogEntry(release, releases, changesets, changelogFuncs,
        changelogLines[rls.type].push(changelogFuncs.getReleaseLine(cs, rls.type, changelogOpts));
      }
    });
@@ -49,7 +32,6 @@ index 94500b3..6329d53 100644
 +  let peerDependentReleasesPatch = [];
 +  let peerDependentReleasesMinor = [];
 +  let peerDependentReleasesMajor = [];
-+
 +
 +  releases.forEach(rel => {
      var _release$packageJson$, _release$packageJson$2;
@@ -157,28 +139,11 @@ index 94500b3..6329d53 100644
  }
  
  function stringDefined(s) {
-@@ -270,7 +349,7 @@ async function getCommitsThatAddChangesets(changesetIds, cwd) {
-   return commits;
- }
- 
--async function applyReleasePlan(releasePlan, packages, config$1 = config.defaultConfig, snapshot) {
-+async function applyReleasePlan(releasePlan, packages, config$1 = config.defaultConfig, snapshot, ignoreRange = false) {
-   let cwd = packages.root.dir;
-   let touchedFiles = [];
-   const packagesByName = new Map(packages.packages.map(x => [x.packageJson.name, x]));
-@@ -306,6 +385,7 @@ async function applyReleasePlan(releasePlan, packages, config$1 = config.default
- 
-   let finalisedRelease = releaseWithChangelogs.map(release => {
-     return versionPackage(release, versionsToUpdate, {
-+      ignoreRange,
-       updateInternalDependencies: config$1.updateInternalDependencies,
-       onlyUpdatePeerDependentsWhenOutOfRange: config$1.___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH.onlyUpdatePeerDependentsWhenOutOfRange,
-       bumpVersionsWithWorkspaceProtocolOnly: config$1.bumpVersionsWithWorkspaceProtocolOnly
 diff --git a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
-index d6e3ccb..bb18a6a 100644
+index d6e3ccb..38a06ea 100644
 --- a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
 +++ b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
-@@ -1,7 +1,3 @@
+@@ -1,7 +1,7 @@
  'use strict';
  
 -if (process.env.NODE_ENV === "production") {
@@ -186,4 +151,8 @@ index d6e3ccb..bb18a6a 100644
 -} else {
 -  module.exports = require("./apply-release-plan.cjs.dev.js");
 -}
++// if (process.env.NODE_ENV === "production") {
++//   module.exports = require("./apply-release-plan.cjs.prod.js");
++// } else {
 +module.exports = require("./apply-release-plan.cjs.dev.js");
++// }
