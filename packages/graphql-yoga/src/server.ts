@@ -645,7 +645,9 @@ export class YogaServer<
         err instanceof Error &&
         err.message.startsWith('File size limit exceeded: ')
       ) {
-        throw new GraphQLError(err.message)
+        throw new GraphQLError(err.message, {
+          extensions: { http: { status: 413 } },
+        })
       }
       throw err
     }
