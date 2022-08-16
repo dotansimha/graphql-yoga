@@ -39,6 +39,9 @@ jobs:
         run: yarn install --ignore-engines --frozen-lockfile --immutable
         if: steps.node-modules-cache-test-node.outputs.cache-hit != 'true'
 
+      - name: Build Packages
+        run: yarn build
+
       - name: Run Tests
         run: yarn test
 
