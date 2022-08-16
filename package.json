@@ -9,7 +9,6 @@
     "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace @graphql-yoga/common run generate-graphiql-html && bob build",
     "test": "jest --passWithNoTests --forceExit",
     "release": "yarn build && changeset publish",
-    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
     "start:docs": "yarn workspace website dev",
     "postinstall": "patch-package && husky install",
     "fix-bin": "node scripts/fix-bin.js",
@@ -52,7 +51,8 @@
     "@babel/plugin-proposal-decorators": "7.18.10",
     "@babel/preset-env": "7.18.10",
     "@babel/preset-typescript": "7.18.6",
-    "@changesets/cli": "2.23.2",
+    "@changesets/changelog-github": "0.4.6",
+    "@changesets/cli": "2.24.3",
     "@types/babel__core": "^7",
     "@types/babel__preset-env": "^7",
     "@types/jest": "^28.0.0",
@@ -76,7 +76,6 @@
     "typescript": "4.7.4"
   },
   "resolutions": {
-    "@changesets/apply-release-plan": "6.0.0",
     "graphql": "16.5.0",
     "@types/react": "17.0.39",
     "@types/react-dom": "18.0.6",

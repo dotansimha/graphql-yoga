@@ -1,5 +1,5 @@
 diff --git a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
-index f05ea74..9a0ed16 100644
+index 2ac23c7..ad592c5 100644
 --- a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
 +++ b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
 @@ -130,18 +130,9 @@ function determineDependents({
@@ -18,29 +18,27 @@ index f05ea74..9a0ed16 100644
 -            type = "major";
 -          } else {
 -            if ( // TODO validate this - I don't think it's right anymore
-+          if (['patch', 'minor', 'major'].indexOf(nextRelease.type) > ['patch', 'minor', 'major'].indexOf(type)) {
-+            type = nextRelease.type
-+          } else if ( // TODO validate this - I don't think it's right anymore
++            if (['patch', 'minor', 'major'].indexOf(nextRelease.type) > ['patch', 'minor', 'major'].indexOf(type)) {
++              type = nextRelease.type
++            } else if ( // TODO validate this - I don't think it's right anymore
              (!releases.has(dependent) || releases.get(dependent).type === "none") && (config.___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH.updateInternalDependents === "always" || !semver__default['default'].satisfies(incrementVersion(nextRelease, preInfo), versionRange))) {
                switch (depType) {
                  case "dependencies":
-@@ -162,7 +153,8 @@ function determineDependents({
+@@ -162,7 +153,7 @@ function determineDependents({
                    }
                }
              }
 -          }
 +          
-+
          }
        }
  
-@@ -183,17 +175,26 @@ function determineDependents({
+@@ -183,17 +174,23 @@ function determineDependents({
        type,
        pkgJSON
      }) => {
 -      // At this point, we know if we are making a change
 -      updated = true;
-+
        const existing = releases.get(name); // For things that are being given a major bump, we check if we have already
        // added them here. If we have, we update the existing item instead of pushing it on to search.
        // It is safe to not add it to pkgsToSearch because it should have already been searched at the
@@ -60,13 +58,11 @@ index f05ea74..9a0ed16 100644
 +        }
 +        // pkgsToSearch.push(existing);
        } else {
-+        // At this point, we know if we are making a change
 +        updated = true;
-+
          let newDependent = {
            name,
            type,
-@@ -311,20 +312,14 @@ function getHighestReleaseType(releases) {
+@@ -311,20 +308,15 @@ function getHighestReleaseType(releases) {
    let highestReleaseType = "none";
  
    for (let release of releases) {
@@ -84,6 +80,7 @@ index f05ea74..9a0ed16 100644
 -        }
 -
 -        break;
++    console.log(release, release.type)
 +    if (release.type === "major") {
 +      return "major";
 +    } else if (release.type === "minor") {
@@ -95,24 +92,19 @@ index f05ea74..9a0ed16 100644
      }
    }
  
-@@ -494,6 +489,7 @@ preState, snapshot) {
-   // changesets, and with a calculated new versions
- 
-   let releases = flattenReleases(relevantChangesets, packagesByName, config.ignore);
-+
-   let dependencyGraph = getDependentsGraph.getDependentsGraph(packages, {
-     bumpVersionsWithWorkspaceProtocolOnly: config.bumpVersionsWithWorkspaceProtocolOnly
-   });
 diff --git a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js
-index f3beb31..04c332f 100644
+index f3beb31..42d1290 100644
 --- a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js
 +++ b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js
-@@ -1,7 +1,3 @@
+@@ -1,7 +1,7 @@
  'use strict';
  
 -if (process.env.NODE_ENV === "production") {
 -  module.exports = require("./assemble-release-plan.cjs.prod.js");
 -} else {
--  module.exports = require("./assemble-release-plan.cjs.dev.js");
++// if (process.env.NODE_ENV === "production") {
++//   module.exports = require("./assemble-release-plan.cjs.prod.js");
++// } else {
+   module.exports = require("./assemble-release-plan.cjs.dev.js");
 -}
-+module.exports = require('./assemble-release-plan.cjs.dev.js');
++// }

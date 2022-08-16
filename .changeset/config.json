@@ -1,10 +1,17 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@1.6.2/schema.json",
-  "changelog": "@changesets/cli/changelog",
+  "$schema": "https://unpkg.com/@changesets/config@2.1.0/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "dotansimha/graphql-yoga" }
+  ],
   "commit": false,
   "linked": [],
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["website"]
+  "ignore": ["website", "*-example"],
+  "snapshot": {
+    "useCalculatedVersion": true,
+    "prereleaseTemplate": "{tag}-{datetime}-{commit}"
+  }
 }

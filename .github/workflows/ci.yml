@@ -1,4 +1,4 @@
-name: Tests
+name: test
 env:
   NODE_NO_WARNINGS: true
 on:
@@ -10,8 +10,8 @@ on:
       - 'website/**'
 
 jobs:
-  test-node:
-    name: Testing on Node ${{ matrix.node-version }}
+  node:
+    name: unit / nodejs v${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,7 +46,7 @@ jobs:
         run: yarn test
 
   test-esm:
-    name: Testing with Node ESM
+    name: esm
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -78,7 +78,6 @@ jobs:
         run: yarn test
 
   typecheck:
-    name: Typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
