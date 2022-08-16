@@ -332,6 +332,37 @@ describe('Context error', () => {
     })
     expect(response.status).toEqual(200)
   })
+
+  it('error thrown within context factory is exposed via originalError extension field in dev mode', async () => {
+    const yoga = createServer({
+      logging: false,
+      context: () => {
+        throw new Error('I am the original error.')
+      },
+      maskedErrors: {
+        isDev: true,
+      },
+    })
+    const response = await request(yoga).post('/graphql').send({
+      query: '{ greetings }',
+    })
+    const body = JSON.parse(response.text)
+    expect(body).toStrictEqual({
+      data: null,
+      errors: [
+        {
+          message: 'Unexpected error.',
+          extensions: {
+            originalError: {
+              message: 'I am the original error.',
+              stack: expect.stringContaining('Error: I am the original error.'),
+            },
+          },
+        },
+      ],
+    })
+    expect(response.status).toEqual(200)
+  })
 })
 
 it('parse error is sent to clients', async () => {
