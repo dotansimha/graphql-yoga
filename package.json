@@ -5,7 +5,7 @@
     "prebuild": "rimraf packages/*/dist",
     "check": "yarn workspaces run check",
     "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace graphql-yoga run generate-graphiql-html && bob build",
-    "test": "jest --passWithNoTests --forceExit",
+    "test": "jest --detectOpenHandles",
     "test:integration": "cross-env INTEGRATION_TEST=true jest --passWithNoTests --forceExit",
     "release": "yarn build && changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag canary) || echo Skipping Canary...",
@@ -87,7 +87,8 @@
     "rimraf": "^3.0.2",
     "supertest": "^6.1.6",
     "ts-jest": "^28.0.0",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "weak-napi": ""
   },
   "resolutions": {
     "@whatwg-node/fetch": "0.2.9",
