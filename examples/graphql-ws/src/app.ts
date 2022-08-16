@@ -11,6 +11,9 @@ export function buildApp() {
         type Query {
           hello: String!
         }
+        type Mutation {
+          dontChange: String!
+        }
         type Subscription {
           greetings: String!
         }
@@ -19,6 +22,11 @@ export function buildApp() {
         Query: {
           hello() {
             return 'world'
+          },
+        },
+        Mutation: {
+          dontChange() {
+            return 'didntChange'
           },
         },
         Subscription: {

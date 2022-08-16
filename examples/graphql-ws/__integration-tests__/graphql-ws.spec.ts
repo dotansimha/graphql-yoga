@@ -30,6 +30,29 @@ describe('graphql-ws example integration', () => {
     expect(onNext).toBeCalledWith({ data: { hello: 'world' } })
   })
 
+  it('should execute mutation', async () => {
+    const client = createClient({
+      webSocketImpl: WebSocket,
+      url: 'ws://localhost:4000/graphql',
+      retryAttempts: 0, // fail right away
+    })
+
+    const onNext = jest.fn()
+
+    await new Promise<void>((resolve, reject) => {
+      client.subscribe(
+        { query: 'mutation { dontChange }' },
+        {
+          next: onNext,
+          error: reject,
+          complete: resolve,
+        },
+      )
+    })
+
+    expect(onNext).toBeCalledWith({ data: { dontChange: 'didntChange' } })
+  })
+
   it('should subscribe', async () => {
     const client = createClient({
       webSocketImpl: WebSocket,
