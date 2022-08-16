@@ -557,10 +557,6 @@ export class YogaServer<
         ...serverContext,
       })
 
-    if (!schema) {
-      throw new Error('Missing schema')
-    }
-
     let document
     try {
       document = parse(params.query)
