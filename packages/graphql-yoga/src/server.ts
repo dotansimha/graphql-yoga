@@ -387,12 +387,18 @@ export class YogaServer<
           acceptedMediaType = getAcceptableMediaType(
             request.headers.get('accept'),
           )
-        } else if ((params = await this.parseMultipartFormRequest(request))) {
-          // unofficial
+        } else if ((params = await this.parseMultipartRequest(request))) {
+          // unofficial, has spec https://github.com/jaydenseric/graphql-multipart-request-spec
           resultToResponse = this.resultToRegularResponse
           acceptedMediaType = getAcceptableMediaType(
             request.headers.get('accept'),
           )
+        } else if (
+          (params = await this.parseIncrementalDeliveryRequest(request))
+        ) {
+          // unofficial, has spec https://github.com/graphql/graphql-over-http/blob/main/rfcs/IncrementalDelivery.md
+          resultToResponse = this.resultToIncrementalDeliveryResponse
+          acceptedMediaType = 'multipart/mixed'
         } else if ((params = await this.parseEventStreamRequest(request))) {
           // unofficial
           resultToResponse = this.resultToEventStreamResponse
@@ -619,14 +625,12 @@ export class YogaServer<
     return null
   }
 
-  private parseMultipartFormRequest = async (
+  private parseMultipartRequest = async (
     request: Request,
   ): Promise<GraphQLParams | null> => {
     if (!this.multipartEnabled) {
       return null
     }
-
-    // https://github.com/jaydenseric/graphql-multipart-request-spec
     if (
       !(
         request.method === 'POST' &&
@@ -635,6 +639,7 @@ export class YogaServer<
     ) {
       return null
     }
+
     let requestBody: FormData
     try {
       requestBody = await request.formData()
@@ -670,6 +675,24 @@ export class YogaServer<
       variables: operations.variables,
       extensions: operations.extensions,
     }
+  }
+
+  private parseIncrementalDeliveryRequest = async (
+    request: Request,
+  ): Promise<GraphQLParams | null> => {
+    if (!request.headers.get('accept')?.includes('multipart/mixed')) {
+      return null
+    }
+    if (request.method === 'GET') {
+      return parseURLSearchParams(request.url.split('?')[1])
+    }
+    if (
+      request.method === 'POST' &&
+      isContentTypeMatch(request, 'application/json')
+    ) {
+      return await request.json()
+    }
+    return null
   }
 
   private parseEventStreamRequest = async (
@@ -735,7 +758,9 @@ export class YogaServer<
     })
   }
 
-  private resultToMultipartResponse = (result: OperationResult): Response => {
+  private resultToIncrementalDeliveryResponse = (
+    result: OperationResult,
+  ): Response => {
     let iterator: AsyncIterator<ExecutionResult<any>>
     const textEncoder = new this.fetchAPI.TextEncoder()
     const readableStream = new this.fetchAPI.ReadableStream({
