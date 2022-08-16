@@ -387,10 +387,12 @@ export class YogaServer<
           acceptedMediaType = getAcceptableMediaType(
             request.headers.get('accept'),
           )
-        } else if ((params = await this.parseMultipartRequest(request))) {
+        } else if ((params = await this.parseMultipartFormRequest(request))) {
           // unofficial
-          resultToResponse = this.resultToMultipartResponse
-          acceptedMediaType = 'multipart/mixed'
+          resultToResponse = this.resultToRegularResponse
+          acceptedMediaType = getAcceptableMediaType(
+            request.headers.get('accept'),
+          )
         } else if ((params = await this.parseEventStreamRequest(request))) {
           // unofficial
           resultToResponse = this.resultToEventStreamResponse
@@ -403,7 +405,11 @@ export class YogaServer<
             url: request.url,
             method: request.method,
             headers,
-            body: await request.text(),
+            // some servers (like fastify) like parsing the body for you and
+            // @whatwg-node/server fill inject the body into the .json() method
+            body: isContentTypeMatch(request, 'application/json')
+              ? await request.json()
+              : await request.text(),
             raw: request,
             context: serverContext as TServerContext,
           })
@@ -612,24 +618,20 @@ export class YogaServer<
     return null
   }
 
-  private parseMultipartRequest = async (
+  private parseMultipartFormRequest = async (
     request: Request,
   ): Promise<GraphQLParams | null> => {
-    if (!request.headers.get('accept')?.includes('multipart/mixed')) {
+    if (!this.multipartEnabled) {
       return null
-    }
-    if (request.method === 'GET') {
-      return parseURLSearchParams(request.url.split('?')[1])
-    }
-    if (
-      request.method === 'POST' &&
-      isContentTypeMatch(request, 'application/json')
-    ) {
-      return await request.json()
     }
 
     // https://github.com/jaydenseric/graphql-multipart-request-spec
-    if (!this.multipartEnabled) {
+    if (
+      !(
+        request.method === 'POST' &&
+        isContentTypeMatch(request, 'multipart/form-data')
+      )
+    ) {
       return null
     }
     let requestBody: FormData
