@@ -347,11 +347,12 @@ export class YogaServer<
 
       // So the user can manipulate the query parameter
       useCheckGraphQLQueryParam(),
-      // We handle validation errors at the end
-      useHTTPValidationError(),
+
       // We make sure that the user doesn't send a mutation with GET
       usePreventMutationViaGET(),
       this.maskedErrorsOpts != null && useMaskedErrors(this.maskedErrorsOpts),
+      // We handle validation errors at the end
+      useHTTPValidationError(),
       useUnhandledRoute({
         graphqlEndpoint: this.graphqlEndpoint,
         showLandingPage: options?.landingPage ?? true,

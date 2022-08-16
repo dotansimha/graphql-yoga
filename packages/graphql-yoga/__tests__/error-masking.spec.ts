@@ -368,4 +368,161 @@ describe('error masking', () => {
       ],
     })
   })
+
+  it('validation error is masked via handleValidationErrors option', async () => {
+    const yoga = createYoga({
+      logging: false,
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+      maskedErrors: {
+        handleValidationErrors: true,
+      },
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{bubatzbieber}' }),
+    })
+
+    expect(response.status).toEqual(400)
+    const body = JSON.parse(await response.text())
+
+    expect(body).toMatchObject({
+      data: null,
+      errors: [
+        {
+          locations: [
+            {
+              column: 2,
+              line: 1,
+            },
+          ],
+          message: 'Unexpected error.',
+        },
+      ],
+    })
+    const { extensions } = body.errors![0]
+    expect(extensions).toMatchObject({
+      originalError: {
+        message: 'Cannot query field "bubatzbieber" on type "Query".',
+        stack: expect.stringContaining(
+          'GraphQLError: Cannot query field "bubatzbieber" on type "Query"',
+        ),
+      },
+    })
+  })
+
+  it('parse error is masked via handleParseErrors option', async () => {
+    const yoga = createYoga({
+      logging: false,
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+      maskedErrors: {
+        handleParseErrors: true,
+      },
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{' }),
+    })
+
+    expect(response.status).toEqual(400)
+    const body = JSON.parse(await response.text())
+
+    expect(body).toMatchObject({
+      data: null,
+      errors: [
+        {
+          locations: [
+            {
+              column: 2,
+              line: 1,
+            },
+          ],
+          message: 'Unexpected error.',
+        },
+      ],
+    })
+    const { extensions } = body.errors![0]
+    expect(extensions).toMatchObject({
+      originalError: {
+        message: 'Syntax Error: Expected Name, found <EOF>.',
+        stack: expect.stringContaining(
+          'GraphQLError: Syntax Error: Expected Name, found <EOF>.',
+        ),
+      },
+    })
+  })
+
+  it('subclassed GraphQLError is not masked', async () => {
+    class MyError extends GraphQLError {
+      constructor(message: string) {
+        super(message)
+      }
+    }
+
+    const yoga = createYoga({
+      logging: false,
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            a: () => {
+              throw new MyError('I like turtles')
+            },
+          },
+        },
+      }),
+      maskedErrors: {
+        isDev: true,
+      },
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{a}' }),
+    })
+
+    expect(response.status).toEqual(200)
+    const body = JSON.parse(await response.text())
+    expect(body).toEqual({
+      data: null,
+      errors: [
+        {
+          locations: [
+            {
+              column: 2,
+              line: 1,
+            },
+          ],
+          message: 'I like turtles',
+          path: ['a'],
+        },
+      ],
+    })
+  })
 })
