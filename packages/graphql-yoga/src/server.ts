@@ -417,7 +417,7 @@ export class YogaServer<
             statusText: 'Not Acceptable',
             headers: {
               accept:
-                'application/graphql+json; charset=utf-8, application/json; charset=utf-8, text/event-stream; charset=utf-8',
+                'application/graphql+json; charset=utf-8, application/json; charset=utf-8, text/event-stream; charset=utf-8, multipart/mixed; charset=utf-8',
             },
           })
         }
