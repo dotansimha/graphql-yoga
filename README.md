@@ -53,7 +53,7 @@ server.listen(4000)
 - TypeScript
 - File upload with [GraphQL Multipart Request spec](https://github.com/jaydenseric/graphql-multipart-request-spec)
 - Realtime capabilities
-- Accepts `application/json`, `application/graphql+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
+- Accepts `application/json`, `application/graphql-response+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
 

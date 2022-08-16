@@ -16,7 +16,7 @@ describe('koa', () => {
       .send({ query: '{ hello }' })
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain(
-      'application/graphql+json',
+      'application/graphql-response+json',
     )
     expect(response.body).toStrictEqual({
       data: {
@@ -30,7 +30,7 @@ describe('koa', () => {
       .send({ query: '{ isKoa }' })
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain(
-      'application/graphql+json',
+      'application/graphql-response+json',
     )
     expect(response.body).toStrictEqual({
       data: {

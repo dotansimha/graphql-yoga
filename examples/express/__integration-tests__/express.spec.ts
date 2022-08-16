@@ -16,7 +16,7 @@ function getTests(app: Express.Application) {
       .send({ query: '{ hello }' })
     expect(response.statusCode).toBe(200)
     expect(response.headers['content-type']).toContain(
-      'application/graphql+json',
+      'application/graphql-response+json',
     )
     expect(response.body).toStrictEqual({
       data: {

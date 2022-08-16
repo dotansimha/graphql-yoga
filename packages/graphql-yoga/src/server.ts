@@ -417,7 +417,7 @@ export class YogaServer<
             statusText: 'Not Acceptable',
             headers: {
               accept:
-                'application/graphql+json; charset=utf-8, application/json; charset=utf-8, text/event-stream; charset=utf-8, multipart/mixed; charset=utf-8',
+                'application/graphql-response+json; charset=utf-8, application/json; charset=utf-8, text/event-stream; charset=utf-8, multipart/mixed; charset=utf-8',
             },
           })
         }
@@ -469,8 +469,8 @@ export class YogaServer<
           headers: {
             ...headers,
             'content-type':
-              acceptedMediaType === 'application/graphql+json'
-                ? 'application/graphql+json; charset=utf-8'
+              acceptedMediaType === 'application/graphql-response+json'
+                ? 'application/graphql-response+json; charset=utf-8'
                 : 'application/json; charset=utf-8',
           },
         })

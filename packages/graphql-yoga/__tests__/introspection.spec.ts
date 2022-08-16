@@ -52,7 +52,7 @@ describe('introspection', () => {
 
     expect(response.status).toBe(400)
     expect(response.headers.get('content-type')).toBe(
-      'application/graphql+json; charset=utf-8',
+      'application/graphql-response+json; charset=utf-8',
     )
     const body = await response.json()
     expect(body.data).not.toBeDefined()
