@@ -384,8 +384,7 @@ export class YogaServer<
 
       // So the user can manipulate the query parameter
       useCheckGraphQLQueryParam(),
-      // We handle validation errors at the end
-      useHTTPValidationError(),
+
       // We make sure that the user doesn't send a mutation with GET
       usePreventMutationViaGET(),
 
@@ -395,6 +394,8 @@ export class YogaServer<
           typeof maskedErrors === 'object' ? maskedErrors : undefined,
         ),
       ),
+      // We handle validation errors at the end
+      useHTTPValidationError(),
     ]
 
     this.getEnveloped = envelop({
