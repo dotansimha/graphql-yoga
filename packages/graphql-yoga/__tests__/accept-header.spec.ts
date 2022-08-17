@@ -204,4 +204,30 @@ describe('accept header', () => {
     })
     expect(response.status).toEqual(406)
   })
+
+  it('server returns the correct content-type if accept header is "application/graphql-response+json"', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            ping: String
+          }
+        `,
+        resolvers: {
+          Query: { ping: () => 'pong' },
+        },
+      }),
+    })
+
+    const response = await yoga.fetch(`http://yoga/graphql?query=query{ping}`, {
+      headers: {
+        accept: 'application/graphql-response+json',
+      },
+    })
+    expect(response.headers.get('content-type')).toEqual(
+      'application/graphql-response+json',
+    )
+    const result = await response.json()
+    expect(result).toEqual({ data: { ping: 'pong' } })
+  })
 })
