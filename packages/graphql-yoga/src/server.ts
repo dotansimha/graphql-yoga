@@ -182,7 +182,7 @@ export class YogaServer<
     TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
-  protected graphqlEndpoint: string
+  public readonly graphqlEndpoint: string
   public fetchAPI: FetchAPI
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
