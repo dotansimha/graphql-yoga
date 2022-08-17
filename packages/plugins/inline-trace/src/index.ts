@@ -30,9 +30,15 @@ export function useInlineTrace(options: InlineTracePluginOptions = {}): Plugin {
   const ctxForReq = new WeakMap<Request, Context>()
 
   return {
-    onRequest() {},
-    onResponse({ response }) {
-      response
+    onRequest({ request }) {
+      // must be ftv1 tracing protocol
+      if (request.headers.get('apollo-federation-include-trace') !== 'ftv1') {
+        return
+      }
+    },
+    onResolverCalled({ info }) {},
+    onResultProcess({ result }) {
+      // execution completed, we're about to send the response
     },
   }
 }
