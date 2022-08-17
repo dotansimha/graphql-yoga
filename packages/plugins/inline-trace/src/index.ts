@@ -1,9 +1,7 @@
-import { Plugin } from './types.js'
-import { PromiseOrValue } from '@envelop/core'
-import { GraphQLParams } from '../types.js'
+import { Plugin } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
 
-interface InlineTracePluginOptions {
+export interface InlineTracePluginOptions {
   /**
    * > By default, all errors from this service get included in the trace.  You
    * > can specify a filter function to exclude specific errors from being
@@ -24,7 +22,13 @@ interface InlineTracePluginOptions {
  *
  * https://github.com/apollographql/apollo-server/blob/main/packages/apollo-server-core/src/plugin/inlineTrace/index.ts
  */
-export function useInlineTrace(options: InlineTracePluginOptions): Plugin {
+export function useInlineTrace(options: InlineTracePluginOptions = {}): Plugin {
+  interface Context {
+    tracer: null
+  }
+
+  const ctxForReq = new WeakMap<Request, Context>()
+
   return {
     onRequest() {},
     onResponse({ response }) {
