@@ -266,34 +266,41 @@ Also, you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets 
 `yoga-with-ws.ts`
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createServer } from 'http'
 import { WebSocketServer } from 'ws'
+import { createServer } from 'graphql-yoga'
 import { useServer } from 'graphql-ws/lib/use/ws'
 
 async function main() {
-  const yogaApp = createServer({
+  const yoga = createYoga({
     graphiql: {
       // Use WebSockets in GraphiQL
       subscriptionsProtocol: 'WS',
     },
   })
 
-  // Get NodeJS Server from Yoga
-  const httpServer = await yogaApp.start()
+  // Create NodeJS Server from Yoga
+  const server = createServer(yoga)
+
   // Create WebSocket server instance from our Node server
-  const wsServer = new WebSocketServer({
-    server: httpServer,
-    path: yogaApp.getAddressInfo().endpoint,
+  const wss = new WebSocketServer({
+    server,
+    // Make sure WS is on the same endpoint
+    path: yoga.graphqlEndpoint,
   })
 
   // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
   useServer(
     {
-      execute: (args: any) => args.rootValue.execute(args),
-      subscribe: (args: any) => args.rootValue.subscribe(args),
+      execute: (args: any) => args.execute(args),
+      subscribe: (args: any) => args.subscribe(args),
       onSubscribe: async (ctx, msg) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yogaApp.getEnveloped(ctx)
+          yoga.getEnveloped({
+            ...ctx,
+            req: ctx.extra.request,
+            socket: ctx.extra.socket,
+          })
 
         const args = {
           schema,
@@ -301,10 +308,8 @@ async function main() {
           document: parse(msg.payload.query),
           variableValues: msg.payload.variables,
           contextValue: await contextFactory(),
-          rootValue: {
-            execute,
-            subscribe,
-          },
+          execute,
+          subscribe,
         }
 
         const errors = validate(args.schema, args.document)
@@ -312,8 +317,10 @@ async function main() {
         return args
       },
     },
-    wsServer,
+    wss,
   )
+
+  server.listen(4000)
 }
 
 main().catch((e) => {
