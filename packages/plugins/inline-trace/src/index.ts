@@ -1,5 +1,7 @@
-import { Plugin } from 'graphql-yoga'
+import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
+import { TraceTreeBuilder } from './apolloTraceTreeBuilder'
+import { Trace } from 'apollo-reporting-protobuf'
 
 export interface InlineTracePluginOptions {
   /**
@@ -22,9 +24,11 @@ export interface InlineTracePluginOptions {
  *
  * https://github.com/apollographql/apollo-server/blob/main/packages/apollo-server-core/src/plugin/inlineTrace/index.ts
  */
-export function useInlineTrace(options: InlineTracePluginOptions = {}): Plugin {
+export function useInlineTrace(
+  options: InlineTracePluginOptions = {},
+): Plugin<YogaInitialContext> {
   interface Context {
-    tracer: null
+    treeBuilder: TraceTreeBuilder
   }
 
   const ctxForReq = new WeakMap<Request, Context>()
@@ -35,10 +39,80 @@ export function useInlineTrace(options: InlineTracePluginOptions = {}): Plugin {
       if (request.headers.get('apollo-federation-include-trace') !== 'ftv1') {
         return
       }
+
+      const treeBuilder = new TraceTreeBuilder({
+        rewriteError: options.rewriteError,
+      })
+
+      treeBuilder.startTiming()
+
+      ctxForReq.set(request, { treeBuilder })
     },
-    onResolverCalled({ info }) {},
-    onResultProcess({ result }) {
-      // execution completed, we're about to send the response
+    onResolverCalled({ context: { request }, info }) {
+      return ctxForReq.get(request)?.treeBuilder.willResolveField(info)
+    },
+    onParse() {
+      return ({ context: { request }, result }) => {
+        if (result instanceof GraphQLError) {
+          ctxForReq.get(request)?.treeBuilder.didEncounterErrors([result])
+        } else if (result instanceof Error) {
+          ctxForReq.get(request)?.treeBuilder.didEncounterErrors([
+            new GraphQLError(result.message, {
+              originalError: result,
+            }),
+          ])
+        }
+      }
+    },
+    onValidate() {
+      return ({ context: { request }, result: errors }) => {
+        if (errors.length) {
+          ctxForReq.get(request)?.treeBuilder.didEncounterErrors(errors)
+        }
+      }
+    },
+    onExecute() {
+      return {
+        onExecuteDone({
+          args: {
+            contextValue: { request },
+          },
+          result,
+        }) {
+          // TODO: should handle streaming results? how?
+          if (!isAsyncIterable(result) && result.errors?.length) {
+            ctxForReq
+              .get(request)
+              ?.treeBuilder.didEncounterErrors(result.errors)
+          }
+        },
+      }
+    },
+    // TODO: should track subscription errors? how?
+    onResultProcess({ request, result }) {
+      const treeBuilder = ctxForReq.get(request)?.treeBuilder
+      if (!treeBuilder) return
+
+      // TODO: should handle streaming results? how?
+      if (isAsyncIterable(result)) return
+
+      treeBuilder.stopTiming()
+
+      const encodedUint8Array = Trace.encode(treeBuilder.trace).finish()
+      const encodedBuffer = Buffer.from(
+        encodedUint8Array,
+        encodedUint8Array.byteOffset,
+        encodedUint8Array.byteLength,
+      )
+
+      const extensions =
+        result.extensions || (result.extensions = Object.create(null))
+
+      if (typeof extensions.ftv1 !== 'undefined') {
+        throw new Error('The `ftv1` extension was already present.')
+      }
+
+      extensions.ftv1 = encodedBuffer.toString('base64')
     },
   }
 }
