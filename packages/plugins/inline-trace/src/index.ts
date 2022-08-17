@@ -96,6 +96,10 @@ export function useInlineTrace(
       // TODO: should handle streaming results? how?
       if (isAsyncIterable(result)) return
 
+      if (result.extensions?.ftv1 !== undefined) {
+        throw new Error('The `ftv1` extension was already present.')
+      }
+
       treeBuilder.stopTiming()
 
       const encodedUint8Array = Trace.encode(treeBuilder.trace).finish()
@@ -105,14 +109,10 @@ export function useInlineTrace(
         encodedUint8Array.byteLength,
       )
 
-      const extensions =
-        result.extensions || (result.extensions = Object.create(null))
-
-      if (typeof extensions.ftv1 !== 'undefined') {
-        throw new Error('The `ftv1` extension was already present.')
+      result.extensions = {
+        ...result.extensions,
+        ftv1: encodedBuffer.toString('base64'),
       }
-
-      extensions.ftv1 = encodedBuffer.toString('base64')
     },
   }
 }
