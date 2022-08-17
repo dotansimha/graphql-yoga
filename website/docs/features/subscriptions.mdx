@@ -285,17 +285,22 @@ async function main() {
   // Create WebSocket server instance from our Node server
   const wss = new WebSocketServer({
     server,
-    path: '/graphql',
+    // Make sure WS is on the same endpoint
+    path: yoga.graphqlEndpoint,
   })
 
   // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
   useServer(
     {
-      execute: (args: any) => args.rootValue.execute(args),
-      subscribe: (args: any) => args.rootValue.subscribe(args),
+      execute: (args: any) => args.execute(args),
+      subscribe: (args: any) => args.subscribe(args),
       onSubscribe: async (ctx, msg) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yogaApp.getEnveloped({ ...ctx, ...ctx.extra })
+          yoga.getEnveloped({
+            ...ctx,
+            req: ctx.extra.request,
+            socket: ctx.extra.socket,
+          })
 
         const args = {
           schema,
@@ -303,10 +308,8 @@ async function main() {
           document: parse(msg.payload.query),
           variableValues: msg.payload.variables,
           contextValue: await contextFactory(),
-          rootValue: {
-            execute,
-            subscribe,
-          },
+          execute,
+          subscribe,
         }
 
         const errors = validate(args.schema, args.document)

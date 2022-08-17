@@ -45,16 +45,20 @@ export function buildApp() {
   const server = createServer(yoga)
   const wss = new WebSocketServer({
     server,
-    path: '/graphql',
+    path: yoga.graphqlEndpoint,
   })
 
   useServer(
     {
-      execute: (args: any) => args.rootValue.execute(args),
-      subscribe: (args: any) => args.rootValue.subscribe(args),
+      execute: (args: any) => args.execute(args),
+      subscribe: (args: any) => args.subscribe(args),
       onSubscribe: async (ctx, msg) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yoga.getEnveloped({ ...ctx, ...ctx.extra })
+          yoga.getEnveloped({
+            ...ctx,
+            req: ctx.extra.request,
+            socket: ctx.extra.socket,
+          })
 
         const args = {
           schema,
@@ -62,10 +66,8 @@ export function buildApp() {
           document: parse(msg.payload.query),
           variableValues: msg.payload.variables,
           contextValue: await contextFactory(),
-          rootValue: {
-            execute,
-            subscribe,
-          },
+          execute,
+          subscribe,
         }
 
         const errors = validate(args.schema, args.document)
