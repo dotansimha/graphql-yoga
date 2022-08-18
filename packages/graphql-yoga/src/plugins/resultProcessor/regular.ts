@@ -12,12 +12,16 @@ export function isRegularResult(
   if (!isAsyncIterable(result)) {
     const acceptHeader = request.headers.get('accept')
     if (acceptHeader && !acceptHeader.includes('*/*')) {
-      if (acceptHeader.includes('application/json')) {
-        acceptHeaderByResult.set(result, 'application/json')
+      if (acceptHeader.includes('application/graphql-response+json')) {
+        acceptHeaderByResult.set(result, 'application/graphql-response+json')
         return true
       }
       if (acceptHeader.includes('application/graphql+json')) {
         acceptHeaderByResult.set(result, 'application/graphql+json')
+        return true
+      }
+      if (acceptHeader.includes('application/json')) {
+        acceptHeaderByResult.set(result, 'application/json')
         return true
       }
       // If there is an accept header but this processer doesn't support, reject
