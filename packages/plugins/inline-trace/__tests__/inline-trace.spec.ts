@@ -101,7 +101,7 @@ describe('Inline Trace', () => {
 
     expectTrace(trace)
 
-    const hello = trace.root!.child![0]
+    const hello = trace.root?.child?.[0]
     expectTraceNode(hello, 'hello', 'String!')
   })
 
@@ -180,7 +180,7 @@ describe('Inline Trace', () => {
 
     expectTrace(trace)
 
-    const boom = trace.root!.child![0]
+    const boom = trace.root?.child?.[0]
     expectTraceNode(boom, 'boom', 'String!')
     expectTraceNodeError(boom)
   })
