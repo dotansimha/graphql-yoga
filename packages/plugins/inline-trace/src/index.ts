@@ -19,24 +19,22 @@ interface InlineTraceContext {
 
 export interface InlineTracePluginOptions {
   /**
-   * > By default, all errors from this service get included in the trace.  You
-   * > can specify a filter function to exclude specific errors from being
-   * > reported by returning an explicit `null`, or you can mask certain details
-   * > of the error by modifying it and returning the modified error.
+   * Format errors before being sent for tracing. Beware that only the error
+   * `message` and `extensions` can be changed.
    *
-   * https://github.com/apollographql/apollo-server/blob/main/packages/apollo-server-core/src/plugin/inlineTrace/index.ts
+   * Return `null` to skip reporting error.
    */
   rewriteError?: (err: GraphQLError) => GraphQLError | null
 }
 
 /**
- * > This ftv1 plugin produces a base64'd Trace protobuf containing only the
- * > durationNs, startTime, endTime, and root fields.  This output is placed
- * > on the `extensions`.`ftv1` property of the response.  The Apollo Gateway
- * > utilizes this data to construct the full trace and submit it to Apollo's
- * > usage reporting ingress.
+ * Produces Apollo's base64 trace protocol containing timing, resolution and
+ * errors information.
  *
- * https://github.com/apollographql/apollo-server/blob/main/packages/apollo-server-core/src/plugin/inlineTrace/index.ts
+ * The output is placed in `extensions.ftv1` of the GraphQL result.
+ *
+ * The Apollo Gateway utilizes this data to construct the full trace and submit
+ * it to Apollo's usage reporting ingress.
  */
 export function useInlineTrace(
   options: InlineTracePluginOptions = {},
