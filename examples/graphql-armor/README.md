@@ -8,6 +8,19 @@
 yarn workspace example-graphql-armor start
 ```
 
+## Installation snippet
+
+```typescript
+import { EnvelopArmor } from '@escape.tech/graphql-armor'
+
+const armor = new EnvelopArmor()
+const enhancements = armor.protect()
+
+const server = createServer({
+  plugins: [...enhancements.plugins],
+  ...
+```
+
 ## Supported remediations
 
 - Aliases Limit
