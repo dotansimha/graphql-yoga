@@ -11,6 +11,7 @@ describe('Inline Trace', () => {
         hello: String!
         boom: String!
         person: Person!
+        people: [Person!]!
       }
       type Person {
         name: String!
@@ -26,6 +27,9 @@ describe('Inline Trace', () => {
         },
         person() {
           return { name: 'John' }
+        },
+        people() {
+          return [{ name: 'John' }, { name: 'Jane' }]
         },
       },
     },
@@ -153,6 +157,45 @@ describe('Inline Trace', () => {
     expect(hi?.error?.length).toBe(0)
     expectTraceNode(hi, 'hi', 'String!', 'Query')
     expect(hi?.originalFieldName).toBe('hello')
+  })
+
+  it('should contain valid proto tracing details on flat query with array field success', async () => {
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
+      .post('/graphql')
+      .set({
+        'apollo-federation-include-trace': 'ftv1',
+      })
+      .send({
+        query: '{ people { name } }',
+      })
+
+    expect(response.ok).toBeTruthy()
+    expect(response.body?.errors).toBeUndefined()
+
+    //
+
+    const ftv1 = response.body?.extensions?.ftv1
+    const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
+
+    expectTrace(trace)
+    expect(trace.root?.error?.length).toBe(0)
+
+    const people = trace.root?.child?.[0]
+    expect(people?.error?.length).toBe(0)
+    expectTraceNode(people, 'people', '[Person!]!', 'Query')
+
+    const arr = people!.child!
+    for (let i = 0; i < arr.length; i++) {
+      const person = arr[i]
+      expect(person?.error?.length).toBe(0)
+      expect(person.index).toBe(i)
+      expectTraceNode(person.child?.[0], 'name', 'String!', 'Person')
+    }
   })
 
   it('should contain valid proto tracing details on nested query success', async () => {
