@@ -2,6 +2,7 @@ import request from 'supertest'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { useInlineTrace } from '../src'
 import { Trace } from 'apollo-reporting-protobuf'
+import { GraphQLError } from 'graphql'
 
 describe('Inline Trace', () => {
   const schema = createSchema({
@@ -279,10 +280,82 @@ describe('Inline Trace', () => {
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
+    expect(trace.root?.error?.length).toBe(0)
 
     const boom = trace.root?.child?.[0]
     expectTraceNode(boom, 'boom', 'String!', 'Query')
     expectTraceNodeError(boom)
+  })
+
+  it('should skip tracing errors through rewriteError', async () => {
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [
+          useInlineTrace({
+            rewriteError: () => null,
+          }),
+        ],
+      }),
+    )
+      .post('/graphql')
+      .set({
+        'apollo-federation-include-trace': 'ftv1',
+      })
+      .send({
+        query: '{ he',
+      })
+
+    expect(response.body?.errors).toBeDefined()
+
+    //
+
+    const ftv1 = response.body?.extensions?.ftv1
+    const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
+
+    expectTrace(trace)
+    expect(trace.root?.error?.length).toBe(0)
+  })
+
+  it('should rewrite only error messages and extensions through rewriteError', async () => {
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [
+          useInlineTrace({
+            rewriteError: () =>
+              new GraphQLError('bim', { extensions: { str: 'ing' } }),
+          }),
+        ],
+      }),
+    )
+      .post('/graphql')
+      .set({
+        'apollo-federation-include-trace': 'ftv1',
+      })
+      .send({
+        query: '{ boom }',
+      })
+
+    expect(response.body?.errors).toBeDefined()
+
+    //
+
+    const ftv1 = response.body?.extensions?.ftv1
+    const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
+
+    expectTrace(trace)
+    expect(trace.root?.error?.length).toBe(0)
+
+    const boom = trace.root?.child?.[0]
+    expectTraceNode(boom, 'boom', 'String!', 'Query')
+    expectTraceNodeError(boom) // will check for location
+
+    const error = boom!.error!
+    expect(error[0].message).toBe('bim') // not 'bam'
+
+    const errObj = JSON.parse(error[0].json!)
+    expect(errObj.extensions).toEqual({ str: 'ing' })
   })
 })
 
