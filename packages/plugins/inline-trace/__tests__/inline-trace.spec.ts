@@ -65,8 +65,10 @@ describe('Inline Trace', () => {
     expect(typeof trace.endTime?.seconds).toBe('number')
     expect(typeof trace.endTime?.nanos).toBe('number')
 
-    expect(trace.startTime!.seconds! + trace.startTime!.nanos!).toBeLessThan(
-      trace.endTime!.seconds! + trace.endTime!.nanos!,
+    expect(
+      addSecondsAndNanos(trace.startTime!.seconds!, trace.startTime!.nanos!),
+    ).toBeLessThan(
+      addSecondsAndNanos(trace.endTime!.seconds!, trace.endTime!.nanos!),
     )
 
     expect(typeof trace.fieldExecutionWeight).toBe('number')
@@ -86,3 +88,7 @@ describe('Inline Trace', () => {
     expect(hello.startTime!).toBeLessThan(hello.endTime!)
   })
 })
+
+function addSecondsAndNanos(seconds: number, nanos: number): number {
+  return seconds + nanos / 1e9
+}
