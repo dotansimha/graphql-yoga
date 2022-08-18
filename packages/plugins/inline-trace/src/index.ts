@@ -133,7 +133,6 @@ export function useInlineTrace(
         },
       }
     },
-    // TODO: should track subscription errors? how?
     onResultProcess({ request, result }) {
       const ctx = ctxForReq.get(request)
       if (!ctx) return
