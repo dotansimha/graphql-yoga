@@ -108,8 +108,10 @@ describe('Inline Trace', () => {
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
+    expect(trace.root?.error).toBeUndefined()
 
     const hello = trace.root?.child?.[0]
+    expect(hello?.error).toBeUndefined()
     expectTraceNode(hello, 'hello', 'String!', 'Query')
   })
 
@@ -132,8 +134,10 @@ describe('Inline Trace', () => {
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
+    expect(trace.root?.error).toBeUndefined()
 
     const hi = trace.root?.child?.[0]
+    expect(hi?.error).toBeUndefined()
     expectTraceNode(hi, 'hi', 'String!', 'Query')
     expect(hi?.originalFieldName).toBe('hello')
   })
@@ -157,11 +161,14 @@ describe('Inline Trace', () => {
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
+    expect(trace.root?.error).toBeUndefined()
 
     const person = trace.root?.child?.[0]
+    expect(person?.error).toBeUndefined()
     expectTraceNode(person, 'person', 'Person!', 'Query')
 
     const personName = person?.child?.[0]
+    expect(personName?.error).toBeUndefined()
     expectTraceNode(personName, 'name', 'String!', 'Person')
   })
 
