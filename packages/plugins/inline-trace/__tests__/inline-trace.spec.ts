@@ -1,8 +1,11 @@
 import request from 'supertest'
 import { createYoga, createSchema } from 'graphql-yoga'
+import { createServer } from 'http'
+import { AddressInfo } from 'net'
 import { useInlineTrace } from '../src'
 import { Trace } from 'apollo-reporting-protobuf'
-import { GraphQLError } from 'graphql'
+import { ExecutionResult, GraphQLError } from 'graphql'
+import EventSource from 'eventsource'
 
 describe('Inline Trace', () => {
   const schema = createSchema({
@@ -12,6 +15,9 @@ describe('Inline Trace', () => {
         boom: String!
         person: Person!
         people: [Person!]!
+      }
+      type Subscription {
+        hello: String!
       }
       type Person {
         name: String!
@@ -30,6 +36,13 @@ describe('Inline Trace', () => {
         },
         people() {
           return [{ name: 'John' }, { name: 'Jane' }]
+        },
+      },
+      Subscription: {
+        hello: {
+          async *subscribe() {
+            yield { hello: 'world' }
+          },
         },
       },
     },
@@ -399,6 +412,38 @@ describe('Inline Trace', () => {
 
     const errObj = JSON.parse(error[0].json!)
     expect(errObj.extensions).toEqual({ str: 'ing' })
+  })
+
+  it('should not trace subscriptions', async () => {
+    const server = createServer(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
+
+    server.listen(0)
+    const { port } = server.address() as AddressInfo
+    const url = `http://localhost:${port}/graphql`
+
+    const result = await new Promise<ExecutionResult>((resolve, reject) => {
+      const eventSource = new EventSource(`${url}?query=subscription{hello}`)
+      eventSource.onmessage = (e) => {
+        resolve(JSON.parse(e.data))
+        eventSource.close()
+      }
+      eventSource.onerror = (e) => {
+        reject(e)
+      }
+    })
+
+    await new Promise<void>((resolve, reject) =>
+      server.close((err) => (err ? reject(err) : resolve())),
+    )
+
+    expect(result.data).toEqual({ hello: 'world' })
+    expect(result.errors).toBeUndefined()
+    expect(result.extensions).toBeUndefined()
   })
 })
 
