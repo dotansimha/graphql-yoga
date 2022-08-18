@@ -4,37 +4,39 @@ import { useInlineTrace } from '../src'
 import { Trace } from 'apollo-reporting-protobuf'
 
 describe('Inline Trace', () => {
-  const yoga = createYoga({
-    schema: createSchema({
-      typeDefs: /* GraphQL */ `
-        type Query {
-          hello: String!
-          boom: String!
-          person: Person!
-        }
-        type Person {
-          name: String!
-        }
-      `,
-      resolvers: {
-        Query: {
-          hello() {
-            return 'world'
-          },
-          boom() {
-            throw new Error('bam')
-          },
-          person() {
-            return { name: 'John' }
-          },
+  const schema = createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+        boom: String!
+        person: Person!
+      }
+      type Person {
+        name: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello() {
+          return 'world'
+        },
+        boom() {
+          throw new Error('bam')
+        },
+        person() {
+          return { name: 'John' }
         },
       },
-    }),
-    plugins: [useInlineTrace()],
+    },
   })
 
   it('should add ftv1 tracing to result extensions', async () => {
-    const response = await request(yoga)
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
       .post('/graphql')
       .set({
         'apollo-federation-include-trace': 'ftv1',
@@ -90,7 +92,12 @@ describe('Inline Trace', () => {
   }
 
   it('should contain valid proto tracing details on flat query success', async () => {
-    const response = await request(yoga)
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
       .post('/graphql')
       .set({
         'apollo-federation-include-trace': 'ftv1',
@@ -116,7 +123,12 @@ describe('Inline Trace', () => {
   })
 
   it('should contain valid proto tracing details on aliased flat query success', async () => {
-    const response = await request(yoga)
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
       .post('/graphql')
       .set({
         'apollo-federation-include-trace': 'ftv1',
@@ -143,7 +155,12 @@ describe('Inline Trace', () => {
   })
 
   it('should contain valid proto tracing details on nested query success', async () => {
-    const response = await request(yoga)
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
       .post('/graphql')
       .set({
         'apollo-federation-include-trace': 'ftv1',
@@ -188,7 +205,12 @@ describe('Inline Trace', () => {
   }
 
   it('should contain valid proto tracing details on parse fail', async () => {
-    const response = await request(yoga)
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
       .post('/graphql')
       .set({
         'apollo-federation-include-trace': 'ftv1',
@@ -209,7 +231,12 @@ describe('Inline Trace', () => {
   })
 
   it('should contain valid proto tracing details on validation fail', async () => {
-    const response = await request(yoga)
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
       .post('/graphql')
       .set({
         'apollo-federation-include-trace': 'ftv1',
@@ -230,7 +257,12 @@ describe('Inline Trace', () => {
   })
 
   it('should contain valid proto tracing details on execution fail', async () => {
-    const response = await request(yoga)
+    const response = await request(
+      createYoga({
+        schema,
+        plugins: [useInlineTrace()],
+      }),
+    )
       .post('/graphql')
       .set({
         'apollo-federation-include-trace': 'ftv1',
