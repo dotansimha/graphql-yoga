@@ -10,6 +10,10 @@ describe('Inline Trace', () => {
         type Query {
           hello: String!
           boom: String!
+          person: Person!
+        }
+        type Person {
+          name: String!
         }
       `,
       resolvers: {
@@ -19,6 +23,9 @@ describe('Inline Trace', () => {
           },
           boom() {
             throw new Error('bam')
+          },
+          person() {
+            return { name: 'John' }
           },
         },
       },
@@ -68,12 +75,13 @@ describe('Inline Trace', () => {
     node: Trace.INode | null | undefined,
     field: string,
     type: string,
+    parent: string,
   ) {
     expect(node).toBeDefined()
 
     expect(node!.responseName).toBe(field)
     expect(node!.type).toBe(type)
-    expect(node!.parentType).toBe('Query')
+    expect(node!.parentType).toBe(parent)
 
     expect(typeof node!.startTime).toBe('number')
     expect(typeof node!.endTime).toBe('number')
@@ -81,7 +89,7 @@ describe('Inline Trace', () => {
     expect(node!.startTime!).toBeLessThan(node!.endTime!)
   }
 
-  it('should contain valid proto tracing details on success', async () => {
+  it('should contain valid proto tracing details on flat query success', async () => {
     const response = await request(yoga)
       .post('/graphql')
       .set({
@@ -102,7 +110,59 @@ describe('Inline Trace', () => {
     expectTrace(trace)
 
     const hello = trace.root?.child?.[0]
-    expectTraceNode(hello, 'hello', 'String!')
+    expectTraceNode(hello, 'hello', 'String!', 'Query')
+  })
+
+  it('should contain valid proto tracing details on aliased flat query success', async () => {
+    const response = await request(yoga)
+      .post('/graphql')
+      .set({
+        'apollo-federation-include-trace': 'ftv1',
+      })
+      .send({
+        query: '{ hi: hello }',
+      })
+
+    expect(response.ok).toBeTruthy()
+    expect(response.body?.errors).toBeUndefined()
+
+    //
+
+    const ftv1 = response.body?.extensions?.ftv1
+    const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
+
+    expectTrace(trace)
+
+    const hi = trace.root?.child?.[0]
+    expectTraceNode(hi, 'hi', 'String!', 'Query')
+    expect(hi?.originalFieldName).toBe('hello')
+  })
+
+  it('should contain valid proto tracing details on nested query success', async () => {
+    const response = await request(yoga)
+      .post('/graphql')
+      .set({
+        'apollo-federation-include-trace': 'ftv1',
+      })
+      .send({
+        query: '{ person { name } }',
+      })
+
+    expect(response.ok).toBeTruthy()
+    expect(response.body?.errors).toBeUndefined()
+
+    //
+
+    const ftv1 = response.body?.extensions?.ftv1
+    const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
+
+    expectTrace(trace)
+
+    const person = trace.root?.child?.[0]
+    expectTraceNode(person, 'person', 'Person!', 'Query')
+
+    const personName = person?.child?.[0]
+    expectTraceNode(personName, 'name', 'String!', 'Person')
   })
 
   function expectTraceNodeError(node: Trace.INode | null | undefined) {
@@ -181,7 +241,7 @@ describe('Inline Trace', () => {
     expectTrace(trace)
 
     const boom = trace.root?.child?.[0]
-    expectTraceNode(boom, 'boom', 'String!')
+    expectTraceNode(boom, 'boom', 'String!', 'Query')
     expectTraceNodeError(boom)
   })
 })
