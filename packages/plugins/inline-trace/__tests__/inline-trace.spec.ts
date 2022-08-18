@@ -96,7 +96,7 @@ describe('Inline Trace', () => {
     expect(node!.startTime!).toBeLessThan(node!.endTime!)
   }
 
-  it('should contain valid proto tracing details on flat query success', async () => {
+  it('should have proto tracing on flat query', async () => {
     const response = await request(
       createYoga({
         schema,
@@ -127,7 +127,7 @@ describe('Inline Trace', () => {
     expectTraceNode(hello, 'hello', 'String!', 'Query')
   })
 
-  it('should contain valid proto tracing details on aliased flat query success', async () => {
+  it('should have proto tracing on aliased flat query', async () => {
     const response = await request(
       createYoga({
         schema,
@@ -159,7 +159,7 @@ describe('Inline Trace', () => {
     expect(hi?.originalFieldName).toBe('hello')
   })
 
-  it('should contain valid proto tracing details on flat query with array field success', async () => {
+  it('should have proto tracing on flat query with array field', async () => {
     const response = await request(
       createYoga({
         schema,
@@ -198,7 +198,7 @@ describe('Inline Trace', () => {
     }
   })
 
-  it('should contain valid proto tracing details on nested query success', async () => {
+  it('should have proto tracing on nested query', async () => {
     const response = await request(
       createYoga({
         schema,
@@ -248,7 +248,7 @@ describe('Inline Trace', () => {
     }).not.toThrow()
   }
 
-  it('should contain valid proto tracing details on parse fail', async () => {
+  it('should have proto tracing on parse fail', async () => {
     const response = await request(
       createYoga({
         schema,
@@ -274,7 +274,7 @@ describe('Inline Trace', () => {
     expectTraceNodeError(trace.root)
   })
 
-  it('should contain valid proto tracing details on validation fail', async () => {
+  it('should have proto tracing on validation fail', async () => {
     const response = await request(
       createYoga({
         schema,
@@ -300,7 +300,7 @@ describe('Inline Trace', () => {
     expectTraceNodeError(trace.root)
   })
 
-  it('should contain valid proto tracing details on execution fail', async () => {
+  it('should have proto tracing on execution fail', async () => {
     const response = await request(
       createYoga({
         schema,
