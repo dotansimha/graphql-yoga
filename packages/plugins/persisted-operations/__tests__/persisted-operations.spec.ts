@@ -1,6 +1,6 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 import request from 'supertest'
-import { usePersistedOperations } from 'packages/plugins/inline-trace/src'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
