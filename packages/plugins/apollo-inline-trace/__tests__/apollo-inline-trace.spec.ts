@@ -426,20 +426,23 @@ describe('Inline Trace', () => {
     const { port } = server.address() as AddressInfo
     const url = `http://localhost:${port}/graphql`
 
-    const result = await new Promise<ExecutionResult>((resolve, reject) => {
-      const eventSource = new EventSource(`${url}?query=subscription{hello}`)
-      eventSource.onmessage = (e) => {
-        resolve(JSON.parse(e.data))
-        eventSource.close()
-      }
-      eventSource.onerror = (e) => {
-        reject(e)
-      }
-    })
-
-    await new Promise<void>((resolve, reject) =>
-      server.close((err) => (err ? reject(err) : resolve())),
-    )
+    let result
+    try {
+      result = await new Promise<ExecutionResult>((resolve, reject) => {
+        const eventSource = new EventSource(`${url}?query=subscription{hello}`)
+        eventSource.onmessage = (e) => {
+          resolve(JSON.parse(e.data))
+          eventSource.close()
+        }
+        eventSource.onerror = (e) => {
+          reject(e)
+        }
+      })
+    } finally {
+      await new Promise<void>((resolve, reject) =>
+        server.close((err) => (err ? reject(err) : resolve())),
+      )
+    }
 
     expect(result.data).toEqual({ hello: 'world' })
     expect(result.errors).toBeUndefined()
