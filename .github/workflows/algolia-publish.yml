@@ -13,23 +13,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Use Node
-        uses: actions/setup-node@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 18.x
-          cache: 'yarn'
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-algolia-publish
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-          restore-keys: |
-            ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-algolia-publish.outputs.cache-hit != 'true'
+          nodeVersion: 18
 
       - name: Build Packages
         run: yarn build
