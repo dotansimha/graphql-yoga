@@ -2,7 +2,7 @@ import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
 import { GraphQLError, ResponsePath } from 'graphql'
 import { google, Trace } from 'apollo-reporting-protobuf'
 
-interface InlineTraceContext {
+interface ApolloInlineTraceContext {
   startHrTime: [number, number]
   rootNode: Trace.Node
   trace: Trace
@@ -17,7 +17,7 @@ interface InlineTraceContext {
   stopped: boolean
 }
 
-export interface InlineTracePluginOptions {
+export interface ApolloInlineTracePluginOptions {
   /**
    * Format errors before being sent for tracing. Beware that only the error
    * `message` and `extensions` can be changed.
@@ -36,10 +36,10 @@ export interface InlineTracePluginOptions {
  * The Apollo Gateway utilizes this data to construct the full trace and submit
  * it to Apollo's usage reporting ingress.
  */
-export function useInlineTrace(
-  options: InlineTracePluginOptions = {},
+export function useApolloInlineTrace(
+  options: ApolloInlineTracePluginOptions = {},
 ): Plugin<YogaInitialContext> {
-  const ctxForReq = new WeakMap<Request, InlineTraceContext>()
+  const ctxForReq = new WeakMap<Request, ApolloInlineTraceContext>()
 
   return {
     onRequest({ request }) {
@@ -66,7 +66,7 @@ export function useInlineTrace(
       const ctx = ctxForReq.get(request)
       if (!ctx) return
 
-      // result was already shipped (see InlineTraceContext.stopped)
+      // result was already shipped (see ApolloInlineTraceContext.stopped)
       if (ctx.stopped) {
         return () => {
           // noop
@@ -216,7 +216,7 @@ function responsePathToString(path?: ResponsePath): string {
 }
 
 function ensureParentTraceNode(
-  ctx: InlineTraceContext,
+  ctx: ApolloInlineTraceContext,
   path: ResponsePath,
 ): Trace.Node {
   const parentNode = ctx.nodes.get(responsePathToString(path.prev))
@@ -225,7 +225,7 @@ function ensureParentTraceNode(
   return newTraceNode(ctx, path.prev!)
 }
 
-function newTraceNode(ctx: InlineTraceContext, path: ResponsePath) {
+function newTraceNode(ctx: ApolloInlineTraceContext, path: ResponsePath) {
   const node = new Trace.Node()
   const id = path.key
   if (typeof id === 'number') {
@@ -240,9 +240,9 @@ function newTraceNode(ctx: InlineTraceContext, path: ResponsePath) {
 }
 
 function handleErrors(
-  ctx: InlineTraceContext,
+  ctx: ApolloInlineTraceContext,
   errors: readonly GraphQLError[],
-  rewriteError: InlineTracePluginOptions['rewriteError'],
+  rewriteError: ApolloInlineTracePluginOptions['rewriteError'],
 ) {
   if (ctx.stopped) {
     throw new Error('Handling errors after tracing was stopped')

@@ -2,7 +2,7 @@ import request from 'supertest'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { AddressInfo } from 'net'
-import { useInlineTrace } from '../src'
+import { useApolloInlineTrace } from '../src'
 import { Trace } from 'apollo-reporting-protobuf'
 import { ExecutionResult, GraphQLError } from 'graphql'
 import EventSource from 'eventsource'
@@ -52,7 +52,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -113,7 +113,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -144,7 +144,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -176,7 +176,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -215,7 +215,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -265,7 +265,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -291,7 +291,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -317,7 +317,7 @@ describe('Inline Trace', () => {
     const response = await request(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
       .post('/graphql')
@@ -348,7 +348,7 @@ describe('Inline Trace', () => {
       createYoga({
         schema,
         plugins: [
-          useInlineTrace({
+          useApolloInlineTrace({
             rewriteError: () => null,
           }),
         ],
@@ -378,7 +378,7 @@ describe('Inline Trace', () => {
       createYoga({
         schema,
         plugins: [
-          useInlineTrace({
+          useApolloInlineTrace({
             rewriteError: () =>
               new GraphQLError('bim', { extensions: { str: 'ing' } }),
           }),
@@ -418,7 +418,7 @@ describe('Inline Trace', () => {
     const server = createServer(
       createYoga({
         schema,
-        plugins: [useInlineTrace()],
+        plugins: [useApolloInlineTrace()],
       }),
     )
 
