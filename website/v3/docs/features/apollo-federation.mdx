@@ -107,6 +107,37 @@ server.listen(4001, () => {
 })
 ```
 
+## Federated tracing
+
+Inject additional metrics for [Apollo's federated tracing](https://www.apollographql.com/docs/federation/metrics/).
+
+You'll need the `@graphql-yoga/apollo-inline-trace` Yoga plugin for this.
+
+### Installation
+
+<PackageInstall
+  packages={['graphql-yoga', '@graphql-yoga/apollo-inline-trace', 'graphql']}
+/>
+
+### Example Federated tracing
+
+```ts
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
+import { useApolloInlineTrace } from '@graphql-yoga/apollo-inline-trace'
+
+const yoga = createYoga({
+  plugins: [
+    useApolloInlineTrace(),
+    // ...rest of your Apollo federation plugins
+  ],
+})
+
+// Start the server and explore http://localhost:4000/graphql
+const server = createServer(yoga)
+server.listen(4000)
+```
+
 ## Working Example
 
 Check our [working example](https://github.com/dotansimha/graphql-yoga/tree/master/examples/apollo-federation) to try it out.
