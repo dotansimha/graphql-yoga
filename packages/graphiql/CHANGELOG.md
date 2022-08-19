@@ -1,5 +1,13 @@
 # @graphql-yoga/graphiql
 
+## 2.4.1
+
+### Patch Changes
+
+- [#1611](https://github.com/dotansimha/graphql-yoga/pull/1611) [`eba1af0`](https://github.com/dotansimha/graphql-yoga/commit/eba1af0aeb1d359cc16cf4e04ade2f9b6b8d157f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`graphql@16.6.0` ↗︎](https://www.npmjs.com/package/graphql/v/16.6.0) (from `16.5.0`, in `dependencies`)
+
 ## 2.4.0
 
 ### Minor Changes
