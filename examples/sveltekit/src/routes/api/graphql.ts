@@ -1,6 +1,7 @@
 import { useGraphQlJit } from '@envelop/graphql-jit';
 import { createServer } from '@graphql-yoga/common';
 import type { RequestEvent } from '@sveltejs/kit';
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql';
 
 const yogaApp = createServer<RequestEvent>({
 	logging: false,
@@ -20,6 +21,7 @@ const yogaApp = createServer<RequestEvent>({
 		useGraphQlJit()
 		// other plugins: https://www.envelop.dev/plugins
 	],
+	renderGraphiQL,
 	graphiql: {
 		endpoint: '/api/graphql',
 		defaultQuery: `query Hello {

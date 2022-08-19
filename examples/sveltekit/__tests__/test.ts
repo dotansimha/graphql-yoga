@@ -28,6 +28,7 @@ describe('SvelteKit integration', () => {
 			// Kill the port if it's used!
 			try {
 				execSync('fuser -k 3007/tcp');
+				// eslint-disable-next-line no-empty
 			} catch (error) {}
 
 			// Build svelteKit
@@ -89,21 +90,14 @@ describe('SvelteKit integration', () => {
 			let strIntro = '';
 			try {
 				// A-1/ Wait for the introspection query result getting our type "hello"
-				let resIntro = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
+				const resIntro = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
 					timeout: timings.waitForResponse
 				});
-				let jsonIntro = await resIntro.json();
+				const jsonIntro = await resIntro.json();
 				strIntro = JSON.stringify(jsonIntro, null, 0);
 			} catch (error) {
 				// We had an issue grabbing the introspection query result!
 				// let's see what is in the html with the finafinally
-			} finally {
-				const bodyContent = await body?.text();
-
-				// B/ Check that GraphiQL is showing
-				expect(bodyContent).toContain(
-					`renderYogaGraphiQL(root,{\"endpoint\":\"/api/graphql\",\"defaultQuery\":\"query Hello {\\n\\thello\\n}\"})`
-				);
 			}
 
 			// A-2/ Finish the test after the body check
