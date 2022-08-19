@@ -1,5 +1,12 @@
 # file-upload
 
+## 0.13.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.8
+
 ## 0.13.7
 
 ### Patch Changes

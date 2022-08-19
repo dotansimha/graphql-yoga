@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.12.7
+
+### Patch Changes
+
+- [#1634](https://github.com/dotansimha/graphql-yoga/pull/1634) [`5193e43`](https://github.com/dotansimha/graphql-yoga/commit/5193e436b7abd0abcfbbb25f9c1a33cbe5cb6446) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Use 'correct' deep import for working around unpkg limitations of not supporting the package.json exports map.
+
 ## 2.12.6
 
 ### Patch Changes
@@ -172,10 +178,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-      info: (...args) => args.forEach((arg) => app.log.info(arg)),
-      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
+      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
+      info: (...args) => args.forEach(arg => app.log.info(arg)),
+      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
+      error: (...args) => args.forEach(arg => app.log.error(arg)),
     },
   })
   ```
