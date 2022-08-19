@@ -154,15 +154,11 @@ export function useApolloInlineTrace(
       ctx.trace.endTime = nowTimestamp()
 
       const encodedUint8Array = Trace.encode(ctx.trace).finish()
-      const encodedBuffer = Buffer.from(
-        encodedUint8Array,
-        encodedUint8Array.byteOffset,
-        encodedUint8Array.byteLength,
-      )
+      const base64 = btoa(String.fromCharCode(...encodedUint8Array))
 
       result.extensions = {
         ...result.extensions,
-        ftv1: encodedBuffer.toString('base64'),
+        ftv1: base64,
       }
     },
   }
