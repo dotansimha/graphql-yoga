@@ -509,7 +509,8 @@ export class YogaServer<
         })
       }
       return response
-    } catch (e) {
+    } catch (e: any) {
+      this.logger.error(e)
       return new this.fetchAPI.Response('Internal Server Error', {
         status: 500,
       })

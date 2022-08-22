@@ -21,16 +21,20 @@ describe('Inline Trace', () => {
     `,
     resolvers: {
       Query: {
-        hello() {
+        async hello() {
+          await new Promise((resolve) => setTimeout(resolve, 100))
           return 'world'
         },
-        boom() {
+        async boom() {
+          await new Promise((resolve) => setTimeout(resolve, 100))
           throw new Error('bam')
         },
-        person() {
+        async person() {
+          await new Promise((resolve) => setTimeout(resolve, 100))
           return { name: 'John' }
         },
-        people() {
+        async people() {
+          await new Promise((resolve) => setTimeout(resolve, 100))
           return [{ name: 'John' }, { name: 'Jane' }]
         },
       },
@@ -47,6 +51,7 @@ describe('Inline Trace', () => {
   const yoga = createYoga({
     schema,
     plugins: [useApolloInlineTrace()],
+    maskedErrors: false,
   })
 
   const FlatQuery = /* GraphQL */ `
