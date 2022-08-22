@@ -1,12 +1,12 @@
 import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
 import { GraphQLError, ResponsePath } from 'graphql'
-import { google, Trace } from 'apollo-reporting-protobuf'
+import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]
-  rootNode: Trace.Node
-  trace: Trace
-  nodes: Map<string, Trace.Node>
+  rootNode: ApolloReportingProtobuf.Trace.Node
+  trace: ApolloReportingProtobuf.Trace
+  nodes: Map<string, ApolloReportingProtobuf.Trace.Node>
   /**
    * graphql-js can continue to execute more fields indefinitely after
    * `execute()` resolves. That's because parallelism on a selection set
@@ -49,11 +49,11 @@ export function useApolloInlineTrace(
       }
 
       const startHrTime = process.hrtime()
-      const rootNode = new Trace.Node()
+      const rootNode = new ApolloReportingProtobuf.Trace.Node()
       ctxForReq.set(request, {
         startHrTime,
         rootNode,
-        trace: new Trace({
+        trace: new ApolloReportingProtobuf.Trace({
           root: rootNode,
           fieldExecutionWeight: 1, // Why 1? See: https://github.com/apollographql/apollo-server/blob/9389da785567a56e989430962564afc71e93bd7f/packages/apollo-server-core/src/plugin/traceTreeBuilder.ts#L16-L23
           startTime: nowTimestamp(),
@@ -153,7 +153,9 @@ export function useApolloInlineTrace(
       )
       ctx.trace.endTime = nowTimestamp()
 
-      const encodedUint8Array = Trace.encode(ctx.trace).finish()
+      const encodedUint8Array = ApolloReportingProtobuf.Trace.encode(
+        ctx.trace,
+      ).finish()
       const base64 = btoa(String.fromCharCode(...encodedUint8Array))
 
       result.extensions = {
@@ -181,10 +183,10 @@ function hrTimeToDurationInNanos(hrtime: [number, number]) {
  *
  * Reference: https://github.com/apollographql/apollo-server/blob/9389da785567a56e989430962564afc71e93bd7f/packages/apollo-server-core/src/plugin/traceTreeBuilder.ts#L315-L323
  */
-function nowTimestamp(): google.protobuf.Timestamp {
+function nowTimestamp(): ApolloReportingProtobuf.google.protobuf.Timestamp {
   const totalMillis = Date.now()
   const millis = totalMillis % 1000
-  return new google.protobuf.Timestamp({
+  return new ApolloReportingProtobuf.google.protobuf.Timestamp({
     seconds: (totalMillis - millis) / 1000,
     nanos: millis * 1e6,
   })
@@ -214,7 +216,7 @@ function responsePathToString(path?: ResponsePath): string {
 function ensureParentTraceNode(
   ctx: ApolloInlineTraceContext,
   path: ResponsePath,
-): Trace.Node {
+): ApolloReportingProtobuf.Trace.Node {
   const parentNode = ctx.nodes.get(responsePathToString(path.prev))
   if (parentNode) return parentNode
   // path.prev isn't undefined because we set up the root path in ctx.nodes
@@ -222,7 +224,7 @@ function ensureParentTraceNode(
 }
 
 function newTraceNode(ctx: ApolloInlineTraceContext, path: ResponsePath) {
-  const node = new Trace.Node()
+  const node = new ApolloReportingProtobuf.Trace.Node()
   const id = path.key
   if (typeof id === 'number') {
     node.index = id
@@ -297,10 +299,11 @@ function handleErrors(
     }
 
     node.error.push(
-      new Trace.Error({
+      new ApolloReportingProtobuf.Trace.Error({
         message: errToReport.message,
         location: (errToReport.locations || []).map(
-          ({ line, column }) => new Trace.Location({ line, column }),
+          ({ line, column }) =>
+            new ApolloReportingProtobuf.Trace.Location({ line, column }),
         ),
         json: JSON.stringify(errToReport),
       }),

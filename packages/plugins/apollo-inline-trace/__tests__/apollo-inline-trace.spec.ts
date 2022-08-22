@@ -1,11 +1,7 @@
-import request from 'supertest'
 import { createYoga, createSchema } from 'graphql-yoga'
-import { createServer } from 'http'
-import { AddressInfo } from 'net'
 import { useApolloInlineTrace } from '../src'
 import { Trace } from 'apollo-reporting-protobuf'
-import { ExecutionResult, GraphQLError } from 'graphql'
-import EventSource from 'eventsource'
+import { GraphQLError } from 'graphql'
 
 describe('Inline Trace', () => {
   const schema = createSchema({
@@ -48,24 +44,70 @@ describe('Inline Trace', () => {
     },
   })
 
+  const yoga = createYoga({
+    schema,
+    plugins: [useApolloInlineTrace()],
+  })
+
+  const FlatQuery = /* GraphQL */ `
+    query FlatQuery {
+      hello
+    }
+  `
+  const AliasedFlatQuery = /* GraphQL */ `
+    query AliasedFlatQuery {
+      hi: hello
+    }
+  `
+  const FlatQueryWithArrayField = /* GraphQL */ `
+    query FlatQueryWithArrayField {
+      people {
+        name
+      }
+    }
+  `
+
+  const NestedQuery = /* GraphQL */ `
+    query NestedQuery {
+      person {
+        name
+      }
+    }
+  `
+  const BrokenQuery = `{ he`
+
+  const FailingQuery = /* GraphQL */ `
+    query FailingQuery {
+      boom
+    }
+  `
+
+  const InvalidQuery = /* GraphQL */ `
+    query InvalidQuery {
+      henlo
+    }
+  `
+
+  const FlatSubscription = /* GraphQL */ `
+    subscription FlatSubscription {
+      hello
+    }
+  `
   it('should add ftv1 tracing to result extensions', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
-      }),
-    )
-      .post('/graphql')
-      .set({
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query: FlatQuery }),
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ hello }',
-      })
+      },
+    })
+
+    const result = await response.json()
 
     expect(response.ok).toBeTruthy()
-    expect(response.body?.errors).toBeUndefined()
-    expect(response.body?.extensions?.ftv1).toBeDefined()
+    expect(result?.errors).toBeUndefined()
+    expect(result?.extensions?.ftv1).toBeDefined()
   })
 
   function expectTrace(trace: Trace) {
@@ -110,26 +152,23 @@ describe('Inline Trace', () => {
   }
 
   it('should have proto tracing on flat query', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
-      }),
-    )
-      .post('/graphql')
-      .set({
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query: FlatQuery }),
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ hello }',
-      })
+      },
+    })
+
+    const result = await response.json()
 
     expect(response.ok).toBeTruthy()
-    expect(response.body?.errors).toBeUndefined()
+    expect(result?.errors).toBeUndefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -141,26 +180,25 @@ describe('Inline Trace', () => {
   })
 
   it('should have proto tracing on aliased flat query', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: AliasedFlatQuery,
       }),
-    )
-      .post('/graphql')
-      .set({
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ hi: hello }',
-      })
+      },
+    })
+
+    const result = await response.json()
 
     expect(response.ok).toBeTruthy()
-    expect(response.body?.errors).toBeUndefined()
+    expect(result?.errors).toBeUndefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -173,26 +211,25 @@ describe('Inline Trace', () => {
   })
 
   it('should have proto tracing on flat query with array field', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: FlatQueryWithArrayField,
       }),
-    )
-      .post('/graphql')
-      .set({
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ people { name } }',
-      })
+      },
+    })
+
+    const result = await response.json()
 
     expect(response.ok).toBeTruthy()
-    expect(response.body?.errors).toBeUndefined()
+    expect(result?.errors).toBeUndefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -212,26 +249,25 @@ describe('Inline Trace', () => {
   })
 
   it('should have proto tracing on nested query', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: NestedQuery,
       }),
-    )
-      .post('/graphql')
-      .set({
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ person { name } }',
-      })
+      },
+    })
 
     expect(response.ok).toBeTruthy()
-    expect(response.body?.errors).toBeUndefined()
+
+    const result = await response.json()
+    expect(result?.errors).toBeUndefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -262,25 +298,24 @@ describe('Inline Trace', () => {
   }
 
   it('should have proto tracing on parse fail', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: BrokenQuery,
       }),
-    )
-      .post('/graphql')
-      .set({
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ he',
-      })
+      },
+    })
 
-    expect(response.body?.errors).toBeDefined()
+    const result = await response.json()
+
+    expect(result?.errors).toBeDefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -288,25 +323,24 @@ describe('Inline Trace', () => {
   })
 
   it('should have proto tracing on validation fail', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: InvalidQuery,
       }),
-    )
-      .post('/graphql')
-      .set({
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ henlo }',
-      })
+      },
+    })
 
-    expect(response.body?.errors).toBeDefined()
+    const result = await response.json()
+
+    expect(result?.errors).toBeDefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -314,25 +348,24 @@ describe('Inline Trace', () => {
   })
 
   it('should have proto tracing on execution fail', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: FailingQuery,
       }),
-    )
-      .post('/graphql')
-      .set({
+      headers: {
+        'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ boom }',
-      })
+      },
+    })
 
-    expect(response.body?.errors).toBeDefined()
+    const result = await response.json()
+
+    expect(result?.errors).toBeDefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -344,29 +377,33 @@ describe('Inline Trace', () => {
   })
 
   it('should skip tracing errors through rewriteError', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [
-          useApolloInlineTrace({
-            rewriteError: () => null,
-          }),
-        ],
-      }),
-    )
-      .post('/graphql')
-      .set({
-        'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ he',
-      })
+    const yoga = createYoga({
+      schema,
+      plugins: [
+        useApolloInlineTrace({
+          rewriteError: () => null,
+        }),
+      ],
+    })
 
-    expect(response.body?.errors).toBeDefined()
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: BrokenQuery,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'apollo-federation-include-trace': 'ftv1',
+      },
+    })
+
+    const result = await response.json()
+
+    expect(result?.errors).toBeDefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -374,30 +411,34 @@ describe('Inline Trace', () => {
   })
 
   it('should rewrite only error messages and extensions through rewriteError', async () => {
-    const response = await request(
-      createYoga({
-        schema,
-        plugins: [
-          useApolloInlineTrace({
-            rewriteError: () =>
-              new GraphQLError('bim', { extensions: { str: 'ing' } }),
-          }),
-        ],
-      }),
-    )
-      .post('/graphql')
-      .set({
-        'apollo-federation-include-trace': 'ftv1',
-      })
-      .send({
-        query: '{ boom }',
-      })
+    const yoga = createYoga({
+      schema,
+      plugins: [
+        useApolloInlineTrace({
+          rewriteError: () =>
+            new GraphQLError('bim', { extensions: { str: 'ing' } }),
+        }),
+      ],
+    })
 
-    expect(response.body?.errors).toBeDefined()
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: FailingQuery,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'apollo-federation-include-trace': 'ftv1',
+      },
+    })
+
+    const result = await response.json()
+
+    expect(result?.errors).toBeDefined()
 
     //
 
-    const ftv1 = response.body?.extensions?.ftv1
+    const ftv1 = result?.extensions?.ftv1
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'))
 
     expectTrace(trace)
@@ -415,38 +456,19 @@ describe('Inline Trace', () => {
   })
 
   it('should not trace subscriptions', async () => {
-    const server = createServer(
-      createYoga({
-        schema,
-        plugins: [useApolloInlineTrace()],
-      }),
+    const response = await yoga.fetch(
+      'http://yoga/graphql?query=' + encodeURIComponent('subscription{hello}'),
+      {
+        headers: {
+          Accept: 'text/event-stream',
+        },
+      },
     )
 
-    server.listen(0)
-    const { port } = server.address() as AddressInfo
-    const url = `http://localhost:${port}/graphql`
+    expect(response.ok).toBe(true)
 
-    let result
-    try {
-      result = await new Promise<ExecutionResult>((resolve, reject) => {
-        const eventSource = new EventSource(`${url}?query=subscription{hello}`)
-        eventSource.onmessage = (e) => {
-          resolve(JSON.parse(e.data))
-          eventSource.close()
-        }
-        eventSource.onerror = (e) => {
-          reject(e)
-        }
-      })
-    } finally {
-      await new Promise<void>((resolve, reject) =>
-        server.close((err) => (err ? reject(err) : resolve())),
-      )
-    }
-
-    expect(result.data).toEqual({ hello: 'world' })
-    expect(result.errors).toBeUndefined()
-    expect(result.extensions).toBeUndefined()
+    const result = await response.text()
+    expect(result).toBe('data: {"data":{"hello":"world"}}\n\n')
   })
 })
 
