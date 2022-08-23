@@ -786,6 +786,18 @@ describe('Incremental Delivery', () => {
 
     expect(getCounterValue()).toBe(counterValue2)
   })
+
+  it('should accept POST requests as "application/json" by default if content-type is not present', async () => {
+    const response = await yoga.fetch(yoga.getServerUrl(), {
+      method: 'POST',
+      body: JSON.stringify({ query: '{ ping }' }),
+    })
+
+    expect(response.status).toBe(200)
+    const body = await response.json()
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
 })
 
 function md5File(path: string) {
