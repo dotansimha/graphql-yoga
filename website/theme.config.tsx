@@ -1,6 +1,16 @@
 import { YogaLogo, DocsThemeConfig } from '@theguild/components'
+// @ts-ignore -- TODO: @laurin why I get TS2307: Cannot find module 'guild-docs/giscus' or its corresponding type declarations.
+import type { Giscus } from 'guild-docs/giscus'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 
 const SITE_NAME = 'GraphQL Yoga'
+
+const Comments = dynamic(
+  // @ts-ignore
+  () => import('guild-docs/giscus').then((m) => m.Giscus),
+  { ssr: false },
+) as Giscus
 
 const config: DocsThemeConfig = {
   titleSuffix: ` – ${SITE_NAME}`,
@@ -37,6 +47,20 @@ const config: DocsThemeConfig = {
   defaultMenuCollapsed: true,
   feedbackLink: 'Question? Give us feedback →',
   feedbackLabels: 'kind/docs',
+  bodyExtraContent() {
+    const { route } = useRouter()
+    if (!route.startsWith('/docs') && !route.startsWith('/tutorial')) {
+      return null
+    }
+    return (
+      <Comments
+        repo="dotansimha/graphql-yoga"
+        repoId="MDEwOlJlcG9zaXRvcnkxMTA4MTk5Mzk="
+        category="Docs Discussion"
+        categoryId="DIC_kwDOBpr6Y84CAquY"
+      />
+    )
+  },
 }
 
 export default config

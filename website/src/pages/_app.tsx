@@ -4,11 +4,8 @@ import { FooterExtended, Header, ThemeProvider } from '@theguild/components'
 import { useGoogleAnalytics } from 'guild-docs'
 import 'guild-docs/style.css'
 
-export default function App({ Component, pageProps, router }: AppProps) {
-  const googleAnalytics = useGoogleAnalytics({
-    router,
-    trackingId: 'G-246BWRER3C',
-  })
+export default function App({ Component, pageProps }: AppProps) {
+  const googleAnalytics = useGoogleAnalytics({ trackingId: 'G-246BWRER3C' })
 
   return (
     <ThemeProvider>
