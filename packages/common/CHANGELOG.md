@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.12.8
+
+### Patch Changes
+
+- [#1636](https://github.com/dotansimha/graphql-yoga/pull/1636) [`38c7c13e`](https://github.com/dotansimha/graphql-yoga/commit/38c7c13ec78acc98ebd988354e4d5e5ed9e9f3d7) Thanks [@ardatan](https://github.com/ardatan)! - Since 2.8.0, Yoga stopped accepting POST requests if they don't have "Content-Type" header defined. But this was a breaking change for the existing users in a minor release. Now this has been reverted. Now it is safer to upgrade from 2.7.0 to the latest by skipping 2.8.0
+
 ## 2.12.7
 
 ### Patch Changes
@@ -178,10 +184,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
-      info: (...args) => args.forEach(arg => app.log.info(arg)),
-      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
-      error: (...args) => args.forEach(arg => app.log.error(arg)),
+      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
+      info: (...args) => args.forEach((arg) => app.log.info(arg)),
+      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
+      error: (...args) => args.forEach((arg) => app.log.error(arg)),
     },
   })
   ```
