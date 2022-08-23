@@ -19,14 +19,14 @@ const config: DocsThemeConfig = {
       <YogaLogo className="mr-1.5 h-9 w-9" />
       <div>
         <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
-        <h2 className="hidden text-xs sm:!block">
+        <h2 className="hidden text-xs sm:block">
           Fully-featured, simple to set up, performant and extendable GraphQL
           JavaScript server
         </h2>
       </div>
     </>
   ),
-  head: (
+  head: () => (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content={`${SITE_NAME}: documentation`} />

@@ -1,24 +1,35 @@
 import { HeroGradient, HeroIllustration } from '@theguild/components'
-import { handlePushRoute } from 'guild-docs'
+import { IHeroIllustrationProps } from '@theguild/components/dist/types/components'
+import httpImage from '../public/assets/http.svg'
+import ecosystemImage from '../public/assets/ecosystem.svg'
+import subscriptionsImage from '../public/assets/subscriptions.svg'
+import uploadsImage from '../public/assets/uploads.svg'
+import yogaImage from '../public/assets/yogaHome.svg'
 
-export const ITEMS = [
+export const ITEMS: IHeroIllustrationProps[] = [
   {
     title: 'GraphQL over HTTP compliant',
     description: 'Yoga follows the GraphQL over HTTP specification.',
-    imageSrc: '/assets/http.svg',
-    imageAlt: 'Server over HTTP',
+    image: {
+      src: httpImage,
+      placeholder: 'empty',
+      alt: 'Server over HTTP',
+    },
     link: {
       children: 'Learn more',
       title: 'Learn more',
-      href: '/docs/quick-start',
+      href: '/docs',
     },
   },
   {
     title: 'Extensible GraphQL Engine powered by Envelop',
     description:
       'Add authentication, caching, error reporting or rate limiting with ease.',
-    imageSrc: '/assets/ecosystem.svg',
-    imageAlt: 'Ecosystem',
+    image: {
+      src: ecosystemImage,
+      placeholder: 'empty',
+      alt: 'Ecosystem',
+    },
     flipped: true,
     link: {
       children: 'Learn more',
@@ -30,8 +41,11 @@ export const ITEMS = [
     title: 'GraphQL Subscriptions over HTTP',
     description:
       'Run GraphQL Subscriptions over HTTP instead of WebSockets via Server Sent Events.',
-    imageSrc: '/assets/subscriptions.svg',
-    imageAlt: 'Subscriptions',
+    image: {
+      src: subscriptionsImage,
+      placeholder: 'empty',
+      alt: 'Subscriptions',
+    },
     link: {
       children: 'Learn more',
       title: 'Learn more',
@@ -42,8 +56,11 @@ export const ITEMS = [
     title: 'Handle file uploads with GraphQL',
     description:
       'Enable file uploads using GraphQL mutations with no additional packages needed.',
-    imageSrc: '/assets/uploads.svg',
-    imageAlt: 'Uploads',
+    image: {
+      src: uploadsImage,
+      placeholder: 'empty',
+      alt: 'Uploads',
+    },
     flipped: true,
     link: {
       children: 'Learn more',
@@ -52,6 +69,7 @@ export const ITEMS = [
     },
   },
 ]
+import Link from 'next/link'
 
 export default function IndexPage() {
   return (
@@ -61,16 +79,14 @@ export default function IndexPage() {
         description="The fully-featured GraphQL Server with focus on easy setup, performance and great developer experience."
         link={[
           {
-            href: '/docs/quick-start',
+            href: '/docs',
             children: 'Read the docs',
             title: 'Read the Yoga Docs',
-            onClick: (e) => handlePushRoute('/docs/quick-start', e),
           },
           {
-            href: '/docs/tutorial',
+            href: '/tutorial/basic',
             children: 'Start the Tutorial',
             title: 'Start the Tutorial',
-            onClick: (e) => handlePushRoute('/tutorial', e),
             style: {
               color: '#fff',
               border: '1px solid #fff',
@@ -80,23 +96,19 @@ export default function IndexPage() {
         ]}
         colors={['#7433ff', '#1cc8ee']}
         image={{
-          src: '/assets/yogaHome.svg',
+          src: yogaImage,
+          placeholder: 'empty',
           alt: 'Yoga',
         }}
       />
-
       {ITEMS.map((option) => (
-
         <HeroIllustration
-          key={option.title}
-          title={option.title}
-          description={option.description}
+          key={option.title as string}
+          {...option}
           image={{
-            src: option.imageSrc,
-            alt: option.imageAlt,
+            ...option.image,
+            className: 'h-52 md:h-72',
           }}
-          flipped={option.flipped}
-          link={option.link}
         />
       ))}
     </>

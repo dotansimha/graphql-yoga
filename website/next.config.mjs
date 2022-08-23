@@ -1,24 +1,15 @@
 import { withGuildDocs } from 'guild-docs/next.config'
 
 export default withGuildDocs({
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  redirects: () => [
-    {
-      source: '/docs',
-      destination: '/docs/quick-start',
+  redirects: () =>
+    Object.entries({
+      '/docs/quick-start': '/docs',
+      '/tutorial': '/tutorial/basic',
+      '/tutorial/basic/00-introduction': '/tutorial/basic',
+      '/docs/testing': '/docs/features/testing',
+    }).map(([from, to]) => ({
+      source: from,
+      destination: to,
       permanent: true,
-    },
-    {
-      source: '/tutorial',
-      destination: '/tutorial/basic/00-introduction',
-      permanent: true,
-    },
-    {
-      source: '/docs/testing',
-      destination: '/docs/features/testing',
-      permanent: true,
-    },
-  ],
+    })),
 })
