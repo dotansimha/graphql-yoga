@@ -1,5 +1,12 @@
 # hello-world
 
+## 0.13.9
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.9
+
 ## 0.13.8
 
 ### Patch Changes

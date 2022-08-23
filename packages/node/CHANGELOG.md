@@ -1,5 +1,12 @@
 # @graphql-yoga/node
 
+## 2.13.9
+
+### Patch Changes
+
+- Updated dependencies [[`38c7c13e`](https://github.com/dotansimha/graphql-yoga/commit/38c7c13ec78acc98ebd988354e4d5e5ed9e9f3d7)]:
+  - @graphql-yoga/common@2.12.8
+
 ## 2.13.8
 
 ### Patch Changes
@@ -160,10 +167,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
-      info: (...args) => args.forEach(arg => app.log.info(arg)),
-      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
-      error: (...args) => args.forEach(arg => app.log.error(arg)),
+      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
+      info: (...args) => args.forEach((arg) => app.log.info(arg)),
+      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
+      error: (...args) => args.forEach((arg) => app.log.error(arg)),
     },
   })
   ```
