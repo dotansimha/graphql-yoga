@@ -1,9 +1,14 @@
-import { print, ExecutionResult } from 'graphql'
+import {
+  print,
+  ExecutionResult,
+  execute,
+  parse,
+  validate,
+  subscribe,
+} from 'graphql'
 import {
   GetEnvelopedFn,
   envelop,
-  useMaskedErrors,
-  UseMaskedErrorsOpts,
   useExtendContext,
   useLogger,
   PromiseOrValue,
@@ -103,7 +108,7 @@ export type YogaServerOptions<
    *
    * Default: `true`
    */
-  maskedErrors?: boolean | UseMaskedErrorsOpts
+  maskedErrors?: boolean
   /**
    * Context
    */
@@ -370,6 +375,10 @@ export class YogaServer<
     ]
 
     this.getEnveloped = envelop({
+      parse,
+      validate,
+      execute,
+      subscribe,
       plugins: this.plugins,
     }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
