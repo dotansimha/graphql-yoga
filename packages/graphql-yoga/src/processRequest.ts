@@ -60,7 +60,7 @@ export async function processRequest<TContext>({
 }: {
   params: GraphQLParams
   enveloped: ReturnType<GetEnvelopedFn<TContext>>
-}): Promise<ResultProcessorInput> {
+}) {
   // Parse GraphQLParams
   const document = enveloped.parse(params.query!)
 

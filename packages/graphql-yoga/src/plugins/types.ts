@@ -45,7 +45,9 @@ export type OnRequestParseHook = (
   payload: OnRequestParseEventPayload,
 ) => PromiseOrValue<void | OnRequestParseHookResult>
 
-export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
+export type RequestParser = (
+  request: Request,
+) => PromiseOrValue<GraphQLParams> | PromiseOrValue<GraphQLParams[]>
 
 export interface OnRequestParseEventPayload {
   request: Request
@@ -64,15 +66,21 @@ export type OnRequestParseDoneHook = (
 export interface OnRequestParseDoneEventPayload {
   params: GraphQLParams
   setParams: (params: GraphQLParams) => void
-  setResult: (result: ResultProcessorInput) => void
+  setResult: (result: ExecutorResult) => void
 }
 
 export type OnResultProcess = (
   payload: OnResultProcessEventPayload,
 ) => PromiseOrValue<void>
 
+export type ExecutorResult =
+  | ExecutionResult
+  | AsyncIterable<ExecutionResult>
+  | AsyncIterable<ExecutionPatchResult>
+
 export type ResultProcessorInput =
   | ExecutionResult
+  | ExecutionResult[]
   | AsyncIterable<ExecutionResult>
   | AsyncIterable<ExecutionPatchResult>
 

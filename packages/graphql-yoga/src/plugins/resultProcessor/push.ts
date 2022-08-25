@@ -18,7 +18,7 @@ export function processPushResult(
 
   const responseInit = getResponseInitByRespectingErrors(result, headersInit)
 
-  let iterator: AsyncIterator<ExecutionResult<any>>
+  let iterator: AsyncIterator<ExecutionResult<any> | ExecutionResult<any>[]>
 
   const textEncoder = new fetchAPI.TextEncoder()
   const readableStream = new fetchAPI.ReadableStream({
