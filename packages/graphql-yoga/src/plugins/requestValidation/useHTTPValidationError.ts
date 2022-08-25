@@ -18,7 +18,8 @@ export function useHTTPValidationError(): Plugin {
     onValidate() {
       return ({ valid, result }) => {
         if (!valid) {
-          throw getAggregateErrorFromErrors(result)
+          // Typecasting since Envelop is Agnostic to GraphQL.js
+          throw getAggregateErrorFromErrors(result as GraphQLError[])
         }
       }
     },

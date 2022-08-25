@@ -1,6 +1,6 @@
-import { FormatErrorHandler } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
+import { FormatErrorHandler } from '../plugins/useMaskedError.js'
 
 export const yogaDefaultFormatError: FormatErrorHandler = (
   err,

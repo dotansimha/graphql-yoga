@@ -114,7 +114,9 @@ export function useApolloInlineTrace(
       return ({ context: { request }, result: errors }) => {
         if (errors.length) {
           const ctx = ctxForReq.get(request)
-          if (ctx) handleErrors(ctx, errors, options.rewriteError)
+          if (ctx)
+            // Envelop doesn't give GraphQLError type since it is agnostic
+            handleErrors(ctx, errors as GraphQLError[], options.rewriteError)
         }
       }
     },
