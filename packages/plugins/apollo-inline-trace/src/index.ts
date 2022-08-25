@@ -2,6 +2,7 @@ import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
 import { GraphQLError, ResponsePath } from 'graphql'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import { btoa } from '@whatwg-node/fetch'
+import { prepareTracedSchema } from './traced-schema.js'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]
@@ -43,6 +44,9 @@ export function useApolloInlineTrace(
   const ctxForReq = new WeakMap<Request, ApolloInlineTraceContext>()
 
   return {
+    onSchemaChange: async ({ schema }) => {
+      prepareTracedSchema(schema)
+    },
     onRequest({ request }) {
       // must be ftv1 tracing protocol
       if (request.headers.get('apollo-federation-include-trace') !== 'ftv1') {
