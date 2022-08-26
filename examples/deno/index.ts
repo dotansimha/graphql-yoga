@@ -1,10 +1,26 @@
-import { serve } from 'https://deno.land/std@0.117.0/http/server.ts'
-import { createYoga } from 'https://cdn.skypack.dev/graphql-yoga'
+import { createYoga, createSchema } from 'npm:graphql-yoga'
 
-const yoga = createYoga()
-
-serve(yoga, {
-  addr: ':4000',
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'Hello Deno!',
+      },
+    },
+  }),
 })
 
-console.log('Server is running on http://localhost:4000/graphql')
+Deno.serve(
+  async (req) => {
+    const res = await yoga.handleRequest(req)
+    return new Response(res.body, res)
+  },
+  {
+    port: 4000,
+  },
+)
