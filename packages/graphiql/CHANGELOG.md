@@ -1,5 +1,14 @@
 # @graphql-yoga/graphiql
 
+## 2.4.2
+
+### Patch Changes
+
+- [#1537](https://github.com/dotansimha/graphql-yoga/pull/1537) [`6605d9fc`](https://github.com/dotansimha/graphql-yoga/commit/6605d9fc965f23c7c6d7f5d03be77fdeb2685c22) Thanks [@TuvalSimha](https://github.com/TuvalSimha)! - dependencies updates:
+
+  - Updated dependency [`react@18.2.0` ↗︎](https://www.npmjs.com/package/react/v/18.2.0) (from `17.0.2`, in `dependencies`)
+  - Updated dependency [`react-dom@18.2.0` ↗︎](https://www.npmjs.com/package/react-dom/v/18.2.0) (from `17.0.2`, in `dependencies`)
+
 ## 2.4.1
 
 ### Patch Changes

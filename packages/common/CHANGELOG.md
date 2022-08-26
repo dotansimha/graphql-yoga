@@ -1,5 +1,15 @@
 # @graphql-yoga/common
 
+## 2.12.9
+
+### Patch Changes
+
+- [#1649](https://github.com/dotansimha/graphql-yoga/pull/1649) [`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.3.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/null) (from `^0.2.6`, in `dependencies`)
+
+* [#1667](https://github.com/dotansimha/graphql-yoga/pull/1667) [`313e6f30`](https://github.com/dotansimha/graphql-yoga/commit/313e6f3036a1ddeb7e6299925a49bb7f0c2d2eb6) Thanks [@dagda1](https://github.com/dagda1)! - fix(common): accept the server context if Yoga instance is used as a Request handler
+
 ## 2.12.8
 
 ### Patch Changes
@@ -184,10 +194,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-      info: (...args) => args.forEach((arg) => app.log.info(arg)),
-      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
+      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
+      info: (...args) => args.forEach(arg => app.log.info(arg)),
+      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
+      error: (...args) => args.forEach(arg => app.log.error(arg)),
     },
   })
   ```
