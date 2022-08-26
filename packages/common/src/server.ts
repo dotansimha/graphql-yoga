@@ -381,21 +381,27 @@ export class YogaServer<
         processResult: processMultipartResult as ResultProcessor,
       }),
       ...(options?.plugins ?? []),
-
-      // So the user can manipulate the query parameter
       useCheckGraphQLQueryParam(),
-
-      // We make sure that the user doesn't send a mutation with GET
-      usePreventMutationViaGET(),
-
-      enableIf(
-        !!maskedErrors,
-        useMaskedErrors(
-          typeof maskedErrors === 'object' ? maskedErrors : undefined,
-        ),
-      ),
-      // We handle validation errors at the end
-      useHTTPValidationError(),
+      // To make sure those are called at the end
+      {
+        onPluginInit({ addPlugin }) {
+          addPlugin(
+            // We make sure that the user doesn't send a mutation with GET
+            usePreventMutationViaGET(),
+          )
+          if (!!maskedErrors) {
+            addPlugin(
+              useMaskedErrors(
+                typeof maskedErrors === 'object' ? maskedErrors : undefined,
+              ),
+            )
+          }
+          addPlugin(
+            // We handle validation errors at the end
+            useHTTPValidationError(),
+          )
+        },
+      },
     ]
 
     this.getEnveloped = envelop({
