@@ -1,5 +1,12 @@
 # sveltekit
 
+## 0.12.10
+
+### Patch Changes
+
+- Updated dependencies [[`cb360975`](https://github.com/dotansimha/graphql-yoga/commit/cb36097523b5700fed8260cb654cbce75d37de20)]:
+  - @graphql-yoga/common@2.12.10
+
 ## 0.12.9
 
 ### Patch Changes

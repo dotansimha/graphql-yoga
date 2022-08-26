@@ -1,5 +1,12 @@
 # graphql-lambda
 
+## 0.13.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.11
+
 ## 0.13.10
 
 ### Patch Changes

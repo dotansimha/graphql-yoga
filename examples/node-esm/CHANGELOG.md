@@ -1,5 +1,12 @@
 # node-esm
 
+## 0.12.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.11
+
 ## 0.12.10
 
 ### Patch Changes

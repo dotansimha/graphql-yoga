@@ -1,5 +1,12 @@
 # file-upload-nextjs-pothos
 
+## 0.11.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.11
+
 ## 0.11.10
 
 ### Patch Changes
