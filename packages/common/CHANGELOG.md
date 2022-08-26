@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.12.10
+
+### Patch Changes
+
+- [#1671](https://github.com/dotansimha/graphql-yoga/pull/1671) [`cb360975`](https://github.com/dotansimha/graphql-yoga/commit/cb36097523b5700fed8260cb654cbce75d37de20) Thanks [@ardatan](https://github.com/ardatan)! - Respect Envelop's OnPluginInit's addPlugin method
+
 ## 2.12.9
 
 ### Patch Changes
