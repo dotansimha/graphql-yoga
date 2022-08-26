@@ -1,5 +1,54 @@
 # node-esm
 
+## 0.12.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.11
+
+## 0.12.10
+
+### Patch Changes
+
+- Updated dependencies [[`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6)]:
+  - @graphql-yoga/node@2.13.10
+
+## 0.12.9
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.9
+
+## 0.12.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.8
+
+## 0.12.7
+
+### Patch Changes
+
+- Updated dependencies [[`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b), [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10)]:
+  - @graphql-yoga/node@2.13.7
+
+## 0.12.6
+
+### Patch Changes
+
+- Updated dependencies [eecf24c]
+  - @graphql-yoga/node@2.13.6
+
+## 0.12.5
+
+### Patch Changes
+
+- Updated dependencies [c00dad3]
+  - @graphql-yoga/node@2.13.5
+
 ## 0.12.4
 
 ### Patch Changes

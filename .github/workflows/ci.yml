@@ -1,4 +1,4 @@
-name: Tests
+name: test
 env:
   NODE_NO_WARNINGS: true
 on:
@@ -10,40 +10,12 @@ on:
       - 'website/**'
 
 jobs:
-  test-node:
-    name: Testing on Node ${{ matrix.node-version }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14, 16, 18]
-      fail-fast: false
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@master
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-test-node
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-          restore-keys: |
-            ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-test-node.outputs.cache-hit != 'true'
-
-      - name: Build Packages
-        run: yarn build
-
-      - name: Run Tests
-        run: yarn test
+  node:
+    name: unit / nodejs v${{ matrix.node-version }}
+    uses: the-guild-org/shared-config/.github/workflows/ci-node-matrix.yml@main
+    with:
+      script: 'yarn build && yarn test'
+      nodeVersions: '[12,14,16,18]'
 
   test-integration:
     name: Run integration tests
@@ -81,29 +53,16 @@ jobs:
         run: yarn test:integration
 
   test-esm:
-    name: Testing with Node ESM
+    name: esm
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 18
-        uses: actions/setup-node@master
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 18
-          cache: 'yarn'
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-test-esm
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-18-node-modules-
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-test-esm.outputs.cache-hit != 'true'
+          nodeVersion: 18
 
       - name: Build Packages
         run: yarn build
@@ -112,32 +71,18 @@ jobs:
         run: yarn workspace example-node-esm run test
 
   typecheck:
-    name: Typecheck
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 18
-        uses: actions/setup-node@master
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 18
-          cache: 'yarn'
+          nodeVersion: 18
 
       - name: Use Deno
         uses: denoland/setup-deno@v1
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-type-check
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}
-          restore-keys: |
-            ${{runner.os}}-18-node-modules-
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-type-check.outputs.cache-hit != 'true'
 
       - name: Build Packages
         run: yarn build

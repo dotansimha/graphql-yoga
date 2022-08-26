@@ -229,6 +229,8 @@ export class YogaServer<
               : {}),
           }
 
+    const maskedErrors = options?.maskedErrors ?? true
+
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
 
     this.plugins = [
@@ -344,18 +346,27 @@ export class YogaServer<
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
-
-      // So the user can manipulate the query parameter
       useCheckGraphQLQueryParam(),
-      // We handle validation errors at the end
-      useHTTPValidationError(),
-      // We make sure that the user doesn't send a mutation with GET
-      usePreventMutationViaGET(),
-      this.maskedErrorsOpts != null && useMaskedErrors(this.maskedErrorsOpts),
-      useUnhandledRoute({
-        graphqlEndpoint: this.graphqlEndpoint,
-        showLandingPage: options?.landingPage ?? true,
-      }),
+      // To make sure those are called at the end
+      {
+        onPluginInit({ addPlugin }) {
+          addPlugin(
+            // We make sure that the user doesn't send a mutation with GET
+            usePreventMutationViaGET(),
+          )
+          if (!!maskedErrors) {
+            addPlugin(
+              useMaskedErrors(
+                typeof maskedErrors === 'object' ? maskedErrors : undefined,
+              ),
+            )
+          }
+          addPlugin(
+            // We handle validation errors at the end
+            useHTTPValidationError(),
+          )
+        },
+      },
     ]
 
     this.getEnveloped = envelop({

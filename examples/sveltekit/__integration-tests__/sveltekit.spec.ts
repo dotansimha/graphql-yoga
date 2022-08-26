@@ -26,9 +26,8 @@ describe('SvelteKit integration', () => {
 			// Kill the port if it's used!
 			try {
 				execSync('fuser -k 3007/tcp');
-			} catch (error) {
-				// console.error(error)
-			}
+				// eslint-disable-next-line no-empty
+			} catch (error) {}
 
 			// Build svelteKit
 			execSync('yarn workspace example-sveltekit build');
