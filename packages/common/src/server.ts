@@ -640,6 +640,10 @@ export type YogaServerInstance<TServerContext, TUserContext, TRootValue> =
   YogaServer<TServerContext, TUserContext, TRootValue> &
     (
       | WindowOrWorkerGlobalScope['fetch']
+      | ((
+          request: Request,
+          serverContext?: TServerContext,
+        ) => Promise<Response>)
       | ((context: { request: Request }) => Promise<Response>)
     )
 
