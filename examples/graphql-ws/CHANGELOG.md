@@ -1,5 +1,13 @@
 # graphql-ws
 
+## 0.10.10
+
+### Patch Changes
+
+- Updated dependencies [[`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6)]:
+  - @graphql-yoga/node@2.13.10
+  - graphql-ws@0.10.10
+
 ## 0.10.9
 
 ### Patch Changes
