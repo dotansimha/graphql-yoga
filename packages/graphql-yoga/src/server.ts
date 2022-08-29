@@ -229,9 +229,11 @@ export class YogaServer<
               : {}),
           }
 
-    const maskedErrors = options?.maskedErrors ?? true
+    const maskedErrors =
+      this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
 
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
+    const graphqlEndpoint = this.graphqlEndpoint
 
     this.plugins = [
       // Use the schema provided by the user
@@ -347,19 +349,17 @@ export class YogaServer<
       }),
       ...(options?.plugins ?? []),
       useCheckGraphQLQueryParam(),
+      useUnhandledRoute({
+        graphqlEndpoint,
+        showLandingPage: options?.landingPage ?? true,
+      }),
+      // We make sure that the user doesn't send a mutation with GET
+      usePreventMutationViaGET(),
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
-          addPlugin(
-            // We make sure that the user doesn't send a mutation with GET
-            usePreventMutationViaGET(),
-          )
-          if (!!maskedErrors) {
-            addPlugin(
-              useMaskedErrors(
-                typeof maskedErrors === 'object' ? maskedErrors : undefined,
-              ),
-            )
+          if (maskedErrors) {
+            addPlugin(useMaskedErrors(maskedErrors))
           }
           addPlugin(
             // We handle validation errors at the end
