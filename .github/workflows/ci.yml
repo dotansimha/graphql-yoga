@@ -15,7 +15,7 @@ jobs:
     uses: the-guild-org/shared-config/.github/workflows/ci-node-matrix.yml@main
     with:
       script: 'yarn build && yarn test'
-      nodeVersions: '[12,14,16,18]'
+      nodeVersions: '[14,16,18]'
 
   test-integration:
     name: Run integration tests
