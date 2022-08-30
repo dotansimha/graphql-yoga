@@ -22,19 +22,15 @@ describe('Inline Trace', () => {
     resolvers: {
       Query: {
         async hello() {
-          await new Promise((resolve) => setTimeout(resolve, 100))
           return 'world'
         },
         async boom() {
-          await new Promise((resolve) => setTimeout(resolve, 100))
           throw new Error('bam')
         },
         async person() {
-          await new Promise((resolve) => setTimeout(resolve, 100))
           return { name: 'John' }
         },
         async people() {
-          await new Promise((resolve) => setTimeout(resolve, 100))
           return [{ name: 'John' }, { name: 'Jane' }]
         },
       },
@@ -126,9 +122,10 @@ describe('Inline Trace', () => {
     expect(typeof trace.endTime?.seconds).toBe('number')
     expect(typeof trace.endTime?.nanos).toBe('number')
 
+    // its ok to be "equal" since executions can happen in the same tick
     expect(
       addSecondsAndNanos(trace.startTime!.seconds!, trace.startTime!.nanos!),
-    ).toBeLessThan(
+    ).toBeLessThanOrEqual(
       addSecondsAndNanos(trace.endTime!.seconds!, trace.endTime!.nanos!),
     )
 
@@ -153,7 +150,8 @@ describe('Inline Trace', () => {
     expect(typeof node!.startTime).toBe('number')
     expect(typeof node!.endTime).toBe('number')
 
-    expect(node!.startTime!).toBeLessThan(node!.endTime!)
+    // its ok to be "equal" since executions can happen in the same tick
+    expect(node!.startTime!).toBeLessThanOrEqual(node!.endTime!)
   }
 
   it('should have proto tracing on flat query', async () => {
