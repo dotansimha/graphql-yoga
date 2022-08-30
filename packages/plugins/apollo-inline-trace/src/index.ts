@@ -2,7 +2,7 @@ import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
 import { GraphQLError, ResponsePath } from 'graphql'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import { btoa } from '@whatwg-node/fetch'
-import { prepareTracedSchema } from './traced-schema.js'
+import { useOnResolver } from './on-resolver.js'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]
@@ -45,7 +45,40 @@ export function useApolloInlineTrace(
 
   return {
     onSchemaChange: async ({ schema }) => {
-      prepareTracedSchema(schema)
+      useOnResolver<YogaInitialContext>(
+        schema,
+        ({ context: { request }, info }) => {
+          const ctx = ctxForReq.get(request)
+          if (!ctx) return
+
+          // result was already shipped (see ApolloInlineTraceContext.stopped)
+          if (ctx.stopped) {
+            return () => {
+              // noop
+            }
+          }
+
+          const node = newTraceNode(ctx, info.path)
+          node.type = info.returnType.toString()
+          node.parentType = info.parentType.toString()
+          node.startTime = hrTimeToDurationInNanos(
+            process.hrtime(ctx.startHrTime),
+          )
+          if (
+            typeof info.path.key === 'string' &&
+            info.path.key !== info.fieldName
+          ) {
+            // field was aliased, send the original field name too
+            node.originalFieldName = info.fieldName
+          }
+
+          return () => {
+            node.endTime = hrTimeToDurationInNanos(
+              process.hrtime(ctx.startHrTime),
+            )
+          }
+        },
+      )
     },
     onRequest({ request }) {
       // must be ftv1 tracing protocol
@@ -66,33 +99,6 @@ export function useApolloInlineTrace(
         nodes: new Map([[responsePathToString(), rootNode]]),
         stopped: false,
       })
-    },
-    onResolverCalled({ context: { request }, info }) {
-      const ctx = ctxForReq.get(request)
-      if (!ctx) return
-
-      // result was already shipped (see ApolloInlineTraceContext.stopped)
-      if (ctx.stopped) {
-        return () => {
-          // noop
-        }
-      }
-
-      const node = newTraceNode(ctx, info.path)
-      node.type = info.returnType.toString()
-      node.parentType = info.parentType.toString()
-      node.startTime = hrTimeToDurationInNanos(process.hrtime(ctx.startHrTime))
-      if (
-        typeof info.path.key === 'string' &&
-        info.path.key !== info.fieldName
-      ) {
-        // field was aliased, send the original field name too
-        node.originalFieldName = info.fieldName
-      }
-
-      return () => {
-        node.endTime = hrTimeToDurationInNanos(process.hrtime(ctx.startHrTime))
-      }
     },
     onParse() {
       return ({ context: { request }, result }) => {
