@@ -2,13 +2,24 @@ import { AfterValidateHook } from '@envelop/core'
 import { GraphQLError } from 'graphql'
 import { Plugin } from './types'
 import { createYoga } from '../server'
+import { createSchema } from '../schema'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: String
+    }
+  `,
+})
 
 describe('Yoga Plugins', () => {
   it(`should respect Envelop's OnPluginInit's addPlugin`, async () => {
     const afterValidateHook: AfterValidateHook<any> = jest
       .fn()
       .mockImplementation(({ setResult }) => {
-        setResult([new GraphQLError('My Error')])
+        setResult([
+          new GraphQLError('My Error', { extensions: { my: 'error' } }),
+        ])
       })
     const testPlugin: Plugin = {
       onValidate() {
@@ -22,6 +33,7 @@ describe('Yoga Plugins', () => {
     }
     const yoga = createYoga({
       plugins: [testPluginToAdd],
+      schema,
     })
     const response = await yoga.fetch('http://localhost:3000/graphql', {
       method: 'POST',
@@ -38,7 +50,7 @@ describe('Yoga Plugins', () => {
       errors: [
         {
           message: 'My Error',
-          extensions: {},
+          extensions: { my: 'error' },
         },
       ],
     })
