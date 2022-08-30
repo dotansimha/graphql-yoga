@@ -1,5 +1,18 @@
 # graphql-config-example
 
+## 0.13.6
+
+### Patch Changes
+
+- Updated dependencies [eecf24c]
+  - graphql-yoga@2.13.6
+
+## 0.13.5
+
+### Patch Changes
+
+- graphql-yoga@2.13.5
+
 ## 0.13.4
 
 ### Patch Changes

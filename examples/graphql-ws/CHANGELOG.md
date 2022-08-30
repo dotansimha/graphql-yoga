@@ -1,5 +1,61 @@
 # graphql-ws
 
+## 0.10.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.11
+  - graphql-ws@0.10.11
+
+## 0.10.10
+
+### Patch Changes
+
+- Updated dependencies [[`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6)]:
+  - @graphql-yoga/node@2.13.10
+  - graphql-ws@0.10.10
+
+## 0.10.9
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.9
+  - graphql-ws@0.10.9
+
+## 0.10.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.8
+  - graphql-ws@0.10.8
+
+## 0.10.7
+
+### Patch Changes
+
+- Updated dependencies [[`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b), [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10)]:
+  - @graphql-yoga/node@2.13.7
+  - graphql-ws@0.10.7
+
+## 0.10.6
+
+### Patch Changes
+
+- Updated dependencies [eecf24c]
+  - @graphql-yoga/node@2.13.6
+  - graphql-ws@0.10.6
+
+## 0.10.5
+
+### Patch Changes
+
+- Updated dependencies [c00dad3]
+  - @graphql-yoga/node@2.13.5
+  - graphql-ws@0.10.5
+
 ## 0.10.4
 
 ### Patch Changes

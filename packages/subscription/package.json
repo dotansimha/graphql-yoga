@@ -1,6 +1,6 @@
 {
   "name": "@graphql-yoga/subscription",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     },
     "./*": {
       "require": {
-        "types": "./dist/typings/*.d.ts",
+        "types": "./dist/typings/*.d.cts",
         "default": "./dist/cjs/*.js"
       },
       "import": {
@@ -60,7 +60,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@graphql-yoga/typed-event-target": "^0.1.0",
+    "@graphql-yoga/typed-event-target": "^0.1.1",
     "@repeaterjs/repeater": "^3.0.4",
     "tslib": "^2.3.1"
   },

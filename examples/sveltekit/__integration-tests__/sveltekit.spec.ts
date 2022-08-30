@@ -26,9 +26,8 @@ describe('SvelteKit integration', () => {
 			// Kill the port if it's used!
 			try {
 				execSync('fuser -k 3007/tcp');
-			} catch (error) {
-				// console.error(error)
-			}
+				// eslint-disable-next-line no-empty
+			} catch (error) {}
 
 			// Build svelteKit
 			execSync('yarn workspace example-sveltekit build');
@@ -98,11 +97,8 @@ describe('SvelteKit integration', () => {
 				// let's see what is in the html with the finafinally
 			} finally {
 				const bodyContent = await body?.text();
-
 				// B/ Check that GraphiQL is showing
-				expect(bodyContent).toContain(
-					`renderYogaGraphiQL(root,{"endpoint":"/api/graphql","defaultQuery":"query Hello {\\n\\thello\\n}"})`
-				);
+				expect(bodyContent).toContain(`Yoga GraphiQL`)
 			}
 
 			// A-2/ Finish the test after the body check

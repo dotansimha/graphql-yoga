@@ -1,5 +1,13 @@
 # @graphql-yoga/subscription
 
+## 2.2.3
+
+### Patch Changes
+
+- eecf24c: Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+- Updated dependencies [eecf24c]
+  - @graphql-yoga/typed-event-target@0.1.1
+
 ## 2.2.2
 
 ### Patch Changes
