@@ -38,6 +38,7 @@ export interface OnRequestEventPayload<TServerContext> {
   serverContext: TServerContext | undefined
   fetchAPI: FetchAPI
   endResponse(response: Response): void
+  url: URL
 }
 
 export type OnRequestParseHook = (

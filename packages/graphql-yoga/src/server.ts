@@ -412,6 +412,7 @@ export class YogaServer<
           endResponse(newResponse) {
             response = newResponse
           },
+          url: new URL(request.url),
         })
         if (response) {
           return response

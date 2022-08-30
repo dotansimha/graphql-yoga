@@ -6,9 +6,8 @@ export function useUnhandledRoute(args: {
   showLandingPage: boolean
 }): Plugin {
   return {
-    onRequest({ request, fetchAPI, endResponse }) {
-      // new URL is slow
-      const { pathname: requestPath } = new URL(request.url)
+    onRequest({ request, fetchAPI, endResponse, url }) {
+      const { pathname: requestPath } = url
       if (requestPath !== args.graphqlEndpoint) {
         if (
           args.showLandingPage === true &&
