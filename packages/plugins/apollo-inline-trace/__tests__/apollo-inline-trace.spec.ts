@@ -50,54 +50,16 @@ describe('Inline Trace', () => {
     maskedErrors: false,
   })
 
-  const FlatQuery = /* GraphQL */ `
-    query FlatQuery {
-      hello
-    }
-  `
-  const AliasedFlatQuery = /* GraphQL */ `
-    query AliasedFlatQuery {
-      hi: hello
-    }
-  `
-  const FlatQueryWithArrayField = /* GraphQL */ `
-    query FlatQueryWithArrayField {
-      people {
-        name
-      }
-    }
-  `
-
-  const NestedQuery = /* GraphQL */ `
-    query NestedQuery {
-      person {
-        name
-      }
-    }
-  `
-  const BrokenQuery = `{ he`
-
-  const FailingQuery = /* GraphQL */ `
-    query FailingQuery {
-      boom
-    }
-  `
-
-  const InvalidQuery = /* GraphQL */ `
-    query InvalidQuery {
-      henlo
-    }
-  `
-
-  const FlatSubscription = /* GraphQL */ `
-    subscription FlatSubscription {
-      hello
-    }
-  `
   it('should add ftv1 tracing to result extensions', async () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      body: JSON.stringify({ query: FlatQuery }),
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          {
+            hello
+          }
+        `,
+      }),
       headers: {
         'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
@@ -157,7 +119,13 @@ describe('Inline Trace', () => {
   it('should have proto tracing on flat query', async () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      body: JSON.stringify({ query: FlatQuery }),
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          {
+            hello
+          }
+        `,
+      }),
       headers: {
         'Content-Type': 'application/json',
         'apollo-federation-include-trace': 'ftv1',
@@ -186,7 +154,11 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: AliasedFlatQuery,
+        query: /* GraphQL */ `
+          {
+            hi: hello
+          }
+        `,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -217,7 +189,13 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: FlatQueryWithArrayField,
+        query: /* GraphQL */ `
+          {
+            people {
+              name
+            }
+          }
+        `,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -255,7 +233,13 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: NestedQuery,
+        query: /* GraphQL */ `
+          {
+            person {
+              name
+            }
+          }
+        `,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -304,7 +288,7 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: BrokenQuery,
+        query: '{ he',
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -329,7 +313,11 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: InvalidQuery,
+        query: /* GraphQL */ `
+          {
+            henlo
+          }
+        `,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -354,7 +342,11 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: FailingQuery,
+        query: /* GraphQL */ `
+          {
+            boom
+          }
+        `,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -392,7 +384,7 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: BrokenQuery,
+        query: '{ he',
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -427,7 +419,11 @@ describe('Inline Trace', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: JSON.stringify({
-        query: FailingQuery,
+        query: /* GraphQL */ `
+          {
+            boom
+          }
+        `,
       }),
       headers: {
         'Content-Type': 'application/json',
