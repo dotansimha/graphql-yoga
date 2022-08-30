@@ -161,7 +161,7 @@ class SSELink extends ApolloLink {
     url.searchParams.append('query', print(operation.query))
     if (operation.operationName) {
       url.searchParams.append(
-        'operationName',
+        'operation',
         JSON.stringify(operation.operationName),
       )
     }
