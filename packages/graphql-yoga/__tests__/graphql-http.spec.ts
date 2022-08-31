@@ -17,7 +17,7 @@ for (const audit of serverAudits({
 })) {
   test(audit.name, async () => {
     const result = await audit.fn()
-    if (result.status === 'error') {
+    if (result.status !== 'ok') {
       throw result.reason
     }
   })
