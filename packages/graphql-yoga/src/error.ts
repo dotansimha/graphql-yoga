@@ -72,9 +72,6 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
-        // Remove http extensions from the final response
-        delete error.extensions.http
-        //TODO: avoid slow "delete"
       }
     }
   } else {
