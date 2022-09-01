@@ -73,6 +73,7 @@ export function getResponseInitByRespectingErrors(
           Object.assign(headers, error.extensions.http.headers)
         }
         // Remove http extensions from the final response
+        // TODO: this delete leaks, comment it out and see 'should respect http extensions status consistently' test pass
         delete error.extensions.http
         //TODO: avoid slow "delete"
       }

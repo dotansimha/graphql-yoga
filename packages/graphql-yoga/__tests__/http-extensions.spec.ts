@@ -155,4 +155,30 @@ describe('GraphQLError.extensions.http', () => {
 
     expect(response.headers.get('x-foo')).toBe('A')
   })
+
+  it('should respect http extensions status consistently', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            _: String
+          }
+        `,
+      },
+    })
+
+    let response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
+    })
+    expect(response.status).toBe(400)
+
+    response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
+    })
+    expect(response.status).toBe(400)
+  })
 })
