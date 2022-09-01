@@ -74,7 +74,7 @@ import {
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './error.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
-import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
+import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
@@ -350,7 +350,7 @@ export class YogaServer<
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
-      useCheckGraphQLQueryParam(),
+      useCheckGraphQLQueryParams(),
       useUnhandledRoute({
         graphqlEndpoint,
         showLandingPage: options?.landingPage ?? true,

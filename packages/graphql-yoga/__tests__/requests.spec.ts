@@ -193,7 +193,7 @@ describe('requests', () => {
     const body = JSON.parse(await response.text())
     expect(body.data).toBeNull()
     expect(body.errors?.[0].message).toBe(
-      'Expected "query" to be "string" but given "object".',
+      'Expected "query" param to be a string, but given object.',
     )
   })
 
