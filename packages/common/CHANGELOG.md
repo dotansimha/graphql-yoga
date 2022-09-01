@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.12.11
+
+### Patch Changes
+
+- [#1691](https://github.com/dotansimha/graphql-yoga/pull/1691) [`fb250371`](https://github.com/dotansimha/graphql-yoga/commit/fb2503717b2927df47da105f0f84ca26ddc88f2d) Thanks [@hayes](https://github.com/hayes)! - Fix compatability with typescript 4.8
+
 ## 2.12.10
 
 ### Patch Changes
@@ -200,10 +206,10 @@
     logging: {
       // app.log is Fastify's logger
       // You should replace it with your own if you have some other logger implementation
-      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
-      info: (...args) => args.forEach(arg => app.log.info(arg)),
-      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
-      error: (...args) => args.forEach(arg => app.log.error(arg)),
+      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
+      info: (...args) => args.forEach((arg) => app.log.info(arg)),
+      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
+      error: (...args) => args.forEach((arg) => app.log.error(arg)),
     },
   })
   ```
