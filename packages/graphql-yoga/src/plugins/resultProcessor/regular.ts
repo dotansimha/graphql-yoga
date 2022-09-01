@@ -49,6 +49,15 @@ export function processRegularResult(
     headersInit,
   )
 
+  if (
+    responseInit.status >= 400 &&
+    acceptHeaderByResult.get(executionResult) === 'application/json'
+  ) {
+    // regular responses accepting 'application/json' are recommended to always respond with 200
+    // see more: https://graphql.github.io/graphql-over-http/draft/#sel-EANNLDFAADHCAx5H
+    responseInit.status = 200
+  }
+
   const textEncoder = new fetchAPI.TextEncoder()
   const responseBody = jsonStringifyResult(executionResult)
   const decodedString = textEncoder.encode(responseBody)
