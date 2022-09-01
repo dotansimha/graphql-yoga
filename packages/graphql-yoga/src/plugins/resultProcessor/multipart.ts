@@ -3,6 +3,7 @@ import { ExecutionResult } from 'graphql'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
+import { jsonStringifyResult } from './stringify.js'
 
 export function isMultipartResult(request: Request): boolean {
   // There should be an explicit accept header for this result type
@@ -53,7 +54,7 @@ export function processMultipartResult(
         )
         controller.enqueue(textEncoder.encode('\r\n'))
 
-        const chunk = JSON.stringify(value)
+        const chunk = jsonStringifyResult(value)
         const encodedChunk = textEncoder.encode(chunk)
 
         controller.enqueue(

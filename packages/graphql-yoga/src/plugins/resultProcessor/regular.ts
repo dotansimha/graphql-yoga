@@ -2,6 +2,7 @@ import { isAsyncIterable } from '@graphql-tools/utils'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
+import { jsonStringifyResult } from './stringify.js'
 
 const acceptHeaderByResult = new WeakMap<ResultProcessorInput, string>()
 
@@ -39,6 +40,10 @@ export function processRegularResult(
   executionResult: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
+  if (isAsyncIterable(executionResult)) {
+    throw new Error('Cannot process stream result as regular')
+  }
+
   const contentType = acceptHeaderByResult.get(executionResult)
   const headersInit = {
     'Content-Type': contentType || 'application/json',
@@ -50,7 +55,7 @@ export function processRegularResult(
   )
 
   const textEncoder = new fetchAPI.TextEncoder()
-  const responseBody = JSON.stringify(executionResult)
+  const responseBody = jsonStringifyResult(executionResult)
   const decodedString = textEncoder.encode(responseBody)
 
   headersInit['Content-Length'] = decodedString.byteLength.toString()
