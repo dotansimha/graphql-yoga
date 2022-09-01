@@ -7,8 +7,15 @@ export function jsonStringifyResult(
 ) {
   return JSON.stringify(result, (key, value) => {
     if (key === 'extensions') {
-      const { http, ...rest } = value
-      return rest
+      // omit http extensions
+      const { http, ...extensions } = value
+
+      // remove empty extensions object
+      if (Object.keys(extensions).length === 0) {
+        return undefined
+      }
+
+      return extensions
     }
     return value
   })
