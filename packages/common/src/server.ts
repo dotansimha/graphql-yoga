@@ -79,7 +79,7 @@ import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckG
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 
-interface OptionsWithPlugins<TContext> {
+interface OptionsWithPlugins<TContext extends Record<string, any>> {
   /**
    * Envelop Plugins
    * @see https://envelop.dev/plugins
@@ -642,16 +642,16 @@ export class YogaServer<
   }
 }
 
-export type YogaServerInstance<TServerContext, TUserContext, TRootValue> =
-  YogaServer<TServerContext, TUserContext, TRootValue> &
-    (
-      | WindowOrWorkerGlobalScope['fetch']
-      | ((
-          request: Request,
-          serverContext?: TServerContext,
-        ) => Promise<Response>)
-      | ((context: { request: Request }) => Promise<Response>)
-    )
+export type YogaServerInstance<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+  TRootValue,
+> = YogaServer<TServerContext, TUserContext, TRootValue> &
+  (
+    | WindowOrWorkerGlobalScope['fetch']
+    | ((request: Request, serverContext?: TServerContext) => Promise<Response>)
+    | ((context: { request: Request }) => Promise<Response>)
+  )
 
 export function createServer<
   TServerContext extends Record<string, any> = {},

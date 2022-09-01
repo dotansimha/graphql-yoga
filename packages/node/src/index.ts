@@ -208,9 +208,12 @@ export function createServer<
   })
 }
 
-export type YogaNodeServerInstance<TServerContext, TUserContext, TRootValue> =
-  YogaNodeServer<TServerContext, TUserContext, TRootValue> &
-    YogaNodeServer<TServerContext, TUserContext, TRootValue>['requestListener']
+export type YogaNodeServerInstance<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+  TRootValue,
+> = YogaNodeServer<TServerContext, TUserContext, TRootValue> &
+  YogaNodeServer<TServerContext, TUserContext, TRootValue>['requestListener']
 
 export * from './types.js'
 export {
