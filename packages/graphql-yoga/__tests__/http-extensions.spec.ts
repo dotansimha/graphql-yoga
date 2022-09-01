@@ -192,7 +192,7 @@ describe('GraphQLError.extensions.http', () => {
     expect(response.headers.get('x-foo')).toBe('A')
 
     const result = await response.json()
-    expect(result.errors[0].extensions.http).toBeUndefined()
+    expect(result.errors[0]?.extensions?.http).toBeUndefined()
   })
 
   it('should respect http extensions status consistently on parsing fail', async () => {
