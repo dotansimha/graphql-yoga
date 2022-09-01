@@ -6,6 +6,7 @@ import {
   ResultProcessorInput,
 } from './plugins/types.js'
 import { GetEnvelopedFn } from '@envelop/core'
+import { acceptableMediaTypes } from './plugins/requestValidation/useAccept.js'
 
 export async function processResult({
   request,
@@ -39,6 +40,9 @@ export async function processResult({
     return new fetchAPI.Response(null, {
       status: 406,
       statusText: 'Not Acceptable',
+      headers: {
+        accept: acceptableMediaTypes.join('; charset=utf-8, '),
+      },
     })
   }
 
