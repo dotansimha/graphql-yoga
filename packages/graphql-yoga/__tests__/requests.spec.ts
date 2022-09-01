@@ -77,7 +77,7 @@ describe('requests', () => {
     expect(response.headers.get('allow')).toEqual('POST')
     const body = JSON.parse(await response.text())
 
-    expect(body.data).toEqual(null)
+    expect(body.data).toBeUndefined()
     expect(body.errors).toHaveLength(1)
     expect(body.errors[0].message).toEqual(
       'Can only perform a mutation operation from a POST request.',
@@ -134,7 +134,7 @@ describe('requests', () => {
     const body = JSON.parse(await response.text())
 
     expect(body.errors).toBeDefined()
-    expect(body.data).toBeNull()
+    expect(body.data).toBeUndefined()
   })
 
   it('should error on invalid JSON parameters', async () => {
@@ -149,7 +149,7 @@ describe('requests', () => {
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toEqual('POST body sent invalid JSON.')
 
-    expect(body.data).toBeNull()
+    expect(body.data).toBeUndefined()
   })
 
   it('should error on malformed query string', async () => {
@@ -164,7 +164,7 @@ describe('requests', () => {
     const body = JSON.parse(await response.text())
 
     expect(body.errors).toBeDefined()
-    expect(body.data).toBeNull()
+    expect(body.data).toBeUndefined()
   })
 
   it('should error missing query', async () => {
@@ -177,7 +177,7 @@ describe('requests', () => {
     expect(response.status).toBe(400)
 
     const body = JSON.parse(await response.text())
-    expect(body.data).toBeNull()
+    expect(body.data).toBeUndefined()
     expect(body.errors?.[0].message).toBe('Must provide query string.')
   })
 
@@ -191,7 +191,7 @@ describe('requests', () => {
     expect(response.status).toBe(400)
 
     const body = JSON.parse(await response.text())
-    expect(body.data).toBeNull()
+    expect(body.data).toBeUndefined()
     expect(body.errors?.[0].message).toBe(
       'Expected "query" param to be a string, but given object.',
     )

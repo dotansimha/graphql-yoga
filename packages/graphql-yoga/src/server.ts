@@ -494,7 +494,6 @@ export class YogaServer<
       const errors = handleError(error, this.maskedErrorsOpts)
 
       const result: ExecutionResult = {
-        data: null,
         errors,
       }
       return processResult({

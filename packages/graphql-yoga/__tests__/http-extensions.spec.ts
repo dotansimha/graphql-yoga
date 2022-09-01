@@ -272,7 +272,6 @@ describe('GraphQLError.extensions.http', () => {
     expect(response.headers.get('x-foo')).toBe('bar')
     expect(await response.json()).toMatchInlineSnapshot(`
       Object {
-        "data": null,
         "errors": Array [
           Object {
             "message": "No http status extension",
