@@ -56,7 +56,7 @@ export function useAccept(): Plugin {
           accepted.push('application/json')
         }
 
-        if (mediaType === 'text/*' || mediaType === 'text/stream') {
+        if (mediaType === 'text/*' || mediaType === 'text/event-stream') {
           accepted.push('text/event-stream')
         }
 
