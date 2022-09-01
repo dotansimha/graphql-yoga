@@ -1,21 +1,13 @@
 import { Plugin } from '../types.js'
 
-const singleMediaTypes = [
+export const acceptableMediaTypes = [
   'application/graphql-response+json' as const,
   'application/json' as const,
-]
-export type SingleResultMediaType = typeof singleMediaTypes[0]
-
-const streamingMediaTypes = [
   'multipart/mixed' as const,
   'text/event-stream' as const,
+  'text/html' as const, // landing page and graphiql
 ]
-export type StreamingResultMediaType = typeof streamingMediaTypes[0]
 
-export const acceptableMediaTypes = [
-  ...singleMediaTypes,
-  ...streamingMediaTypes,
-]
 export type AcceptableMediaType = typeof acceptableMediaTypes[0]
 
 const acceptForRequest = new WeakMap<Request, AcceptableMediaType[]>()
@@ -56,6 +48,11 @@ export function useAccept(): Plugin {
           accepted.push('application/json')
         }
 
+        if (mediaType === 'text/html') {
+          // landing page and graphiql
+          accepted.push('text/html')
+        }
+
         if (mediaType === 'text/*' || mediaType === 'text/event-stream') {
           accepted.push('text/event-stream')
         }
@@ -63,18 +60,6 @@ export function useAccept(): Plugin {
         if (mediaType === 'multipart/*' || mediaType === 'multipart/mixed') {
           accepted.push('multipart/mixed')
         }
-      }
-
-      if (!accepted.length) {
-        endResponse(
-          new fetchAPI.Response(null, {
-            status: 406,
-            statusText: 'Not Acceptable',
-            headers: {
-              accept: acceptableMediaTypes.join('; charset=utf-8, '),
-            },
-          }),
-        )
       }
     },
   }

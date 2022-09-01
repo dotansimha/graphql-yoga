@@ -34,10 +34,10 @@ export function processRegularResult(
   fetchAPI: FetchAPI,
 ): Response {
   if (isAsyncIterable(executionResult)) {
+    // shouldnt happen
     throw new Error('Cannot process stream result as regular')
   }
 
-  const contentType = acceptHeaderByResult.get(executionResult)
   const headersInit = {
     'Content-Type':
       (acceptHeaderByResult.get(executionResult) ||

@@ -80,10 +80,7 @@ import { usePreventMutationViaGET } from './plugins/requestValidation/usePrevent
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
-import {
-  getAcceptForRequest,
-  useAccept,
-} from './plugins/requestValidation/useAccept.js'
+import { useAccept } from './plugins/requestValidation/useAccept.js'
 
 /**
  * Configuration options for the server
