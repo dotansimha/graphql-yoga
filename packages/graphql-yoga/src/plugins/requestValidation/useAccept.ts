@@ -37,9 +37,9 @@ export function useAccept(): Plugin {
       for (const accept of accepts) {
         const [mediaType, ...params] = accept.split(';')
         const charset =
-          params?.find((param) => param.includes('charset=')) || 'charset=utf8' // utf-8 is assumed when not specified;
+          params?.find((param) => param.includes('charset=')) || 'charset=utf-8' // utf-8 is assumed when not specified;
 
-        if (charset !== 'charset=utf8') {
+        if (charset !== 'charset=utf-8') {
           // only utf-8 is supported
           continue
         }
