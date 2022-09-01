@@ -121,7 +121,7 @@ describe('Automatic Persisted Queries', () => {
           },
         },
       })
-    expect(response.status).toEqual(200)
+    expect(response.status).toEqual(500)
     expect(JSON.parse(response.text)).toEqual({
       data: null,
       errors: [{ message: 'PersistedQueryMismatch' }],

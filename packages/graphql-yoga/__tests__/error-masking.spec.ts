@@ -287,7 +287,7 @@ describe('error masking', () => {
         },
       ],
     })
-    expect(response.status).toEqual(200)
+    expect(response.status).toEqual(500)
   })
 
   it('parse error is not masked', async () => {
