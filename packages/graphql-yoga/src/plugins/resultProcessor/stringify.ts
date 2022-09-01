@@ -1,7 +1,7 @@
 import { ExecutionResult } from 'graphql'
 import { ExecutionPatchResult } from '../../types'
 
-// JSON stringifier that removes http extensions from the result while serialising
+// JSON stringifier that adjusts the result extensions while serialising
 export function jsonStringifyResult(
   result: ExecutionResult | ExecutionPatchResult,
 ) {
