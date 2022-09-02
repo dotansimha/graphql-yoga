@@ -2,13 +2,8 @@ import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
-import { getAcceptForRequest } from '../requestValidation/useAccept.js'
 import { ResultProcessorInput } from '../types.js'
 import { jsonStringifyResult } from './stringify.js'
-
-export function isPushResult(request: Request): boolean {
-  return getAcceptForRequest(request).includes('text/event-stream')
-}
 
 export function processPushResult(
   result: ResultProcessorInput,

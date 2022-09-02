@@ -1,18 +1,25 @@
-import { Plugin, ResultProcessor, ResultProcessorInput } from './types.js'
+import { isAcceptableByRequest } from './resultProcessor/accept.js'
+import { Plugin, ResultProcessor } from './types.js'
 
 export interface ResultProcessorPluginOptions {
   processResult: ResultProcessor
-  match?(request: Request, result: ResultProcessorInput): boolean
+  mediaTypes: string[]
 }
 
 export function useResultProcessor(
   options: ResultProcessorPluginOptions,
 ): Plugin {
-  const matchFn = options.match || (() => true)
   return {
-    onResultProcess({ request, result, setResultProcessor }) {
-      if (matchFn(request, result)) {
-        setResultProcessor(options.processResult)
+    onResultProcess({ request, acceptableMediaTypes, setResultProcessor }) {
+      let acceptedMediaType: string | undefined
+      for (const mediaType of options.mediaTypes) {
+        if (!acceptedMediaType && isAcceptableByRequest(mediaType, request)) {
+          acceptedMediaType = mediaType
+        }
+        acceptableMediaTypes.add(mediaType)
+      }
+      if (acceptedMediaType) {
+        setResultProcessor(options.processResult, acceptedMediaType)
       }
     },
   }

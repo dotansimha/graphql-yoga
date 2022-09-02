@@ -6,7 +6,7 @@ import {
   ResultProcessorInput,
 } from './plugins/types.js'
 import { GetEnvelopedFn } from '@envelop/core'
-import { acceptableMediaTypes } from './plugins/requestValidation/useAccept.js'
+import { getMediaTypesForRequest } from './plugins/resultProcessor/accept.js'
 
 export async function processResult({
   request,
@@ -24,13 +24,18 @@ export async function processResult({
 }) {
   let resultProcessor: ResultProcessor | undefined
 
+  const acceptableMediaTypes = new Set<string>()
+  let acceptedMediaType = '*/*'
+
   for (const onResultProcessHook of onResultProcessHooks) {
     await onResultProcessHook({
       request,
+      acceptableMediaTypes,
       result,
       resultProcessor,
-      setResultProcessor(newResultProcessor) {
+      setResultProcessor(newResultProcessor, newAcceptedMimeType) {
         resultProcessor = newResultProcessor
+        acceptedMediaType = newAcceptedMimeType
       },
     })
   }
@@ -41,12 +46,12 @@ export async function processResult({
       status: 406,
       statusText: 'Not Acceptable',
       headers: {
-        accept: acceptableMediaTypes.join('; charset=utf-8, '),
+        accept: [...acceptableMediaTypes].join('; charset=utf-8, '),
       },
     })
   }
 
-  return resultProcessor(result, fetchAPI)
+  return resultProcessor(result, fetchAPI, acceptedMediaType)
 }
 
 export async function processRequest<TContext>({

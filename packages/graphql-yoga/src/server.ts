@@ -56,18 +56,9 @@ import {
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString.js'
 import { useResultProcessor } from './plugins/useResultProcessor.js'
-import {
-  isRegularResult,
-  processRegularResult,
-} from './plugins/resultProcessor/regular.js'
-import {
-  isPushResult,
-  processPushResult,
-} from './plugins/resultProcessor/push.js'
-import {
-  isMultipartResult,
-  processMultipartResult,
-} from './plugins/resultProcessor/multipart.js'
+import { processRegularResult } from './plugins/resultProcessor/regular.js'
+import { processPushResult } from './plugins/resultProcessor/push.js'
+import { processMultipartResult } from './plugins/resultProcessor/multipart.js'
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
@@ -80,7 +71,6 @@ import { usePreventMutationViaGET } from './plugins/requestValidation/usePrevent
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
-import { useAccept } from './plugins/requestValidation/useAccept.js'
 
 /**
  * Configuration options for the server
@@ -313,7 +303,6 @@ export class YogaServer<
         }),
       // Middlewares before the GraphQL execution
       useCheckMethodForGraphQL(),
-      useAccept(),
       useRequestParser({
         match: isGETRequest,
         parse: parseGETRequest,
@@ -338,15 +327,15 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessor({
-        match: isMultipartResult,
+        mediaTypes: ['multipart/mixed'],
         processResult: processMultipartResult,
       }),
       useResultProcessor({
-        match: isPushResult,
+        mediaTypes: ['text/event-stream'],
         processResult: processPushResult,
       }),
       useResultProcessor({
-        match: isRegularResult,
+        mediaTypes: ['application/graphql-response+json', 'application/json'],
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
