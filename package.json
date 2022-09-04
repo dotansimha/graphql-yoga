@@ -12,8 +12,7 @@
     "start:docs": "yarn workspace website dev",
     "postinstall": "patch-package && husky install",
     "fix-bin": "node scripts/fix-bin.js",
-    "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx .",
-    "build-website": "yarn build && cd website && yarn build"
+    "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx ."
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
