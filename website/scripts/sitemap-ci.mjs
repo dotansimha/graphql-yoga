@@ -16,7 +16,7 @@ async function main() {
   const d = parser.parse(fs.readFileSync(sitemapPath, 'utf-8'))
 
   const routes = d.urlset.url.map((url) =>
-    url.loc.replace(`https://graphql-yoga.com`, ``),
+    url.loc.replace(process.env.SITE_URL || `https://graphql-yoga.com`, ``),
   )
 
   const redirectsPointingToNonExistingStuff = []
