@@ -149,7 +149,10 @@ export function useCORS<TServerContext>(
         )
         const response = new fetchAPI.Response(null, {
           status: 204,
-          headers,
+          headers: {
+            ...headers,
+            'Content-Length': '0',
+          },
         })
         endResponse(response)
       }
