@@ -72,6 +72,7 @@ import { usePreventMutationViaGET } from './plugins/requestValidation/usePrevent
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
+import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
 
 /**
  * Configuration options for the server
@@ -93,7 +94,7 @@ export type YogaServerOptions<
    * You can lean more about this here:
    * @see https://graphql-yoga.vercel.app/docs/features/error-masking
    *
-   * Default: `true`
+   * @default true
    */
   maskedErrors?: boolean | UseMaskedErrorsOpts
   /**
@@ -109,18 +110,24 @@ export type YogaServerOptions<
   cors?: CORSPluginOptions<TServerContext>
 
   /**
-   * GraphQL endpoint (defaults to '/graphql')
+   * GraphQL endpoint
    * So you need to define it explicitly if GraphQL API lives in a different path other than `/graphql`
+   *
+   * @default "/graphql"
    */
   graphqlEndpoint?: string
 
   /**
-   * Readiness check endpoint (defaults to '/readiness')
+   * Readiness check endpoint
+   *
+   * @default "/readiness"
    */
   readinessCheckEndpoint?: string
 
   /**
-   * Readiness check endpoint (defaults to '/readiness')
+   * Readiness check endpoint
+   *
+   * @default "/health"
    */
   healthCheckEndpoint?: string
 
@@ -132,7 +139,7 @@ export type YogaServerOptions<
   /**
    * GraphiQL options
    *
-   * Default: `true`
+   * @default true
    */
   graphiql?: GraphiQLOptionsOrFactory<TServerContext>
 
@@ -156,6 +163,14 @@ export type YogaServerOptions<
   fetchAPI?: FetchAPI
   multipart?: boolean
   id?: string
+  /**
+   * You can limit the number of batched operations per request.
+   *
+   * Set this to undefined or 0 to disable batching.
+   *
+   * @default 0
+   */
+  batchingLimit?: number
 }
 
 /**
@@ -337,6 +352,9 @@ export class YogaServer<
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
+      ...(options?.batchingLimit != null
+        ? [useLimitBatching(options.batchingLimit)]
+        : []),
       useCheckGraphQLQueryParams(),
       useUnhandledRoute({
         graphqlEndpoint,
