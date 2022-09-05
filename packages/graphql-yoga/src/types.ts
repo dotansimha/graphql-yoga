@@ -87,3 +87,5 @@ export type YogaMaskedErrorOpts = {
   errorMessage: string
   isDev: boolean
 }
+
+export type MaybeArray<T> = T | T[]

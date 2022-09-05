@@ -1,7 +1,5 @@
 import { ExecutionResult } from 'graphql'
-import { ExecutionPatchResult } from '../../types'
-
-type MaybeArray<T> = T | T[]
+import { ExecutionPatchResult, MaybeArray } from '../../types'
 
 // JSON stringifier that adjusts the result extensions while serialising
 export function jsonStringifyResult(

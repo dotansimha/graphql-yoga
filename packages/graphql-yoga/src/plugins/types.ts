@@ -1,6 +1,11 @@
 import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import { ExecutionPatchResult, FetchAPI, GraphQLParams } from '../types.js'
+import {
+  ExecutionPatchResult,
+  FetchAPI,
+  GraphQLParams,
+  MaybeArray,
+} from '../types.js'
 
 export type Plugin<
   PluginContext extends Record<string, any> = {},
@@ -94,8 +99,7 @@ export type ExecutorResult =
   | AsyncIterable<ExecutionPatchResult>
 
 export type ResultProcessorInput =
-  | ExecutionResult
-  | ExecutionResult[]
+  | MaybeArray<ExecutionResult>
   | AsyncIterable<ExecutionResult>
   | AsyncIterable<ExecutionPatchResult>
 
