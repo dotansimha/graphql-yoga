@@ -56,25 +56,16 @@ import {
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString.js'
 import { useResultProcessor } from './plugins/useResultProcessor.js'
-import {
-  isRegularResult,
-  processRegularResult,
-} from './plugins/resultProcessor/regular.js'
-import {
-  isPushResult,
-  processPushResult,
-} from './plugins/resultProcessor/push.js'
-import {
-  isMultipartResult,
-  processMultipartResult,
-} from './plugins/resultProcessor/multipart.js'
+import { processRegularResult } from './plugins/resultProcessor/regular.js'
+import { processPushResult } from './plugins/resultProcessor/push.js'
+import { processMultipartResult } from './plugins/resultProcessor/multipart.js'
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './error.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
-import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
+import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
@@ -336,19 +327,19 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessor({
-        match: isMultipartResult,
+        mediaTypes: ['multipart/mixed'],
         processResult: processMultipartResult,
       }),
       useResultProcessor({
-        match: isPushResult,
+        mediaTypes: ['text/event-stream'],
         processResult: processPushResult,
       }),
       useResultProcessor({
-        match: isRegularResult,
+        mediaTypes: ['application/graphql-response+json', 'application/json'],
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
-      useCheckGraphQLQueryParam(),
+      useCheckGraphQLQueryParams(),
       useUnhandledRoute({
         graphqlEndpoint,
         showLandingPage: options?.landingPage ?? true,
@@ -492,7 +483,6 @@ export class YogaServer<
       const errors = handleError(error, this.maskedErrorsOpts)
 
       const result: ExecutionResult = {
-        data: null,
         errors,
       }
       return processResult({

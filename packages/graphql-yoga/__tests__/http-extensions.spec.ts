@@ -246,4 +246,38 @@ describe('GraphQLError.extensions.http', () => {
     })
     expect(response.status).toBe(400)
   })
+
+  it('should respond with status 500 when error without http extension is thrown', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            _: String
+          }
+        `,
+      },
+      context: () => {
+        throw new GraphQLError('No http status extension', {
+          extensions: { http: { headers: { 'x-foo': 'bar' } } },
+        })
+      },
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ __typename }' }),
+    })
+    expect(response.status).toBe(500)
+    expect(response.headers.get('x-foo')).toBe('bar')
+    expect(await response.json()).toMatchInlineSnapshot(`
+      Object {
+        "errors": Array [
+          Object {
+            "message": "No http status extension",
+          },
+        ],
+      }
+    `)
+  })
 })

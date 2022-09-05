@@ -78,6 +78,11 @@ export function getResponseInitByRespectingErrors(
     status = 200
   }
 
+  if (!status) {
+    // there should always be a concrete status provided (avoids responding with the default 200 status codes on erroneous results)
+    status = 500
+  }
+
   return {
     status,
     headers,

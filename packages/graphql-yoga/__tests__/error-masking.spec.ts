@@ -186,15 +186,14 @@ describe('error masking', () => {
     })
     const body = JSON.parse(await response.text())
     expect(body).toMatchInlineSnapshot(`
-            Object {
-              "data": null,
-              "errors": Array [
-                Object {
-                  "message": "I like turtles",
-                },
-              ],
-            }
-          `)
+      Object {
+        "errors": Array [
+          Object {
+            "message": "I like turtles",
+          },
+        ],
+      }
+    `)
   })
 
   it('error thrown within context factory is masked', async () => {
@@ -213,15 +212,14 @@ describe('error masking', () => {
     })
     const body = JSON.parse(await response.text())
     expect(body).toMatchInlineSnapshot(`
-            Object {
-              "data": null,
-              "errors": Array [
-                Object {
-                  "message": "Unexpected error.",
-                },
-              ],
-            }
-          `)
+      Object {
+        "errors": Array [
+          Object {
+            "message": "Unexpected error.",
+          },
+        ],
+      }
+    `)
   })
 
   it('GraphQLError thrown within context factory with error masking is not masked', async () => {
@@ -240,15 +238,14 @@ describe('error masking', () => {
     })
     const body = JSON.parse(await response.text())
     expect(body).toMatchInlineSnapshot(`
-            Object {
-              "data": null,
-              "errors": Array [
-                Object {
-                  "message": "I like turtles",
-                },
-              ],
-            }
-          `)
+      Object {
+        "errors": Array [
+          Object {
+            "message": "I like turtles",
+          },
+        ],
+      }
+    `)
   })
 
   it('GraphQLError thrown within context factory has error extensions exposed on the response', async () => {
@@ -276,18 +273,19 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ greetings }' }),
     })
     const body = JSON.parse(await response.text())
-    expect(body).toStrictEqual({
-      data: null,
-      errors: [
-        {
-          message: 'I like turtles',
-          extensions: {
-            foo: 1,
+    expect(body).toMatchInlineSnapshot(`
+      Object {
+        "errors": Array [
+          Object {
+            "extensions": Object {
+              "foo": 1,
+            },
+            "message": "I like turtles",
           },
-        },
-      ],
-    })
-    expect(response.status).toEqual(200)
+        ],
+      }
+    `)
+    expect(response.status).toEqual(500)
   })
 
   it('parse error is not masked', async () => {
@@ -313,20 +311,21 @@ describe('error masking', () => {
     expect(response.status).toEqual(400)
     const body = JSON.parse(await response.text())
 
-    expect(body).toEqual({
-      data: null,
-      errors: [
-        {
-          locations: [
-            {
-              column: 10,
-              line: 1,
-            },
-          ],
-          message: 'Syntax Error: Expected Name, found <EOF>.',
-        },
-      ],
-    })
+    expect(body).toMatchInlineSnapshot(`
+      Object {
+        "errors": Array [
+          Object {
+            "locations": Array [
+              Object {
+                "column": 10,
+                "line": 1,
+              },
+            ],
+            "message": "Syntax Error: Expected Name, found <EOF>.",
+          },
+        ],
+      }
+    `)
   })
 
   it('validation error is not masked', async () => {
@@ -352,20 +351,20 @@ describe('error masking', () => {
     expect(response.status).toEqual(400)
     const body = JSON.parse(await response.text())
 
-    expect(body).toEqual({
-      data: null,
-      errors: [
-        {
-          locations: [
-            {
-              column: 2,
-              line: 1,
-            },
-          ],
-
-          message: 'Cannot query field "libl_pls" on type "Query".',
-        },
-      ],
-    })
+    expect(body).toMatchInlineSnapshot(`
+      Object {
+        "errors": Array [
+          Object {
+            "locations": Array [
+              Object {
+                "column": 2,
+                "line": 1,
+              },
+            ],
+            "message": "Cannot query field \\"libl_pls\\" on type \\"Query\\".",
+          },
+        ],
+      }
+    `)
   })
 })

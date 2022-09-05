@@ -18,6 +18,7 @@ describe('accept header', () => {
         accept: 'text/event-stream',
       },
     })
+
     expect(response.headers.get('content-type')).toEqual('text/event-stream')
     const valueStr = await response.text()
     expect(valueStr).toContain(
@@ -225,7 +226,7 @@ describe('accept header', () => {
       },
     })
     expect(response.headers.get('content-type')).toEqual(
-      'application/graphql-response+json',
+      'application/graphql-response+json; charset=utf-8',
     )
     const result = await response.json()
     expect(result).toEqual({ data: { ping: 'pong' } })
@@ -251,8 +252,9 @@ describe('accept header', () => {
           'application/graphql-response+json; charset=utf-8, application/json; charset=utf-8',
       },
     })
+
     expect(response.headers.get('content-type')).toEqual(
-      'application/graphql-response+json',
+      'application/graphql-response+json; charset=utf-8',
     )
     const result = await response.json()
     expect(result).toEqual({ data: { ping: 'pong' } })

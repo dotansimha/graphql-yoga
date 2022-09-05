@@ -5,11 +5,6 @@ import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 import { jsonStringifyResult } from './stringify.js'
 
-export function isMultipartResult(request: Request): boolean {
-  // There should be an explicit accept header for this result type
-  return !!request.headers.get('accept')?.includes('multipart/mixed')
-}
-
 export function processMultipartResult(
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,

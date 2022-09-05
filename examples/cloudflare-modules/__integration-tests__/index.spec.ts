@@ -32,7 +32,7 @@ test('should succeeds introspection query', async () => {
   const response = await worker.fetch(request)
 
   expect(response.status).toBe(200)
-  expect(response.headers.get('content-type')).toBe('application/json')
+  expect(response.headers.get('content-type')).toContain('application/json')
   expect(await response.json()).toMatchObject({
     data: {
       __schema: {
