@@ -1,5 +1,12 @@
 # @graphql-yoga/node
 
+## 2.13.13
+
+### Patch Changes
+
+- Updated dependencies [[`4cc0d688`](https://github.com/dotansimha/graphql-yoga/commit/4cc0d68833ed6299e283200af225fe629dd51b3b)]:
+  - @graphql-yoga/common@2.12.12
+
 ## 2.13.12
 
 ### Patch Changes

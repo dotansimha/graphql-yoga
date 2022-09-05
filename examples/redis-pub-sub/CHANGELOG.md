@@ -1,5 +1,12 @@
 # example-redis-pub-sub
 
+## 0.1.13
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.13
+
 ## 0.1.12
 
 ### Patch Changes

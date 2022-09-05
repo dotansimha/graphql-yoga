@@ -1,5 +1,11 @@
 # @graphql-yoga/common
 
+## 2.12.12
+
+### Patch Changes
+
+- [#1702](https://github.com/dotansimha/graphql-yoga/pull/1702) [`4cc0d688`](https://github.com/dotansimha/graphql-yoga/commit/4cc0d68833ed6299e283200af225fe629dd51b3b) Thanks [@ardatan](https://github.com/ardatan)! - fix(cors): add content-length: 0 header if 204 is returned by OPTIONS request
+
 ## 2.12.11
 
 ### Patch Changes

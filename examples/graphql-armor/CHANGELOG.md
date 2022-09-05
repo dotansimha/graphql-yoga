@@ -1,5 +1,12 @@
 # example-graphql-armor
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.13
+
 ## 0.0.6
 
 ### Patch Changes
