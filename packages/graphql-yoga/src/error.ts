@@ -72,13 +72,15 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
-        // Remove http extensions from the final response
-        delete error.extensions.http
-        //TODO: avoid slow "delete"
       }
     }
   } else {
     status = 200
+  }
+
+  if (!status) {
+    // there should always be a concrete status provided (avoids responding with the default 200 status codes on erroneous results)
+    status = 500
   }
 
   return {

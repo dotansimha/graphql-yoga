@@ -3,11 +3,7 @@ import { ExecutionResult } from 'graphql'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
-
-export function isPushResult(request: Request): boolean {
-  // There should be an explicit accept header for this result type
-  return !!request.headers.get('accept')?.includes('text/event-stream')
-}
+import { jsonStringifyResult } from './stringify.js'
 
 export function processPushResult(
   result: ResultProcessorInput,
@@ -45,7 +41,7 @@ export function processPushResult(
     async pull(controller) {
       const { done, value } = await iterator.next()
       if (value != null) {
-        const chunk = JSON.stringify(value)
+        const chunk = jsonStringifyResult(value)
         controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
       }
       if (done) {

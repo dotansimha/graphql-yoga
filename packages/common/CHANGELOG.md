@@ -1,5 +1,55 @@
 # @graphql-yoga/common
 
+## 2.12.10
+
+### Patch Changes
+
+- [#1671](https://github.com/dotansimha/graphql-yoga/pull/1671) [`cb360975`](https://github.com/dotansimha/graphql-yoga/commit/cb36097523b5700fed8260cb654cbce75d37de20) Thanks [@ardatan](https://github.com/ardatan)! - Respect Envelop's OnPluginInit's addPlugin method
+
+## 2.12.9
+
+### Patch Changes
+
+- [#1649](https://github.com/dotansimha/graphql-yoga/pull/1649) [`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.3.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/null) (from `^0.2.6`, in `dependencies`)
+
+* [#1667](https://github.com/dotansimha/graphql-yoga/pull/1667) [`313e6f30`](https://github.com/dotansimha/graphql-yoga/commit/313e6f3036a1ddeb7e6299925a49bb7f0c2d2eb6) Thanks [@dagda1](https://github.com/dagda1)! - fix(common): accept the server context if Yoga instance is used as a Request handler
+
+## 2.12.8
+
+### Patch Changes
+
+- [#1636](https://github.com/dotansimha/graphql-yoga/pull/1636) [`38c7c13e`](https://github.com/dotansimha/graphql-yoga/commit/38c7c13ec78acc98ebd988354e4d5e5ed9e9f3d7) Thanks [@ardatan](https://github.com/ardatan)! - Since 2.8.0, Yoga stopped accepting POST requests if they don't have "Content-Type" header defined. But this was a breaking change for the existing users in a minor release. Now this has been reverted. Now it is safer to upgrade from 2.7.0 to the latest by skipping 2.8.0
+
+## 2.12.7
+
+### Patch Changes
+
+- [#1634](https://github.com/dotansimha/graphql-yoga/pull/1634) [`5193e43`](https://github.com/dotansimha/graphql-yoga/commit/5193e436b7abd0abcfbbb25f9c1a33cbe5cb6446) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Use 'correct' deep import for working around unpkg limitations of not supporting the package.json exports map.
+
+## 2.12.6
+
+### Patch Changes
+
+- [#1603](https://github.com/dotansimha/graphql-yoga/pull/1603) [`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Update `@envelop/core` which resolves swallowed context errors with error masking.
+
+* [#1600](https://github.com/dotansimha/graphql-yoga/pull/1600) [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Apply the HTTP validation error plugin last in order to not interfere error masking when using the `handleValidationErrors` option.
+
+## 2.12.5
+
+### Patch Changes
+
+- eecf24c: Fix CommonJS TypeScript resolution with `moduleResolution` `node16` or `nodenext`
+- Updated dependencies [eecf24c]
+  - @graphql-yoga/subscription@2.2.3
+
+## 2.12.4
+
+### Patch Changes
+
+- c00dad3: Resolve issue where `@whatwg-node/fetch` caused other `fetch` to fail processing HTTP requests.
+
 ## 2.12.3
 
 ### Patch Changes

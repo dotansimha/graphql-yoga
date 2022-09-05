@@ -1,0 +1,158 @@
+diff --git a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
+index 4c476cb..80b0df6 100644
+--- a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
++++ b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.dev.js
+@@ -193,6 +193,19 @@ async function generateChangesForVersionTypeMarkdown(obj, type) {
+   }
+ } // release is the package and version we are releasing
+ 
++function getRelevantChangesets(
++  releases,
++  changesets
++) {
++  let relevantChangesetIds = new Set();
++  releases.forEach(rel => {
++    rel.changesets.forEach(cs => {
++      relevantChangesetIds.add(cs);
++    });
++  });
++
++  return changesets.filter(cs => relevantChangesetIds.has(cs.id));
++}
+ 
+ async function getChangelogEntry(release, releases, changesets, changelogFuncs, changelogOpts, {
+   updateInternalDependencies,
+@@ -215,32 +228,96 @@ async function getChangelogEntry(release, releases, changesets, changelogFuncs,
+       changelogLines[rls.type].push(changelogFuncs.getReleaseLine(cs, rls.type, changelogOpts));
+     }
+   });
+-  let dependentReleases = releases.filter(rel => {
++
++  let dependentReleases = [];
++  let peerDependentReleasesPatch = [];
++  let peerDependentReleasesMinor = [];
++  let peerDependentReleasesMajor = [];
++
++  releases.forEach(rel => {
+     var _release$packageJson$, _release$packageJson$2;
+ 
+     const dependencyVersionRange = (_release$packageJson$ = release.packageJson.dependencies) === null || _release$packageJson$ === void 0 ? void 0 : _release$packageJson$[rel.name];
+     const peerDependencyVersionRange = (_release$packageJson$2 = release.packageJson.peerDependencies) === null || _release$packageJson$2 === void 0 ? void 0 : _release$packageJson$2[rel.name];
+     const versionRange = dependencyVersionRange || peerDependencyVersionRange;
+-    return versionRange && shouldUpdateDependencyBasedOnConfig({
+-      type: rel.type,
+-      version: rel.newVersion
+-    }, {
+-      depVersionRange: versionRange,
+-      depType: dependencyVersionRange ? "dependencies" : "peerDependencies"
+-    }, {
+-      minReleaseType: updateInternalDependencies,
+-      onlyUpdatePeerDependentsWhenOutOfRange
+-    });
+-  });
+-  let relevantChangesetIds = new Set();
+-  dependentReleases.forEach(rel => {
+-    rel.changesets.forEach(cs => {
+-      relevantChangesetIds.add(cs);
+-    });
++    const depType = peerDependencyVersionRange
++      ? "peerDependencies"
++      : "dependencies";
++
++    const shouldUpdate =
++      versionRange 
++      && shouldUpdateDependencyBasedOnConfig({
++        type: rel.type,
++        version: rel.newVersion
++      }, {
++        depVersionRange: versionRange,
++        depType,
++      }, {
++        minReleaseType: updateInternalDependencies,
++        onlyUpdatePeerDependentsWhenOutOfRange
++      });
++
++    if (!shouldUpdate) {
++      return;
++    }
++
++    if (depType === "peerDependencies") {
++      if (rel.type === "patch") {
++        peerDependentReleasesPatch.push(rel)
++      } else if (rel.type === "minor") {
++        peerDependentReleasesMinor.push(rel)
++      } else if (rel.type === "major") {
++        peerDependentReleasesMajor.push(rel)
++      }
++    } else {
++      dependentReleases.push(rel);
++    }
+   });
+-  let relevantChangesets = changesets.filter(cs => relevantChangesetIds.has(cs.id));
+-  changelogLines.patch.push(changelogFuncs.getDependencyReleaseLine(relevantChangesets, dependentReleases, changelogOpts));
+-  return [`## ${release.newVersion}`, await generateChangesForVersionTypeMarkdown(changelogLines, "major"), await generateChangesForVersionTypeMarkdown(changelogLines, "minor"), await generateChangesForVersionTypeMarkdown(changelogLines, "patch")].filter(line => line).join("\n");
++
++  changelogLines.patch.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(peerDependentReleasesPatch, changesets),
++      peerDependentReleasesPatch,
++      changelogOpts,
++      "peerDependencies"
++    )
++  );
++
++  changelogLines.minor.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(peerDependentReleasesMinor, changesets),
++      peerDependentReleasesMinor,
++      changelogOpts,
++      "peerDependencies"
++    )
++  );
++
++  changelogLines.major.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(peerDependentReleasesMajor, changesets),
++      peerDependentReleasesMajor,
++      changelogOpts,
++      "peerDependencies"
++    )
++  );
++
++  changelogLines.patch.push(
++    changelogFuncs.getDependencyReleaseLine(
++      getRelevantChangesets(dependentReleases, changesets),
++      dependentReleases,
++      changelogOpts,
++      "dependencies"
++    )
++  );
++
++  return [
++    `## ${release.newVersion}`,
++    await generateChangesForVersionTypeMarkdown(changelogLines, "major"),
++    await generateChangesForVersionTypeMarkdown(changelogLines, "minor"),
++    await generateChangesForVersionTypeMarkdown(changelogLines, "patch")
++  ]
++    .filter(line => line)
++    .join("\n");
+ }
+ 
+ function stringDefined(s) {
+diff --git a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
+index d6e3ccb..38a06ea 100644
+--- a/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
++++ b/node_modules/@changesets/apply-release-plan/dist/apply-release-plan.cjs.js
+@@ -1,7 +1,7 @@
+ 'use strict';
+ 
+-if (process.env.NODE_ENV === "production") {
+-  module.exports = require("./apply-release-plan.cjs.prod.js");
+-} else {
+-  module.exports = require("./apply-release-plan.cjs.dev.js");
+-}
++// if (process.env.NODE_ENV === "production") {
++//   module.exports = require("./apply-release-plan.cjs.prod.js");
++// } else {
++module.exports = require("./apply-release-plan.cjs.dev.js");
++// }

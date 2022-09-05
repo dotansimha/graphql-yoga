@@ -38,6 +38,7 @@ export interface OnRequestEventPayload<TServerContext> {
   serverContext: TServerContext | undefined
   fetchAPI: FetchAPI
   endResponse(response: Response): void
+  url: URL
 }
 
 export type OnRequestParseHook = (
@@ -78,13 +79,18 @@ export type ResultProcessorInput =
 export type ResultProcessor = (
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,
+  acceptedMediaType: string,
 ) => PromiseOrValue<Response>
 
 export interface OnResultProcessEventPayload {
   request: Request
   result: ResultProcessorInput
   resultProcessor?: ResultProcessor
-  setResultProcessor(resultProcessor: ResultProcessor): void
+  acceptableMediaTypes: Set<string>
+  setResultProcessor(
+    resultProcessor: ResultProcessor,
+    acceptedMediaType: string,
+  ): void
 }
 
 export type OnResponseHook<TServerContext> = (

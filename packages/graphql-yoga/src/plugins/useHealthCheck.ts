@@ -16,8 +16,8 @@ export function useHealthCheck({
   readinessCheckEndpoint = '/readiness',
 }: HealthCheckPluginOptions = {}): Plugin {
   return {
-    async onRequest({ request, endResponse, fetchAPI }) {
-      const { pathname: requestPath } = new URL(request.url)
+    async onRequest({ request, endResponse, fetchAPI, url }) {
+      const { pathname: requestPath } = url
       if (requestPath === healthCheckEndpoint) {
         logger.debug(`Responding Health Check`)
         const response = new fetchAPI.Response(

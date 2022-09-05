@@ -56,25 +56,16 @@ import {
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString.js'
 import { useResultProcessor } from './plugins/useResultProcessor.js'
-import {
-  isRegularResult,
-  processRegularResult,
-} from './plugins/resultProcessor/regular.js'
-import {
-  isPushResult,
-  processPushResult,
-} from './plugins/resultProcessor/push.js'
-import {
-  isMultipartResult,
-  processMultipartResult,
-} from './plugins/resultProcessor/multipart.js'
+import { processRegularResult } from './plugins/resultProcessor/regular.js'
+import { processPushResult } from './plugins/resultProcessor/push.js'
+import { processMultipartResult } from './plugins/resultProcessor/multipart.js'
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './error.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
-import { useCheckGraphQLParams } from './plugins/requestValidation/useCheckGraphQLParams.js'
+import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
@@ -182,7 +173,7 @@ export class YogaServer<
     TUserContext & TServerContext & YogaInitialContext
   >
   public logger: YogaLogger
-  protected graphqlEndpoint: string
+  public readonly graphqlEndpoint: string
   public fetchAPI: FetchAPI
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
@@ -229,7 +220,11 @@ export class YogaServer<
               : {}),
           }
 
+    const maskedErrors =
+      this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
+
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
+    const graphqlEndpoint = this.graphqlEndpoint
 
     this.plugins = [
       // Use the schema provided by the user
@@ -332,30 +327,37 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessor({
-        match: isMultipartResult,
+        mediaTypes: ['multipart/mixed'],
         processResult: processMultipartResult,
       }),
       useResultProcessor({
-        match: isPushResult,
+        mediaTypes: ['text/event-stream'],
         processResult: processPushResult,
       }),
       useResultProcessor({
-        match: isRegularResult,
+        mediaTypes: ['application/graphql-response+json', 'application/json'],
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
-
-      // So the user can manipulate the query parameter
-      useCheckGraphQLParams(),
-      // We handle validation errors at the end
-      useHTTPValidationError(),
-      // We make sure that the user doesn't send a mutation with GET
-      usePreventMutationViaGET(),
-      this.maskedErrorsOpts != null && useMaskedErrors(this.maskedErrorsOpts),
+      useCheckGraphQLQueryParams(),
       useUnhandledRoute({
-        graphqlEndpoint: this.graphqlEndpoint,
+        graphqlEndpoint,
         showLandingPage: options?.landingPage ?? true,
       }),
+      // We make sure that the user doesn't send a mutation with GET
+      usePreventMutationViaGET(),
+      // To make sure those are called at the end
+      {
+        onPluginInit({ addPlugin }) {
+          if (maskedErrors) {
+            addPlugin(useMaskedErrors(maskedErrors))
+          }
+          addPlugin(
+            // We handle validation errors at the end
+            useHTTPValidationError(),
+          )
+        },
+      },
     ]
 
     this.getEnveloped = envelop({
@@ -401,6 +403,7 @@ export class YogaServer<
           endResponse(newResponse) {
             response = newResponse
           },
+          url: new URL(request.url),
         })
         if (response) {
           return response
@@ -480,7 +483,6 @@ export class YogaServer<
       const errors = handleError(error, this.maskedErrorsOpts)
 
       const result: ExecutionResult = {
-        data: null,
         errors,
       }
       return processResult({
@@ -509,7 +511,8 @@ export class YogaServer<
         })
       }
       return response
-    } catch (e) {
+    } catch (e: any) {
+      this.logger.error(e)
       return new this.fetchAPI.Response('Internal Server Error', {
         status: 500,
       })

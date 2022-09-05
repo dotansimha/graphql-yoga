@@ -51,9 +51,11 @@ describe('introspection', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.headers.get('content-type')).toBe('application/json')
+    expect(response.headers.get('content-type')).toBe(
+      'application/graphql-response+json; charset=utf-8',
+    )
     const body = await response.json()
-    expect(body.data).toBeNull()
+    expect(body.data).toBeUndefined()
     expect(body.errors![0]).toMatchInlineSnapshot(`
             Object {
               "locations": Array [

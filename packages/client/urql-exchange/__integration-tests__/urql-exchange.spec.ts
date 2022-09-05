@@ -67,8 +67,8 @@ describe('graphExchange', () => {
     })
     await new Promise<void>((resolve) => server.listen(port, hostname, resolve))
   })
-  afterAll(async () => {
-    await new Promise((resolve) => server.close(resolve))
+  afterAll(() => {
+    server.close()
   })
   it('should handle queries correctly', async () => {
     const result = await client
