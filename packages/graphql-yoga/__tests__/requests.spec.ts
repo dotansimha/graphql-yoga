@@ -270,7 +270,7 @@ describe('requests', () => {
 
     expect(response.status).toBe(400)
     const body = JSON.parse(await response.text())
-    expect(body.data).toBe(null)
+    expect(body.data).toBeUndefined()
     expect(body.errors?.[0].message).toBe(
       'Unexpected parameter "test" in the request body.',
     )
