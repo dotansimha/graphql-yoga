@@ -1,5 +1,13 @@
 # graphql-ws
 
+## 0.10.13
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.13
+  - graphql-ws@0.10.13
+
 ## 0.10.12
 
 ### Patch Changes

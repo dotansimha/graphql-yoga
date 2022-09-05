@@ -1,5 +1,12 @@
 # issue-template
 
+## 1.13.13
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @graphql-yoga/node@2.13.13
+
 ## 1.13.12
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # service-worker
 
+## 0.12.12
+
+### Patch Changes
+
+- Updated dependencies [[`4cc0d688`](https://github.com/dotansimha/graphql-yoga/commit/4cc0d68833ed6299e283200af225fe629dd51b3b)]:
+  - @graphql-yoga/common@2.12.12
+
 ## 0.12.11
 
 ### Patch Changes
