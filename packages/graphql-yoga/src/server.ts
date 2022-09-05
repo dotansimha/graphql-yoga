@@ -19,6 +19,7 @@ import {
 } from './types.js'
 import {
   ExecutorResult,
+  OnParamsHook,
   OnRequestHook,
   OnRequestParseDoneHook,
   OnRequestParseHook,
@@ -195,6 +196,7 @@ export class YogaServer<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
   private onRequestParseHooks: OnRequestParseHook[]
+  private onParamsHooks: OnParamsHook[]
   private onRequestHooks: OnRequestHook<TServerContext>[]
   private onResultProcessHooks: OnResultProcess[]
   private onResponseHooks: OnResponseHook<TServerContext>[]
@@ -382,15 +384,19 @@ export class YogaServer<
 
     this.onRequestHooks = []
     this.onRequestParseHooks = []
+    this.onParamsHooks = []
     this.onResultProcessHooks = []
     this.onResponseHooks = []
     for (const plugin of this.plugins) {
       if (plugin) {
+        if (plugin.onRequest) {
+          this.onRequestHooks.push(plugin.onRequest)
+        }
         if (plugin.onRequestParse) {
           this.onRequestParseHooks.push(plugin.onRequestParse)
         }
-        if (plugin.onRequest) {
-          this.onRequestHooks.push(plugin.onRequest)
+        if (plugin.onParams) {
+          this.onParamsHooks.push(plugin.onParams)
         }
         if (plugin.onResultProcess) {
           this.onResultProcessHooks.push(plugin.onResultProcess)
@@ -405,11 +411,9 @@ export class YogaServer<
   async getResultForParams(
     {
       params,
-      onRequestParseDoneList,
       request,
     }: {
       params: GraphQLParams
-      onRequestParseDoneList: OnRequestParseDoneHook[]
       request: Request
     },
     ...args: {} extends TServerContext
@@ -419,19 +423,17 @@ export class YogaServer<
     try {
       let result: ExecutorResult | undefined
 
-      for (const onRequestParseDone of onRequestParseDoneList) {
-        await onRequestParseDone({
+      for (const onParamsHook of this.onParamsHooks) {
+        await onParamsHook({
           params,
-          setParams(newParams: GraphQLParams) {
+          request,
+          setParams(newParams) {
             params = newParams
           },
-          setResult(earlyResult: ExecutorResult) {
-            result = earlyResult
+          setResult(newResult) {
+            result = newResult
           },
         })
-        if (result) {
-          break
-        }
       }
 
       if (result == null) {
@@ -515,7 +517,16 @@ export class YogaServer<
         })
       }
 
-      const requestParserResult = await requestParser(request)
+      let requestParserResult = await requestParser(request)
+
+      for (const onRequestParseDone of onRequestParseDoneList) {
+        await onRequestParseDone({
+          requestParserResult,
+          setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+            requestParserResult = newParams
+          },
+        })
+      }
 
       result = (await (Array.isArray(requestParserResult)
         ? Promise.all(
@@ -523,7 +534,6 @@ export class YogaServer<
               this.getResultForParams(
                 {
                   params,
-                  onRequestParseDoneList,
                   request,
                 },
                 ...args,
@@ -533,7 +543,6 @@ export class YogaServer<
         : this.getResultForParams(
             {
               params: requestParserResult,
-              onRequestParseDoneList,
               request,
             },
             ...args,

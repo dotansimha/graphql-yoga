@@ -5,9 +5,9 @@ export function useLimitBatching(limit = Infinity): Plugin {
   return {
     onRequestParse() {
       return {
-        onRequestParseDone({ params }) {
-          if (Array.isArray(params)) {
-            if (params.length > limit) {
+        onRequestParseDone({ requestParserResult }) {
+          if (Array.isArray(requestParserResult)) {
+            if (requestParserResult.length > limit) {
               throw new GraphQLError(
                 `Batching is limited to ${limit} operations per request.`,
                 {
