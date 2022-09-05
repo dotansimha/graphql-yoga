@@ -1,15 +1,14 @@
-name: pr
+name: v3 Next Release
 on:
-  pull_request:
+  push:
     branches:
-      - master
       - v3
 
 jobs:
   release:
     uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
     with:
-      npmTag: alpha
+      npmTag: next
       buildScript: build
       nodeVersion: 18
     secrets:
