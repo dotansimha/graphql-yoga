@@ -354,9 +354,7 @@ export class YogaServer<
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
-      ...(options?.batchingLimit != null
-        ? [useLimitBatching(options.batchingLimit)]
-        : []),
+      useLimitBatching(options?.batchingLimit),
       useCheckGraphQLQueryParams(),
       useUnhandledRoute({
         graphqlEndpoint,

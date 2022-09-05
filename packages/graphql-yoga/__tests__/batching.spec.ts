@@ -2,21 +2,22 @@ import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 
 describe('Batching', () => {
-  const yoga = createYoga({
-    schema: createSchema({
-      typeDefs: /* GraphQL */ `
-        type Query {
-          hello: String
-          bye: String
-        }
-      `,
-      resolvers: {
-        Query: {
-          hello: () => 'hello',
-          bye: () => 'bye',
-        },
+  const schema = createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
+        bye: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'hello',
+        bye: () => 'bye',
       },
-    }),
+    },
+  })
+  const yoga = createYoga({
+    schema,
     batchingLimit: 2,
   })
   it('should support batching for JSON requests', async () => {
@@ -72,7 +73,7 @@ describe('Batching', () => {
       { data: { bye: 'bye' } },
     ])
   })
-  it('should throw an error if the limit is exceeded', async () => {
+  it('should throw if the limit is exceeded', async () => {
     const query1 = /* GraphQL */ `
       query {
         hello
@@ -105,6 +106,37 @@ describe('Batching', () => {
       errors: [
         {
           message: 'Batching is limited to 2 operations per request.',
+        },
+      ],
+    })
+  })
+  it('should not support batching by default', async () => {
+    const noBatchingYoga = createYoga({
+      schema,
+    })
+    const query1 = /* GraphQL */ `
+      query {
+        hello
+      }
+    `
+    const query2 = /* GraphQL */ `
+      query {
+        bye
+      }
+    `
+    const response = await noBatchingYoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([{ query: query1 }, { query: query2 }]),
+    })
+    expect(response.status).toBe(400)
+    const result = await response.json()
+    expect(result).toEqual({
+      errors: [
+        {
+          message: 'Batching is not supported.',
         },
       ],
     })
