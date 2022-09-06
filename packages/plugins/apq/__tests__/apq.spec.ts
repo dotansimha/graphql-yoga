@@ -36,7 +36,7 @@ describe('Automatic Persisted Queries', () => {
       }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryNotFound')
   })
@@ -68,7 +68,7 @@ describe('Automatic Persisted Queries', () => {
       }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.__typename).toBe('Query')
   })
@@ -106,7 +106,7 @@ describe('Automatic Persisted Queries', () => {
     const entry = store.get(persistedQueryEntry.sha256Hash)
     expect(entry).toBe(query)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.__typename).toBe('Query')
   })
@@ -138,7 +138,7 @@ describe('Automatic Persisted Queries', () => {
     })
 
     expect(response.status).toEqual(500)
-    expect(JSON.parse(await response.text())).toEqual({
+    expect(await response.json()).toEqual({
       errors: [{ message: 'PersistedQueryMismatch' }],
     })
   })

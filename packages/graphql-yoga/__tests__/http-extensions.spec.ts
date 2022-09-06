@@ -82,7 +82,7 @@ describe('GraphQLError.extensions.http', () => {
 
     expect(response.status).toBe(503)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body).toMatchObject({
       data: {
         a: null,

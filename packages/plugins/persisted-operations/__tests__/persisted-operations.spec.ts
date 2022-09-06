@@ -38,7 +38,7 @@ describe('Persisted Operations', () => {
       }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryNotFound')
   })
@@ -75,7 +75,7 @@ describe('Persisted Operations', () => {
       }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.__typename).toBe('Query')
   })
@@ -110,7 +110,7 @@ describe('Persisted Operations', () => {
       }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryOnly')
   })
@@ -145,7 +145,7 @@ describe('Persisted Operations', () => {
       }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
@@ -182,7 +182,7 @@ describe('Persisted Operations', () => {
       }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
