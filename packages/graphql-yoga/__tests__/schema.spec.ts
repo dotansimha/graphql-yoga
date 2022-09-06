@@ -16,15 +16,13 @@ describe('schema', () => {
     })
 
     expect(response.status).toEqual(500)
-    expect(await response.json()).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
-            "message": "Unexpected error.",
-          },
-        ],
-      }
-    `)
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Unexpected error.',
+        },
+      ],
+    })
   })
 
   it('schema factory function', async () => {

@@ -185,15 +185,13 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ __typename }' }),
     })
     const body = await response.json()
-    expect(body).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
-            "message": "I like turtles",
-          },
-        ],
-      }
-    `)
+    expect(body).toMatchObject({
+      errors: [
+        {
+          message: 'I like turtles',
+        },
+      ],
+    })
   })
 
   it('error thrown within context factory is masked', async () => {
@@ -211,15 +209,13 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ __typename }' }),
     })
     const body = await response.json()
-    expect(body).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
-            "message": "Unexpected error.",
-          },
-        ],
-      }
-    `)
+    expect(body).toMatchObject({
+      errors: [
+        {
+          message: 'Unexpected error.',
+        },
+      ],
+    })
   })
 
   it('GraphQLError thrown within context factory with error masking is not masked', async () => {
@@ -237,15 +233,13 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ __typename }' }),
     })
     const body = await response.json()
-    expect(body).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
-            "message": "I like turtles",
-          },
-        ],
-      }
-    `)
+    expect(body).toMatchObject({
+      errors: [
+        {
+          message: 'I like turtles',
+        },
+      ],
+    })
   })
 
   it('GraphQLError thrown within context factory has error extensions exposed on the response', async () => {
@@ -273,18 +267,16 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ greetings }' }),
     })
     const body = await response.json()
-    expect(body).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
-            "extensions": Object {
-              "foo": 1,
-            },
-            "message": "I like turtles",
+    expect(body).toMatchObject({
+      errors: [
+        {
+          extensions: {
+            foo: 1,
           },
-        ],
-      }
-    `)
+          message: 'I like turtles',
+        },
+      ],
+    })
     expect(response.status).toEqual(500)
   })
 
@@ -311,21 +303,19 @@ describe('error masking', () => {
     expect(response.status).toEqual(400)
     const body = await response.json()
 
-    expect(body).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
-            "locations": Array [
-              Object {
-                "column": 10,
-                "line": 1,
-              },
-            ],
-            "message": "Syntax Error: Expected Name, found <EOF>.",
-          },
-        ],
-      }
-    `)
+    expect(body).toMatchObject({
+      errors: [
+        {
+          locations: [
+            {
+              column: 10,
+              line: 1,
+            },
+          ],
+          message: 'Syntax Error: Expected Name, found <EOF>.',
+        },
+      ],
+    })
   })
 
   it('validation error is not masked', async () => {
@@ -351,21 +341,19 @@ describe('error masking', () => {
     expect(response.status).toEqual(400)
     const body = await response.json()
 
-    expect(body).toMatchInlineSnapshot(`
-      Object {
-        "errors": Array [
-          Object {
-            "locations": Array [
-              Object {
-                "column": 2,
-                "line": 1,
-              },
-            ],
-            "message": "Cannot query field \\"libl_pls\\" on type \\"Query\\".",
-          },
-        ],
-      }
-    `)
+    expect(body).toMatchObject({
+      errors: [
+        {
+          locations: [
+            {
+              column: 2,
+              line: 1,
+            },
+          ],
+          message: 'Cannot query field "libl_pls" on type "Query".',
+        },
+      ],
+    })
   })
 
   it('error thrown within context factory is exposed via originalError extension field in dev mode', async () => {
