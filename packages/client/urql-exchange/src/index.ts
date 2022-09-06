@@ -21,6 +21,7 @@ import {
   Client,
   OperationContext,
   ExchangeIO,
+  AnyVariables,
 } from '@urql/core'
 
 import { ExecutionRequest, isAsyncIterable } from '@graphql-tools/utils'
@@ -38,23 +39,12 @@ function createYogaSourceFactory(
   options?: YogaExchangeOptions,
 ) {
   const urlLoader = new UrlLoader()
-  const extraFetchOptions =
-    typeof client.fetchOptions === 'function'
-      ? client.fetchOptions()
-      : client.fetchOptions
-  const executor = urlLoader.getExecutorAsync(options?.endpoint || client.url, {
-    subscriptionsProtocol: SubscriptionProtocol.SSE,
-    multipart: true,
-    customFetch: client.fetch,
-    useGETForQueries: client.preferGetMethod,
-    headers: extraFetchOptions?.headers as Record<string, string>,
-    method: extraFetchOptions?.method as 'GET' | 'POST',
-    credentials: extraFetchOptions?.credentials,
-    ...options,
-  })
-  return function makeYogaSource<TData, TVariables extends Record<string, any>>(
+  return function makeYogaSource<
+    TData extends Record<string, any>,
+    TVariables extends Record<string, any>,
+  >(
     operation: Operation<TData, TVariables>,
-  ): Source<OperationResult<TData, TVariables>> {
+  ): Source<OperationResult<TData, AnyVariables>> {
     const operationName = getOperationName(operation.query)
     const executionRequest: ExecutionRequest<TVariables, OperationContext> = {
       document: operation.query,
@@ -67,7 +57,24 @@ function createYogaSourceFactory(
         headers: operation.context.headers,
       },
     }
-    return make<OperationResult<TData, TVariables>>((observer) => {
+    const extraFetchOptions =
+      typeof operation.context.fetchOptions === 'function'
+        ? operation.context.fetchOptions()
+        : operation.context.fetchOptions
+    const executor = urlLoader.getExecutorAsync(
+      options?.endpoint || operation.context.url,
+      {
+        subscriptionsProtocol: SubscriptionProtocol.SSE,
+        multipart: true,
+        customFetch: operation.context.fetch,
+        useGETForQueries: operation.context.preferGetMethod,
+        headers: extraFetchOptions?.headers as Record<string, string>,
+        method: extraFetchOptions?.method as 'GET' | 'POST',
+        credentials: extraFetchOptions?.credentials,
+        ...options,
+      },
+    )
+    return make<OperationResult<TData, AnyVariables>>((observer) => {
       let ended = false
       executor(executionRequest)
         .then(
@@ -78,7 +85,7 @@ function createYogaSourceFactory(
             if (!isAsyncIterable(result)) {
               observer.next(makeResult(operation, result))
             } else {
-              let prevResult: OperationResult<TData, TVariables> | null = null
+              let prevResult: OperationResult<TData, AnyVariables> | null = null
 
               for await (const value of result) {
                 if (value) {
@@ -114,10 +121,10 @@ export function yogaExchange(options?: YogaExchangeOptions): Exchange {
     const makeYogaSource = createYogaSourceFactory(client, options)
     return function yogaExchangeIO<
       TData,
-      TVariables extends Record<string, any>,
+      TVariables,
     >(
       ops$: Source<Operation<TData, TVariables>>,
-    ): Source<OperationResult<TData, TVariables>> {
+    ): Source<OperationResult<TData, AnyVariables>> {
       const sharedOps$ = share(ops$)
 
       const executedOps$ = pipe(
