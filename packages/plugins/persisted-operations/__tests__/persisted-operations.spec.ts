@@ -205,11 +205,18 @@ describe('Persisted Operations', () => {
     })
     const persistedOperationKey = 'my-persisted-operation'
     store.set(persistedOperationKey, '{__typename}')
-    const response = await request(yoga).post('/graphql').send({
-      doc_id: persistedOperationKey,
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        doc_id: persistedOperationKey,
+      }),
     })
 
-    const body = JSON.parse(response.text)
+    const body = await response.json()
+
     expect(body.errors).toBeUndefined()
     expect(body.data.__typename).toBe('Query')
   })

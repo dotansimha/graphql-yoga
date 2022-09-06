@@ -395,7 +395,6 @@ describe('error masking', () => {
 
     const body = JSON.parse(await response.text())
     expect(body).toStrictEqual({
-      data: null,
       errors: [
         {
           message: 'Unexpected error.',
@@ -408,6 +407,6 @@ describe('error masking', () => {
         },
       ],
     })
-    expect(response.status).toEqual(200)
+    expect(response.status).toEqual(500)
   })
 })
