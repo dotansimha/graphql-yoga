@@ -1,25 +1,22 @@
-import { Plugin, PromiseOrValue } from 'graphql-yoga'
+import { GraphQLParams, Plugin, PromiseOrValue } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
 
-export interface PersistedOperationsStore {
-  get(key: string): PromiseOrValue<string | null | undefined>
-}
+export type ExtractPersistedOperationId = (
+  params: GraphQLParams,
+) => null | string
 
-export interface PersistedOperationExtension {
-  version: 1
-  sha256Hash: string
-}
-
-function decodePersistedOperationsExtension(
-  input: Record<string, any> | null | undefined,
-): null | PersistedOperationExtension {
+export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
+  params: GraphQLParams,
+): null | string => {
   if (
-    input != null &&
-    typeof input === 'object' &&
-    input?.version === 1 &&
-    typeof input?.sha256Hash === 'string'
+    params.extensions != null &&
+    typeof params.extensions === 'object' &&
+    params.extensions?.persistedQuery != null &&
+    typeof params.extensions?.persistedQuery === 'object' &&
+    params.extensions?.persistedQuery.version === 1 &&
+    typeof params.extensions?.persistedQuery.sha256Hash === 'string'
   ) {
-    return input as PersistedOperationExtension
+    return params.extensions?.persistedQuery.sha256Hash
   }
   return null
 }
@@ -30,21 +27,26 @@ type AllowArbitraryOperationsHandler = (
 
 export interface UsePersistedOperationsOptions {
   /**
-   * Store for reading persisted operations.
+   * A function that fetches the persisted operation
    */
-  store: PersistedOperationsStore
+  getPersistedOperation(key: string): PromiseOrValue<string | null>
   /**
    * Whether to allow execution of arbitrary GraphQL operations aside from persisted operations.
    */
   allowArbitraryOperations?: boolean | AllowArbitraryOperationsHandler
+  /**
+   * The path to the persisted operation id
+   */
+  extractPersistedOperationId?: ExtractPersistedOperationId
 }
 
-export function usePersistedOperations<TPluginContext>(
-  args: UsePersistedOperationsOptions,
-): Plugin<TPluginContext> {
-  const allowArbitraryOperations = args.allowArbitraryOperations ?? false
+export function usePersistedOperations<TPluginContext>({
+  getPersistedOperation,
+  allowArbitraryOperations = false,
+  extractPersistedOperationId = defaultExtractPersistedOperationId,
+}: UsePersistedOperationsOptions): Plugin<TPluginContext> {
   return {
-    async onParams({ params, request, setParams }) {
+    async onParams({ request, params, setParams }) {
       if (params.query) {
         if (
           (typeof allowArbitraryOperations === 'boolean'
@@ -56,21 +58,20 @@ export function usePersistedOperations<TPluginContext>(
         return
       }
 
-      const persistedQueryData = decodePersistedOperationsExtension(
-        params.extensions?.persistedQuery,
-      )
+      const persistedOperationKey = extractPersistedOperationId(params)
 
-      if (persistedQueryData == null) {
+      if (persistedOperationKey == null) {
         throw new GraphQLError('PersistedQueryNotFound')
       }
 
-      const persistedQuery = await args.store.get(persistedQueryData.sha256Hash)
+      const persistedQuery = await getPersistedOperation(persistedOperationKey)
       if (persistedQuery == null) {
         throw new GraphQLError('PersistedQueryNotFound')
       }
       setParams({
-        ...params,
         query: persistedQuery,
+        variables: params.variables,
+        extensions: params.extensions,
       })
     },
   }
