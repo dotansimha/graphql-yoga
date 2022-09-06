@@ -31,7 +31,7 @@ it('should expose Node req and res objects in the context', async () => {
       `http://localhost:${port}/graphql?query=query{isNode}`,
     )
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.isNode).toBe(true)
   } finally {

@@ -33,7 +33,7 @@ describe('introspection', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data?.__schema.queryType.name).toBe('Query')
   })

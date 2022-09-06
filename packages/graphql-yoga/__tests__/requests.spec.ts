@@ -43,7 +43,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.ping).toBe('pong')
   })
@@ -57,7 +57,7 @@ describe('requests', () => {
     )
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.ping).toBe('pong')
   })
@@ -75,7 +75,7 @@ describe('requests', () => {
     expect(response.status).toBe(405)
 
     expect(response.headers.get('allow')).toEqual('POST')
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
 
     expect(body.data).toBeUndefined()
     expect(body.errors).toHaveLength(1)
@@ -98,7 +98,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.echo).toBe(null)
   })
@@ -118,7 +118,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.echo).toBe('hello')
   })
@@ -131,7 +131,7 @@ describe('requests', () => {
     })
     expect(response.status).toBe(400)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
 
     expect(body.errors).toBeDefined()
     expect(body.data).toBeUndefined()
@@ -145,7 +145,7 @@ describe('requests', () => {
     })
     expect(response.status).toBe(400)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toEqual('POST body sent invalid JSON.')
 
@@ -161,7 +161,7 @@ describe('requests', () => {
 
     expect(response.status).toBe(400)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
 
     expect(body.errors).toBeDefined()
     expect(body.data).toBeUndefined()
@@ -176,7 +176,7 @@ describe('requests', () => {
 
     expect(response.status).toBe(400)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.data).toBeUndefined()
     expect(body.errors?.[0].message).toBe('Must provide query string.')
   })
@@ -190,7 +190,7 @@ describe('requests', () => {
 
     expect(response.status).toBe(400)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.data).toBeUndefined()
     expect(body.errors?.[0].message).toBe(
       'Expected "query" param to be a string, but given object.',
@@ -224,7 +224,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.ping).toBe('pong')
   })
@@ -239,7 +239,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.ping).toBe('pong')
   })
@@ -254,7 +254,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.ping).toBe('pong')
   })
@@ -269,7 +269,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toBe(400)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.data).toBeUndefined()
     expect(body.errors?.[0].message).toBe(
       'Unexpected parameter "test" in the request body.',

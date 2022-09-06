@@ -1,5 +1,4 @@
 import { createYoga, createSchema, GraphQLParams } from 'graphql-yoga'
-import request from 'supertest'
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 
 const schema = createSchema({
@@ -11,7 +10,7 @@ const schema = createSchema({
 })
 
 describe('Persisted Operations', () => {
-  it('should return not found error if persisted query is missing', async () => {
+  it('returns not found error for missing persisted query', async () => {
     const yoga = createYoga({
       plugins: [
         usePersistedOperations({
@@ -22,9 +21,13 @@ describe('Persisted Operations', () => {
       ],
       schema,
     })
-    const response = await request(yoga)
-      .post('/graphql')
-      .send({
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
         extensions: {
           persistedQuery: {
             version: 1,
@@ -32,13 +35,15 @@ describe('Persisted Operations', () => {
               'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
           },
         },
-      })
+      }),
+    })
 
-    const body = JSON.parse(response.text)
+    const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryNotFound')
   })
-  it('should load the persisted query when stored', async () => {
+
+  it('uses a persisted query from the store', async () => {
     const store = new Map<string, string>()
     const yoga = createYoga({
       plugins: [
@@ -50,25 +55,32 @@ describe('Persisted Operations', () => {
       ],
       schema,
     })
+
     const persistedQueryEntry = {
       version: 1,
       sha256Hash:
         'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
+
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
-    const response = await request(yoga)
-      .post('/graphql')
-      .send({
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
         extensions: {
           persistedQuery: persistedQueryEntry,
         },
-      })
+      }),
+    })
 
-    const body = JSON.parse(response.text)
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data.__typename).toBe('Query')
   })
-  it('should reject non-persisted operations', async () => {
+
+  it('rejects non-persisted operations', async () => {
     const store = new Map<string, string>()
 
     const yoga = createYoga({
@@ -88,15 +100,21 @@ describe('Persisted Operations', () => {
     }
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
 
-    const response = await request(yoga).post('/graphql').send({
-      query: '{__typename}',
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{__typename}',
+      }),
     })
 
-    const body = JSON.parse(response.text)
+    const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryOnly')
   })
-  it('should allow non-persisted operations via allowArbitraryOperations flag', async () => {
+  it('allows non-persisted operations via allowArbitraryOperations flag', async () => {
     const store = new Map<string, string>()
 
     const yoga = createYoga({
@@ -117,15 +135,21 @@ describe('Persisted Operations', () => {
     }
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
 
-    const response = await request(yoga).post('/graphql').send({
-      query: '{__typename}',
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{__typename}',
+      }),
     })
 
-    const body = JSON.parse(response.text)
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
-  it('should allow non-persisted operations via allowArbitraryOperations based on a header', async () => {
+  it('allows non-persisted operations via allowArbitraryOperations based on a header', async () => {
     const store = new Map<string, string>()
 
     const yoga = createYoga({
@@ -147,14 +171,18 @@ describe('Persisted Operations', () => {
     }
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
 
-    const response = await request(yoga)
-      .post('/graphql')
-      .set('foo', 'bar')
-      .send({
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        foo: 'bar',
+      },
+      body: JSON.stringify({
         query: '{__typename}',
-      })
+      }),
+    })
 
-    const body = JSON.parse(response.text)
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
@@ -177,11 +205,18 @@ describe('Persisted Operations', () => {
     })
     const persistedOperationKey = 'my-persisted-operation'
     store.set(persistedOperationKey, '{__typename}')
-    const response = await request(yoga).post('/graphql').send({
-      doc_id: persistedOperationKey,
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        doc_id: persistedOperationKey,
+      }),
     })
 
-    const body = JSON.parse(response.text)
+    const body = await response.json()
+
     expect(body.errors).toBeUndefined()
     expect(body.data.__typename).toBe('Query')
   })

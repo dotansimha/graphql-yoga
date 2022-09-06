@@ -38,7 +38,7 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ hi hello }' }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.data.hi).toBeNull()
     expect(body.errors![0].message).toBe('Unexpected error.')
     expect(body.data.hello).toBeNull()
@@ -57,7 +57,7 @@ describe('error masking', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ query: '{ hi hello }' }),
     })
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
 
     expect(body.data.hi).toBeNull()
     expect(body.errors![0].message).toBe('Hahahaha')
@@ -77,7 +77,7 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ hi hello }' }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.data.hi).toBeNull()
     expect(body.errors![0].message).toBe('Unexpected error.')
     expect(body.data.hello).toBeNull()
@@ -99,7 +99,7 @@ describe('error masking', () => {
       body: JSON.stringify({ query: '{ hi hello }' }),
     })
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.data.hi).toBeNull()
     expect(body.errors?.[0]?.message).toBe('Unexpected error.')
     expect(body.errors?.[0]?.extensions).toStrictEqual({
@@ -129,7 +129,7 @@ describe('error masking', () => {
         body: JSON.stringify({ query: '{ hi hello }' }),
       })
 
-      const body = JSON.parse(await response.text())
+      const body = await response.json()
       expect(body.data.hi).toBeNull()
       expect(body.errors?.[0]?.message).toBe('Unexpected error.')
       expect(body.errors?.[0]?.extensions).toStrictEqual({
@@ -165,7 +165,7 @@ describe('error masking', () => {
 
     expect(response.status).toBe(500)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors?.[0]?.message).toBe('Unexpected error.')
   })
 
@@ -184,7 +184,7 @@ describe('error masking', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ query: '{ __typename }' }),
     })
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       Object {
         "errors": Array [
@@ -210,7 +210,7 @@ describe('error masking', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ query: '{ __typename }' }),
     })
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       Object {
         "errors": Array [
@@ -236,7 +236,7 @@ describe('error masking', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ query: '{ __typename }' }),
     })
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       Object {
         "errors": Array [
@@ -272,7 +272,7 @@ describe('error masking', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ query: '{ greetings }' }),
     })
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       Object {
         "errors": Array [
@@ -309,7 +309,7 @@ describe('error masking', () => {
     })
 
     expect(response.status).toEqual(400)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
 
     expect(body).toMatchInlineSnapshot(`
       Object {
@@ -349,7 +349,7 @@ describe('error masking', () => {
     })
 
     expect(response.status).toEqual(400)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
 
     expect(body).toMatchInlineSnapshot(`
       Object {
@@ -366,5 +366,47 @@ describe('error masking', () => {
         ],
       }
     `)
+  })
+
+  it('error thrown within context factory is exposed via originalError extension field in dev mode', async () => {
+    const yoga = createYoga({
+      logging: false,
+      context: () => {
+        throw new Error('I am the original error.')
+      },
+      maskedErrors: {
+        isDev: true,
+      },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+    })
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{a}' }),
+    })
+
+    const body = await response.json()
+    expect(body).toStrictEqual({
+      errors: [
+        {
+          message: 'Unexpected error.',
+          extensions: {
+            originalError: {
+              message: 'I am the original error.',
+              stack: expect.stringContaining('Error: I am the original error.'),
+            },
+          },
+        },
+      ],
+    })
+    expect(response.status).toEqual(500)
   })
 })
