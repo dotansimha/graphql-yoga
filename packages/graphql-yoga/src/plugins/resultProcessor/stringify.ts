@@ -1,9 +1,9 @@
 import { ExecutionResult } from 'graphql'
-import { ExecutionPatchResult } from '../../types'
+import { ExecutionPatchResult, MaybeArray } from '../../types'
 
 // JSON stringifier that adjusts the result extensions while serialising
 export function jsonStringifyResult(
-  result: ExecutionResult | ExecutionPatchResult,
+  result: MaybeArray<ExecutionResult | ExecutionPatchResult>,
 ) {
   return JSON.stringify(result, (key, value) => {
     if (key === 'extensions') {

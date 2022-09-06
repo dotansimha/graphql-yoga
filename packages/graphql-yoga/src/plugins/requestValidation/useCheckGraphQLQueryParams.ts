@@ -97,12 +97,8 @@ export function isValidGraphQLParams(params: unknown): params is GraphQLParams {
 
 export function useCheckGraphQLQueryParams(): Plugin {
   return {
-    onRequestParse() {
-      return {
-        onRequestParseDone({ params }) {
-          checkGraphQLQueryParams(params)
-        },
-      }
+    onParams({ params }) {
+      checkGraphQLQueryParams(params)
     },
   }
 }

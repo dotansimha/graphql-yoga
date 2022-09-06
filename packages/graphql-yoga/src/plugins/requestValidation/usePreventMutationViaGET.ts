@@ -49,7 +49,13 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
   return {
     onParse() {
       // We should improve this by getting Yoga stuff from the hook params directly instead of the context
-      return ({ result, context: { request, operationName } }) => {
+      return ({
+        result,
+        context: {
+          request,
+          params: { operationName },
+        },
+      }) => {
         // Run only if this is a Yoga request
         // the `request` might be missing when using graphql-ws for example
         // in which case throwing an error would abruptly close the socket
