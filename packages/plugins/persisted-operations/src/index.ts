@@ -40,7 +40,9 @@ export interface UsePersistedOperationsOptions {
   extractPersistedOperationId?: ExtractPersistedOperationId
 }
 
-export function usePersistedOperations<TPluginContext>({
+export function usePersistedOperations<
+  TPluginContext extends Record<string, any>,
+>({
   getPersistedOperation,
   allowArbitraryOperations = false,
   extractPersistedOperationId = defaultExtractPersistedOperationId,

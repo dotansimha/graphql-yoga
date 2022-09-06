@@ -670,16 +670,19 @@ export class YogaServer<
   }
 }
 
-export type YogaServerInstance<TServerContext, TUserContext, TRootValue> =
-  ServerAdapter<
-    TServerContext,
-    YogaServer<TServerContext, TUserContext, TRootValue>
-  >
+export type YogaServerInstance<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+  TRootValue extends Record<string, any>,
+> = ServerAdapter<
+  TServerContext,
+  YogaServer<TServerContext, TUserContext, TRootValue>
+>
 
 export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
-  TRootValue = {},
+  TRootValue extends Record<string, any> = {},
 >(
   options: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
 ): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
