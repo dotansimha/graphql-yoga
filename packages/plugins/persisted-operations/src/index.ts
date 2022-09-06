@@ -1,7 +1,13 @@
 import { GraphQLParams, Plugin, PromiseOrValue } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
 
-function defaultGetPersistedOperationKey(params: GraphQLParams): null | string {
+export type ExtractPersistedOperationId = (
+  params: GraphQLParams,
+) => null | string
+
+export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
+  params: GraphQLParams,
+): null | string => {
   if (
     params.extensions != null &&
     typeof params.extensions === 'object' &&
@@ -31,15 +37,14 @@ export interface UsePersistedOperationsOptions {
   /**
    * The path to the persisted operation id
    */
-  getPersistedOperationKey?(params: GraphQLParams): string | null
+  extractPersistedOperationId?: ExtractPersistedOperationId
 }
 
-export function usePersistedOperations<TPluginContext>(
-  args: UsePersistedOperationsOptions,
-): Plugin<TPluginContext> {
-  const getPersistedOperationKey =
-    args.getPersistedOperationKey ?? defaultGetPersistedOperationKey
-  const allowArbitraryOperations = args.allowArbitraryOperations ?? false
+export function usePersistedOperations<TPluginContext>({
+  getPersistedOperation,
+  allowArbitraryOperations = false,
+  extractPersistedOperationId = defaultExtractPersistedOperationId,
+}: UsePersistedOperationsOptions): Plugin<TPluginContext> {
   return {
     onRequestParse({ request }) {
       return {
@@ -58,13 +63,13 @@ export function usePersistedOperations<TPluginContext>(
             return
           }
 
-          const persistedOperationKey = getPersistedOperationKey(params)
+          const persistedOperationKey = extractPersistedOperationId(params)
 
           if (persistedOperationKey == null) {
             throw new GraphQLError('PersistedQueryNotFound')
           }
 
-          const persistedQuery = await args.getPersistedOperation(
+          const persistedQuery = await getPersistedOperation(
             persistedOperationKey,
           )
           if (persistedQuery == null) {

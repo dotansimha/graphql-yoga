@@ -166,7 +166,9 @@ describe('Persisted Operations', () => {
           getPersistedOperation(key: string) {
             return store.get(key) || null
           },
-          getPersistedOperationKey(params: GraphQLParams & { doc_id: string }) {
+          extractPersistedOperationId(
+            params: GraphQLParams & { doc_id?: string },
+          ) {
             return params.doc_id ?? null
           },
         }),
