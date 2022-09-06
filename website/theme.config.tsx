@@ -36,6 +36,7 @@ const config: DocsThemeConfig = {
       </div>
     </>
   ),
+  projectChatLink: 'https://discord.gg/94CDTmgmbs',
   head: () => (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
