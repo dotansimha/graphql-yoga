@@ -47,15 +47,15 @@ describe('Disable Introspection with plugin', () => {
     expect(response.headers['content-type']).toBe('application/json')
     expect(response.body.data).toBeNull()
     expect(response.body.errors![0]).toMatchInlineSnapshot(`
-      Object {
-        "extensions": Object {},
-        "locations": Array [
-          Object {
+      {
+        "extensions": {},
+        "locations": [
+          {
             "column": 7,
             "line": 3,
           },
         ],
-        "message": "GraphQL introspection has been disabled, but the requested query contained the field \\"__schema\\".",
+        "message": "GraphQL introspection has been disabled, but the requested query contained the field "__schema".",
       }
     `)
   })
@@ -248,10 +248,10 @@ describe('Context error', () => {
     })
     const body = JSON.parse(response.text)
     expect(body).toMatchInlineSnapshot(`
-      Object {
+      {
         "data": null,
-        "errors": Array [
-          Object {
+        "errors": [
+          {
             "message": "I like turtles",
           },
         ],
@@ -272,10 +272,10 @@ describe('Context error', () => {
     })
     const body = JSON.parse(response.text)
     expect(body).toMatchInlineSnapshot(`
-      Object {
+      {
         "data": null,
-        "errors": Array [
-          Object {
+        "errors": [
+          {
             "message": "Unexpected error.",
           },
         ],
@@ -296,10 +296,10 @@ describe('Context error', () => {
     })
     const body = JSON.parse(response.text)
     expect(body).toMatchInlineSnapshot(`
-      Object {
+      {
         "data": null,
-        "errors": Array [
-          Object {
+        "errors": [
+          {
             "message": "I like turtles",
           },
         ],
@@ -382,13 +382,13 @@ it('parse error is sent to clients', async () => {
     }).then((_) => _.json())
 
     expect(result).toMatchInlineSnapshot(`
-      Object {
+      {
         "data": null,
-        "errors": Array [
-          Object {
-            "extensions": Object {},
-            "locations": Array [
-              Object {
+        "errors": [
+          {
+            "extensions": {},
+            "locations": [
+              {
                 "column": 10,
                 "line": 1,
               },
@@ -420,18 +420,18 @@ it('validation error is sent to clients', async () => {
     }).then((_) => _.json())
 
     expect(result).toMatchInlineSnapshot(`
-      Object {
+      {
         "data": null,
-        "errors": Array [
-          Object {
-            "extensions": Object {},
-            "locations": Array [
-              Object {
+        "errors": [
+          {
+            "extensions": {},
+            "locations": [
+              {
                 "column": 2,
                 "line": 1,
               },
             ],
-            "message": "Cannot query field \\"libl_pls\\" on type \\"Query\\".",
+            "message": "Cannot query field "libl_pls" on type "Query".",
           },
         ],
       }

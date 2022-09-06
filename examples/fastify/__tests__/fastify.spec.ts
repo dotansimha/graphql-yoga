@@ -140,27 +140,27 @@ describe('fastify example integration', () => {
       })
     expect(response.statusCode).toEqual(200)
     expect(response.text).toMatchInlineSnapshot(`
-      "data: {\\"data\\":{\\"countdown\\":10}}
+      "data: {"data":{"countdown":10}}
 
-      data: {\\"data\\":{\\"countdown\\":9}}
+      data: {"data":{"countdown":9}}
 
-      data: {\\"data\\":{\\"countdown\\":8}}
+      data: {"data":{"countdown":8}}
 
-      data: {\\"data\\":{\\"countdown\\":7}}
+      data: {"data":{"countdown":7}}
 
-      data: {\\"data\\":{\\"countdown\\":6}}
+      data: {"data":{"countdown":6}}
 
-      data: {\\"data\\":{\\"countdown\\":5}}
+      data: {"data":{"countdown":5}}
 
-      data: {\\"data\\":{\\"countdown\\":4}}
+      data: {"data":{"countdown":4}}
 
-      data: {\\"data\\":{\\"countdown\\":3}}
+      data: {"data":{"countdown":3}}
 
-      data: {\\"data\\":{\\"countdown\\":2}}
+      data: {"data":{"countdown":2}}
 
-      data: {\\"data\\":{\\"countdown\\":1}}
+      data: {"data":{"countdown":1}}
 
-      data: {\\"data\\":{\\"countdown\\":0}}
+      data: {"data":{"countdown":0}}
 
       "
     `)
@@ -181,27 +181,27 @@ describe('fastify example integration', () => {
       })
     expect(response.statusCode).toEqual(200)
     expect(response.text).toMatchInlineSnapshot(`
-      "data: {\\"data\\":{\\"countdown\\":10}}
+      "data: {"data":{"countdown":10}}
 
-      data: {\\"data\\":{\\"countdown\\":9}}
+      data: {"data":{"countdown":9}}
 
-      data: {\\"data\\":{\\"countdown\\":8}}
+      data: {"data":{"countdown":8}}
 
-      data: {\\"data\\":{\\"countdown\\":7}}
+      data: {"data":{"countdown":7}}
 
-      data: {\\"data\\":{\\"countdown\\":6}}
+      data: {"data":{"countdown":6}}
 
-      data: {\\"data\\":{\\"countdown\\":5}}
+      data: {"data":{"countdown":5}}
 
-      data: {\\"data\\":{\\"countdown\\":4}}
+      data: {"data":{"countdown":4}}
 
-      data: {\\"data\\":{\\"countdown\\":3}}
+      data: {"data":{"countdown":3}}
 
-      data: {\\"data\\":{\\"countdown\\":2}}
+      data: {"data":{"countdown":2}}
 
-      data: {\\"data\\":{\\"countdown\\":1}}
+      data: {"data":{"countdown":1}}
 
-      data: {\\"data\\":{\\"countdown\\":0}}
+      data: {"data":{"countdown":0}}
 
       "
     `)
