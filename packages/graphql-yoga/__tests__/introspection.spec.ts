@@ -56,16 +56,15 @@ describe('introspection', () => {
     )
     const body = await response.json()
     expect(body.data).toBeUndefined()
-    expect(body.errors![0]).toMatchInlineSnapshot(`
-            Object {
-              "locations": Array [
-                Object {
-                  "column": 7,
-                  "line": 3,
-                },
-              ],
-              "message": "GraphQL introspection has been disabled, but the requested query contained the field \\"__schema\\".",
-            }
-          `)
+    expect(body.errors![0]).toMatchObject({
+      locations: [
+        {
+          column: 7,
+          line: 3,
+        },
+      ],
+      message:
+        'GraphQL introspection has been disabled, but the requested query contained the field "__schema".',
+    })
   })
 })
