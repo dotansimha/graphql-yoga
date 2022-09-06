@@ -18,7 +18,7 @@ describe('Batching', () => {
   })
   const yoga = createYoga({
     schema,
-    batchingLimit: 2,
+    batching: true,
   })
   it('should support batching for JSON requests', async () => {
     const query1 = /* GraphQL */ `
@@ -73,7 +73,7 @@ describe('Batching', () => {
       { data: { bye: 'bye' } },
     ])
   })
-  it('should throw if the limit is exceeded', async () => {
+  it('should throw if the default limit is exceeded', async () => {
     const query1 = /* GraphQL */ `
       query {
         hello
@@ -84,11 +84,6 @@ describe('Batching', () => {
         bye
       }
     `
-    const query3 = /* GraphQL */ `
-      query {
-        hello
-      }
-    `
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -97,7 +92,16 @@ describe('Batching', () => {
       body: JSON.stringify([
         { query: query1 },
         { query: query2 },
-        { query: query3 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
       ]),
     })
     expect(response.status).toBe(413)
@@ -105,7 +109,7 @@ describe('Batching', () => {
     expect(result).toEqual({
       errors: [
         {
-          message: 'Batching is limited to 2 operations per request.',
+          message: 'Batching is limited to 10 operations per request.',
         },
       ],
     })
@@ -137,6 +141,157 @@ describe('Batching', () => {
       errors: [
         {
           message: 'Batching is not supported.',
+        },
+      ],
+    })
+  })
+  it('should respect `batching.limit` option', async () => {
+    const yoga = createYoga({
+      schema,
+      batching: {
+        limit: 2,
+      },
+    })
+    const query1 = /* GraphQL */ `
+      query {
+        hello
+      }
+    `
+    const query2 = /* GraphQL */ `
+      query {
+        bye
+      }
+    `
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+      ]),
+    })
+
+    expect(response.status).toBe(413)
+    const result = await response.json()
+    expect(result).toEqual({
+      errors: [
+        {
+          message: 'Batching is limited to 2 operations per request.',
+        },
+      ],
+    })
+  })
+  it('should not allow batching if `batching: false`', async () => {
+    const yoga = createYoga({
+      schema,
+      batching: false,
+    })
+    const query1 = /* GraphQL */ `
+      query {
+        hello
+      }
+    `
+    const query2 = /* GraphQL */ `
+      query {
+        bye
+      }
+    `
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([{ query: query1 }, { query: query2 }]),
+    })
+    expect(response.status).toBe(400)
+    const result = await response.json()
+    expect(result).toEqual({
+      errors: [
+        {
+          message: 'Batching is not supported.',
+        },
+      ],
+    })
+  })
+  it('should not allow batching if `batching.limit` is 0', async () => {
+    const yoga = createYoga({
+      schema,
+      batching: {
+        limit: 0,
+      },
+    })
+    const query1 = /* GraphQL */ `
+      query {
+        hello
+      }
+    `
+    const query2 = /* GraphQL */ `
+      query {
+        bye
+      }
+    `
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([{ query: query1 }, { query: query2 }]),
+    })
+    expect(response.status).toBe(400)
+    const result = await response.json()
+    expect(result).toEqual({
+      errors: [
+        {
+          message: 'Batching is not supported.',
+        },
+      ],
+    })
+  })
+  it('should set `batching.limit` to 10 by default', async () => {
+    const yoga = createYoga({
+      schema,
+      batching: {},
+    })
+    const query1 = /* GraphQL */ `
+      query {
+        hello
+      }
+    `
+    const query2 = /* GraphQL */ `
+      query {
+        bye
+      }
+    `
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+        { query: query1 },
+        { query: query2 },
+      ]),
+    })
+    expect(response.status).toBe(413)
+    const result = await response.json()
+    expect(result).toEqual({
+      errors: [
+        {
+          message: 'Batching is limited to 10 operations per request.',
         },
       ],
     })

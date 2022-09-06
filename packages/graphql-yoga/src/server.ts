@@ -162,17 +162,35 @@ export type YogaServerOptions<
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: FetchAPI
+  /**
+   * GraphQL Multipart Request spec support
+   *
+   * @see https://github.com/jaydenseric/graphql-multipart-request-spec
+   *
+   * @default true
+   */
   multipart?: boolean
   id?: string
   /**
-   * You can limit the number of batched operations per request.
+   * Batching RFC Support configuration
    *
-   * Set this to undefined or 0 to disable batching.
+   * @see https://github.com/graphql/graphql-over-http/blob/main/rfcs/Batching.md
    *
-   * @default 0
+   * @default false
    */
-  batchingLimit?: number
+  batching?: BatchingOptions
 }
+
+export type BatchingOptions =
+  | boolean
+  | {
+      /**
+       * You can limit the number of batched operations per request.
+       *
+       * @default 10
+       */
+      limit?: number
+    }
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -240,6 +258,15 @@ export class YogaServer<
 
     const maskedErrors =
       this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
+
+    let batchingLimit: number = 0
+    if (options?.batching) {
+      if (typeof options.batching === 'boolean') {
+        batchingLimit = 10
+      } else {
+        batchingLimit = options.batching.limit ?? 10
+      }
+    }
 
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
     const graphqlEndpoint = this.graphqlEndpoint
@@ -354,7 +381,7 @@ export class YogaServer<
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
-      useLimitBatching(options?.batchingLimit),
+      useLimitBatching(batchingLimit),
       useCheckGraphQLQueryParams(),
       useUnhandledRoute({
         graphqlEndpoint,
