@@ -1,4 +1,4 @@
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createYoga, createSchema, GraphQLParams } from 'graphql-yoga'
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 
 const schema = createSchema({
