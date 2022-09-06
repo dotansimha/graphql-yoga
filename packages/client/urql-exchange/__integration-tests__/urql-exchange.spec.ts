@@ -78,6 +78,7 @@ describe('graphExchange', () => {
             hello
           }
         `,
+        {},
       )
       .toPromise()
     expect(result.error).toBeUndefined()
@@ -87,11 +88,14 @@ describe('graphExchange', () => {
   })
   it('should handle subscriptions correctly', async () => {
     const observable = pipe(
-      client.subscription(/* GraphQL */ `
-        subscription Time {
-          time
-        }
-      `),
+      client.subscription(
+        /* GraphQL */ `
+          subscription Time {
+            time
+          }
+        `,
+        {},
+      ),
       toObservable,
     )
 
