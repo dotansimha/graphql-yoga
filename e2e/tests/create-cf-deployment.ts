@@ -14,6 +14,7 @@ import { version } from '@pulumi/cloudflare/package.json'
 
 export function createCFDeployment(
   projectName: string,
+  isModule = false,
 ): DeploymentConfiguration<{
   workerUrl: string
 }> {
@@ -50,6 +51,7 @@ export function createCFDeployment(
           `../examples/${projectName}/dist/index.js`,
           'utf-8',
         ),
+        module: isModule,
         secretTextBindings: [
           {
             name: 'GRAPHQL_ROUTE',
