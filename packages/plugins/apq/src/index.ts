@@ -54,7 +54,7 @@ function decodeAPQExtension(
   return null
 }
 
-export function useAPQ<TPluginContext>(
+export function useAPQ<TPluginContext extends Record<string, any>>(
   options: APQOptions = {},
 ): Plugin<TPluginContext> {
   const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options

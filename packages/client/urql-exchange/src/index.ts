@@ -52,7 +52,7 @@ function createYogaSourceFactory(
     credentials: extraFetchOptions?.credentials,
     ...options,
   })
-  return function makeYogaSource<TData, TVariables>(
+  return function makeYogaSource<TData, TVariables extends Record<string, any>>(
     operation: Operation<TData, TVariables>,
   ): Source<OperationResult<TData, TVariables>> {
     const operationName = getOperationName(operation.query)
@@ -112,7 +112,10 @@ function createYogaSourceFactory(
 export function yogaExchange(options?: YogaExchangeOptions): Exchange {
   return function yogaExchangeFn({ forward, client }): ExchangeIO {
     const makeYogaSource = createYogaSourceFactory(client, options)
-    return function yogaExchangeIO<TData, TVariables>(
+    return function yogaExchangeIO<
+      TData,
+      TVariables extends Record<string, any>,
+    >(
       ops$: Source<Operation<TData, TVariables>>,
     ): Source<OperationResult<TData, TVariables>> {
       const sharedOps$ = share(ops$)
