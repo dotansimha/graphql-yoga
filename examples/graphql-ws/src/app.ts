@@ -58,6 +58,7 @@ export function buildApp() {
             ...ctx,
             req: ctx.extra.request,
             socket: ctx.extra.socket,
+            params: msg.payload,
           })
 
         const args = {

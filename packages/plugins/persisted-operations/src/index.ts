@@ -46,42 +46,33 @@ export function usePersistedOperations<TPluginContext>({
   extractPersistedOperationId = defaultExtractPersistedOperationId,
 }: UsePersistedOperationsOptions): Plugin<TPluginContext> {
   return {
-    onRequestParse({ request }) {
-      return {
-        onRequestParseDone: async function persistedQueriesOnRequestParseDone({
-          params,
-          setParams,
-        }) {
-          if (params.query) {
-            if (
-              (typeof allowArbitraryOperations === 'boolean'
-                ? allowArbitraryOperations
-                : await allowArbitraryOperations(request)) === false
-            ) {
-              throw new GraphQLError('PersistedQueryOnly')
-            }
-            return
-          }
-
-          const persistedOperationKey = extractPersistedOperationId(params)
-
-          if (persistedOperationKey == null) {
-            throw new GraphQLError('PersistedQueryNotFound')
-          }
-
-          const persistedQuery = await getPersistedOperation(
-            persistedOperationKey,
-          )
-          if (persistedQuery == null) {
-            throw new GraphQLError('PersistedQueryNotFound')
-          }
-          setParams({
-            query: persistedQuery,
-            variables: params.variables,
-            extensions: params.extensions,
-          })
-        },
+    async onParams({ request, params, setParams }) {
+      if (params.query) {
+        if (
+          (typeof allowArbitraryOperations === 'boolean'
+            ? allowArbitraryOperations
+            : await allowArbitraryOperations(request)) === false
+        ) {
+          throw new GraphQLError('PersistedQueryOnly')
+        }
+        return
       }
+
+      const persistedOperationKey = extractPersistedOperationId(params)
+
+      if (persistedOperationKey == null) {
+        throw new GraphQLError('PersistedQueryNotFound')
+      }
+
+      const persistedQuery = await getPersistedOperation(persistedOperationKey)
+      if (persistedQuery == null) {
+        throw new GraphQLError('PersistedQueryNotFound')
+      }
+      setParams({
+        query: persistedQuery,
+        variables: params.variables,
+        extensions: params.extensions,
+      })
     },
   }
 }

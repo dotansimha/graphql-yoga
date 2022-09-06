@@ -1,8 +1,9 @@
 name: pr
 on:
-  pull_request:
+  push:
     branches:
-      - master
+      - v3
+  pull_request:
 
 jobs:
   release:

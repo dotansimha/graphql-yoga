@@ -32,25 +32,13 @@ export interface GraphQLParams<
 
 export interface YogaInitialContext {
   /**
-   * A Document containing GraphQL Operations and Fragments to execute.
+   * GraphQL Parameters
    */
-  query?: string | DocumentNode
+  params: GraphQLParams
   /**
    * An object describing the HTTP request.
    */
   request: Request
-  /**
-   * The name of the Operation in the Document to execute.
-   */
-  operationName?: string
-  /**
-   * Values for any Variables defined by the Operation.
-   */
-  variables?: Record<string, any>
-  /**
-   * Additional extensions object sent by the client.
-   */
-  extensions?: Record<string, any>
 }
 
 export type CORSOptions =
@@ -99,3 +87,5 @@ export type YogaMaskedErrorOpts = {
   errorMessage: string
   isDev: boolean
 }
+
+export type MaybeArray<T> = T | T[]

@@ -1,5 +1,9 @@
 name: test
 on:
+  push:
+    branches:
+      - 'master'
+      - 'v3'
   pull_request:
     paths-ignore:
       - 'website/**'

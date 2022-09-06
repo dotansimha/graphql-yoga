@@ -1,7 +1,7 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
 import { getResponseInitByRespectingErrors } from '../../error.js'
-import { FetchAPI } from '../../types.js'
+import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 import { jsonStringifyResult } from './stringify.js'
 
@@ -18,7 +18,7 @@ export function processPushResult(
 
   const responseInit = getResponseInitByRespectingErrors(result, headersInit)
 
-  let iterator: AsyncIterator<ExecutionResult<any>>
+  let iterator: AsyncIterator<MaybeArray<ExecutionResult>>
 
   const textEncoder = new fetchAPI.TextEncoder()
   const readableStream = new fetchAPI.ReadableStream({
