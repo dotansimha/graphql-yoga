@@ -34,19 +34,13 @@ import { OperationTypeNode } from 'graphql'
 
 export type YogaExchangeOptions = LoadFromUrlOptions
 
-function createYogaSourceFactory(
-  client: Client,
-  options?: YogaExchangeOptions,
-) {
+export function yogaExchange(options?: YogaExchangeOptions): Exchange {
   const urlLoader = new UrlLoader()
-  return function makeYogaSource<
-    TData extends Record<string, any>,
-    TVariables extends Record<string, any>,
-  >(
-    operation: Operation<TData, TVariables>,
-  ): Source<OperationResult<TData, AnyVariables>> {
+  function makeYogaSource<TData extends Record<string, any>>(
+    operation: Operation<TData>,
+  ): Source<OperationResult<TData>> {
     const operationName = getOperationName(operation.query)
-    const executionRequest: ExecutionRequest<TVariables, OperationContext> = {
+    const executionRequest: ExecutionRequest<any, OperationContext> = {
       document: operation.query,
       operationName,
       operationType: operation.kind as OperationTypeNode,
@@ -74,7 +68,7 @@ function createYogaSourceFactory(
         ...options,
       },
     )
-    return make<OperationResult<TData, AnyVariables>>((observer) => {
+    return make<OperationResult<TData>>((observer) => {
       let ended = false
       executor(executionRequest)
         .then(
@@ -114,17 +108,10 @@ function createYogaSourceFactory(
       }
     })
   }
-}
-
-export function yogaExchange(options?: YogaExchangeOptions): Exchange {
   return function yogaExchangeFn({ forward, client }): ExchangeIO {
-    const makeYogaSource = createYogaSourceFactory(client, options)
-    return function yogaExchangeIO<
-      TData,
-      TVariables,
-    >(
+    return function yogaExchangeIO<TData, TVariables extends AnyVariables>(
       ops$: Source<Operation<TData, TVariables>>,
-    ): Source<OperationResult<TData, AnyVariables>> {
+    ): Source<OperationResult<TData>> {
       const sharedOps$ = share(ops$)
 
       const executedOps$ = pipe(
