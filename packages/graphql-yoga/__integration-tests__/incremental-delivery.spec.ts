@@ -58,7 +58,6 @@ describe('incremental delivery', () => {
     const yoga = createYoga({
       logging: false,
       plugins: [plugin],
-      maskedErrors: false,
     })
 
     const server = createServer(yoga)
@@ -140,7 +139,27 @@ describe('incremental delivery: node-fetch', () => {
             fields: () => ({
               name: { type: GraphQLString },
               type: { type: GraphQLString },
-              text: { type: GraphQLString },
+              text: {
+                type: GraphQLString,
+                resolve: async (file) => {
+                  try {
+                    return await file.text()
+                  } catch (e) {
+                    if (
+                      e instanceof Error &&
+                      e.message.startsWith('File size limit exceeded: ')
+                    ) {
+                      throw createGraphQLError(e.message, {
+                        extensions: {
+                          http: {
+                            status: 413,
+                          },
+                        },
+                      })
+                    }
+                  }
+                },
+              },
             }),
           }),
           description: 'Upload a single file',
@@ -338,6 +357,8 @@ describe('incremental delivery: node-fetch', () => {
       method: 'POST',
       body: formData,
     })
+
+    expect(response.status).toBe(413)
 
     const body = await response.json()
 
