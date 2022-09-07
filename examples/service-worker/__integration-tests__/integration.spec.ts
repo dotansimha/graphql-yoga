@@ -55,11 +55,12 @@ describe('Service worker', () => {
             subscribe: () =>
               new Repeater(async (push, end) => {
                 const interval = setInterval(() => {
-                  push({ currentTime: new Date().toISOString() })
+                  push(new Date().toISOString())
                 }, 1000)
                 end.then(() => clearInterval(interval))
                 await end
               }),
+            resolve: (value) => value,
           },
         },
       },

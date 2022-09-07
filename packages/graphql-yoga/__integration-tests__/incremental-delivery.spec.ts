@@ -18,6 +18,7 @@ import {
 } from '@whatwg-node/fetch'
 import getPort from 'get-port'
 import EventSource from 'eventsource'
+import { createGraphQLError } from '@graphql-tools/utils'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
@@ -138,7 +139,27 @@ describe('incremental delivery: node-fetch', () => {
             fields: () => ({
               name: { type: GraphQLString },
               type: { type: GraphQLString },
-              text: { type: GraphQLString },
+              text: {
+                type: GraphQLString,
+                resolve: async (file) => {
+                  try {
+                    return await file.text()
+                  } catch (e) {
+                    if (
+                      e instanceof Error &&
+                      e.message.startsWith('File size limit exceeded: ')
+                    ) {
+                      throw createGraphQLError(e.message, {
+                        extensions: {
+                          http: {
+                            status: 413,
+                          },
+                        },
+                      })
+                    }
+                  }
+                },
+              },
             }),
           }),
           description: 'Upload a single file',
@@ -205,6 +226,7 @@ describe('incremental delivery: node-fetch', () => {
       useNodeFetch: true,
       formDataLimits: {
         fileSize: 12,
+        fieldsFirst: true,
       },
     }),
     schema,
@@ -336,9 +358,9 @@ describe('incremental delivery: node-fetch', () => {
       body: formData,
     })
 
-    const body = await response.json()
-
     expect(response.status).toBe(413)
+
+    const body = await response.json()
 
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('File size limit exceeded: 12 bytes')

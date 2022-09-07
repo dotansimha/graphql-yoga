@@ -229,6 +229,9 @@ export class YogaServer<
       options?.fetchAPI ??
       createFetch({
         useNodeFetch: true,
+        formDataLimits: {
+          fieldsFirst: true,
+        },
       })
 
     const logger = options?.logging != null ? options.logging : true
