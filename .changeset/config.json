@@ -1,11 +1,7 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.1.0/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    { "repo": "dotansimha/graphql-yoga" }
-  ],
   "commit": false,
-  "linked": [["@graphql-yoga/graphiql", "@graphql-yoga/common"]],
+  "fixed": [["@graphql-yoga/graphiql", "@graphql-yoga/common"]],
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
