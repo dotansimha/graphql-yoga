@@ -6,11 +6,9 @@ export default withGuildDocs({
     process.env.NEXT_BASE_PATH && process.env.NEXT_BASE_PATH !== ''
       ? process.env.NEXT_BASE_PATH
       : undefined,
-  experimental: {
-    images: {
-      unoptimized: true, // doesn't work with `next export`
-      allowFutureImage: true,
-    },
+  images: {
+    unoptimized: true, // doesn't work with `next export`
+    allowFutureImage: true,
   },
   webpack(config, meta) {
     applyUnderscoreRedirects(config, meta)
