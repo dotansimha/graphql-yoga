@@ -2241,47 +2241,55 @@
   dependencies:
     "@envelop/types" "2.3.1"
 
-"@envelop/disable-introspection@3.5.0", "@envelop/disable-introspection@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@envelop/disable-introspection/-/disable-introspection-3.5.0.tgz#2db05bab8da24ec097bf6dac707d3f0790ff2e7f"
-  integrity sha512-zBG4eJoCdJlkeQNdQuZl9hAlst1lDQrOaClDiCLnrxze/aStXVDFdn2+xV1L2q0AKdOW4O6NRECPfBXsqWnbOA==
+"@envelop/disable-introspection@3.6.0", "@envelop/disable-introspection@^3.5.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@envelop/disable-introspection/-/disable-introspection-3.6.0.tgz#04b033389a83b9831442caabcbae30bde89857b9"
+  integrity sha512-Zf505LqWo2efM0EtTBvXyYPynSTSL2+Ps0X+dCH33vQ3wF6gxMui9g1pGa4MDcGjaXWG67qZcT4eojpGlmmavA==
+  dependencies:
+    tslib "^2.4.0"
 
-"@envelop/extended-validation@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@envelop/extended-validation/-/extended-validation-1.8.0.tgz#d593e9f3d52c19332dc17764a25a1f040c3c40cd"
-  integrity sha512-RldSbY/4Bun6puNXv2ihB7n8zpJJ/muhkv4MJ4SP1Y6E59YL8O91+czLg1rtO9hwl6qxpk0MCfwfPsJQasCcUg==
+"@envelop/extended-validation@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@envelop/extended-validation/-/extended-validation-1.9.0.tgz#a4634452797177e718302a8645a7c8d5381fe09b"
+  integrity sha512-Kf0xkTKRuP1XEgHa5Pi8+zaCUGYnFyiGPkb24Z/X1zKd8+s2gtuBmaw6GoROgaBoK0XIE+ZYne7BZCheUqfp+A==
   dependencies:
     "@graphql-tools/utils" "^8.8.0"
+    tslib "^2.4.0"
 
-"@envelop/generic-auth@4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@envelop/generic-auth/-/generic-auth-4.4.0.tgz#cf890b435fa63e8e55b9afeec715d8b10645780f"
-  integrity sha512-CeL1rWz5AME+d0JBPhFGkJrxJs2Guh4iqaamiTTyhoUh/luBpkeFQMK6re94YgJ3dY2Mxk3c6iGZNESaWAsj5Q==
-  dependencies:
-    "@envelop/extended-validation" "^1.8.0"
-
-"@envelop/graphql-jit@4.5.0":
+"@envelop/generic-auth@4.5.0":
   version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@envelop/graphql-jit/-/graphql-jit-4.5.0.tgz#708ade2f445de36d3505d94aad1d884a380c4b72"
-  integrity sha512-aE3eB1PupSniFSxBrCLZTq8oBCVwoXbLUr9DN+tWvAXmSaZebdFWAiL1IxTL8hQw1WLn6682JupDC1RYOexvuA==
+  resolved "https://registry.yarnpkg.com/@envelop/generic-auth/-/generic-auth-4.5.0.tgz#2025a008f5ceec653c4f404907966a3febaa6263"
+  integrity sha512-outYr5vQjzliGmlMUG0t0k0PLkwbgwb0ZLVnRgRvyZZknW5wlS3wCCs5sYcdvpwv3fEsRih2l6yE/yGxG4Micw==
+  dependencies:
+    "@envelop/extended-validation" "^1.9.0"
+    tslib "^2.4.0"
+
+"@envelop/graphql-jit@4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@envelop/graphql-jit/-/graphql-jit-4.6.0.tgz#3b771d1fa7c6907f7d64120382a3e9f405a8cbaa"
+  integrity sha512-6RM+uSfKN7i9rlEcaAvraF/GsFNB4JoCuEUDEdMjOxJVoADvg1MsmzgGPoIAlpZZIQ//A8Pp+A+qWkJW4Wn4PA==
   dependencies:
     graphql-jit "^0.7.0"
     lru-cache "^6.0.0"
+    tslib "^2.4.0"
 
-"@envelop/graphql-modules@3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@envelop/graphql-modules/-/graphql-modules-3.5.0.tgz#72087d1db74c9b811e0106efb778e3e772aceec3"
-  integrity sha512-Le3ExHvzXPmfqu2e4f8Q/rkXUppO1TK6aNo18OZwydb91MaRVV+oAEkvArE5EErHilfsZM3adzwoG0OjQm/N/g==
+"@envelop/graphql-modules@3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@envelop/graphql-modules/-/graphql-modules-3.6.0.tgz#de9dfd5537ffd2da84be95d8c3a5ac02e645ece1"
+  integrity sha512-eLnlYholnvYKjdf4HhBHo6AhaYhONIjE3eSGLoZpkZjTuQBH0xmTrsJR5aNF0rgRD8l0qfWzI8QBmPaZuamCDw==
+  dependencies:
+    tslib "^2.4.0"
 
-"@envelop/live-query@4.1.0", "@envelop/live-query@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@envelop/live-query/-/live-query-4.1.0.tgz#ea090ce70edf2035c0b25ba1bc80340852e9a96b"
-  integrity sha512-uj99MEdysjd3+H3BtcjYCeqQHDm/SVxTCsYGu5Gee1iW0BYGe4L7f6ZqCTh0GK+CxA0T28JNfvS3svPEiTb3FQ==
+"@envelop/live-query@4.2.0", "@envelop/live-query@^4.1.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@envelop/live-query/-/live-query-4.2.0.tgz#170249026addcf07a58813dcbdb948e9b3c9f711"
+  integrity sha512-ady8RXwFx6bsoREkv4qeBPlpv/5smPvA/0x85gFWFWNI4HP0U0v4qWxOH8iZg59Gpwes/ADmvPkqwrKFI6JYoA==
   dependencies:
     "@graphql-tools/utils" "^8.8.0"
     "@n1ru4l/graphql-live-query" "^0.10.0"
     "@n1ru4l/graphql-live-query-patch" "^0.7.0"
     "@n1ru4l/in-memory-live-query-store" "^0.10.0"
+    tslib "^2.4.0"
 
 "@envelop/parser-cache@^4.6.0":
   version "4.6.0"
