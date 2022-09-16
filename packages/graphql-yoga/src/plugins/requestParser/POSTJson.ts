@@ -17,13 +17,7 @@ export async function parsePOSTJsonRequest(
     const requestBody: any = await request.json()
 
     if (typeof requestBody !== 'object' || requestBody == null) {
-      throw createGraphQLError('POST body sent invalid JSON.', {
-        extensions: {
-          http: {
-            status: 400,
-          },
-        },
-      })
+      throw 'Not an object'
     }
 
     return requestBody

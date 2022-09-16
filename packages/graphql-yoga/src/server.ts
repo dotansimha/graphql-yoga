@@ -228,7 +228,6 @@ export class YogaServer<
     this.fetchAPI =
       options?.fetchAPI ??
       createFetch({
-        useNodeFetch: true,
         formDataLimits: {
           fieldsFirst: true,
         },

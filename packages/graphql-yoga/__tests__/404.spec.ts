@@ -60,13 +60,14 @@ describe('404', () => {
   it('404 handling does allow defining different route handlers', async () => {
     const yoga = createYoga({
       logging: false,
+      maskedErrors: false,
       plugins: [
         {
-          onRequest({ request, endResponse, fetchAPI }) {
-            if (request.url.endsWith('/iliketurtles')) {
+          onRequest({ url, endResponse, fetchAPI }) {
+            if (url.pathname === '/iliketurtles') {
               endResponse(
                 new fetchAPI.Response('Do you really like em?', {
-                  status: 666,
+                  status: 599,
                 }),
               )
             }
@@ -76,8 +77,9 @@ describe('404', () => {
     })
     const response = await yoga.fetch(`http://localhost:4000/iliketurtles`)
 
-    expect(response.status).toEqual(666)
     const body = await response.text()
     expect(body).toEqual('Do you really like em?')
+
+    expect(response.status).toEqual(599)
   })
 })
