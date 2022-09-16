@@ -62,11 +62,9 @@ describe('Batching', () => {
     )
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/mixed; boundary=boundary',
-      },
       body: formData,
     })
+    expect(response.status).toBe(200)
     const result = await response.json()
     expect(result).toEqual([
       { data: { hello: 'hello' } },
