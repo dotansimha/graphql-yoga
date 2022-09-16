@@ -22,7 +22,7 @@ const users: Record<string, User> = {
   },
 }
 
-const yoga = createYoga<{}, { currentUser: User }>({
+export const yoga = createYoga<{}, { currentUser: User }>({
   plugins: [
     useGenericAuth({
       mode: 'protect-granular',
