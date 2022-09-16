@@ -1,0 +1,141 @@
+diff --git a/node_modules/nextra-theme-docs/dist/index.js b/node_modules/nextra-theme-docs/dist/index.js
+index ce17c56..e659acc 100644
+--- a/node_modules/nextra-theme-docs/dist/index.js
++++ b/node_modules/nextra-theme-docs/dist/index.js
+@@ -52,7 +52,7 @@ var __async = (__this, __arguments, generator) => {
+ 
+ // src/index.tsx
+ import React41, { useEffect as useEffect8, useMemo as useMemo5, useRef as useRef7 } from "react";
+-import { useRouter as useRouter9 } from "next/router";
++import { useRouter as useRouter9 } from "next/router.js";
+ import "focus-visible";
+ import scrollIntoView3 from "scroll-into-view-if-needed";
+ import { SkipNavContent } from "@reach/skip-nav";
+@@ -61,11 +61,11 @@ import { MDXProvider } from "@mdx-js/react";
+ 
+ // src/constants.tsx
+ import React38, { isValidElement } from "react";
+-import { useRouter as useRouter8 } from "next/router";
++import { useRouter as useRouter8 } from "next/router.js";
+ 
+ // src/components/anchor.tsx
+ import React3, { forwardRef } from "react";
+-import NextLink from "next/link";
++import NextLink from "next/link.js";
+ 
+ // src/contexts/active-anchor.tsx
+ import React, {
+@@ -189,8 +189,9 @@ var Anchor = forwardRef(function(_a, forwardedRef) {
+   if (config.newNextLinkBehavior) {
+     return /* @__PURE__ */ React3.createElement(NextLink, __spreadValues({
+       ref: forwardedRef,
+-      href
+-    }, props), children);
++      href,
++      legacyBehavior: false
++    }, props), React.createElement(Fragment, null, children));
+   }
+   return /* @__PURE__ */ React3.createElement(NextLink, {
+     href,
+@@ -466,7 +467,7 @@ var getFSRoute = (asPath, locale) => {
+ import parseGitUrl from "parse-git-url";
+ var getGitEditUrl = (filePath) => {
+   const config = useConfig();
+-  const repo = parseGitUrl(config.docsRepositoryBase || "");
++  const repo = parseGitUrl.default(config.docsRepositoryBase || "");
+   if (!repo)
+     throw new Error("Invalid `docsRepositoryBase` URL!");
+   const subdir = repo.subdir ? `${repo.subdir}/` : "";
+@@ -487,7 +488,7 @@ var getGitIssueUrl = ({
+   title,
+   labels
+ }) => {
+-  const repo = parseGitUrl2(repository);
++  const repo = parseGitUrl2.default(repository);
+   if (!repo)
+     throw new Error("Invalid `docsRepositoryBase` URL!");
+   switch (repo.type) {
+@@ -952,7 +953,7 @@ function Collapse({
+ 
+ // src/components/flexsearch.tsx
+ import React23, { useState as useState5, useCallback as useCallback3 } from "react";
+-import { useRouter as useRouter2 } from "next/router";
++import { useRouter as useRouter2 } from "next/router.js";
+ import FlexSearch from "flexsearch";
+ import cn8 from "clsx";
+ 
+@@ -992,7 +993,7 @@ var Input = forwardRef2((_a, forwardedRef) => {
+ });
+ 
+ // src/components/search.tsx
+-import { useRouter } from "next/router";
++import { useRouter } from "next/router.js";
+ var INPUTS = ["input", "select", "button", "textarea"];
+ function Search({
+   className,
+@@ -1369,7 +1370,7 @@ import cn10 from "clsx";
+ 
+ // src/components/locale-switch.tsx
+ import React25 from "react";
+-import { useRouter as useRouter3 } from "next/router";
++import { useRouter as useRouter3 } from "next/router.js";
+ 
+ // src/components/select.tsx
+ import React24 from "react";
+@@ -1509,7 +1510,7 @@ function Footer({ menu }) {
+ 
+ // src/components/head.tsx
+ import React28 from "react";
+-import NextHead from "next/head";
++import NextHead from "next/head.js";
+ import { useTheme as useTheme2 } from "next-themes";
+ function Head() {
+   const config = useConfig();
+@@ -1588,7 +1589,7 @@ var NavLinks = ({
+ // src/components/navbar.tsx
+ import React30 from "react";
+ import cn12 from "clsx";
+-import { useRouter as useRouter4 } from "next/router";
++import { useRouter as useRouter4 } from "next/router.js";
+ import { Menu, Transition as Transition3 } from "@headlessui/react";
+ var classes2 = {
+   link: "text-sm contrast-more:text-gray-700 contrast-more:dark:text-gray-100",
+@@ -1686,7 +1687,7 @@ function Navbar({ flatDirectories, items }) {
+ 
+ // src/components/not-found.tsx
+ import React31 from "react";
+-import { useRouter as useRouter5 } from "next/router";
++import { useRouter as useRouter5 } from "next/router.js";
+ function NotFoundPage() {
+   const config = useConfig();
+   const mounted = useMounted();
+@@ -1710,7 +1711,7 @@ function NotFoundPage() {
+ 
+ // src/components/server-side-error.tsx
+ import React33 from "react";
+-import { useRouter as useRouter6 } from "next/router";
++import { useRouter as useRouter6 } from "next/router.js";
+ function ServerSideErrorPage() {
+   const config = useConfig();
+   const mounted = useMounted();
+@@ -1742,7 +1743,7 @@ import React34, {
+ } from "react";
+ import cn13 from "clsx";
+ import Slugger from "github-slugger";
+-import { useRouter as useRouter7 } from "next/router";
++import { useRouter as useRouter7 } from "next/router.js";
+ import scrollIntoView from "scroll-into-view-if-needed";
+ var TreeState = /* @__PURE__ */ Object.create(null);
+ var Folder = memo2(FolderImpl);
+diff --git a/node_modules/nextra-theme-docs/package.json b/node_modules/nextra-theme-docs/package.json
+index 0a8a39f..c536a6e 100644
+--- a/node_modules/nextra-theme-docs/package.json
++++ b/node_modules/nextra-theme-docs/package.json
+@@ -5,6 +5,7 @@
+   "repository": "https://github.com/shuding/nextra",
+   "author": "Shu Ding <g@shud.in>",
+   "license": "MIT",
++  "type": "module",
+   "files": [
+     "dist",
+     "style.css"
