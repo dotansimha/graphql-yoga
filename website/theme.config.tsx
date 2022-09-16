@@ -20,21 +20,28 @@ const Comments = dynamic(
 ) as Giscus
 
 const config: DocsThemeConfig = {
-  titleSuffix: ` – ${SITE_NAME}`,
-  project: {
-    link: 'https://github.com/dotansimha/graphql-yoga', // GitHub link in the navbar
+  chat: {
+    link: 'https://discord.gg/94CDTmgmbs',
   },
   docsRepositoryBase:
     'https://github.com/dotansimha/graphql-yoga/tree/master/website/src/pages', // base URL for the docs repository
-  search: {
-    component: null,
+  editLink: {
+    text: 'Edit this page on GitHub',
+  },
+  feedback: {
+    content: 'Question? Give us feedback →',
+    labels: 'kind/docs',
   },
   footer: {
     component: <FooterExtended />,
   },
-  editLink: {
-    text: 'Edit this page on GitHub',
-  },
+  head: (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="description" content={`${SITE_NAME}: documentation`} />
+      <meta name="og:title" content={`${SITE_NAME}: documentation`} />
+    </>
+  ),
   logo: (
     <>
       <YogaLogo className="mr-1.5 h-9 w-9" />
@@ -47,33 +54,6 @@ const config: DocsThemeConfig = {
       </div>
     </>
   ),
-  chat: {
-    link: 'https://discord.gg/94CDTmgmbs',
-  },
-  head: (
-    <>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="description" content={`${SITE_NAME}: documentation`} />
-      <meta name="og:title" content={`${SITE_NAME}: documentation`} />
-    </>
-  ),
-  navbar: (props) => (
-    <>
-      <Header
-        accentColor="#1cc8ee"
-        themeSwitch
-        searchBarProps={{ version: 'v2' }}
-      />
-      <Navbar {...props} />
-    </>
-  ),
-  sidebar: {
-    defaultMenuCollapsed: true,
-  },
-  feedback: {
-    content: 'Question? Give us feedback →',
-    labels: 'kind/docs',
-  },
   main: {
     extraContent() {
       const { route } = useRouter()
@@ -90,6 +70,26 @@ const config: DocsThemeConfig = {
       return null
     },
   },
+  navbar: (props) => (
+    <>
+      <Header
+        accentColor="#1cc8ee"
+        themeSwitch
+        searchBarProps={{ version: 'v2' }}
+      />
+      <Navbar {...props} />
+    </>
+  ),
+  project: {
+    link: 'https://github.com/dotansimha/graphql-yoga', // GitHub link in the navbar
+  },
+  search: {
+    component: null,
+  },
+  sidebar: {
+    defaultMenuCollapsed: true,
+  },
+  titleSuffix: ` – ${SITE_NAME}`,
 }
 
 export default config
