@@ -19,7 +19,7 @@ const users = [
 ]
 
 // Provide your schema
-const yoga = createYoga({
+export const yoga = createYoga({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type User {
