@@ -1,5 +1,4 @@
-import { HeroGradient, HeroIllustration } from '@theguild/components'
-import { IHeroIllustrationProps } from '@theguild/components/dist/types/components'
+import { HeroGradient, HeroIllustration, IHeroIllustrationProps } from '@theguild/components'
 import httpImage from '../public/assets/http.svg'
 import ecosystemImage from '../public/assets/ecosystem.svg'
 import subscriptionsImage from '../public/assets/subscriptions.svg'
