@@ -195,8 +195,8 @@ export type BatchingOptions =
  * @internal
  */
 export class YogaServer<
-  TServerContext extends Record<string, any>,
-  TUserContext extends Record<string, any>,
+  TServerContext,
+  TUserContext,
 > {
   /**
    * Instance of envelop
@@ -430,6 +430,11 @@ export class YogaServer<
     this.onResponseHooks = []
     for (const plugin of this.plugins) {
       if (plugin) {
+        if (plugin.onYogaInit) {
+          plugin.onYogaInit({
+            yoga: this,
+          })
+        }
         if (plugin.onRequest) {
           this.onRequestHooks.push(plugin.onRequest)
         }
