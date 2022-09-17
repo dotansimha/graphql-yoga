@@ -11,7 +11,7 @@ index 06400d6..cdefc43 100644
  interface MenuItem extends MdxFile {
      title: string;
 diff --git a/node_modules/nextra-theme-docs/dist/index.js b/node_modules/nextra-theme-docs/dist/index.js
-index 55d4d18..ef39146 100644
+index 55d4d18..9e9b96b 100644
 --- a/node_modules/nextra-theme-docs/dist/index.js
 +++ b/node_modules/nextra-theme-docs/dist/index.js
 @@ -51,8 +51,8 @@ var __async = (__this, __arguments, generator) => {
@@ -21,22 +21,89 @@ index 55d4d18..ef39146 100644
 -import React41, { useEffect as useEffect8, useMemo as useMemo5, useRef as useRef7 } from "react";
 -import { useRouter as useRouter9 } from "next/router";
 +import React44, { useEffect as useEffect8, useMemo as useMemo5, useRef as useRef7 } from "react";
-+import { useRouter as useRouter10 } from "next/router";
++import { useRouter as useRouter10 } from "next/router.js";
  import "focus-visible";
  import scrollIntoView3 from "scroll-into-view-if-needed";
  import { SkipNavContent } from "@reach/skip-nav";
-@@ -60,8 +60,8 @@ import cn17 from "clsx";
+@@ -60,12 +60,12 @@ import cn17 from "clsx";
  import { MDXProvider } from "@mdx-js/react";
  
  // src/constants.tsx
 -import React38, { isValidElement } from "react";
 -import { useRouter as useRouter8 } from "next/router";
 +import React39, { isValidElement } from "react";
-+import { useRouter as useRouter9 } from "next/router";
++import { useRouter as useRouter9 } from "next/router.js";
  
  // src/components/anchor.tsx
  import React3, { forwardRef } from "react";
-@@ -1540,7 +1540,6 @@ function Head() {
+-import NextLink from "next/link";
++import NextLink from "next/link.js";
+ 
+ // src/contexts/active-anchor.tsx
+ import React, {
+@@ -189,6 +189,7 @@ var Anchor = forwardRef(function(_a, forwardedRef) {
+   if (config.newNextLinkBehavior) {
+     return /* @__PURE__ */ React3.createElement(NextLink, __spreadValues({
+       ref: forwardedRef,
++      legacyBehavior: false,
+       href
+     }, props), children);
+   }
+@@ -466,7 +467,7 @@ var getFSRoute = (asPath, locale) => {
+ import parseGitUrl from "parse-git-url";
+ var getGitEditUrl = (filePath) => {
+   const config = useConfig();
+-  const repo = parseGitUrl(config.docsRepositoryBase || "");
++  const repo = parseGitUrl.default(config.docsRepositoryBase || "");
+   if (!repo)
+     throw new Error("Invalid `docsRepositoryBase` URL!");
+   const subdir = repo.subdir ? `${repo.subdir}/` : "";
+@@ -487,7 +488,7 @@ var getGitIssueUrl = ({
+   title,
+   labels
+ }) => {
+-  const repo = parseGitUrl2(repository);
++  const repo = parseGitUrl.default(repository);
+   if (!repo)
+     throw new Error("Invalid `docsRepositoryBase` URL!");
+   switch (repo.type) {
+@@ -952,7 +953,7 @@ function Collapse({
+ 
+ // src/components/flexsearch.tsx
+ import React23, { useState as useState5, useCallback as useCallback3 } from "react";
+-import { useRouter as useRouter2 } from "next/router";
++import { useRouter as useRouter2 } from "next/router.js";
+ import FlexSearch from "flexsearch";
+ import cn8 from "clsx";
+ 
+@@ -992,7 +993,7 @@ var Input = forwardRef2((_a, forwardedRef) => {
+ });
+ 
+ // src/components/search.tsx
+-import { useRouter } from "next/router";
++import { useRouter } from "next/router.js";
+ var INPUTS = ["input", "select", "button", "textarea"];
+ function Search({
+   className,
+@@ -1369,7 +1370,7 @@ import cn10 from "clsx";
+ 
+ // src/components/locale-switch.tsx
+ import React25 from "react";
+-import { useRouter as useRouter3 } from "next/router";
++import { useRouter as useRouter3 } from "next/router.js";
+ 
+ // src/components/select.tsx
+ import React24 from "react";
+@@ -1509,7 +1510,7 @@ function Footer({ menu }) {
+ 
+ // src/components/head.tsx
+ import React28 from "react";
+-import NextHead from "next/head";
++import NextHead from "next/head.js";
+ import { useTheme as useTheme2 } from "next-themes";
+ function Head() {
+   const config = useConfig();
+@@ -1540,7 +1541,6 @@ function Head() {
          :root {
            --nextra-primary-hue: ${lightHue}deg;
            --nextra-navbar-height: 4rem;
@@ -44,7 +111,7 @@ index 55d4d18..ef39146 100644
            --nextra-banner-height: 2.5rem;
          }
          
-@@ -1586,10 +1585,44 @@ var NavLinks = ({
+@@ -1586,10 +1586,44 @@ var NavLinks = ({
  };
  
  // src/components/navbar.tsx
@@ -52,12 +119,12 @@ index 55d4d18..ef39146 100644
 +import React31 from "react";
  import cn12 from "clsx";
 -import { useRouter as useRouter4 } from "next/router";
-+import { useRouter as useRouter5 } from "next/router";
++import { useRouter as useRouter5 } from "next/router.js";
  import { Menu, Transition as Transition3 } from "@headlessui/react";
 +
 +// src/components/version-switch.tsx
 +import React30, { useState as useState6 } from "react";
-+import { useRouter as useRouter4 } from "next/router";
++import { useRouter as useRouter4 } from "next/router.js";
 +function VersionSwitch({
 +  options
 +}) {
@@ -91,7 +158,7 @@ index 55d4d18..ef39146 100644
  var classes2 = {
    link: "text-sm contrast-more:text-gray-700 contrast-more:dark:text-gray-100",
    active: "subpixel-antialiased contrast-more:font-bold",
-@@ -1602,21 +1635,21 @@ function NavbarMenu({
+@@ -1602,21 +1636,21 @@ function NavbarMenu({
  }) {
    const { items } = menu;
    const routes = Object.fromEntries((menu.children || []).map((route) => [route.name, route]));
@@ -119,7 +186,7 @@ index 55d4d18..ef39146 100644
        href: item.href || ((_a = routes[key]) == null ? void 0 : _a.route) || menu.route + "/" + key,
        className: cn12("hidden whitespace-nowrap md:inline-block text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 relative select-none w-full", "py-1.5 ltr:pl-3 ltr:pr-9 rtl:pr-3 rtl:pl-9"),
        newWindow: item.newWindow
-@@ -1625,31 +1658,43 @@ function NavbarMenu({
+@@ -1625,31 +1659,43 @@ function NavbarMenu({
  }
  function Navbar({ flatDirectories, items }) {
    const config = useConfig();
@@ -147,7 +214,7 @@ index 55d4d18..ef39146 100644
 +  }), /* @__PURE__ */ React31.createElement("nav", {
 +    className: "mx-auto flex h-[var(--nextra-navbar-height)] max-w-[90rem] items-center gap-2 pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]"
 +  }, /* @__PURE__ */ React31.createElement("div", {
-+    className: "grow flex gap-2"
++    className: "grow flex gap-2 items-center"
 +  }, /* @__PURE__ */ React31.createElement(Anchor, {
      href: "/",
 -    className: "flex ltr:mr-auto rtl:ml-auto items-center hover:opacity-75"
@@ -175,7 +242,7 @@ index 55d4d18..ef39146 100644
        }));
      }
      const page = pageOrMenu;
-@@ -1658,7 +1703,7 @@ function Navbar({ flatDirectories, items }) {
+@@ -1658,7 +1704,7 @@ function Navbar({ flatDirectories, items }) {
        href = (page.withIndexPage ? page.route : page.firstChildRoute) || href;
      }
      const isActive = page.route === activeRoute || activeRoute.startsWith(page.route + "/");
@@ -184,7 +251,7 @@ index 55d4d18..ef39146 100644
        href,
        key: page.route,
        className: cn12(classes2.link, "-ml-2 hidden whitespace-nowrap p-2 md:inline-block", !isActive || page.newWindow ? classes2.inactive : classes2.active),
-@@ -1668,36 +1713,36 @@ function Navbar({ flatDirectories, items }) {
+@@ -1668,36 +1714,36 @@ function Navbar({ flatDirectories, items }) {
    }), renderComponent(config.search.component, {
      directories: flatDirectories,
      className: "hidden md:inline-block min-w-[200px]"
@@ -212,7 +279,7 @@ index 55d4d18..ef39146 100644
 -import React31 from "react";
 -import { useRouter as useRouter5 } from "next/router";
 +import React33 from "react";
-+import { useRouter as useRouter6 } from "next/router";
++import { useRouter as useRouter6 } from "next/router.js";
  function NotFoundPage() {
    const config = useConfig();
    const mounted = useMounted();
@@ -230,14 +297,14 @@ index 55d4d18..ef39146 100644
      href: getGitIssueUrl({
        repository: config.docsRepositoryBase,
        title: `Found broken \`${mounted ? asPath : ""}\` link. Please fix!`,
-@@ -1709,19 +1754,19 @@ function NotFoundPage() {
+@@ -1709,19 +1755,19 @@ function NotFoundPage() {
  }
  
  // src/components/server-side-error.tsx
 -import React33 from "react";
 -import { useRouter as useRouter6 } from "next/router";
 +import React34 from "react";
-+import { useRouter as useRouter7 } from "next/router";
++import { useRouter as useRouter7 } from "next/router.js";
  function ServerSideErrorPage() {
    const config = useConfig();
    const mounted = useMounted();
@@ -255,7 +322,7 @@ index 55d4d18..ef39146 100644
      href: getGitIssueUrl({
        repository: config.docsRepositoryBase,
        title: `Got server-side error in \`${mounted ? asPath : ""}\` url. Please fix!`,
-@@ -1733,8 +1778,8 @@ function ServerSideErrorPage() {
+@@ -1733,8 +1779,8 @@ function ServerSideErrorPage() {
  }
  
  // src/components/sidebar.tsx
@@ -266,16 +333,16 @@ index 55d4d18..ef39146 100644
    useEffect as useEffect4,
    useMemo as useMemo2,
    memo as memo2,
-@@ -1742,7 +1787,7 @@ import React34, {
+@@ -1742,7 +1788,7 @@ import React34, {
  } from "react";
  import cn13 from "clsx";
  import Slugger from "github-slugger";
 -import { useRouter as useRouter7 } from "next/router";
-+import { useRouter as useRouter8 } from "next/router";
++import { useRouter as useRouter8 } from "next/router.js";
  import scrollIntoView from "scroll-into-view-if-needed";
  var TreeState = /* @__PURE__ */ Object.create(null);
  var Folder = memo2(FolderImpl);
-@@ -1757,7 +1802,7 @@ function FolderImpl({
+@@ -1757,7 +1803,7 @@ function FolderImpl({
    item,
    anchors
  }) {
@@ -284,7 +351,7 @@ index 55d4d18..ef39146 100644
    const routeOriginal = getFSRoute(asPath, locale);
    const [route] = routeOriginal.split("#");
    const active = [route, route + "/"].includes(item.route + "/");
-@@ -1765,7 +1810,7 @@ function FolderImpl({
+@@ -1765,7 +1811,7 @@ function FolderImpl({
    const { setMenu } = useMenu();
    const config = useConfig();
    const open = TreeState[item.route] !== void 0 ? TreeState[item.route] : active || activeRouteInside || !config.sidebar.defaultMenuCollapsed;
@@ -293,7 +360,7 @@ index 55d4d18..ef39146 100644
    useEffect4(() => {
      if (activeRouteInside) {
        TreeState[item.route] = true;
-@@ -1783,9 +1828,9 @@ function FolderImpl({
+@@ -1783,9 +1829,9 @@ function FolderImpl({
        return __spreadValues(__spreadValues({}, route2), item2);
      });
    }
@@ -305,7 +372,7 @@ index 55d4d18..ef39146 100644
      href: item.withIndexPage ? item.route : "",
      className: cn13("gap-2 items-center justify-between", classes3.link, active ? classes3.active : classes3.inactive),
      onClick: (e) => {
-@@ -1811,13 +1856,13 @@ function FolderImpl({
+@@ -1811,13 +1857,13 @@ function FolderImpl({
    }, renderComponent(config.sidebar.titleComponent, {
      title: item.title,
      type: item.type
@@ -322,7 +389,7 @@ index 55d4d18..ef39146 100644
      className: cn13(classes3.border, "ltr:ml-1 rtl:mr-1"),
      directories: item.children,
      base: item.route,
-@@ -1826,12 +1871,12 @@ function FolderImpl({
+@@ -1826,12 +1872,12 @@ function FolderImpl({
  }
  function Separator({ title }) {
    const config = useConfig();
@@ -337,7 +404,7 @@ index 55d4d18..ef39146 100644
      className: "mx-2 border-t border-gray-200 dark:border-primary-100/10"
    }));
  }
-@@ -1839,7 +1884,7 @@ function File({
+@@ -1839,7 +1885,7 @@ function File({
    item,
    anchors
  }) {
@@ -346,7 +413,7 @@ index 55d4d18..ef39146 100644
    const route = getFSRoute(asPath, locale);
    const active = [route, route + "/"].includes(item.route + "/");
    const slugger = new Slugger();
-@@ -1847,13 +1892,13 @@ function File({
+@@ -1847,13 +1893,13 @@ function File({
    const { setMenu } = useMenu();
    const config = useConfig();
    if (item.type === "separator") {
@@ -363,7 +430,7 @@ index 55d4d18..ef39146 100644
      href: item.href || item.route,
      newWindow: item.newWindow,
      className: cn13(classes3.link, active ? classes3.active : classes3.inactive),
-@@ -1863,14 +1908,14 @@ function File({
+@@ -1863,14 +1909,14 @@ function File({
    }, renderComponent(config.sidebar.titleComponent, {
      title: item.title,
      type: item.type
@@ -381,7 +448,7 @@ index 55d4d18..ef39146 100644
        href: `#${slug}`,
        className: cn13(classes3.link, 'before:opacity-25 flex gap-2 before:content-["#"]', ((_a = activeAnchor[slug]) == null ? void 0 : _a.isActive) ? classes3.active : classes3.inactive),
        onClick: () => {
-@@ -1880,13 +1925,13 @@ function File({
+@@ -1880,13 +1926,13 @@ function File({
    })));
  }
  function Menu2({ directories, anchors, className }) {
@@ -398,7 +465,7 @@ index 55d4d18..ef39146 100644
      key: item.name,
      item,
      anchors
-@@ -1933,41 +1978,41 @@ function Sidebar({
+@@ -1933,41 +1979,41 @@ function Sidebar({
      }
    }, [menu]);
    const hasMenu = config.i18n.length > 0 || config.darkMode;
@@ -452,7 +519,7 @@ index 55d4d18..ef39146 100644
  import cn14 from "clsx";
  import { Tab as HeadlessTab } from "@headlessui/react";
  function isTabItem(item) {
-@@ -1988,22 +2033,22 @@ function Tabs({
+@@ -1988,22 +2034,22 @@ function Tabs({
    onChange,
    children
  }) {
@@ -480,7 +547,7 @@ index 55d4d18..ef39146 100644
  }
  function Tab(_a) {
    var _b = _a, {
-@@ -2011,13 +2056,13 @@ function Tab(_a) {
+@@ -2011,13 +2057,13 @@ function Tab(_a) {
    } = _b, props = __objRest(_b, [
      "children"
    ]);
@@ -496,7 +563,7 @@ index 55d4d18..ef39146 100644
  import cn15 from "clsx";
  import Slugger2 from "github-slugger";
  import scrollIntoView2 from "scroll-into-view-if-needed";
-@@ -2054,17 +2099,17 @@ function TOC({ headings, filePath }) {
+@@ -2054,17 +2100,17 @@ function TOC({ headings, filePath }) {
      }
    }, [activeSlug]);
    const linkClassName = cn15("text-xs font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100", "contrast-more:text-gray-800 contrast-more:dark:text-gray-50");
@@ -519,7 +586,7 @@ index 55d4d18..ef39146 100644
        href: `#${slug}`,
        className: cn15({
          2: "font-semibold",
-@@ -2074,9 +2119,9 @@ function TOC({ headings, filePath }) {
+@@ -2074,9 +2120,9 @@ function TOC({ headings, filePath }) {
          6: "ltr:ml-16 rtl:mr-16"
        }[depth], ((_a2 = activeAnchor[slug]) == null ? void 0 : _a2.isActive) ? "text-primary-500 subpixel-antialiased contrast-more:!text-primary-500" : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300", "contrast-more:text-gray-900 contrast-more:underline contrast-more:dark:text-gray-50")
      }, text));
@@ -531,7 +598,7 @@ index 55d4d18..ef39146 100644
      className: linkClassName,
      href: getGitIssueUrl({
        repository: config.docsRepositoryBase,
-@@ -2092,22 +2137,22 @@ function TOC({ headings, filePath }) {
+@@ -2092,22 +2138,22 @@ function TOC({ headings, filePath }) {
  }
  
  // src/components/match-sorter-search.tsx
@@ -558,7 +625,7 @@ index 55d4d18..ef39146 100644
      value: search,
      onChange: setSearch,
      className,
-@@ -2125,7 +2170,7 @@ var DEFAULT_THEME = {
+@@ -2125,7 +2171,7 @@ var DEFAULT_THEME = {
      text: ""
    },
    chat: {
@@ -567,7 +634,7 @@ index 55d4d18..ef39146 100644
        className: "sr-only"
      }, "Discord")),
      link: ""
-@@ -2140,7 +2185,7 @@ var DEFAULT_THEME = {
+@@ -2140,7 +2186,7 @@ var DEFAULT_THEME = {
        if (!editUrl) {
          return null;
        }
@@ -576,7 +643,7 @@ index 55d4d18..ef39146 100644
          className,
          href: editUrl
        }, children);
-@@ -2157,42 +2202,42 @@ var DEFAULT_THEME = {
+@@ -2157,42 +2203,42 @@ var DEFAULT_THEME = {
      text: `MIT ${new Date().getFullYear()} \xA9 Nextra.`
    },
    gitTimestamp({ timestamp }) {
@@ -631,7 +698,7 @@ index 55d4d18..ef39146 100644
      className: "hidden font-normal text-gray-600 md:inline"
    }, "The Next Docs Builder")),
    main: {
-@@ -2216,7 +2261,7 @@ var DEFAULT_THEME = {
+@@ -2216,7 +2262,7 @@ var DEFAULT_THEME = {
      light: 212
    },
    project: {
@@ -640,7 +707,7 @@ index 55d4d18..ef39146 100644
        className: "sr-only"
      }, "GitHub")),
      link: ""
-@@ -2224,18 +2269,18 @@ var DEFAULT_THEME = {
+@@ -2224,18 +2270,18 @@ var DEFAULT_THEME = {
    search: {
      component({ className, directories }) {
        const config = useConfig();
@@ -663,7 +730,7 @@ index 55d4d18..ef39146 100644
        if (locale === "zh-CN")
          return "\u641C\u7D22\u6587\u6863...";
        return "Search documentation...";
-@@ -2247,7 +2292,7 @@ var DEFAULT_THEME = {
+@@ -2247,7 +2293,7 @@ var DEFAULT_THEME = {
    },
    sidebar: {
      defaultMenuCollapsed: false,
@@ -672,7 +739,7 @@ index 55d4d18..ef39146 100644
    },
    titleSuffix: " \u2013 Nextra",
    toc: {
-@@ -2316,10 +2361,10 @@ if (IS_BROWSER) {
+@@ -2316,10 +2362,10 @@ if (IS_BROWSER) {
  }
  
  // src/mdx-components.tsx
@@ -685,7 +752,7 @@ index 55d4d18..ef39146 100644
    cloneElement,
    Children
  } from "react";
-@@ -2327,11 +2372,11 @@ import "intersection-observer";
+@@ -2327,11 +2373,11 @@ import "intersection-observer";
  import cn16 from "clsx";
  
  // ../nextra/dist/components/index.mjs
@@ -699,7 +766,7 @@ index 55d4d18..ef39146 100644
  } from "react";
  import React310 from "react";
  import React43, { useCallback as useCallback22 } from "react";
-@@ -2347,7 +2392,7 @@ var Button = (_a) => {
+@@ -2347,7 +2393,7 @@ var Button = (_a) => {
      "children",
      "className"
    ]);
@@ -708,7 +775,7 @@ index 55d4d18..ef39146 100644
      className: [
        "nextra-button transition-colors",
        "bg-primary-700/5 border border-black/5 text-gray-600 hover:text-gray-900 rounded-md p-2",
-@@ -2362,7 +2407,7 @@ var CopyToClipboard = (_a) => {
+@@ -2362,7 +2408,7 @@ var CopyToClipboard = (_a) => {
    } = _b, props = __objRest2(_b, [
      "value"
    ]);
@@ -717,7 +784,7 @@ index 55d4d18..ef39146 100644
    useEffect6(() => {
      if (!isCopied)
        return;
-@@ -2548,7 +2593,7 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
+@@ -2548,7 +2594,7 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
        });
      };
    }, []);
@@ -726,7 +793,7 @@ index 55d4d18..ef39146 100644
      className: cn16("font-semibold tracking-tight", {
        h2: "mt-10 text-3xl border-b pb-1 dark:border-primary-100/10 contrast-more:border-neutral-400 contrast-more:dark:border-neutral-400",
        h3: "mt-8 text-2xl",
-@@ -2556,11 +2601,11 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
+@@ -2556,11 +2602,11 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
        h5: "mt-8 text-lg",
        h6: "mt-8 text-base"
      }[Tag])
@@ -740,7 +807,7 @@ index 55d4d18..ef39146 100644
      href: `#${id}`
    }, children));
  };
-@@ -2594,9 +2639,9 @@ var Details = (_a) => {
+@@ -2594,9 +2640,9 @@ var Details = (_a) => {
      "children",
      "open"
    ]);
@@ -752,7 +819,7 @@ index 55d4d18..ef39146 100644
    useEffect7(() => {
      if (openState) {
        setDelayedOpenState(true);
-@@ -2605,19 +2650,19 @@ var Details = (_a) => {
+@@ -2605,19 +2651,19 @@ var Details = (_a) => {
        return () => clearTimeout(timeout);
      }
    }, [openState]);
@@ -776,7 +843,7 @@ index 55d4d18..ef39146 100644
      className: cn16("list-none cursor-pointer p-1 transition-colors hover:bg-gray-100 dark:hover:bg-neutral-800", "before:mr-1 before:content-[''] before:inline-block before:transition-transform dark:before:invert", "[[data-expanded]>&]:before:rotate-90 rtl:before:rotate-180")
    }, props), {
      onClick: (e) => {
-@@ -2628,7 +2673,7 @@ var Summary = (props) => {
+@@ -2628,7 +2674,7 @@ var Summary = (props) => {
  };
  var A = (_a) => {
    var _b = _a, { href = "" } = _b, props = __objRest(_b, ["href"]);
@@ -785,7 +852,7 @@ index 55d4d18..ef39146 100644
      href,
      newWindow: href.startsWith("https://")
    }, props));
-@@ -2642,7 +2687,7 @@ var getComponents = ({
+@@ -2642,7 +2688,7 @@ var getComponents = ({
    }
    const context = { index: 0 };
    return __spreadValues({
@@ -794,7 +861,7 @@ index 55d4d18..ef39146 100644
        className: "mt-2 text-4xl font-bold tracking-tight"
      }, props)),
      h2: createHeaderLink("h2", context),
-@@ -2650,28 +2695,28 @@ var getComponents = ({
+@@ -2650,28 +2696,28 @@ var getComponents = ({
      h4: createHeaderLink("h4", context),
      h5: createHeaderLink("h5", context),
      h6: createHeaderLink("h6", context),
@@ -831,7 +898,7 @@ index 55d4d18..ef39146 100644
        className: "mt-6 first:mt-0 leading-7"
      }, props)),
      tr: Tr,
-@@ -2699,7 +2744,7 @@ if (IS_BROWSER) {
+@@ -2699,7 +2745,7 @@ if (IS_BROWSER) {
    }));
  }
  function useDirectoryInfo(pageMap) {
@@ -840,7 +907,7 @@ index 55d4d18..ef39146 100644
    return useMemo5(() => {
      const fsPath = getFSRoute(route, locale);
      return normalizePages({
-@@ -2728,25 +2773,25 @@ var Body = ({
+@@ -2728,25 +2774,25 @@ var Body = ({
      };
    }, []);
    if (themeContext.layout === "raw") {
@@ -873,7 +940,7 @@ index 55d4d18..ef39146 100644
      className: "w-full min-w-0 max-w-4xl px-6 pt-4 md:px-8",
      ref: mainElement
    }, breadcrumb, body));
-@@ -2774,47 +2819,45 @@ var InnerLayout = ({
+@@ -2774,47 +2820,45 @@ var InnerLayout = ({
    const themeContext = __spreadValues(__spreadValues({}, activeThemeContext), frontMatter);
    const hideSidebar = !themeContext.sidebar || themeContext.layout === "raw" || activeType === "page";
    const tocClassName = "nextra-toc order-last hidden w-64 flex-shrink-0 xl:block";
@@ -932,7 +999,7 @@ index 55d4d18..ef39146 100644
      components: getComponents({
        isRawLayout: themeContext.layout === "raw",
        components: config.components
-@@ -2822,14 +2865,14 @@ var InnerLayout = ({
+@@ -2822,14 +2866,14 @@ var InnerLayout = ({
    }, children)))), themeContext.footer && renderComponent(config.footer.component, { menu: hideSidebar }));
  };
  function Layout(props) {
