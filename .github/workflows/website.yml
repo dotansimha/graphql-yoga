@@ -38,6 +38,7 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           projectName: graphql-yoga
           prId: ${{ github.event.pull_request.number }}
+          mainBranch: master
           websiteDirectory: ./
           buildScript: yarn build && cd website && yarn build && yarn next export
           artifactDir: website/out
