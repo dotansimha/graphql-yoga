@@ -3,12 +3,14 @@ on:
   push:
     branches:
       - v2
+      - v3
 
 jobs:
   stable:
     uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
     with:
       releaseScript: release
+      releasePrName: Upcoming Release Changes (${{ github.ref }})
       nodeVersion: 18
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
