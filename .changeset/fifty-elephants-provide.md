@@ -1,5 +1,5 @@
 ---
-'graphql-yoga': patch
+'graphql-yoga': major
 '@graphql-yoga/plugin-apollo-inline-trace': patch
 '@graphql-yoga/plugin-apq': patch
 ---
