@@ -1,7 +1,7 @@
 import { yoga } from '../src/main'
 import { createServer, Server } from 'http'
+import { AddressInfo } from 'net'
 import { fetch } from '@whatwg-node/fetch'
-import getPort from 'get-port'
 import EventSource from 'eventsource'
 
 describe('graphql-auth example integration', () => {
@@ -9,9 +9,9 @@ describe('graphql-auth example integration', () => {
   let port: number
 
   beforeAll(async () => {
-    port = await getPort()
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(port, resolve))
+    await new Promise<void>((resolve) => server.listen(0, resolve))
+    port = (server.address() as AddressInfo).port
   })
 
   afterAll(async () => {
