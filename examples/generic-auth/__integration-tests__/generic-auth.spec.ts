@@ -1,4 +1,4 @@
-import { yoga } from '../src/main'
+import { yoga } from '../src/app'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
 import { fetch } from '@whatwg-node/fetch'
