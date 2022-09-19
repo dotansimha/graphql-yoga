@@ -1,5 +1,15 @@
 # @graphql-yoga/common
 
+## 2.12.13
+
+### Patch Changes
+
+- [#1711](https://github.com/dotansimha/graphql-yoga/pull/1711) [`406d83eb`](https://github.com/dotansimha/graphql-yoga/commit/406d83eb68095d38ccfae23b3dc7c319520b0e4f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.4.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/null) (from `^0.3.0`, in `dependencies`)
+
+- [`69b593e8`](https://github.com/dotansimha/graphql-yoga/commit/69b593e891739228a9e8c6597ef07598968d4858) Thanks [@ardatan](https://github.com/ardatan)! - Do not run "usePreventMutationViaGET" if it is not a Yoga requestr
+
 ## 2.12.12
 
 ### Patch Changes
