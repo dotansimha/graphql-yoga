@@ -1,80 +1,19 @@
 import { PromiseOrValue } from '@envelop/core'
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import { IResolvers, TypeSource } from '@graphql-tools/utils'
 import { GraphQLError, GraphQLSchema, isSchema } from 'graphql'
 import { GraphQLSchemaWithContext, YogaInitialContext } from '../types'
 import { Plugin } from './types'
 
-// TODO: Will be removed later
-type TypeDefsAndResolvers<TContext, TRootValue = {}> = {
-  typeDefs: TypeSource
-  resolvers?:
-    | IResolvers<TRootValue, TContext>
-    | Array<IResolvers<TRootValue, TContext>>
-}
-
-export type YogaSchemaDefinition<TContext, TRootValue> =
-  | TypeDefsAndResolvers<TContext, TRootValue>
+export type YogaSchemaDefinition<TContext> =
   | PromiseOrValue<GraphQLSchemaWithContext<TContext>>
   | ((request: Request) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>)
 
-// Will be moved to a seperate export later
-export function getDefaultSchema() {
-  return makeExecutableSchema({
-    typeDefs: /* GraphQL */ `
-      """
-      Greetings from GraphQL Yoga!
-      """
-      type Query {
-        greetings: String
-      }
-      type Subscription {
-        """
-        Current Time
-        """
-        time: String
-      }
-    `,
-    resolvers: {
-      Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
-      },
-      Subscription: {
-        time: {
-          async *subscribe() {
-            while (true) {
-              yield { time: new Date().toISOString() }
-              await new Promise((resolve) => setTimeout(resolve, 1000))
-            }
-          },
-        },
-      },
-    },
-  })
-}
-
 export const useSchema = <
   TContext extends YogaInitialContext = YogaInitialContext,
-  TRootValue = {},
 >(
-  schemaDef?: YogaSchemaDefinition<TContext, TRootValue>,
+  schemaDef?: YogaSchemaDefinition<TContext>,
 ): Plugin<TContext> => {
   if (schemaDef == null) {
-    const schema = getDefaultSchema()
-    return {
-      onPluginInit({ setSchema }) {
-        setSchema(schema)
-      },
-    }
-  }
-  if ('typeDefs' in schemaDef) {
-    const schema = makeExecutableSchema(schemaDef)
-    return {
-      onPluginInit({ setSchema }) {
-        setSchema(schema)
-      },
-    }
+    return {}
   }
   if (isSchema(schemaDef)) {
     return {

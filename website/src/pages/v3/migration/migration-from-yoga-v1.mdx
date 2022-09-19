@@ -15,8 +15,8 @@ You can start with updating `graphql-yoga` package.import { PackageCmd } from '@
 
 ## Server setup
 
-Yoga v1 no longer uses a class for constructing the server, the `createServer` function is now used.
-Also the `typeDefs` and `resolvers` config options must now be passed to a `schema` property.
+Yoga v1 no longer uses a class for constructing the server, the `createYoga` function is now used.
+Also the `typeDefs` and `resolvers` config options must now be passed to a `schema` property with `createSchema`.
 
 **Yoga v1**
 
@@ -32,12 +32,12 @@ server.start()
 **Yoga v3**
 
 ```ts
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { typeDefs, resolvers } from './schema'
 
 const yoga = createYoga({
-  schema: { typeDefs, resolvers },
+  schema: createSchema({ typeDefs, resolvers }),
 })
 
 const server = createServer(yoga)
@@ -70,18 +70,18 @@ In Yoga v3 you now need to use the `fs` module for Node.js.
 ```ts
 import * as path from 'path'
 import * as fs from 'fs'
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { resolvers } from './schema'
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: fs.readFileSync(
       path.join(__dirname, 'type-definitions.graphql'),
       'utf-8',
     ),
     resolvers,
-  },
+  }),
 })
 
 const server = createServer(yoga)
@@ -197,16 +197,16 @@ server.listen(4000)
 **Yoga v3**
 
 ```ts
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { typeDefs, resolvers } from './schema'
 import { db } from './db'
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs,
     resolvers,
-  },
+  }),
   context: (initialContext) => {
     const authHeader =
       initialContext.request.headers.get('authorization') ?? null
@@ -267,7 +267,7 @@ server.start()
 **Yoga v3**
 
 ```ts
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { useGraphQLMiddleware } from '@envelop/graphql-middleware'
 import { typeDefs, resolvers } from './schema'
@@ -294,7 +294,7 @@ const permissions = {
 }
 
 const yoga = createYoga({
-  schema: { typeDefs, resolvers },
+  schema: createSchema({ typeDefs, resolvers }),
   plugins: [useGraphQLMiddleware([permissions])],
 })
 
@@ -404,7 +404,7 @@ server.start()
 **Yoga v3**
 
 ```ts
-import { createPubSub, createYoga } from 'graphql-yoga'
+import { createPubSub, createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 
 const pubSub = new PubSub<{
@@ -413,7 +413,7 @@ const pubSub = new PubSub<{
 
 const yoga = createYoga({
   context: { pubSub },
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         _: Boolean
@@ -442,7 +442,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)
@@ -511,7 +511,7 @@ const pubSub = new PubSub<{
 
 const yoga = createYoga({
   context: { pubSub },
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         _: Boolean
@@ -543,7 +543,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)

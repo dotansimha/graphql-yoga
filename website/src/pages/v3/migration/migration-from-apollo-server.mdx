@@ -43,7 +43,7 @@ import { schema } from './schema'
 - const server = new ApolloServer({
 + const yoga = createYoga({
   // You can also pass `typeDefs` and `resolvers` here directly if you previously use `ApolloServer` constructor to build your `GraphQLSchema`
-  // schema: { typeDefs, resolvers },
+  // schema: createSchema({ typeDefs, resolvers }),
   schema,
 +  plugins: [useApolloServerErrors()],
 })
@@ -51,7 +51,6 @@ import { schema } from './schema'
 + const server = createServer(yoga)
 
 server.listen(4000)
-+ server.listen(4000)
 ```
 
 ## Migration from standalone `apollo-server`

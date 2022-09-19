@@ -1,4 +1,4 @@
-import { createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
 
 const wait = (time: number) =>
@@ -84,10 +84,10 @@ const resolvers = {
 }
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs,
     resolvers,
-  },
+  }),
   graphiql: {
     defaultQuery: /* GraphQL */ `
       # Slow alphabet

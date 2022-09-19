@@ -26,7 +26,7 @@ import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -52,7 +52,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)
@@ -257,13 +257,13 @@ GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it
 `server.ts`
 
 ```ts
-import { createServer, createPubSub } from 'graphql-yoga'
+import { createServer, createPubSub, createSchema } from 'graphql-yoga'
 
 const pubSub = createPubSub()
 
 // Provide your schema
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -295,7 +295,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)

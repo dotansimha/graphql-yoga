@@ -81,7 +81,6 @@ import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.j
 export type YogaServerOptions<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
-  TRootValue,
 > = {
   /**
    * Enable/disable logging or provide a custom logger.
@@ -147,8 +146,7 @@ export type YogaServerOptions<
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
   schema?: YogaSchemaDefinition<
-    TUserContext & TServerContext & YogaInitialContext,
-    TRootValue
+    TUserContext & TServerContext & YogaInitialContext
   >
 
   /**
@@ -199,7 +197,6 @@ export type BatchingOptions =
 export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
-  TRootValue,
 > {
   /**
    * Instance of envelop
@@ -221,9 +218,7 @@ export class YogaServer<
   private maskedErrorsOpts: YogaMaskedErrorOpts | null
   private id: string
 
-  constructor(
-    options?: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
-  ) {
+  constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
     this.id = options?.id ?? 'yoga'
     this.fetchAPI =
       options?.fetchAPI ??
@@ -662,21 +657,14 @@ export class YogaServer<
 export type YogaServerInstance<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
-  TRootValue extends Record<string, any>,
-> = ServerAdapter<
-  TServerContext,
-  YogaServer<TServerContext, TUserContext, TRootValue>
->
+> = ServerAdapter<TServerContext, YogaServer<TServerContext, TUserContext>>
 
 export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
-  TRootValue extends Record<string, any> = {},
 >(
-  options: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
-): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
-  const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
-    options,
-  )
+  options: YogaServerOptions<TServerContext, TUserContext>,
+): YogaServerInstance<TServerContext, TUserContext> {
+  const server = new YogaServer<TServerContext, TUserContext>(options)
   return createServerAdapter(server, server.fetchAPI.Request)
 }

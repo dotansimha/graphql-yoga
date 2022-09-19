@@ -42,7 +42,7 @@ describe('GraphQLError.extensions.http', () => {
 
   it('picks the highest status code and headers for GraphQLErrors thrown within multiple resolvers', async () => {
     const yoga = createYoga({
-      schema: {
+      schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             a: String
@@ -71,7 +71,7 @@ describe('GraphQLError.extensions.http', () => {
             },
           },
         },
-      },
+      }),
     })
 
     const response = await yoga.fetch('http://yoga/graphql', {
@@ -103,7 +103,7 @@ describe('GraphQLError.extensions.http', () => {
 
   it('picks the header of the last GraphQLError when multiple errors are thrown within multiple resolvers', async () => {
     const yoga = createYoga({
-      schema: {
+      schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             a: String
@@ -136,7 +136,7 @@ describe('GraphQLError.extensions.http', () => {
             },
           },
         },
-      },
+      }),
     })
 
     let response = await yoga.fetch('http://yoga/graphql', {
@@ -158,7 +158,7 @@ describe('GraphQLError.extensions.http', () => {
 
   it('should not contain the http extensions in response result', async () => {
     const yoga = createYoga({
-      schema: {
+      schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             a: String
@@ -180,7 +180,7 @@ describe('GraphQLError.extensions.http', () => {
             },
           },
         },
-      },
+      }),
     })
 
     let response = await yoga.fetch('http://yoga/graphql', {
@@ -197,13 +197,13 @@ describe('GraphQLError.extensions.http', () => {
 
   it('should respect http extensions status consistently on parsing fail', async () => {
     const yoga = createYoga({
-      schema: {
+      schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             _: String
           }
         `,
-      },
+      }),
     })
 
     let response = await yoga.fetch('http://yoga/graphql', {
@@ -223,13 +223,13 @@ describe('GraphQLError.extensions.http', () => {
 
   it('should respect http extensions status consistently on validation fail', async () => {
     const yoga = createYoga({
-      schema: {
+      schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             _: String
           }
         `,
-      },
+      }),
     })
 
     let response = await yoga.fetch('http://yoga/graphql', {
@@ -249,13 +249,13 @@ describe('GraphQLError.extensions.http', () => {
 
   it('should respond with status 500 when error without http extension is thrown', async () => {
     const yoga = createYoga({
-      schema: {
+      schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             _: String
           }
         `,
-      },
+      }),
       context: () => {
         throw new GraphQLError('No http status extension', {
           extensions: { http: { headers: { 'x-foo': 'bar' } } },
