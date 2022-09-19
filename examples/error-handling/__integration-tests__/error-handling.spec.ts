@@ -1,36 +1,41 @@
-import { yoga } from '../src'
+import { yoga } from '../src/yoga'
 import { createServer, Server } from 'http'
+import { AddressInfo } from 'net'
 import { fetch } from '@whatwg-node/fetch'
-import getPort from 'get-port'
 
 describe('error-handling example integration', () => {
+  let server: Server
+  let port: number
+
+  beforeAll(async () => {
+    server = createServer(yoga)
+    await new Promise<void>((resolve) => server.listen(0, resolve))
+    port = (server.address() as AddressInfo).port
+  })
+
+  afterAll(async () => {
+    await new Promise((resolve) => server.close(resolve))
+  })
+
   it('should get a masked error', async () => {
-    const port = await getPort()
-    const server = createServer(yoga)
-    try {
-      await new Promise<void>((resolve) => server.listen(port, resolve))
-      const response = await fetch(
-        `http://localhost:${port}/graphql?query=query{greeting}`,
-      )
-      const body = await response.json()
-      expect(body.errors).toBeDefined()
-      expect(body.errors[0].message).toEqual('Unexpected error.')
-      expect(body.data).toBeNull()
-    } finally {
-      await new Promise((resolve) => server.close(resolve))
-    }
+    const response = await fetch(
+      `http://localhost:${port}/graphql?query=query{greeting}`,
+    )
+    const body = await response.json()
+
+    expect(body.errors).toBeDefined()
+    expect(body.errors[0].message).toEqual('Unexpected error.')
+    expect(body.data).toBeNull()
   })
 
   it('should get a custom error', async () => {
-    const port = await getPort()
-    const server = createServer(yoga)
-    try {
-      const response = await fetch(
-        `http://localhost:${port}/graphql?query=query{user(byId: "6"){id}}`,
-      )
-      const body = await response.json()
-      expect(body.errors).toBeDefined()
-      expect(body.errors).toMatchInlineSnapshot(`
+    const response = await fetch(
+      `http://localhost:${port}/graphql?query=query{user(byId: "6"){id}}`,
+    )
+    const body = await response.json()
+
+    expect(body.errors).toBeDefined()
+    expect(body.errors).toMatchInlineSnapshot(`
         [
           {
             "extensions": {
@@ -52,9 +57,5 @@ describe('error-handling example integration', () => {
           },
         ]
         `)
-      expect(body.data).toBeNull()
-    } finally {
-      await new Promise((resolve) => server.close(resolve))
-    }
   })
 })
