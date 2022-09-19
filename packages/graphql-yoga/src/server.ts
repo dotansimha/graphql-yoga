@@ -494,13 +494,7 @@ export class YogaServer<
     }
   }
 
-  async getResponse(
-    request: Request,
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
-  ) {
-    const serverContext = args[0]
+  async getResponse(request: Request, serverContext: TServerContext) {
     const url = new URL(request.url, 'http://localhost')
     for (const onRequestHook of this.onRequestHooks) {
       let response: Response | undefined
@@ -564,7 +558,7 @@ export class YogaServer<
                   params,
                   request,
                 },
-                ...args,
+                serverContext,
               ),
             ),
           )
@@ -573,7 +567,7 @@ export class YogaServer<
               params: requestParserResult,
               request,
             },
-            ...args,
+            serverContext,
           ))) as ResultProcessorInput
     } catch (error) {
       const errors = handleError(error, this.maskedErrorsOpts)
@@ -593,20 +587,15 @@ export class YogaServer<
     return response
   }
 
-  handleRequest = async (
-    request: Request,
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
-  ) => {
+  handle = async (request: Request, serverContext: TServerContext) => {
     try {
-      const response = await this.getResponse(request, ...args)
+      const response = await this.getResponse(request, serverContext)
 
       for (const onResponseHook of this.onResponseHooks) {
         await onResponseHook({
           request,
           response,
-          serverContext: args[0],
+          serverContext,
         })
       }
       return response
@@ -658,10 +647,7 @@ export class YogaServer<
         }),
       },
     )
-    const response = await this.handleRequest(
-      request,
-      serverContext as TServerContext,
-    )
+    const response = await this.handle(request, serverContext as TServerContext)
     let executionResult: ExecutionResult<TData> | null = null
     if (response.headers.get('content-type') === 'application/json') {
       executionResult = await response.json()
@@ -692,9 +678,5 @@ export function createYoga<
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,
   )
-  return createServerAdapter({
-    baseObject: server,
-    handleRequest: server.handleRequest as any,
-    Request: server.fetchAPI.Request,
-  })
+  return createServerAdapter(server, server.fetchAPI.Request)
 }
