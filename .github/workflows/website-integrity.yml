@@ -4,7 +4,7 @@ on:
     paths:
       - 'website/**'
     branches:
-      - v2
+      - v3
 jobs:
   website-check:
     runs-on: ubuntu-latest
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Fetch
-        run: git fetch origin v2
+        run: git fetch origin v3
       - name: Use Node 18
         uses: actions/setup-node@v2
         with:
