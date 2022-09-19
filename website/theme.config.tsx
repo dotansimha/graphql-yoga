@@ -5,7 +5,7 @@ import {
   FooterExtended,
   Header,
   Navbar,
-  mdxComponents
+  mdxComponents,
 } from '@theguild/components'
 // @ts-ignore -- TODO: @laurin why I get TS2307: Cannot find module '@theguild/components/giscus' or its corresponding type declarations.
 import type { Giscus } from '@theguild/components/giscus'
@@ -26,7 +26,7 @@ const config: DocsThemeConfig = {
   },
   components: mdxComponents,
   docsRepositoryBase:
-    'https://github.com/dotansimha/graphql-yoga/tree/master/website/src/pages', // base URL for the docs repository
+    'https://github.com/dotansimha/graphql-yoga/tree/v2/website/src/pages', // base URL for the docs repository
   editLink: {
     text: 'Edit this page on GitHub',
   },

@@ -36,7 +36,7 @@ server.start()
 
 <Callout>
   You can also check a full example on our GitHub repository
-  [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/service-worker).
+  [here](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/service-worker).
 </Callout>
 
 ## Example with Modules Approach
@@ -59,7 +59,7 @@ interface Env {
 }
 
 export default createServer<Env>({
-  typeDefs: /* GraphQL */`
+  typeDefs: /* GraphQL */ `
     type Query {
       todo(id: ID!): String
       todos: [String]
@@ -81,9 +81,9 @@ export default createServer<Env>({
       },
       deleteTodo(_, { id }, context) {
         return context.MY_NAMESPACE.delete(id)
-      }
-    }
-  }
+      },
+    },
+  },
 })
 ```
 
@@ -107,7 +107,7 @@ export default {
 
 <Callout>
   You can also check a full example on our GitHub repository
-  [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/cloudflare-modules).
+  [here](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/cloudflare-modules).
 </Callout>
 
 ## Enabling Subscriptions

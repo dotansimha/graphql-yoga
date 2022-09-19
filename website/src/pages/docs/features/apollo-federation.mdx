@@ -16,7 +16,8 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 <Callout>
   Please note that Apollo Federation implementation doesn't support GraphQL
   Subscriptions. If you need to use Subscriptions with a Federated Gateway you
-  can use [Schema Stitching](https://graphql-tools.com/docs/schema-stitching/stitch-federation).
+  can use [Schema
+  Stitching](https://graphql-tools.com/docs/schema-stitching/stitch-federation).
 </Callout>
 
 ## Gateway
@@ -24,7 +25,9 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 ### Installation for Gateway
 
 <PackageCmd
-  packages={['@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15']}
+  packages={[
+    '@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15',
+  ]}
 />
 
 ### Example Gateway
@@ -104,4 +107,4 @@ server.start().then(() => {
 
 ## Working Example
 
-Check our [working example](https://github.com/dotansimha/graphql-yoga/tree/master/examples/apollo-federation) to try it out.
+Check our [working example](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/apollo-federation) to try it out.

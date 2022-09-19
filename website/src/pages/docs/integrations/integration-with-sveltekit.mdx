@@ -24,7 +24,7 @@ import type { RequestEvent } from '@sveltejs/kit'
 
 const yogaApp = createServer<RequestEvent>({
   schema: {
-    typeDefs: /* GraphQL */`
+    typeDefs: /* GraphQL */ `
       type Query {
         hello: String
       }
@@ -45,11 +45,10 @@ export { yogaApp as get, yogaApp as post }
 
 <Callout>
   Simple example on our GitHub repository
-  [here](https://github.com/dotansimha/graphql-yoga/tree/master/examples/sveltekit).
+  [here](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/sveltekit).
 </Callout>
 
-<Callout emoji='🪄'>
-  More examples with our KitQL library
-  [here](https://github.com/jycouet/kitql). The best of all GraphQL ecosystem for SvelteKit.
+<Callout emoji="🪄">
+  More examples with our KitQL library [here](https://github.com/jycouet/kitql).
+  The best of all GraphQL ecosystem for SvelteKit.
 </Callout>
-
