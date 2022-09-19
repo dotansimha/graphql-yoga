@@ -1,7 +1,16 @@
 diff --git a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
-index 2ac23c7..ad592c5 100644
+index 97fead9..ae16bc2 100644
 --- a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
 +++ b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
+@@ -75,7 +75,7 @@ function incrementVersion(release, preInfo) {
+     // because semver.inc with prereleases is confusing and this seems easier
+ 
+ 
+-    version += `-${preInfo.state.tag}.${preVersion}`;
++    version += `-next.${preVersion}`;
+   }
+ 
+   return version;
 @@ -130,18 +130,9 @@ function determineDependents({
            depType,
            versionRange
