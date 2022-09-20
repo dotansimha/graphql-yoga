@@ -23,9 +23,25 @@ describe('error-handling example integration', () => {
     )
     const body = await response.json()
 
-    expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toEqual('Unexpected error.')
-    expect(body.data).toBeNull()
+    expect(body).toMatchInlineSnapshot(`
+      {
+        "data": null,
+        "errors": [
+          {
+            "locations": [
+              {
+                "column": 7,
+                "line": 1,
+              },
+            ],
+            "message": "Unexpected error.",
+            "path": [
+              "greeting",
+            ],
+          },
+        ],
+      }
+    `)
   })
 
   it('should get a custom error', async () => {
@@ -34,9 +50,10 @@ describe('error-handling example integration', () => {
     )
     const body = await response.json()
 
-    expect(body.errors).toBeDefined()
-    expect(body.errors).toMatchInlineSnapshot(`
-        [
+    expect(body).toMatchInlineSnapshot(`
+      {
+        "data": null,
+        "errors": [
           {
             "extensions": {
               "code": "USER_NOT_FOUND",
@@ -55,7 +72,8 @@ describe('error-handling example integration', () => {
               "user",
             ],
           },
-        ]
-        `)
+        ],
+      }
+    `)
   })
 })

@@ -35,6 +35,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
+      - name: Setup Bun Runtime
+        uses: antongolub/action-setup-bun@v1
+
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-test-node

@@ -16,7 +16,7 @@ import {
 } from 'graphql'
 import { GraphQLBigInt } from 'graphql-scalars'
 import 'json-bigint-patch'
-import getPort from 'get-port'
+import { AddressInfo } from 'net'
 
 export function createTestSchema() {
   let liveQueryCounter = 0
@@ -155,8 +155,8 @@ describe('browser', () => {
   const server = createServer(yogaApp)
 
   beforeAll(async () => {
-    port = await getPort()
-    await new Promise<void>((resolve) => server.listen(port, resolve))
+    await new Promise<void>((resolve) => server.listen(0, resolve))
+    port = (server.address() as AddressInfo).port
     browser = await puppeteer.launch({
       // If you wanna run tests with open browser
       // set your PUPPETEER_HEADLESS env to "false"
@@ -384,7 +384,6 @@ describe('browser', () => {
     let anotherServer: Server
     let anotherOriginPort: number
     beforeAll(async () => {
-      anotherOriginPort = await getPort()
       anotherServer = createServer((_req, res) => {
         res.end(/* HTML */ `
           <html>
@@ -422,8 +421,9 @@ describe('browser', () => {
         `)
       })
       await new Promise<void>((resolve) =>
-        anotherServer.listen(anotherOriginPort, () => resolve()),
+        anotherServer.listen(0, () => resolve()),
       )
+      anotherOriginPort = (anotherServer.address() as AddressInfo).port
     })
     afterAll(async () => {
       await new Promise<void>((resolve) => anotherServer.close(() => resolve()))

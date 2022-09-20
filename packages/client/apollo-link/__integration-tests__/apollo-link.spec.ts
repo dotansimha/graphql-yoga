@@ -5,7 +5,7 @@ import { parse } from 'graphql'
 import { observableToAsyncIterable } from '@graphql-tools/utils'
 import { YogaLink } from '@graphql-yoga/apollo-link'
 import { File } from '@whatwg-node/fetch'
-import getPort from 'get-port'
+import { AddressInfo } from 'node:net'
 
 describe('Yoga Apollo Link', () => {
   const endpoint = '/graphql'
@@ -54,8 +54,9 @@ describe('Yoga Apollo Link', () => {
   let client: ApolloClient<any>
 
   beforeAll(async () => {
-    const port = await getPort()
     server = createServer(yoga)
+    await new Promise<void>((resolve) => server.listen(0, hostname, resolve))
+    const port = (server.address() as AddressInfo).port
     url = `http://${hostname}:${port}${endpoint}`
     client = new ApolloClient({
       link: new YogaLink({
@@ -64,7 +65,6 @@ describe('Yoga Apollo Link', () => {
       }),
       cache: new InMemoryCache(),
     })
-    await new Promise<void>((resolve) => server.listen(port, hostname, resolve))
   })
   afterAll(() => {
     server.close()

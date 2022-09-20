@@ -1,7 +1,6 @@
 ---
 id: subscriptions
 title: Subscriptions
-sidebar_label: Subscriptions
 ---
 
 import { PackageCmd } from '@theguild/components'
@@ -26,7 +25,7 @@ import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -52,7 +51,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)
@@ -257,13 +256,13 @@ GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it
 `server.ts`
 
 ```ts
-import { createServer, createPubSub } from 'graphql-yoga'
+import { createServer, createPubSub, createSchema } from 'graphql-yoga'
 
 const pubSub = createPubSub()
 
 // Provide your schema
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -295,7 +294,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)
@@ -405,7 +404,7 @@ The `createPubSub` function allows you to specify a custom [`EventTarget`](https
 
 The minimal `EventTarget` implementation is described by the [`TypedEventTarget` interface](https://github.com/dotansimha/graphql-yoga/blob/master/packages/event-target/typed-event-target/src/typed-event-target.ts).
 
-Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).import { PackageCmd } from '@theguild/components';
+Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).
 
 <PackageCmd packages={['@graphql-yoga/redis-event-target ioredis']} />
 

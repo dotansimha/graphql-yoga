@@ -1,4 +1,4 @@
-import { createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { EnvelopArmor } from '@escape.tech/graphql-armor'
 import { createServer } from 'http'
 
@@ -18,7 +18,7 @@ const booksStore = [
 
 const yoga = createYoga({
   plugins: [...enhancements.plugins],
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Book {
         title: String
@@ -33,7 +33,7 @@ const yoga = createYoga({
         books: () => booksStore,
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)
