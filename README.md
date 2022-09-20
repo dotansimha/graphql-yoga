@@ -9,7 +9,7 @@ Fully-featured GraphQL Server with focus on easy setup, performance & great deve
 ### Installation
 
 ```shell
-npm i graphql-yoga graphql
+npm i @graphql-yoga/node graphql
 ```
 
 ### Quickstart
@@ -17,10 +17,9 @@ npm i graphql-yoga graphql
 You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map:
 
 ```ts
-import { createServer } from 'http'
-import { createYoga } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/node'
 
-const yoga = createYoga({
+const server = createServer({
   schema: {
     typeDefs: /* GraphQL */ `
       type Query {
@@ -35,8 +34,7 @@ const yoga = createYoga({
   },
 })
 
-const server = createServer(yoga)
-server.listen(4000)
+server.start()
 ```
 
 ## Overview
