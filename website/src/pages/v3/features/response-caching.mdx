@@ -14,12 +14,12 @@ Response caching is a technique for reducing server load by caching GraphQL quer
 ## Quick Start
 
 ```ts
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: `type Query { slow: String}`,
     resolvers: {
       Query: {
@@ -29,7 +29,7 @@ const yoga = createYoga({
         },
       },
     },
-  },
+  }),
   plugins: [
     useResponseCache({
       // global cache

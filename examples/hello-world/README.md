@@ -63,12 +63,12 @@ The server returns the following response:
 This is what the [implementation](./index.js) looks like:
 
 ```js
-import { createServer } from 'http'
+import { createServer, createSchema } from 'http'
 import { createYoga } from 'graphql-yoga'
 // ... or using `require()`
-// const { createServer } = require('graphql-yoga')
+// const { createServer, createSchema } = require('graphql-yoga')
 
-const typeDefs = `
+const typeDefs = /* GraphQL */ `
   type Query {
     hello(name: String): String!
   }
@@ -81,10 +81,10 @@ const resolvers = {
 }
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs,
     resolvers,
-  },
+  }),
 })
 
 const server = createServer(yoga)

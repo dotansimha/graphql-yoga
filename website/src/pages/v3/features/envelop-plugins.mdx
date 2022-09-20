@@ -12,11 +12,11 @@ The following example adds [GraphQL JIT](https://github.com/zalando-incubator/gr
 
 ```ts
 import { useGraphQlJit } from '@envelop/graphql-jit'
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 
 // Provide your schema
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         greetings: String!
@@ -27,7 +27,7 @@ const yoga = createYoga({
         greetings: () => 'Hello World!',
       },
     },
-  },
+  }),
   plugins: [useGraphQlJit()],
 })
 
