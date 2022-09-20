@@ -4,7 +4,7 @@
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
-[Docs](https://www.graphql-yoga.com/docs)
+[Docs](https://www.the-guild.dev/graphql/yoga-server/v3)
 
 ### Installation
 
