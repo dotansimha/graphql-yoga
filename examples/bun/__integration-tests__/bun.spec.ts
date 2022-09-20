@@ -7,6 +7,7 @@ let bunProcess: ReturnType<typeof spawn>
 
 const timings = {
   setup: {
+    waitAfterPreview: 5000,
     total: 20000, // build + preview + {waitAfterPreview} is expected to be less than 20sec
   },
   waitForSelector: 999,
@@ -36,7 +37,9 @@ describe('Bun integration', () => {
       bunProcess.stdout?.on('data', (chunk) => {
         const chunkString = chunk.toString('utf-8')
         if (chunkString.includes('Server is running on')) {
-          resolve()
+          setTimeout(() => {
+            resolve()
+          }, timings.setup.waitAfterPreview)
         }
       })
     })
