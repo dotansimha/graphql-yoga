@@ -29,7 +29,7 @@ describe('Bun integration', () => {
       console.error(chunk.toString('utf-8'))
     })
 
-    // Wait for sveltekit to start
+    // Wait for Bun to start
     await new Promise((resolve) =>
       setTimeout(resolve, timings.setup.waitAfterPreview),
     )
