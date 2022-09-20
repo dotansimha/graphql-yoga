@@ -16,9 +16,8 @@ import {
   File,
   FormData,
 } from '@whatwg-node/fetch'
-import getPort from 'get-port'
-import EventSource from 'eventsource'
 import { createGraphQLError } from '@graphql-tools/utils'
+import { AddressInfo } from 'net'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
@@ -63,23 +62,27 @@ describe('incremental delivery', () => {
     const server = createServer(yoga)
 
     try {
-      await new Promise<void>((resolve) => server.listen(9876, resolve))
+      await new Promise<void>((resolve) => server.listen(0, resolve))
+      const port = (server.address() as AddressInfo).port
       const abortCtrl = new AbortController()
-      const res = await yoga.fetchAPI.fetch('http://localhost:9876/graphql', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          accept: 'multipart/mixed',
+      const res = await yoga.fetchAPI.fetch(
+        `http://localhost:${port}/graphql`,
+        {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            accept: 'multipart/mixed',
+          },
+          body: JSON.stringify({
+            query: /* GraphQL */ `
+              query {
+                a
+              }
+            `,
+          }),
+          signal: abortCtrl.signal,
         },
-        body: JSON.stringify({
-          query: /* GraphQL */ `
-            query {
-              a
-            }
-          `,
-        }),
-        signal: abortCtrl.signal,
-      })
+      )
 
       // Start and Close a HTTP Request
       for await (const chunk of res.body!) {
@@ -236,9 +239,9 @@ describe('incremental delivery: node-fetch', () => {
   let url: string
   beforeEach(async () => {
     server = createServer(yoga)
-    const port = await getPort()
+    await new Promise<void>((resolve) => server.listen(0, resolve))
+    const port = (server.address() as AddressInfo).port
     url = `http://localhost:${port}/graphql`
-    await new Promise<void>((resolve) => server.listen(port, resolve))
   })
   afterEach(async () => {
     await new Promise((resolve) => server.close(resolve))
@@ -366,29 +369,36 @@ describe('incremental delivery: node-fetch', () => {
     expect(body.errors[0].message).toBe('File size limit exceeded: 12 bytes')
   })
 
-  it('should get subscription', (done) => {
+  it('should get subscription', async () => {
     expect.assertions(3)
-    const eventSource = new EventSource(`${url}?query=subscription{counter}`)
     let counter = 0
-    eventSource.onmessage = (event) => {
-      const result = JSON.parse(event.data)
-      if (counter === 0) {
-        expect(result.data.counter).toBe(0)
-        counter++
-        push?.(counter)
-      } else if (counter === 1) {
-        expect(result.data.counter).toBe(1)
-        counter++
-        push?.(counter)
-      } else if (counter === 2) {
-        expect(result.data.counter).toBe(2)
-        counter++
-        stop?.()
-        done()
+    setTimeout(() => {
+      push?.(counter)
+    }, 500)
+    const response = await fetch(`${url}?query=subscription{counter}`, {
+      headers: {
+        Accept: 'text/event-stream',
+      },
+    })
+    for await (const chunk of response.body!) {
+      const chunkString = Buffer.from(chunk).toString('utf-8')
+      if (chunkString.includes('data:')) {
+        const result = JSON.parse(chunkString.replace('data:', ''))
+        if (counter === 0) {
+          expect(result.data.counter).toBe(0)
+          counter++
+          push?.(counter)
+        } else if (counter === 1) {
+          expect(result.data.counter).toBe(1)
+          counter++
+          push?.(counter)
+        } else if (counter === 2) {
+          expect(result.data.counter).toBe(2)
+          counter++
+          stop?.()
+          return
+        }
       }
     }
-    new Promise((resolve) => setTimeout(resolve, 100)).then(() => {
-      push?.(counter)
-    })
   })
 })

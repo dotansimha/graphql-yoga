@@ -2,7 +2,6 @@ import { yoga } from '../src/app'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
 import { fetch } from '@whatwg-node/fetch'
-import EventSource from 'eventsource'
 
 describe('graphql-auth example integration', () => {
   let server: Server
@@ -58,87 +57,66 @@ describe('graphql-auth example integration', () => {
   })
 
   it('should execute on public field with subscription', async () => {
-    const eventSource = new EventSource(
+    expect.assertions(1)
+    const response = await fetch(
       `http://localhost:${port}/graphql?query=subscription{public}`,
+      {
+        headers: {
+          Accept: 'text/event-stream',
+        },
+      },
     )
 
-    const messages: string[] = []
-    try {
-      await new Promise<void>((resolve, reject) => {
-        eventSource.onmessage = (message) => {
-          messages.push(message.data)
-          eventSource.close()
-          resolve()
-        }
-        eventSource.onerror = (error) => {
-          reject(error)
-        }
-      })
-
-      expect(messages).toMatchInlineSnapshot(`
-        [
-          "{"data":{"public":"hi"}}",
-        ]
-      `)
-    } finally {
-      eventSource.close()
+    for await (const chunk of response.body!) {
+      const chunkString = Buffer.from(chunk).toString('utf-8')
+      if (chunkString.includes('data:')) {
+        expect(chunkString.trim()).toBe('data: {"data":{"public":"hi"}}')
+        break
+      }
     }
   })
 
   it('should execute on auth required field with subscription', async () => {
-    const eventSource = new EventSource(
+    expect.assertions(1)
+    const response = await fetch(
       `http://localhost:${port}/graphql?query=subscription{requiresAuth}`,
       {
         headers: {
+          Accept: 'text/event-stream',
           'x-authorization': 'aaa',
         },
       },
     )
 
-    const messages: string[] = []
-    try {
-      await new Promise<void>((resolve, reject) => {
-        eventSource.onmessage = (message) => {
-          messages.push(message.data)
-          eventSource.close()
-          resolve()
-        }
-        eventSource.onerror = (error) => {
-          reject(error)
-        }
-      })
-
-      expect(messages).toMatchInlineSnapshot(`
-        [
-          "{"data":{"requiresAuth":"hi foo@foo.com"}}",
-        ]
-      `)
-    } finally {
-      eventSource.close()
+    for await (const chunk of response.body!) {
+      const chunkStr = Buffer.from(chunk).toString('utf-8')
+      if (chunkStr.startsWith('data:')) {
+        expect(chunkStr.trim()).toBe(
+          'data: {"data":{"requiresAuth":"hi foo@foo.com"}}',
+        )
+        break
+      }
     }
   })
 
   it('should not execute on auth required field with subscription', async () => {
-    const eventSource = new EventSource(
+    expect.assertions(1)
+    const response = await fetch(
       `http://localhost:${port}/graphql?query=subscription{requiresAuth}`,
+      {
+        headers: {
+          Accept: 'text/event-stream',
+        },
+      },
     )
-
-    const messages: string[] = []
-    try {
-      await new Promise<void>((resolve, reject) => {
-        eventSource.onmessage = (message) => {
-          messages.push(message.data)
-          eventSource.close()
-          resolve()
-        }
-        eventSource.onerror = (error) => {
-          reject(error)
-        }
-      })
-    } catch (err) {
-      expect(err.message).toEqual('Internal Server Error')
-    } finally {
-      eventSource.close()
+    for await (const chunk of response.body!) {
+      const chunkStr = Buffer.from(chunk).toString('utf-8')
+      if (chunkStr.startsWith('data:')) {
+        expect(chunkStr.trim()).toBe(
+          'data: {"data":null,"errors":[{"message":"Accessing \'Subscription.requiresAuth\' requires authentication.","locations":[{"line":1,"column":14}]}]}',
+        )
+        break
+      }
     }
   })
 })
