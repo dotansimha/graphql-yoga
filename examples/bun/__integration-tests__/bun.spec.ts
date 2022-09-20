@@ -7,7 +7,6 @@ let bunProcess: ReturnType<typeof spawn>
 
 const timings = {
   setup: {
-    waitAfterPreview: 5000,
     total: 20000, // build + preview + {waitAfterPreview} is expected to be less than 20sec
   },
   waitForSelector: 999,
@@ -25,14 +24,22 @@ describe('Bun integration', () => {
     // Start Bun
     bunProcess = spawn('yarn', ['workspace', 'example-bun', 'start'])
 
-    bunProcess.stderr?.on('data', (chunk) => {
-      console.error(chunk.toString('utf-8'))
-    })
+    await new Promise<void>((resolve, reject) => {
+      bunProcess.stderr?.on('data', (chunk) => {
+        const chunkString = chunk.toString('utf-8')
+        console.error(chunk.toString('utf-8'))
+        if (chunkString.includes('Command failed')) {
+          reject(new Error('Bun failed to start'))
+        }
+      })
 
-    // Wait for Bun to start
-    await new Promise((resolve) =>
-      setTimeout(resolve, timings.setup.waitAfterPreview),
-    )
+      bunProcess.stdout?.on('data', (chunk) => {
+        const chunkString = chunk.toString('utf-8')
+        if (chunkString.includes('Server is running on')) {
+          resolve()
+        }
+      })
+    })
 
     // Launch puppeteer
     browser = await puppeteer.launch({
