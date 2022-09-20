@@ -1,12 +1,10 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
-import { FormatErrorHandler } from '../plugins/useMaskedError.js'
+import { MaskError } from '@envelop/core'
 
-export const yogaDefaultFormatError: FormatErrorHandler = (
-  err,
-  message,
-  isDev,
-) => {
+const isDev = globalThis.process?.env?.NODE_ENV === 'development'
+
+export const yogaDefaultFormatError: MaskError = (err, message) => {
   if (err instanceof GraphQLError) {
     if (err.originalError) {
       if (err.originalError.name === 'GraphQLError') {

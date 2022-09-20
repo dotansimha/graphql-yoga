@@ -12,6 +12,8 @@ import {
   useExtendContext,
   useLogger,
   PromiseOrValue,
+  useMaskedErrors,
+  UseMaskedErrorsOpts,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -77,10 +79,6 @@ import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValid
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
-import {
-  useMaskedErrors,
-  UseMaskedErrorsOpts,
-} from './plugins/useMaskedError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
 
@@ -260,9 +258,8 @@ export class YogaServer<
       options?.maskedErrors === false
         ? null
         : {
-            formatError: yogaDefaultFormatError,
+            maskError: yogaDefaultFormatError,
             errorMessage: 'Unexpected error.',
-            isDev: globalThis.process?.env?.NODE_ENV === 'development',
             ...(typeof options?.maskedErrors === 'object'
               ? options.maskedErrors
               : {}),

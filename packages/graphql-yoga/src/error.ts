@@ -31,10 +31,9 @@ export function handleError(
       errors.push(...handleError(singleError, maskedErrorsOpts))
     }
   } else if (maskedErrorsOpts) {
-    const maskedError = maskedErrorsOpts.formatError(
+    const maskedError = maskedErrorsOpts.maskError(
       error,
       maskedErrorsOpts.errorMessage,
-      maskedErrorsOpts.isDev,
     )
     errors.push(maskedError)
   } else {
