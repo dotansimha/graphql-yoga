@@ -1,5 +1,3 @@
-import { Accordion } from './accordion'
-
 # Error Handling
 
 In the previous chapter, you encountered an error while executing a `Mutation.postCommentOnLink` operation.
@@ -123,7 +121,8 @@ This is great, but now we never know why our request failed 🤔 and the error m
 
 Let's change the implementation to expose the much more helpful message `Cannot post comment on non-existing link with id 'X'.` instead of `Unexpected error.`.
 
-<Accordion title="v2">
+<details>
+  <summary>v2</summary>
 
 For doing so you will use the `GraphQLYogaError` class that is exported from the `@graphql-yoga/node` package.
 
@@ -173,9 +172,10 @@ const resolvers = {
 The error code `P2003` indicates a foreign key constraint error. You can learn more about it in [the Prisma documentation](https://prisma.io/docs/reference/api-reference/error-reference#p2003).
 You use that code for identifying this edge case of a missing link and then throw a `GraphQLYogaError` with a useful error message instead.
 
-</Accordion>
+</details>
 
-<Accordion title="v3" initiallyOpen>
+<details open>
+  <summary>v3</summary>
 
 For doing so you will use the `GraphQLError` class that is exported from the `graphql` package.
 
@@ -225,7 +225,7 @@ const resolvers = {
 The error code `P2003` indicates a foreign key constraint error. You can learn more about it in [the Prisma documentation](https://prisma.io/docs/reference/api-reference/error-reference#p2003).
 You use that code for identifying this edge case of a missing link and then throw a `GraphQLError` with a useful error message instead.
 
-</Accordion>
+</details>
 
 Restart the server using `npm run dev` and again execute the mutation operation using GraphiQL.
 
@@ -364,7 +364,8 @@ There are multiple mathematical numeral systems. The implementation tries to be 
 
 Add the following code to the `src/schema.ts` file.
 
-<Accordion title="v2">
+<details>
+  <summary>v2</summary>
 
 ```ts filename="src/schema.ts"
 // ... other code ...
@@ -420,9 +421,10 @@ const resolvers = {
 }
 ```
 
-</Accordion>
+</details>
 
-<Accordion title="v3" initiallyOpen>
+<details open>
+  <summary>v3</summary>
 
 ```ts filename="src/schema.ts"
 // ... other code ...
@@ -478,7 +480,7 @@ const resolvers = {
 }
 ```
 
-</Accordion>
+</details>
 
 The regex `/^(\d+)$/` simply verifies that every character within the `value` is a digit. In case the value includes a non-digit character, you simply return `null` and then reject the resolver with a `GraphQLYogaError` error.
 

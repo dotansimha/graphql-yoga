@@ -1,5 +1,4 @@
 import { Callout } from '@theguild/components'
-import { Accordion } from './accordion'
 
 # Connecting the Server and Database with Prisma Client
 
@@ -33,7 +32,8 @@ export async function createContext(): Promise<GraphQLContext> {
 
 Now, you'll need to import the `createContext` function and make sure you add it as part of the GraphQL execution process:
 
-<Accordion title="v2">
+<details>
+  <summary>v2</summary>
 
 ```typescript
 import { createServer } from '@graphql-yoga/node'
@@ -48,9 +48,10 @@ async function main() {
 main()
 ```
 
-</Accordion>
+</details>
 
-<Accordion title="v3" initiallyOpen>
+<details open>
+  <summary>v3</summary>
 
 ```typescript
 import { createYoga } from 'graphql-yoga'
@@ -67,7 +68,7 @@ function main() {
 main()
 ```
 
-</Accordion>
+</details>
 
 In the next step, you'll connect the Prisma client and your GraphQL server!
 

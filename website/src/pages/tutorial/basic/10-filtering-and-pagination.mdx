@@ -1,5 +1,4 @@
 import { Callout } from '@theguild/components'
-import { Accordion } from './accordion'
 
 # Filtering and Pagination
 
@@ -179,7 +178,8 @@ Let's use the value 30 as the default value and 50 as the upper limit and 1 as t
 
 Adjust the current schema resolver implementation according to the following.
 
-<Accordion title="v2">
+<details>
+  <summary>v2</summary>
 
 ```ts
 import { GraphQLYogaError } from '@graphql-yoga/node'
@@ -232,9 +232,10 @@ const resolvers = {
 }
 ```
 
-</Accordion>
+</details>
 
-<Accordion title="v3" initiallyOpen>
+<details open>
+  <summary>v3</summary>
 
 ```ts
 // ... other code ...
@@ -287,7 +288,7 @@ const resolvers = {
 }
 ```
 
-</Accordion>
+</details>
 
 Cool! Now we can try executing an operation with a `take` argument value outside the range!
 
