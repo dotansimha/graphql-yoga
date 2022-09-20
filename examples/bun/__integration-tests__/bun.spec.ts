@@ -1,26 +1,11 @@
 import { spawn } from 'child_process'
-import puppeteer from 'puppeteer'
-
-let browser: puppeteer.Browser
-let page: puppeteer.Page
-let bunProcess: ReturnType<typeof spawn>
-
-const timings = {
-  waitForSelector: 999,
-  waitForResponse: 1999,
-}
-
-jest.setTimeout(30000)
-
-let toSkip = true
+import { getIntrospectionQuery } from 'graphql'
 
 describe('Bun integration', () => {
+  let bunProcess: ReturnType<typeof spawn>
   let serverUrl: string
+
   beforeAll(async () => {
-    if (process.versions.node.startsWith('18')) {
-      toSkip = false
-      return
-    }
     // Start Bun
     bunProcess = spawn('yarn', ['workspace', 'example-bun', 'start'])
 
@@ -37,83 +22,44 @@ describe('Bun integration', () => {
         const chunkString = chunk.toString('utf-8')
         console.log(chunk.toString('utf-8'))
         if (chunkString.includes('Server is running on')) {
-          setTimeout(() => {
-            resolve(chunkString.split('Server is running on ')[1])
-          }, 5000)
+          resolve(chunkString.split('Server is running on ')[1])
         }
       })
     })
-
-    // Launch puppeteer
-    browser = await puppeteer.launch({
-      // If you wanna run tests with open browser
-      // set your PUPPETEER_HEADLESS env to "false"
-      headless: process.env.PUPPETEER_HEADLESS !== 'false',
-      args: ['--incognito'],
-    })
   })
 
-  beforeEach(async () => {
-    if (toSkip) {
-      return
-    }
-    if (page !== undefined) {
-      await page.close()
-    }
-    const context = await browser.createIncognitoBrowserContext()
-    page = await context.newPage()
-  })
-
-  afterAll(async () => {
-    if (toSkip) {
-      return
-    }
-    await browser.close()
+  afterAll(() => {
     bunProcess.kill()
   })
 
-  it('go to GraphiQL page', async () => {
-    if (toSkip) {
-      return
-    }
-    // Go the the right route
-    const body = await page.goto(
-      `${serverUrl}?query=query+Hello+%7B%0A%09greetings%0A%7D`,
-    )
+  it('shows GraphiQL', async () => {
+    const response = await fetch(serverUrl, {
+      method: 'GET',
+      headers: {
+        Accept: 'text/html',
+      },
+    })
+    expect(response.status).toEqual(200)
+    expect(response.headers.get('content-type')).toEqual('text/html')
+    const htmlContents = await response.text()
+    expect(htmlContents).toContain('Yoga GraphiQL')
+  })
 
-    let strIntro = ''
-    try {
-      // A-1/ Wait for the introspection query result getting our type "greetings"
-      const resIntro = await page.waitForResponse(
-        (res) => res.url().endsWith('/graphql'),
-        {
-          timeout: timings.waitForResponse,
-        },
-      )
-      const jsonIntro = await resIntro.json()
-      strIntro = JSON.stringify(jsonIntro, null, 0)
-    } catch (error) {
-      // We had an issue grabbing the introspection query result!
-      // let's see what is in the html with the finafinally
-    } finally {
-      const bodyContent = await body?.text()
-      // B/ Check that GraphiQL is showing
-      expect(bodyContent).toContain(`Yoga GraphiQL`)
-    }
-
-    // A-2/ Finish the test after the body check
-    expect(strIntro).toContain(`"name":"greetings"`)
-
-    // C/ Tigger the default request and wait for the response
-    const [res] = await Promise.all([
-      page.waitForResponse((res) => res.url().endsWith('/graphql'), {
-        timeout: timings.waitForResponse,
+  it('accepts a query', async () => {
+    const response = await fetch(serverUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `{ greetings }`,
       }),
-      page.click(`button[class="execute-button"]`),
-    ])
-
-    const json = await res.json()
-    const str = JSON.stringify(json, null, 0)
-    expect(str).toContain(`{"data":{"greetings":"Hello Bun!"}}`)
+    })
+    const result = await response.json()
+    expect(result).toEqual({
+      data: {
+        greetings: 'Hello Bun!',
+      },
+    })
   })
 })
