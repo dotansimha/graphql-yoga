@@ -1,4 +1,4 @@
-import { execSync, spawn } from 'child_process'
+import { spawn } from 'child_process'
 import puppeteer from 'puppeteer'
 
 let browser: puppeteer.Browser
@@ -6,26 +6,19 @@ let page: puppeteer.Page
 let bunProcess: ReturnType<typeof spawn>
 
 const timings = {
-  setup: {
-    waitAfterPreview: 5000,
-    total: 20000, // build + preview + {waitAfterPreview} is expected to be less than 20sec
-  },
   waitForSelector: 999,
   waitForResponse: 1999,
 }
 
-describe('Bun integration', () => {
-  beforeAll(async () => {
-    // Kill the port if it's used!
-    try {
-      execSync('fuser -k 9876/tcp')
-      // eslint-disable-next-line no-empty
-    } catch {}
+jest.setTimeout(20000)
 
+describe('Bun integration', () => {
+  let serverUrl: string
+  beforeAll(async () => {
     // Start Bun
     bunProcess = spawn('yarn', ['workspace', 'example-bun', 'start'])
 
-    await new Promise<void>((resolve, reject) => {
+    serverUrl = await new Promise((resolve, reject) => {
       bunProcess.stderr?.on('data', (chunk) => {
         const chunkString = chunk.toString('utf-8')
         console.error(chunk.toString('utf-8'))
@@ -36,10 +29,9 @@ describe('Bun integration', () => {
 
       bunProcess.stdout?.on('data', (chunk) => {
         const chunkString = chunk.toString('utf-8')
+        console.log(chunk.toString('utf-8'))
         if (chunkString.includes('Server is running on')) {
-          setTimeout(() => {
-            resolve()
-          }, timings.setup.waitAfterPreview)
+          resolve(chunkString.split('Server is running on ')[1])
         }
       })
     })
@@ -51,9 +43,7 @@ describe('Bun integration', () => {
       headless: process.env.PUPPETEER_HEADLESS !== 'false',
       args: ['--incognito'],
     })
-
-    // How long it took?
-  }, timings.setup.total)
+  })
 
   beforeEach(async () => {
     if (page !== undefined) {
@@ -71,7 +61,7 @@ describe('Bun integration', () => {
   it('go to GraphiQL page', async () => {
     // Go the the right route
     const body = await page.goto(
-      'http://localhost:9876/graphql?query=query+Hello+%7B%0A%09greetings%0A%7D',
+      `http://${serverUrl}?query=query+Hello+%7B%0A%09greetings%0A%7D`,
     )
 
     let strIntro = ''
