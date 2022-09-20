@@ -1,3 +1,5 @@
+import { Accordion } from './accordion'
+
 # Error Handling
 
 In the previous chapter, you encountered an error while executing a `Mutation.postCommentOnLink` operation.
@@ -121,6 +123,8 @@ This is great, but now we never know why our request failed 🤔 and the error m
 
 Let's change the implementation to expose the much more helpful message `Cannot post comment on non-existing link with id 'X'.` instead of `Unexpected error.`.
 
+<Accordion title="v2">
+
 For doing so you will use the `GraphQLYogaError` class that is exported from the `@graphql-yoga/node` package.
 
 Add the following catch handler for mapping a foreign key error into a `GraphQLYogaError`:
@@ -168,6 +172,14 @@ const resolvers = {
 
 The error code `P2003` indicates a foreign key constraint error. You can learn more about it in [the Prisma documentation](https://prisma.io/docs/reference/api-reference/error-reference#p2003).
 You use that code for identifying this edge case of a missing link and then throw a `GraphQLYogaError` with a useful error message instead.
+
+</Accordion>
+
+<Accordion title="v3" initiallyOpen>
+
+TODO
+
+</Accordion>
 
 Restart the server using `npm run dev` and again execute the mutation operation using GraphiQL.
 
