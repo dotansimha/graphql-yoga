@@ -1,5 +1,5 @@
 import { spawn } from 'child_process'
-import { getIntrospectionQuery } from 'graphql'
+import { fetch } from '@whatwg-node/fetch'
 
 describe('Bun integration', () => {
   let bunProcess: ReturnType<typeof spawn>
