@@ -17,21 +17,21 @@ yarn add graphql-yoga graphql
 Make a schema, create Yoga and start a Node server with it:
 
 ```ts
-import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
-import { createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
 
-const yoga = createToga({
-  schema: new GraphQLSchema({
-    query: new GraphQLObjectType({
-      name: 'Query',
-      fields: {
-        hello: {
-          type: GraphQLString,
-          resolve: () => 'world',
-        },
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'Hello from Yoga!',
       },
-    }),
+    },
   }),
 })
 
