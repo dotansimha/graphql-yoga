@@ -12,9 +12,15 @@ const timings = {
 
 jest.setTimeout(20000)
 
+let toSkip = false
+
 describe('Bun integration', () => {
   let serverUrl: string
   beforeAll(async () => {
+    if (process.versions.node.startsWith('14')) {
+      toSkip = true
+      return
+    }
     // Start Bun
     bunProcess = spawn('yarn', ['workspace', 'example-bun', 'start'])
 
@@ -46,6 +52,9 @@ describe('Bun integration', () => {
   })
 
   beforeEach(async () => {
+    if (toSkip) {
+      return
+    }
     if (page !== undefined) {
       await page.close()
     }
@@ -54,11 +63,17 @@ describe('Bun integration', () => {
   })
 
   afterAll(async () => {
+    if (toSkip) {
+      return
+    }
     await browser.close()
     bunProcess.kill()
   })
 
   it('go to GraphiQL page', async () => {
+    if (toSkip) {
+      return
+    }
     // Go the the right route
     const body = await page.goto(
       `${serverUrl}?query=query+Hello+%7B%0A%09greetings%0A%7D`,
