@@ -13,26 +13,7 @@ export function isPOSTMultipartRequest(request: Request): boolean {
 export async function parsePOSTMultipartRequest(
   request: Request,
 ): Promise<GraphQLParams> {
-  let requestBody: FormData
-  try {
-    requestBody = await request.formData()
-  } catch (e: unknown) {
-    // Trick for @whatwg-node/fetch errors on Node.js
-    // TODO: This needs a better solution
-    if (
-      e instanceof Error &&
-      e.message.startsWith('File size limit exceeded: ')
-    ) {
-      throw createGraphQLError(e.message, {
-        extensions: {
-          http: {
-            status: 413,
-          },
-        },
-      })
-    }
-    throw e
-  }
+  const requestBody = await request.formData()
 
   const operationsStr = requestBody.get('operations')?.toString() || '{}'
   const operations = JSON.parse(operationsStr)
@@ -46,10 +27,5 @@ export async function parsePOSTMultipartRequest(
     }
   }
 
-  return {
-    operationName: operations.operationName,
-    query: operations.query,
-    variables: operations.variables,
-    extensions: operations.extensions,
-  }
+  return operations
 }

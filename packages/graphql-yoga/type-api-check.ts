@@ -16,7 +16,7 @@ const request: Request = null as any
   const server = createYoga<{}>({
     schema,
   })
-  server.handleRequest(request)
+  server.handleRequest(request, {})
 }
 
 // some results in mandatory context (error)

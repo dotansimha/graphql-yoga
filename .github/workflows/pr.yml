@@ -1,9 +1,9 @@
 name: pr
 on:
-  pull_request:
+  push:
     branches:
-      - master
       - v3
+  pull_request:
 
 jobs:
   release:
@@ -12,6 +12,7 @@ jobs:
       npmTag: alpha
       buildScript: build
       nodeVersion: 18
+      exitPre: true
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NODE_AUTH_TOKEN }}

@@ -45,12 +45,13 @@ describe('Yoga Plugins', () => {
       }),
     })
     const result = await response.json()
-    expect(result).toEqual({
-      data: null,
+    expect(result).toMatchObject({
       errors: [
         {
+          extensions: {
+            my: 'error',
+          },
           message: 'My Error',
-          extensions: { my: 'error' },
         },
       ],
     })

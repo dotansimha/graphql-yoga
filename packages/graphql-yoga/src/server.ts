@@ -23,6 +23,8 @@ import {
   YogaMaskedErrorOpts,
 } from './types.js'
 import {
+  ExecutorResult,
+  OnParamsHook,
   OnRequestHook,
   OnRequestParseDoneHook,
   OnRequestParseHook,
@@ -61,25 +63,16 @@ import {
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString.js'
 import { useResultProcessor } from './plugins/useResultProcessor.js'
-import {
-  isRegularResult,
-  processRegularResult,
-} from './plugins/resultProcessor/regular.js'
-import {
-  isPushResult,
-  processPushResult,
-} from './plugins/resultProcessor/push.js'
-import {
-  isMultipartResult,
-  processMultipartResult,
-} from './plugins/resultProcessor/multipart.js'
+import { processRegularResult } from './plugins/resultProcessor/regular.js'
+import { processPushResult } from './plugins/resultProcessor/push.js'
+import { processMultipartResult } from './plugins/resultProcessor/multipart.js'
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
 } from './plugins/requestParser/POSTFormUrlEncoded.js'
 import { handleError } from './error.js'
 import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
-import { useCheckGraphQLQueryParam } from './plugins/requestValidation/useCheckGraphQLQueryParam.js'
+import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
@@ -89,6 +82,7 @@ import {
   UseMaskedErrorsOpts,
 } from './plugins/useMaskedError.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
+import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
 
 /**
  * Configuration options for the server
@@ -110,7 +104,7 @@ export type YogaServerOptions<
    * You can lean more about this here:
    * @see https://graphql-yoga.vercel.app/docs/features/error-masking
    *
-   * Default: `true`
+   * @default true
    */
   maskedErrors?: boolean | UseMaskedErrorsOpts
   /**
@@ -126,18 +120,24 @@ export type YogaServerOptions<
   cors?: CORSPluginOptions<TServerContext>
 
   /**
-   * GraphQL endpoint (defaults to '/graphql')
+   * GraphQL endpoint
    * So you need to define it explicitly if GraphQL API lives in a different path other than `/graphql`
+   *
+   * @default "/graphql"
    */
   graphqlEndpoint?: string
 
   /**
-   * Readiness check endpoint (defaults to '/readiness')
+   * Readiness check endpoint
+   *
+   * @default "/readiness"
    */
   readinessCheckEndpoint?: string
 
   /**
-   * Readiness check endpoint (defaults to '/readiness')
+   * Readiness check endpoint
+   *
+   * @default "/health"
    */
   healthCheckEndpoint?: string
 
@@ -149,7 +149,7 @@ export type YogaServerOptions<
   /**
    * GraphiQL options
    *
-   * Default: `true`
+   * @default true
    */
   graphiql?: GraphiQLOptionsOrFactory<TServerContext>
 
@@ -171,9 +171,35 @@ export type YogaServerOptions<
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: FetchAPI
+  /**
+   * GraphQL Multipart Request spec support
+   *
+   * @see https://github.com/jaydenseric/graphql-multipart-request-spec
+   *
+   * @default true
+   */
   multipart?: boolean
   id?: string
+  /**
+   * Batching RFC Support configuration
+   *
+   * @see https://github.com/graphql/graphql-over-http/blob/main/rfcs/Batching.md
+   *
+   * @default false
+   */
+  batching?: BatchingOptions
 }
+
+export type BatchingOptions =
+  | boolean
+  | {
+      /**
+       * You can limit the number of batched operations per request.
+       *
+       * @default 10
+       */
+      limit?: number
+    }
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -197,6 +223,7 @@ export class YogaServer<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
   private onRequestParseHooks: OnRequestParseHook[]
+  private onParamsHooks: OnParamsHook[]
   private onRequestHooks: OnRequestHook<TServerContext>[]
   private onResultProcessHooks: OnResultProcess[]
   private onResponseHooks: OnResponseHook<TServerContext>[]
@@ -211,6 +238,9 @@ export class YogaServer<
       options?.fetchAPI ??
       createFetch({
         useNodeFetch: true,
+        formDataLimits: {
+          fieldsFirst: true,
+        },
       })
 
     const logger = options?.logging != null ? options.logging : true
@@ -240,6 +270,15 @@ export class YogaServer<
 
     const maskedErrors =
       this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
+
+    let batchingLimit: number = 0
+    if (options?.batching) {
+      if (typeof options.batching === 'boolean') {
+        batchingLimit = 10
+      } else {
+        batchingLimit = options.batching.limit ?? 10
+      }
+    }
 
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
     const graphqlEndpoint = this.graphqlEndpoint
@@ -272,10 +311,7 @@ export class YogaServer<
               case 'subscribe-start':
                 this.logger.debug(titleBold('Execution start'))
                 const {
-                  query,
-                  operationName,
-                  variables,
-                  extensions,
+                  params: { query, operationName, variables, extensions },
                 }: YogaInitialContext = events.args.contextValue
                 this.logger.debug(titleBold('Received GraphQL operation:'))
                 this.logger.debug({
@@ -345,19 +381,20 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessor({
-        match: isMultipartResult,
+        mediaTypes: ['multipart/mixed'],
         processResult: processMultipartResult,
       }),
       useResultProcessor({
-        match: isPushResult,
+        mediaTypes: ['text/event-stream'],
         processResult: processPushResult,
       }),
       useResultProcessor({
-        match: isRegularResult,
+        mediaTypes: ['application/graphql-response+json', 'application/json'],
         processResult: processRegularResult,
       }),
       ...(options?.plugins ?? []),
-      useCheckGraphQLQueryParam(),
+      useLimitBatching(batchingLimit),
+      useCheckGraphQLQueryParams(),
       useUnhandledRoute({
         graphqlEndpoint,
         showLandingPage: options?.landingPage ?? true,
@@ -388,15 +425,19 @@ export class YogaServer<
 
     this.onRequestHooks = []
     this.onRequestParseHooks = []
+    this.onParamsHooks = []
     this.onResultProcessHooks = []
     this.onResponseHooks = []
     for (const plugin of this.plugins) {
       if (plugin) {
+        if (plugin.onRequest) {
+          this.onRequestHooks.push(plugin.onRequest)
+        }
         if (plugin.onRequestParse) {
           this.onRequestParseHooks.push(plugin.onRequestParse)
         }
-        if (plugin.onRequest) {
-          this.onRequestHooks.push(plugin.onRequest)
+        if (plugin.onParams) {
+          this.onParamsHooks.push(plugin.onParams)
         }
         if (plugin.onResultProcess) {
           this.onResultProcessHooks.push(plugin.onResultProcess)
@@ -408,33 +449,87 @@ export class YogaServer<
     }
   }
 
-  async getResponse(
-    request: Request,
+  async getResultForParams(
+    {
+      params,
+      request,
+    }: {
+      params: GraphQLParams
+      request: Request
+    },
     ...args: {} extends TServerContext
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
   ) {
-    const serverContext = args[0]
     try {
-      for (const onRequestHook of this.onRequestHooks) {
-        let response: Response | undefined
-        await onRequestHook({
+      let result: ExecutorResult | undefined
+
+      for (const onParamsHook of this.onParamsHooks) {
+        await onParamsHook({
+          params,
           request,
-          serverContext,
-          fetchAPI: this.fetchAPI,
-          endResponse(newResponse) {
-            response = newResponse
+          setParams(newParams) {
+            params = newParams
           },
-          url: new URL(request.url),
+          setResult(newResult) {
+            result = newResult
+          },
         })
-        if (response) {
-          return response
-        }
       }
 
-      let requestParser: RequestParser | undefined
-      const onRequestParseDoneList: OnRequestParseDoneHook[] = []
+      if (result == null) {
+        const serverContext = args[0]
+        const initialContext = {
+          ...serverContext,
+          request,
+          params,
+        }
 
+        const enveloped = this.getEnveloped(initialContext)
+
+        this.logger.debug(`Processing GraphQL Parameters`)
+
+        result = await processGraphQLParams({
+          params,
+          enveloped,
+        })
+      }
+
+      return result
+    } catch (error) {
+      const errors = handleError(error, this.maskedErrorsOpts)
+
+      const result: ExecutionResult = {
+        errors,
+      }
+
+      return result
+    }
+  }
+
+  async getResponse(request: Request, serverContext: TServerContext) {
+    const url = new URL(request.url, 'http://localhost')
+    for (const onRequestHook of this.onRequestHooks) {
+      let response: Response | undefined
+      await onRequestHook({
+        request,
+        serverContext,
+        fetchAPI: this.fetchAPI,
+        url,
+        endResponse(newResponse) {
+          response = newResponse
+        },
+      })
+      if (response) {
+        return response
+      }
+    }
+
+    let requestParser: RequestParser | undefined
+    const onRequestParseDoneList: OnRequestParseDoneHook[] = []
+    let result: ResultProcessorInput
+
+    try {
       for (const onRequestParse of this.onRequestParseHooks) {
         const onRequestParseResult = await onRequestParse({
           request,
@@ -457,80 +552,63 @@ export class YogaServer<
         })
       }
 
-      let params = await requestParser(request)
-
-      let result: ResultProcessorInput | undefined
+      let requestParserResult = await requestParser(request)
 
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({
-          params,
-          setParams(newParams: GraphQLParams) {
-            params = newParams
+          requestParserResult,
+          setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+            requestParserResult = newParams
           },
-          setResult(earlyResult: ResultProcessorInput) {
-            result = earlyResult
-          },
-        })
-        if (result) {
-          break
-        }
-      }
-
-      if (result == null) {
-        const initialContext = {
-          request,
-          ...params,
-          ...serverContext,
-        }
-
-        const enveloped = this.getEnveloped(initialContext)
-
-        this.logger.debug(`Processing GraphQL Parameters`)
-
-        result = await processGraphQLParams({
-          params,
-          enveloped,
         })
       }
 
-      const response = await processResult({
-        request,
-        result,
-        fetchAPI: this.fetchAPI,
-        onResultProcessHooks: this.onResultProcessHooks,
-      })
-
-      return response
-    } catch (error: unknown) {
+      result = (await (Array.isArray(requestParserResult)
+        ? Promise.all(
+            requestParserResult.map((params) =>
+              this.getResultForParams(
+                {
+                  params,
+                  request,
+                },
+                serverContext,
+              ),
+            ),
+          )
+        : this.getResultForParams(
+            {
+              params: requestParserResult,
+              request,
+            },
+            serverContext,
+          ))) as ResultProcessorInput
+    } catch (error) {
       const errors = handleError(error, this.maskedErrorsOpts)
 
-      const result: ExecutionResult = {
-        data: null,
+      result = {
         errors,
       }
-      return processResult({
-        request,
-        result,
-        fetchAPI: this.fetchAPI,
-        onResultProcessHooks: this.onResultProcessHooks,
-      })
     }
+
+    const response = await processResult({
+      request,
+      result,
+      fetchAPI: this.fetchAPI,
+      onResultProcessHooks: this.onResultProcessHooks,
+    })
+
+    return response
   }
 
-  handleRequest = async (
-    request: Request,
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
-  ) => {
+  handle = async (request: Request, serverContext: TServerContext) => {
     try {
-      const response = await this.getResponse(request, ...args)
+      const response = await this.getResponse(request, serverContext)
 
       for (const onResponseHook of this.onResponseHooks) {
         await onResponseHook({
           request,
           response,
-          serverContext: args[0],
+          serverContext,
         })
       }
       return response
@@ -582,10 +660,7 @@ export class YogaServer<
         }),
       },
     )
-    const response = await this.handleRequest(
-      request,
-      serverContext as TServerContext,
-    )
+    const response = await this.handle(request, serverContext as TServerContext)
     let executionResult: ExecutionResult<TData> | null = null
     if (response.headers.get('content-type') === 'application/json') {
       executionResult = await response.json()
@@ -597,25 +672,24 @@ export class YogaServer<
   }
 }
 
-export type YogaServerInstance<TServerContext, TUserContext, TRootValue> =
-  ServerAdapter<
-    TServerContext,
-    YogaServer<TServerContext, TUserContext, TRootValue>
-  >
+export type YogaServerInstance<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+  TRootValue extends Record<string, any>,
+> = ServerAdapter<
+  TServerContext,
+  YogaServer<TServerContext, TUserContext, TRootValue>
+>
 
 export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
-  TRootValue = {},
+  TRootValue extends Record<string, any> = {},
 >(
   options: YogaServerOptions<TServerContext, TUserContext, TRootValue>,
 ): YogaServerInstance<TServerContext, TUserContext, TRootValue> {
   const server = new YogaServer<TServerContext, TUserContext, TRootValue>(
     options,
   )
-  return createServerAdapter({
-    baseObject: server,
-    handleRequest: server.handleRequest as any,
-    Request: server.fetchAPI.Request,
-  })
+  return createServerAdapter(server, server.fetchAPI.Request)
 }

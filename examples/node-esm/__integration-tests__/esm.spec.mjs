@@ -12,7 +12,7 @@ describe('Node ESM', () => {
       }),
     })
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.data.greetings).toBe('Hello world!')
   })
 })

@@ -33,7 +33,7 @@ describe('introspection', () => {
     })
 
     expect(response.status).toBe(200)
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data?.__schema.queryType.name).toBe('Query')
   })
@@ -51,19 +51,20 @@ describe('introspection', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.headers.get('content-type')).toBe('application/json')
+    expect(response.headers.get('content-type')).toBe(
+      'application/graphql-response+json; charset=utf-8',
+    )
     const body = await response.json()
-    expect(body.data).toBeNull()
-    expect(body.errors![0]).toMatchInlineSnapshot(`
-            Object {
-              "locations": Array [
-                Object {
-                  "column": 7,
-                  "line": 3,
-                },
-              ],
-              "message": "GraphQL introspection has been disabled, but the requested query contained the field \\"__schema\\".",
-            }
-          `)
+    expect(body.data).toBeUndefined()
+    expect(body.errors![0]).toMatchObject({
+      locations: [
+        {
+          column: 7,
+          line: 3,
+        },
+      ],
+      message:
+        'GraphQL introspection has been disabled, but the requested query contained the field "__schema".',
+    })
   })
 })

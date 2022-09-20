@@ -82,7 +82,7 @@ describe('GraphQLError.extensions.http', () => {
 
     expect(response.status).toBe(503)
 
-    const body = JSON.parse(await response.text())
+    const body = await response.json()
     expect(body).toMatchObject({
       data: {
         a: null,
@@ -154,5 +154,128 @@ describe('GraphQLError.extensions.http', () => {
     })
 
     expect(response.headers.get('x-foo')).toBe('A')
+  })
+
+  it('should not contain the http extensions in response result', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            a: () => {
+              throw new GraphQLError('Woah!', {
+                extensions: {
+                  http: {
+                    status: 418,
+                    headers: {
+                      'x-foo': 'A',
+                    },
+                  },
+                },
+              })
+            },
+          },
+        },
+      },
+    })
+
+    let response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ a }' }),
+    })
+    expect(response.status).toBe(418)
+    expect(response.headers.get('x-foo')).toBe('A')
+
+    const result = await response.json()
+    expect(result.errors[0]?.extensions?.http).toBeUndefined()
+  })
+
+  it('should respect http extensions status consistently on parsing fail', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            _: String
+          }
+        `,
+      },
+    })
+
+    let response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
+    })
+    expect(response.status).toBe(400)
+
+    response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
+    })
+    expect(response.status).toBe(400)
+  })
+
+  it('should respect http extensions status consistently on validation fail', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            _: String
+          }
+        `,
+      },
+    })
+
+    let response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ notme }' }), // will throw a GraphQLError with { http: { status: 400 } }
+    })
+    expect(response.status).toBe(400)
+
+    response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ notme }' }), // will throw a GraphQLError with { http: { status: 400 } }
+    })
+    expect(response.status).toBe(400)
+  })
+
+  it('should respond with status 500 when error without http extension is thrown', async () => {
+    const yoga = createYoga({
+      schema: {
+        typeDefs: /* GraphQL */ `
+          type Query {
+            _: String
+          }
+        `,
+      },
+      context: () => {
+        throw new GraphQLError('No http status extension', {
+          extensions: { http: { headers: { 'x-foo': 'bar' } } },
+        })
+      },
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ __typename }' }),
+    })
+    expect(response.status).toBe(500)
+    expect(response.headers.get('x-foo')).toBe('bar')
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'No http status extension',
+        },
+      ],
+    })
   })
 })

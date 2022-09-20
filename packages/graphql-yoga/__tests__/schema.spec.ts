@@ -16,8 +16,7 @@ describe('schema', () => {
     })
 
     expect(response.status).toEqual(500)
-    expect(await response.json()).toEqual({
-      data: null,
+    expect(await response.json()).toMatchObject({
       errors: [
         {
           message: 'Unexpected error.',

@@ -15,9 +15,9 @@ You only need to add a scalar type definition for file uploads in your schema. T
 Let's use `File` in this example:
 
 ```ts filename="file-upload-example.ts"
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import { createServer } from '@graphql-yoga/node'
-import fs from 'fs'
-import path from 'path'
 
 // Provide your schema
 const server = createServer({
@@ -47,17 +47,14 @@ const server = createServer({
           const textContent = await file.text()
           return textContent
         },
-        saveFile: async (_, { file }: { file: File }) => {
+        async saveFile(_, { file }: { file: File }) {
           try {
             const fileStream = file.stream()
-            await fs.promises.writeFile(
-              path.join(__dirname, file.name),
-              fileStream,
-            )
-          } catch (e) {
+            await fs.writeFile(path.join(__dirname, file.name), fileStream)
+            return true
+          } catch {
             return false
           }
-          return true
         },
       },
     },

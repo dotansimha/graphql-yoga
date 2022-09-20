@@ -55,11 +55,12 @@ describe('Service worker', () => {
             subscribe: () =>
               new Repeater(async (push, end) => {
                 const interval = setInterval(() => {
-                  push({ currentTime: new Date().toISOString() })
+                  push(new Date().toISOString())
                 }, 1000)
                 end.then(() => clearInterval(interval))
                 await end
               }),
+            resolve: (value) => value,
           },
         },
       },
@@ -111,7 +112,7 @@ describe('Service worker', () => {
     })
 
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('application/json')
+    expect(response.headers.get('content-type')).toContain('application/json')
     expect(await response.json()).toMatchObject({
       data: {
         __schema: {

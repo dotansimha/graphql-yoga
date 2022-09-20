@@ -54,45 +54,36 @@ function decodeAPQExtension(
   return null
 }
 
-export function useAPQ<TPluginContext>(
+export function useAPQ<TPluginContext extends Record<string, any>>(
   options: APQOptions = {},
 ): Plugin<TPluginContext> {
   const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options
 
   return {
-    onRequestParse() {
-      return {
-        onRequestParseDone: async function persistedQueriesOnRequestParseDone({
-          params,
-          setParams,
-        }) {
-          const persistedQueryData = decodeAPQExtension(
-            params.extensions?.persistedQuery,
-          )
+    async onParams({ params, setParams }) {
+      const persistedQueryData = decodeAPQExtension(
+        params.extensions?.persistedQuery,
+      )
 
-          if (persistedQueryData === null) {
-            return
-          }
+      if (persistedQueryData === null) {
+        return
+      }
 
-          if (params.query == null) {
-            const persistedQuery = await store.get(
-              persistedQueryData.sha256Hash,
-            )
-            if (persistedQuery == null) {
-              throw new GraphQLError('PersistedQueryNotFound')
-            }
-            setParams({
-              ...params,
-              query: persistedQuery,
-            })
-          } else {
-            const expectedHash = await hash(params.query)
-            if (persistedQueryData.sha256Hash !== expectedHash) {
-              throw new GraphQLError('PersistedQueryMismatch')
-            }
-            await store.set(persistedQueryData.sha256Hash, params.query)
-          }
-        },
+      if (params.query == null) {
+        const persistedQuery = await store.get(persistedQueryData.sha256Hash)
+        if (persistedQuery == null) {
+          throw new GraphQLError('PersistedQueryNotFound')
+        }
+        setParams({
+          ...params,
+          query: persistedQuery,
+        })
+      } else {
+        const expectedHash = await hash(params.query)
+        if (persistedQueryData.sha256Hash !== expectedHash) {
+          throw new GraphQLError('PersistedQueryMismatch')
+        }
+        await store.set(persistedQueryData.sha256Hash, params.query)
       }
     },
   }

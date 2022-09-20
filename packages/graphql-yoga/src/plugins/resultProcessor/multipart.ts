@@ -1,13 +1,9 @@
 import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
 import { getResponseInitByRespectingErrors } from '../../error.js'
-import { FetchAPI } from '../../types.js'
+import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
-
-export function isMultipartResult(request: Request): boolean {
-  // There should be an explicit accept header for this result type
-  return !!request.headers.get('accept')?.includes('multipart/mixed')
-}
+import { jsonStringifyResult } from './stringify.js'
 
 export function processMultipartResult(
   result: ResultProcessorInput,
@@ -21,7 +17,7 @@ export function processMultipartResult(
 
   const responseInit = getResponseInitByRespectingErrors(result, headersInit)
 
-  let iterator: AsyncIterator<ExecutionResult<any>>
+  let iterator: AsyncIterator<MaybeArray<ExecutionResult>>
 
   const textEncoder = new fetchAPI.TextEncoder()
 
@@ -53,7 +49,7 @@ export function processMultipartResult(
         )
         controller.enqueue(textEncoder.encode('\r\n'))
 
-        const chunk = JSON.stringify(value)
+        const chunk = jsonStringifyResult(value)
         const encodedChunk = textEncoder.encode(chunk)
 
         controller.enqueue(

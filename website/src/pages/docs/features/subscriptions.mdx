@@ -95,11 +95,8 @@ data: {"data":{"countdown":0}}
 ### GraphQL Subscriptions with Server-Sent Events
 
 <iframe
-  className="mt-6 h-[400px] w-full"
-  src="https://www.youtube.com/embed/oZtTut7QsZ8"
+  src="https://youtube.com/embed/oZtTut7QsZ8"
   title="GraphQL Subscriptions with Server Sent Events"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
 />
 
 ## Handling Subscriptions on the Client
@@ -259,46 +256,39 @@ const client = createClient({
 
 ## Subscriptions over WebSockets with `graphql-ws`
 
-Suppose you want to use the [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol with GraphQL Yoga, you can use the [`graphql-ws`](https://github.com/enisdenjo/graphql-ws) library.
+Suppose you want to use the [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/v2/PROTOCOL.md) protocol with GraphQL Yoga, you can use the [`graphql-ws`](https://github.com/enisdenjo/graphql-ws) library.
 To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
 Also, you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets instead of Server-Sent Events within GraphiQL.
 
 ```ts filename="yoga-with-ws.ts"
-import { createServer } from 'http'
+import { createServer } from '@graphql-yoga/node'
 import { WebSocketServer } from 'ws'
-import { createServer } from 'graphql-yoga'
 import { useServer } from 'graphql-ws/lib/use/ws'
 
 async function main() {
-  const yoga = createYoga({
+  const yogaApp = createServer({
     graphiql: {
       // Use WebSockets in GraphiQL
       subscriptionsProtocol: 'WS',
     },
   })
 
-  // Create NodeJS Server from Yoga
-  const server = createServer(yoga)
-
+  // Get NodeJS Server from Yoga
+  const httpServer = await yogaApp.start()
   // Create WebSocket server instance from our Node server
-  const wss = new WebSocketServer({
-    server,
-    // Make sure WS is on the same endpoint
-    path: yoga.graphqlEndpoint,
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: yogaApp.getAddressInfo().endpoint,
   })
 
   // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
   useServer(
     {
-      execute: (args: any) => args.execute(args),
-      subscribe: (args: any) => args.subscribe(args),
+      execute: (args: any) => args.rootValue.execute(args),
+      subscribe: (args: any) => args.rootValue.subscribe(args),
       onSubscribe: async (ctx, msg) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yoga.getEnveloped({
-            ...ctx,
-            req: ctx.extra.request,
-            socket: ctx.extra.socket,
-          })
+          yogaApp.getEnveloped(ctx)
 
         const args = {
           schema,
@@ -306,8 +296,10 @@ async function main() {
           document: parse(msg.payload.query),
           variableValues: msg.payload.variables,
           contextValue: await contextFactory(),
-          execute,
-          subscribe,
+          rootValue: {
+            execute,
+            subscribe,
+          },
         }
 
         const errors = validate(args.schema, args.document)
@@ -315,10 +307,8 @@ async function main() {
         return args
       },
     },
-    wss,
+    wsServer,
   )
-
-  server.listen(4000)
 }
 
 main().catch((e) => {
@@ -504,7 +494,7 @@ An event triggered on one server instance will not be distributed to the other s
 
 The `createPubSub` function allows you to specify a custom [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) implementation, which can use an external datastore for distributing the events across all server replicas such as [`Redis Pub/Sub`](https://redis.io/topics/pubsub) or [`Kafka`](https://kafka.apache.org/).
 
-The minimal `EventTarget` implementation is described by the [`TypedEventTarget` interface](https://github.com/dotansimha/graphql-yoga/blob/master/packages/event-target/typed-event-target/src/typed-event-target.ts).
+The minimal `EventTarget` implementation is described by the [`TypedEventTarget` interface](https://github.com/dotansimha/graphql-yoga/blob/v2/packages/event-target/typed-event-target/src/typed-event-target.ts).
 
 Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).
 

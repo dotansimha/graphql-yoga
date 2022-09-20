@@ -26,12 +26,7 @@ export async function parsePOSTJsonRequest(
       })
     }
 
-    return {
-      operationName: requestBody.operationName,
-      query: requestBody.query,
-      variables: requestBody.variables,
-      extensions: requestBody.extensions,
-    }
+    return requestBody
   } catch (err) {
     throw createGraphQLError('POST body sent invalid JSON.', {
       extensions: {

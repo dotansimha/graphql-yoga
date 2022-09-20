@@ -29,6 +29,8 @@ export interface ApolloInlineTracePluginOptions {
   rewriteError?: (err: GraphQLError) => GraphQLError | null
 }
 
+const asArray = <T>(x: T | T[]): T[] => (Array.isArray(x) ? x : [x])
+
 /**
  * Produces Apollo's base64 trace protocol containing timing, resolution and
  * errors information.
@@ -153,27 +155,29 @@ export function useApolloInlineTrace(
       // TODO: should handle streaming results? how?
       if (isAsyncIterable(result)) return
 
-      if (result.extensions?.ftv1 !== undefined) {
-        throw new Error('The `ftv1` extension is already present')
-      }
+      for (const singleResult of asArray(result)) {
+        if (singleResult.extensions?.ftv1 !== undefined) {
+          throw new Error('The `ftv1` extension is already present')
+        }
 
-      // onResultProcess will be called only once since we disallow async iterables
-      if (ctx.stopped) throw new Error('Trace stopped multiple times')
+        // onResultProcess will be called only once since we disallow async iterables
+        if (ctx.stopped) throw new Error('Trace stopped multiple times')
 
-      ctx.stopped = true
-      ctx.trace.durationNs = hrTimeToDurationInNanos(
-        process.hrtime(ctx.startHrTime),
-      )
-      ctx.trace.endTime = nowTimestamp()
+        ctx.stopped = true
+        ctx.trace.durationNs = hrTimeToDurationInNanos(
+          process.hrtime(ctx.startHrTime),
+        )
+        ctx.trace.endTime = nowTimestamp()
 
-      const encodedUint8Array = ApolloReportingProtobuf.Trace.encode(
-        ctx.trace,
-      ).finish()
-      const base64 = btoa(String.fromCharCode(...encodedUint8Array))
+        const encodedUint8Array = ApolloReportingProtobuf.Trace.encode(
+          ctx.trace,
+        ).finish()
+        const base64 = btoa(String.fromCharCode(...encodedUint8Array))
 
-      result.extensions = {
-        ...result.extensions,
-        ftv1: base64,
+        singleResult.extensions = {
+          ...singleResult.extensions,
+          ftv1: base64,
+        }
       }
     },
   }

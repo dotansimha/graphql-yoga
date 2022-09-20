@@ -1,6 +1,11 @@
 import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
-import { ExecutionPatchResult, FetchAPI, GraphQLParams } from '../types.js'
+import {
+  ExecutionPatchResult,
+  FetchAPI,
+  GraphQLParams,
+  MaybeArray,
+} from '../types.js'
 
 export type Plugin<
   PluginContext extends Record<string, any> = {},
@@ -17,6 +22,11 @@ export type Plugin<
    * @internal
    */
   onRequestParse?: OnRequestParseHook
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
+  onParams?: OnParamsHook
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
@@ -45,7 +55,9 @@ export type OnRequestParseHook = (
   payload: OnRequestParseEventPayload,
 ) => PromiseOrValue<void | OnRequestParseHookResult>
 
-export type RequestParser = (request: Request) => PromiseOrValue<GraphQLParams>
+export type RequestParser = (
+  request: Request,
+) => PromiseOrValue<GraphQLParams> | PromiseOrValue<GraphQLParams[]>
 
 export interface OnRequestParseEventPayload {
   request: Request
@@ -62,30 +74,50 @@ export type OnRequestParseDoneHook = (
 ) => PromiseOrValue<void>
 
 export interface OnRequestParseDoneEventPayload {
+  requestParserResult: GraphQLParams | GraphQLParams[]
+  setRequestParserResult: (params: GraphQLParams | GraphQLParams[]) => void
+}
+
+export type OnParamsHook = (
+  payload: OnParamsEventPayload,
+) => PromiseOrValue<void>
+
+export interface OnParamsEventPayload {
   params: GraphQLParams
+  request: Request
   setParams: (params: GraphQLParams) => void
-  setResult: (result: ResultProcessorInput) => void
+  setResult: (result: ExecutorResult) => void
 }
 
 export type OnResultProcess = (
   payload: OnResultProcessEventPayload,
 ) => PromiseOrValue<void>
 
-export type ResultProcessorInput =
+export type ExecutorResult =
   | ExecutionResult
+  | AsyncIterable<ExecutionResult>
+  | AsyncIterable<ExecutionPatchResult>
+
+export type ResultProcessorInput =
+  | MaybeArray<ExecutionResult>
   | AsyncIterable<ExecutionResult>
   | AsyncIterable<ExecutionPatchResult>
 
 export type ResultProcessor = (
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,
+  acceptedMediaType: string,
 ) => PromiseOrValue<Response>
 
 export interface OnResultProcessEventPayload {
   request: Request
   result: ResultProcessorInput
   resultProcessor?: ResultProcessor
-  setResultProcessor(resultProcessor: ResultProcessor): void
+  acceptableMediaTypes: Set<string>
+  setResultProcessor(
+    resultProcessor: ResultProcessor,
+    acceptedMediaType: string,
+  ): void
 }
 
 export type OnResponseHook<TServerContext> = (
