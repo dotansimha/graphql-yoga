@@ -2,7 +2,7 @@
 '@graphql-yoga/plugin-response-cache': major
 ---
 
-New Response Cache Plugin!!!
+_New Response Cache Plugin!!!_
 
 On top of [`@envelop/response-cache`](https://www.envelop.dev/plugins/use-response-cache), this new plugin allows you to skip execution phase even before all the GraphQL execution phases immediately after the GraphQL request parameters is parsed by Yoga.
 

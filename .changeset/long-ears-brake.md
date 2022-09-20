@@ -4,7 +4,7 @@
 ---
 
 New Persisted Operations Plugin;
-https://www.graphql-yoga.com/docs/features/persisted-operations
+https://www.graphql-yoga.com/v3/features/persisted-operations
 
 New Automatic Persisted Queries Plugin;
-https://www.graphql-yoga.com/docs/features/automatic-persisted-queries
+https://www.graphql-yoga.com/v3/features/automatic-persisted-queries
