@@ -1,6 +1,6 @@
 import { Repeater } from '@repeaterjs/repeater'
 import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
-import { Event, EventTarget } from '@whatwg-node/fetch'
+import { CustomEvent, EventTarget } from '@whatwg-node/events'
 
 type PubSubPublishArgsByKey = {
   [key: string]: [] | [any] | [number | string, any]
@@ -9,11 +9,11 @@ type PubSubPublishArgsByKey = {
 export type PubSubEvent<
   TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
   TKey extends Extract<keyof TPubSubPublishArgsByKey, string>,
-> = Event & {
-  data?: TPubSubPublishArgsByKey[TKey][1] extends undefined
+> = CustomEvent<
+  TPubSubPublishArgsByKey[TKey][1] extends undefined
     ? TPubSubPublishArgsByKey[TKey][0]
     : TPubSubPublishArgsByKey[TKey][1]
-}
+>
 
 export type PubSubEventTarget<
   TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
@@ -66,7 +66,9 @@ export const createPubSub = <
 >(
   config?: ChannelPubSubConfig<TPubSubPublishArgsByKey>,
 ): PubSub<TPubSubPublishArgsByKey> => {
-  const target = config?.eventTarget ?? new EventTarget()
+  const target =
+    config?.eventTarget ??
+    (new EventTarget() as PubSubEventTarget<TPubSubPublishArgsByKey>)
 
   return {
     publish<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
@@ -79,8 +81,12 @@ export const createPubSub = <
           ? routingKey
           : `${routingKey}:${args[0] as number}`
 
-      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new Event(topic)
-      event.data = payload
+      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new CustomEvent(
+        topic,
+        {
+          detail: payload,
+        },
+      )
       target.dispatchEvent(event)
     },
     subscribe<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
@@ -105,7 +111,7 @@ export const createPubSub = <
         function pubsubEventListener(
           event: PubSubEvent<TPubSubPublishArgsByKey, TKey>,
         ) {
-          next(event.data)
+          next(event.detail)
         }
       })
     },
