@@ -1,4 +1,5 @@
 import { Callout } from '@theguild/components'
+import { Accordion } from './accordion'
 
 # Filtering and Pagination
 
@@ -178,7 +179,10 @@ Let's use the value 30 as the default value and 50 as the upper limit and 1 as t
 
 Adjust the current schema resolver implementation according to the following.
 
+<Accordion title="v2">
+
 ```ts
+import { GraphQLYogaError } from '@graphql-yoga/node'
 // ... other code ...
 
 const applyTakeConstraints = (params: {
@@ -227,6 +231,63 @@ const resolvers = {
   },
 }
 ```
+
+</Accordion>
+
+<Accordion title="v3" initiallyOpen>
+
+```ts
+// ... other code ...
+import { GraphQLError } from 'graphql'
+
+const applyTakeConstraints = (params: {
+  min: number
+  max: number
+  value: number
+}) => {
+  if (params.value < params.min || params.value > params.max) {
+    throw new GraphQLError(
+      `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`,
+    )
+  }
+  return params.value
+}
+
+const resolvers = {
+  // ... other resolvers maps ...
+  Query: {
+    // ... other Query object type resolver functions ...
+    async feed(
+      parent: unknown,
+      args: { filterNeedle?: string; skip?: number; take?: number },
+      context: GraphQLContext,
+    ) {
+      const where = args.filterNeedle
+        ? {
+            OR: [
+              { description: { contains: args.filterNeedle } },
+              { url: { contains: args.filterNeedle } },
+            ],
+          }
+        : {}
+
+      const take = applyTakeConstraints({
+        min: 1,
+        max: 50,
+        value: args.take ?? 30,
+      })
+
+      return context.prisma.link.findMany({
+        where,
+        skip: args.skip,
+        take,
+      })
+    },
+  },
+}
+```
+
+</Accordion>
 
 Cool! Now we can try executing an operation with a `take` argument value outside the range!
 
