@@ -819,15 +819,7 @@ function md5File(path: string) {
 
 describe('file uploads', () => {
   it('uploading and streaming a binary file succeeds', async () => {
-    const sourceFilePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'website',
-      'public',
-      'logo.png',
-    )
+    const sourceFilePath = __filename
     const sourceMd5 = await md5File(sourceFilePath)
     const id = crypto.randomBytes(20).toString('hex')
     const targetFilePath = path.join(os.tmpdir(), `${id}.png`)
