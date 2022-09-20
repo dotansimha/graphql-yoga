@@ -35,7 +35,7 @@ export function handleError(
       error,
       maskedErrorsOpts.errorMessage,
     )
-    errors.push(maskedError)
+    errors.push(maskedError as GraphQLError)
   } else {
     if (error instanceof GraphQLError) {
       errors.push(error)

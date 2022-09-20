@@ -1,40 +1,61 @@
 import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLError } from 'graphql'
-import { MaskError } from '@envelop/core'
+import { isGraphQLError } from '@envelop/core'
 
-const isDev = globalThis.process?.env?.NODE_ENV === 'development'
+export const yogaDefaultFormatError = ({
+  error,
+  message,
+  isDev,
+}: {
+  error: unknown
+  message: string
+  isDev?: boolean
+}) => {
+  const dev = isDev || globalThis.process?.env?.NODE_ENV === 'development'
 
-export const yogaDefaultFormatError: MaskError = (err, message) => {
-  if (err instanceof GraphQLError) {
-    if (err.originalError) {
-      if (err.originalError.name === 'GraphQLError') {
-        return err
+  if (isGraphQLError(error)) {
+    if (error.originalError) {
+      if (error.originalError.name === 'GraphQLError') {
+        return error
       }
       // Original error should be removed
       const extensions = {
-        ...err.extensions,
+        // @ts-ignore
+        ...error.extensions,
       }
-      if (isDev) {
+      if (dev) {
         extensions.originalError = {
-          message: err.originalError.message,
-          stack: err.originalError.stack,
+          message: error.originalError.message,
+          stack: error.originalError.stack,
         }
       }
       return createGraphQLError(message, {
-        nodes: err.nodes,
-        source: err.source,
-        positions: err.positions,
-        path: err.path,
+        // @ts-ignore
+        nodes: error.nodes,
+        // @ts-ignore
+        source: error.source,
+        // @ts-ignore
+        positions: error.positions,
+        // @ts-ignore
+        path: error.path,
         extensions,
       })
     }
-    return err
+    return error
   }
+
   return createGraphQLError(message, {
     extensions: {
       http: {
         status: 500,
       },
+      originalError: dev
+        ? error instanceof Error
+          ? {
+              message: error.message,
+              stack: error.stack,
+            }
+          : error
+        : undefined,
     },
   })
 }

@@ -88,6 +88,9 @@ describe('error masking', () => {
     const yoga = createYoga({
       schema: createTestSchema(),
       logging: false,
+      maskedErrors: {
+        isDev: true,
+      },
     })
 
     const response = await yoga.fetch('http://yoga/graphql', {
@@ -358,6 +361,9 @@ describe('error masking', () => {
       logging: false,
       context: () => {
         throw new Error('I am the original error.')
+      },
+      maskedErrors: {
+        isDev: true,
       },
       schema: createSchema({
         typeDefs: /* GraphQL */ `

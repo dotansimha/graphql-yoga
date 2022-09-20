@@ -14,6 +14,7 @@ import {
   PromiseOrValue,
   useMaskedErrors,
   UseMaskedErrorsOpts,
+  useErrorHandler,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -104,7 +105,7 @@ export type YogaServerOptions<
    *
    * @default true
    */
-  maskedErrors?: boolean | UseMaskedErrorsOpts
+  maskedErrors?: boolean | YogaMaskedErrorOpts
   /**
    * Context
    */
@@ -258,7 +259,12 @@ export class YogaServer<
       options?.maskedErrors === false
         ? null
         : {
-            maskError: yogaDefaultFormatError,
+            maskError: (error, message) =>
+              yogaDefaultFormatError({
+                error,
+                message,
+                isDev: this.maskedErrorsOpts?.isDev ?? false,
+              }),
             errorMessage: 'Unexpected error.',
             ...(typeof options?.maskedErrors === 'object'
               ? options.maskedErrors
@@ -402,11 +408,17 @@ export class YogaServer<
       {
         onPluginInit({ addPlugin }) {
           if (maskedErrors) {
-            addPlugin(useMaskedErrors(maskedErrors))
+            addPlugin(
+              useMaskedErrors(maskedErrors) as Plugin<
+                TUserContext & TServerContext & YogaInitialContext
+              >,
+            )
           }
           addPlugin(
             // We handle validation errors at the end
-            useHTTPValidationError(),
+            useHTTPValidationError() as Plugin<
+              TUserContext & TServerContext & YogaInitialContext
+            >,
           )
         },
       },
@@ -418,7 +430,9 @@ export class YogaServer<
       execute,
       subscribe,
       plugins: this.plugins,
-    }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
+    }) as unknown as GetEnvelopedFn<
+      TUserContext & TServerContext & YogaInitialContext
+    >
 
     this.onRequestHooks = []
     this.onRequestParseHooks = []

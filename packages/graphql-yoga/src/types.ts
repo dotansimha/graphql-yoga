@@ -86,9 +86,6 @@ export interface FetchEvent extends Event {
   respondWith(response: PromiseOrValue<Response>): void
 }
 
-export type YogaMaskedErrorOpts = {
-  maskError?: MaskError
-  errorMessage?: string
-}
+export type YogaMaskedErrorOpts = UseMaskedErrorsOpts & { isDev?: boolean }
 
 export type MaybeArray<T> = T | T[]
