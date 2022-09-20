@@ -18,15 +18,15 @@ export const Accordion: React.FC<PropsWithChildren<AccordionProps>> = ({
       <button
         role="button"
         onClick={() => setOpen((open) => !open)}
-        className="flex justify-between w-full p-2 font-medium bg-primary-700/5 text-gray-700 dark:bg-primary-300/10 dark:text-gray-200"
+        className="flex justify-between w-full p-2 px-4 font-medium bg-primary-700/5 text-gray-700 dark:bg-primary-300/10 dark:text-gray-200"
       >
         <span>{title}</span>
-        <span className="text-gray-400 dark:text-gray-500">
-          {open ? '-' : '+'}
-        </span>
+        <span>{open ? '-' : '+'}</span>
       </button>
 
-      <Collapse open={open}>{children}</Collapse>
+      <Collapse open={open} className="p-4">
+        {children}
+      </Collapse>
     </section>
   )
 }
