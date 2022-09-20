@@ -61,7 +61,7 @@ describe('Bun integration', () => {
   it('go to GraphiQL page', async () => {
     // Go the the right route
     const body = await page.goto(
-      `http://${serverUrl}?query=query+Hello+%7B%0A%09greetings%0A%7D`,
+      `${serverUrl}?query=query+Hello+%7B%0A%09greetings%0A%7D`,
     )
 
     let strIntro = ''

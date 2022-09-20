@@ -141,13 +141,47 @@ describe('requests', () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: 'null',
+      body: '{ "query": "',
     })
     expect(response.status).toBe(400)
 
     const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toEqual('POST body sent invalid JSON.')
+
+    expect(body.data).toBeUndefined()
+  })
+
+  it('should error on nullish JSON body', async () => {
+    const response = await yoga.fetch(`http://yoga/test-graphql`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: 'null',
+    })
+    expect(response.status).toBe(400)
+
+    const body = await response.json()
+    expect(body.errors).toBeDefined()
+    expect(body.errors[0].message).toEqual(
+      'POST body is expected to be object but received null',
+    )
+
+    expect(body.data).toBeUndefined()
+  })
+
+  it('should error on non-object JSON body', async () => {
+    const response = await yoga.fetch(`http://yoga/test-graphql`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: '"body"',
+    })
+    expect(response.status).toBe(400)
+
+    const body = await response.json()
+    expect(body.errors).toBeDefined()
+    expect(body.errors[0].message).toEqual(
+      'POST body is expected to be object but received string',
+    )
 
     expect(body.data).toBeUndefined()
   })

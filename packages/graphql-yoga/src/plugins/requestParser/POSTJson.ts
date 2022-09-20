@@ -1,4 +1,5 @@
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLErrorExtensions } from 'graphql'
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 
@@ -13,27 +14,52 @@ export function isPOSTJsonRequest(request: Request) {
 export async function parsePOSTJsonRequest(
   request: Request,
 ): Promise<GraphQLParams> {
+  let requestBody: GraphQLParams
   try {
-    const requestBody: any = await request.json()
+    requestBody = await request.json()
+  } catch (err) {
+    const extensions: GraphQLErrorExtensions = {
+      http: {
+        status: 400,
+      },
+    }
+    if (err instanceof Error) {
+      extensions.originalError = {
+        name: err.name,
+        message: err.message,
+      }
+    }
+    throw createGraphQLError('POST body sent invalid JSON.', {
+      extensions,
+    })
+  }
 
-    if (typeof requestBody !== 'object' || requestBody == null) {
-      throw createGraphQLError('POST body sent invalid JSON.', {
+  if (requestBody == null) {
+    throw createGraphQLError(
+      `POST body is expected to be object but received ${requestBody}`,
+      {
         extensions: {
           http: {
             status: 400,
           },
         },
-      })
-    }
+      },
+    )
+  }
 
-    return requestBody
-  } catch (err) {
-    throw createGraphQLError('POST body sent invalid JSON.', {
-      extensions: {
-        http: {
-          status: 400,
+  const requestBodyTypeof = typeof requestBody
+  if (requestBodyTypeof !== 'object') {
+    throw createGraphQLError(
+      `POST body is expected to be object but received ${requestBodyTypeof}`,
+      {
+        extensions: {
+          http: {
+            status: 400,
+          },
         },
       },
-    })
+    )
   }
+
+  return requestBody
 }
