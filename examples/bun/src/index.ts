@@ -13,7 +13,7 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        greetings: () => 'Hello world!',
+        greetings: () => 'Hello Bun!',
       },
       Subscription: {
         time: {
@@ -34,8 +34,7 @@ const yoga = createYoga({
 
 const server = Bun.serve({
   fetch: yoga,
-  port: 4000,
-  hostname: '0.0.0.0',
+  port: 9876,
   development: true,
 })
 
