@@ -10,15 +10,15 @@ const timings = {
   waitForResponse: 1999,
 }
 
-jest.setTimeout(20000)
+jest.setTimeout(30000)
 
-let toSkip = false
+let toSkip = true
 
 describe('Bun integration', () => {
   let serverUrl: string
   beforeAll(async () => {
-    if (process.versions.node.startsWith('14')) {
-      toSkip = true
+    if (process.versions.node.startsWith('18')) {
+      toSkip = false
       return
     }
     // Start Bun
@@ -37,7 +37,9 @@ describe('Bun integration', () => {
         const chunkString = chunk.toString('utf-8')
         console.log(chunk.toString('utf-8'))
         if (chunkString.includes('Server is running on')) {
-          resolve(chunkString.split('Server is running on ')[1])
+          setTimeout(() => {
+            resolve(chunkString.split('Server is running on ')[1])
+          }, 5000)
         }
       })
     })
