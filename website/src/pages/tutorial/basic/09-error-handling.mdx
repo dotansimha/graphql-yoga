@@ -177,7 +177,53 @@ You use that code for identifying this edge case of a missing link and then thro
 
 <Accordion title="v3" initiallyOpen>
 
-TODO
+For doing so you will use the `GraphQLError` class that is exported from the `graphql` package.
+
+Add the following catch handler for mapping a foreign key error into a `GraphQLError`:
+
+```ts
+// ... other imports ...
+import { GraphQLError } from 'graphql'
+// ... other imports ...
+
+const resolvers = {
+  // ... other resolver maps ...
+  Mutation: {
+    // ... other Mutation object type field resolver functions ...
+    async postCommentOnLink(
+      parent: unknown,
+      args: { linkId: string; body: string },
+      context: GraphQLContext,
+    ) {
+      const comment = await context.prisma.comment
+        .create({
+          data: {
+            body: args.body,
+            linkId: parseInt(args.linkId),
+          },
+        })
+        .catch((err: unknown) => {
+          if (
+            err instanceof PrismaClientKnownRequestError &&
+            err.code === 'P2003'
+          ) {
+            return Promise.reject(
+              new GraphQLError(
+                `Cannot post comment on non-existing link with id '${args.linkId}'.`,
+              ),
+            )
+          }
+          return Promise.reject(err)
+        })
+
+      return comment
+    },
+  },
+}
+```
+
+The error code `P2003` indicates a foreign key constraint error. You can learn more about it in [the Prisma documentation](https://prisma.io/docs/reference/api-reference/error-reference#p2003).
+You use that code for identifying this edge case of a missing link and then throw a `GraphQLError` with a useful error message instead.
 
 </Accordion>
 
@@ -212,9 +258,9 @@ You will receive a response with the `Cannot post comment on non-existing link w
 }
 ```
 
-As you might have noticed, GraphQLYoga will exclude `GraphQLYogaError` errors thrown within the resolvers from masking the error masking.
+As you might have noticed, GraphQL Yoga will exclude wrapped errors thrown within the resolvers from masking the error masking.
 
-That means every time you want to expose an error to the outside world you should throw a `GraphQLYogaError` error.
+That means every time you want to expose an error to the outside world you should throw such an error.
 
 At the same time, any other unexpected error will automatically be masked from the outside world, bringing you sensible and safe defaults for a GraphQL Yoga production deployment!
 
@@ -318,8 +364,11 @@ There are multiple mathematical numeral systems. The implementation tries to be 
 
 Add the following code to the `src/schema.ts` file.
 
+<Accordion title="v2">
+
 ```ts filename="src/schema.ts"
 // ... other code ...
+import { GraphQLYogaError } from '@graphql-yoga/node'
 
 const parseIntSafe = (value: string): number | null => {
   if (/^(\d+)$/.test(value)) {
@@ -371,6 +420,66 @@ const resolvers = {
 }
 ```
 
+</Accordion>
+
+<Accordion title="v3" initiallyOpen>
+
+```ts filename="src/schema.ts"
+// ... other code ...
+import { GraphQLError } from 'graphql'
+
+const parseIntSafe = (value: string): number | null => {
+  if (/^(\d+)$/.test(value)) {
+    return parseInt(value, 10)
+  }
+  return null
+}
+
+const resolvers = {
+  // ... other resolver maps ...
+  Mutation: {
+    // ... other field resolver functions
+    async postCommentOnLink(
+      parent: unknown,
+      args: { linkId: string; body: string },
+      context: GraphQLContext,
+    ) {
+      const linkId = parseIntSafe(args.linkId)
+      if (linkId === null) {
+        return Promise.reject(
+          new GraphQLError(
+            `Cannot post comment on non-existing link with id '${args.linkId}'.`,
+          ),
+        )
+      }
+
+      const comment = await context.prisma.comment
+        .create({
+          data: {
+            body: args.body,
+            linkId,
+          },
+        })
+        .catch((err: unknown) => {
+          if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code === 'P2003') {
+              return Promise.reject(
+                new GraphQLError(
+                  `Cannot post comment on non-existing link with id '${args.linkId}'.`,
+                ),
+              )
+            }
+          }
+          return Promise.reject(err)
+        })
+      return comment
+    },
+  },
+}
+```
+
+</Accordion>
+
 The regex `/^(\d+)$/` simply verifies that every character within the `value` is a digit. In case the value includes a non-digit character, you simply return `null` and then reject the resolver with a `GraphQLYogaError` error.
 
 Returning `null` instead of returning `NaN` is the better choice here, as it allows nice TypeScript checks (`linkId === null`).
@@ -411,3 +520,7 @@ Remember, when implementing your GraphQL resolver functions, the input arguments
 ## Optional Exercise
 
 As an optional exercise for interiorizing the knowledge, you can now also implement validation of the `body` argument of `Mutation.postCommentOnLink` and argument sanitization for the `Mutation.postLink` field. You wouldn't want anyone to post an empty comment or invalid link, right?
+
+```
+
+```
