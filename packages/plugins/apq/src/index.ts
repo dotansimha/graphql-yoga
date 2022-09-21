@@ -1,6 +1,6 @@
 import { Plugin, PromiseOrValue } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
-import lru from 'tiny-lru'
+import { lru } from 'tiny-lru'
 import { crypto, TextEncoder } from '@whatwg-node/fetch'
 
 const textEncoder = new TextEncoder()
@@ -22,7 +22,7 @@ export interface APQStoreOptions {
 export function createInMemoryAPQStore(
   options: APQStoreOptions = {},
 ): APQStore {
-  return lru<string>(options.max ?? 1000, options.ttl ?? 36000)
+  return lru(options.max ?? 1000, options.ttl ?? 36000)
 }
 
 export interface APQOptions {
