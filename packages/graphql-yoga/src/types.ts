@@ -42,7 +42,7 @@ export type CORSOptions =
 export type GraphQLServerInject<
   TData = any,
   TVariables = Record<string, any>,
-  TServerContext extends Record<string, any> = Record<string, any>,
+  TServerContext = Record<string, any>,
 > = {
   /** GraphQL Operation to execute */
   document: string | TypedDocumentNode<TData, TVariables>

@@ -5,8 +5,17 @@ import type { Plugin } from '../types'
 const EXPECTED_PARAMS = ['query', 'variables', 'operationName', 'extensions']
 
 export function assertInvalidParams(
-  params: any,
+  params: unknown,
 ): asserts params is GraphQLParams {
+  if (params == null || typeof params !== 'object') {
+    throw createGraphQLError('Invalid "params" in the request body', {
+      extensions: {
+        http: {
+          status: 400,
+        }
+      }
+    })
+  }
   for (const paramKey in params) {
     if (!EXPECTED_PARAMS.includes(paramKey)) {
       throw createGraphQLError(

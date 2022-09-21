@@ -20,6 +20,8 @@ export function useUnhandledRoute(args: {
                 .replace(/__GRAPHIQL_LINK__/g, args.graphqlEndpoint)
                 .replace(/__REQUEST_PATH__/g, requestPath),
               {
+                status: 200,
+                statusText: 'OK',
                 headers: {
                   'Content-Type': 'text/html',
                 },
