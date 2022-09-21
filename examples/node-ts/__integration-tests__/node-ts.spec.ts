@@ -1,19 +1,30 @@
 import { yoga } from '../src/yoga'
-import request from 'supertest'
 
 describe('node-ts example integration', () => {
   it('should execute query', async () => {
-    const response = await request(yoga)
-      .post('/graphql')
-      .send({ query: '{ hello }' })
+    const response = await yoga.fetch('/graphql?query={hello}')
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body).toMatchInlineSnapshot(`
+    expect(response.status).toBe(200)
+    expect(await response.text()).toMatchInlineSnapshot(
+      `"{"data":{"hello":"world"}}"`,
+    )
+  })
+
+  it('should have subscriptions disabled', async () => {
+    const response = await yoga.fetch(
+      '/graphql?query=subscription{greetings}',
       {
-        "data": {
-          "hello": "world",
+        headers: {
+          Accept: 'text/event-stream',
         },
-      }
+      },
+    )
+
+    expect(response.status).toBe(400)
+    expect(await response.text()).toMatchInlineSnapshot(`
+      "data: {"errors":[{"message":"Subscriptions have been disabled"}]}
+
+      "
     `)
   })
 })
