@@ -1,17 +1,35 @@
-import { Plugin as EnvelopPlugin, PromiseOrValue } from '@envelop/core'
+import {
+  Plugin as EnvelopPlugin,
+  PromiseOrValue,
+  OnExecuteHook,
+  OnSubscribeHook,
+} from '@envelop/core'
 import { ExecutionResult } from 'graphql'
 import {
   ExecutionPatchResult,
   FetchAPI,
   GraphQLParams,
   MaybeArray,
+  YogaInitialContext,
 } from '../types.js'
 
 export type Plugin<
   PluginContext extends Record<string, any> = {},
   TServerContext = {},
   TUserContext = {},
-> = EnvelopPlugin<PluginContext> & {
+> = EnvelopPlugin<YogaInitialContext & PluginContext> & {
+  /**
+   * onExecute hook that is invoked before the execute function is invoked.
+   */
+  onExecute?: OnExecuteHook<YogaInitialContext & PluginContext & TUserContext>
+  /**
+   * onSubscribe hook that is invoked before the subscribe function is called.
+   * Return a OnSubscribeHookResult for hooking into phase after the subscribe function has been called.
+   */
+  onSubscribe?: OnSubscribeHook<
+    YogaInitialContext & PluginContext & TUserContext
+  >
+} & {
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
