@@ -4,23 +4,24 @@
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
 
-[Docs](https://www.graphql-yoga.com/docs)
+[Docs](https://www.the-guild.dev/graphql/yoga-server/v3)
 
 ### Installation
 
 ```shell
-npm i @graphql-yoga/node graphql
+yarn add graphql-yoga graphql
 ```
 
 ### Quickstart
 
-You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map:
+Make a schema, create Yoga and start a Node server with it:
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
-const server = createServer({
-  schema: {
+const yoga = createYoga({
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -31,10 +32,12 @@ const server = createServer({
         hello: () => 'Hello from Yoga!',
       },
     },
-  },
+  }),
 })
 
-server.start()
+const server = createServer(yoga)
+
+server.listen(4000)
 ```
 
 ## Overview
@@ -51,7 +54,7 @@ server.start()
 - TypeScript
 - File upload with [GraphQL Multipart Request spec](https://github.com/jaydenseric/graphql-multipart-request-spec)
 - Realtime capabilities
-- Accepts `application/json`, `application/graphql+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
+- Accepts `application/json`, `application/graphql-response+json`, `application/graphql+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
 
