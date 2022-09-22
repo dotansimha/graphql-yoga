@@ -109,7 +109,7 @@ describe('SvelteKit integration', () => {
 				page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
 					timeout: timings.waitForResponse
 				}),
-				page.click(`button[class="execute-button"]`)
+				page.click(`.graphiql-execute-button`)
 			]);
 
 			const json = await res.json();
