@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.0.0-next.1
+
+### Patch Changes
+
+- [#1775](https://github.com/dotansimha/graphql-yoga/pull/1775) [`44878a5b`](https://github.com/dotansimha/graphql-yoga/commit/44878a5b1be937ab0ffefccc327400c80bd62847) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Context typings improvements
+
 ## 3.0.0-next.0
 
 ### Major Changes
