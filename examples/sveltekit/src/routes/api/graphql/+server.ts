@@ -30,4 +30,12 @@ const yogaApp = createYoga<RequestEvent>({
 	}
 });
 
-export { yogaApp as get, yogaApp as post };
+// export { yogaApp as GET, yogaApp as POST };
+
+// export async function GET({ request }) {
+// 	return new Response(String('Here is the GET response'));
+// }
+
+// export async function POST({ request }) {
+// 	return new Response(String('Here is the POST response'));
+// }
