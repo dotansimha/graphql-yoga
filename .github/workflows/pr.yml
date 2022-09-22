@@ -17,7 +17,7 @@ jobs:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
 
-  dependencies:
-    uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@main
-    secrets:
-      githubToken: ${{ secrets.GITHUB_TOKEN }}
+  # dependencies:
+  #   uses: the-guild-org/shared-config/.github/workflows/changesets-dependencies.yaml@main
+  #   secrets:
+  #     githubToken: ${{ secrets.GITHUB_TOKEN }}
