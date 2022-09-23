@@ -62,7 +62,7 @@ server.listen(4000)
 - **WHATWG Fetch API:** the core package depends on [WHATWG Fetch API](https://fetch.spec.whatwg.org/) so it can run and deploy on any environment (Serverless, Workers, Deno, Node).
 - **Easily Extendable:** New GraphQL-Yoga support all [`envelop`](https://www.envelop.dev) plugins.
 
-## Features
+## [Features](https://www.the-guild.dev/graphql/yoga-server/v3)
 
 - Fully typed with TypeScript
 - [GraphQL over HTTP spec compliant](https://github.com/graphql/graphql-over-http)
