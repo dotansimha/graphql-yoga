@@ -1,6 +1,9 @@
 <p align="center"><img src="./website/public/cover.png" width="720" /></p>
 
-<p align="center">Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</p>
+<p align="center">
+  <h1>GraphQL Yoga</h1>
+  <b>Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</b>
+</p>
 
 <p align="center"><a href="https://www.the-guild.dev/graphql/yoga-server/v3">Go to documenation and read more</a></p>
 
