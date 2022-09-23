@@ -64,14 +64,24 @@ server.listen(4000)
 
 ## Features
 
+- Fully typed with TypeScript
 - [GraphQL over HTTP spec compliant](https://github.com/graphql/graphql-over-http)
-- TypeScript
-- File upload with [GraphQL Multipart Request spec](https://github.com/jaydenseric/graphql-multipart-request-spec)
-- Realtime capabilities
-- Accepts `application/json`, `application/graphql-response+json`, `application/graphql+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
+- [GraphiQL included](https://www.the-guild.dev/graphql/yoga-server/v3/features/graphiql)
+- [File uploads with GraphQL Multipart Request spec](https://www.the-guild.dev/graphql/yoga-server/v3/features/file-uploads)
+- [Subscriptions and realtime capabilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/subscriptions)
+- [Automatic persisted queries](https://www.the-guild.dev/graphql/yoga-server/v3/features/automatic-persisted-queries)
+- [Built-in parsing and validation caching](https://www.the-guild.dev/graphql/yoga-server/v3/features/parsing-and-validation-caching)
+- [Testing utilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/testing)
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
-- Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
-- [_And much more..._](https://www.the-guild.dev/graphql/yoga-server/v3)
+- Runs **everywhere**, some of the environments include:
+
+  - [Deno](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-deno)
+  - [Bun](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-bun)
+  - [Cloudflare Workers](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-cloudflare-workers)
+  - [AWS Lambda](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-aws-lambda)
+  - [And other environments...](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/z-other-environments)
+
+- [_And more..._](https://www.the-guild.dev/graphql/yoga-server/v3)
 
 ## [Examples](https://github.com/dotansimha/graphql-yoga/tree/readme/examples)
 
