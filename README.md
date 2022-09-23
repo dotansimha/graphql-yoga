@@ -28,6 +28,8 @@ yarn add graphql-yoga graphql
 
 ### Start
 
+Make a schema, create Yoga and start a Node server:
+
 ```ts
 import { createSchema, createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
