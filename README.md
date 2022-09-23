@@ -2,9 +2,11 @@
 
 <div align="center">
 
+![npm](https://badgen.net/npm/v/graphql-yoga)
 ![bundlephobia minified size](https://badgen.net/bundlephobia/min/graphql-yoga)
 ![bundlephobia minified+zipped size](https://badgen.net/bundlephobia/minzip/graphql-yoga)
 ![bundlephobia treeshaking](https://badgen.net/bundlephobia/tree-shaking/graphql-yoga)
+![license](https://badgen.net/github/license/dotansimha/graphql-yoga)
 
 </div>
 
@@ -78,7 +80,5 @@ Help us keep Yoga open and inclusive. Please read and follow our [
 of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/)
 
 ### License
-
-[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/dotansimha/graphql-yoga/master/LICENSE)
 
 MIT
