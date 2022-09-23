@@ -1,5 +1,9 @@
 <p align="center"><img src="./website/public/cover.png" width="720" /></p>
 
+<p align="center">Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</p>
+
+<p align="center"><a href="https://www.the-guild.dev/graphql/yoga-server/v3">Go to documenation and read more</a></p>
+
 <div align="center">
 
 ![npm](https://badgen.net/npm/v/graphql-yoga)
@@ -9,12 +13,6 @@
 ![license](https://badgen.net/github/license/dotansimha/graphql-yoga)
 
 </div>
-
-# GraphQL Yoga
-
-Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
-
-[Docs](https://www.the-guild.dev/graphql/yoga-server/v3)
 
 ### Installation
 
