@@ -71,18 +71,22 @@ server.listen(4000)
 - Accepts `application/json`, `application/graphql-response+json`, `application/graphql+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
+- [_And much more..._](https://www.the-guild.dev/graphql/yoga-server/v3/comparison)
 
-### Contributing
+## [Comparison](https://www.the-guild.dev/graphql/yoga-server/v3/comparison)
+
+Read more about how GraphQL Yoga compares to other servers in the ecosystem [here](https://www.the-guild.dev/graphql/yoga-server/v3/comparison).
+
+## Contributing
 
 If this is your first time contributing to this project, please do read our [Contributor Workflow Guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md) before you get started off.
 
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
-### Code of Conduct
+## Code of Conduct
 
-Help us keep Yoga open and inclusive. Please read and follow our [
-of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/)
+Help us keep Yoga open and inclusive. Please read and follow our [Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/).
 
-### License
+## License
 
 MIT
