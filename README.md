@@ -1,8 +1,10 @@
 <p align="center"><img src="./website/public/cover.png" width="720" /></p>
 
+<p align="center">
 ![bundlephobia minified size](https://badgen.net/bundlephobia/min/graphql-yoga)
 ![bundlephobia minified+zipped size](https://badgen.net/bundlephobia/minzip/graphql-yoga)
 ![bundlephobia treeshaking](https://badgen.net/bundlephobia/tree-shaking/graphql-yoga)
+</p>
 
 # GraphQL Yoga
 
