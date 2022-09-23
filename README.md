@@ -1,11 +1,10 @@
-<p align="center"><img src="./website/public/cover.png" width="720" /></p>
+<div align="center"><img src="./website/public/cover.png" width="720" /></div>
 
-<p align="center">
-  <h1>GraphQL Yoga</h1>
-  <b>Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</b>
-</p>
-
-<p align="center"><a href="https://www.the-guild.dev/graphql/yoga-server/v3">Go to documenation and read more</a></p>
+<div align="center">
+  <h3>GraphQL Yoga</h3>
+  <h6>Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</h6>
+  <a href="https://www.the-guild.dev/graphql/yoga-server/v3">Go to documenation</a>
+</div>
 
 <div align="center">
 
