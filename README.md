@@ -73,7 +73,7 @@ server.listen(4000)
 - [Built-in parsing and validation caching](https://www.the-guild.dev/graphql/yoga-server/v3/features/parsing-and-validation-caching)
 - [Testing utilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/testing)
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
-- Runs **everywhere**, some of the environments include:
+- Runs **everywhere**, including environments like:
   - [Deno](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-deno)
   - [Bun](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-bun)
   - [Cloudflare Workers](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-cloudflare-workers)
