@@ -6,6 +6,8 @@
   <a href="https://www.the-guild.dev/graphql/yoga-server/v3">Go to documenation</a>
 </div>
 
+<br />
+
 <div align="center">
 
 ![npm](https://badgen.net/npm/v/graphql-yoga)
