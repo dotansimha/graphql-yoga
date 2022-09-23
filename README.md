@@ -1,6 +1,6 @@
 <p align="center"><img src="./website/public/cover.png" width="720" /></p>
 
-https://badgen.net/bundlephobia/min/graphql-yoga
+![bundlephobia minified](https://badgen.net/bundlephobia/min/graphql-yoga)
 
 # GraphQL Yoga
 
