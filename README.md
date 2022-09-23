@@ -65,7 +65,7 @@ server.listen(4000)
 ## [Features](https://www.the-guild.dev/graphql/yoga-server/v3)
 
 - Fully typed with TypeScript
-- [GraphQL over HTTP spec compliant](https://github.com/graphql/graphql-over-http)
+- [GraphQL over HTTP spec compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga)
 - [GraphiQL included](https://www.the-guild.dev/graphql/yoga-server/v3/features/graphiql)
 - [File uploads with GraphQL Multipart Request spec](https://www.the-guild.dev/graphql/yoga-server/v3/features/file-uploads)
 - [Subscriptions and realtime capabilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/subscriptions)
