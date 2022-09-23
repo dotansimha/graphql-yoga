@@ -26,7 +26,7 @@
 yarn add graphql-yoga graphql
 ```
 
-### Create and start Yoga server
+### Start
 
 ```ts
 import { createSchema, createYoga } from 'graphql-yoga'
