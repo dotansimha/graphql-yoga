@@ -64,7 +64,7 @@ server.listen(4000)
 
 ## [Features](https://www.the-guild.dev/graphql/yoga-server/v3)
 
-- Fully typed with TypeScript
+- Fully typed with [TypeScript](https://www.typescriptlang.org)
 - [GraphQL over HTTP spec compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga)
 - [GraphiQL included](https://www.the-guild.dev/graphql/yoga-server/v3/features/graphiql)
 - [File uploads with GraphQL Multipart Request spec](https://www.the-guild.dev/graphql/yoga-server/v3/features/file-uploads)
