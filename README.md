@@ -73,6 +73,10 @@ server.listen(4000)
 - Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
 - [_And much more..._](https://www.the-guild.dev/graphql/yoga-server/v3)
 
+## [Examples](https://github.com/dotansimha/graphql-yoga/tree/readme/examples)
+
+We've made sure developers can quickly start with GraphQL Yoga by providing a comprehensive set of examples. [See all of them in the `examples/` folder.](https://github.com/dotansimha/graphql-yoga/tree/readme/examples)
+
 ## [Comparison](https://www.the-guild.dev/graphql/yoga-server/v3/comparison)
 
 Read more about how GraphQL Yoga compares to other servers in the ecosystem [here](https://www.the-guild.dev/graphql/yoga-server/v3/comparison).
