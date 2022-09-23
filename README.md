@@ -74,13 +74,11 @@ server.listen(4000)
 - [Testing utilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/testing)
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - Runs **everywhere**, some of the environments include:
-
   - [Deno](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-deno)
   - [Bun](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-bun)
   - [Cloudflare Workers](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-cloudflare-workers)
   - [AWS Lambda](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-aws-lambda)
-  - [And other environments...](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/z-other-environments)
-
+  - [_And other environments..._](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/z-other-environments)
 - [_And more..._](https://www.the-guild.dev/graphql/yoga-server/v3)
 
 ## [Examples](https://github.com/dotansimha/graphql-yoga/tree/readme/examples)
