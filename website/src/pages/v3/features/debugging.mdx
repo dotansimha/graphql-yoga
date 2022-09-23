@@ -1,0 +1,44 @@
+# Debugging
+
+You can run Yoga in a debug mode by running it with `DEBUG=1` in the environment. Doing so will increase verbosity of the logger delivering additional information including:
+
+- Processing of GraphQL parameters
+- Parsing of GraphQL parameters
+- Execution or subscription start
+- Received GraphQL operation variables
+- Execution or subscription end
+- [GraphiQL](https://github.com/graphql/graphiql) rendering
+- Healthcheck and readiness checks
+
+The default logger in Yoga is the [JavaScript console](https://developer.mozilla.org/en-US/docs/Web/API/console) and its respective methods ([debug](https://developer.mozilla.org/en-US/docs/Web/API/console/debug), [info](https://developer.mozilla.org/en-US/docs/Web/API/console/info), [warn](https://developer.mozilla.org/en-US/docs/Web/API/console/warn) and [error](https://developer.mozilla.org/en-US/docs/Web/API/console/error)) matching the log level.
+
+You can of course provide your own logger for piping to your favourite logging service/utility:
+
+```ts
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { schema } from './my-schema'
+import { logger } from './my-logger'
+
+const yoga = createYoga({
+  schema,
+  logging: {
+    debug(...args) {
+      // will only get triggered if DEBUG=1 in environment
+      logger.debug(...args)
+    },
+    info(...args) {
+      logger.info(...args)
+    },
+    warn(...args) {
+      logger.warn(...args)
+    },
+    error(...args) {
+      logger.error(...args)
+    },
+  },
+})
+
+const server = createServer(yoga)
+server.listen(4000)
+```
