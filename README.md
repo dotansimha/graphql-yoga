@@ -3,7 +3,7 @@
 <div align="center">
   <h3>GraphQL Yoga</h3>
   <h6>Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</h6>
-  <a href="https://www.the-guild.dev/graphql/yoga-server/v3">Go to documenation</a>
+  <a href="https://www.the-guild.dev/graphql/yoga-server/v3"><b>Go to documenation</b></a>
 </div>
 
 <br />
@@ -18,15 +18,15 @@
 
 </div>
 
-### Installation
+## Quick start
 
-```shell
+### Install
+
+```sh
 yarn add graphql-yoga graphql
 ```
 
-### Quickstart
-
-Make a schema, create Yoga and start a Node server with it:
+### Create and start Yoga server
 
 ```ts
 import { createSchema, createYoga } from 'graphql-yoga'
