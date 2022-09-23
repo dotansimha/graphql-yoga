@@ -1,5 +1,7 @@
 <p align="center"><img src="./website/public/cover.png" width="720" /></p>
 
+https://badgen.net/bundlephobia/min/graphql-yoga
+
 # GraphQL Yoga
 
 Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
