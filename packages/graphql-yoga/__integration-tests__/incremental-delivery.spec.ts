@@ -226,7 +226,7 @@ describe('incremental delivery: node-fetch', () => {
     logging: false,
     maskedErrors: false,
     fetchAPI: createFetch({
-      useNodeFetch: true,
+      useNodeFetch: false,
       formDataLimits: {
         fileSize: 12,
         fieldsFirst: true,

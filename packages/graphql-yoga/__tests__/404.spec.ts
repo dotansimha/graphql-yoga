@@ -66,7 +66,7 @@ describe('404', () => {
             if (request.url.endsWith('/iliketurtles')) {
               endResponse(
                 new fetchAPI.Response('Do you really like em?', {
-                  status: 666,
+                  status: 566,
                 }),
               )
             }
@@ -76,7 +76,7 @@ describe('404', () => {
     })
     const response = await yoga.fetch(`http://localhost:4000/iliketurtles`)
 
-    expect(response.status).toEqual(666)
+    expect(response.status).toEqual(566)
     const body = await response.text()
     expect(body).toEqual('Do you really like em?')
   })
