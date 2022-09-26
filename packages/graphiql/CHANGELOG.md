@@ -1,5 +1,11 @@
 # @graphql-yoga/graphiql
 
+## 3.0.0-next.0
+
+### Major Changes
+
+- [#1777](https://github.com/dotansimha/graphql-yoga/pull/1777) [`418f8388`](https://github.com/dotansimha/graphql-yoga/commit/418f8388ba03341ce51bc166ff86755983d5e0b7) Thanks [@saihaj](https://github.com/saihaj)! - upgrade to GraphiQL v2
+
 ## 2.4.2
 
 ### Patch Changes

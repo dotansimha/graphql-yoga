@@ -5,7 +5,7 @@ import { pipe, toObservable } from 'wonka'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { File } from '@whatwg-node/fetch'
 import { createServer, Server } from 'http'
-import getPort from 'get-port'
+import { AddressInfo } from 'node:net'
 
 describe('graphExchange', () => {
   const endpoint = '/graphql'
@@ -54,8 +54,9 @@ describe('graphExchange', () => {
   let client: Client
 
   beforeAll(async () => {
-    const port = await getPort()
     server = createServer(yoga)
+    await new Promise<void>((resolve) => server.listen(0, hostname, resolve))
+    const port = (server.address() as AddressInfo).port
     url = `http://${hostname}:${port}${endpoint}`
     client = createClient({
       url,
@@ -65,7 +66,6 @@ describe('graphExchange', () => {
         }),
       ],
     })
-    await new Promise<void>((resolve) => server.listen(port, hostname, resolve))
   })
   afterAll(() => {
     server.close()

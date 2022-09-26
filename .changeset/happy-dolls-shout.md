@@ -2,4 +2,4 @@
 'graphql-yoga': patch
 ---
 
-Handle invalid JSON body gracefully
+Handle invalid POST body gracefully; - Reject `null` - Reject non-object body - Reject invalid JSON body

@@ -1,5 +1,5 @@
 import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
-import { Event } from '@whatwg-node/fetch'
+import { CustomEvent } from '@whatwg-node/events'
 import type { Redis, Cluster } from 'ioredis'
 
 export type CreateRedisEventTargetArgs = {
@@ -7,7 +7,7 @@ export type CreateRedisEventTargetArgs = {
   subscribeClient: Redis | Cluster
 }
 
-export function createRedisEventTarget<TEvent extends Event>(
+export function createRedisEventTarget<TEvent extends CustomEvent>(
   args: CreateRedisEventTargetArgs,
 ): TypedEventTarget<TEvent> {
   const { publishClient, subscribeClient } = args
@@ -19,10 +19,10 @@ export function createRedisEventTarget<TEvent extends Event>(
     if (callbacks === undefined) {
       return
     }
-    const event = new Event(channel) as TEvent & {
-      data: unknown
-    }
-    event.data = message === '' ? undefined : JSON.parse(message)
+
+    const event = new CustomEvent(channel, {
+      detail: message === '' ? undefined : JSON.parse(message),
+    }) as TEvent
     for (const callback of callbacks) {
       callback(event)
     }
@@ -56,27 +56,29 @@ export function createRedisEventTarget<TEvent extends Event>(
 
   return {
     addEventListener(topic, callbackOrOptions) {
-      const callback =
-        'handleEvent' in callbackOrOptions
-          ? callbackOrOptions.handleEvent
-          : callbackOrOptions
-      addCallback(topic, callback)
+      if (callbackOrOptions != null) {
+        const callback =
+          'handleEvent' in callbackOrOptions
+            ? callbackOrOptions.handleEvent
+            : callbackOrOptions
+        addCallback(topic, callback)
+      }
     },
     dispatchEvent(event: TEvent) {
       publishClient.publish(
         event.type,
-        (event as any).data === undefined
-          ? ''
-          : JSON.stringify((event as any).data),
+        event.detail === undefined ? '' : JSON.stringify(event.detail),
       )
       return true
     },
     removeEventListener(topic, callbackOrOptions) {
-      const callback =
-        'handleEvent' in callbackOrOptions
-          ? callbackOrOptions.handleEvent
-          : callbackOrOptions
-      removeCallback(topic, callback)
+      if (callbackOrOptions != null) {
+        const callback =
+          'handleEvent' in callbackOrOptions
+            ? callbackOrOptions.handleEvent
+            : callbackOrOptions
+        removeCallback(topic, callback)
+      }
     },
   }
 }

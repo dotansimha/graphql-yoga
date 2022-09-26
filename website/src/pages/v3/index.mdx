@@ -1,7 +1,6 @@
 ---
 id: quick-start
 title: Quick Start
-sidebar_label: Quick Start
 ---
 
 GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP](https://github.com/graphql/graphql-over-http) spec-compliant GraphQL Server using [Envelop](https://envelop.dev), and [GraphQL Tools](https://graphql-tools.com) that runs anywhere.
@@ -17,11 +16,11 @@ import { PackageCmd } from '@theguild/components'
 You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map.
 
 ```ts
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -32,7 +31,7 @@ const yoga = createYoga({
         hello: () => 'Hello from Yoga!',
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)

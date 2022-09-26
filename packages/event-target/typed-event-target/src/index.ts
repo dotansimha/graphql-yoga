@@ -1,31 +1,26 @@
-export type TypedEvent = Event & {
-  data?: unknown
-}
-
-export interface TypedEventListener<TEvent extends TypedEvent>
-  extends EventListener {
+export interface TypedEventListener<TEvent extends CustomEvent> {
   (evt: TEvent): void
 }
 
-export interface TypedEventListenerObject<TEvent extends TypedEvent>
-  extends EventListener {
+export interface TypedEventListenerObject<TEvent extends CustomEvent> {
   handleEvent(object: TEvent): void
 }
 
-export type TypedEventListenerOrEventListenerObject<TEvent extends TypedEvent> =
-  TypedEventListener<TEvent> | TypedEventListenerObject<TEvent>
+export type TypedEventListenerOrEventListenerObject<
+  TEvent extends CustomEvent,
+> = TypedEventListener<TEvent> | TypedEventListenerObject<TEvent>
 
-export interface TypedEventTarget<TEvent extends TypedEvent>
+export interface TypedEventTarget<TEvent extends CustomEvent>
   extends EventTarget {
   addEventListener(
     type: string,
-    callback: TypedEventListenerOrEventListenerObject<TEvent>,
+    callback: TypedEventListenerOrEventListenerObject<TEvent> | null,
     options?: AddEventListenerOptions | boolean,
   ): void
   dispatchEvent(event: TEvent): boolean
   removeEventListener(
     type: string,
-    callback: TypedEventListenerOrEventListenerObject<TEvent>,
+    callback: TypedEventListenerOrEventListenerObject<TEvent> | null,
     options?: EventListenerOptions | boolean,
   ): void
 }

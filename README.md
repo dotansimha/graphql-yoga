@@ -1,27 +1,41 @@
-<p align="center"><img src="./website/public/cover.png" width="720" /></p>
+<div align="center"><img src="./website/public/cover.png" width="720" /></div>
 
-# GraphQL Yoga
+<div align="center">
+  <h3>GraphQL Yoga</h3>
+  <h6>Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</h6>
+  <a href="https://www.the-guild.dev/graphql/yoga-server/v3"><b>Go to documenation</b></a>
+</div>
 
-Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience
+<br />
 
-[Docs](https://www.graphql-yoga.com/docs)
+<div align="center">
 
-### Installation
+![npm](https://badgen.net/npm/v/graphql-yoga)
+![bundlephobia minified size](https://badgen.net/bundlephobia/min/graphql-yoga)
+![bundlephobia minified+zipped size](https://badgen.net/bundlephobia/minzip/graphql-yoga)
+![bundlephobia treeshaking](https://badgen.net/bundlephobia/tree-shaking/graphql-yoga)
+![license](https://badgen.net/github/license/dotansimha/graphql-yoga)
 
-```shell
-npm i graphql-yoga graphql
+</div>
+
+## Quick start
+
+### Install
+
+```sh
+yarn add graphql-yoga graphql
 ```
 
-### Quickstart
+### Start
 
-You will need to provide schema to Yoga, either by an existing executable schema, or by providing your type definitions and resolver map:
+Make a schema, create Yoga and start a Node server:
 
 ```ts
-import { createServer } from 'http'
-import { createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -32,10 +46,11 @@ const yoga = createYoga({
         hello: () => 'Hello from Yoga!',
       },
     },
-  },
+  }),
 })
 
 const server = createServer(yoga)
+
 server.listen(4000)
 ```
 
@@ -47,29 +62,47 @@ server.listen(4000)
 - **WHATWG Fetch API:** the core package depends on [WHATWG Fetch API](https://fetch.spec.whatwg.org/) so it can run and deploy on any environment (Serverless, Workers, Deno, Node).
 - **Easily Extendable:** New GraphQL-Yoga support all [`envelop`](https://www.envelop.dev) plugins.
 
-## Features
+## [Features](https://www.the-guild.dev/graphql/yoga-server/v3)
 
-- [GraphQL over HTTP spec compliant](https://github.com/graphql/graphql-over-http)
-- TypeScript
-- File upload with [GraphQL Multipart Request spec](https://github.com/jaydenseric/graphql-multipart-request-spec)
-- Realtime capabilities
-- Accepts `application/json`, `application/graphql+json`, `application/x-www-form-urlencoded`, `application/graphql` and `multipart/formdata` content-types
+- Fully typed with [TypeScript](https://www.typescriptlang.org)
+- [GraphQL over HTTP spec compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga)
+- [GraphiQL included](https://www.the-guild.dev/graphql/yoga-server/v3/features/graphiql)
+- [File uploads with GraphQL Multipart Request spec](https://www.the-guild.dev/graphql/yoga-server/v3/features/file-uploads)
+- [Subscriptions and realtime capabilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/subscriptions)
+- [Automatic persisted queries](https://www.the-guild.dev/graphql/yoga-server/v3/features/automatic-persisted-queries)
+- [Built-in parsing and validation caching](https://www.the-guild.dev/graphql/yoga-server/v3/features/parsing-and-validation-caching)
+- [Testing utilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/testing)
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
-- Runs everywhere: Can be deployed via `now`, `up`, AWS Lambda, Heroku etc.
+- Runs **everywhere**, including environments like:
+  - [Deno](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-deno)
+  - [Bun](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-bun)
+  - [Cloudflare Workers](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-cloudflare-workers)
+  - [AWS Lambda](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-aws-lambda)
+  - [_And other..._](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/z-other-environments)
+- [_And more..._](https://www.the-guild.dev/graphql/yoga-server/v3)
 
-### Contributing
+## [Documentation](https://www.the-guild.dev/graphql/yoga-server/v3)
+
+Our [documentation website](https://www.the-guild.dev/graphql/yoga-server/v3) will help you get started.
+
+## [Examples](https://github.com/dotansimha/graphql-yoga/tree/readme/examples)
+
+We've made sure developers can quickly start with GraphQL Yoga by providing a comprehensive set of examples. [See all of them in the `examples/` folder.](https://github.com/dotansimha/graphql-yoga/tree/readme/examples)
+
+## [Comparison](https://www.the-guild.dev/graphql/yoga-server/v3/comparison)
+
+Read more about how GraphQL Yoga compares to other servers in the ecosystem [here](https://www.the-guild.dev/graphql/yoga-server/v3/comparison).
+
+## Contributing
 
 If this is your first time contributing to this project, please do read our [Contributor Workflow Guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md) before you get started off.
 
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
-### Code of Conduct
+## Code of Conduct
 
-Help us keep Yoga open and inclusive. Please read and follow our [
-of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/)
+Help us keep Yoga open and inclusive. Please read and follow our [Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/).
 
-### License
-
-[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/dotansimha/graphql-yoga/master/LICENSE)
+## License
 
 MIT
