@@ -61,13 +61,12 @@ describe('Yoga Apollo Link', () => {
     client = new ApolloClient({
       link: new YogaLink({
         endpoint: url,
-        customFetch: yoga.fetchAPI.fetch,
       }),
       cache: new InMemoryCache(),
     })
   })
-  afterAll(() => {
-    server.close()
+  afterAll((done) => {
+    server.close(done)
   })
   it('should handle queries correctly', async () => {
     const result = await client.query({
@@ -96,6 +95,7 @@ describe('Yoga Apollo Link', () => {
         FetchResult<any, Record<string, any>, Record<string, any>>
       >(observable)
     let i = 0
+    expect.assertions(3)
     for await (const result of asyncIterable) {
       i++
       if (i === 2) {

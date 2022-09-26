@@ -21,6 +21,7 @@ if (process.env.INTEGRATION_TEST === 'true') {
     testMatch.push('!**/examples/sveltekit/**')
     testMatch.push('!**/examples/fastify*/**')
   }
+  testMatch.push('!**/examples/bun*/**')
 } else {
   testMatch.push(
     '<rootDir>/packages/**/?(*.)+(spec|test).[jt]s?(x)',

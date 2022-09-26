@@ -60,15 +60,11 @@ describe('graphExchange', () => {
     url = `http://${hostname}:${port}${endpoint}`
     client = createClient({
       url,
-      exchanges: [
-        yogaExchange({
-          customFetch: yoga.fetchAPI.fetch,
-        }),
-      ],
+      exchanges: [yogaExchange()],
     })
   })
-  afterAll(() => {
-    server.close()
+  afterAll((done) => {
+    server.close(done)
   })
   it('should handle queries correctly', async () => {
     const result = await client
@@ -102,7 +98,7 @@ describe('graphExchange', () => {
     const asyncIterable =
       observableToAsyncIterable<OperationResult<any>>(observable)
     let i = 0
-    expect.assertions(4)
+    expect.assertions(3)
     for await (const result of asyncIterable) {
       i++
       if (i === 2) {
