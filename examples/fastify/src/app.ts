@@ -1,5 +1,6 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 import fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import { Readable } from 'stream'
 
 export function buildApp(logging = true) {
   const app = fastify({
@@ -81,7 +82,7 @@ export function buildApp(logging = true) {
 
       reply.status(response.status)
 
-      reply.send(response.body)
+      reply.send(Readable.from(response.body))
 
       return reply
     },

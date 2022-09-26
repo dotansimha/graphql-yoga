@@ -1,4 +1,4 @@
-import { spawn } from 'child_process'
+import { spawn, execSync } from 'child_process'
 import { fetch } from '@whatwg-node/fetch'
 
 describe('Bun integration', () => {
@@ -7,29 +7,26 @@ describe('Bun integration', () => {
 
   beforeAll(async () => {
     // Start Bun
-    bunProcess = spawn('yarn', ['workspace', 'example-bun', 'start'])
-
-    serverUrl = await new Promise((resolve, reject) => {
-      bunProcess.stderr?.on('data', (chunk) => {
-        const chunkString = chunk.toString('utf-8')
-        console.error(chunk.toString('utf-8'))
-        if (chunkString.includes('Command failed')) {
-          reject(new Error('Bun failed to start'))
-        }
-      })
-
-      bunProcess.stdout?.on('data', (chunk) => {
-        const chunkString = chunk.toString('utf-8')
-        console.log(chunk.toString('utf-8'))
-        if (chunkString.includes('Server is running on')) {
-          resolve(chunkString.split('Server is running on ')[1])
-        }
-      })
+    bunProcess = spawn('yarn', ['workspace', 'example-bun', 'start'], {
+      timeout: 1000,
     })
+
+    for await (const chunk of bunProcess.stdout || bunProcess.stderr || []) {
+      const chunkString = chunk.toString('utf-8')
+      console.log(chunk.toString('utf-8'))
+      if (chunkString.includes('Command failed')) {
+        throw new Error('Bun failed to start')
+      }
+      if (chunkString.includes('Server is running on')) {
+        serverUrl = chunkString.split('Server is running on ')[1]
+        break
+      }
+    }
   })
 
-  afterAll(() => {
-    bunProcess.kill()
+  afterAll((done) => {
+    bunProcess.once('exit', () => done())
+    bunProcess.kill('SIGTERM')
   })
 
   it('shows GraphiQL', async () => {

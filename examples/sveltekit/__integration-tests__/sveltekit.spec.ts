@@ -95,6 +95,7 @@ describe('SvelteKit integration', () => {
 			} catch (error) {
 				// We had an issue grabbing the introspection query result!
 				// let's see what is in the html with the finafinally
+				console.error(error);
 			} finally {
 				const bodyContent = await body?.text();
 				// B/ Check that GraphiQL is showing
