@@ -34,8 +34,20 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
-import { ApolloGateway } from '@apollo/gateway'
+import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { useApolloFederation } from '@envelop/apollo-federation'
+
+/**
+ * Needed since federation remote data source fetcher
+ * doesn't support `application/graphql-response+json` content type
+ * https://github.com/apollographql/federation/issues/2161
+ * And yoga defaults to `application/graphql-response+json` as per the spec.
+ */
+class DataSource extends RemoteGraphQLDataSource {
+  willSendRequest({ request }) {
+    request.http.headers.set('accept', 'application/json')
+  }
+}
 
 // Initialize the gateway
 const gateway = new ApolloGateway({
@@ -44,6 +56,12 @@ const gateway = new ApolloGateway({
     { name: 'products', url: 'http://localhost:4002' },
     // ...additional subgraphs...
   ],
+  introspectionHeaders: {
+    accept: 'application/json',
+  },
+  buildService({ url }) {
+    return new DataSource({ url })
+  },
 })
 
 // Make sure all services are loaded
