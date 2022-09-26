@@ -1,4 +1,4 @@
-import { gateway } from '../gateway/gateway'
+import { gateway, DataSource } from '../gateway/gateway'
 import { yoga as service1 } from '../service/yoga'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
@@ -20,6 +20,12 @@ describe('apollo-federation example integration', () => {
       serviceList: [
         { name: 'accounts', url: `http://localhost:${servicePort}/graphql` },
       ],
+      introspectionHeaders: {
+        accept: 'application/json',
+      },
+      buildService({ url }) {
+        return new DataSource({ url })
+      },
     }
 
     const gatewayService = await gateway(gatewayConfig)
@@ -40,7 +46,9 @@ describe('apollo-federation example integration', () => {
     const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({
-      id: '1',
+      me: {
+        id: '1',
+      },
     })
   })
 })
