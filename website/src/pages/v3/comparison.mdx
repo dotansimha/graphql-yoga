@@ -10,26 +10,37 @@ This comparison highlights the main differences when using Yoga instead of Apoll
 ### No Framework-specific Packages
 
 One of the goals of `graphql-yoga` is to have as few `graphql-yoga` packages as possible.
-Yoga is designed around the W3C Request/Response specification (often just referred to as ["Fetch API"](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)),
+That's why Yoga's overall architecture was designed around the W3C Request/Response specification (often just referred to as ["Fetch API"](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)),
 which is already adopted by deno, cloudflare workers, and browsers.
 
 For Node.js environments and frameworks (which unfortunately do not have full W3C Request/Response support), graphql-yoga comes with a small compatibility layer for making it work.
+
+Read more about the underlying technology [here](https://the-guild.dev/blog/fetch-for-servers).
 
 You only need to search for [`apollo-server-` on NPM](https://www.npmjs.com/search?q=apollo-server-) to see how many variants and packages there are for apollo and how hard it is to maintain.
 
 ### Run anywhere
 
 As mentioned in the above paragraph `graphql-yoga` is built around W3C Request/Response which is supported in all major serverless/worker/"serverful" JavaScript environments.
+
 Apollo Server plans to drop active support for cloudflare workers and [pushes it onto the community](https://github.com/apollographql/apollo-server/issues/6034).
-GraphQL Yoga will continuously support all platforms and runtimes and
+
+GraphQL Yoga will continuously support all platforms and runtimes **wihtout any changes in your code** and
 Furthermore, Yoga has a full end to end testing suite that actually deploys to all those runtimes in order to ensure integrity and prevent unexpected issues.
+
+Current list of supported and tested platform: 
+
+Node ([Express](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-express), [Fastify](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-fastify), [Koa](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-koa), [NestJS](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-nestjs), [SvelteKit](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-sveltekit)), [AWS Lambda](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-aws-lambda), [Cloudflare Workers](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-cloudflare-workers), [Deno](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-deno), [NextJS API Routes](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-nextjs), [Bun](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-bun) and [more](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/z-other-environments)..
 
 ### Powerful Plugin System
 
-Envelop’s powerful GraphQL plugin system, that is unfortunately not fully compatible with Apollo Server.
-There is still no further follow-up from the apollo maintainers over [on the Apollo Server and envelop discussion](https://github.com/apollographql/apollo-server/discussions/5541).
+GraphQL Yoga is built on top of [Envelop](https://envelop.dev/) - the powerful GraphQL [plugin system](https://www.envelop.dev/plugins). 
 
-GraphQL Yoga builds upon envelop and, futhrermore, has a default plugin preset enabled for ensuring best practices for a performant (parse and validation caching) and secure GraphQL (e.g. though error masking) server by default.
+Unfortunately Apollo Server is not fully compatible with it, there is still no further follow-up from the apollo maintainers over [on the Apollo Server and envelop discussion](https://github.com/apollographql/apollo-server/discussions/5541).
+
+GraphQL Yoga builds upon envelop, which means it can use the whole plugin ecosystem of Envelop, including rate limiting, caching, Auth, tracing and monitoring and basically any feature GraphQL servers in production needs.
+
+Futhrermore, Yoga a default plugin preset enabled for ensuring best practices for a performant (parse and validation caching) and secure GraphQL (e.g. though error masking) server by default.
 If you want to opt-out of some or all of these plugins that is also possible.
 
 Yoga is fully customizable for your needs!
@@ -38,15 +49,18 @@ You can find a list of all available Envelop plugins over on [the envelop plugin
 
 ### Full Support of the GraphQL over HTTP specification
 
-GraphQL Yoga is fully compatible with the GraphQL over HTTP specification (including the incremental delivaery over HTTP specification).
+GraphQL Yoga is fully compatible with the GraphQL over HTTP specification (including the incremental delivery over HTTP specification).
 
 ### File Uploads
 
-GraphQL Yoga supports [file uploads out of the box](/v3/docs/features/file-uploads#enable-file-uploads-in-graphql-yoga).
+GraphQL Yoga supports [file uploads out of the box](/v3/docs/features/file-uploads#enable-file-uploads-in-graphql-yoga) and fully supports the [GraphQL-Multipart-Request](https://github.com/jaydenseric/graphql-multipart-request-spec).
 
-### GraphQL Subscriptions over Server-Sent-Events (SSE)
+### Real time and GraphQL Subscriptions over Server-Sent-Events (SSE)
 
-GraphQL Yoga supports [GraphQL Subscriptions over Server-Sent-Events (SSE)](/v3/docs/features/subscriptions#subscriptions) out of the box without the need of any additional libraries.
+The current version of GraphQL Subscriptions by Apollo hasn't received any major updates in the last couple of years.
+
+GraphQL Yoga supports [GraphQL Subscriptions over Server-Sent-Events (SSE)](/v3/docs/features/subscriptions#subscriptions) out of the box with fully typed implementation without the need of any additional libraries.
+It also support GraphQL Subscriptions over WS and in addition to that, we added the ability to use GraphQL Live Queries.
 
 ### Bundle Size and lean Dependencies
 
@@ -64,6 +78,25 @@ GraphQL Yoga only has a fraction of the dependencies of Apollo Server, and in ge
 - [Dependency visualizer `apollo-server-micro`](https://npm.anvaka.com/#/view/2d/apollo-server-micro)
 
 GraphQL Yogas APIs are designed for code-splitting and supported by popular bundlers.
+
+### Better runtime performance
+
+GraphQL Yoga has significantly less latency and much higher requests rate than Apollo Server in all popular benchmarks.
+
+### GraphiQL
+
+While Apollo Server is shipping with their proprietary and less updated hosted IDE and removed the default open source GraphiQL, 
+GraphQL Yoga ships with the latest and greatest from the open source, Foundation backed [GraphiQL IDE](https://github.com/graphql/graphiql) and we support and contribute to the project.
+
+### Compatibility with Apollo Federation
+
+GraphQL Yoga not only officially supports the Federation spec as a subgraph, but also can act as the Apollo Gateway server.
+With GraphQL Yoga you can use Apollo Federation together with all the plugins of Envelop, so you can benefit from both ecosystems:
+https://www.graphql-yoga.com/docs/features/apollo-federation
+
+We believe GraphQL Yoga is the best Apollo Federation Server out there.
+
+The migration from Apollo Server to Yoga Server is easy and you can find [instructions here](https://www.the-guild.dev/graphql/yoga-server/v3/migration/migration-from-apollo-server).
 
 ## GraphQL Yoga and GraphQL Helix
 
