@@ -1,4 +1,8 @@
-import { createYoga, createSchema } from 'npm:graphql-yoga'
+import {
+  createYoga,
+  createSchema,
+} from 'https://cdn.skypack.dev/graphql-yoga@three?dts'
+import { serve } from 'https://deno.land/std@0.157.0/http/server.ts'
 
 const yoga = createYoga({
   schema: createSchema({
@@ -15,12 +19,8 @@ const yoga = createYoga({
   }),
 })
 
-Deno.serve(
-  async (req) => {
-    const res = await yoga.handleRequest(req)
-    return new Response(res.body, res)
+serve(yoga, {
+  onListen({ hostname, port }) {
+    console.log(`Listening on http://${hostname}:${port}/graphql`)
   },
-  {
-    port: 4000,
-  },
-)
+})

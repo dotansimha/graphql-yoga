@@ -35,9 +35,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
-      - name: Setup Bun Runtime
-        uses: antongolub/action-setup-bun@v1
-
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-test-node
@@ -87,6 +84,9 @@ jobs:
 
       - name: Use Deno
         uses: denoland/setup-deno@v1
+
+      - name: Setup Bun Runtime
+        uses: antongolub/action-setup-bun@v1
 
       - name: Build Packages
         run: yarn build
