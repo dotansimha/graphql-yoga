@@ -102,6 +102,7 @@ describe('graphExchange', () => {
     const asyncIterable =
       observableToAsyncIterable<OperationResult<any>>(observable)
     let i = 0
+    expect.assertions(4)
     for await (const result of asyncIterable) {
       i++
       if (i === 2) {

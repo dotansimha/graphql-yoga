@@ -53,23 +53,27 @@ describe('subscription', () => {
 
       // Start and Close a HTTP SSE subscription
       await new Promise<void>(async (res) => {
+        const abortCtrl = new AbortController()
         const response = await fetch(
           `http://localhost:${port}/graphql?query=subscription{foo}`,
           {
             headers: {
               Accept: 'text/event-stream',
             },
+            signal: abortCtrl.signal,
           },
         )
         expect(response.status).toBe(200)
         expect(response.headers.get('content-type')).toBe('text/event-stream')
 
         for await (const chunk of response.body!) {
-          const chunkStr = Buffer.from(chunk).toString('utf-8')
-          if (chunkStr) {
-            res()
+          const str = Buffer.from(chunk).toString('utf-8')
+          if (str) {
+            break
           }
         }
+        abortCtrl.abort()
+        res()
       })
       resolve()
 

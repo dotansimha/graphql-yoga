@@ -1,4 +1,4 @@
-import { spawn, execSync } from 'child_process'
+import { spawn } from 'child_process'
 import { fetch } from '@whatwg-node/fetch'
 
 describe('Bun integration', () => {
@@ -24,8 +24,7 @@ describe('Bun integration', () => {
     }
   })
 
-  afterAll((done) => {
-    bunProcess.once('exit', () => done())
+  afterAll(() => {
     bunProcess.kill('SIGTERM')
   })
 

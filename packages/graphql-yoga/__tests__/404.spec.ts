@@ -27,7 +27,7 @@ describe('404', () => {
     expect(response.status).toEqual(404)
     expect(await response.text()).toEqual('')
   })
-  it('returns 404 with landing page when accepting text/html and sending a GET request', async () => {
+  it('returns 200 with landing page when accepting text/html and sending a GET request', async () => {
     const yoga = createYoga({
       logging: false,
     })
@@ -37,7 +37,7 @@ describe('404', () => {
       { method: 'GET', headers: { Accept: 'text/html' } },
     )
 
-    expect(response.status).toEqual(404)
+    expect(response.status).toEqual(200)
     const body = await response.text()
     expect(body).toContain('<!DOCTYPE html>')
     expect(body).toContain('GraphQL Yoga')

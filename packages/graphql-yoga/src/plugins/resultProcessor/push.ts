@@ -49,6 +49,7 @@ export function processPushResult(
       }
     },
     async cancel(e) {
+      console.log('geldi3')
       await iterator.return?.(e)
     },
   })
