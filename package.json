@@ -6,7 +6,7 @@
     "check": "yarn workspaces run check",
     "build": "yarn workspace @graphql-yoga/graphiql run build && yarn workspace @graphql-yoga/render-graphiql run build && yarn workspace graphql-yoga run generate-graphiql-html && bob build",
     "test": "jest --detectOpenHandles --detectLeaks",
-    "test:integration": "cross-env INTEGRATION_TEST=true jest --detectLeaks --logHeapUsage --runInBand --forceExit",
+    "test:integration": "cross-env INTEGRATION_TEST=true jest --detectLeaks --logHeapUsage --forceExit",
     "release": "yarn build && changeset publish",
     "start:docs": "yarn workspace website dev",
     "postinstall": "patch-package && husky install",
@@ -92,9 +92,6 @@
     "weak-napi": "2.0.2"
   },
   "resolutions": {
-    "graphql": "16.6.0",
-    "@whatwg-node/server": "0.4.10-alpha-20220927125913-2297df6",
-    "@whatwg-node/fetch": "0.4.6-alpha-20220927125913-2297df6",
-    "undici": "5.10.0"
+    "graphql": "16.6.0"
   }
 }
