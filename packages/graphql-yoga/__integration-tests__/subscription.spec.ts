@@ -2,26 +2,24 @@ import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { fetch } from '@whatwg-node/fetch'
 import { AddressInfo } from 'net'
+import { ExecutionResult } from 'graphql'
 
 describe('subscription', () => {
   test('Subscription is closed properly', async () => {
     let counter = 0
-    let resolve: () => void = () => {
-      throw new Error('Noop')
-    }
 
-    const p = new Promise<IteratorResult<void>>((res) => {
-      resolve = () => res({ done: true, value: undefined })
-    })
-
-    const fakeIterator: AsyncIterableIterator<unknown> = {
+    const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
-      next: () => {
-        if (counter === 0) {
-          counter = counter + 1
-          return Promise.resolve({ done: false, value: 'a' })
+      async next() {
+        counter++
+        return {
+          done: false,
+          value: {
+            data: {
+              counter,
+            },
+          },
         }
-        return p
       },
       return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
     }
@@ -53,14 +51,12 @@ describe('subscription', () => {
 
       // Start and Close a HTTP SSE subscription
       await new Promise<void>(async (res) => {
-        const abortCtrl = new AbortController()
         const response = await fetch(
           `http://localhost:${port}/graphql?query=subscription{foo}`,
           {
             headers: {
               Accept: 'text/event-stream',
             },
-            signal: abortCtrl.signal,
           },
         )
         expect(response.status).toBe(200)
@@ -72,10 +68,8 @@ describe('subscription', () => {
             break
           }
         }
-        abortCtrl.abort()
         res()
       })
-      resolve()
 
       // very small timeout to make sure the subscription is closed
       await new Promise((res) => setTimeout(res, 30))

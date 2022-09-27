@@ -9,13 +9,7 @@ import {
 import { createYoga, Plugin, Repeater } from 'graphql-yoga'
 import { Push } from '@repeaterjs/repeater'
 import { createServer, Server } from 'http'
-import {
-  createFetch,
-  AbortController,
-  fetch,
-  File,
-  FormData,
-} from '@whatwg-node/fetch'
+import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { AddressInfo } from 'net'
 
