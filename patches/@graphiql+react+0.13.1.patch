@@ -1,20 +1,17 @@
 diff --git a/node_modules/@graphiql/react/dist/index.es.js b/node_modules/@graphiql/react/dist/index.es.js
-index f7ba535..752285c 100644
+index f7ba535..3de8b0c 100644
 --- a/node_modules/@graphiql/react/dist/index.es.js
 +++ b/node_modules/@graphiql/react/dist/index.es.js
-@@ -18839,11 +18839,9 @@ function ExecutionContextProvider(props2) {
-               ...rest
-             };
+@@ -18882,7 +18882,7 @@ function ExecutionContextProvider(props2) {
+         });
+         try {
+           for await (const result of value22) {
+-            handleResponse(result);
++            setResponse(formatResult(result));
            }
--          setIsFetching(false);
-           setResponse(formatResult(fullResponse));
-         } else {
-           const response = formatResult(result);
--          setIsFetching(false);
-           setResponse(response);
-         }
-       }, "handleResponse");
-@@ -21891,12 +21889,16 @@ function hasStringOrNullKey(obj, key) {
+           setIsFetching(false);
+           setSubscription(null);
+@@ -21891,12 +21891,16 @@ function hasStringOrNullKey(obj, key) {
  }
  __name(hasStringOrNullKey, "hasStringOrNullKey");
  __name$c(hasStringOrNullKey, "hasStringOrNullKey");
