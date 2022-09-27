@@ -11,15 +11,15 @@ on:
       - 'website/**'
 
 jobs:
-  node:
+  unit:
     name: unit / nodejs v${{ matrix.node-version }}
     uses: the-guild-org/shared-config/.github/workflows/ci-node-matrix.yml@main
     with:
       script: 'yarn build && yarn test'
       nodeVersions: '[14,16,18]'
 
-  test-integration:
-    name: Run integration tests
+  integration:
+    name: integration / nodejs v${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -53,8 +53,7 @@ jobs:
       - name: Run Tests
         run: yarn test:integration --ci
 
-  test-esm:
-    name: esm
+  esm:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
