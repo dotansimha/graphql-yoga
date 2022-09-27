@@ -6011,10 +6011,10 @@
   resolved "https://registry.yarnpkg.com/@whatwg-node/events/-/events-0.0.2.tgz#7b7107268d2982fc7b7aff5ee6803c64018f84dd"
   integrity sha512-WKj/lI4QjnLuPrim0cfO7i+HsDSXHxNv1y0CrJhdntuO3hxWZmnXCwNDnwOvry11OjRin6cgWNF+j/9Pn8TN4w==
 
-"@whatwg-node/fetch@0.4.5":
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.4.5.tgz#786fb15f1c4b8588904521ad7272fde83738ac51"
-  integrity sha512-goWqxQ/+8pAbbOjdnE4f2BwQXZ9OPR8BE8ZOWP8PIhoTo+6tI1yDouMd1f6OltS6t5cF8bx3HJ/ii6ETg3F1lg==
+"@whatwg-node/fetch@0.4.5", "@whatwg-node/fetch@0.4.6-alpha-20220927125913-2297df6", "@whatwg-node/fetch@^0.4.0":
+  version "0.4.6-alpha-20220927125913-2297df6"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.4.6-alpha-20220927125913-2297df6.tgz#1149cba2e0130bab516f91dbdfebec63a851c47d"
+  integrity sha512-9d8IJTIXDxNFsTGhUbN4Cc9y3ddLZDeJboofa0u3EyfF9hIVPWXk6AYcWiE2Cm7lH+v6dQ5BZ8f+z42/pI+8yw==
   dependencies:
     "@peculiar/webcrypto" "^1.4.0"
     abort-controller "^3.0.0"
@@ -6022,29 +6022,15 @@
     form-data-encoder "^1.7.1"
     formdata-node "^4.3.1"
     node-fetch "^2.6.7"
-    undici "^5.8.0"
+    undici "^5.10.0"
     web-streams-polyfill "^3.2.0"
 
-"@whatwg-node/fetch@^0.4.0":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.4.4.tgz#9f6502177453d48b76d31f33d32dcd60afb9eb54"
-  integrity sha512-/c2u1blMAXHVXneZjVLyE0AwdRuuFpv2P3ghNz2QtpHed+25WdSkTi7XxICwuaRsl/mMgundCzSy1352rZgWPg==
+"@whatwg-node/server@0.4.10-alpha-20220927125913-2297df6", "@whatwg-node/server@0.4.9":
+  version "0.4.10-alpha-20220927125913-2297df6"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/server/-/server-0.4.10-alpha-20220927125913-2297df6.tgz#65cfdeae28d11da9fa06da7500a8a6810e2d146b"
+  integrity sha512-XUpX7PVofl2HNsKOynnMf6y9taXEsj1iE6uTpBCotS2fqwyofZgSZSpI21iuRC+gZTMDM8ggxUYW/Wi/ArXyQw==
   dependencies:
-    "@peculiar/webcrypto" "^1.4.0"
-    abort-controller "^3.0.0"
-    busboy "^1.6.0"
-    form-data-encoder "^1.7.1"
-    formdata-node "^4.3.1"
-    node-fetch "^2.6.7"
-    undici "^5.8.0"
-    web-streams-polyfill "^3.2.0"
-
-"@whatwg-node/server@0.4.9":
-  version "0.4.9"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/server/-/server-0.4.9.tgz#7b6bdef0995f34b00900bc1cbb24980c4490a2f9"
-  integrity sha512-KLDYp5lJJXEnip9Zm/VCzGLfb22QJL31P1ucT6SqgOn+ExkXPKxWcJq5bbi9nnyY2zO9RieHlUIRTq1EX8GRLQ==
-  dependencies:
-    "@whatwg-node/fetch" "0.4.5"
+    "@whatwg-node/fetch" "0.4.6-alpha-20220927125913-2297df6"
     tslib "^2.3.1"
 
 "@wry/context@^0.6.0":
@@ -20155,15 +20141,10 @@ unc-path-regex@^0.1.2:
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
   integrity sha1-5z3T17DXxe2G+6xrCufYxqadUPo=
 
-undici@5.10.0, undici@^5.1.0, undici@^5.8.0:
+undici@5.10.0, undici@5.9.1, undici@^5.1.0, undici@^5.10.0:
   version "5.10.0"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.10.0.tgz#dd9391087a90ccfbd007568db458674232ebf014"
   integrity sha512-c8HsD3IbwmjjbLvoZuRI26TZic+TSEe8FPMLLOkN1AfYRhdjnKBU6yL+IwcSCbdZiX4e5t0lfMDLDCqj4Sq70g==
-
-undici@5.9.1:
-  version "5.9.1"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.9.1.tgz#fc9fd85dd488f965f153314a63d9426a11f3360b"
-  integrity sha512-6fB3a+SNnWEm4CJbgo0/CWR8RGcOCQP68SF4X0mxtYTq2VNN8T88NYrWVBAeSX+zb7bny2dx2iYhP3XHi00omg==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
