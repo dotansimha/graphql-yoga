@@ -1,5 +1,12 @@
 # hello-world-benchmark
 
+## 1.0.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`8c674c36`](https://github.com/dotansimha/graphql-yoga/commit/8c674c365e0bac176ca296e8d531fcd28d228d5b)]:
+  - graphql-yoga@3.0.0-next.2
+
 ## 1.0.0-next.1
 
 ### Patch Changes
