@@ -1,4 +1,3 @@
-import { spawn } from 'child_process'
 import { fetch } from '@whatwg-node/fetch'
 
 import { createYoga, createSchema } from 'graphql-yoga'
@@ -21,9 +20,8 @@ describe('Bun integration', () => {
     }),
   })
 
-  const server = Bun.serve(yoga)
-
   it('shows GraphiQL', async () => {
+    const server = Bun.serve(yoga)
     const response = await fetch(
       new URL(yoga.graphqlEndpoint, server.hostname).toString(),
       {
@@ -37,9 +35,11 @@ describe('Bun integration', () => {
     expect(response.headers.get('content-type')).toBe('text/html')
     const htmlContents = await response.text()
     expect(htmlContents.includes('GraphiQL')).toBe(true)
+    server.stop()
   })
 
   it('accepts a query', async () => {
+    const server = Bun.serve(yoga)
     const response = await fetch(
       new URL(yoga.graphqlEndpoint, server.hostname).toString(),
       {
@@ -54,7 +54,6 @@ describe('Bun integration', () => {
     )
     const result = await response.json()
     expect(result.data.greetings).toBe('Hello Bun!')
+    server.stop()
   })
-
-  server.stop()
 })
