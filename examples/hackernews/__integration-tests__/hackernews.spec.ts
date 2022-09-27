@@ -23,7 +23,7 @@ describe('hackernews example integration', () => {
   afterAll(async () => {
     // drop
     await DbDrop.new().parse([
-      '--preview-feature', // experimental feature
+      '--preview-feature', // DbDrop is an experimental feature
       '--force',
     ])
   })
