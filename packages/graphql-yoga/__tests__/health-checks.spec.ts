@@ -5,12 +5,7 @@ describe('health checks', () => {
     const yoga = createYoga({
       logging: false,
     })
-    const result = await yoga.fetch('http://yoga/health', {
-      method: 'GET',
-    })
+    const result = await yoga.fetch('http://yoga/health')
     expect(result.status).toBe(200)
-    expect(await result.json()).toEqual({
-      message: 'alive',
-    })
   })
 })
