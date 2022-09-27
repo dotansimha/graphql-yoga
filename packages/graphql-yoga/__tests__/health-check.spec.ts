@@ -1,6 +1,6 @@
 import { createYoga } from 'graphql-yoga'
 
-describe('health checks', () => {
+describe('health check', () => {
   it('return 200 status code for health check endpoint', async () => {
     const yoga = createYoga({
       logging: false,
