@@ -40,7 +40,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ### Load type definitions from a file
@@ -84,7 +86,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 For more complex loading of type-definitions please refer to [`graphql-tools/load-files` ](https://www.graphql-tools.com/docs/schema-loading#load-typedefsdocumentnode-and-resolvers-from-files).
@@ -190,7 +194,9 @@ const server = new GraphQLServer({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 **Yoga v3**
@@ -215,7 +221,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Middlewares
@@ -298,7 +306,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 For more details please refer to the
@@ -445,7 +455,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ### Filtering events
@@ -546,5 +558,7 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```

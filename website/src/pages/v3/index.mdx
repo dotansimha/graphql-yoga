@@ -35,7 +35,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 > Yoga uses GraphQL Tools under the hood so you'll want to follow the [`makeExecutableSchema`](https://www.graphql-tools.com/docs/generate-schema) pattern.
@@ -68,7 +70,9 @@ const yoga = createYoga({
 
 const server = createServer(yoga)
 
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 <iframe

@@ -18,7 +18,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Furthermore, you can provide your own cache store to both of these plugins by implementing the following interface:
@@ -49,7 +51,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Yoga uses [envelop](https://www.envelop.dev/)'s plugins [`useParserCache`](https://www.envelop.dev/plugins/use-parser-cache) and [`useValidationCache`](https://www.envelop.dev/plugins/use-validation-cache) underneath, read more about them on their respective websites.

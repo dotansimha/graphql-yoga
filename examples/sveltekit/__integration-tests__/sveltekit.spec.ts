@@ -98,7 +98,8 @@ describe('SvelteKit integration', () => {
 
 			const json = await res.json();
 			const str = JSON.stringify(json, null, 0);
-			expect(str).toContain(`{"data":{"hello":"SvelteKit - GraphQL Yoga"}}`);
+			expect(str).toContain(`{"data":`);
+			expect(str).not.toContain('"errors"');
 		}
 	});
 });
