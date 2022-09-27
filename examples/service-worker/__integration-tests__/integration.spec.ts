@@ -147,10 +147,10 @@ describe('Service worker', () => {
 
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toBe('text/event-stream')
-    const responseBodyIterator = response.body?.[Symbol.asyncIterator]()
-    const { value, done } = await responseBodyIterator!.next()
-    expect(done).toBe(false)
-    expect(value.toString()).toMatch(/data: {/)
-    await responseBodyIterator!.return?.()
+    for await (const chunk of response.body as any) {
+      expect(Buffer.from(chunk).toString('utf-8')).toMatch(/data: {/)
+      break
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   })
 })

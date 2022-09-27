@@ -2,7 +2,7 @@ import { yoga } from '../src/yoga'
 
 describe('node-ts example integration', () => {
   it('should execute query', async () => {
-    const response = await yoga.fetch('/graphql?query={hello}')
+    const response = await yoga.fetch('http://yoga/graphql?query={hello}')
 
     expect(response.status).toBe(200)
     expect(await response.text()).toMatchInlineSnapshot(
@@ -12,7 +12,7 @@ describe('node-ts example integration', () => {
 
   it('should have subscriptions disabled', async () => {
     const response = await yoga.fetch(
-      '/graphql?query=subscription{greetings}',
+      'http://yoga/graphql?query=subscription{greetings}',
       {
         headers: {
           Accept: 'text/event-stream',

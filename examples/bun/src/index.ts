@@ -1,4 +1,4 @@
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 
 const yoga = createYoga({
   schema: createSchema({

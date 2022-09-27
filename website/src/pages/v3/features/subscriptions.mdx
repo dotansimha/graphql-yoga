@@ -55,7 +55,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
@@ -298,7 +300,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ### Topics
@@ -513,7 +517,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ### Subscriptions with initial value
@@ -583,7 +589,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ### Listen to multiple Pub/Sub topics
@@ -668,5 +676,7 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```

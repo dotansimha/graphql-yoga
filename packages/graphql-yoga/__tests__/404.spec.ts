@@ -27,7 +27,7 @@ describe('404', () => {
     expect(response.status).toEqual(404)
     expect(await response.text()).toEqual('')
   })
-  it('returns 404 with landing page when accepting text/html and sending a GET request', async () => {
+  it('returns 200 with landing page when accepting text/html and sending a GET request', async () => {
     const yoga = createYoga({
       logging: false,
     })
@@ -37,7 +37,7 @@ describe('404', () => {
       { method: 'GET', headers: { Accept: 'text/html' } },
     )
 
-    expect(response.status).toEqual(404)
+    expect(response.status).toEqual(200)
     const body = await response.text()
     expect(body).toContain('<!DOCTYPE html>')
     expect(body).toContain('GraphQL Yoga')
@@ -66,7 +66,7 @@ describe('404', () => {
             if (request.url.endsWith('/iliketurtles')) {
               endResponse(
                 new fetchAPI.Response('Do you really like em?', {
-                  status: 666,
+                  status: 566,
                 }),
               )
             }
@@ -76,7 +76,7 @@ describe('404', () => {
     })
     const response = await yoga.fetch(`http://localhost:4000/iliketurtles`)
 
-    expect(response.status).toEqual(666)
+    expect(response.status).toEqual(566)
     const body = await response.text()
     expect(body).toEqual('Do you really like em?')
   })

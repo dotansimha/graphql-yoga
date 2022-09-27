@@ -102,14 +102,12 @@ describe('error masking', () => {
     const body = await response.json()
     expect(body.data.hi).toBeNull()
     expect(body.errors?.[0]?.message).toBe('Unexpected error.')
-    expect(body.errors?.[0]?.extensions).toStrictEqual({
-      originalError: {
-        message: 'This error will get mask if you enable maskedError.',
-        stack: expect.stringContaining(
-          'Error: This error will get mask if you enable maskedError.',
-        ),
-      },
-    })
+    expect(body.errors?.[0]?.extensions?.originalError?.message).toBe(
+      'This error will get mask if you enable maskedError.',
+    )
+    expect(body.errors?.[0]?.extensions?.originalError?.stack).toContain(
+      'Error: This error will get mask if you enable maskedError.',
+    )
   })
 
   it('includes the original error in the extensions in dev mode (process.env.NODE_ENV=development)', async () => {
@@ -132,14 +130,12 @@ describe('error masking', () => {
       const body = await response.json()
       expect(body.data.hi).toBeNull()
       expect(body.errors?.[0]?.message).toBe('Unexpected error.')
-      expect(body.errors?.[0]?.extensions).toStrictEqual({
-        originalError: {
-          message: 'This error will get mask if you enable maskedError.',
-          stack: expect.stringContaining(
-            'Error: This error will get mask if you enable maskedError.',
-          ),
-        },
-      })
+      expect(body.errors?.[0]?.extensions?.originalError?.message).toBe(
+        'This error will get mask if you enable maskedError.',
+      )
+      expect(body.errors?.[0]?.extensions?.originalError?.stack).toContain(
+        'Error: This error will get mask if you enable maskedError.',
+      )
     } finally {
       process.env.NODE_ENV = initialEnv
     }
@@ -382,19 +378,13 @@ describe('error masking', () => {
     })
 
     const body = await response.json()
-    expect(body).toStrictEqual({
-      errors: [
-        {
-          message: 'Unexpected error.',
-          extensions: {
-            originalError: {
-              message: 'I am the original error.',
-              stack: expect.stringContaining('Error: I am the original error.'),
-            },
-          },
-        },
-      ],
-    })
+    expect(body.errors[0].message).toEqual('Unexpected error.')
+    expect(body.errors[0].extensions.originalError.message).toEqual(
+      'I am the original error.',
+    )
+    expect(body.errors[0].extensions.originalError.stack).toContain(
+      'Error: I am the original error.',
+    )
     expect(response.status).toEqual(500)
   })
 })

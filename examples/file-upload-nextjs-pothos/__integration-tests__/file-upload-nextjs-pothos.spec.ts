@@ -3,10 +3,7 @@ import { AddressInfo } from 'net'
 import { fetch, File, FormData } from '@whatwg-node/fetch'
 import * as fs from 'fs'
 import * as path from 'path'
-import { createYoga } from 'graphql-yoga'
-import { schema } from '../schema'
-
-const yoga = createYoga({ schema })
+import yoga from '../pages/api/graphql'
 
 describe('file-upload-nextjs-pothos example integration', () => {
   let server: Server
@@ -24,7 +21,7 @@ describe('file-upload-nextjs-pothos example integration', () => {
 
   it('should execute query', async () => {
     const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{greetings}`,
+      `http://localhost:${port}/api/graphql?query=query{greetings}`,
     )
     const body = await response.json()
     expect(body.errors).toBeUndefined()
@@ -65,7 +62,7 @@ describe('file-upload-nextjs-pothos example integration', () => {
       ),
     )
 
-    const response = await fetch(`http://localhost:${port}/graphql`, {
+    const response = await fetch(`http://localhost:${port}/api/graphql`, {
       method: 'POST',
       body: formData,
     })

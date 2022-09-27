@@ -15,15 +15,50 @@ export async function parsePOSTMultipartRequest(
 ): Promise<GraphQLParams> {
   const requestBody = await request.formData()
 
-  const operationsStr = requestBody.get('operations')?.toString() || '{}'
-  const operations = JSON.parse(operationsStr)
-  const mapStr = requestBody.get('map')?.toString() || '{}'
-  const map = JSON.parse(mapStr)
-  for (const fileIndex in map) {
-    const file = requestBody.get(fileIndex)
-    const keys = map[fileIndex]
-    for (const key of keys) {
-      dset(operations, key, file)
+  const operationsStr = requestBody.get('operations')
+
+  if (!operationsStr) {
+    throw createGraphQLError('Missing multipart form field "operations"')
+  }
+
+  if (typeof operationsStr !== 'string') {
+    throw createGraphQLError(
+      'Multipart form field "operations" must be a string',
+    )
+  }
+
+  let operations: GraphQLParams
+
+  try {
+    operations = JSON.parse(operationsStr)
+  } catch (err) {
+    throw createGraphQLError(
+      'Multipart form field "operations" must be a valid JSON string',
+    )
+  }
+
+  const mapStr = requestBody.get('map')
+
+  if (mapStr != null) {
+    if (typeof mapStr !== 'string') {
+      throw createGraphQLError('Multipart form field "map" must be a string')
+    }
+
+    let map: Record<string, string[]>
+
+    try {
+      map = JSON.parse(mapStr)
+    } catch (err) {
+      throw createGraphQLError(
+        'Multipart form field "map" must be a valid JSON string',
+      )
+    }
+    for (const fileIndex in map) {
+      const file = requestBody.get(fileIndex)
+      const keys = map[fileIndex]
+      for (const key of keys) {
+        dset(operations, key, file)
+      }
     }
   }
 

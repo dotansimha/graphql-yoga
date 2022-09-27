@@ -1,65 +1,59 @@
-import { spawn } from 'child_process'
 import { fetch } from '@whatwg-node/fetch'
 
+import { createYoga, createSchema } from 'graphql-yoga'
+
+import { describe, it, expect } from 'bun:test'
+
 describe('Bun integration', () => {
-  let bunProcess: ReturnType<typeof spawn>
-  let serverUrl: string
-
-  beforeAll(async () => {
-    // Start Bun
-    bunProcess = spawn('yarn', ['workspace', 'example-bun', 'start'])
-
-    serverUrl = await new Promise((resolve, reject) => {
-      bunProcess.stderr?.on('data', (chunk) => {
-        const chunkString = chunk.toString('utf-8')
-        console.error(chunk.toString('utf-8'))
-        if (chunkString.includes('Command failed')) {
-          reject(new Error('Bun failed to start'))
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          greetings: String
         }
-      })
-
-      bunProcess.stdout?.on('data', (chunk) => {
-        const chunkString = chunk.toString('utf-8')
-        console.log(chunk.toString('utf-8'))
-        if (chunkString.includes('Server is running on')) {
-          resolve(chunkString.split('Server is running on ')[1])
-        }
-      })
-    })
-  })
-
-  afterAll(() => {
-    bunProcess.kill()
+      `,
+      resolvers: {
+        Query: {
+          greetings: () => 'Hello Bun!',
+        },
+      },
+    }),
   })
 
   it('shows GraphiQL', async () => {
-    const response = await fetch(serverUrl, {
-      method: 'GET',
-      headers: {
-        Accept: 'text/html',
+    const server = Bun.serve(yoga)
+    const response = await fetch(
+      new URL(yoga.graphqlEndpoint, server.hostname).toString(),
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'text/html',
+        },
       },
-    })
-    expect(response.status).toEqual(200)
-    expect(response.headers.get('content-type')).toEqual('text/html')
+    )
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-type')).toBe('text/html')
     const htmlContents = await response.text()
-    expect(htmlContents).toContain('Yoga GraphiQL')
+    expect(htmlContents.includes('GraphiQL')).toBe(true)
+    server.stop()
   })
 
   it('accepts a query', async () => {
-    const response = await fetch(serverUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const server = Bun.serve(yoga)
+    const response = await fetch(
+      new URL(yoga.graphqlEndpoint, server.hostname).toString(),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `{ greetings }`,
+        }),
       },
-      body: JSON.stringify({
-        query: `{ greetings }`,
-      }),
-    })
+    )
     const result = await response.json()
-    expect(result).toEqual({
-      data: {
-        greetings: 'Hello Bun!',
-      },
-    })
+    expect(result.data.greetings).toBe('Hello Bun!')
+    server.stop()
   })
 })

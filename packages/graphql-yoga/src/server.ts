@@ -223,7 +223,8 @@ export class YogaServer<
     this.fetchAPI =
       options?.fetchAPI ??
       createFetch({
-        useNodeFetch: true,
+        // Enable it after leaking issues with node-fetch on Node 18
+        // useNodeFetch: true,
         formDataLimits: {
           fieldsFirst: true,
         },

@@ -6011,7 +6011,21 @@
   resolved "https://registry.yarnpkg.com/@whatwg-node/events/-/events-0.0.2.tgz#7b7107268d2982fc7b7aff5ee6803c64018f84dd"
   integrity sha512-WKj/lI4QjnLuPrim0cfO7i+HsDSXHxNv1y0CrJhdntuO3hxWZmnXCwNDnwOvry11OjRin6cgWNF+j/9Pn8TN4w==
 
-"@whatwg-node/fetch@0.4.5", "@whatwg-node/fetch@^0.4.0":
+"@whatwg-node/fetch@0.4.6":
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.4.6.tgz#d846026687db76565ce8c2a56641e0fc5eb470eb"
+  integrity sha512-DyeD0lN4Bk2Pdd/n4iT7g3rt4ZvvwSq+Yl2eF/Ku+odw1nVS7foww5JlAlwaJA4ZEGiZYT5oDagltX52UWKaXg==
+  dependencies:
+    "@peculiar/webcrypto" "^1.4.0"
+    abort-controller "^3.0.0"
+    busboy "^1.6.0"
+    form-data-encoder "^1.7.1"
+    formdata-node "^4.3.1"
+    node-fetch "^2.6.7"
+    undici "^5.10.0"
+    web-streams-polyfill "^3.2.0"
+
+"@whatwg-node/fetch@^0.4.0":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.4.5.tgz#786fb15f1c4b8588904521ad7272fde83738ac51"
   integrity sha512-goWqxQ/+8pAbbOjdnE4f2BwQXZ9OPR8BE8ZOWP8PIhoTo+6tI1yDouMd1f6OltS6t5cF8bx3HJ/ii6ETg3F1lg==
@@ -6025,12 +6039,12 @@
     undici "^5.8.0"
     web-streams-polyfill "^3.2.0"
 
-"@whatwg-node/server@0.4.7":
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/server/-/server-0.4.7.tgz#7fbd676ca681f421ad1f41831a113a25116662e6"
-  integrity sha512-7XAcD/auQlaeolN4eUyD9Yy7nlsgwk+5UHhKY8uY7dUgakkf8Yn7CbPlKWTSXQUnRk7rw+Ngve4bZ1T6oIcQQw==
+"@whatwg-node/server@0.4.10":
+  version "0.4.10"
+  resolved "https://registry.yarnpkg.com/@whatwg-node/server/-/server-0.4.10.tgz#6ccd115bb97b188237bdd5dc616b64f41e3b1416"
+  integrity sha512-2CrBRD2HE5cAy1NrET2+MIywfHOG1LPHxBDI83xMq6jbztWUoxMJTNrTHtJXL+N1+y1oWt5C+LIPYy77N/8t7g==
   dependencies:
-    "@whatwg-node/fetch" "0.4.5"
+    "@whatwg-node/fetch" "0.4.6"
     tslib "^2.3.1"
 
 "@wry/context@^0.6.0":
@@ -20141,7 +20155,7 @@ unc-path-regex@^0.1.2:
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
   integrity sha1-5z3T17DXxe2G+6xrCufYxqadUPo=
 
-undici@5.10.0, undici@^5.1.0, undici@^5.8.0:
+undici@5.10.0, undici@^5.1.0, undici@^5.10.0, undici@^5.8.0:
   version "5.10.0"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.10.0.tgz#dd9391087a90ccfbd007568db458674232ebf014"
   integrity sha512-c8HsD3IbwmjjbLvoZuRI26TZic+TSEe8FPMLLOkN1AfYRhdjnKBU6yL+IwcSCbdZiX4e5t0lfMDLDCqj4Sq70g==

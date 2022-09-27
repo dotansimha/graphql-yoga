@@ -2,7 +2,7 @@ import { yoga } from '../src/yoga'
 
 describe('pothos example integration', () => {
   it('should query', async () => {
-    const response = await yoga.fetch('/graphql?query={hello}')
+    const response = await yoga.fetch('http://yoga/graphql?query={hello}')
 
     expect(response.status).toBe(200)
     expect(await response.text()).toMatchInlineSnapshot(
@@ -12,7 +12,7 @@ describe('pothos example integration', () => {
 
   it('should subscribe', async () => {
     const response = await yoga.fetch(
-      '/graphql?query=subscription{greetings}',
+      'http://yoga/graphql?query=subscription{greetings}',
       {
         headers: {
           accept: 'text/event-stream',

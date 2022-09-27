@@ -27,7 +27,9 @@ const yoga = createYoga({
 })
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Disabling GraphiQL
@@ -43,7 +45,9 @@ const yoga = createYoga({
 })
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 > Be aware that this does not really make your GraphQL server more secure. As long as the introspection and/or the "did you mean x" suggestion feature of GraphQL are enabled.
@@ -59,7 +63,9 @@ const yoga = createYoga({
 })
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Disabling the "did you mean x" suggestion feature is not possible at the moment ([see the corresponding graphql-js GitHub issue](https://github.com/graphql/graphql-js/issues/2247)).
@@ -81,7 +87,9 @@ const yoga = createYoga({
 })
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 So if your goal is to avoid unknown actors from reverse-engineering your GraphQL schema and executing arbitary operations, it is highly recommended to use persisted operations.
@@ -108,7 +116,9 @@ const yoga = createYoga({
 })
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Within the function passed to `graphiql` you also have access to the `serverContext`.
@@ -130,7 +140,9 @@ const yoga = createYoga({
 })
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Offline Usage

@@ -1,5 +1,6 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 import Koa from 'koa'
+import { Readable } from 'stream'
 
 export function buildApp() {
   const app = new Koa()
@@ -46,7 +47,7 @@ export function buildApp() {
       ctx.append(key, value)
     })
 
-    ctx.body = response.body
+    ctx.body = Readable.from(response.body)
   })
 
   return app
