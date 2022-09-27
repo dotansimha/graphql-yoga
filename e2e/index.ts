@@ -2,6 +2,7 @@ import { LocalWorkspace } from '@pulumi/pulumi/automation'
 import { awsLambdaDeployment } from './tests/aws-lambda'
 import { azureFunctionDeployment } from './tests/azure-function'
 import { cloudFlareDeployment } from './tests/cf-worker'
+import { cfModulesDeployment } from './tests/cf-modules'
 import { dockerDeployment } from './tests/docker'
 import { DeploymentConfiguration } from './types'
 import { env, getCommitId } from './utils'
@@ -9,6 +10,7 @@ import { vercelDeployment } from './tests/vercel'
 
 const AVAILABLE_TEST_PLANS = {
   'cf-worker': cloudFlareDeployment,
+  'cf-modules': cfModulesDeployment,
   'azure-function': azureFunctionDeployment,
   'aws-lambda': awsLambdaDeployment,
   'vercel-function': vercelDeployment,
