@@ -52,8 +52,10 @@ export function createCFDeployment(
 
       // Add endpoint
       content = content.replace(
-        `createYoga({`,
-        `createYoga({ graphqlEndpoint: '/${stackName}',`,
+        `createYoga({
+  schema:`,
+        `createYoga({ graphqlEndpoint: '/${stackName}',
+  schema:`,
       )
 
       // Deploy CF script as Worker
