@@ -45,22 +45,12 @@ export function createCFDeployment(
       const stackName = pulumi.getStack()
       const workerUrl = `e2e.graphql-yoga.com/${stackName}`
 
-      let content = await fsPromises.readFile(
-        `../examples/${projectName}/dist/index.js`,
-        'utf-8',
-      )
-
-      // Add endpoint
-      content = content.replace(
-        `createYoga({
-  schema:`,
-        `createYoga({ graphqlEndpoint: '/${stackName}',
-  schema:`,
-      )
-
       // Deploy CF script as Worker
       const workerScript = new cf.WorkerScript('worker', {
-        content,
+        content: await fsPromises.readFile(
+          `../examples/${projectName}/dist/index.js`,
+          'utf-8',
+        ),
         module: isModule,
         secretTextBindings: [
           {
@@ -79,7 +69,7 @@ export function createCFDeployment(
       })
 
       return {
-        workerUrl: `https://${workerUrl}`,
+        workerUrl: `https://${workerUrl}/graphql`,
       }
     },
     test: async ({ workerUrl }) => {
