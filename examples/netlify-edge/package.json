@@ -3,8 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "postinstall": "yarn build",
-    "start": "netlify dev",
+    "start": "yarn build && netlify dev",
     "build": "node ./build.js",
     "check": "exit 0"
   },
