@@ -52,7 +52,7 @@ export function createCFDeployment(
           'utf-8',
         ),
         module: isModule,
-        secretTextBindings: [
+        plainTextBindings: [
           {
             name: 'GRAPHQL_ROUTE',
             text: `/${stackName}`,
