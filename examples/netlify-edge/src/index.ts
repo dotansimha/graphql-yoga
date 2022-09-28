@@ -4,9 +4,15 @@ const yoga = createYoga({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
-        hello: String
+        greetings: String!
       }
     `,
+    resolvers: {
+      Query: {
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type',
+      },
+    },
   }),
 })
 
