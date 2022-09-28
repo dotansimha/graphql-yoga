@@ -2,11 +2,11 @@ import { yoga } from '../src/yoga'
 
 describe('node-ts example integration', () => {
   it('should execute query', async () => {
-    const response = await yoga.fetch('http://yoga/graphql?query={hello}')
+    const response = await yoga.fetch('http://yoga/graphql?query={greetings}')
 
     expect(response.status).toBe(200)
     expect(await response.text()).toMatchInlineSnapshot(
-      `"{"data":{"hello":"world"}}"`,
+      `"{"data":{"greetings":"This is the \`greetings\` field of the root \`Query\` type"}}"`,
     )
   })
 
