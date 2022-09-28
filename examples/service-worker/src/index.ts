@@ -1,10 +1,6 @@
 import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 
-// We can define GraphQL Route dynamically using env vars.
-declare var GRAPHQL_ROUTE: string
-
 const yoga = createYoga({
-  graphqlEndpoint: GRAPHQL_ROUTE || '/graphql',
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {

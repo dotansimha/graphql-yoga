@@ -31,7 +31,7 @@ export type ChannelPubSubConfig<
    * The event target. If not specified an (in-memory) EventTarget will be created.
    * For multiple server replica or serverless environments a distributed EventTarget is recommended.
    *
-   * An event dispatched on the event target MUST have a `data` property.
+   * An event dispatched on the event target MUST have a `detail` property.
    */
   eventTarget?: PubSubEventTarget<TPubSubPublishArgsByKey>
 }
