@@ -1,9 +1,8 @@
 // src/index.mjs
 import { createYoga, createSchema } from 'graphql-yoga'
 
-const { fetch } = createYoga({
+const yoga = createYoga({
   graphqlEndpoint: '/graphql',
-  landingPage: false,
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
@@ -19,4 +18,6 @@ const { fetch } = createYoga({
   }),
 })
 
-export default { fetch }
+export default {
+  fetch: yoga.fetch,
+}
