@@ -25,7 +25,7 @@ export const yoga = createYoga<ServerContext, UserContext>({
     resolvers: {
       Query: {
         greetings: () =>
-          'This is the `greetings` field of the root `Query` type.',
+          'This is the `greetings` field of the root `Query` type',
       },
       Subscription: {
         greetings: {
