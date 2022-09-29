@@ -1,6 +1,9 @@
 import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 
+declare const GRAPHQL_ENDPOINT: string
+
 const yoga = createYoga({
+  graphqlEndpoint: GRAPHQL_ENDPOINT || '/graphql',
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
