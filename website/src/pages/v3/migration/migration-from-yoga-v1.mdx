@@ -124,11 +124,11 @@ In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.
 import { Plugin, createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
 import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils'
-import { makeExecuteableSchema } from '@graphql-tools/schema'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { defaultFieldResolver } from 'graphql'
 import { typeDefs, resolvers } from './schema'
 
-let schema = makeExecuteableSchema({
+let schema = makeExecutableSchema({
   typeDefs: [
     typeDefs,
     /* GraphQL */ `
@@ -162,7 +162,7 @@ const yoga = createYoga({
 })
 ```
 
-You can learn more about this practise within the [`graphql-tools` schema directives documentation](https://www.graphql-tools.com/docs/schema-directives#using-schema-directives).
+You can learn more about this practice within the [`graphql-tools` schema directives documentation](https://www.graphql-tools.com/docs/schema-directives#using-schema-directives).
 
 ## Context
 
@@ -245,7 +245,7 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
   const permit = ctx.request.get('Authorization') === code
 
   if (!permit) {
-    throw new Error(`Not authorised!`)
+    throw new Error(`Not authorized!`)
   }
 
   return resolve()
@@ -283,7 +283,7 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
   const permit = ctx.request.get('Authorization') === code
 
   if (!permit) {
-    throw new Error(`Not authorised!`)
+    throw new Error(`Not authorized!`)
   }
 
   return resolve()

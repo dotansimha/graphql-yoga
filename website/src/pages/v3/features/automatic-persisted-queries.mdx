@@ -8,7 +8,7 @@ Since the upload speed can be the bottleneck from client to server, reducing the
 GraphQL Yoga's Automatic Persisted Queries plugin follows [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine)
 
 > **NOTE:** Automatic Persisted Queries do not provide any security features, the benefit of using them is to reduce network overhead.
-> If you want to avoid exeucuting arbitary GraphQL operations please use the Persisted Documents plugin.
+> If you want to avoid executing arbitrary GraphQL operations please use the Persisted Documents plugin.
 
 ## Installation
 
@@ -38,7 +38,7 @@ curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
 -d '{"query":"{__typename}","extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
 ```
 
-Then afterwards we can send the same payload againl, but this time omit the `query` field.
+Then afterwards we can send the same payload again, but this time omit the `query` field.
 
 ```bash
 curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
@@ -50,7 +50,7 @@ Especially for big GraphQL document strings, the subsequent payload can be much 
 ## Client Usage
 
 GraphQL clients such `Apollo Client` and `Urql` support Automatic Persisted Queries out of the box.
-Check the corresponding doucmentation for more information.
+Check the corresponding documentation for more information.
 
 - [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
 - [Urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)

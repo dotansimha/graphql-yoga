@@ -92,7 +92,7 @@ useResponseCache({
 })
 ```
 
-## Invalidatios via Mutation
+## Invalidations via Mutation
 
 When executing a mutation operation the cached query results that contain type entities within the Mutation result will be automatically be invalidated.
 
@@ -151,7 +151,7 @@ useResponseCache({
 
 Then in your business logic you can call the `invalidate` method on the cache instance.
 
-Invalidate all GraphQL query results that referance a specific type:
+Invalidate all GraphQL query results that reference a specific type:
 
 ```ts
 cache.invalidate([{ type: 'User' }])
@@ -190,7 +190,7 @@ const redis = new Redis({
   password: '1234567890',
 })
 
-const redis = new Redis('rediss://:1234567890@my-redis-db.example.com:30652')
+const redis = new Redis('redis://:1234567890@my-redis-db.example.com:30652')
 
 const cache = createRedisCache({ redis })
 
