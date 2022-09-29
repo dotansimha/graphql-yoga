@@ -120,13 +120,6 @@ export type YogaServerOptions<
   /**
    * Readiness check endpoint
    *
-   * @default "/readiness"
-   */
-  readinessCheckEndpoint?: string
-
-  /**
-   * Readiness check endpoint
-   *
    * @default "/health"
    */
   healthCheckEndpoint?: string
@@ -331,8 +324,7 @@ export class YogaServer<
       useHealthCheck({
         id: this.id,
         logger: this.logger,
-        healthCheckEndpoint: options?.healthCheckEndpoint,
-        readinessCheckEndpoint: options?.readinessCheckEndpoint,
+        endpoint: options?.healthCheckEndpoint,
       }),
       options?.cors !== false && useCORS(options?.cors),
       options?.graphiql !== false &&
