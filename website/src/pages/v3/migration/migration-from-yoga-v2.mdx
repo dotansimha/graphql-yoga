@@ -156,3 +156,27 @@ new GraphQLError('My error message', {
   },
 })
 ```
+
+**No more `readinessCheckEndpoint`, consider using the `useReadinessCheck` plugin instead**
+
+A readiness health check is not something Yoga can accurately perform as it requires user-land context. Read more about the [new health check](/v3/features/health-check).
+
+```diff
+- import { createServer } from '@graphql-yoga/node'
++ import { createYoga, useReadinessCheck } from 'graphql-yoga'
+import { schema, checkDbAvailable } from './my-service';
+
+- const yoga = createServer({
++ const yoga = createYoga({
+     schema,
+-    readinessCheckEndpoint: '/ready',
++    useReadinessCheck({
++      endpoint: '/ready' // default,
++      check: async () => {
++        // if resolves, respond with 200 OK
++        // if throw, respond with 504 Service Unavailable and error message as plaintext in body
++        await checkDbAvailable()
++      },
++    })
+ })
+```
