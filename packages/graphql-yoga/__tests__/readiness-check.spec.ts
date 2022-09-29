@@ -1,5 +1,5 @@
 import { createYoga, createSchema } from 'graphql-yoga'
-import { useReadinessCheck } from '../src'
+import { useReadinessCheck } from '../src/plugins/useReadinessCheck'
 
 describe('Readiness Check', () => {
   const schema = createSchema({
