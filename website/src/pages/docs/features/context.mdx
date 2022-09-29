@@ -33,10 +33,10 @@ const server = createServer({
       Query: {
         logHeader(_, _args, context) {
           console.log(context.request.headers.get('x-foo'))
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 })
 
 server.start()
@@ -69,11 +69,11 @@ const server = createServer({
       Query: {
         someNumber(_, _args, context) {
           context.someNumber
-        },
-      },
-    },
+        }
+      }
+    }
   },
-  context: { someNumber: 13 },
+  context: { someNumber: 13 }
 })
 
 server.start()
@@ -97,13 +97,13 @@ const server = createServer({
       Query: {
         someNumber(_, _args, context) {
           context.someNumber
-        },
-      },
-    },
+        }
+      }
+    }
   },
   context() {
     return { someNumber: 13 }
-  },
+  }
 })
 
 server.start()
@@ -125,13 +125,13 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        someNumber: (_, _args, context) => context.someNumber,
-      },
-    },
+        someNumber: (_, _args, context) => context.someNumber
+      }
+    }
   },
   async context() {
     return { someNumber: 13 }
-  },
+  }
 })
 
 server.start()
@@ -195,7 +195,7 @@ const graphQLServer = createServer<{
 
 const response = await graphQLServer.handleIncomingMessage(req, {
   req,
-  reply,
+  reply
 })
 ```
 
@@ -218,7 +218,7 @@ const server = createServer({
     // get custom header value
     const foo = request.headers.get('x-foo') ?? null
     return { foo }
-  },
+  }
 })
 
 server.start()

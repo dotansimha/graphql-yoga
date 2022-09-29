@@ -27,8 +27,8 @@ const yoga = createYoga({
     },
     error(...args) {
       logger.error(...args)
-    },
-  },
+    }
+  }
 })
 
 const server = createServer(yoga)
@@ -54,9 +54,9 @@ const yoga = createYoga({
         // Event could be execute-start / execute-end / subscribe-start / subscribe-end / etc.
         // args will include the arguments passed to execute/subscribe (in case of "start" event) and additional result in case of "end" event.
         logger.debug(eventName, ...args)
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 
 const server = createServer(yoga)

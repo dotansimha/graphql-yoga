@@ -21,11 +21,11 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        greetings: () => 'Hello World!',
-      },
-    },
+        greetings: () => 'Hello World!'
+      }
+    }
   }),
-  plugins: [useGraphQlJit()],
+  plugins: [useGraphQlJit()]
 })
 
 // Start the server and explore http://localhost:4000/graphql

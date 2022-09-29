@@ -15,18 +15,18 @@ const resolvers = {
     async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const comment = await context.prisma.comment.create({
         data: {
           body: args.body,
-          linkId: parseInt(args.linkId),
-        },
+          linkId: parseInt(args.linkId)
+        }
       })
 
       return comment
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -140,14 +140,14 @@ const resolvers = {
     async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const comment = await context.prisma.comment
         .create({
           data: {
             body: args.body,
-            linkId: parseInt(args.linkId),
-          },
+            linkId: parseInt(args.linkId)
+          }
         })
         .catch((err: unknown) => {
           if (
@@ -156,16 +156,16 @@ const resolvers = {
           ) {
             return Promise.reject(
               new GraphQLYogaError(
-                `Cannot post comment on non-existing link with id '${args.linkId}'.`,
-              ),
+                `Cannot post comment on non-existing link with id '${args.linkId}'.`
+              )
             )
           }
           return Promise.reject(err)
         })
 
       return comment
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -193,14 +193,14 @@ const resolvers = {
     async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const comment = await context.prisma.comment
         .create({
           data: {
             body: args.body,
-            linkId: parseInt(args.linkId),
-          },
+            linkId: parseInt(args.linkId)
+          }
         })
         .catch((err: unknown) => {
           if (
@@ -209,16 +209,16 @@ const resolvers = {
           ) {
             return Promise.reject(
               new GraphQLError(
-                `Cannot post comment on non-existing link with id '${args.linkId}'.`,
-              ),
+                `Cannot post comment on non-existing link with id '${args.linkId}'.`
+              )
             )
           }
           return Promise.reject(err)
         })
 
       return comment
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -385,14 +385,14 @@ const resolvers = {
     async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const linkId = parseIntSafe(args.linkId)
       if (linkId === null) {
         return Promise.reject(
           new GraphQLYogaError(
-            `Cannot post comment on non-existing link with id '${args.linkId}'.`,
-          ),
+            `Cannot post comment on non-existing link with id '${args.linkId}'.`
+          )
         )
       }
 
@@ -400,24 +400,24 @@ const resolvers = {
         .create({
           data: {
             body: args.body,
-            linkId,
-          },
+            linkId
+          }
         })
         .catch((err: unknown) => {
           if (err instanceof PrismaClientKnownRequestError) {
             if (err.code === 'P2003') {
               return Promise.reject(
                 new GraphQLYogaError(
-                  `Cannot post comment on non-existing link with id '${args.linkId}'.`,
-                ),
+                  `Cannot post comment on non-existing link with id '${args.linkId}'.`
+                )
               )
             }
           }
           return Promise.reject(err)
         })
       return comment
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -444,14 +444,14 @@ const resolvers = {
     async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const linkId = parseIntSafe(args.linkId)
       if (linkId === null) {
         return Promise.reject(
           new GraphQLError(
-            `Cannot post comment on non-existing link with id '${args.linkId}'.`,
-          ),
+            `Cannot post comment on non-existing link with id '${args.linkId}'.`
+          )
         )
       }
 
@@ -459,24 +459,24 @@ const resolvers = {
         .create({
           data: {
             body: args.body,
-            linkId,
-          },
+            linkId
+          }
         })
         .catch((err: unknown) => {
           if (err instanceof PrismaClientKnownRequestError) {
             if (err.code === 'P2003') {
               return Promise.reject(
                 new GraphQLError(
-                  `Cannot post comment on non-existing link with id '${args.linkId}'.`,
-                ),
+                  `Cannot post comment on non-existing link with id '${args.linkId}'.`
+                )
               )
             }
           }
           return Promise.reject(err)
         })
       return comment
-    },
-  },
+    }
+  }
 }
 ```
 

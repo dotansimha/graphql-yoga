@@ -55,12 +55,12 @@ import { deepEqual } from 'assert'
 const yoga = createYoga()
 
 const response = await request(yoga).post('/graphql').send({
-  query: '{ greetings }',
+  query: '{ greetings }'
 })
 
 deepEqual(response.status, 200)
 deepEqual(
   response.body.data.greetings,
-  'This is the `greetings` field of the root `Query` type',
+  'This is the `greetings` field of the root `Query` type'
 )
 ```

@@ -83,9 +83,9 @@ import { CatsModule } from './cats/cats.module'
     GraphQLModule.forRoot<YogaDriverConfig>({
       driver: YogaDriver,
       typePaths: ['./**/*.graphql'],
-      installSubscriptionHandlers: true,
-    }),
-  ],
+      installSubscriptionHandlers: true
+    })
+  ]
 })
 export class AppModule {}
 ```
@@ -151,9 +151,9 @@ import { RecipesModule } from './recipes/recipes.module'
     RecipesModule,
     GraphQLModule.forRoot<YogaDriverConfig>({
       driver: YogaDriver,
-      autoSchemaFile: 'schema.gql',
-    }),
-  ],
+      autoSchemaFile: 'schema.gql'
+    })
+  ]
 })
 export class AppModule {}
 ```

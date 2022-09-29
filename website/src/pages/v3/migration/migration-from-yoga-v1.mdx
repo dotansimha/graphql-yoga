@@ -32,7 +32,7 @@ import { createServer } from 'http'
 import { typeDefs, resolvers } from './schema'
 
 const yoga = createYoga({
-  schema: createSchema({ typeDefs, resolvers }),
+  schema: createSchema({ typeDefs, resolvers })
 })
 
 const server = createServer(yoga)
@@ -54,7 +54,7 @@ import { resolvers } from './schema'
 
 const server = new GraphQLServer({
   typeDefs: path.join(__dirname, 'type-definitions.graphql'),
-  resolvers,
+  resolvers
 })
 
 server.start()
@@ -75,10 +75,10 @@ const yoga = createYoga({
   schema: createSchema({
     typeDefs: fs.readFileSync(
       path.join(__dirname, 'type-definitions.graphql'),
-      'utf-8',
+      'utf-8'
     ),
-    resolvers,
-  }),
+    resolvers
+  })
 })
 
 const server = createServer(yoga)
@@ -106,7 +106,7 @@ const server = new GraphQLServer({
       hi: String
     }
   `,
-  directiveResolvers: uppercaseDirectiveResolverImplementation,
+  directiveResolvers: uppercaseDirectiveResolverImplementation
 })
 
 server.start()
@@ -133,9 +133,9 @@ let schema = makeExecutableSchema({
     typeDefs,
     /* GraphQL */ `
       directive @uppercase on FIELD_DEFINITION
-    `,
+    `
   ],
-  resolvers,
+  resolvers
 })
 
 schema = mapSchema(schema, {
@@ -151,15 +151,13 @@ schema = mapSchema(schema, {
             return result.toUpperCase()
           }
           return result
-        },
+        }
       }
     }
-  },
+  }
 })
 
-const yoga = createYoga({
-  schema,
-})
+const yoga = createYoga({ schema })
 ```
 
 You can learn more about this practice within the [`graphql-tools` schema directives documentation](https://www.graphql-tools.com/docs/schema-directives#using-schema-directives).
@@ -183,10 +181,10 @@ import { db } from './db'
 const server = new GraphQLServer({
   typeDefs,
   resolvers,
-  context: (initialContext) => {
+  context(initialContext) {
     const authHeader = initialContext.request.headers['authorization'] ?? null
     return { ...initialContext, db, authHeader }
-  },
+  }
 })
 
 const server = createServer(yoga)
@@ -204,16 +202,13 @@ import { typeDefs, resolvers } from './schema'
 import { db } from './db'
 
 const yoga = createYoga({
-  schema: createSchema({
-    typeDefs,
-    resolvers,
-  }),
-  context: (initialContext) => {
+  schema: createSchema({ typeDefs, resolvers }),
+  context(initialContext) {
     const authHeader =
       initialContext.request.headers.get('authorization') ?? null
 
     return { db, authHeader }
-  },
+  }
 })
 
 const server = createServer(yoga)
@@ -253,15 +248,15 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
 
 const permissions = {
   Query: {
-    secured: isLoggedIn,
+    secured: isLoggedIn
   },
-  Me: isLoggedIn,
+  Me: isLoggedIn
 }
 
 const server = new GraphQLServer({
   typeDefs,
   resolvers,
-  middleware: [permissions],
+  middleware: [permissions]
 })
 
 server.start()
@@ -291,14 +286,14 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
 
 const permissions = {
   Query: {
-    secured: isLoggedIn,
+    secured: isLoggedIn
   },
-  Me: isLoggedIn,
+  Me: isLoggedIn
 }
 
 const yoga = createYoga({
   schema: createSchema({ typeDefs, resolvers }),
-  plugins: [useGraphQLMiddleware([permissions])],
+  plugins: [useGraphQLMiddleware([permissions])]
 })
 
 const server = createServer(yoga)
@@ -389,18 +384,18 @@ const server = new GraphQLServer({
   resolvers: {
     Subscription: {
       randomNumber: {
-        subscribe: (_, _, context) => {
+        subscribe: (_, _2, context) => {
           return context.asyncIterator('randomNumber')
         },
-        resolve: (value) => value,
-      },
+        resolve: (value) => value
+      }
     },
     Mutation: {
       publishRandomNumber: (_, args, context) => {
         context.pubSub.publish('randomNumber', args.randomNumber)
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 server.start()
@@ -435,19 +430,19 @@ const yoga = createYoga({
     resolvers: {
       Subscription: {
         randomNumber: {
-          subscribe: (_, _, context) => {
+          subscribe: (_, _2, context) => {
             return context.subscribe('randomNumber')
           },
-          resolve: (value) => value,
-        },
+          resolve: (value) => value
+        }
       },
       Mutation: {
         publishRandomNumber: (_, args, context) => {
           context.pubSub.publish('randomNumber', args.randomNumber)
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)
@@ -487,20 +482,20 @@ const server = new GraphQLServer({
     Subscription: {
       randomNumber: {
         subscribe: withFilter(
-          (_, _, context) => {
+          (_, _2, context) => {
             return context.asyncIterator('randomNumber')
           },
-          (payload, args) => payload > args,
+          (payload, args) => payload > args
         ),
-        resolve: (value) => value,
-      },
+        resolve: (value) => value
+      }
     },
     Mutation: {
       publishRandomNumber: (_, args, context) => {
         context.pubSub.publish('randomNumber', args.randomNumber)
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 server.start()
@@ -538,19 +533,19 @@ const yoga = createYoga({
           subscribe: (_, args, context) => {
             return pipe(
               context.subscribe('randomNumber'),
-              filter((value) => value > args.greaterThan),
+              filter((value) => value > args.greaterThan)
             )
           },
-          resolve: (value) => value,
-        },
+          resolve: (value) => value
+        }
       },
       Mutation: {
         publishRandomNumber: (_, args, context) => {
           context.pubSub.publish('randomNumber', args.randomNumber)
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)

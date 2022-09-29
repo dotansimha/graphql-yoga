@@ -69,12 +69,12 @@ export type GraphQLContext = {
 }
 
 export async function createContext(
-  initialContext: YogaInitialContext,
+  initialContext: YogaInitialContext
 ): Promise<GraphQLContext> {
   return {
     prisma,
     currentUser: await authenticateUser(prisma, initialContext.request),
-    pubSub,
+    pubSub
   }
 }
 ```
@@ -136,9 +136,9 @@ const resolvers = {
   Subscription: {
     newLink: {
       subscribe: (parent: unknown, args: {}, context: GraphQLContext) =>
-        context.pubSub.subscribe('newLink'),
-    },
-  },
+        context.pubSub.subscribe('newLink')
+    }
+  }
 }
 
 // ... other code ...
@@ -160,7 +160,7 @@ const resolvers = {
     async post(
       parent: unknown,
       args: { url: string; description: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       if (context.currentUser === null) {
         throw new GraphQLYogaError('Unauthenticated!')
@@ -170,15 +170,15 @@ const resolvers = {
         data: {
           url: args.url,
           description: args.description,
-          postedBy: { connect: { id: context.currentUser.id } },
-        },
+          postedBy: { connect: { id: context.currentUser.id } }
+        }
       })
 
       context.pubSub.publish('newLink', { newLink })
 
       return newLink
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -362,7 +362,7 @@ const resolvers = {
     async vote(
       parent: unknown,
       args: { linkId: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       // 1
       if (!context.currentUser) {
@@ -377,9 +377,9 @@ const resolvers = {
         where: {
           linkId_userId: {
             linkId: Number(args.linkId),
-            userId: userId,
-          },
-        },
+            userId: userId
+          }
+        }
       })
 
       if (vote !== null) {
@@ -390,16 +390,16 @@ const resolvers = {
       const newVote = await context.prisma.vote.create({
         data: {
           user: { connect: { id: userId } },
-          link: { connect: { id: Number(args.linkId) } },
-        },
+          link: { connect: { id: Number(args.linkId) } }
+        }
       })
 
       // 5
       context.pubSub.publish('newVote', { newVote })
 
       return newVote
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -446,8 +446,8 @@ const resolvers = {
   Link: {
     // ... other Link field resolver functions ...
     votes: (parent: Link, args: {}, context: GraphQLContext) =>
-      context.prisma.link.findUnique({ where: { id: parent.id } }).votes(),
-  },
+      context.prisma.link.findUnique({ where: { id: parent.id } }).votes()
+  }
 }
 ```
 
@@ -462,8 +462,8 @@ const resolvers = {
     link: (parent: User, args: {}, context: GraphQLContext) =>
       context.prisma.vote.findUnique({ where: { id: parent.id } }).link(),
     user: (parent: User, args: {}, context: GraphQLContext) =>
-      context.prisma.vote.findUnique({ where: { id: parent.id } }).user(),
-  },
+      context.prisma.vote.findUnique({ where: { id: parent.id } }).user()
+  }
 }
 ```
 
@@ -493,9 +493,9 @@ const resolvers = {
     // ... other Subscription field resolvers ...
     newVote: {
       subscribe: (parent: unknown, args: {}, context: GraphQLContext) =>
-        context.pubSub.subscribe('newVote'),
-    },
-  },
+        context.pubSub.subscribe('newVote')
+    }
+  }
 }
 ```
 

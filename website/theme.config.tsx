@@ -6,19 +6,11 @@ import {
   Header,
   Navbar,
   mdxComponents,
+  Giscus,
 } from '@theguild/components'
-// @ts-ignore -- TODO: @laurin why I get TS2307: Cannot find module '@theguild/components/giscus' or its corresponding type declarations.
-import type { Giscus } from '@theguild/components/giscus'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 
 const SITE_NAME = 'GraphQL Yoga'
-
-const Comments = dynamic(
-  // @ts-ignore
-  () => import('@theguild/components/giscus').then((m) => m.Giscus),
-  { ssr: false },
-) as Giscus
 
 const config: DocsThemeConfig = {
   chat: {
@@ -26,7 +18,7 @@ const config: DocsThemeConfig = {
   },
   components: mdxComponents,
   docsRepositoryBase:
-    'https://github.com/dotansimha/graphql-yoga/tree/v2/website/src/pages', // base URL for the docs repository
+    'https://github.com/dotansimha/graphql-yoga/tree/v3/website',
   editLink: {
     text: 'Edit this page on GitHub',
   },
@@ -61,7 +53,7 @@ const config: DocsThemeConfig = {
       const { route } = useRouter()
       if (route.startsWith('/docs') || route.startsWith('/tutorial')) {
         return (
-          <Comments
+          <Giscus
             repo="dotansimha/graphql-yoga"
             repoId="MDEwOlJlcG9zaXRvcnkxMTA4MTk5Mzk="
             category="Docs Discussion"

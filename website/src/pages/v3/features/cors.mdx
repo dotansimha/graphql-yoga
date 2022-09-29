@@ -35,8 +35,8 @@ const yogaApp = createYoga({
     origin: 'http://localhost:4000',
     credentials: true,
     allowedHeaders: ['X-Custom-Header'],
-    methods: ['POST'],
-  },
+    methods: ['POST']
+  }
   /* ...other args */
 })
 ```
@@ -64,9 +64,9 @@ const yogaApp = createYoga({
       origin: requestOrigin,
       credentials: true,
       allowedHeaders: ['X-Custom-Header'],
-      methods: ['POST'],
+      methods: ['POST']
     }
-  },
+  }
 })
 ```
 
@@ -88,8 +88,8 @@ You can disable CORS on your Yoga server by simply passing `false` as the cors p
 import { createYoga } from 'graphql-yoga'
 
 const yogaApp = createYoga({
-  cors: false,
-  /* ...other args */
+  cors: false
+  // ...other args
 })
 ```
 

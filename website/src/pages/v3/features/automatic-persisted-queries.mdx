@@ -22,7 +22,7 @@ import { createServer } from 'node:http'
 import { useAPQ } from '@graphql-yoga/plugin-apq'
 
 const yoga = createYoga({
-  plugins: [useAPQ()],
+  plugins: [useAPQ()]
 })
 
 const server = createServer(yoga)
@@ -70,7 +70,7 @@ import { useAPQ } from '@graphql-yoga/plugin-apq'
 const store: APQStore = new Map()
 
 const yoga = createYoga({
-  plugins: [useAPQ({ store })],
+  plugins: [useAPQ({ store })]
 })
 
 const server = createServer(yoga)

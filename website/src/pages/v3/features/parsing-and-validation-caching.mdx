@@ -14,7 +14,7 @@ import { schema } from './my-schema'
 const yoga = createYoga({
   schema,
   parserCache: false, // disable parse caching
-  validationCache: false, // disable validation caching
+  validationCache: false // disable validation caching
 })
 
 const server = createServer(yoga)
@@ -33,7 +33,7 @@ import { schema } from './my-schema'
 import {
   documentCacheStore,
   errorCacheStore,
-  validationCacheStore,
+  validationCacheStore
 } from './my-cache'
 
 interface CacheStore<T> {
@@ -45,9 +45,9 @@ const yoga = createYoga({
   schema,
   parserCache: {
     documentCache: documentCacheStore as CacheStore<DocumentNode>,
-    errorCache: errorCacheStore as CacheStore<Error>,
+    errorCache: errorCacheStore as CacheStore<Error>
   },
-  validationCache: validationCacheStore as CacheStore<readonly GraphQLError[]>,
+  validationCache: validationCacheStore as CacheStore<readonly GraphQLError[]>
 })
 
 const server = createServer(yoga)
