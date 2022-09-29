@@ -1,8 +1,8 @@
 import { PackageCmd } from '@theguild/components'
 
-# Persisted operations
+# Persisted Operations
 
-Persisted operations is a mechanism for preventing the execution of arbitary GraphQL operation documents.
+Persisted operations is a mechanism for preventing the execution of arbitrary GraphQL operation documents.
 By default, the persisted operations plugin follows the [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine) for **SENDING** hashes to the server.
 However, you can change this behavior by overriding the `getPersistedOperationKey` option to support Relay's specification for example.
 
