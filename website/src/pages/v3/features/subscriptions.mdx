@@ -1,9 +1,6 @@
----
-id: subscriptions
-title: Subscriptions
----
-
 import { PackageCmd } from '@theguild/components'
+
+# Subscriptions
 
 A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the server to the client that issued the subscription.
 
@@ -131,7 +128,7 @@ eventsource.onmessage = function (event) {
 
 ### Client usage with Apollo
 
-You need to use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads in Apollo Client.import { PackageCmd } from '@theguild/components';
+You need to use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads in Apollo Client.
 
 <PackageCmd packages={['@graphql-yoga/urql-exchange']} />
 
@@ -149,7 +146,7 @@ const client = new ApolloClient({
 
 ### Client usage with Urql
 
-You need to install `@urql/exchange-graphql` for GraphQL Yoga, and use `yogaExchange` from that package.import { PackageCmd } from '@theguild/components';
+You need to install `@urql/exchange-graphql` for GraphQL Yoga, and use `yogaExchange` from that package.
 
 <PackageCmd packages={['@graphql-yoga/urql-exchange']} />
 

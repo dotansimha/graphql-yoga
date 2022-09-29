@@ -1,9 +1,6 @@
----
-id: response-caching
-title: Response Caching
----
-
 import { PackageCmd } from '@theguild/components'
+
+# Response caching
 
 Response caching is a technique for reducing server load by caching GraphQL query operation results.
 
@@ -179,7 +176,7 @@ cache.invalidate([
 
 By default the response cache stores all the cached query results in memory.
 
-If you want a cache that is shared between multiple server instances you can use the Redis cache implementation.import { PackageCmd } from '@theguild/components';
+If you want a cache that is shared between multiple server instances you can use the Redis cache implementation.
 
 <PackageCmd packages={['@envelop/response-cache-redis']} />
 
