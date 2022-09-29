@@ -112,8 +112,8 @@ describe('Readiness Check', () => {
       schema,
       plugins: [
         useReadinessCheck({
-          check: async () => {
-            return new Response(message, { status: 201 })
+          check: async ({ fetchAPI }) => {
+            return new fetchAPI.Response(message, { status: 201 })
           },
         }),
       ],

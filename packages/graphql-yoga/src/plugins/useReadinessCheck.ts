@@ -1,4 +1,4 @@
-import { Plugin } from 'graphql-yoga'
+import { Plugin, FetchAPI } from 'graphql-yoga'
 
 export interface ReadinessCheckPluginOptions {
   /**
@@ -20,9 +20,10 @@ export interface ReadinessCheckPluginOptions {
    * Beware that if an instance of `Error` is thrown, its message will be present in the
    * response body. Be careful which information you expose.
    */
-  check: (
-    request: Request,
-  ) => void | boolean | Response | Promise<void | boolean | Response>
+  check: (payload: {
+    request: Request
+    fetchAPI: FetchAPI
+  }) => void | boolean | Response | Promise<void | boolean | Response>
 }
 
 /**
@@ -38,7 +39,7 @@ export function useReadinessCheck({
       if (requestPath === endpoint) {
         let response: Response
         try {
-          const readyOrResponse = await check(request)
+          const readyOrResponse = await check({ request, fetchAPI })
           if (typeof readyOrResponse === 'object') {
             response = readyOrResponse
           } else {
