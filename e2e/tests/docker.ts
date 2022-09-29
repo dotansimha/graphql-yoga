@@ -1,14 +1,24 @@
 import { DeploymentConfiguration } from '../types'
-import { assertGraphiQL, assertQuery, waitForEndpoint } from '../utils'
+import {
+  assertGraphiQL,
+  assertQuery,
+  execPromise,
+  waitForEndpoint,
+} from '../utils'
 import * as docker from '@pulumi/docker'
 import { interpolate } from '@pulumi/pulumi'
-import { resolve } from 'path'
+import { join, resolve } from 'path'
 
 export const dockerDeployment = (
   image: string,
 ): DeploymentConfiguration<{
   endpoint: string
 }> => ({
+  prerequisites: async () => {
+    await execPromise('yarn build', {
+      cwd: '../examples/node-ts',
+    })
+  },
   program: async () => {
     const remoteImage = new docker.RemoteImage('node-image', {
       name: image,
@@ -17,14 +27,14 @@ export const dockerDeployment = (
 
     const container = new docker.Container('container', {
       image: remoteImage.repoDigest,
-      command: [`npx`, '.'],
+      command: [`node`, 'index.js'],
       volumes: [
         {
           containerPath: '/app',
-          hostPath: resolve('../'),
+          hostPath: resolve('../examples/node-ts/dist'),
         },
       ],
-      workingDir: '/app/packages/graphql-yoga/dist',
+      workingDir: '/app',
       ports: [
         {
           internal: 4000,
@@ -38,7 +48,7 @@ export const dockerDeployment = (
     )
 
     return {
-      endpoint: interpolate`http://${endpoint}`,
+      endpoint: interpolate`http://${endpoint}/graphql`,
     }
   },
   test: async ({ endpoint }) => {
