@@ -6,7 +6,8 @@ import {
   Header,
   Navbar,
   mdxComponents,
-  Giscus,
+  useTheme,
+  Giscus
 } from '@theguild/components'
 import { useRouter } from 'next/router'
 
@@ -50,18 +51,24 @@ const config: DocsThemeConfig = {
   ),
   main: {
     extraContent() {
+      const { resolvedTheme } = useTheme()
       const { route } = useRouter()
-      if (route.startsWith('/docs') || route.startsWith('/tutorial')) {
-        return (
-          <Giscus
-            repo="dotansimha/graphql-yoga"
-            repoId="MDEwOlJlcG9zaXRvcnkxMTA4MTk5Mzk="
-            category="Docs Discussion"
-            categoryId="DIC_kwDOBpr6Y84CAquY"
-          />
-        )
+
+      if (route === '/') {
+        return null
       }
-      return null
+      return (
+        <Giscus
+          // ensure giscus is reloaded when client side route is changed
+          key={route}
+          repo="dotansimha/graphql-yoga"
+          repoId="MDEwOlJlcG9zaXRvcnkxMTA4MTk5Mzk="
+          category="Docs Discussion"
+          categoryId="DIC_kwDOBpr6Y84CAquY"
+          mapping="pathname"
+          theme={resolvedTheme}
+        />
+      )
     },
   },
   navbar: (props) => (
