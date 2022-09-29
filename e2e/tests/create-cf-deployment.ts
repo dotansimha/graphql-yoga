@@ -52,10 +52,10 @@ export function createCFDeployment(
           'utf-8',
         ),
         module: isModule,
-        secretTextBindings: [
+        plainTextBindings: [
           {
             name: 'GRAPHQL_ENDPOINT',
-            value: stackName,
+            text: stackName,
           },
           {
             name: 'DEBUG',
