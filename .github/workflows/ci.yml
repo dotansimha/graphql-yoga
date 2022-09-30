@@ -32,7 +32,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./examples/deno
-        run: deno test ./test.ts
+        run: deno test --no-check ./test.ts
 
   integration:
     name: integration / nodejs v${{ matrix.node-version }}
