@@ -1,10 +1,11 @@
 import { DbDrop, MigrateDev } from '@prisma/migrate'
 import { PrismaClient } from '@prisma/client'
-import { createYoga } from 'graphql-yoga'
+import { createYoga, YogaServerInstance } from 'graphql-yoga'
 import { schema } from '../src/schema'
+import type { GraphQLContext } from '../src/context'
 
 describe.skip('hackernews example integration', () => {
-  let yoga: ReturnType<typeof createYoga>
+  let yoga: YogaServerInstance<Record<string, any>, GraphQLContext>
   beforeAll(async () => {
     const { createContext } = await import('../src/context')
     yoga = createYoga({ schema, context: createContext })
