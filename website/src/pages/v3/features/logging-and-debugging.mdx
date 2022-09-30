@@ -1,10 +1,10 @@
-# Logging and debugging
+# Logging and Debugging
 
 ## Logging
 
 The default logger in Yoga is the [JavaScript console](https://developer.mozilla.org/en-US/docs/Web/API/console) and its respective methods ([debug](https://developer.mozilla.org/en-US/docs/Web/API/console/debug) _when `DEBUG=1` in environment_, [info](https://developer.mozilla.org/en-US/docs/Web/API/console/info), [warn](https://developer.mozilla.org/en-US/docs/Web/API/console/warn) and [error](https://developer.mozilla.org/en-US/docs/Web/API/console/error)) matching the log level.
 
-You can of course provide your own logger for piping to your favourite logging service/utility:
+You can of course provide your own logger for piping to your favorite logging service/utility:
 
 ```ts
 import { createYoga } from 'graphql-yoga'
@@ -76,4 +76,4 @@ Note that Yoga can run in debug when having `DEBUG=1` in the environment. Doing 
 - Received GraphQL operation variables
 - Execution or subscription end
 - [GraphiQL](https://github.com/graphql/graphiql) rendering
-- Healthcheck and readiness checks
+- Health checks

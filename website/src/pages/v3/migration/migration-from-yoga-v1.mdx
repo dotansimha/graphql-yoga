@@ -1,14 +1,10 @@
----
-id: migration-from-yoga-v1
-title: Migration from Yoga V1
-type: Guide
----
-
 import { PackageCmd } from '@theguild/components'
+
+# Migration from Yoga V1
 
 ## Installation
 
-You can start with updating `graphql-yoga` package.import { PackageCmd } from '@theguild/components';
+You can start with updating `graphql-yoga` package.
 
 <PackageCmd packages={['graphql-yoga']} />
 
@@ -118,7 +114,7 @@ server.start()
 
 Before deciding upon using schema directives, you should consider whether your custom directive could be instead implemented via a field argument (abstraction).
 
-In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.import { PackageCmd } from '@theguild/components';
+In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.
 
 <PackageCmd packages={['@graphql-tools/utils', '@graphql-tools/schema']} />
 
@@ -128,11 +124,11 @@ In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.import { 
 import { Plugin, createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
 import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils'
-import { makeExecuteableSchema } from '@graphql-tools/schema'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { defaultFieldResolver } from 'graphql'
 import { typeDefs, resolvers } from './schema'
 
-let schema = makeExecuteableSchema({
+let schema = makeExecutableSchema({
   typeDefs: [
     typeDefs,
     /* GraphQL */ `
@@ -166,7 +162,7 @@ const yoga = createYoga({
 })
 ```
 
-You can learn more about this practise within the [`graphql-tools` schema directives documentation](https://www.graphql-tools.com/docs/schema-directives#using-schema-directives).
+You can learn more about this practice within the [`graphql-tools` schema directives documentation](https://www.graphql-tools.com/docs/schema-directives#using-schema-directives).
 
 ## Context
 
@@ -231,7 +227,7 @@ server.listen(4000, () => {
 GraphQL Yoga v1 included [`graphql-middleware`](https://github.com/maticzav/graphql-middleware) for wrapping resolver functions with common logic.
 GraphQL Yoga v2 no longer includes `graphql-middleware` by default as using it can result in bad performance as it wraps all field resolvers within the schema.
 
-If you cannot migrate your `graphql-middleware` code to something like [`graphql-tool` `mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://www.npmjs.com/package/@envelop/graphql-middleware) plugin.import { PackageCmd } from '@theguild/components';
+If you cannot migrate your `graphql-middleware` code to something like [`graphql-tool` `mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://www.npmjs.com/package/@envelop/graphql-middleware) plugin.
 
 <PackageCmd packages={['@envelop/graphql-middleware']} />
 
@@ -249,7 +245,7 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
   const permit = ctx.request.get('Authorization') === code
 
   if (!permit) {
-    throw new Error(`Not authorised!`)
+    throw new Error(`Not authorized!`)
   }
 
   return resolve()
@@ -287,7 +283,7 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
   const permit = ctx.request.get('Authorization') === code
 
   if (!permit) {
-    throw new Error(`Not authorised!`)
+    throw new Error(`Not authorized!`)
   }
 
   return resolve()

@@ -1,21 +1,16 @@
----
-id: quick-start
-title: Quick Start
----
+import { PackageCmd, Tabs, Tab } from '@theguild/components'
+
+# Quick start
 
 GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga) GraphQL server powered by [Envelop](https://envelop.dev) and [GraphQL Tools](https://graphql-tools.com) that runs anywhere; focused on easy setup, performance and great developer experience.
 
 ## Installation
-
-import { PackageCmd } from '@theguild/components'
 
 <PackageCmd packages={['graphql graphql-yoga']} />
 
 ## Schema
 
 You will need to provide a schema to Yoga, there are many ways to assemble a GraphQL schema, here's just a few:
-
-import { Tabs, Tab } from '@theguild/components'
 
 <Tabs items={['graphql-yoga', '@graphql-tools/schema', 'Pothos', 'GraphQL Nexus', 'gqtx', 'graphql-js']}>
   <Tab>

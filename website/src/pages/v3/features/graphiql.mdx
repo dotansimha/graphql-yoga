@@ -1,9 +1,6 @@
----
-id: graphiql
-title: GraphiQL
----
-
 import { PackageCmd } from '@theguild/components'
+
+# GraphiQL
 
 [GraphiQL is an in-browser IDE for writing, validating, and testing GraphQL queries.](https://github.com/graphql/graphiql)
 
@@ -92,7 +89,7 @@ server.listen(4000, () => {
 })
 ```
 
-So if your goal is to avoid unknown actors from reverse-engineering your GraphQL schema and executing arbitary operations, it is highly recommended to use persisted operations.
+So if your goal is to avoid unknown actors from reverse-engineering your GraphQL schema and executing arbitrary operations, it is highly recommended to use persisted operations.
 Envelop has the plugin [`@envelop/persisted-operations`](https://www.npmjs.com/package/@envelop/persisted-operations) that can be used with GraphQL Yoga.
 
 A more detailed guide and example for adding persisted operations to GraphQL Yoga will follow.
@@ -148,7 +145,7 @@ server.listen(4000, () => {
 ## Offline Usage
 
 By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc).
-If you want to use GraphiQL from a local version, you need to install it manually.import { PackageCmd } from '@theguild/components';
+If you want to use GraphiQL from a local version, you need to install it manually.
 
 <PackageCmd packages={['@graphql-yoga/render-graphiql']} />
 

@@ -1,9 +1,6 @@
----
-id: subscriptions
-title: Subscriptions
----
-
 import { PackageCmd } from '@theguild/components'
+
+# Subscriptions
 
 A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the server to the client that issued the subscription.
 
@@ -131,7 +128,7 @@ eventsource.onmessage = function (event) {
 
 ### Client usage with Apollo
 
-You need to use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads in Apollo Client.import { PackageCmd } from '@theguild/components';
+You need to use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads in Apollo Client.
 
 <PackageCmd packages={['@graphql-yoga/urql-exchange']} />
 
@@ -149,7 +146,7 @@ const client = new ApolloClient({
 
 ### Client usage with Urql
 
-You need to install `@urql/exchange-graphql` for GraphQL Yoga, and use `yogaExchange` from that package.import { PackageCmd } from '@theguild/components';
+You need to install `@urql/exchange-graphql` for GraphQL Yoga, and use `yogaExchange` from that package.
 
 <PackageCmd packages={['@graphql-yoga/urql-exchange']} />
 
@@ -234,13 +231,13 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 
 ### SSE vs WebSocket
 
-#### Advantages of SSE over Websockets#
+#### Advantages of SSE over WebSockets
 
 - Transported over simple HTTP instead of a custom protocol
 - Built in support for re-connection and event-id Simpler protocol
 - No trouble with corporate firewalls doing packet inspection
 
-#### Advantages of Websockets over SSE
+#### Advantages of WebSockets over SSE
 
 - Real time, two directional communication.
 - Lower latency

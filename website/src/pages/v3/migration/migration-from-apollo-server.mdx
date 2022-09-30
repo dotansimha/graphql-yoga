@@ -1,14 +1,10 @@
----
-id: migration-from-apollo-server
-title: Migration from Apollo Server
-type: Guide
----
-
 import { PackageCmd } from '@theguild/components'
+
+# Migration from Apollo Server
 
 ## Installation
 
-You can start with installing `graphql-yoga` package.import { PackageCmd } from '@theguild/components';
+You can start with installing `graphql-yoga` package.
 
 <PackageCmd packages={['graphql-yoga']} />
 
@@ -79,7 +75,7 @@ GraphQL Yoga does not support batched queries for the following reasons:
 
 Because the GraphQL server does not start sending a response to the client until all the queries are completed, a slow query will prevent a faster query result to be already processed/shown to the end user.
 
-**_Batched queries can ba achieved by componsing multiple GraphQL fragments/operation into a single one._**
+**_Batched queries can ba achieved by composing multiple GraphQL fragments/operation into a single one._**
 
 Instead of having two operations:
 

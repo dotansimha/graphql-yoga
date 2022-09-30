@@ -1,15 +1,11 @@
----
-id: migration-from-yoga-v2
-title: Migration from Yoga V2
-type: Guide
----
-
 import { PackageCmd } from '@theguild/components'
+
+# Migration from Yoga V2
 
 ## Install the new NPM package
 
 Now GraphQL Yoga has a single NPM package for all environments `graphql-yoga` instead of `@graphql-yoga/common` and `@graphql-yoga/node`.
-So you need to uninstall `@graphql-yoga/common` and `@graphql-yoga/node` then install `graphql-yoga` from NPM.import { PackageCmd } from '@theguild/components';
+So you need to uninstall `@graphql-yoga/common` and `@graphql-yoga/node` then install `graphql-yoga` from NPM.
 
 <PackageCmd packages={['graphql-yoga']} />
 
@@ -92,7 +88,7 @@ Previously it was possible to configure limitations of multipart request process
 
 **`endpoint` and `graphiql.endpoint` options are now removed**
 In v2, there is `endpoint` option which is used to configure the GraphQL endpoint, and `graphiql.endpoint` to point `GraphiQL` to a different GraphQL API.
-Now they are removed in favor `graphqlEndpoint` option. If you want to use `YogaGraphiQL` for a different GraphQL endpoint, you can use `@graphql-yoga/render-graphiql` package seperately.
+Now they are removed in favor `graphqlEndpoint` option. If you want to use `YogaGraphiQL` for a different GraphQL endpoint, you can use `@graphql-yoga/render-graphiql` package separately.
 
 ```diff
 - import { createServer } from '@graphql-yoga/node'
