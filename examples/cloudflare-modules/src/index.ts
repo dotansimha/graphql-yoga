@@ -15,13 +15,13 @@ const schema = createSchema({
 })
 
 export default {
-  fetch(request: Request, env: { [key: string]: string }) {
+  fetch(request: Request, env: Record<string, any>, ...rest: any[]) {
     const yoga = createYoga({
       graphqlEndpoint: env.GRAPHQL_ROUTE || '/graphql',
       landingPage: false,
       schema,
     })
 
-    return yoga.fetch(request)
+    return yoga.fetch(request, env, ...rest)
   },
 }
