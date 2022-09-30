@@ -32,15 +32,8 @@ export const useSchema = <
       },
       onEnveloped({ setSchema }) {
         if (!schema) {
-          throw new GraphQLError(
+          throw new Error(
             `You provide a promise of a schema but it hasn't been resolved yet. Make sure you use this plugin with GraphQL Yoga.`,
-            {
-              extensions: {
-                http: {
-                  status: 500,
-                },
-              },
-            },
           )
         }
         setSchema(schema)
@@ -57,28 +50,14 @@ export const useSchema = <
       if (context?.request) {
         const schema = schemaByRequest.get(context.request)
         if (schema == null) {
-          throw new GraphQLError(
+          throw new Error(
             `No schema found for this request. Make sure you use this plugin with GraphQL Yoga.`,
-            {
-              extensions: {
-                http: {
-                  status: 500,
-                },
-              },
-            },
           )
         }
         setSchema(schema)
       } else {
-        throw new GraphQLError(
+        throw new Error(
           'Request object is not available in the context. Make sure you use this plugin with GraphQL Yoga.',
-          {
-            extensions: {
-              http: {
-                status: 500,
-              },
-            },
-          },
         )
       }
     },
