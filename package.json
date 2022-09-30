@@ -14,7 +14,8 @@
     "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx .",
     "prettier": "prettier --ignore-path .prettierignore --write --list-different .",
     "prettier:check": "prettier --ignore-path .prettierignore --check .",
-    "build-website": "yarn build && cd website && yarn build"
+    "build-website": "yarn build && cd website && yarn build",
+    "denoify": "denoify"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
@@ -76,6 +77,7 @@
     "babel-plugin-transform-typescript-metadata": "0.3.2",
     "bob-the-bundler": "4.0.0",
     "cross-env": "7.0.3",
+    "denoify": "1.1.5",
     "eslint": "^8.21.0",
     "execa": "5.1.1",
     "graphql": "^16.5.0",

@@ -81,11 +81,13 @@ jobs:
         with:
           nodeVersion: 18
 
-      - name: Use Deno
-        uses: denoland/setup-deno@v1
-
       - name: Setup Bun Runtime
         uses: antongolub/action-setup-bun@v1
+
+      - name: Setup Deno Runtime
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
 
       - name: Build Packages
         run: yarn build

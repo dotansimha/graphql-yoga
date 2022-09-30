@@ -4,6 +4,7 @@
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "check": "exit 0"
+    "start": "deno run --import-map ../../import-map.json --unstable --allow-env --allow-net index.ts",
+    "check": "deno test --import-map ../../import-map.json --unstable --allow-env --allow-net --no-check ./test.ts"
   }
 }
