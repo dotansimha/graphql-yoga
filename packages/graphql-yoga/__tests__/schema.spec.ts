@@ -138,4 +138,90 @@ describe('schema', () => {
       foo: true,
     })
   })
+  it('schema promise is not resolved until GraphQL execution starts', async () => {
+    const schemaPromise: PromiseLike<GraphQLSchema> = {
+      then: jest.fn(async (callback) => {
+        return callback!(
+          createSchema({
+            typeDefs: /* GraphQL */ `
+              type Query {
+                foo: Boolean
+              }
+            `,
+            resolvers: {
+              Query: {
+                foo: () => true,
+              },
+            },
+          }),
+        )
+      }),
+    }
+    const yoga = createYoga({
+      schema: schemaPromise as Promise<GraphQLSchema>,
+      plugins: [
+        {
+          onRequest({ url, fetchAPI, endResponse }) {
+            if (url.pathname === '/some-path') {
+              endResponse(new fetchAPI.Response('some response'))
+            }
+          },
+        },
+      ],
+    })
+    const response = await yoga.fetch('http://yoga/some-path')
+    expect(response.status).toEqual(200)
+    const responseText = await response.text()
+    expect(responseText).toEqual('some response')
+    expect(schemaPromise.then).not.toHaveBeenCalled()
+    const responseWithGraphQL = await yoga.fetch(
+      'http://yoga/graphql?query={foo}',
+    )
+    expect(schemaPromise.then).toHaveBeenCalled()
+    const { data } = await responseWithGraphQL.json()
+    expect(data).toEqual({
+      foo: true,
+    })
+  })
+  it('schema factory should never been called until GraphQL execution starts', async () => {
+    const schemaFactory = jest.fn(async () => {
+      return createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            foo: Boolean
+          }
+        `,
+        resolvers: {
+          Query: {
+            foo: () => true,
+          },
+        },
+      })
+    })
+    const yoga = createYoga({
+      schema: schemaFactory,
+      plugins: [
+        {
+          onRequest({ url, fetchAPI, endResponse }) {
+            if (url.pathname === '/some-path') {
+              endResponse(new fetchAPI.Response('some response'))
+            }
+          },
+        },
+      ],
+    })
+    const response = await yoga.fetch('http://yoga/some-path')
+    expect(response.status).toEqual(200)
+    const responseText = await response.text()
+    expect(responseText).toEqual('some response')
+    expect(schemaFactory).not.toHaveBeenCalled()
+    const responseWithGraphQL = await yoga.fetch(
+      'http://yoga/graphql?query={foo}',
+    )
+    expect(schemaFactory).toHaveBeenCalled()
+    const { data } = await responseWithGraphQL.json()
+    expect(data).toEqual({
+      foo: true,
+    })
+  })
 })
