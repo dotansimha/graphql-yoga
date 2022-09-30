@@ -1,35 +1,15 @@
 /* eslint sort-keys: error */
-import {
-  YogaLogo,
-  DocsThemeConfig,
-  FooterExtended,
-  Header,
-  Navbar,
-  mdxComponents,
-  useTheme,
-  Giscus
-} from '@theguild/components'
+import { YogaLogo, useTheme, Giscus, defineConfig } from '@theguild/components'
 import { useRouter } from 'next/router'
 
 const SITE_NAME = 'GraphQL Yoga'
 
-const config: DocsThemeConfig = {
+export default defineConfig({
   chat: {
     link: 'https://discord.gg/94CDTmgmbs',
   },
-  components: mdxComponents,
   docsRepositoryBase:
     'https://github.com/dotansimha/graphql-yoga/tree/v3/website',
-  editLink: {
-    text: 'Edit this page on GitHub',
-  },
-  feedback: {
-    content: 'Question? Give us feedback →',
-    labels: 'kind/docs',
-  },
-  footer: {
-    component: <FooterExtended />,
-  },
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -71,26 +51,5 @@ const config: DocsThemeConfig = {
       )
     },
   },
-  navbar: (props) => (
-    <>
-      <Header
-        accentColor="#1cc8ee"
-        themeSwitch
-        searchBarProps={{ version: 'v2' }}
-      />
-      <Navbar {...props} />
-    </>
-  ),
-  project: {
-    link: 'https://github.com/dotansimha/graphql-yoga', // GitHub link in the navbar
-  },
-  search: {
-    component: null,
-  },
-  sidebar: {
-    defaultMenuCollapsed: true,
-  },
   titleSuffix: ` – ${SITE_NAME}`,
-}
-
-export default config
+})
