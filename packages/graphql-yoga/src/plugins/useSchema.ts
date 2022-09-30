@@ -25,7 +25,7 @@ export const useSchema = <
   if ('then' in schemaDef) {
     let schema: GraphQLSchema | undefined
     return {
-      async onRequest() {
+      async onParams() {
         if (!schema) {
           schema = await schemaDef
         }
@@ -49,16 +49,26 @@ export const useSchema = <
   }
   const schemaByRequest = new WeakMap<Request, GraphQLSchema>()
   return {
-    async onRequest({ request }) {
+    async onParams({ request }) {
       const schema = await schemaDef(request)
       schemaByRequest.set(request, schema)
     },
     onEnveloped({ setSchema, context }) {
       if (context?.request) {
         const schema = schemaByRequest.get(context.request)
-        if (schema) {
-          setSchema(schema)
+        if (schema == null) {
+          throw new GraphQLError(
+            `No schema found for this request. Make sure you use this plugin with GraphQL Yoga.`,
+            {
+              extensions: {
+                http: {
+                  status: 500,
+                },
+              },
+            },
+          )
         }
+        setSchema(schema)
       } else {
         throw new GraphQLError(
           'Request object is not available in the context. Make sure you use this plugin with GraphQL Yoga.',
