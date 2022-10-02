@@ -1,5 +1,11 @@
 import { GraphQLSchema } from 'graphql'
-import { createSchema, createYoga, YogaInitialContext } from 'graphql-yoga'
+import {
+  createSchema,
+  createYoga,
+  envelop,
+  useSchema,
+  YogaInitialContext,
+} from 'graphql-yoga'
 
 describe('schema', () => {
   it('missing schema causes a error', async () => {
@@ -26,8 +32,8 @@ describe('schema', () => {
   })
 
   it('schema factory function', async () => {
-    const schemaFactory = async (request: Request) => {
-      const strFromContext = request.headers.get('str')
+    const schemaFactory = async (ctx: YogaInitialContext) => {
+      const strFromContext = ctx.request.headers.get('str')
       return createSchema<YogaInitialContext>({
         typeDefs: /* GraphQL */ `
           type Query {
@@ -68,6 +74,34 @@ describe('schema', () => {
       data: { foo: 'bars' },
     })
   })
+
+  it('fails if factory function does not return a schema', async () => {
+    const schemaFactory = () => {
+      return null as any
+    }
+
+    const yoga = createYoga({
+      schema: schemaFactory,
+      maskedErrors: false,
+    })
+    const query = `{foo}`
+    const result = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query }),
+      headers: {
+        str: 'foo',
+        'Content-Type': 'application/json',
+      },
+    })
+    expect(await result.json()).toEqual({
+      errors: [
+        {
+          message: `No schema found for this request. Make sure you use this plugin with GraphQL Yoga.`,
+        },
+      ],
+    })
+  })
+
   it('schema promise', async () => {
     const schemaPromise = Promise.resolve(
       createSchema({
@@ -103,6 +137,33 @@ describe('schema', () => {
       foo: true,
     })
   })
+
+  it('fails if promise does not resolve to a schema', async () => {
+    const schemaPromise = Promise.resolve(null as any)
+    const yoga = createYoga({
+      schema: schemaPromise,
+      maskedErrors: false,
+    })
+    const query = /* GraphQL */ `
+      query {
+        foo
+      }
+    `
+    const result = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    const { errors } = await result.json()
+    expect(errors).toEqual([
+      {
+        message: `You provide a promise of a schema but it hasn't been resolved yet. Make sure you use this plugin with GraphQL Yoga.`,
+      },
+    ])
+  })
+
   it('schema factory returning a promise', async () => {
     const yoga = createYoga({
       schema: () =>
@@ -138,6 +199,32 @@ describe('schema', () => {
       foo: true,
     })
   })
+
+  it('fails if factory function returning a promise does not resolve to a schema', async () => {
+    const yoga = createYoga({
+      schema: () => Promise.resolve(null as any),
+      maskedErrors: false,
+    })
+    const query = /* GraphQL */ `
+      query {
+        foo
+      }
+    `
+    const result = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    const { errors } = await result.json()
+    expect(errors).toEqual([
+      {
+        message: `No schema found for this request. Make sure you use this plugin with GraphQL Yoga.`,
+      },
+    ])
+  })
+
   it('schema promise is not resolved until GraphQL execution starts', async () => {
     const schemaPromise: PromiseLike<GraphQLSchema> = {
       then: jest.fn(async (callback) => {
@@ -183,6 +270,7 @@ describe('schema', () => {
       foo: true,
     })
   })
+
   it('schema factory should never been called until GraphQL execution starts', async () => {
     const schemaFactory = jest.fn(async () => {
       return createSchema({
