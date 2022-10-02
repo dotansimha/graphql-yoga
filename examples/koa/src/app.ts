@@ -47,7 +47,7 @@ export function buildApp() {
       ctx.append(key, value)
     })
 
-    ctx.body = Readable.from(response.body)
+    ctx.body = response.body
   })
 
   return app

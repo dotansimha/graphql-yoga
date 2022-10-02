@@ -82,7 +82,7 @@ export function buildApp(logging = true) {
 
       reply.status(response.status)
 
-      reply.send(Readable.from(response.body))
+      reply.send(response.body)
 
       return reply
     },

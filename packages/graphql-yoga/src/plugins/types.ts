@@ -106,6 +106,7 @@ export interface OnParamsEventPayload {
   request: Request
   setParams: (params: GraphQLParams) => void
   setResult: (result: ExecutorResult) => void
+  fetchAPI: FetchAPI
 }
 
 export type OnResultProcess = (

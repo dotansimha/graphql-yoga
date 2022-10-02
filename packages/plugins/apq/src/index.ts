@@ -1,16 +1,22 @@
 import { Plugin, PromiseOrValue } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
 import { lru } from 'tiny-lru'
-import { crypto, TextEncoder } from '@whatwg-node/fetch'
 
-const textEncoder = new TextEncoder()
-export async function hashSHA256(str: string) {
+export async function hashSHA256(
+  str: string,
+  api: {
+    crypto: Crypto
+    TextEncoder: typeof globalThis['TextEncoder']
+  } = globalThis,
+) {
+  const { crypto, TextEncoder } = api
+  const textEncoder = new TextEncoder()
   const utf8 = textEncoder.encode(str)
   const hashBuffer = await crypto.subtle.digest('SHA-256', utf8)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  const hashHex = hashArray
-    .map((bytes) => bytes.toString(16).padStart(2, '0'))
-    .join('')
+  let hashHex = ''
+  for (const bytes of new Uint8Array(hashBuffer)) {
+    hashHex += bytes.toString(16).padStart(2, '0')
+  }
   return hashHex
 }
 
@@ -27,7 +33,10 @@ export function createInMemoryAPQStore(
 
 export interface APQOptions {
   store?: APQStore
-  hash?: (str: string) => PromiseOrValue<string>
+  hash?: (
+    str: string,
+    api: { crypto: Crypto; TextEncoder: typeof TextEncoder },
+  ) => PromiseOrValue<string>
 }
 
 export interface APQStore {
@@ -60,7 +69,7 @@ export function useAPQ<TPluginContext extends Record<string, any>>(
   const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options
 
   return {
-    async onParams({ params, setParams }) {
+    async onParams({ params, setParams, fetchAPI }) {
       const persistedQueryData = decodeAPQExtension(
         params.extensions?.persistedQuery,
       )
@@ -79,7 +88,7 @@ export function useAPQ<TPluginContext extends Record<string, any>>(
           query: persistedQuery,
         })
       } else {
-        const expectedHash = await hash(params.query)
+        const expectedHash = await hash(params.query, fetchAPI)
         if (persistedQueryData.sha256Hash !== expectedHash) {
           throw new GraphQLError('PersistedQueryMismatch')
         }
