@@ -203,7 +203,7 @@ export class YogaServer<
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
-  private onRequestParseHooks: OnRequestParseHook[]
+  private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
   private onParamsHooks: OnParamsHook[]
   private onRequestHooks: OnRequestHook<TServerContext>[]
   private onResultProcessHooks: OnResultProcess[]
@@ -509,6 +509,7 @@ export class YogaServer<
         const onRequestParseResult = await onRequestParse({
           request,
           requestParser,
+          serverContext,
           setRequestParser(parser: RequestParser) {
             requestParser = parser
           },
