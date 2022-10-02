@@ -25,13 +25,13 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        greetings: () => 'Hello from Yoga in a Bun app!',
-      },
-    },
-  }),
+        greetings: () => 'Hello from Yoga in a Bun app!'
+      }
+    }
+  })
 })
 const server = Bun.serve(yoga)
 console.info(
-  `Server is running on ${new URL(yoga.graphqlEndpoint, server.hostname)}`,
+  `Server is running on ${new URL(yoga.graphqlEndpoint, server.hostname)}`
 )
 ```

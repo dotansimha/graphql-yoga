@@ -14,7 +14,6 @@ You will need to provide a schema to Yoga, there are many ways to assemble a Gra
 
 <Tabs items={['graphql-yoga', '@graphql-tools/schema', 'Pothos', 'GraphQL Nexus', 'gqtx', 'graphql-js']}>
   <Tab>
-
 Use the `createSchema` function included in Yoga. It actually reuses the [`makeExecutableSchema` from @graphql-tools/schema](https://www.graphql-tools.com/docs/generate-schema).
 
 ```js filename="schema.js"
@@ -28,16 +27,15 @@ export const schema = createSchema({
   `,
   resolvers: {
     Query: {
-      hello: () => 'world',
-    },
-  },
+      hello: () => 'world'
+    }
+  }
 })
 ```
 
   </Tab>
 
   <Tab>
-
 [`makeExecutableSchema` from @graphql-tools/schema](https://www.graphql-tools.com/docs/generate-schema) is very simple, but powerful. Install it and create a schema.
 
 <PackageCmd packages={['@graphql-tools/schema']} />
@@ -53,9 +51,9 @@ export const schema = makeExecutableSchema({
   `,
   resolvers: {
     Query: {
-      hello: () => 'world',
-    },
-  },
+      hello: () => 'world'
+    }
+  }
 })
 ```
 
@@ -75,9 +73,9 @@ const builder = new SchemaBuilder({})
 builder.queryType({
   fields: (t) => ({
     hello: t.string({
-      resolve: () => 'world',
-    }),
-  }),
+      resolve: () => 'world'
+    })
+  })
 })
 
 export const schema = builder.toSchema()
@@ -86,7 +84,6 @@ export const schema = builder.toSchema()
   </Tab>
 
   <Tab>
-
 Declarative, Code-First GraphQL Schemas for JavaScript/TypeScript through [Nexus GraphQL](https://nexusjs.org/). Install it and create schema.
 
 <PackageCmd packages={['nexus']} />
@@ -96,15 +93,15 @@ import { makeSchema, queryField } from 'nexus'
 
 const helloField = queryField('hello', {
   type: 'String',
-  resolve: () => 'world',
+  resolve: () => 'world'
 })
 
 export const schema = makeSchema({ types: [helloField] })
 ```
 
   </Tab>
-  <Tab>
 
+  <Tab>
 Code-first type-safe GraphQL schema without codegen or metaprogramming using [gqtx](https://github.com/sikanhe/gqtx). Install it and create schema.
 
 <PackageCmd packages={['gqtx']} />
@@ -119,9 +116,9 @@ const Query = t.queryType({
     t.field({
       name: 'hello',
       type: t.String,
-      resolve: () => 'world',
-    }),
-  ],
+      resolve: () => 'world'
+    })
+  ]
 })
 
 export const schema = buildGraphQLSchema({ query: Query })
@@ -130,7 +127,6 @@ export const schema = buildGraphQLSchema({ query: Query })
   </Tab>
 
   <Tab>
-
 [graphql-js](https://github.com/graphql/graphql-js) is a reference implementation of GraphQL for JavaScript. You should already have it installed, just create schema.
 
 ```js filename="schema.js"
@@ -142,10 +138,10 @@ export const schema = new GraphQLSchema({
     fields: {
       hello: {
         type: GraphQLString,
-        resolve: () => 'world',
-      },
-    },
-  }),
+        resolve: () => 'world'
+      }
+    }
+  })
 })
 ```
 
@@ -157,8 +153,8 @@ export const schema = new GraphQLSchema({
 After you have created a GraphQL schema, simply pass it in to Yoga and liftoff! 🚀
 
 ```js
-import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
 import { schema } from './schema'
 
 // Create a Yoga instance with a GraphQL schema.
@@ -177,13 +173,4 @@ Visit [`http://localhost:4000/graphql`](http://localhost:4000/graphql) to see Yo
 
 ## Showcase
 
-<iframe
-  width="100%"
-  height="400"
-  src="https://www.youtube.com/embed/_-B6QIFSSwo"
-  title="GraphQL Yoga 2"
-  frameBorder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
-></iframe>
-````
+<iframe src="https://youtube.com/embed/_-B6QIFSSwo" title="GraphQL Yoga 2" />

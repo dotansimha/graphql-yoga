@@ -43,10 +43,10 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        hello: () => 'Hello from Yoga!',
-      },
-    },
-  }),
+        hello: () => 'Hello from Yoga!'
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)

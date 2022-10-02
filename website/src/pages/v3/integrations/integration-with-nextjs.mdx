@@ -2,7 +2,7 @@ import { PackageCmd } from '@theguild/components'
 
 # Integration with Next.js
 
-[Next.js](https://nextjs.org/) is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as [an API Route](https://nextjs.org/docs/api-routes/api-middlewares).
+[Next.js](https://nextjs.org) is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as [an API Route](https://nextjs.org/docs/api-routes/api-middlewares).
 
 ## Installation
 
@@ -10,9 +10,7 @@ import { PackageCmd } from '@theguild/components'
 
 ## Example
 
-`pages/api/graphql.ts`
-
-```ts
+```ts filename="pages/api/graphql.ts"
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { createYoga } from 'graphql-yoga'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -20,8 +18,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 export const config = {
   api: {
     // Disable body parsing (required for file uploads)
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
 export default createYoga<{
@@ -29,7 +27,7 @@ export default createYoga<{
   res: NextApiResponse
 }>({
   // Needed to be defined explicitly because our endpoint lives at a different path other than `/graphql`
-  graphqlEndpoint: '/api/graphql',
+  graphqlEndpoint: '/api/graphql'
 })
 ```
 

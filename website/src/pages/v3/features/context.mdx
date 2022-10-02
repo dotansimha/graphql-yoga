@@ -34,10 +34,10 @@ const yoga = createYoga({
       Query: {
         logHeader(_, _args, context) {
           console.log(context.request.headers.get('x-foo'))
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)
@@ -74,11 +74,11 @@ const yoga = createYoga({
       Query: {
         someNumber(_, _args, context) {
           context.someNumber
-        },
-      },
-    },
+        }
+      }
+    }
   }),
-  context: { someNumber: 13 },
+  context: { someNumber: 13 }
 })
 
 const server = createServer(yoga)
@@ -138,13 +138,13 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        someNumber: (_, _args, context) => context.someNumber,
-      },
-    },
+        someNumber: (_, _args, context) => context.someNumber
+      }
+    }
   }),
   async context() {
     return { someNumber: 13 }
-  },
+  }
 })
 server.listen(4000, () => {
   console.info('Server is running on http://localhost:4000/graphql')
@@ -213,7 +213,7 @@ const yoga = createYoga<{
 
 const response = await yoga.handleNodeRequest(req, {
   req,
-  reply,
+  reply
 })
 ```
 

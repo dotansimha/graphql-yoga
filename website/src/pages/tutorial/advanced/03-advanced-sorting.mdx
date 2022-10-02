@@ -63,14 +63,14 @@ const resolvers = {
           createdAt?: Prisma.SortOrder
         }
       },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const where = args.filter
         ? {
             OR: [
               { description: { contains: args.filter } },
-              { url: { contains: args.filter } },
-            ],
+              { url: { contains: args.filter } }
+            ]
           }
         : {}
 
@@ -78,10 +78,10 @@ const resolvers = {
         where,
         skip: args.skip,
         take: args.take,
-        orderBy: args.orderBy,
+        orderBy: args.orderBy
       })
-    },
-  },
+    }
+  }
 }
 ```
 

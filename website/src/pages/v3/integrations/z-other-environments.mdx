@@ -10,12 +10,12 @@ import { Request } from '@whatwg-node/fetch' // or fetch spec compliant library
 
 const yoga = createYoga<MyRandomCtx>()
 
-export function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
+export async function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
   // req.url is a full url here not a relative path
   const request = new Request(req.url, {
     method: req.method,
     headers: req.headers,
-    body: req.body, // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
+    body: req.body // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
   })
 
   // Second parameter becomes your server context
@@ -38,7 +38,7 @@ export function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
     // body: await response.json() If it accepts a json
     // body: response.body if it accepts a ReadableStream or an AsyncIterable
     // body: Readable.from(response.body) if it accepts a Node.js Readable
-    headers: headersObj, // We assume that your environments accepts a regular JS object for response headers
+    headers: headersObj // We assume that your environments accepts a regular JS object for response headers
   }
 }
 ```

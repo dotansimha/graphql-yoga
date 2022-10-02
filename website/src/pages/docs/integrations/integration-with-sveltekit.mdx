@@ -31,13 +31,13 @@ const yogaApp = createServer<RequestEvent>({
     `,
     resolvers: {
       Query: {
-        hello: () => 'SvelteKit - GraphQL Yoga',
-      },
-    },
+        hello: () => 'SvelteKit - GraphQL Yoga'
+      }
+    }
   },
   graphiql: {
-    endpoint: '/api/graphql',
-  },
+    endpoint: '/api/graphql'
+  }
 })
 
 export { yogaApp as get, yogaApp as post }

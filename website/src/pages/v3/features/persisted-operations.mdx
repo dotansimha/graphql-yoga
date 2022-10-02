@@ -19,7 +19,7 @@ import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operation
 
 const store = {
   ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38:
-    '{__typename}',
+    '{__typename}'
 }
 
 const yoga = createYoga({
@@ -27,9 +27,9 @@ const yoga = createYoga({
     usePersistedOperations({
       getPersistedOperation(sha256Hash: string) {
         return store[sha256Hash]
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 
 const server = createServer(yoga)
@@ -75,9 +75,9 @@ const yoga = createYoga({
     usePersistedOperations({
       getPersistedOperation(key: string) {
         return persistedOperations[key]
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 
 const server = createServer(yoga)
@@ -94,7 +94,7 @@ GraphQL clients such `Apollo Client` and `Urql` support that out of the box.
 Check the corresponding documentation for more information.
 
 - [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
-- [Urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
+- [urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
 
 ## Allowing arbitrary GraphQL operations
 
@@ -107,7 +107,7 @@ This can be achieved using the `allowArbitraryOperations` option.
 usePersistedOperations({
   allowArbitraryOperations: (request) =>
     request.headers.request.headers.get('x-allow-arbitrary-operations') ===
-    'true',
+    'true'
 })
 ```
 

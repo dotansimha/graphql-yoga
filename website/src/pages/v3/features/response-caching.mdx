@@ -23,16 +23,16 @@ const yoga = createYoga({
         slow: async () => {
           await new Promise((resolve) => setTimeout(resolve, 5000))
           return 'I am slow.'
-        },
-      },
-    },
+        }
+      }
+    }
   }),
   plugins: [
     useResponseCache({
       // global cache
-      session: () => null,
-    }),
-  ],
+      session: () => null
+    })
+  ]
 })
 
 const server = createServer(yoga)
@@ -67,7 +67,7 @@ If your GraphQL API returns specific data depending on the viewer's session, you
 ```ts
 useResponseCache({
   // cache based on the authentication header
-  session: (request) => request.headers.get('authentication'),
+  session: (request) => request.headers.get('authentication')
 })
 ```
 
@@ -83,12 +83,12 @@ useResponseCache({
   ttl: 2_000,
   ttlPerType: {
     // only cache query operations containing User for 500ms
-    User: 500,
+    User: 500
   },
   ttlPerSchemaCoordinate: {
     // cache operations selecting Query.lazy for 10 seconds
-    'Query.lazy': 10_000,
-  },
+    'Query.lazy': 10_000
+  }
 })
 ```
 
@@ -125,7 +125,7 @@ This behavior can be disabled by setting the `invalidateViaMutation` option to `
 ```ts
 useResponseCache({
   session: (request) => null,
-  invalidateViaMutation: false,
+  invalidateViaMutation: false
 })
 ```
 
@@ -138,14 +138,14 @@ In order to use the API, you need to manually instantiate the cache an pass it t
 ```ts
 import {
   useResponseCache,
-  createInMemoryCache,
+  createInMemoryCache
 } from '@graphql-yoga/plugin-response-cache'
 
 const cache = createInMemoryCache()
 
 useResponseCache({
   session: () => null,
-  cache,
+  cache
 })
 ```
 
@@ -168,13 +168,13 @@ Invalidate all GraphQL query results multiple entities in a single call.
 ```ts
 cache.invalidate([
   { type: 'Post', id: '1' },
-  { type: 'User', id: '2' },
+  { type: 'User', id: '2' }
 ])
 ```
 
 ## External Cache
 
-By default the response cache stores all the cached query results in memory.
+By default, the response cache stores all the cached query results in memory.
 
 If you want a cache that is shared between multiple server instances you can use the Redis cache implementation.
 
@@ -187,7 +187,7 @@ import Redis from 'ioredis'
 const redis = new Redis({
   host: 'my-redis-db.example.com',
   port: '30652',
-  password: '1234567890',
+  password: '1234567890'
 })
 
 const redis = new Redis('redis://:1234567890@my-redis-db.example.com:30652')
@@ -196,6 +196,6 @@ const cache = createRedisCache({ redis })
 
 useResponseCache({
   session: () => null,
-  cache,
+  cache
 })
 ```

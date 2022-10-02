@@ -30,7 +30,7 @@ import { schema } from './my-service'
 
 const yoga = createYoga({
   schema,
-  healthCheckEndpoint: '/live',
+  healthCheckEndpoint: '/live'
 })
 
 const server = createServer(yoga)
@@ -61,9 +61,9 @@ const yoga = createYoga({
         // if resolves, respond with 200 OK
         // if throw, respond with 504 Service Unavailable and error message as plaintext in body
         await checkDbAvailable()
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 
 const server = createServer(yoga)
@@ -102,9 +102,9 @@ const yoga = createYoga({
           // if false, respond with 504 Service Unavailable and no bdy
           return false
         }
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 
 const server = createServer(yoga)

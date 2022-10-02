@@ -29,10 +29,10 @@ const server = createServer({
           const response = await fetch('http://localhost:9876/greeting')
           const greeting = await response.text()
           return greeting
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -110,10 +110,10 @@ const server = createServer({
           const response = await fetch('http://localhost:9876/greeting')
           const greeting = await response.text()
           return greeting
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 })
 
 server.start()
@@ -168,7 +168,7 @@ import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 const users = [
   { id: '1', login: 'Laurin' },
   { id: '2', login: 'Saihaj' },
-  { id: '3', login: 'Dotan' },
+  { id: '3', login: 'Dotan' }
 ]
 
 // Provide your schema
@@ -192,10 +192,10 @@ const server = createServer({
           }
 
           return user
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -244,7 +244,7 @@ import { createServer, GraphQLYogaError } from '@graphql-yoga/node'
 const users = [
   { id: '1', login: 'Laurin' },
   { id: '2', login: 'Saihaj' },
-  { id: '3', login: 'Dotan' },
+  { id: '3', login: 'Dotan' }
 ]
 
 // Provide your schema
@@ -267,15 +267,15 @@ const server = createServer({
             throw new GraphQLYogaError(
               `User with id '${args.byId}' not found.`,
               // error extensions
-              { code: 'USER_NOT_FOUND' },
+              { code: 'USER_NOT_FOUND' }
             )
           }
 
           return user
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -326,10 +326,10 @@ throw new GraphQLYogaError(
     userId: args.byId,
     foo: {
       some: {
-        complex: ['structure'],
-      },
-    },
-  },
+        complex: ['structure']
+      }
+    }
+  }
 )
 ```
 

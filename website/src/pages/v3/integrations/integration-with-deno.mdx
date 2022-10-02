@@ -6,12 +6,12 @@ We will use `graphql-yoga` which has an agnostic HTTP handler using [Fetch API](
 
 ## Example
 
-Create a `deno-yoga.ts` file;
+Create a `deno-yoga.ts` file:
 
-```ts
+```ts filename="deno-yoga.ts"
 import {
   createYoga,
-  createSchema,
+  createSchema
 } from 'https://cdn.skypack.dev/graphql-yoga@three?dts'
 import { serve } from 'https://deno.land/std@0.157.0/http/server.ts'
 
@@ -24,20 +24,20 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        hello: () => 'Hello Deno!',
-      },
-    },
-  }),
+        hello: () => 'Hello Deno!'
+      }
+    }
+  })
 })
 
 serve(yoga, {
   onListen({ hostname, port }) {
     console.log(`Listening on http://${hostname}:${port}/graphql`)
-  },
+  }
 })
 ```
 
-And run it;
+And run it:
 
 ```bash
 deno run index.ts

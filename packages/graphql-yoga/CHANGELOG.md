@@ -51,7 +51,7 @@
   createYoga({
     schema(request: Request) {
       return getSchemaForToken(request.headers.get('x-my-token'))
-    },
+    }
   })
   ```
 
@@ -63,7 +63,7 @@
   }
 
   createYoga({
-    schema: buildSchemaAsync(),
+    schema: buildSchemaAsync()
   })
   ```
 

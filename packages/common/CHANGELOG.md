@@ -140,7 +140,7 @@
   const server = createServer()
 
   export default {
-    fetch: server.fetch,
+    fetch: server.fetch
   }
   ```
 
@@ -176,7 +176,7 @@
     resolvers: {
       Query: {
         todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
-        todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list(),
+        todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list()
       },
       Mutation: {
         // MY_NAMESPACE is available as a GraphQL context
@@ -185,9 +185,9 @@
         },
         deleteTodo(_, { id }, context) {
           return context.MY_NAMESPACE.delete(id)
-        },
-      },
-    },
+        }
+      }
+    }
   })
   ```
 
@@ -210,10 +210,10 @@
       http: {
         status: 401,
         headers: {
-          'WWW-Authenticate': 'Bearer',
-        },
-      },
-    },
+          'WWW-Authenticate': 'Bearer'
+        }
+      }
+    }
   })
   ```
 
@@ -249,8 +249,8 @@
       debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
       info: (...args) => args.forEach((arg) => app.log.info(arg)),
       warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
-    },
+      error: (...args) => args.forEach((arg) => app.log.error(arg))
+    }
   })
   ```
 
@@ -326,8 +326,8 @@
   ```ts
   createServer({
     multipart: {
-      maxFileSize: 2000, // Default: Infinity
-    },
+      maxFileSize: 2000 // Default: Infinity
+    }
   })
   ```
 
@@ -335,7 +335,7 @@
 
   ```ts
   createServer({
-    multipart: false, // enabled by default
+    multipart: false // enabled by default
   })
   ```
 
@@ -351,8 +351,8 @@
   createServer({
     cors: {
       origin: ['http://localhost:4000'], // Previously this was ignored even if `credentials` is true
-      credentials: true,
-    },
+      credentials: true
+    }
   })
   ```
 
@@ -392,8 +392,8 @@
       fetch,
       Request,
       Response,
-      ReadableStream,
-    },
+      ReadableStream
+    }
   })
   ```
 
@@ -423,7 +423,7 @@
 
   ```ts
   createServer({
-    graphiql: process.env.NODE_ENV === 'development',
+    graphiql: process.env.NODE_ENV === 'development'
   })
   ```
 
@@ -521,7 +521,7 @@
       // Here `req` and `reply` objects are added to the GraphQL Context
       const response = await graphQLServer.handleIncomingMessage(req, {
         req,
-        reply,
+        reply
       })
       for (const [name, value] of response.headers) {
         reply.header(name, value)
@@ -530,7 +530,7 @@
       reply.status(response.status)
       const nodeStream = Readable.from(response.body)
       reply.send(nodeStream)
-    },
+    }
   })
   ```
 
@@ -553,10 +553,10 @@
           fooHeader: (root, args, context, info) => {
             // context.req is typed here
             return context.req.headers.foo
-          },
-        },
-      },
-    },
+          }
+        }
+      }
+    }
   })
   ```
 
@@ -692,7 +692,7 @@
       // Here `req` and `reply` objects are added to the GraphQL Context
       const response = await graphQLServer.handleIncomingMessage(req, {
         req,
-        reply,
+        reply
       })
       for (const [name, value] of response.headers) {
         reply.header(name, value)
@@ -701,7 +701,7 @@
       reply.status(response.status)
       const nodeStream = Readable.from(response.body)
       reply.send(nodeStream)
-    },
+    }
   })
   ```
 
@@ -724,10 +724,10 @@
           fooHeader: (root, args, context, info) => {
             // context.req is typed here
             return context.req.headers.foo
-          },
-        },
-      },
-    },
+          }
+        }
+      }
+    }
   })
   ```
 
