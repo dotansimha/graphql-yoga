@@ -14,9 +14,15 @@ let testTimeout = undefined
 
 if (process.env.INTEGRATION_TEST === 'true') {
   testTimeout = 10000
-  testMatch.push(
-    '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
-  )
+  if (process.env.NOLEAK === 'true') {
+    testMatch.push(
+      '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).noleak.[jt]s?(x)',
+    )
+  } else {
+    testMatch.push(
+      '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
+    )
+  }
   if (parseInt(process.versions.node.split('.')[0]) <= 14) {
     testMatch.push('!**/examples/sveltekit/**')
     testMatch.push('!**/examples/fastify*/**')
