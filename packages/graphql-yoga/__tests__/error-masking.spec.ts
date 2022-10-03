@@ -273,7 +273,6 @@ describe('error masking', () => {
         },
       ],
     })
-    expect(response.status).toEqual(500)
   })
 
   it('parse error is not masked', async () => {
@@ -385,6 +384,69 @@ describe('error masking', () => {
     expect(body.errors[0].extensions.originalError.stack).toContain(
       'Error: I am the original error.',
     )
+  })
+
+  it('masked errors from context factory should return 500 status code', async () => {
+    const yoga = createYoga({
+      logging: false,
+      context: () => {
+        throw new Error('I like turtles')
+      },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ __typename }' }),
+    })
     expect(response.status).toEqual(500)
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Unexpected error.',
+        },
+      ],
+    })
+  })
+
+  it('masked error from the resolvers should return 500 status code', async () => {
+    const yoga = createYoga({
+      logging: false,
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            a: () => {
+              throw new Error('I like turtles')
+            },
+          },
+        },
+      }),
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ a }' }),
+    })
+    expect(response.status).toEqual(500)
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Unexpected error.',
+        },
+      ],
+    })
   })
 })

@@ -81,7 +81,13 @@ export function useAPQ<TPluginContext extends Record<string, any>>(
       if (params.query == null) {
         const persistedQuery = await store.get(persistedQueryData.sha256Hash)
         if (persistedQuery == null) {
-          throw new GraphQLError('PersistedQueryNotFound')
+          throw new GraphQLError('PersistedQueryNotFound', {
+            extensions: {
+              http: {
+                status: 404,
+              },
+            },
+          })
         }
         setParams({
           ...params,
@@ -90,7 +96,13 @@ export function useAPQ<TPluginContext extends Record<string, any>>(
       } else {
         const expectedHash = await hash(params.query, fetchAPI)
         if (persistedQueryData.sha256Hash !== expectedHash) {
-          throw new GraphQLError('PersistedQueryMismatch')
+          throw new GraphQLError('PersistedQueryMismatch', {
+            extensions: {
+              http: {
+                status: 400,
+              },
+            },
+          })
         }
         await store.set(persistedQueryData.sha256Hash, params.query)
       }

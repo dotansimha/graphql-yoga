@@ -36,6 +36,7 @@ describe('Automatic Persisted Queries', () => {
       }),
     })
 
+    expect(response.ok).toBe(false)
     const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryNotFound')
@@ -137,7 +138,7 @@ describe('Automatic Persisted Queries', () => {
       }),
     })
 
-    expect(response.status).toEqual(500)
+    expect(response.ok).toBe(false)
     expect(await response.json()).toEqual({
       errors: [{ message: 'PersistedQueryMismatch' }],
     })

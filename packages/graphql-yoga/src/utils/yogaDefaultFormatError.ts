@@ -1,6 +1,6 @@
 import { FormatErrorHandler } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLError } from 'graphql'
+import { GraphQLError, GraphQLErrorExtensions } from 'graphql'
 
 export const yogaDefaultFormatError: FormatErrorHandler = (
   err,
@@ -13,8 +13,12 @@ export const yogaDefaultFormatError: FormatErrorHandler = (
         return err
       }
       // Original error should be removed
-      const extensions = {
+      const extensions: GraphQLErrorExtensions = {
         ...err.extensions,
+        http: {
+          status: 500,
+          ...err.extensions?.http,
+        },
       }
       if (isDev) {
         extensions.originalError = {
