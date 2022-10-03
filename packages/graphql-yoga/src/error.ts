@@ -78,8 +78,8 @@ export function getResponseInitByRespectingErrors(
   }
 
   if (!status) {
-    // there should always be a concrete status provided (avoids responding with the default 200 status codes on erroneous results)
-    status = 500
+    // there should always be a concrete status provided
+    status = 200
   }
 
   return {

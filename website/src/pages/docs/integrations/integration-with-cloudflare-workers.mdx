@@ -72,7 +72,7 @@ export default createServer<Env>({
   resolvers: {
     Query: {
       todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
-      todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list(),
+      todos: (_, _2, { MY_NAMESPACE }) => MY_NAMESPACE.list()
     },
     Mutation: {
       // MY_NAMESPACE is available as a GraphQL context
@@ -81,9 +81,9 @@ export default createServer<Env>({
       },
       deleteTodo(_, { id }, context) {
         return context.MY_NAMESPACE.delete(id)
-      },
-    },
-  },
+      }
+    }
+  }
 })
 ```
 
@@ -101,7 +101,7 @@ const yoga = createServer<{ env: Env; ctx: ExecutionContext }>()
 export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
     return yoga.handleRequest(request, { env, ctx })
-  },
+  }
 }
 ```
 

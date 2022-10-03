@@ -1,7 +1,4 @@
----
-id: error-masking
-title: Error Masking
----
+# Error Masking
 
 Yoga uses [the Envelop `useMaskedErrors`](https://www.envelop.dev/plugins/use-masked-errors) for automatically masking unexpected errors and preventing sensitive information leaking to clients.
 
@@ -30,19 +27,21 @@ const yoga = createYoga({
         greeting: async () => {
           // This service does not exist
           const greeting = await fetch('http://localhost:9876/greeting').then(
-            (res) => res.text(),
+            (res) => res.text()
           )
 
           return greeting
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Executing the following operation results in an execution result that does not include any detail from the error raised by the fetch call.
@@ -114,18 +113,20 @@ const yoga = createYoga({
         greeting: async () => {
           // This service does not exist
           const greeting = await fetch('http://localhost:9876/greeting').then(
-            (res) => res.text(),
+            (res) => res.text()
           )
 
           return greeting
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 **GraphQL Operation**
@@ -176,18 +177,9 @@ import { createYoga, createSchema } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
 
 const users = [
-  {
-    id: '1',
-    login: 'Laurin',
-  },
-  {
-    id: '2',
-    login: 'Saihaj',
-  },
-  {
-    id: '3',
-    login: 'Dotan',
-  },
+  { id: '1', login: 'Laurin' },
+  { id: '2', login: 'Saihaj' },
+  { id: '3', login: 'Dotan' }
 ]
 
 // Provide your schema
@@ -211,15 +203,17 @@ const yoga = createYoga({
           }
 
           return user
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 **Query for non existing user**
@@ -263,18 +257,9 @@ import { createSchema, createServer } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
 
 const users = [
-  {
-    id: '1',
-    login: 'Laurin',
-  },
-  {
-    id: '2',
-    login: 'Saihaj',
-  },
-  {
-    id: '3',
-    login: 'Dotan',
-  },
+  { id: '1', login: 'Laurin' },
+  { id: '2', login: 'Saihaj' },
+  { id: '3', login: 'Dotan' }
 ]
 
 // Provide your schema
@@ -299,22 +284,24 @@ const yoga = createYoga({
               // error extensions
               {
                 extensions: {
-                  code: 'USER_NOT_FOUND',
-                },
-              },
+                  code: 'USER_NOT_FOUND'
+                }
+              }
             )
           }
 
           return user
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 **Query for non existing user**
@@ -362,11 +349,11 @@ throw new GraphQLError(
       userId: args.byId,
       foo: {
         some: {
-          complex: ['structure'],
-        },
-      },
-    },
-  },
+          complex: ['structure']
+        }
+      }
+    }
+  }
 )
 ```
 
@@ -408,9 +395,7 @@ We highly recommend using error masking.
 However, you can still disable it using the `maskedErrors` config option.
 
 ```ts
-createYoga({
-  maskedErrors: false,
-})
+createYoga({ maskedErrors: false })
 ```
 
 Executing the following operation will now result within a leaking error message that exposes information about internal API calls.

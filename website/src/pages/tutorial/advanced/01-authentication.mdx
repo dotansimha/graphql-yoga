@@ -159,14 +159,14 @@ const resolvers = {
     async signup(
       parent: unknown,
       args: { email: string; password: string; name: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       // 1
       const password = await hash(args.password, 10)
 
       // 2
       const user = await context.prisma.user.create({
-        data: { ...args, password },
+        data: { ...args, password }
       })
 
       // 3
@@ -174,8 +174,8 @@ const resolvers = {
 
       // 4
       return { token, user }
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -220,11 +220,11 @@ const resolvers = {
     async login(
       parent: unknown,
       args: { email: string; password: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       // 1
       const user = await context.prisma.user.findUnique({
-        where: { email: args.email },
+        where: { email: args.email }
       })
       if (!user) {
         throw new Error('No such user found')
@@ -240,8 +240,8 @@ const resolvers = {
 
       // 3
       return { token, user }
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -307,7 +307,7 @@ export const APP_SECRET = 'this is my secret'
 
 export async function authenticateUser(
   prisma: PrismaClient,
-  request: FastifyRequest,
+  request: FastifyRequest
 ): Promise<User | null> {
   const header = request.headers.get('authorization')
   if (header !== null) {
@@ -347,11 +347,11 @@ export type GraphQLContext = {
 }
 
 export async function createContext(
-  initialContext: YogaInitialContext,
+  initialContext: YogaInitialContext
 ): Promise<GraphQLContext> {
   return {
     prisma,
-    currentUser: await authenticateUser(prisma, initialContext.request),
+    currentUser: await authenticateUser(prisma, initialContext.request)
   }
 }
 ```
@@ -383,8 +383,8 @@ const resolvers = {
       }
 
       return context.currentUser
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -429,7 +429,7 @@ const resolvers = {
     async post(
       parent: unknown,
       args: { url: string; description: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       if (context.currentUser === null) {
         throw new Error('Unauthenticated!')
@@ -439,13 +439,13 @@ const resolvers = {
         data: {
           url: args.url,
           description: args.description,
-          postedBy: { connect: { id: context.currentUser.id } },
-        },
+          postedBy: { connect: { id: context.currentUser.id } }
+        }
       })
 
       return newLink
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -485,8 +485,8 @@ const resolvers = {
       return context.prisma.link
         .findUnique({ where: { id: parent.id } })
         .postedBy()
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -506,8 +506,8 @@ const resolvers = {
   User: {
     // ... other User object type field resolver functions ...
     links: (parent: User, args: {}, context: GraphQLContext) =>
-      context.prisma.user.findUnique({ where: { id: parent.id } }).links(),
-  },
+      context.prisma.user.findUnique({ where: { id: parent.id } }).links()
+  }
 }
 ```
 

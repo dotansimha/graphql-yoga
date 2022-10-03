@@ -53,7 +53,7 @@ import { resolvers } from './schema'
 
 const server = new GraphQLServer({
   typeDefs: path.join(__dirname, 'type-definitions.graphql'),
-  resolvers,
+  resolvers
 })
 
 server.start()
@@ -73,10 +73,10 @@ const server = createServer({
   schema: {
     typeDefs: fs.readFileSync(
       path.join(__dirname, 'type-definitions.graphql'),
-      'utf8',
+      'utf8'
     ),
-    resolvers,
-  },
+    resolvers
+  }
 })
 
 server.start()
@@ -104,7 +104,7 @@ const server = new GraphQLServer({
       hi: String
     }
   `,
-  directiveResolvers: uppercaseDirectiveResolverImplementation,
+  directiveResolvers: uppercaseDirectiveResolverImplementation
 })
 
 server.start()
@@ -131,9 +131,9 @@ let schema = makeExecuteableSchema({
     typeDefs,
     /* GraphQL */ `
       directive @uppercase on FIELD_DEFINITION
-    `,
+    `
   ],
-  resolvers,
+  resolvers
 })
 
 schema = mapSchema(schema, {
@@ -149,10 +149,10 @@ schema = mapSchema(schema, {
             return result.toUpperCase()
           }
           return result
-        },
+        }
       }
     }
-  },
+  }
 })
 
 const server = createServer({ schema })

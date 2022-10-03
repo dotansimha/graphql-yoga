@@ -1,7 +1,4 @@
----
-id: cors
-title: Configuring CORS with Yoga
----
+# CORS
 
 CORS stands for Cross Origin Resource Sharing. In a nutshell, as a security measure, browsers aren't allowed to access resources outside their own domain.
 
@@ -38,8 +35,8 @@ const yogaApp = createYoga({
     origin: 'http://localhost:4000',
     credentials: true,
     allowedHeaders: ['X-Custom-Header'],
-    methods: ['POST'],
-  },
+    methods: ['POST']
+  }
   /* ...other args */
 })
 ```
@@ -55,7 +52,7 @@ Access-Control-Allow-Headers: X-Custom-Header
 
 ### Example configuration using builder function
 
-You can also pass a function to the cors property, that takes your request and contructs the options
+You can also pass a function to the cors property, that takes your request and constructs the options
 
 ```ts
 import { createYoga } from 'graphql-yoga'
@@ -67,9 +64,9 @@ const yogaApp = createYoga({
       origin: requestOrigin,
       credentials: true,
       allowedHeaders: ['X-Custom-Header'],
-      methods: ['POST'],
+      methods: ['POST']
     }
-  },
+  }
 })
 ```
 
@@ -79,7 +76,7 @@ This will return the same headers as the previous example, but take the `origin`
 
 By default, GraphQL Yoga will return `Access-Control-Allow-Origin: *` when preflight requests are made.
 
-This means cross origin requests from browsers work out of the box - however it may be appropriate to lock to a specifc domain before deploying to production.
+This means cross origin requests from browsers work out of the box - however it may be appropriate to lock to a specific domain before deploying to production.
 
 ## Disabling CORS
 
@@ -91,8 +88,8 @@ You can disable CORS on your Yoga server by simply passing `false` as the cors p
 import { createYoga } from 'graphql-yoga'
 
 const yogaApp = createYoga({
-  cors: false,
-  /* ...other args */
+  cors: false
+  // ...other args
 })
 ```
 

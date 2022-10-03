@@ -18,8 +18,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 export const config = {
   api: {
     // Disable body parsing (required for file uploads)
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
 export default createServer<{
@@ -48,8 +48,8 @@ import { getSession } from 'next-auth/react'
 export const config = {
   api: {
     // Disable body parsing (required for file uploads)
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }
 
 export default createServer<
@@ -63,9 +63,9 @@ export default createServer<
 >({
   context: async ({ req }) => {
     return {
-      session: await getSession({ req }),
+      session: await getSession({ req })
     }
-  },
+  }
 })
 ```
 

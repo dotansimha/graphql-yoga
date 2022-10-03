@@ -148,8 +148,8 @@ describe('browser', () => {
   let browser: puppeteer.Browser
   let page: puppeteer.Page
 
-  const playButtonSelector = `[d="M 11 9 L 24 16 L 11 23 z"]`
-  const stopButtonSelector = `[d="M 10 10 L 23 10 L 23 23 L 10 23 z"]`
+  const playButtonSelector = `[aria-label^="Execute"]`
+  const stopButtonSelector = `[aria-label^="Stop"]`
 
   let port: number
   const server = createServer(yogaApp)
@@ -177,14 +177,14 @@ describe('browser', () => {
   })
 
   const typeOperationText = async (text: string) => {
-    await page.type('.query-editor .CodeMirror textarea', text)
+    await page.type('.graphiql-query-editor .CodeMirror textarea', text)
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
     await new Promise((res) => setTimeout(res, 100))
   }
 
   const typeVariablesText = async (text: string) => {
-    await page.type('.variable-editor .CodeMirror textarea', text)
+    await page.type('[aria-label="Variables"] .CodeMirror textarea', text)
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
     await new Promise((res) => setTimeout(res, 100))
@@ -210,7 +210,7 @@ describe('browser', () => {
       await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText('{ alwaysTrue }')
 
-      await page.click('.execute-button')
+      await page.click('.graphiql-execute-button')
       const resultContents = await waitForResult()
 
       expect(resultContents).toEqual(
@@ -232,7 +232,7 @@ describe('browser', () => {
         `mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`,
       )
       await typeVariablesText(`{ "number": 3 }`)
-      await page.click('.execute-button')
+      await page.click('.graphiql-execute-button')
       const resultContents = await waitForResult()
 
       expect(resultContents).toEqual(
@@ -251,7 +251,7 @@ describe('browser', () => {
     test('execute SSE (subscription) operation', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText(`subscription { count(to: 2) }`)
-      await page.click('.execute-button')
+      await page.click('.graphiql-execute-button')
 
       await new Promise((res) => setTimeout(res, 50))
 
@@ -299,7 +299,7 @@ describe('browser', () => {
           query,
         )}`,
       )
-      await page.click('.execute-button')
+      await page.click('.graphiql-execute-button')
       const resultContents = await waitForResult()
 
       expect(resultContents).toEqual(
@@ -318,7 +318,7 @@ describe('browser', () => {
     test('should show BigInt correctly', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText(`{ bigint }`)
-      await page.click('.execute-button')
+      await page.click('.graphiql-execute-button')
       const resultContents = await waitForResult()
 
       expect(resultContents).toEqual(`{
@@ -330,7 +330,7 @@ describe('browser', () => {
     test('should show live queries correctly', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText(`query @live { liveCounter }`)
-      await page.click('.execute-button')
+      await page.click('.graphiql-execute-button')
 
       await new Promise((res) => setTimeout(res, 50))
 

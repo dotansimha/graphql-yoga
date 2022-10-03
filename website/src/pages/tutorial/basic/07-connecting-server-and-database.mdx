@@ -62,7 +62,9 @@ import { createContext } from './context'
 function main() {
   const yoga = createYoga({ schema, context: createContext })
   const server = createServer(yoga)
-  server.listen(4000)
+  server.listen(4000, () => {
+    console.info('Server is running on http://localhost:4000/graphql')
+  })
 }
 
 main()
@@ -117,33 +119,33 @@ const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
     feed: (parent: unknown, args: {}, context: GraphQLContext) =>
-      context.prisma.link.findMany(),
+      context.prisma.link.findMany()
   },
   Link: {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
-    url: (parent: Link) => parent.url,
+    url: (parent: Link) => parent.url
   },
   Mutation: {
     async postLink(
       parent: unknown,
       args: { description: string; url: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const newLink = await context.prisma.link.create({
         data: {
           url: args.url,
-          description: args.description,
-        },
+          description: args.description
+        }
       })
       return newLink
-    },
-  },
+    }
+  }
 }
 
 export const schema = makeExecutableSchema({
   resolvers: [resolvers],
-  typeDefs: [typeDefinitions],
+  typeDefs: [typeDefinitions]
 })
 ```
 
@@ -164,8 +166,8 @@ const resolvers = {
     // ...
     feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
       return context.prisma.link.findMany()
-    },
-  },
+    }
+  }
   // ...
 }
 ```
@@ -184,17 +186,17 @@ const resolvers = {
     async postLink(
       parent: unknown,
       args: { description: string; url: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const newLink = await context.prisma.link.create({
         data: {
           url: args.url,
-          description: args.description,
-        },
+          description: args.description
+        }
       })
       return newLink
-    },
-  },
+    }
+  }
 }
 ```
 

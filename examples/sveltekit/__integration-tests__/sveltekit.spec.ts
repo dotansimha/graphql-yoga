@@ -84,37 +84,22 @@ describe('SvelteKit integration', () => {
 				'http://localhost:3007/api/graphql?query=query+Hello+%7B%0A%09hello%0A%7D'
 			);
 
-			let strIntro = '';
-			try {
-				// A-1/ Wait for the introspection query result getting our type "hello"
-				const resIntro = await page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
-					timeout: timings.waitForResponse
-				});
-				const jsonIntro = await resIntro.json();
-				strIntro = JSON.stringify(jsonIntro, null, 0);
-			} catch (error) {
-				// We had an issue grabbing the introspection query result!
-				// let's see what is in the html with the finafinally
-			} finally {
-				const bodyContent = await body?.text();
-				// B/ Check that GraphiQL is showing
-				expect(bodyContent).toContain(`Yoga GraphiQL`)
-			}
-
-			// A-2/ Finish the test after the body check
-			expect(strIntro).toContain(`"name":"hello"`);
+			const bodyContent = await body?.text();
+			// B/ Check that GraphiQL is showing
+			expect(bodyContent).toContain(`Yoga GraphiQL`)
 
 			// C/ Tigger the default request and wait for the response
 			const [res] = await Promise.all([
 				page.waitForResponse((res) => res.url().endsWith('/api/graphql'), {
 					timeout: timings.waitForResponse
 				}),
-				page.click(`button[class="execute-button"]`)
+				page.click(`.graphiql-execute-button`)
 			]);
 
 			const json = await res.json();
 			const str = JSON.stringify(json, null, 0);
-			expect(str).toContain(`{"data":{"hello":"SvelteKit - GraphQL Yoga"}}`);
+			expect(str).toContain(`{"data":`);
+			expect(str).not.toContain('"errors"');
 		}
 	});
 });

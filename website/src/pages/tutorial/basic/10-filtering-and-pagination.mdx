@@ -40,20 +40,20 @@ const resolvers = {
     async feed(
       parent: unknown,
       args: { filterNeedle?: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const where = args.filterNeedle
         ? {
             OR: [
               { description: { contains: args.filterNeedle } },
-              { url: { contains: args.filterNeedle } },
-            ],
+              { url: { contains: args.filterNeedle } }
+            ]
           }
         : {}
 
       return context.prisma.link.findMany({ where })
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -127,24 +127,24 @@ const resolvers = {
     async feed(
       parent: unknown,
       args: { filterNeedle?: string; skip?: number; take?: number },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const where = args.filterNeedle
         ? {
             OR: [
               { description: { contains: args.filterNeedle } },
-              { url: { contains: args.filterNeedle } },
-            ],
+              { url: { contains: args.filterNeedle } }
+            ]
           }
         : {}
 
       return context.prisma.link.findMany({
         where,
         skip: args.skip,
-        take: args.take,
+        take: args.take
       })
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -192,7 +192,7 @@ const applyTakeConstraints = (params: {
 }) => {
   if (params.value < params.min || params.value > params.max) {
     throw new GraphQLYogaError(
-      `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`,
+      `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`
     )
   }
   return params.value
@@ -205,30 +205,30 @@ const resolvers = {
     async feed(
       parent: unknown,
       args: { filterNeedle?: string; skip?: number; take?: number },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const where = args.filterNeedle
         ? {
             OR: [
               { description: { contains: args.filterNeedle } },
-              { url: { contains: args.filterNeedle } },
-            ],
+              { url: { contains: args.filterNeedle } }
+            ]
           }
         : {}
 
       const take = applyTakeConstraints({
         min: 1,
         max: 50,
-        value: args.take ?? 30,
+        value: args.take ?? 30
       })
 
       return context.prisma.link.findMany({
         where,
         skip: args.skip,
-        take,
+        take
       })
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -248,7 +248,7 @@ const applyTakeConstraints = (params: {
 }) => {
   if (params.value < params.min || params.value > params.max) {
     throw new GraphQLError(
-      `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`,
+      `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`
     )
   }
   return params.value
@@ -261,30 +261,30 @@ const resolvers = {
     async feed(
       parent: unknown,
       args: { filterNeedle?: string; skip?: number; take?: number },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const where = args.filterNeedle
         ? {
             OR: [
               { description: { contains: args.filterNeedle } },
-              { url: { contains: args.filterNeedle } },
-            ],
+              { url: { contains: args.filterNeedle } }
+            ]
           }
         : {}
 
       const take = applyTakeConstraints({
         min: 1,
         max: 50,
-        value: args.take ?? 30,
+        value: args.take ?? 30
       })
 
       return context.prisma.link.findMany({
         where,
         skip: args.skip,
-        take,
+        take
       })
-    },
-  },
+    }
+  }
 }
 ```
 

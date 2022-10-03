@@ -1,20 +1,16 @@
----
-id: integration-with-sveltekit
-title: Integration with SvelteKit
-type: Guide
----
-
 import { PackageCmd } from '@theguild/components'
 
-[SvelteKit is the fastest way to build svelte apps.](https://kit.svelte.dev/) It is very simple, and let you build frontend & backend in a single place.
+# Integration with SvelteKit
+
+[SvelteKit is the fastest way to build svelte apps.](https://kit.svelte.dev) It is very simple, and let you build frontend & backend in a single place.
 
 You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQL & SvelteKit at the same time. [Envelop ecosystem](https://www.envelop.dev) for example!
 
 ## Installation
 
-In a SvelteKit project:import { PackageCmd } from '@theguild/components';
+In a SvelteKit project:
 
-<PackageCmd packages={['graphql', 'graphql-yoga']} />
+<PackageCmd packages={['graphql-yoga graphql']} />
 
 ## Example
 
@@ -22,7 +18,7 @@ In a SvelteKit project:import { PackageCmd } from '@theguild/components';
 
 Create the file `src/routes/api/graphql.ts`:
 
-```ts
+```ts filename="src/routes/api/graphql.ts"
 import { createYoga, createSchema } from 'graphql-yoga'
 import type { RequestEvent } from '@sveltejs/kit'
 
@@ -35,18 +31,18 @@ const yogaApp = createYoga<RequestEvent>({
 		`,
     resolvers: {
       Query: {
-        hello: () => 'SvelteKit - GraphQL Yoga',
-      },
-    },
+        hello: () => 'SvelteKit - GraphQL Yoga'
+      }
+    }
   }),
   // Needed to be defined explicitly because our endpoint lives at a different path other than `/graphql`
-  graphqlEndpoint: '/api/graphql',
+  graphqlEndpoint: '/api/graphql'
 })
 
 export { yogaApp as get, yogaApp as post }
 ```
 
-> **Simple example** on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/sveltekit)
+> **Simple example** on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/sveltekit).
 
-> More examples with our **KitQL** library [here](https://github.com/jycouet/kitql) <br />
+> More examples with our **KitQL** library [here](https://github.com/jycouet/kitql). <br />
 > The best of all GraphQL ecosystem for SvelteKit.

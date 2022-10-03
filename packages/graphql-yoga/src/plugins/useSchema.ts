@@ -5,7 +5,9 @@ import { Plugin } from './types'
 
 export type YogaSchemaDefinition<TContext> =
   | PromiseOrValue<GraphQLSchemaWithContext<TContext>>
-  | ((request: Request) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>)
+  | ((
+      context: TContext & { request: Request },
+    ) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>)
 
 export const useSchema = <
   TContext extends YogaInitialContext = YogaInitialContext,
@@ -25,22 +27,19 @@ export const useSchema = <
   if ('then' in schemaDef) {
     let schema: GraphQLSchema | undefined
     return {
-      async onRequest() {
-        if (!schema) {
-          schema = await schemaDef
+      onRequestParse() {
+        return {
+          async onRequestParseDone() {
+            if (!schema) {
+              schema = await schemaDef
+            }
+          },
         }
       },
       onEnveloped({ setSchema }) {
         if (!schema) {
-          throw new GraphQLError(
+          throw new Error(
             `You provide a promise of a schema but it hasn't been resolved yet. Make sure you use this plugin with GraphQL Yoga.`,
-            {
-              extensions: {
-                http: {
-                  status: 500,
-                },
-              },
-            },
           )
         }
         setSchema(schema)
@@ -49,28 +48,30 @@ export const useSchema = <
   }
   const schemaByRequest = new WeakMap<Request, GraphQLSchema>()
   return {
-    async onRequest({ request }) {
-      const schema = await schemaDef(request)
-      schemaByRequest.set(request, schema)
+    onRequestParse({ request, serverContext }) {
+      return {
+        async onRequestParseDone() {
+          const schema = await schemaDef({
+            ...serverContext,
+            request,
+          } as TContext & { request: Request })
+          schemaByRequest.set(request, schema)
+        },
+      }
     },
     onEnveloped({ setSchema, context }) {
-      if (context?.request) {
-        const schema = schemaByRequest.get(context.request)
-        if (schema) {
-          setSchema(schema)
-        }
-      } else {
-        throw new GraphQLError(
+      if (context?.request == null) {
+        throw new Error(
           'Request object is not available in the context. Make sure you use this plugin with GraphQL Yoga.',
-          {
-            extensions: {
-              http: {
-                status: 500,
-              },
-            },
-          },
         )
       }
+      const schema = schemaByRequest.get(context.request)
+      if (schema == null) {
+        throw new Error(
+          `No schema found for this request. Make sure you use this plugin with GraphQL Yoga.`,
+        )
+      }
+      setSchema(schema)
     },
   }
 }

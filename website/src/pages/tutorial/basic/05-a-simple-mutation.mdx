@@ -45,14 +45,14 @@ const links: Link[] = [
   {
     id: 'link-0',
     url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL',
-  },
+    description: 'Fullstack tutorial for GraphQL'
+  }
 ]
 
 const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: () => links,
+    feed: () => links
   },
   Mutation: {
     postLink: (parent: unknown, args: { description: string; url: string }) => {
@@ -63,14 +63,14 @@ const resolvers = {
       const link: Link = {
         id: `link-${idCount}`,
         description: args.description,
-        url: args.url,
+        url: args.url
       }
 
       links.push(link)
 
       return link
-    },
-  },
+    }
+  }
 }
 ```
 

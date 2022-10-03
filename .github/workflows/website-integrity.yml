@@ -14,7 +14,7 @@ jobs:
       - name: Fetch
         run: git fetch origin v3
       - name: Use Node 18
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'yarn'

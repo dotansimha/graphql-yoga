@@ -1,0 +1,30 @@
+diff --git a/node_modules/@graphiql/react/dist/index.es.js b/node_modules/@graphiql/react/dist/index.es.js
+index f7ba535..3de8b0c 100644
+--- a/node_modules/@graphiql/react/dist/index.es.js
++++ b/node_modules/@graphiql/react/dist/index.es.js
+@@ -18882,7 +18882,7 @@ function ExecutionContextProvider(props2) {
+         });
+         try {
+           for await (const result of value22) {
+-            handleResponse(result);
++            setResponse(formatResult(result));
+           }
+           setIsFetching(false);
+           setSubscription(null);
+@@ -21891,12 +21891,16 @@ function hasStringOrNullKey(obj, key) {
+ }
+ __name(hasStringOrNullKey, "hasStringOrNullKey");
+ __name$c(hasStringOrNullKey, "hasStringOrNullKey");
++window.g = {};
+ function useSynchronizeActiveTabValues({
+   queryEditor,
+   variableEditor,
+   headerEditor,
+   responseEditor
+ }) {
++  window.g.resultComponent = {
++    viewer: responseEditor,
++  };
+   return useCallback(
+     (state2) => {
+       var _a, _b, _c, _d, _e;

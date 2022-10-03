@@ -76,15 +76,15 @@ const typeDefs = /* GraphQL */ `
 
 const resolvers = {
   Query: {
-    hello: (_, { name }) => `Hello ${name || 'World'}`,
-  },
+    hello: (_, { name }) => `Hello ${name || 'World'}`
+  }
 }
 
 const yoga = createYoga({
   schema: createSchema({
     typeDefs,
-    resolvers,
-  }),
+    resolvers
+  })
 })
 
 const server = createServer(yoga)

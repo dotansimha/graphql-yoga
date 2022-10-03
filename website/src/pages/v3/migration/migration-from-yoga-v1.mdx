@@ -1,14 +1,10 @@
----
-id: migration-from-yoga-v1
-title: Migration from Yoga V1
-type: Guide
----
-
 import { PackageCmd } from '@theguild/components'
+
+# Migration from Yoga V1
 
 ## Installation
 
-You can start with updating `graphql-yoga` package.import { PackageCmd } from '@theguild/components';
+You can start with updating `graphql-yoga` package.
 
 <PackageCmd packages={['graphql-yoga']} />
 
@@ -36,11 +32,13 @@ import { createServer } from 'http'
 import { typeDefs, resolvers } from './schema'
 
 const yoga = createYoga({
-  schema: createSchema({ typeDefs, resolvers }),
+  schema: createSchema({ typeDefs, resolvers })
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ### Load type definitions from a file
@@ -56,7 +54,7 @@ import { resolvers } from './schema'
 
 const server = new GraphQLServer({
   typeDefs: path.join(__dirname, 'type-definitions.graphql'),
-  resolvers,
+  resolvers
 })
 
 server.start()
@@ -77,14 +75,16 @@ const yoga = createYoga({
   schema: createSchema({
     typeDefs: fs.readFileSync(
       path.join(__dirname, 'type-definitions.graphql'),
-      'utf-8',
+      'utf-8'
     ),
-    resolvers,
-  }),
+    resolvers
+  })
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 For more complex loading of type-definitions please refer to [`graphql-tools/load-files` ](https://www.graphql-tools.com/docs/schema-loading#load-typedefsdocumentnode-and-resolvers-from-files).
@@ -106,7 +106,7 @@ const server = new GraphQLServer({
       hi: String
     }
   `,
-  directiveResolvers: uppercaseDirectiveResolverImplementation,
+  directiveResolvers: uppercaseDirectiveResolverImplementation
 })
 
 server.start()
@@ -114,7 +114,7 @@ server.start()
 
 Before deciding upon using schema directives, you should consider whether your custom directive could be instead implemented via a field argument (abstraction).
 
-In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.import { PackageCmd } from '@theguild/components';
+In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.
 
 <PackageCmd packages={['@graphql-tools/utils', '@graphql-tools/schema']} />
 
@@ -124,18 +124,18 @@ In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.import { 
 import { Plugin, createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
 import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils'
-import { makeExecuteableSchema } from '@graphql-tools/schema'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { defaultFieldResolver } from 'graphql'
 import { typeDefs, resolvers } from './schema'
 
-let schema = makeExecuteableSchema({
+let schema = makeExecutableSchema({
   typeDefs: [
     typeDefs,
     /* GraphQL */ `
       directive @uppercase on FIELD_DEFINITION
-    `,
+    `
   ],
-  resolvers,
+  resolvers
 })
 
 schema = mapSchema(schema, {
@@ -151,18 +151,16 @@ schema = mapSchema(schema, {
             return result.toUpperCase()
           }
           return result
-        },
+        }
       }
     }
-  },
+  }
 })
 
-const yoga = createYoga({
-  schema,
-})
+const yoga = createYoga({ schema })
 ```
 
-You can learn more about this practise within the [`graphql-tools` schema directives documentation](https://www.graphql-tools.com/docs/schema-directives#using-schema-directives).
+You can learn more about this practice within the [`graphql-tools` schema directives documentation](https://www.graphql-tools.com/docs/schema-directives#using-schema-directives).
 
 ## Context
 
@@ -183,14 +181,16 @@ import { db } from './db'
 const server = new GraphQLServer({
   typeDefs,
   resolvers,
-  context: (initialContext) => {
+  context(initialContext) {
     const authHeader = initialContext.request.headers['authorization'] ?? null
     return { ...initialContext, db, authHeader }
-  },
+  }
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 **Yoga v3**
@@ -202,20 +202,19 @@ import { typeDefs, resolvers } from './schema'
 import { db } from './db'
 
 const yoga = createYoga({
-  schema: createSchema({
-    typeDefs,
-    resolvers,
-  }),
-  context: (initialContext) => {
+  schema: createSchema({ typeDefs, resolvers }),
+  context(initialContext) {
     const authHeader =
       initialContext.request.headers.get('authorization') ?? null
 
     return { db, authHeader }
-  },
+  }
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Middlewares
@@ -223,7 +222,7 @@ server.listen(4000)
 GraphQL Yoga v1 included [`graphql-middleware`](https://github.com/maticzav/graphql-middleware) for wrapping resolver functions with common logic.
 GraphQL Yoga v2 no longer includes `graphql-middleware` by default as using it can result in bad performance as it wraps all field resolvers within the schema.
 
-If you cannot migrate your `graphql-middleware` code to something like [`graphql-tool` `mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://www.npmjs.com/package/@envelop/graphql-middleware) plugin.import { PackageCmd } from '@theguild/components';
+If you cannot migrate your `graphql-middleware` code to something like [`graphql-tool` `mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://www.npmjs.com/package/@envelop/graphql-middleware) plugin.
 
 <PackageCmd packages={['@envelop/graphql-middleware']} />
 
@@ -241,7 +240,7 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
   const permit = ctx.request.get('Authorization') === code
 
   if (!permit) {
-    throw new Error(`Not authorised!`)
+    throw new Error(`Not authorized!`)
   }
 
   return resolve()
@@ -249,15 +248,15 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
 
 const permissions = {
   Query: {
-    secured: isLoggedIn,
+    secured: isLoggedIn
   },
-  Me: isLoggedIn,
+  Me: isLoggedIn
 }
 
 const server = new GraphQLServer({
   typeDefs,
   resolvers,
-  middleware: [permissions],
+  middleware: [permissions]
 })
 
 server.start()
@@ -279,7 +278,7 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
   const permit = ctx.request.get('Authorization') === code
 
   if (!permit) {
-    throw new Error(`Not authorised!`)
+    throw new Error(`Not authorized!`)
   }
 
   return resolve()
@@ -287,18 +286,20 @@ const isLoggedIn = async (resolve, parent, args, ctx, info) => {
 
 const permissions = {
   Query: {
-    secured: isLoggedIn,
+    secured: isLoggedIn
   },
-  Me: isLoggedIn,
+  Me: isLoggedIn
 }
 
 const yoga = createYoga({
   schema: createSchema({ typeDefs, resolvers }),
-  plugins: [useGraphQLMiddleware([permissions])],
+  plugins: [useGraphQLMiddleware([permissions])]
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 For more details please refer to the
@@ -383,18 +384,18 @@ const server = new GraphQLServer({
   resolvers: {
     Subscription: {
       randomNumber: {
-        subscribe: (_, _, context) => {
+        subscribe: (_, _2, context) => {
           return context.asyncIterator('randomNumber')
         },
-        resolve: (value) => value,
-      },
+        resolve: (value) => value
+      }
     },
     Mutation: {
       publishRandomNumber: (_, args, context) => {
         context.pubSub.publish('randomNumber', args.randomNumber)
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 server.start()
@@ -429,23 +430,25 @@ const yoga = createYoga({
     resolvers: {
       Subscription: {
         randomNumber: {
-          subscribe: (_, _, context) => {
+          subscribe: (_, _2, context) => {
             return context.subscribe('randomNumber')
           },
-          resolve: (value) => value,
-        },
+          resolve: (value) => value
+        }
       },
       Mutation: {
         publishRandomNumber: (_, args, context) => {
           context.pubSub.publish('randomNumber', args.randomNumber)
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ### Filtering events
@@ -479,20 +482,20 @@ const server = new GraphQLServer({
     Subscription: {
       randomNumber: {
         subscribe: withFilter(
-          (_, _, context) => {
+          (_, _2, context) => {
             return context.asyncIterator('randomNumber')
           },
-          (payload, args) => payload > args,
+          (payload, args) => payload > args
         ),
-        resolve: (value) => value,
-      },
+        resolve: (value) => value
+      }
     },
     Mutation: {
       publishRandomNumber: (_, args, context) => {
         context.pubSub.publish('randomNumber', args.randomNumber)
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 server.start()
@@ -530,21 +533,23 @@ const yoga = createYoga({
           subscribe: (_, args, context) => {
             return pipe(
               context.subscribe('randomNumber'),
-              filter((value) => value > args.greaterThan),
+              filter((value) => value > args.greaterThan)
             )
           },
-          resolve: (value) => value,
-        },
+          resolve: (value) => value
+        }
       },
       Mutation: {
         publishRandomNumber: (_, args, context) => {
           context.pubSub.publish('randomNumber', args.randomNumber)
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```

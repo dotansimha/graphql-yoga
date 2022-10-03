@@ -10,14 +10,14 @@ import { createServer } from '@graphql-yoga/common'
 const yoga = createServer()
 
 const { response, executionResult } = await yoga.inject({
-  document: '{ greetings }',
+  document: '{ greetings }'
 })
 
 console.assert(response.status === 200, 'Response status should be 200')
 console.assert(
   executionResult.data.greetings ===
     'This is the `greetings` field of the root `Query` type',
-  `Expected 'This is the \`greetings\` field of the root \`Query\` type' but got ${executionResult.data.greetings}`,
+  `Expected 'This is the \`greetings\` field of the root \`Query\` type' but got ${executionResult.data.greetings}`
 )
 ```
 
@@ -31,11 +31,11 @@ const yoga = createServer()
 const response = await yoga.fetch('http://localhost:4000/graphql', {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    query: '{ greetings }',
-  }),
+    query: '{ greetings }'
+  })
 })
 
 console.assert(response.status === 200, 'Response status should be 200')
@@ -43,7 +43,7 @@ const executionResult = await response.json()
 console.assert(
   executionResult.data.greetings ===
     'This is the `greetings` field of the root `Query` type',
-  `Expected 'This is the \`greetings\` field of the root \`Query\` type' but got ${executionResult.data.greetings}`,
+  `Expected 'This is the \`greetings\` field of the root \`Query\` type' but got ${executionResult.data.greetings}`
 )
 ```
 
@@ -57,12 +57,12 @@ import { deepEqual } from 'node:assert'
 const yoga = createServer()
 
 const response = await request(yoga).post('/graphql').send({
-  query: '{ greetings }',
+  query: '{ greetings }'
 })
 
 deepEqual(response.status, 200)
 deepEqual(
   response.body.data.greetings,
-  'This is the `greetings` field of the root `Query` type',
+  'This is the `greetings` field of the root `Query` type'
 )
 ```

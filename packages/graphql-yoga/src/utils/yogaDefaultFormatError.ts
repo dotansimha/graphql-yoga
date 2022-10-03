@@ -1,5 +1,6 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { isGraphQLError } from '@envelop/core'
+import { GraphQLErrorExtensions } from 'graphql'
 
 export const yogaDefaultFormatError = ({
   error,
@@ -18,13 +19,20 @@ export const yogaDefaultFormatError = ({
         return error
       }
       // Original error should be removed
-      const extensions = {
+      const extensions: GraphQLErrorExtensions = {
         // @ts-ignore
-        ...error.extensions,
+        ...err.extensions,
+        http: {
+          status: 500,
+          // @ts-ignore
+          ...err.extensions?.http,
+        },
       }
       if (dev) {
         extensions.originalError = {
+          // @ts-ignore
           message: error.originalError.message,
+          // @ts-ignore
           stack: error.originalError.stack,
         }
       }

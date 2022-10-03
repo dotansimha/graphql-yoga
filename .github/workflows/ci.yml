@@ -11,15 +11,15 @@ on:
       - 'website/**'
 
 jobs:
-  node:
+  unit:
     name: unit / nodejs v${{ matrix.node-version }}
     uses: the-guild-org/shared-config/.github/workflows/ci-node-matrix.yml@main
     with:
       script: 'yarn build && yarn test'
       nodeVersions: '[14,16,18]'
 
-  test-integration:
-    name: Run integration tests
+  integration:
+    name: integration / nodejs v${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,9 +34,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-
-      - name: Setup Bun Runtime
-        uses: antongolub/action-setup-bun@v1
 
       - name: Cache Node Modules
         uses: actions/cache@v3
@@ -54,10 +51,9 @@ jobs:
         run: yarn build
 
       - name: Run Tests
-        run: yarn test:integration
+        run: yarn test:integration --ci
 
-  test-esm:
-    name: esm
+  esm:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -85,8 +81,13 @@ jobs:
         with:
           nodeVersion: 18
 
-      - name: Use Deno
+      - name: Setup Bun Runtime
+        uses: antongolub/action-setup-bun@v1
+
+      - name: Setup Deno Runtime
         uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
 
       - name: Build Packages
         run: yarn build

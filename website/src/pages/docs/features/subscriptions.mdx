@@ -37,7 +37,7 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        hello: () => 'world',
+        hello: () => 'world'
       },
       Subscription: {
         countdown: {
@@ -47,11 +47,11 @@ const server = createServer({
               await new Promise((resolve) => setTimeout(resolve, 1000))
               yield { countdown: i }
             }
-          },
-        },
-      },
-    },
-  },
+          }
+        }
+      }
+    }
+  }
 })
 
 server.start()
@@ -112,12 +112,12 @@ url.searchParams.append(
     subscription Countdown($from: Int!) {
       countdown(from: $from)
     }
-  `,
+  `
 )
 url.searchParams.append('variables', JSON.stringify({ from: 10 }))
 
 const eventsource = new EventSource(url.href, {
-  withCredentials: true, // This is required for cookies
+  withCredentials: true // This is required for cookies
 })
 
 eventsource.onmessage = (event) => {
@@ -140,7 +140,7 @@ import {
   Observable,
   ApolloClient,
   InMemoryCache,
-  gql,
+  gql
 } from '@apollo/client/core'
 import { split } from '@apollo/client/link/core'
 import { HttpLink } from '@apollo/client/link/http'
@@ -159,7 +159,7 @@ class SSELink extends ApolloLink {
     if (operation.operationName) {
       url.searchParams.append(
         'operationName',
-        JSON.stringify(operation.operationName),
+        JSON.stringify(operation.operationName)
       )
     }
     if (operation.variables) {
@@ -168,7 +168,7 @@ class SSELink extends ApolloLink {
     if (operation.extensions) {
       url.searchParams.append(
         'extensions',
-        JSON.stringify(operation.extensions),
+        JSON.stringify(operation.extensions)
       )
     }
 
@@ -203,7 +203,7 @@ const link = split(
     )
   },
   sseLink,
-  httpLink,
+  httpLink
 )
 ```
 
@@ -225,13 +225,13 @@ const client = createClient({
         if (operation.variables) {
           url.searchParams.append(
             'variables',
-            JSON.stringify(operation.variables),
+            JSON.stringify(operation.variables)
           )
         }
         return {
           subscribe(sink) {
             const eventsource = new EventSource(url.toString(), {
-              withCredentials: true, // This is required for cookies
+              withCredentials: true // This is required for cookies
             })
             eventsource.onmessage = (event) => {
               const data = JSON.parse(event.data)
@@ -244,13 +244,13 @@ const client = createClient({
               sink.error(error)
             }
             return {
-              unsubscribe: () => eventsource.close(),
+              unsubscribe: () => eventsource.close()
             }
-          },
+          }
         }
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 ```
 
@@ -269,8 +269,8 @@ async function main() {
   const yogaApp = createServer({
     graphiql: {
       // Use WebSockets in GraphiQL
-      subscriptionsProtocol: 'WS',
-    },
+      subscriptionsProtocol: 'WS'
+    }
   })
 
   // Get NodeJS Server from Yoga
@@ -278,7 +278,7 @@ async function main() {
   // Create WebSocket server instance from our Node server
   const wsServer = new WebSocketServer({
     server: httpServer,
-    path: yogaApp.getAddressInfo().endpoint,
+    path: yogaApp.getAddressInfo().endpoint
   })
 
   // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
@@ -298,16 +298,16 @@ async function main() {
           contextValue: await contextFactory(),
           rootValue: {
             execute,
-            subscribe,
-          },
+            subscribe
+          }
         }
 
         const errors = validate(args.schema, args.document)
         if (errors.length) return errors
         return args
-      },
+      }
     },
-    wsServer,
+    wsServer
   )
 }
 
@@ -371,23 +371,23 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        hello: () => 'world',
+        hello: () => 'world'
       },
       Subscription: {
         randomNumber: {
           // subscribe to the randomNumber event
           subscribe: () => pubSub.subscribe('randomNumber'),
-          resolve: (payload) => payload,
-        },
+          resolve: (payload) => payload
+        }
       },
       Mutation: {
         broadcastRandomNumber(_, args) {
           // publish a random number
           pubSub.publish('randomNumber', Math.random())
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 })
 
 server.start()
@@ -510,7 +510,7 @@ const subscribeClient = new Redis()
 
 const eventTarget = createRedisEventTarget({
   publishClient,
-  subscribeClient,
+  subscribeClient
 })
 
 const pubSub = createPubSub({ eventTarget })
@@ -542,7 +542,7 @@ import {
   createPubSub,
   pipe,
   map,
-  filter,
+  filter
 } from '@graphql-yoga/node'
 
 const pubSub = createPubSub<{
@@ -552,7 +552,7 @@ const pubSub = createPubSub<{
 const source = pipe(
   pubSub.subscribe('randomNumber'),
   map((publishedNumber) => publishedNumber * 2),
-  filter((multipliedNumber) => multipliedNumber < 10),
+  filter((multipliedNumber) => multipliedNumber < 10)
 )
 
 ;(async () => {
@@ -592,7 +592,7 @@ const server = createServer({
   `,
   resolvers: {
     Query: {
-      hello: () => 'world',
+      hello: () => 'world'
     },
     Subscription: {
       randomNumber: {
@@ -601,18 +601,18 @@ const server = createServer({
           pipe(
             pubSub.subscribe('randomNumber'),
             map((publishedNumber) => publishedNumber * args.multiplyBy),
-            filter((multipliedNumber) => multipliedNumber < args.lessThan),
+            filter((multipliedNumber) => multipliedNumber < args.lessThan)
           ),
-        resolve: (payload) => payload,
-      },
+        resolve: (payload) => payload
+      }
     },
     Mutation: {
       broadcastRandomNumber(_, args) {
         // publish a random number
         pubSub.publish('randomNumber', Math.random())
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 server.start()
@@ -635,7 +635,7 @@ import {
   createPubSub,
   Repeater,
   pipe,
-  map,
+  map
 } from '@graphql-yoga/node'
 
 let globalCounter = 0
@@ -658,7 +658,7 @@ const server = createServer({
   `,
   resolvers: {
     Query: {
-      hello: () => 'world',
+      hello: () => 'world'
     },
     Subscription: {
       globalCounter: {
@@ -671,13 +671,13 @@ const server = createServer({
               // upon initiating the subscription
               undefined,
               // event stream for future updates
-              pubSub.subscribe('globalCounter:change'),
+              pubSub.subscribe('globalCounter:change')
             ]),
             // map all stream values to the latest globalCounter
-            map(() => globalCounter),
+            map(() => globalCounter)
           ),
-        resolve: (payload) => payload,
-      },
+        resolve: (payload) => payload
+      }
     },
     Mutation: {
       incrementGlobalCounter() {
@@ -685,9 +685,9 @@ const server = createServer({
         // publish a global counter increment event
         pubSub.publish('globalCounter:change')
         return globalCounter
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 server.start()
@@ -707,7 +707,7 @@ type User = {
 
 let user: User | null = {
   id: '1',
-  login: 'Laurin',
+  login: 'Laurin'
 }
 
 const pubSub = createPubSub<{
@@ -738,7 +738,7 @@ const server = createServer({
   `,
   resolvers: {
     Query: {
-      hello: () => 'world',
+      hello: () => 'world'
     },
     Subscription: {
       user: {
@@ -748,13 +748,13 @@ const server = createServer({
             Repeater.merge([
               undefined,
               pubSub.subscribe('userLoginChanged'),
-              pubSub.subscribe('userDeleted'),
+              pubSub.subscribe('userDeleted')
             ]),
             // map all stream values to the latest user
-            map(() => user),
+            map(() => user)
           ),
-        resolve: (payload) => payload,
-      },
+        resolve: (payload) => payload
+      }
     },
     Mutation: {
       deleteUser() {
@@ -769,9 +769,9 @@ const server = createServer({
         user.login = args.newLogin
         pubSub.publish('userLoginChanged')
         return true
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 server.start()

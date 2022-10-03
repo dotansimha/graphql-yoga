@@ -3,10 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "start": "netlify dev",
+    "start": "yarn build && netlify dev",
+    "build": "node ./build.js",
     "check": "exit 0"
   },
   "devDependencies": {
-    "netlify-cli": "^11.0.0"
+    "netlify-cli": "^12.0.0",
+    "esbuild": "0.15.10"
+  },
+  "dependencies": {
+    "graphql-yoga": "3.0.0-next.3",
+    "graphql": "16.6.0"
   }
 }

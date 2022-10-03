@@ -66,8 +66,8 @@ const typeDefinitions = /* GraphQL */ `
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello World!',
-  },
+    hello: () => 'Hello World!'
+  }
 }
 ```
 
@@ -88,13 +88,13 @@ const typeDefinitions = /* GraphQL */ `
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello World!',
-  },
+    hello: () => 'Hello World!'
+  }
 }
 
 export const schema = makeExecutableSchema({
   resolvers: [resolvers],
-  typeDefs: [typeDefinitions],
+  typeDefs: [typeDefinitions]
 })
 ```
 
@@ -139,7 +139,7 @@ async function main() {
 
   const result = await execute({
     schema,
-    document: myQuery,
+    document: myQuery
   })
 
   console.log(result)

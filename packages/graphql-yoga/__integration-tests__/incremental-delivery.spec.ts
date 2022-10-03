@@ -9,38 +9,26 @@ import {
 import { createYoga, Plugin, Repeater } from 'graphql-yoga'
 import { Push } from '@repeaterjs/repeater'
 import { createServer, Server } from 'http'
-import {
-  createFetch,
-  AbortController,
-  fetch,
-  File,
-  FormData,
-} from '@whatwg-node/fetch'
+import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { AddressInfo } from 'net'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
     let counter = 0
-    let resolve: () => void = () => {
-      throw new Error('Noop')
-    }
-
-    const p = new Promise<IteratorResult<ExecutionResult>>((res) => {
-      resolve = () => res({ done: true, value: { data: 'end' } })
-    })
 
     const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
-      next: () => {
-        if (counter === 0) {
-          counter = counter + 1
-          return Promise.resolve({
-            done: false,
-            value: { data: 'turtles' },
-          } as any)
+      async next() {
+        counter++
+        return {
+          done: false,
+          value: {
+            data: {
+              counter,
+            },
+          },
         }
-        return p
       },
       return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
     }
@@ -64,25 +52,20 @@ describe('incremental delivery', () => {
     try {
       await new Promise<void>((resolve) => server.listen(0, resolve))
       const port = (server.address() as AddressInfo).port
-      const abortCtrl = new AbortController()
-      const res = await yoga.fetchAPI.fetch(
-        `http://localhost:${port}/graphql`,
-        {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            accept: 'multipart/mixed',
-          },
-          body: JSON.stringify({
-            query: /* GraphQL */ `
-              query {
-                a
-              }
-            `,
-          }),
-          signal: abortCtrl.signal,
+      const res = await fetch(`http://localhost:${port}/graphql`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'multipart/mixed',
         },
-      )
+        body: JSON.stringify({
+          query: /* GraphQL */ `
+            query {
+              counter
+            }
+          `,
+        }),
+      })
 
       // Start and Close a HTTP Request
       for await (const chunk of res.body!) {
@@ -98,7 +81,6 @@ describe('incremental delivery', () => {
           break
         }
       }
-      abortCtrl.abort()
       await new Promise((res) => setTimeout(res, 300))
       expect(fakeIterator.return).toBeCalled()
     } finally {

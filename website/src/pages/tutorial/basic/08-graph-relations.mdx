@@ -106,9 +106,9 @@ const resolvers = {
     async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
-      context: GraphQLContext,
-    ) {},
-  },
+      context: GraphQLContext
+    ) {}
+  }
 }
 ```
 
@@ -124,18 +124,18 @@ const resolvers = {
     async postCommentOnLink(
       parent: unknown,
       args: { linkId: string; body: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       const newComment = await context.prisma.comment.create({
         data: {
           linkId: parseInt(args.linkId),
-          body: args.body,
-        },
+          body: args.body
+        }
       })
 
       return newComment
-    },
-  },
+    }
+  }
 }
 ```
 
@@ -241,9 +241,9 @@ const resolvers = {
     async comment(
       parent: unknown,
       args: { id: string },
-      context: GraphQLContext,
-    ) {},
-  },
+      context: GraphQLContext
+    ) {}
+  }
   // ... other resolver maps ...
 }
 ```
@@ -260,13 +260,13 @@ const resolvers = {
     async comment(
       parent: unknown,
       args: { id: string },
-      context: GraphQLContext,
+      context: GraphQLContext
     ) {
       return context.prisma.comment.findUnique({
-        where: { id: parseInt(args.id) },
+        where: { id: parseInt(args.id) }
       })
-    },
-  },
+    }
+  }
   // ... other resolver maps ...
 }
 ```
@@ -355,11 +355,11 @@ const resolvers = {
     comments(parent: Link, args: {}, context: GraphQLContext) {
       return context.prisma.comment.findMany({
         where: {
-          linkId: parent.id,
-        },
+          linkId: parent.id
+        }
       })
-    },
-  },
+    }
+  }
   // ... other resolver maps ...
 }
 ```

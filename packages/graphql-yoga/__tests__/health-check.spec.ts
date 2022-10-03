@@ -1,16 +1,11 @@
 import { createYoga } from 'graphql-yoga'
 
-describe('health checks', () => {
+describe('health check', () => {
   it('return 200 status code for health check endpoint', async () => {
     const yoga = createYoga({
       logging: false,
     })
-    const result = await yoga.fetch('http://yoga/health', {
-      method: 'GET',
-    })
+    const result = await yoga.fetch('http://yoga/health')
     expect(result.status).toBe(200)
-    expect(await result.json()).toEqual({
-      message: 'alive',
-    })
   })
 })
