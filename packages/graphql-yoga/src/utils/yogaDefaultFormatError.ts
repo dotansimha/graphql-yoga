@@ -21,11 +21,11 @@ export const yogaDefaultFormatError = ({
       // Original error should be removed
       const extensions: GraphQLErrorExtensions = {
         // @ts-ignore
-        ...err.extensions,
+        ...error.extensions,
         http: {
           status: 500,
           // @ts-ignore
-          ...err.extensions?.http,
+          ...error.extensions?.http,
         },
       }
       if (dev) {
