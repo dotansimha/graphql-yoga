@@ -9,6 +9,7 @@ import {
 import {
   GetEnvelopedFn,
   envelop,
+  useEngine,
   useExtendContext,
   useLogger,
   PromiseOrValue,
@@ -275,6 +276,7 @@ export class YogaServer<
     const graphqlEndpoint = this.graphqlEndpoint
 
     this.plugins = [
+      useEngine({ parse, validate, execute, subscribe }),
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
@@ -412,10 +414,6 @@ export class YogaServer<
     ]
 
     this.getEnveloped = envelop({
-      parse,
-      validate,
-      execute,
-      subscribe,
       plugins: this.plugins,
     }) as unknown as GetEnvelopedFn<
       TUserContext & TServerContext & YogaInitialContext
