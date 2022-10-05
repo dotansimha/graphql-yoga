@@ -39,6 +39,6 @@ describe('graphql-auth example integration', () => {
         },
       ]
     `)
-    expect(body.data).toBeNull()
+    expect(body.data).toBeFalsy()
   })
 })
