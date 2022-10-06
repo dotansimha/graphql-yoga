@@ -3,31 +3,82 @@ import { PackageCmd } from '@theguild/components'
 # Integration with AWS Lambda
 
 AWS Lambda is a serverless computing platform that makes it easy to build applications that run on the AWS cloud. GraphQL Yoga is platform agnostic so they can fit together easily.
-In order to reduce the boilerplate we prefer to use [Serverless Express from Vendia](https://github.com/vendia/serverless-express).
 
 ## Installation
 
-<PackageCmd
-  packages={['graphql', '@vendia/serverless-express', 'graphql-yoga']}
-/>
+<PackageCmd packages={['graphql', 'aws-lambda', 'graphql-yoga']} />
 
 ## Example
 
 `graphql.ts`
 
 ```ts
-import type { Handler } from '@aws-cdk/aws-lambda'
-import { createYoga } from 'graphql-yoga'
-import { configure } from '@vendia/serverless-express'
+import { createYoga, createSchema } from 'graphql-yoga'
+import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
 
-const app = createYoga()
-
-export const handler: Handler = configure({
-  // Pass Yoga as app
-  app,
-  // Pass Yoga's logger to listen to the logs from Serverless Express as well
-  log: app.logger
+const yoga = createYoga<{
+  event: APIGatewayEvent
+  lambdaContext: Context
+}>({
+  // You need to specify the path to your lambda function
+  graphqlEndpoint: '/my-lambda',
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        greetings: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type'
+      }
+    }
+  })
 })
+
+export async function handler(
+  event: APIGatewayEvent,
+  lambdaContext: Context
+): Promise<APIGatewayProxyResult> {
+  const url = new URL(event.path, 'http://localhost')
+  if (event.queryStringParameters != null) {
+    for (const name in event.queryStringParameters) {
+      const value = event.queryStringParameters[name]
+      if (value != null) {
+        url.searchParams.set(name, value)
+      }
+    }
+  }
+
+  const response = await yoga.fetch(
+    url,
+    {
+      method: event.httpMethod,
+      headers: event.headers as HeadersInit,
+      body: event.body
+        ? Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
+        : undefined
+    },
+    {
+      event,
+      lambdaContext
+    }
+  )
+
+  const responseHeaders: Record<string, string> = {}
+
+  response.headers.forEach((value, name) => {
+    responseHeaders[name] = value
+  })
+
+  return {
+    statusCode: response.status,
+    headers: responseHeaders,
+    body: await response.text(),
+    isBase64Encoded: false
+  }
+}
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/aws-lambda)
