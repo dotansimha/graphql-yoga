@@ -98,8 +98,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
   },
   test: async ({ functionUrl }) => {
     console.log(`ℹ️ AWS Lambda Function deployed to URL: ${functionUrl.value}`)
-    // DOTAN: This is a known issue at the moment, this seems to fail to serve GraphiQL but POST does work.
-    // await assertGraphiQL(functionUrl.value)
+    await assertGraphiQL(functionUrl.value)
     await assertQuery(functionUrl.value + '/graphql')
   },
 }
