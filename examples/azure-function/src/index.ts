@@ -35,7 +35,6 @@ const httpTrigger: AzureFunction = async function (
       body: req.rawBody,
       headers: req.headers,
     })
-    const response = await app.handleRequest(request, context)
     const responseText = await response.text()
     context.log('GraphQL Yoga response text:', responseText)
 
