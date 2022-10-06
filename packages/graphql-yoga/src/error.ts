@@ -21,14 +21,27 @@ function hasToString(obj: any): obj is { toString(): string } {
   return obj != null && typeof obj.toString === 'function'
 }
 
+export function isOriginalGraphQLError(error: Error): boolean {
+  if (error instanceof GraphQLError) {
+    if (error.originalError != null) {
+      return isOriginalGraphQLError(error.originalError)
+    }
+    return true
+  }
+  return false
+}
+
 export function handleError(
   error: unknown,
   maskedErrorsOpts: YogaMaskedErrorOpts | null,
-  errors: GraphQLError[] = [],
 ): GraphQLError[] {
+  const errors = new Set<GraphQLError>()
   if (isAggregateError(error)) {
     for (const singleError of error.errors) {
-      errors.push(...handleError(singleError, maskedErrorsOpts))
+      const handledErrors = handleError(singleError, maskedErrorsOpts)
+      for (const handledError of handledErrors) {
+        errors.add(handledError)
+      }
     }
   } else if (maskedErrorsOpts) {
     const maskedError = maskedErrorsOpts.formatError(
@@ -36,22 +49,47 @@ export function handleError(
       maskedErrorsOpts.errorMessage,
       maskedErrorsOpts.isDev,
     )
-    errors.push(maskedError)
+    errors.add(maskedError)
+  } else if (error instanceof GraphQLError) {
+    errors.add(error)
+  } else if (error instanceof Error) {
+    errors.add(
+      createGraphQLError(error.message, {
+        originalError: error,
+      }),
+    )
+  } else if (typeof error === 'string') {
+    errors.add(
+      createGraphQLError(error, {
+        extensions: {
+          http: {
+            status: 500,
+          },
+        },
+      }),
+    )
+  } else if (hasToString(error)) {
+    errors.add(
+      createGraphQLError(error.toString(), {
+        extensions: {
+          http: {
+            status: 500,
+          },
+        },
+      }),
+    )
   } else {
-    if (error instanceof GraphQLError) {
-      errors.push(error)
-    }
-    if (error instanceof Error) {
-      errors.push(createGraphQLError(error.message))
-    } else if (typeof error === 'string') {
-      errors.push(createGraphQLError(error))
-    } else if (hasToString(error)) {
-      errors.push(createGraphQLError(error.toString()))
-    } else {
-      errors.push(createGraphQLError('Unexpected error!'))
-    }
+    errors.add(
+      createGraphQLError('Unexpected error!', {
+        extensions: {
+          http: {
+            status: 500,
+          },
+        },
+      }),
+    )
   }
-  return errors
+  return Array.from(errors)
 }
 
 export function getResponseInitByRespectingErrors(
@@ -72,6 +110,8 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
+      } else if (!isOriginalGraphQLError(error)) {
+        status = 500
       }
     }
   } else {
@@ -79,7 +119,6 @@ export function getResponseInitByRespectingErrors(
   }
 
   if (!status) {
-    // there should always be a concrete status provided
     status = 200
   }
 
