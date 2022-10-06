@@ -1,6 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import { createYoga, createSchema } from 'graphql-yoga'
-import { Request } from '@whatwg-node/fetch'
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -31,12 +30,11 @@ const httpTrigger: AzureFunction = async function (
   context.log('HTTP trigger function processed a request.')
 
   try {
-    const request = new Request(req.url, {
+    const response = await app.fetch(req.url, {
       method: req.method?.toString(),
       body: req.rawBody,
       headers: req.headers,
     })
-
     const response = await app.handleRequest(request, context)
     const responseText = await response.text()
     context.log('GraphQL Yoga response text:', responseText)
