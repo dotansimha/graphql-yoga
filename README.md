@@ -23,7 +23,7 @@
 ### Install
 
 ```sh
-yarn add graphql-yoga graphql
+yarn add graphql-yoga@three graphql
 ```
 
 ### Start
