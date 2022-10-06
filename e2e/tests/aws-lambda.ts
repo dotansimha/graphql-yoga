@@ -98,7 +98,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
   },
   test: async ({ functionUrl }) => {
     console.log(`ℹ️ AWS Lambda Function deployed to URL: ${functionUrl.value}`)
-    await assertGraphiQL(functionUrl.value)
+    await assertGraphiQL(functionUrl.value + '/graphql')
     await assertQuery(functionUrl.value + '/graphql')
   },
 }
