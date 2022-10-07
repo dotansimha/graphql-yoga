@@ -1,5 +1,12 @@
 # @graphql-yoga/plugin-apq
 
+## 1.0.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`02d2aecd`](https://github.com/dotansimha/graphql-yoga/commit/02d2aecdee55e4c54454c48c2ca0fd7425796ae0), [`b079c93b`](https://github.com/dotansimha/graphql-yoga/commit/b079c93ba47dc94d58f7d2b738a9423c29a149a1)]:
+  - graphql-yoga@3.0.0-next.4
+
 ## 1.0.0-next.3
 
 ### Patch Changes
