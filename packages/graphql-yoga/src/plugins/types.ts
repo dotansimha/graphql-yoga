@@ -39,7 +39,7 @@ export type Plugin<
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
    */
-  onRequestParse?: OnRequestParseHook
+  onRequestParse?: OnRequestParseHook<TServerContext>
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
@@ -69,17 +69,18 @@ export interface OnRequestEventPayload<TServerContext> {
   url: URL
 }
 
-export type OnRequestParseHook = (
-  payload: OnRequestParseEventPayload,
+export type OnRequestParseHook<TServerContext> = (
+  payload: OnRequestParseEventPayload<TServerContext>,
 ) => PromiseOrValue<void | OnRequestParseHookResult>
 
 export type RequestParser = (
   request: Request,
 ) => PromiseOrValue<GraphQLParams> | PromiseOrValue<GraphQLParams[]>
 
-export interface OnRequestParseEventPayload {
+export interface OnRequestParseEventPayload<TServerContext> {
   request: Request
   requestParser: RequestParser | undefined
+  serverContext: TServerContext
   setRequestParser: (parser: RequestParser) => void
 }
 
@@ -105,6 +106,7 @@ export interface OnParamsEventPayload {
   request: Request
   setParams: (params: GraphQLParams) => void
   setResult: (result: ExecutorResult) => void
+  fetchAPI: FetchAPI
 }
 
 export type OnResultProcess = (

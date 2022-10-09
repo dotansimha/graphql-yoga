@@ -16,7 +16,7 @@ export const yoga = createYoga<ServerContext, UserContext>({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
-        hello: String!
+        greetings: String!
       }
       type Subscription {
         greetings: String!
@@ -24,7 +24,8 @@ export const yoga = createYoga<ServerContext, UserContext>({
     `,
     resolvers: {
       Query: {
-        hello: () => 'world',
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type',
       },
       Subscription: {
         greetings: {

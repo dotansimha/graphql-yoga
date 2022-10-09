@@ -1,8 +1,4 @@
----
-id: z-other-environments
-title: Integration with other environments
-type: Guide
----
+# Other Environments
 
 If you have a different environment that you want to integrate with, you can implement your middleware/handler like the example below.
 
@@ -10,24 +6,25 @@ GraphQL Yoga understands [WHATWG `Request` object](https://developer.mozilla.org
 
 ```ts
 import { createYoga } from 'graphql-yoga'
-import { Request } from '@whatwg-node/fetch' // or fetch spec compliant library
 
 const yoga = createYoga<MyRandomCtx>()
 
-export function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
+export async function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
   // req.url is a full url here not a relative path
-  const request = new Request(req.url, {
-    method: req.method,
-    headers: req.headers,
-    body: req.body, // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
-  })
-
-  // Second parameter becomes your server context
-  const response = await yoga.handleRequest(req, ctx)
+  const response = await yoga.fetch(
+    req.url,
+    {
+      method: req.method,
+      headers: req.headers,
+      body: req.body // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
+    },
+    // Third parameter becomes your server context
+    ctx
+  )
   // response is a WHATWG `Response` object
 
   // Create a headers object for your middleware response
-  const headersObj: any = {}
+  const headersObj: Record<string, string> = {}
 
   response.headers.forEach((value, key) => {
     headersObj[key] = value
@@ -42,7 +39,7 @@ export function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
     // body: await response.json() If it accepts a json
     // body: response.body if it accepts a ReadableStream or an AsyncIterable
     // body: Readable.from(response.body) if it accepts a Node.js Readable
-    headers: headersObj, // We assume that your environments accepts a regular JS object for response headers
+    headers: headersObj // We assume that your environments accepts a regular JS object for response headers
   }
 }
 ```

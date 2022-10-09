@@ -1,4 +1,4 @@
-# Enable File Uploads in GraphQL Yoga
+# File Uploads
 
 GraphQL Yoga supports [GraphQL Multipart Request Specification](https://github.com/jaydenseric/graphql-multipart-request-spec) which allows you to upload files via HTTP and consume the binary data inside GraphQL Resolvers.
 
@@ -35,7 +35,7 @@ const server = createServer({
     `,
     resolvers: {
       Query: {
-        greetings: () => 'Hello World!',
+        greetings: () => 'Hello World!'
       },
       Mutation: {
         /**
@@ -55,10 +55,10 @@ const server = createServer({
           } catch {
             return false
           }
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 })
 // Start the server and explore http://localhost:4000/graphql
 server.start()
@@ -84,7 +84,7 @@ import {
   mutationField,
   queryField,
   arg,
-  nonNull,
+  nonNull
 } from 'nexus'
 import { createServer } from '@graphql-yoga/node'
 
@@ -92,12 +92,12 @@ const FileScalar = scalarType({
   name: 'File',
   asNexusMethod: 'file',
   description: 'The `File` scalar type represents a file upload.',
-  sourceType: 'File',
+  sourceType: 'File'
 })
 
 const greetings = queryField('greetings', {
   type: 'String',
-  resolve: () => 'Hello World!',
+  resolve: () => 'Hello World!'
 })
 
 const readTextFile = mutationField('readTextFile', {
@@ -106,11 +106,11 @@ const readTextFile = mutationField('readTextFile', {
   async resolve(parent, { file }) {
     const textContent = await file.text()
     return textContent
-  },
+  }
 })
 
 const schema = makeSchema({
-  types: [FileScalar, greetings, readTextFile],
+  types: [FileScalar, greetings, readTextFile]
 })
 
 const server = createServer({ schema: schema })
@@ -141,7 +141,7 @@ createServer({
     // Maximum allowed size of content (operations, variables etc...)
     fieldSize: 1000000,
     // Maximum allowed header size for form data
-    headerSize: 1000000,
-  },
+    headerSize: 1000000
+  }
 })
 ```

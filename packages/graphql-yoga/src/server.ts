@@ -120,13 +120,6 @@ export type YogaServerOptions<
   /**
    * Readiness check endpoint
    *
-   * @default "/readiness"
-   */
-  readinessCheckEndpoint?: string
-
-  /**
-   * Readiness check endpoint
-   *
    * @default "/health"
    */
   healthCheckEndpoint?: string
@@ -210,7 +203,7 @@ export class YogaServer<
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
   >
-  private onRequestParseHooks: OnRequestParseHook[]
+  private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
   private onParamsHooks: OnParamsHook[]
   private onRequestHooks: OnRequestHook<TServerContext>[]
   private onResultProcessHooks: OnResultProcess[]
@@ -330,8 +323,7 @@ export class YogaServer<
       useHealthCheck({
         id: this.id,
         logger: this.logger,
-        healthCheckEndpoint: options?.healthCheckEndpoint,
-        readinessCheckEndpoint: options?.readinessCheckEndpoint,
+        endpoint: options?.healthCheckEndpoint,
       }),
       options?.cors !== false && useCORS(options?.cors),
       options?.graphiql !== false &&
@@ -456,6 +448,7 @@ export class YogaServer<
           setResult(newResult) {
             result = newResult
           },
+          fetchAPI: this.fetchAPI,
         })
       }
 
@@ -516,6 +509,7 @@ export class YogaServer<
         const onRequestParseResult = await onRequestParse({
           request,
           requestParser,
+          serverContext,
           setRequestParser(parser: RequestParser) {
             requestParser = parser
           },

@@ -1,5 +1,30 @@
 # @graphql-yoga/plugin-apollo-inline-trace
 
+## 1.0.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`02d2aecd`](https://github.com/dotansimha/graphql-yoga/commit/02d2aecdee55e4c54454c48c2ca0fd7425796ae0), [`b079c93b`](https://github.com/dotansimha/graphql-yoga/commit/b079c93ba47dc94d58f7d2b738a9423c29a149a1)]:
+  - graphql-yoga@3.0.0-next.4
+
+## 1.0.0-next.3
+
+### Patch Changes
+
+- Updated dependencies [[`64e06d74`](https://github.com/dotansimha/graphql-yoga/commit/64e06d74132a118f30b42b51c0e71abced0506a4)]:
+  - graphql-yoga@3.0.0-next.3
+
+## 1.0.0-next.2
+
+### Patch Changes
+
+- [#1794](https://github.com/dotansimha/graphql-yoga/pull/1794) [`8c674c36`](https://github.com/dotansimha/graphql-yoga/commit/8c674c365e0bac176ca296e8d531fcd28d228d5b) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@0.4.6` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.4.6) (from `0.4.5`, in `dependencies`)
+
+- Updated dependencies [[`8c674c36`](https://github.com/dotansimha/graphql-yoga/commit/8c674c365e0bac176ca296e8d531fcd28d228d5b)]:
+  - graphql-yoga@3.0.0-next.2
+
 ## 1.0.0-next.1
 
 ### Patch Changes

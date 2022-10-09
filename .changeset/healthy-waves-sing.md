@@ -8,7 +8,7 @@ Support a schema factory function that runs per request or a promise to be resol
 createYoga({
   schema(request: Request) {
     return getSchemaForToken(request.headers.get('x-my-token'))
-  },
+  }
 })
 ```
 
@@ -20,6 +20,6 @@ async function buildSchemaAsync() {
 }
 
 createYoga({
-  schema: buildSchemaAsync(),
+  schema: buildSchemaAsync()
 })
 ```

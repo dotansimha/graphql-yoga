@@ -63,22 +63,22 @@ const links: Link[] = [
   {
     id: 'link-0',
     url: 'https://graphql-yoga.com',
-    description: 'The easiest way of setting up a GraphQL server',
-  },
+    description: 'The easiest way of setting up a GraphQL server'
+  }
 ]
 
 const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
     // 3
-    feed: () => links,
+    feed: () => links
   },
   // 4
   Link: {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
-    url: (parent: Link) => parent.url,
-  },
+    url: (parent: Link) => parent.url
+  }
 }
 ```
 

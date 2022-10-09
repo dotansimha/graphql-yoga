@@ -1,8 +1,6 @@
----
-id: integration-with-fastify
-title: Integration with Fastify
-type: Guide
----
+import { PackageCmd } from '@theguild/components'
+
+# Integration with Fastify
 
 [Fastify is one of the popular HTTP server frameworks for Node.js.](https://www.fastify.io/) It is a very simple, yet powerful framework that is easy to learn and use.
 You can easily integrate GraphQL Yoga with Fastify.
@@ -12,9 +10,7 @@ So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Y
 
 ## Installation
 
-import { PackageCmd } from '@theguild/components'
-
-<PackageCmd packages={['fastify', 'graphql', 'graphql-yoga']} />
+<PackageCmd packages={['fastify', 'graphql', 'graphql-yoga@three']} />
 
 ## Example
 
@@ -34,8 +30,8 @@ const yoga = createYoga<{
     debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
     info: (...args) => args.forEach((arg) => app.log.info(arg)),
     warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-    error: (...args) => args.forEach((arg) => app.log.error(arg)),
-  },
+    error: (...args) => args.forEach((arg) => app.log.error(arg))
+  }
 })
 
 /**
@@ -50,7 +46,7 @@ app.route({
     // Second parameter adds Fastify's `req` and `reply` to the GraphQL Context
     const response = await yoga.handleNodeRequest(req, {
       req,
-      reply,
+      reply
     })
     response.headers.forEach((value, key) => {
       reply.header(key, value)
@@ -61,7 +57,7 @@ app.route({
     reply.send(response.body)
 
     return reply
-  },
+  }
 })
 
 app.listen(4000)
@@ -74,7 +70,7 @@ Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requ
 ```ts
 // This will allow Fastify to forward multipart requests to GraphQL Yoga
 app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
-  done(null),
+  done(null)
 )
 ```
 

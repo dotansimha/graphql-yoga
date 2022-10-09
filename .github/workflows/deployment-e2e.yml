@@ -9,8 +9,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        plan: ['cf-worker', 'azure-function', 'aws-lambda', 'vercel-function']
+        plan:
+          [
+            'cf-worker',
+            'cf-modules',
+            'azure-function',
+            'aws-lambda',
+            'vercel-function',
+          ]
     name: e2e / ${{ matrix.plan }}
+
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:

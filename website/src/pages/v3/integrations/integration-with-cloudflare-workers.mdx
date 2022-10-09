@@ -1,8 +1,6 @@
----
-id: integration-with-cloudflare-workers
-title: Integration with Cloudflare Workers
-type: Guide
----
+import { PackageCmd } from '@theguild/components'
+
+# Integration with Cloudflare Workers
 
 GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
 
@@ -26,9 +24,7 @@ You will want to use the package `graphql-yoga` which has an agnostic HTTP handl
 
 ## Installation
 
-import { PackageCmd } from '@theguild/components'
-
-<PackageCmd packages={['graphql', 'graphql-yoga']} />
+<PackageCmd packages={['graphql', 'graphql-yoga@three']} />
 
 ## Example with regular `fetch` event listener
 
@@ -79,7 +75,7 @@ const yoga = createYoga<Env>({
   resolvers: {
     Query: {
       todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
-      todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list(),
+      todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list()
     },
     Mutation: {
       // MY_NAMESPACE is available as a GraphQL context
@@ -88,9 +84,9 @@ const yoga = createYoga<Env>({
       },
       deleteTodo(_, { id }, context) {
         return context.MY_NAMESPACE.delete(id)
-      },
-    },
-  },
+      }
+    }
+  }
 })
 
 export default { fetch: yoga.handleRequest }
@@ -110,7 +106,7 @@ const yoga = createYoga<{ env: Env; ctx: ExecutionContext }>()
 export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
     return yoga.handleRequest(request, { env, ctx })
-  },
+  }
 }
 ```
 

@@ -10,7 +10,7 @@ test('should render GraphiQL', async () => {
       Accept: 'text/html',
     },
   })
-  const response = await worker.fetch(request)
+  const response = await worker.fetch(request, {})
 
   expect(response.status).toBe(200)
   expect(response.headers.get('content-type')).toBe('text/html')
@@ -29,7 +29,36 @@ test('should succeeds introspection query', async () => {
       query: getIntrospectionQuery(),
     }),
   })
-  const response = await worker.fetch(request)
+  const response = await worker.fetch(request, {})
+
+  expect(response.status).toBe(200)
+  expect(response.headers.get('content-type')).toContain('application/json')
+  expect(await response.json()).toMatchObject({
+    data: {
+      __schema: {
+        queryType: {
+          name: 'Query',
+        },
+      },
+    },
+  })
+})
+
+test('should succeeds introspection query with custom route', async () => {
+  // Note we're using Worker APIs in our test, without importing anything extra
+  const request = new Request('http://localhost/api', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: getIntrospectionQuery(),
+    }),
+  })
+  const response = await worker.fetch(request, {
+    GRAPHQL_ROUTE: '/api',
+  })
 
   expect(response.status).toBe(200)
   expect(response.headers.get('content-type')).toContain('application/json')

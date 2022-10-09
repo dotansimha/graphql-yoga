@@ -106,7 +106,7 @@ describe('fastify example integration', () => {
     })
   })
 
-  it.skip('rejects mutation operation via GET with an useful error message', async () => {
+  it('rejects mutation operation via GET with an useful error message', async () => {
     const response = await request(app.server)
       .get('/graphql')
       .query({
@@ -121,7 +121,7 @@ describe('fastify example integration', () => {
     expect(response.body).toStrictEqual({
       errors: [
         {
-          message: "Cannot process mutation operations via 'POST' HTTP verb.",
+          message: 'Can only perform a mutation operation from a POST request.',
         },
       ],
     })

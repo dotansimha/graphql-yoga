@@ -102,14 +102,12 @@ describe('error masking', () => {
     const body = await response.json()
     expect(body.data.hi).toBeNull()
     expect(body.errors?.[0]?.message).toBe('Unexpected error.')
-    expect(body.errors?.[0]?.extensions).toStrictEqual({
-      originalError: {
-        message: 'This error will get mask if you enable maskedError.',
-        stack: expect.stringContaining(
-          'Error: This error will get mask if you enable maskedError.',
-        ),
-      },
-    })
+    expect(body.errors?.[0]?.extensions?.originalError?.message).toBe(
+      'This error will get mask if you enable maskedError.',
+    )
+    expect(body.errors?.[0]?.extensions?.originalError?.stack).toContain(
+      'Error: This error will get mask if you enable maskedError.',
+    )
   })
 
   it('includes the original error in the extensions in dev mode (process.env.NODE_ENV=development)', async () => {
@@ -132,14 +130,12 @@ describe('error masking', () => {
       const body = await response.json()
       expect(body.data.hi).toBeNull()
       expect(body.errors?.[0]?.message).toBe('Unexpected error.')
-      expect(body.errors?.[0]?.extensions).toStrictEqual({
-        originalError: {
-          message: 'This error will get mask if you enable maskedError.',
-          stack: expect.stringContaining(
-            'Error: This error will get mask if you enable maskedError.',
-          ),
-        },
-      })
+      expect(body.errors?.[0]?.extensions?.originalError?.message).toBe(
+        'This error will get mask if you enable maskedError.',
+      )
+      expect(body.errors?.[0]?.extensions?.originalError?.stack).toContain(
+        'Error: This error will get mask if you enable maskedError.',
+      )
     } finally {
       process.env.NODE_ENV = initialEnv
     }
@@ -277,7 +273,6 @@ describe('error masking', () => {
         },
       ],
     })
-    expect(response.status).toEqual(500)
   })
 
   it('parse error is not masked', async () => {
@@ -382,19 +377,76 @@ describe('error masking', () => {
     })
 
     const body = await response.json()
-    expect(body).toStrictEqual({
+    expect(body.errors[0].message).toEqual('Unexpected error.')
+    expect(body.errors[0].extensions.originalError.message).toEqual(
+      'I am the original error.',
+    )
+    expect(body.errors[0].extensions.originalError.stack).toContain(
+      'Error: I am the original error.',
+    )
+  })
+
+  it('masked errors from context factory should return 500 status code', async () => {
+    const yoga = createYoga({
+      logging: false,
+      context: () => {
+        throw new Error('I like turtles')
+      },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ __typename }' }),
+    })
+    expect(response.status).toEqual(500)
+    expect(await response.json()).toMatchObject({
       errors: [
         {
           message: 'Unexpected error.',
-          extensions: {
-            originalError: {
-              message: 'I am the original error.',
-              stack: expect.stringContaining('Error: I am the original error.'),
-            },
-          },
         },
       ],
     })
+  })
+
+  it('masked error from the resolvers should return 500 status code', async () => {
+    const yoga = createYoga({
+      logging: false,
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            a: () => {
+              throw new Error('I like turtles')
+            },
+          },
+        },
+      }),
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ a }' }),
+    })
     expect(response.status).toEqual(500)
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Unexpected error.',
+        },
+      ],
+    })
   })
 })

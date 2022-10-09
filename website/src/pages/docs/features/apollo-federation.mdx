@@ -1,6 +1,6 @@
 import { Callout, PackageCmd } from '@theguild/components'
 
-# Apollo Federation with GraphQL Yoga
+# Apollo Federation
 
 [Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies microservice architecture through GraphQL APIs.
 
@@ -26,7 +26,7 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 
 <PackageCmd
   packages={[
-    '@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15',
+    '@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15'
   ]}
 />
 
@@ -34,23 +34,41 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
-import { ApolloGateway } from '@apollo/gateway'
+import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { useApolloFederation } from '@envelop/apollo-federation'
+
+/**
+ * Needed since federation remote data source fetcher
+ * doesn't support `application/graphql-response+json` content type
+ * https://github.com/apollographql/federation/issues/2161
+ * And yoga defaults to `application/graphql-response+json` as per the spec.
+ */
+class DataSource extends RemoteGraphQLDataSource {
+  willSendRequest({ request }) {
+    request.http.headers.set('accept', 'application/json')
+  }
+}
 
 // Initialize the gateway
 const gateway = new ApolloGateway({
   serviceList: [
     { name: 'accounts', url: 'http://localhost:4001' },
-    { name: 'products', url: 'http://localhost:4002' },
+    { name: 'products', url: 'http://localhost:4002' }
     // ...additional subgraphs...
   ],
+  introspectionHeaders: {
+    accept: 'application/json'
+  },
+  buildService({ url }) {
+    return new DataSource({ url })
+  }
 })
 
 // Make sure all services are loaded
 await gateway.load()
 
 const server = createServer({
-  plugins: [useApolloFederation({ gateway })],
+  plugins: [useApolloFederation({ gateway })]
 })
 
 // Start the server and explore http://localhost:4000/graphql
@@ -87,17 +105,17 @@ const resolvers = {
   Query: {
     me() {
       return { id: '1', username: '@ava' }
-    },
+    }
   },
   User: {
     __resolveReference(user, { fetchUserById }) {
       return fetchUserById(user.id)
-    },
-  },
+    }
+  }
 }
 const server = createServer({
   schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
-  port: 4001,
+  port: 4001
 })
 
 server.start().then(() => {

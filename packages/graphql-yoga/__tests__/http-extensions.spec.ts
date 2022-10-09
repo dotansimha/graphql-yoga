@@ -247,7 +247,7 @@ describe('GraphQLError.extensions.http', () => {
     expect(response.status).toBe(400)
   })
 
-  it('should respond with status 500 when error without http extension is thrown', async () => {
+  it('should respond with status 200 when error without http extension is thrown', async () => {
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
@@ -268,7 +268,7 @@ describe('GraphQLError.extensions.http', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ query: '{ __typename }' }),
     })
-    expect(response.status).toBe(500)
+    expect(response.status).toBe(200)
     expect(response.headers.get('x-foo')).toBe('bar')
     expect(await response.json()).toMatchObject({
       errors: [

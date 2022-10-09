@@ -50,7 +50,7 @@ describe('Context', () => {
       ],
     })
 
-    const response = await yoga.fetch('/graphql?query={hello}')
+    const response = await yoga.fetch('http://yoga/graphql?query={hello}')
     expect(response.status).toBe(200)
 
     expect(onExecuteFn.mock.lastCall[0].args.contextValue.hi).toBe(
@@ -86,7 +86,7 @@ describe('Context', () => {
     })
 
     const response = await yoga.fetch(
-      '/graphql?query=subscription{greetings}',
+      'http://yoga/graphql?query=subscription{greetings}',
       {
         headers: {
           Accept: 'text/event-stream',
@@ -136,7 +136,7 @@ describe('Context', () => {
       ],
     })
 
-    const response = await yoga.fetch('/graphql?query={hello}')
+    const response = await yoga.fetch('http://yoga/graphql?query={hello}')
     expect(response.status).toBe(200)
 
     const params = {

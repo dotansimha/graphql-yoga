@@ -1,4 +1,4 @@
-# Integration with Other Environments
+# Other Environments
 
 If you have a different environment that you want to integrate with, you can implement your middleware/handler like the example below.
 
@@ -15,7 +15,7 @@ export async function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
   const request = new Request(req.url, {
     method: req.method,
     headers: req.headers,
-    body: req.body, // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
+    body: req.body // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
   })
 
   // Second parameter becomes your server context
@@ -38,7 +38,7 @@ export async function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
     // body: await response.json() If it accepts a json
     // body: response.body if it accepts a ReadableStream or an AsyncIterable
     // body: Readable.from(response.body) if it accepts a Node.js Readable
-    headers: headersObj, // We assume that your environments accepts a regular JS object for response headers
+    headers: headersObj // We assume that your environments accepts a regular JS object for response headers
   }
 }
 ```

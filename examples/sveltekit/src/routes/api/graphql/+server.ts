@@ -27,7 +27,8 @@ const yogaApp = createYoga<RequestEvent>({
 		defaultQuery: `query Hello {
 	hello
 }`
-	}
+	},
+	fetchAPI: globalThis,
 });
 
 // export { yogaApp as GET, yogaApp as POST };

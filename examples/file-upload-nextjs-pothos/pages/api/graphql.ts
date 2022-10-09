@@ -8,4 +8,5 @@ export default createYoga<{
 }>({
   schema,
   graphqlEndpoint: '/api/graphql',
+  maskedErrors: false,
 })

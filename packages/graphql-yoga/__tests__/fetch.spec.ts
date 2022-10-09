@@ -17,7 +17,7 @@ describe('Internal Fetch API', () => {
     }),
   })
   it('should accept relative paths as URL', async () => {
-    const response = await yoga.fetch('/graphql', {
+    const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

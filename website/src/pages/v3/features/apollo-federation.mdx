@@ -1,6 +1,6 @@
 import { Callout, PackageCmd } from '@theguild/components'
 
-# Apollo Federation with GraphQL Yoga
+# Apollo Federation
 
 [Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies microservice architecture through GraphQL APIs.
 
@@ -29,7 +29,7 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
     'graphql-yoga',
     '@apollo/gateway',
     '@envelop/apollo-federation',
-    'graphql@15',
+    'graphql@15'
   ]}
 />
 
@@ -45,9 +45,9 @@ import { useApolloFederation } from '@envelop/apollo-federation'
 const gateway = new ApolloGateway({
   serviceList: [
     { name: 'accounts', url: 'http://localhost:4001' },
-    { name: 'products', url: 'http://localhost:4002' },
+    { name: 'products', url: 'http://localhost:4002' }
     // ...additional subgraphs...
-  ],
+  ]
 })
 
 // Make sure all services are loaded
@@ -56,14 +56,16 @@ await gateway.load()
 const yoga = createYoga({
   plugins: [
     useApolloFederation({
-      gateway,
-    }),
-  ],
+      gateway
+    })
+  ]
 })
 
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Federation Service
@@ -72,7 +74,7 @@ You don't need any extra plugins for Yoga for Federation Service.
 
 ### Installation
 
-<PackageCmd packages={['graphql-yoga', '@apollo/subgraph', 'graphql']} />
+<PackageCmd packages={['graphql-yoga@three', '@apollo/subgraph', 'graphql']} />
 
 ### Example User Service
 
@@ -97,16 +99,16 @@ const resolvers = {
   Query: {
     me() {
       return { id: '1', username: '@ava' }
-    },
+    }
   },
   User: {
     __resolveReference(user, { fetchUserById }) {
       return fetchUserById(user.id)
-    },
-  },
+    }
+  }
 }
 const yoga = createYoga({
-  schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
+  schema: buildSubgraphSchema([{ typeDefs, resolvers }])
 })
 
 const server = createServer(yoga)
@@ -126,9 +128,9 @@ You'll need the `@graphql-yoga/plugin-apollo-inline-trace` Yoga plugin for this.
 
 <PackageCmd
   packages={[
-    'graphql-yoga',
-    '@graphql-yoga/plugin-apollo-inline-trace',
-    'graphql',
+    'graphql-yoga@three',
+    '@graphql-yoga/plugin-apollo-inline-trace@three',
+    'graphql'
   ]}
 />
 
@@ -141,14 +143,16 @@ import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace'
 
 const yoga = createYoga({
   plugins: [
-    useApolloInlineTrace(),
+    useApolloInlineTrace()
     // ...rest of your Apollo federation plugins
-  ],
+  ]
 })
 
 // Start the server and explore http://localhost:4000/graphql
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Working Example

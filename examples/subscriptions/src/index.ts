@@ -9,9 +9,7 @@ import {
 } from 'graphql-yoga'
 import { createServer } from 'http'
 import { Resolvers } from './generated/graphql'
-
-const wait = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time))
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -104,7 +102,8 @@ const yoga = createYoga<Context, any>({
     typeDefs,
   }),
   logging: true,
-  context: () => ({ pubSub }),
+  context: { pubSub },
+  renderGraphiQL,
 })
 
 const server = createServer(yoga)

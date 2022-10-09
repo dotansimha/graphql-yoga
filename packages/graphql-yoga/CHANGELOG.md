@@ -1,5 +1,33 @@
 # graphql-yoga
 
+## 3.0.0-next.4
+
+### Major Changes
+
+- [#1808](https://github.com/dotansimha/graphql-yoga/pull/1808) [`02d2aecd`](https://github.com/dotansimha/graphql-yoga/commit/02d2aecdee55e4c54454c48c2ca0fd7425796ae0) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Drop `readinessCheckEndpoint` and introduce `useReadinessCheck` plugin
+
+### Patch Changes
+
+- [#1844](https://github.com/dotansimha/graphql-yoga/pull/1844) [`b079c93b`](https://github.com/dotansimha/graphql-yoga/commit/b079c93ba47dc94d58f7d2b738a9423c29a149a1) Thanks [@ardatan](https://github.com/ardatan)! - - All unexpected errors even if they are masked/wrapped, HTTP status code will be set to 500.
+
+  > "Unexpected error" means an Error that is not an instance of GraphQLError or an instance of GraphQLError with an `originalError` that is not an instance of GraphQLError recursively.
+
+## 3.0.0-next.3
+
+### Patch Changes
+
+- [`64e06d74`](https://github.com/dotansimha/graphql-yoga/commit/64e06d74132a118f30b42b51c0e71abced0506a4) Thanks [@ardatan](https://github.com/ardatan)! - Fix execute/stop button
+
+## 3.0.0-next.2
+
+### Patch Changes
+
+- [#1794](https://github.com/dotansimha/graphql-yoga/pull/1794) [`8c674c36`](https://github.com/dotansimha/graphql-yoga/commit/8c674c365e0bac176ca296e8d531fcd28d228d5b) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@0.4.6` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.4.6) (from `0.4.5`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.4.10` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.4.10) (from `0.4.7`, in `dependencies`)
+  - Added dependency [`@graphql-tools/utils@8.12.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/8.12.0) (to `dependencies`)
+
 ## 3.0.0-next.1
 
 ### Patch Changes
@@ -35,7 +63,7 @@
   createYoga({
     schema(request: Request) {
       return getSchemaForToken(request.headers.get('x-my-token'))
-    },
+    }
   })
   ```
 
@@ -47,7 +75,7 @@
   }
 
   createYoga({
-    schema: buildSchemaAsync(),
+    schema: buildSchemaAsync()
   })
   ```
 

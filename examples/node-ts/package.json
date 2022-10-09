@@ -4,14 +4,15 @@
   "version": "1.0.0",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "build": "node ./build.js",
     "check": "tsc --pretty --noEmit"
   },
   "dependencies": {
-    "graphql-yoga": "3.0.0-next.1",
+    "graphql-yoga": "3.0.0-next.4",
     "graphql": "16.6.0"
   },
   "devDependencies": {
     "ts-node": "10.9.1",
-    "typescript": "4.8.3"
+    "typescript": "4.8.4"
   }
 }

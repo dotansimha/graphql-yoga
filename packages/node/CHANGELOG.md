@@ -1,5 +1,26 @@
 # @graphql-yoga/node
 
+## 3.0.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`02d2aecd`](https://github.com/dotansimha/graphql-yoga/commit/02d2aecdee55e4c54454c48c2ca0fd7425796ae0), [`b079c93b`](https://github.com/dotansimha/graphql-yoga/commit/b079c93ba47dc94d58f7d2b738a9423c29a149a1)]:
+  - graphql-yoga@3.0.0-next.4
+
+## 3.0.0-next.3
+
+### Patch Changes
+
+- Updated dependencies [[`64e06d74`](https://github.com/dotansimha/graphql-yoga/commit/64e06d74132a118f30b42b51c0e71abced0506a4)]:
+  - graphql-yoga@3.0.0-next.3
+
+## 3.0.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`8c674c36`](https://github.com/dotansimha/graphql-yoga/commit/8c674c365e0bac176ca296e8d531fcd28d228d5b)]:
+  - graphql-yoga@3.0.0-next.2
+
 ## 3.0.0-next.1
 
 ### Patch Changes
@@ -170,10 +191,10 @@
       http: {
         status: 401,
         headers: {
-          'WWW-Authenticate': 'Bearer',
-        },
-      },
-    },
+          'WWW-Authenticate': 'Bearer'
+        }
+      }
+    }
   })
   ```
 
@@ -212,8 +233,8 @@
       debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
       info: (...args) => args.forEach((arg) => app.log.info(arg)),
       warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
-    },
+      error: (...args) => args.forEach((arg) => app.log.error(arg))
+    }
   })
   ```
 
@@ -294,8 +315,8 @@
   ```ts
   createServer({
     multipart: {
-      maxFileSize: 2000, // Default: Infinity
-    },
+      maxFileSize: 2000 // Default: Infinity
+    }
   })
   ```
 
@@ -303,7 +324,7 @@
 
   ```ts
   createServer({
-    multipart: false, // enabled by default
+    multipart: false // enabled by default
   })
   ```
 
@@ -373,7 +394,7 @@
   import { create } from '@whatwg-node/fetch'
 
   createServer({
-    fetchAPI: create({ useNodeFetch: false }),
+    fetchAPI: create({ useNodeFetch: false })
   })
   ```
 
@@ -403,7 +424,7 @@
 
   ```ts
   createServer({
-    graphiql: process.env.NODE_ENV === 'development',
+    graphiql: process.env.NODE_ENV === 'development'
   })
   ```
 
@@ -463,7 +484,7 @@
       // Here `req` and `reply` objects are added to the GraphQL Context
       const response = await graphQLServer.handleIncomingMessage(req, {
         req,
-        reply,
+        reply
       })
       for (const [name, value] of response.headers) {
         reply.header(name, value)
@@ -472,7 +493,7 @@
       reply.status(response.status)
       const nodeStream = Readable.from(response.body)
       reply.send(nodeStream)
-    },
+    }
   })
   ```
 
@@ -495,10 +516,10 @@
           fooHeader: (root, args, context, info) => {
             // context.req is typed here
             return context.req.headers.foo
-          },
-        },
-      },
-    },
+          }
+        }
+      }
+    }
   })
   ```
 
@@ -677,7 +698,7 @@
       // Here `req` and `reply` objects are added to the GraphQL Context
       const response = await graphQLServer.handleIncomingMessage(req, {
         req,
-        reply,
+        reply
       })
       for (const [name, value] of response.headers) {
         reply.header(name, value)
@@ -686,7 +707,7 @@
       reply.status(response.status)
       const nodeStream = Readable.from(response.body)
       reply.send(nodeStream)
-    },
+    }
   })
   ```
 
@@ -709,10 +730,10 @@
           fooHeader: (root, args, context, info) => {
             // context.req is typed here
             return context.req.headers.foo
-          },
-        },
-      },
-    },
+          }
+        }
+      }
+    }
   })
   ```
 

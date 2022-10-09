@@ -1,11 +1,8 @@
----
-id: persisted-operations
-title: Persisted Operations
----
-
 import { PackageCmd } from '@theguild/components'
 
-Persisted operations is a mechanism for preventing the execution of arbitary GraphQL operation documents.
+# Persisted Operations
+
+Persisted operations is a mechanism for preventing the execution of arbitrary GraphQL operation documents.
 By default, the persisted operations plugin follows the [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine) for **SENDING** hashes to the server.
 However, you can change this behavior by overriding the `getPersistedOperationKey` option to support Relay's specification for example.
 
@@ -22,7 +19,7 @@ import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operation
 
 const store = {
   ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38:
-    '{__typename}',
+    '{__typename}'
 }
 
 const yoga = createYoga({
@@ -30,13 +27,15 @@ const yoga = createYoga({
     usePersistedOperations({
       getPersistedOperation(sha256Hash: string) {
         return store[sha256Hash]
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Start your yoga server and send the following request.
@@ -46,7 +45,7 @@ curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
 -d '{"extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
 ```
 
-Then afterwards we can send the same payload againl, but this time omit the `query` field.
+Then afterwards we can send the same payload again, but this time omit the `query` field.
 
 Especially for big GraphQL document strings, the subsequent payload can be much smaller.
 
@@ -76,13 +75,15 @@ const yoga = createYoga({
     usePersistedOperations({
       getPersistedOperation(key: string) {
         return persistedOperations[key]
-      },
-    }),
-  ],
+      }
+    })
+  ]
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Sending the hash from the client
@@ -90,10 +91,10 @@ server.listen(4000)
 The persisted operations plugin follows the [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine) for SENDING hashes to the server.
 
 GraphQL clients such `Apollo Client` and `Urql` support that out of the box.
-Check the corresponding doucmentation for more information.
+Check the corresponding documentation for more information.
 
 - [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
-- [Urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
+- [urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
 
 ## Allowing arbitrary GraphQL operations
 
@@ -106,7 +107,7 @@ This can be achieved using the `allowArbitraryOperations` option.
 usePersistedOperations({
   allowArbitraryOperations: (request) =>
     request.headers.request.headers.get('x-allow-arbitrary-operations') ===
-    'true',
+    'true'
 })
 ```
 
@@ -136,5 +137,7 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+    console.info('Server is running on http://localhost:4000/graphql')
+})
 ```

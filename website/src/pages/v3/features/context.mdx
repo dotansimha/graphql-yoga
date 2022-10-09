@@ -34,14 +34,16 @@ const yoga = createYoga({
       Query: {
         logHeader(_, _args, context) {
           console.log(context.request.headers.get('x-foo'))
-        },
-      },
-    },
-  }),
+        }
+      }
+    }
+  })
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ```sh
@@ -72,15 +74,17 @@ const yoga = createYoga({
       Query: {
         someNumber(_, _args, context) {
           context.someNumber
-        },
-      },
-    },
+        }
+      }
+    }
   }),
-  context: { someNumber: 13 },
+  context: { someNumber: 13 }
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 You can also pass a function as the `context` property. The function will be invoked for each incoming GraphQL request with the initial context as an argument and after the invocation it will be merged with the initial context.
@@ -112,7 +116,9 @@ const yoga = createYoga({
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+    console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 The function can either return an object or a Promise that resolves to an object.
@@ -132,17 +138,21 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        someNumber: (_, _args, context) => context.someNumber,
-      },
-    },
+        someNumber: (_, _args, context) => context.someNumber
+      }
+    }
   }),
   async context() {
     return { someNumber: 13 }
-  },
+  }
 })
-
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Advanced Context Life-Cycle
@@ -203,7 +213,7 @@ const yoga = createYoga<{
 
 const response = await yoga.handleNodeRequest(req, {
   req,
-  reply,
+  reply
 })
 ```
 
@@ -226,11 +236,15 @@ const yoga = createYoga({
     // get custom header value
     const foo = request.headers.get('x-foo') ?? null
     return { foo }
-  },
+server.listen(4000, () => {
+    console.info('Server is running on http://localhost:4000/graphql')
+})
 })
 
 const server = createServer(yoga)
-server.listen(4000)
+server.listen(4000, () => {
+    console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 In this case, your final context object will have an extra `foo` property.
