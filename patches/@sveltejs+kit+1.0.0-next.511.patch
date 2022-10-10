@@ -1,0 +1,15 @@
+diff --git a/node_modules/@sveltejs/kit/src/core/sync/write_types/index.js b/node_modules/@sveltejs/kit/src/core/sync/write_types/index.js
+index de91ace..4564275 100644
+--- a/node_modules/@sveltejs/kit/src/core/sync/write_types/index.js
++++ b/node_modules/@sveltejs/kit/src/core/sync/write_types/index.js
+@@ -617,7 +617,9 @@ export function tweak_types(content, is_server) {
+ 					}
+ 				}
+ 			}
+-			modified ||= _modified;
++			if (!modified) {
++				modified = _modified;
++			}
+ 			return _modified;
+ 		}
+ 
