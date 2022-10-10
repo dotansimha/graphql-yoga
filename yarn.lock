@@ -8615,7 +8615,7 @@ cosmiconfig-toml-loader@1.0.0:
   dependencies:
     "@iarna/toml" "^2.2.5"
 
-cosmiconfig@7.0.1, cosmiconfig@^7.0.0:
+cosmiconfig@7.0.1, cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-7.0.1.tgz#714d756522cace867867ccb4474c5d01bbae5d6d"
   integrity sha512-a1YWNUV2HwGimB7dU2s1wUMurNKjpx60HxBB6xUM8Re+2s1g1IIfJvFR0/iCF+XHdE0GMTKTuLR32UQff4TEyQ==
@@ -9715,15 +9715,16 @@ delegates@^1.0.0:
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
   integrity sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=
 
-denoify@1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/denoify/-/denoify-1.1.6.tgz#55400edc7528c0b3f147afe660824d447c80110f"
-  integrity sha512-h427g7KBjdJ8zHskLd0CwNgPsvGXLdyaUvAhKO11xXpwxjAa6VZKLU+XbQdVvPgZgGnYtsKjqmho1C7ijwUrhQ==
+denoify@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/denoify/-/denoify-1.2.1.tgz#40a4371bf59d3014fdc3b97a5d020b01678016f7"
+  integrity sha512-xNZ67FIFAxzVeI/p9Zw35UdMmijNZGEQXJa6PK3Npsndhsrptm07lJpeDfpcq5L+VCw98XqOjnTMU85L0Lr6hg==
   dependencies:
     "@octokit/rest" "^18.0.0"
     "@types/comment-json" "^1.1.1"
     commander "^4.1.1"
     comment-json "^3.0.2"
+    cosmiconfig "^7.0.1"
     evt "^2.4.4"
     get-github-default-branch-name "^0.0.4"
     gitignore-parser "0.0.2"
@@ -9734,6 +9735,7 @@ denoify@1.1.6:
     scripting-tools "^0.19.14"
     tsafe "^1.1.1"
     url-join "^4.0.1"
+    yaml "^2.1.1"
 
 denque@^2.0.1, denque@^2.1.0:
   version "2.1.0"
