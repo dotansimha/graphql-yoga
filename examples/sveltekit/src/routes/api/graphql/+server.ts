@@ -31,4 +31,4 @@ const yogaApp = createYoga<RequestEvent>({
 	fetchAPI: globalThis,
 });
 
-export { yogaApp as get, yogaApp as post };
+export { yogaApp as GET, yogaApp as POST };
