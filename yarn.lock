@@ -2520,10 +2520,10 @@
     apollo-server-core "^3.10.0"
     apollo-server-types "^3.6.0"
 
-"@eslint/eslintrc@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-1.3.2.tgz#58b69582f3b7271d8fa67fe5251767a5b38ea356"
-  integrity sha512-AXYd23w1S/bv3fTs3Lz0vjiYemS08jWkI3hYyS9I1ry+0f+Yjs1wm+sU0BS8qDOPrBIkp4qHYC16I8uVtpLajQ==
+"@eslint/eslintrc@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-1.3.3.tgz#2b044ab39fdfa75b4688184f9e573ce3c5b0ff95"
+  integrity sha512-uj3pT6Mg+3t39fvLrj8iuCIJ38zKO9FpGtJ4BBJebJhEwjoT+KLVNCcHT5QC9NGRIEi7fZ0ZR8YRb884auB4Lg==
   dependencies:
     ajv "^6.12.4"
     debug "^4.3.2"
@@ -3081,11 +3081,6 @@
     "@humanwhocodes/object-schema" "^1.2.1"
     debug "^4.1.1"
     minimatch "^3.0.4"
-
-"@humanwhocodes/gitignore-to-minimatch@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@humanwhocodes/gitignore-to-minimatch/-/gitignore-to-minimatch-1.0.2.tgz#316b0a63b91c10e53f242efb4ace5c3b34e8728d"
-  integrity sha512-rSqmMJDdLFUsyxR6FMtD00nfQKKLFb1kv+qBbOVKqErvloEIJLo5bDTJTQNTYgeyp78JsA7u/NPi5jT1GR/MuA==
 
 "@humanwhocodes/module-importer@^1.0.1":
   version "1.0.1"
@@ -5413,10 +5408,10 @@
     lodash "^4.17.21"
     remove-markdown "0.5.0"
 
-"@theguild/components@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.2.0.tgz#9fa93b95d34e4df99801406d7912af52b8ba3963"
-  integrity sha512-9qsdXlEdiiymJyY4vhZPLsYQvy5IQHY58zNxUAaY8xMKs6vLeRlno2BjtqZIzs4co36JHrt2FHq9zBNmG4dTkA==
+"@theguild/components@4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@theguild/components/-/components-4.2.1.tgz#43b0eb2fc1ba41236f9eb6ef5aae5134b7b3389a"
+  integrity sha512-1Fd8U4yk4jPQulMLRAvpOUWcLdGP3gDykclT9UJ6LrLcU5TTetzKJO8t8Qgq2MW3koDXMmpryamt9ziaG8aS7g==
   dependencies:
     "@algolia/autocomplete-js" "1.7.1"
     "@algolia/autocomplete-plugin-algolia-insights" "1.7.1"
@@ -8634,7 +8629,7 @@ cosmiconfig-toml-loader@1.0.0:
   dependencies:
     "@iarna/toml" "^2.2.5"
 
-cosmiconfig@7.0.1, cosmiconfig@^7.0.0:
+cosmiconfig@7.0.1, cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-7.0.1.tgz#714d756522cace867867ccb4474c5d01bbae5d6d"
   integrity sha512-a1YWNUV2HwGimB7dU2s1wUMurNKjpx60HxBB6xUM8Re+2s1g1IIfJvFR0/iCF+XHdE0GMTKTuLR32UQff4TEyQ==
@@ -9734,15 +9729,16 @@ delegates@^1.0.0:
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
   integrity sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=
 
-denoify@1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/denoify/-/denoify-1.1.6.tgz#55400edc7528c0b3f147afe660824d447c80110f"
-  integrity sha512-h427g7KBjdJ8zHskLd0CwNgPsvGXLdyaUvAhKO11xXpwxjAa6VZKLU+XbQdVvPgZgGnYtsKjqmho1C7ijwUrhQ==
+denoify@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/denoify/-/denoify-1.2.1.tgz#40a4371bf59d3014fdc3b97a5d020b01678016f7"
+  integrity sha512-xNZ67FIFAxzVeI/p9Zw35UdMmijNZGEQXJa6PK3Npsndhsrptm07lJpeDfpcq5L+VCw98XqOjnTMU85L0Lr6hg==
   dependencies:
     "@octokit/rest" "^18.0.0"
     "@types/comment-json" "^1.1.1"
     commander "^4.1.1"
     comment-json "^3.0.2"
+    cosmiconfig "^7.0.1"
     evt "^2.4.4"
     get-github-default-branch-name "^0.0.4"
     gitignore-parser "0.0.2"
@@ -9753,6 +9749,7 @@ denoify@1.1.6:
     scripting-tools "^0.19.14"
     tsafe "^1.1.1"
     url-join "^4.0.1"
+    yaml "^2.1.1"
 
 denque@^2.0.1, denque@^2.1.0:
   version "2.1.0"
@@ -9902,10 +9899,10 @@ devalue@^4.0.0:
   resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.0.0.tgz#efeadbc922894d468ad903029d4a7e65e37f4952"
   integrity sha512-w25siwXyuMUqMr7jPlEjyNCp1vn0Jzj/fNg3qVt/r/Dpe8HjESh2V92L0jmh3uq4iJt0BvjH+Azk1pQzkcnDWA==
 
-devtools-protocol@0.0.1036444:
-  version "0.0.1036444"
-  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.1036444.tgz#a570d3cdde61527c82f9b03919847b8ac7b1c2b9"
-  integrity sha512-0y4f/T8H9lsESV9kKP1HDUXgHxCdniFeJh6Erq+FbdOEvp/Ydp9t8kcAAM5gOd17pMrTDlFWntoHtzzeTUWKNw==
+devtools-protocol@0.0.1045489:
+  version "0.0.1045489"
+  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.1045489.tgz#f959ad560b05acd72d55644bc3fb8168a83abf28"
+  integrity sha512-D+PTmWulkuQW4D1NTiCRCFxF7pQPn0hgp4YyX4wAQ6xYXKOadSWPR3ENGDQ47MW/Ewc9v2rpC/UEEGahgBYpSQ==
 
 dezalgo@1.0.3, dezalgo@^1.0.0:
   version "1.0.3"
@@ -10766,14 +10763,13 @@ eslint-visitor-keys@^3.3.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.3.0.tgz#f6480fa6b1f30efe2d1968aa8ac745b862469826"
   integrity sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==
 
-eslint@8.24.0, eslint@^8.21.0:
-  version "8.24.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.24.0.tgz#489516c927a5da11b3979dbfb2679394523383c8"
-  integrity sha512-dWFaPhGhTAiPcCgm3f6LI2MBWbogMnTJzFBbhXVRQDJPkr9pGZvVjlVfXd+vyDcWPA2Ic9L2AXPIQM0+vk/cSQ==
+eslint@8.25.0, eslint@^8.21.0:
+  version "8.25.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.25.0.tgz#00eb962f50962165d0c4ee3327708315eaa8058b"
+  integrity sha512-DVlJOZ4Pn50zcKW5bYH7GQK/9MsoQG2d5eDH0ebEkE8PbgzTTmtt/VTH9GGJ4BfeZCpBLqFfvsjX35UacUL83A==
   dependencies:
-    "@eslint/eslintrc" "^1.3.2"
+    "@eslint/eslintrc" "^1.3.3"
     "@humanwhocodes/config-array" "^0.10.5"
-    "@humanwhocodes/gitignore-to-minimatch" "^1.0.2"
     "@humanwhocodes/module-importer" "^1.0.1"
     ajv "^6.10.0"
     chalk "^4.0.0"
@@ -16398,10 +16394,10 @@ new-github-issue-url@0.2.1:
   resolved "https://registry.yarnpkg.com/new-github-issue-url/-/new-github-issue-url-0.2.1.tgz#e17be1f665a92de465926603e44b9f8685630c1d"
   integrity sha512-md4cGoxuT4T4d/HDOXbrUHkTKrp/vp+m3aOA7XXVYwNsUNMK49g3SQicTSeV5GIz/5QVGAeYRAOlyp9OvlgsYA==
 
-next-auth@4.12.3:
-  version "4.12.3"
-  resolved "https://registry.yarnpkg.com/next-auth/-/next-auth-4.12.3.tgz#a4392c27d57c246128526a17b38971638f63b5a2"
-  integrity sha512-kfJjYOH2or/y+pEBkeA6O2MxIXOKXNiOKLKhrQHsaRqMDttEQX0yEK3xXVTB1yB7xbMLGcMvsIS3d23BC/K8/A==
+next-auth@4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/next-auth/-/next-auth-4.13.0.tgz#93d312cec2513ac3c5eb583ee0665da50059a902"
+  integrity sha512-FtkPpeb9Bax6yKDaxcaGIvZZjvr10JaU2AsBYv1yv4N6rP86Xa7/4Ro1Aq94YGwsYzk+YKS52CRjD2DqCcSmVA==
   dependencies:
     "@babel/runtime" "^7.16.3"
     "@panva/hkdf" "^1.0.1"
@@ -16413,10 +16409,10 @@ next-auth@4.12.3:
     preact-render-to-string "^5.1.19"
     uuid "^8.3.2"
 
-next-sitemap@3.1.23:
-  version "3.1.23"
-  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-3.1.23.tgz#df696e0a0f5da643d624ec141ac0680401bd8af4"
-  integrity sha512-szQ5uvxn4/7P01U/rvzEccOcYk0Nm+kI3BGzHheREV+HDcj+IilrhXCuNqv4dBWy49eqsgCmjHuEDINx3/teMQ==
+next-sitemap@3.1.24:
+  version "3.1.24"
+  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-3.1.24.tgz#4520db61616390d4e5272e471d43218b2c361bc3"
+  integrity sha512-dEFOI6cnNffDcmxis/1IVNK2JI1wtxxGoj2ipP7L8xDVbxjyuuH2V8MEajHPPrIhybfGk6gyZ5HDpXgVcTv9QA==
   dependencies:
     "@corex/deepmerge" "^4.0.29"
     minimist "^1.2.6"
@@ -18260,22 +18256,31 @@ pupa@^2.1.1:
   dependencies:
     escape-goat "^2.0.0"
 
-puppeteer@18.0.5:
-  version "18.0.5"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-18.0.5.tgz#873223b17b92345182c5b5e8cfbd6f3117f1547d"
-  integrity sha512-s4erjxU0VtKojPvF+KvLKG6OHUPw7gO2YV1dtOsoryyCbhrs444fXb4QZqGWuTv3V/rgSCUzeixxu34g0ZkSMA==
+puppeteer-core@18.2.1:
+  version "18.2.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-18.2.1.tgz#9b7827bb2bf478bb615e2c21425e4659555dc1fe"
+  integrity sha512-MRtTAZfQTluz3U2oU/X2VqVWPcR1+94nbA2V6ZrSZRVEwLqZ8eclZ551qGFQD/vD2PYqHJwWOW/fpC721uznVw==
   dependencies:
     cross-fetch "3.1.5"
     debug "4.3.4"
-    devtools-protocol "0.0.1036444"
+    devtools-protocol "0.0.1045489"
     extract-zip "2.0.1"
     https-proxy-agent "5.0.1"
-    progress "2.0.3"
     proxy-from-env "1.1.0"
     rimraf "3.0.2"
     tar-fs "2.1.1"
     unbzip2-stream "1.4.3"
-    ws "8.8.1"
+    ws "8.9.0"
+
+puppeteer@18.2.1:
+  version "18.2.1"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-18.2.1.tgz#08967cd423efe511ee4c6e3a5c882ffaf2e6bbf3"
+  integrity sha512-7+UhmYa7wxPh2oMRwA++k8UGVDxh3YdWFB52r9C3tM81T6BU7cuusUSxImz0GEYSOYUKk/YzIhkQ6+vc0gHbxQ==
+  dependencies:
+    https-proxy-agent "5.0.1"
+    progress "2.0.3"
+    proxy-from-env "1.1.0"
+    puppeteer-core "18.2.1"
 
 pvtsutils@^1.3.2:
   version "1.3.2"
@@ -22093,11 +22098,6 @@ write-pkg@^4.0.0:
     sort-keys "^2.0.0"
     type-fest "^0.4.1"
     write-json-file "^3.2.0"
-
-ws@8.8.1:
-  version "8.8.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.8.1.tgz#5dbad0feb7ade8ecc99b830c1d77c913d4955ff0"
-  integrity sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==
 
 ws@8.9.0, ws@^8.2.2, ws@^8.3.0:
   version "8.9.0"
