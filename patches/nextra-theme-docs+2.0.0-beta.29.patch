@@ -629,7 +629,7 @@ index 55d4d18..3153398 100644
 +    },
 +    selected: {
 +      key: route,
-+      name: /* @__PURE__ */ React30.createElement(React30.Fragment, null, selected == null ? void 0 : selected.title, /* @__PURE__ */ React30.createElement(ArrowRightIcon, {
++      name: /* @__PURE__ */ React30.createElement(React30.Fragment, null, route ? selected?.title : 'Docs', /* @__PURE__ */ React30.createElement(ArrowRightIcon, {
 +        className: "shrink-0 h-3.5 w-3.5",
 +        pathClassName: "[[aria-expanded='true']>svg>&]:rotate-[270deg] origin-center transition-transform rotate-90"
 +      }))
