@@ -1,5 +1,5 @@
 diff --git a/node_modules/nextra-theme-docs/dist/index.js b/node_modules/nextra-theme-docs/dist/index.js
-index 55d4d18..3153398 100644
+index 55d4d18..b637a04 100644
 --- a/node_modules/nextra-theme-docs/dist/index.js
 +++ b/node_modules/nextra-theme-docs/dist/index.js
 @@ -51,8 +51,8 @@ var __async = (__this, __arguments, generator) => {
@@ -8,7 +8,7 @@ index 55d4d18..3153398 100644
  // src/index.tsx
 -import React41, { useEffect as useEffect8, useMemo as useMemo5, useRef as useRef7 } from "react";
 -import { useRouter as useRouter9 } from "next/router";
-+import React44, { useEffect as useEffect8, useMemo as useMemo5, useRef as useRef7 } from "react";
++import React44, { useEffect as useEffect9, useMemo as useMemo5, useRef as useRef7 } from "react";
 +import { useRouter as useRouter10 } from "next/router";
  import "focus-visible";
  import scrollIntoView3 from "scroll-into-view-if-needed";
@@ -608,18 +608,18 @@ index 55d4d18..3153398 100644
  import { Menu, Transition as Transition3 } from "@headlessui/react";
 +
 +// src/components/version-switch.tsx
-+import React30, { useState as useState6 } from "react";
++import React30, { useEffect as useEffect4, useState as useState6 } from "react";
 +import { useRouter as useRouter4 } from "next/router";
 +function VersionSwitch({
 +  options
 +}) {
 +  const router = useRouter4();
-+  const [route, setRoute] = useState6(
-+    () => {
-+      var _a;
-+      return ((_a = options.find((opt) => router.route.startsWith(opt.route))) == null ? void 0 : _a.route) || "";
-+    }
-+  );
++  const [route, setRoute] = useState6("");
++  useEffect4(() => {
++    var _a;
++    const newRoute = ((_a = options.find((opt) => router.route.startsWith(opt.route))) == null ? void 0 : _a.route) || "";
++    setRoute(newRoute);
++  }, [router.route]);
 +  const selected = route ? options.find((opt) => opt.route === route) : options[0];
 +  return /* @__PURE__ */ React30.createElement(Select, {
 +    className: "flex gap-1 items-center",
@@ -629,7 +629,7 @@ index 55d4d18..3153398 100644
 +    },
 +    selected: {
 +      key: route,
-+      name: /* @__PURE__ */ React30.createElement(React30.Fragment, null, selected == null ? void 0 : selected.title, /* @__PURE__ */ React30.createElement(ArrowRightIcon, {
++      name: /* @__PURE__ */ React30.createElement(React30.Fragment, null, route ? selected == null ? void 0 : selected.title : "Docs", /* @__PURE__ */ React30.createElement(ArrowRightIcon, {
 +        className: "shrink-0 h-3.5 w-3.5",
 +        pathClassName: "[[aria-expanded='true']>svg>&]:rotate-[270deg] origin-center transition-transform rotate-90"
 +      }))
@@ -841,18 +841,19 @@ index 55d4d18..3153398 100644
      href: getGitIssueUrl({
        repository: config.docsRepositoryBase,
        title: `Got server-side error in \`${mounted ? asPath : ""}\` url. Please fix!`,
-@@ -1733,8 +1921,8 @@ function ServerSideErrorPage() {
+@@ -1733,31 +1921,46 @@ function ServerSideErrorPage() {
  }
  
  // src/components/sidebar.tsx
 -import React34, {
 -  useState as useState6,
+-  useEffect as useEffect4,
 +import React35, {
 +  useState as useState7,
-   useEffect as useEffect4,
++  useEffect as useEffect5,
    useMemo as useMemo2,
    memo as memo2,
-@@ -1742,22 +1930,37 @@ import React34, {
+   useRef as useRef4
  } from "react";
  import cn13 from "clsx";
  import Slugger from "github-slugger";
@@ -896,16 +897,17 @@ index 55d4d18..3153398 100644
    const routeOriginal = getFSRoute(asPath, locale);
    const [route] = routeOriginal.split("#");
    const active = [route, route + "/"].includes(item.route + "/");
-@@ -1765,7 +1968,7 @@ function FolderImpl({
+@@ -1765,15 +1968,17 @@ function FolderImpl({
    const { setMenu } = useMenu();
    const config = useConfig();
    const open = TreeState[item.route] !== void 0 ? TreeState[item.route] : active || activeRouteInside || !config.sidebar.defaultMenuCollapsed;
 -  const rerender = useState6({})[1];
+-  useEffect4(() => {
 +  const rerender = useState7({})[1];
-   useEffect4(() => {
++  useEffect5(() => {
      if (activeRouteInside) {
        TreeState[item.route] = true;
-@@ -1773,7 +1976,9 @@ function FolderImpl({
+     }
    }, [activeRouteInside]);
    if (item.type === "menu") {
      const menu = item;
@@ -1061,7 +1063,7 @@ index 55d4d18..3153398 100644
  }
  var emptyHeading = [];
  function Sidebar({
-@@ -1903,7 +2126,10 @@ function Sidebar({
+@@ -1903,17 +2126,20 @@ function Sidebar({
  }) {
    const config = useConfig();
    const { menu, setMenu } = useMenu();
@@ -1072,7 +1074,19 @@ index 55d4d18..3153398 100644
 +  );
    const sidebarRef = useRef4(null);
    const containerRef = useRef4(null);
-   useEffect4(() => {
+-  useEffect4(() => {
++  useEffect5(() => {
+     if (menu) {
+       document.body.classList.add("overflow-hidden", "md:overflow-auto");
+     } else {
+       document.body.classList.remove("overflow-hidden", "md:overflow-auto");
+     }
+   }, [menu]);
+-  useEffect4(() => {
++  useEffect5(() => {
+     var _a;
+     const activeElement = (_a = sidebarRef.current) == null ? void 0 : _a.querySelector("li.active");
+     if (activeElement && (window.innerWidth > 767 || menu)) {
 @@ -1933,41 +2159,63 @@ function Sidebar({
      }
    }, [menu]);
@@ -1200,11 +1214,11 @@ index 55d4d18..3153398 100644
  
  // src/components/toc.tsx
 -import React36, { useEffect as useEffect5, useRef as useRef5, useMemo as useMemo3 } from "react";
-+import React37, { useEffect as useEffect5, useRef as useRef5, useMemo as useMemo3 } from "react";
++import React37, { useEffect as useEffect6, useRef as useRef5, useMemo as useMemo3 } from "react";
  import cn15 from "clsx";
  import Slugger2 from "github-slugger";
  import scrollIntoView2 from "scroll-into-view-if-needed";
-@@ -2027,17 +2281,24 @@ function TOC({ headings, filePath }) {
+@@ -2027,18 +2281,25 @@ function TOC({ headings, filePath }) {
    const activeAnchor = useActiveAnchor();
    const config = useConfig();
    const tocRef = useRef5(null);
@@ -1230,15 +1244,17 @@ index 55d4d18..3153398 100644
    const hasHeadings = items.length > 0;
 -  const hasMetaInfo = Boolean(config.feedback.content || config.editLink.component || config.toc.extraContent);
 -  const activeSlug = (_a = Object.entries(activeAnchor).find(([, { isActive }]) => isActive)) == null ? void 0 : _a[0];
+-  useEffect5(() => {
 +  const hasMetaInfo = Boolean(
 +    config.feedback.content || config.editLink.component || config.toc.extraContent
 +  );
 +  const activeSlug = (_a = Object.entries(activeAnchor).find(
 +    ([, { isActive }]) => isActive
 +  )) == null ? void 0 : _a[0];
-   useEffect5(() => {
++  useEffect6(() => {
      var _a2;
      if (!activeSlug)
+       return;
 @@ -2053,30 +2314,44 @@ function TOC({ headings, filePath }) {
        });
      }
@@ -1459,8 +1475,9 @@ index 55d4d18..3153398 100644
  
  // src/mdx-components.tsx
 -import React40, {
+-  useEffect as useEffect7,
 +import React41, {
-   useEffect as useEffect7,
++  useEffect as useEffect8,
    useRef as useRef6,
 -  useState as useState9,
 +  useState as useState10,
@@ -1475,8 +1492,9 @@ index 55d4d18..3153398 100644
 +import React40 from "react";
  import React210, {
    useCallback as useCallback4,
-   useEffect as useEffect6,
+-  useEffect as useEffect6,
 -  useState as useState8
++  useEffect as useEffect7,
 +  useState as useState9
  } from "react";
  import React310 from "react";
@@ -1490,15 +1508,17 @@ index 55d4d18..3153398 100644
      className: [
        "nextra-button transition-colors",
        "bg-primary-700/5 border border-black/5 text-gray-600 hover:text-gray-900 rounded-md p-2",
-@@ -2362,7 +2642,7 @@ var CopyToClipboard = (_a) => {
+@@ -2362,8 +2642,8 @@ var CopyToClipboard = (_a) => {
    } = _b, props = __objRest2(_b, [
      "value"
    ]);
 -  const [isCopied, setCopied] = useState8(false);
+-  useEffect6(() => {
 +  const [isCopied, setCopied] = useState9(false);
-   useEffect6(() => {
++  useEffect7(() => {
      if (!isCopied)
        return;
+     const timerId = setTimeout(() => {
 @@ -2484,43 +2764,46 @@ var observer;
  var setActiveAnchor;
  var slugs = /* @__PURE__ */ new WeakMap();
@@ -1581,6 +1601,15 @@ index 55d4d18..3153398 100644
  }
  var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
    var _b = _a, {
+@@ -2532,7 +2815,7 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
+   ]);
+   setActiveAnchor != null ? setActiveAnchor : setActiveAnchor = useSetActiveAnchor();
+   const obRef = useRef6(null);
+-  useEffect7(() => {
++  useEffect8(() => {
+     const heading = obRef.current;
+     if (!heading)
+       return;
 @@ -2548,19 +2831,22 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
        });
      };
@@ -1614,7 +1643,7 @@ index 55d4d18..3153398 100644
      href: `#${id}`
    }, children));
  };
-@@ -2594,9 +2880,9 @@ var Details = (_a) => {
+@@ -2594,10 +2880,10 @@ var Details = (_a) => {
      "children",
      "open"
    ]);
@@ -1622,10 +1651,12 @@ index 55d4d18..3153398 100644
 +  const [openState, setOpen] = useState10(!!open);
    const [summary, restChildren] = findSummary(children);
 -  const [delayedOpenState, setDelayedOpenState] = useState9(openState);
+-  useEffect7(() => {
 +  const [delayedOpenState, setDelayedOpenState] = useState10(openState);
-   useEffect7(() => {
++  useEffect8(() => {
      if (openState) {
        setDelayedOpenState(true);
+     } else {
 @@ -2605,20 +2891,24 @@ var Details = (_a) => {
        return () => clearTimeout(timeout);
      }
@@ -1724,6 +1755,15 @@ index 55d4d18..3153398 100644
    return useMemo5(() => {
      const fsPath = getFSRoute(route, locale);
      return normalizePages({
+@@ -2719,7 +3012,7 @@ var Body = ({
+ }) => {
+   const mainElement = useRef7(null);
+   const config = useConfig();
+-  useEffect8(() => {
++  useEffect9(() => {
+     if (mainElement.current) {
+       resizeObserver.observe(mainElement.current);
+     }
 @@ -2728,25 +3021,28 @@ var Body = ({
      };
    }, []);
