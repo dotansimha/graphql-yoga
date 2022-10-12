@@ -30,7 +30,6 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   return {
     onPluginInit({ addPlugin }) {
       addPlugin(
-        // @ts-expect-error - TODO: how to make context types work?
         useEnvelopResponseCache({
           ...options,
           cache,
