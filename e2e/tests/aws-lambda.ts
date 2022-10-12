@@ -1,6 +1,6 @@
 import { Stack } from '@pulumi/pulumi/automation'
 import { DeploymentConfiguration } from '../types'
-import { assertQuery, env, execPromise } from '../utils'
+import { assertGraphiQL, assertQuery, env, execPromise } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
@@ -98,8 +98,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
   },
   test: async ({ functionUrl }) => {
     console.log(`ℹ️ AWS Lambda Function deployed to URL: ${functionUrl.value}`)
-    // DOTAN: This is a known issue at the moment, this seems to fail to serve GraphiQL but POST does work.
-    // await assertGraphiQL(functionUrl.value)
+    await assertGraphiQL(functionUrl.value + '/graphql')
     await assertQuery(functionUrl.value + '/graphql')
   },
 }

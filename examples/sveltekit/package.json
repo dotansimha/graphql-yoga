@@ -3,10 +3,10 @@
 	"version": "0.12.3",
 	"private": true,
 	"scripts": {
-		"prepare": "svelte-kit sync",
-		"dev": "yarn prepare && vite dev",
+		"sync": "svelte-kit sync",
+		"dev": "yarn sync && vite dev",
 		"test": "jest",
-		"build": "yarn prepare && vite build",
+		"build": "yarn sync && vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview --port 3007",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -16,27 +16,27 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "1.0.0-next.80",
-		"@sveltejs/kit": "1.0.0-next.370",
+		"@sveltejs/kit": "1.0.0-next.511",
 		"@types/jest": "^29.0.0",
-		"@typescript-eslint/eslint-plugin": "5.38.1",
-		"@typescript-eslint/parser": "5.38.1",
-		"eslint": "8.24.0",
+		"@typescript-eslint/eslint-plugin": "5.39.0",
+		"@typescript-eslint/parser": "5.39.0",
+		"eslint": "8.25.0",
 		"eslint-config-prettier": "8.5.0",
 		"eslint-plugin-svelte3": "4.0.0",
 		"jest": "^29.0.0",
 		"prettier": "2.7.1",
 		"prettier-plugin-svelte": "2.7.1",
-		"puppeteer": "18.0.5",
+		"puppeteer": "18.2.1",
 		"svelte": "3.50.1",
 		"svelte-check": "2.9.1",
 		"svelte-preprocess": "4.10.7",
 		"tslib": "2.4.0",
 		"typescript": "4.8.4",
-		"vite": "3.1.4"
+		"vite": "3.1.6"
 	},
 	"dependencies": {
 		"@envelop/graphql-jit": "5.0.0-alpha-20220928142730-aa29e80b",
-		"graphql-yoga": "3.0.0-next.3",
+		"graphql-yoga": "3.0.0-next.4",
 		"graphql": "16.6.0"
 	},
 	"type": "module"

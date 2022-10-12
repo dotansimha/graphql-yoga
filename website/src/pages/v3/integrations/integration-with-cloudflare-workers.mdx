@@ -10,27 +10,18 @@ You will want to use the package `graphql-yoga` which has an agnostic HTTP handl
 
 > Watch [Episode #48 of `graphql.wtf`](https://graphql.wtf/episodes/48-graphql-yoga-cloudflare-workers-kv) for a quick introduction to using GraphQL Yoga with Cloudflare Workers, and KV:
 
-<br />
-
 <iframe
-  width="100%"
-  height="400"
   src="https://www.youtube.com/embed/xibiwSXMLsc"
   title="Using GraphQL Yoga with Cloudflare Workers, and KV"
-  frameBorder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
-></iframe>
+/>
 
 ## Installation
 
-<PackageCmd packages={['graphql', 'graphql-yoga']} />
+<PackageCmd packages={['graphql', 'graphql-yoga@three']} />
 
 ## Example with regular `fetch` event listener
 
-`listener.mjs`
-
-```ts
+```ts filename="listener.mjs"
 import { createYoga } from 'graphql-yoga'
 
 const yoga = createYoga()
@@ -42,9 +33,7 @@ self.addEventListener('fetch', yoga)
 
 ## Example with Modules Approach
 
-`modules.mjs`
-
-```ts
+```ts filename="modules.mjs"
 import { createYoga } from 'graphql-yoga'
 
 export default createYoga()
