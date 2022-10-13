@@ -5,6 +5,7 @@ import {
   parse,
   validate,
   subscribe,
+  specifiedRules,
 } from 'graphql'
 import {
   GetEnvelopedFn,
@@ -15,7 +16,6 @@ import {
   PromiseOrValue,
   useMaskedErrors,
   UseMaskedErrorsOpts,
-  useErrorHandler,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -276,7 +276,7 @@ export class YogaServer<
     const graphqlEndpoint = this.graphqlEndpoint
 
     this.plugins = [
-      useEngine({ parse, validate, execute, subscribe }),
+      useEngine({ parse, validate, execute, subscribe, specifiedRules }),
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
