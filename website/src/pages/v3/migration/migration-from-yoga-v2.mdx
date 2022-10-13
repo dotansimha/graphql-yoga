@@ -163,3 +163,27 @@ import { schema, checkDbAvailable } from './my-service';
 +    })
  })
 ```
+
+## Update options for `useMaskedErrors` plugin
+
+- Removed `handleValidationErrors` and `handleParseErrors` options
+- Rename `formatError` to `maskError`
+
+```diff
+- import { createServer } from '@graphql-yoga/node'
++ import { createYoga } from 'graphql-yoga'
+import { schema } from './my-service';
+
+const yoga = createYoga({
+  schema,
+  maskedErrors: {
+-    formatError: () => {
++    maskError: () => {
+      return Error('Sorry, not sorry.')
+    }
+  }
+})
+
+```
+
+Checkout [envelop docs](https://www.the-guild.dev/graphql/envelop/v3/guides/migrating-from-v2-to-v3#8-update-options-for-usemaskederrors-plugin) for more details.
