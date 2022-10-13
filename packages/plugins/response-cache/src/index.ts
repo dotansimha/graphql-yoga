@@ -30,12 +30,11 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   return {
     onPluginInit({ addPlugin }) {
       addPlugin(
-        // @ts-ignore TODO: how do we handle context types
         useEnvelopResponseCache({
           ...options,
           cache,
           session: sessionFactoryForEnvelop,
-        }),
+        }) as Plugin,
       )
     },
     async onParams({ params, request, setResult }) {

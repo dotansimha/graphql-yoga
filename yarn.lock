@@ -2330,12 +2330,20 @@
     apollo-server-types "^3.2.0"
     tslib "^2.4.0"
 
-"@envelop/core@3.0.1", "@envelop/core@^2.4.0":
+"@envelop/core@3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@envelop/core/-/core-3.0.1.tgz#863d23a715972e0dbcf49f26dd4d9935fa16847c"
   integrity sha512-5tRy0SggFuq8LE8nuWv40UWnn2whlVVdKCMgz1MNyMsF29QifI4uOBnVnSHrSeAi0Hp0vUaDkASuKg0SFtkgFw==
   dependencies:
     "@envelop/types" "3.0.0"
+    tslib "2.4.0"
+
+"@envelop/core@^2.4.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@envelop/core/-/core-2.6.0.tgz#1b7a346a37040c217f0f9b60c3358efc6c3b1b94"
+  integrity sha512-yTptKinJN//i6m1kXUbnLBl/FobzddI4ehURAMS08eRUOQwAuXqJU9r8VdTav8nIZLb4t6cuDWFb3n331LiwLw==
+  dependencies:
+    "@envelop/types" "2.4.0"
     tslib "2.4.0"
 
 "@envelop/disable-introspection@4.0.1":
@@ -2388,6 +2396,11 @@
     "@n1ru4l/in-memory-live-query-store" "^0.10.0"
     tslib "^2.4.0"
 
+"@envelop/on-resolve@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@envelop/on-resolve/-/on-resolve-2.0.1.tgz#dc24eeee816dcb92730ad420d4f5648951048ea1"
+  integrity sha512-qRp5GgZuS9g60QZp6sL82GSZ0XfhcD9qMk998lZppruoodON9vxZsMIt6BQfprjEZZZYLUfMMGcGiiTLBLQjFg==
+
 "@envelop/parser-cache@5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@envelop/parser-cache/-/parser-cache-5.0.1.tgz#b59c87fa71e719733cf8a6dddcbe357e10479645"
@@ -2404,6 +2417,13 @@
     "@graphql-tools/utils" "^8.8.0"
     fast-json-stable-stringify "^2.1.0"
     lru-cache "^6.0.0"
+    tslib "^2.4.0"
+
+"@envelop/types@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@envelop/types/-/types-2.4.0.tgz#129163df73503581b68950704f4064a6b0f2c6ed"
+  integrity sha512-pjxS98cDQBS84X29VcwzH3aJ/KiLCGwyMxuj7/5FkdiaCXAD1JEvKEj9LARWlFYj1bY43uII4+UptFebrhiIaw==
+  dependencies:
     tslib "^2.4.0"
 
 "@envelop/types@3.0.0":
@@ -12405,7 +12425,17 @@ graphql-ws@5.11.2, graphql-ws@^5.4.1:
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.11.2.tgz#d5e0acae8b4d4a4cf7be410a24135cfcefd7ddc0"
   integrity sha512-4EiZ3/UXYcjm+xFGP544/yW1+DVI8ZpKASFbzrV5EDTFWJp0ZvLl4Dy2fSZAzz9imKp5pZMIcjB0x/H69Pv/6w==
 
-graphql@16.0.0-experimental-stream-defer.5, graphql@16.5.0, graphql@16.6.0, graphql@^16.0.0, graphql@^16.0.1, graphql@^16.1.0, graphql@^16.2.0, graphql@^16.3.0, graphql@^16.5.0, graphql@^16.6.0:
+graphql@16.0.0-experimental-stream-defer.5:
+  version "16.0.0-experimental-stream-defer.5"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.0.0-experimental-stream-defer.5.tgz#d668566fd33053a054dc5367c38c20a4ac4e4224"
+  integrity sha512-bluMjYpxh3a1lwZuNP+FAaEDMWzccVhkv+STcw0ckB2EPtLRTYUdXQhF9YBbUHd3tZSAR7LXzsxIw2GZXhg5rw==
+
+graphql@16.5.0:
+  version "16.5.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.5.0.tgz#41b5c1182eaac7f3d47164fb247f61e4dfb69c85"
+  integrity sha512-qbHgh8Ix+j/qY+a/ZcJnFQ+j8ezakqPiHwPiZhV/3PgGlgf96QMBB5/f2rkiC9sgLoy/xvT6TSiaf2nTHJh5iA==
+
+graphql@16.6.0, graphql@^16.0.0, graphql@^16.0.1, graphql@^16.1.0, graphql@^16.2.0, graphql@^16.3.0, graphql@^16.5.0, graphql@^16.6.0:
   version "16.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
   integrity sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==

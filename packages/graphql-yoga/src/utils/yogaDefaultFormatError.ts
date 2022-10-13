@@ -20,30 +20,28 @@ export const yogaDefaultFormatError = ({
       }
       // Original error should be removed
       const extensions: GraphQLErrorExtensions = {
-        // @ts-ignore
+        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         ...error.extensions,
         http: {
           status: 500,
-          // @ts-ignore
+          // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
           ...error.extensions?.http,
         },
       }
       if (dev) {
         extensions.originalError = {
-          // @ts-ignore
           message: error.originalError.message,
-          // @ts-ignore
           stack: error.originalError.stack,
         }
       }
       return createGraphQLError(message, {
-        // @ts-ignore
+        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         nodes: error.nodes,
-        // @ts-ignore
+        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         source: error.source,
-        // @ts-ignore
+        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         positions: error.positions,
-        // @ts-ignore
+        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         path: error.path,
         extensions,
       })

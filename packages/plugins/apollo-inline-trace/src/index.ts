@@ -2,7 +2,7 @@ import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
 import { GraphQLError, ResponsePath } from 'graphql'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import { btoa } from '@whatwg-node/fetch'
-import { useOnResolver } from './on-resolver.js'
+import { useOnResolve } from '@envelop/on-resolve'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]
@@ -46,10 +46,9 @@ export function useApolloInlineTrace(
   const ctxForReq = new WeakMap<Request, ApolloInlineTraceContext>()
 
   return {
-    onSchemaChange: async ({ schema }) => {
-      useOnResolver<YogaInitialContext>(
-        schema,
-        ({ context: { request }, info }) => {
+    onPluginInit: ({ addPlugin }) => {
+      addPlugin(
+        useOnResolve(({ context: { request }, info }) => {
           const ctx = ctxForReq.get(request)
           if (!ctx) return
 
@@ -79,7 +78,7 @@ export function useApolloInlineTrace(
               process.hrtime(ctx.startHrTime),
             )
           }
-        },
+        }) as Plugin<YogaInitialContext>,
       )
     },
     onRequest({ request }) {

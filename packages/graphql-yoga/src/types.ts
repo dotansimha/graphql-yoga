@@ -1,10 +1,6 @@
 import type { GraphQLError } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import type {
-  MaskError,
-  PromiseOrValue,
-  UseMaskedErrorsOpts,
-} from '@envelop/core'
+import type { MaskError, PromiseOrValue } from '@envelop/core'
 import type { createFetch } from '@whatwg-node/fetch'
 import type { GraphQLSchema } from 'graphql'
 
