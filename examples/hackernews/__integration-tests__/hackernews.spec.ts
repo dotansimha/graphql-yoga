@@ -4,7 +4,7 @@ import { createYoga, YogaServerInstance } from 'graphql-yoga'
 import { schema } from '../src/schema'
 import type { GraphQLContext } from '../src/context'
 
-describe.skip('hackernews example integration', () => {
+describe('hackernews example integration', () => {
   let yoga: YogaServerInstance<Record<string, any>, GraphQLContext>
   beforeAll(async () => {
     const { createContext } = await import('../src/context')
