@@ -104,7 +104,7 @@ export type YogaServerOptions<
    *
    * @default true
    */
-  maskedErrors?: boolean | YogaMaskedErrorOpts
+  maskedErrors?: boolean | Partial<YogaMaskedErrorOpts>
   /**
    * Context
    */
