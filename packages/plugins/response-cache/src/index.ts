@@ -34,7 +34,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           ...options,
           cache,
           session: sessionFactoryForEnvelop,
-        }) as Plugin,
+        }),
       )
     },
     async onParams({ params, request, setResult }) {

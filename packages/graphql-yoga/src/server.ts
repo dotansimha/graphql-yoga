@@ -397,11 +397,7 @@ export class YogaServer<
       {
         onPluginInit({ addPlugin }) {
           if (maskedErrors) {
-            addPlugin(
-              useMaskedErrors(maskedErrors) as Plugin<
-                TUserContext & TServerContext & YogaInitialContext
-              >,
-            )
+            addPlugin(useMaskedErrors(maskedErrors))
           }
           addPlugin(
             // We handle validation errors at the end
