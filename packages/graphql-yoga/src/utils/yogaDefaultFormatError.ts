@@ -1,6 +1,6 @@
 import { createGraphQLError } from '@graphql-tools/utils'
-import { isGraphQLError } from '@envelop/core'
 import { GraphQLErrorExtensions } from 'graphql'
+import { isGraphQLError } from '../error'
 
 export const yogaDefaultFormatError = ({
   error,
@@ -20,11 +20,9 @@ export const yogaDefaultFormatError = ({
       }
       // Original error should be removed
       const extensions: GraphQLErrorExtensions = {
-        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         ...error.extensions,
         http: {
           status: 500,
-          // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
           ...error.extensions?.http,
         },
       }
@@ -35,13 +33,9 @@ export const yogaDefaultFormatError = ({
         }
       }
       return createGraphQLError(message, {
-        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         nodes: error.nodes,
-        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         source: error.source,
-        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         positions: error.positions,
-        // @ts-expect-error it is a graphql Error based on our check its just we do not have sufficient types to prove it
         path: error.path,
         extensions,
       })

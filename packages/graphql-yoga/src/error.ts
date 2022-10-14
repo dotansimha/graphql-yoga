@@ -1,4 +1,3 @@
-import { isGraphQLError } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
 import { ResultProcessorInput } from './plugins/types'
@@ -22,10 +21,16 @@ function hasToString(obj: any): obj is { toString(): string } {
   return obj != null && typeof obj.toString === 'function'
 }
 
-export function isOriginalGraphQLError(error: Error): boolean {
-  if (error instanceof GraphQLError) {
-    if (error.originalError != null) {
-      return isOriginalGraphQLError(error.originalError)
+export function isGraphQLError(val: unknown): val is GraphQLError {
+  return val instanceof GraphQLError
+}
+
+export function isOriginalGraphQLError(
+  val: unknown,
+): val is GraphQLError & { originalError: GraphQLError } {
+  if (val instanceof GraphQLError) {
+    if (val.originalError != null) {
+      return isOriginalGraphQLError(val.originalError)
     }
     return true
   }
@@ -49,9 +54,15 @@ export function handleError(
       error,
       maskedErrorsOpts.errorMessage,
     )
-    errors.add(maskedError as GraphQLError)
+    errors.add(
+      isGraphQLError(maskedError)
+        ? maskedError
+        : createGraphQLError(maskedError.message, {
+            originalError: maskedError,
+          }),
+    )
   } else if (isGraphQLError(error)) {
-    errors.add(error as GraphQLError)
+    errors.add(error)
   } else if (error instanceof Error) {
     errors.add(
       createGraphQLError(error.message, {
