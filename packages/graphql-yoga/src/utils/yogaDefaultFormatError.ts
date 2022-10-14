@@ -11,7 +11,7 @@ export const yogaDefaultFormatError = ({
   message: string
   isDev?: boolean
 }) => {
-  const dev = isDev || globalThis.process?.env?.NODE_ENV === 'development'
+  const dev = isDev || globalThis.process?.env?.NODE_ENV !== 'production'
 
   if (isGraphQLError(error)) {
     if (error.originalError) {
