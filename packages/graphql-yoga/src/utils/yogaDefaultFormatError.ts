@@ -1,6 +1,6 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLErrorExtensions } from 'graphql'
-import { isGraphQLError } from '../error'
+import { isGraphQLError } from '../error.js'
 
 export const yogaDefaultFormatError = ({
   error,
