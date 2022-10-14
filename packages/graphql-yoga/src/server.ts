@@ -405,9 +405,7 @@ export class YogaServer<
           }
           addPlugin(
             // We handle validation errors at the end
-            useHTTPValidationError() as Plugin<
-              TUserContext & TServerContext & YogaInitialContext
-            >,
+            useHTTPValidationError(),
           )
         },
       },
