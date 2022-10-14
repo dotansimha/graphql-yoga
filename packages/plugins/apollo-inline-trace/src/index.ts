@@ -78,7 +78,7 @@ export function useApolloInlineTrace(
               process.hrtime(ctx.startHrTime),
             )
           }
-        }) as Plugin<YogaInitialContext>,
+        }),
       )
     },
     onRequest({ request }) {
