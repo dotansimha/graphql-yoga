@@ -23,7 +23,10 @@ describe('Bun integration', () => {
   it('shows GraphiQL', async () => {
     const server = Bun.serve(yoga)
     const response = await fetch(
-      new URL(yoga.graphqlEndpoint, server.hostname).toString(),
+      new URL(
+        yoga.graphqlEndpoint,
+        `http://${server.hostname}:${server.port}`,
+      ).toString(),
       {
         method: 'GET',
         headers: {
@@ -41,7 +44,10 @@ describe('Bun integration', () => {
   it('accepts a query', async () => {
     const server = Bun.serve(yoga)
     const response = await fetch(
-      new URL(yoga.graphqlEndpoint, server.hostname).toString(),
+      new URL(
+        yoga.graphqlEndpoint,
+        `http://${server.hostname}:${server.port}`,
+      ).toString(),
       {
         method: 'POST',
         headers: {
