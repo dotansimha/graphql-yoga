@@ -1,0 +1,68 @@
+diff --git a/node_modules/@envelop/response-cache/typings/plugin.d.cts b/node_modules/@envelop/response-cache/typings/plugin.d.cts
+index 3ce651b..305164e 100644
+--- a/node_modules/@envelop/response-cache/typings/plugin.d.cts
++++ b/node_modules/@envelop/response-cache/typings/plugin.d.cts
+@@ -18,7 +18,7 @@ export declare type GetDocumentStringFunction = (executionArgs: ExecutionArgs) =
+ export declare type ShouldCacheResultFunction = (params: {
+     result: ExecutionResult;
+ }) => Boolean;
+-export declare type UseResponseCacheParameter<C = any> = {
++export declare type UseResponseCacheParameter<PluginContext extends Record<string, any> = {}> = {
+     cache?: Cache;
+     /**
+      * Maximum age in ms. Defaults to `Infinity`. Set it to 0 for disabling the global TTL.
+@@ -60,12 +60,12 @@ export declare type UseResponseCacheParameter<C = any> = {
+      * });
+      * ```
+      */
+-    session(context: C): string | undefined | null;
++    session(context: PluginContext): string | undefined | null;
+     /**
+      * Specify whether the cache should be used based on the context.
+      * By default any request uses the cache.
+      */
+-    enabled?(context: C): boolean;
++    enabled?(context: PluginContext): boolean;
+     /**
+      * Skip caching of following the types.
+      */
+@@ -119,4 +119,4 @@ export declare const defaultBuildResponseCacheKey: BuildResponseCacheKeyFunction
+  * By default, results with errors (unexpected, EnvelopError, or GraphQLError) are not cached.
+  */
+ export declare const defaultShouldCacheResult: ShouldCacheResultFunction;
+-export declare function useResponseCache({ cache, ttl: globalTtl, session, enabled, ignoredTypes, ttlPerType, ttlPerSchemaCoordinate, idFields, invalidateViaMutation, buildResponseCacheKey, getDocumentString, shouldCacheResult, includeExtensionMetadata, }: UseResponseCacheParameter): Plugin;
++export declare function useResponseCache<PluginContext extends Record<string, any> = {}>({ cache, ttl: globalTtl, session, enabled, ignoredTypes, ttlPerType, ttlPerSchemaCoordinate, idFields, invalidateViaMutation, buildResponseCacheKey, getDocumentString, shouldCacheResult, includeExtensionMetadata, }: UseResponseCacheParameter<PluginContext>): Plugin<PluginContext>;
+diff --git a/node_modules/@envelop/response-cache/typings/plugin.d.ts b/node_modules/@envelop/response-cache/typings/plugin.d.ts
+index 9125841..e4c300d 100644
+--- a/node_modules/@envelop/response-cache/typings/plugin.d.ts
++++ b/node_modules/@envelop/response-cache/typings/plugin.d.ts
+@@ -18,7 +18,7 @@ export declare type GetDocumentStringFunction = (executionArgs: ExecutionArgs) =
+ export declare type ShouldCacheResultFunction = (params: {
+     result: ExecutionResult;
+ }) => Boolean;
+-export declare type UseResponseCacheParameter<C = any> = {
++export declare type UseResponseCacheParameter<PluginContext extends Record<string, any> = {}> = {
+     cache?: Cache;
+     /**
+      * Maximum age in ms. Defaults to `Infinity`. Set it to 0 for disabling the global TTL.
+@@ -60,12 +60,12 @@ export declare type UseResponseCacheParameter<C = any> = {
+      * });
+      * ```
+      */
+-    session(context: C): string | undefined | null;
++    session(context: PluginContext): string | undefined | null;
+     /**
+      * Specify whether the cache should be used based on the context.
+      * By default any request uses the cache.
+      */
+-    enabled?(context: C): boolean;
++    enabled?(context: PluginContext): boolean;
+     /**
+      * Skip caching of following the types.
+      */
+@@ -119,4 +119,4 @@ export declare const defaultBuildResponseCacheKey: BuildResponseCacheKeyFunction
+  * By default, results with errors (unexpected, EnvelopError, or GraphQLError) are not cached.
+  */
+ export declare const defaultShouldCacheResult: ShouldCacheResultFunction;
+-export declare function useResponseCache({ cache, ttl: globalTtl, session, enabled, ignoredTypes, ttlPerType, ttlPerSchemaCoordinate, idFields, invalidateViaMutation, buildResponseCacheKey, getDocumentString, shouldCacheResult, includeExtensionMetadata, }: UseResponseCacheParameter): Plugin;
++export declare function useResponseCache<PluginContext extends Record<string, any> = {}>({ cache, ttl: globalTtl, session, enabled, ignoredTypes, ttlPerType, ttlPerSchemaCoordinate, idFields, invalidateViaMutation, buildResponseCacheKey, getDocumentString, shouldCacheResult, includeExtensionMetadata, }: UseResponseCacheParameter<PluginContext>): Plugin<PluginContext>;
