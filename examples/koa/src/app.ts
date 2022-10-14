@@ -6,11 +6,6 @@ export function buildApp() {
   const app = new Koa()
 
   const yoga = createYoga<Koa.ParameterizedContext>({
-    maskedErrors: {
-      maskError: () => {
-        return Error('cooool')
-      },
-    },
     schema: createSchema({
       typeDefs: /* GraphQL */ `
         type Query {
