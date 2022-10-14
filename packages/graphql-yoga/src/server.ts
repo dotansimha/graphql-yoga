@@ -15,7 +15,6 @@ import {
   useLogger,
   PromiseOrValue,
   useMaskedErrors,
-  UseMaskedErrorsOpts,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -105,7 +104,7 @@ export type YogaServerOptions<
    *
    * @default true
    */
-  maskedErrors?: boolean | (UseMaskedErrorsOpts & { isDev?: boolean })
+  maskedErrors?: boolean | YogaMaskedErrorOpts
   /**
    * Context
    */
@@ -325,13 +324,14 @@ export class YogaServer<
           },
         }),
       options?.context != null &&
-        useExtendContext(async (initialContext) => {
+        useExtendContext((initialContext) => {
           if (options?.context) {
             if (typeof options.context === 'function') {
-              return (options.context as Function)(initialContext)
+              return options.context(initialContext)
             }
             return options.context
           }
+          return {}
         }),
       // Middlewares before processing the incoming HTTP request
       useHealthCheck({
