@@ -13,12 +13,15 @@ export function getAggregateErrorFromErrors(
   throw new AggregateError(errors)
 }
 
-export function useHTTPValidationError(): Plugin {
+export function useHTTPValidationError<
+  PluginContext extends Record<string, any> = {},
+>(): Plugin<PluginContext> {
   return {
     onValidate() {
       return ({ valid, result }) => {
         if (!valid) {
-          throw getAggregateErrorFromErrors(result)
+          // Typecasting since Envelop is Agnostic to GraphQL.js
+          throw getAggregateErrorFromErrors(result as GraphQLError[])
         }
       }
     },

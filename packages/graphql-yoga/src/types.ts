@@ -1,6 +1,6 @@
-import type { DocumentNode, GraphQLError } from 'graphql'
+import type { GraphQLError } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
-import type { FormatErrorHandler, PromiseOrValue } from '@envelop/core'
+import type { MaskError, PromiseOrValue } from '@envelop/core'
 import type { createFetch } from '@whatwg-node/fetch'
 import type { GraphQLSchema } from 'graphql'
 
@@ -83,9 +83,9 @@ export interface FetchEvent extends Event {
 }
 
 export type YogaMaskedErrorOpts = {
-  formatError: FormatErrorHandler
+  maskError: MaskError
   errorMessage: string
-  isDev: boolean
+  isDev?: boolean
 }
 
 export type MaybeArray<T> = T | T[]

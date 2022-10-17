@@ -120,7 +120,6 @@ describe('Context', () => {
     const onContextBuildingFn = jest.fn(
       (() => {}) as Plugin['onContextBuilding'],
     )
-    const onResolverCalledFn = jest.fn((() => {}) as Plugin['onResolverCalled'])
 
     const yoga = createYoga({
       schema,
@@ -131,7 +130,6 @@ describe('Context', () => {
           onParse: onParseFn,
           onValidate: onValidateFn,
           onContextBuilding: onContextBuildingFn,
-          onResolverCalled: onResolverCalledFn,
         },
       ],
     })
@@ -157,8 +155,5 @@ describe('Context', () => {
 
     expect(onContextBuildingFn.mock.lastCall[0].context.params).toEqual(params)
     expect(onContextBuildingFn.mock.lastCall[0].context.request).toBeDefined()
-
-    expect(onResolverCalledFn.mock.lastCall[0].context.params).toEqual(params)
-    expect(onResolverCalledFn.mock.lastCall[0].context.request).toBeDefined()
   })
 })

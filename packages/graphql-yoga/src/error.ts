@@ -21,10 +21,16 @@ function hasToString(obj: any): obj is { toString(): string } {
   return obj != null && typeof obj.toString === 'function'
 }
 
-export function isOriginalGraphQLError(error: Error): boolean {
-  if (error instanceof GraphQLError) {
-    if (error.originalError != null) {
-      return isOriginalGraphQLError(error.originalError)
+export function isGraphQLError(val: unknown): val is GraphQLError {
+  return val instanceof GraphQLError
+}
+
+export function isOriginalGraphQLError(
+  val: unknown,
+): val is GraphQLError & { originalError: GraphQLError } {
+  if (val instanceof GraphQLError) {
+    if (val.originalError != null) {
+      return isOriginalGraphQLError(val.originalError)
     }
     return true
   }
@@ -44,13 +50,18 @@ export function handleError(
       }
     }
   } else if (maskedErrorsOpts) {
-    const maskedError = maskedErrorsOpts.formatError(
+    const maskedError = maskedErrorsOpts.maskError(
       error,
       maskedErrorsOpts.errorMessage,
-      maskedErrorsOpts.isDev,
     )
-    errors.add(maskedError)
-  } else if (error instanceof GraphQLError) {
+    errors.add(
+      isGraphQLError(maskedError)
+        ? maskedError
+        : createGraphQLError(maskedError.message, {
+            originalError: maskedError,
+          }),
+    )
+  } else if (isGraphQLError(error)) {
     errors.add(error)
   } else if (error instanceof Error) {
     errors.add(
@@ -91,7 +102,6 @@ export function handleError(
   }
   return Array.from(errors)
 }
-
 export function getResponseInitByRespectingErrors(
   result: ResultProcessorInput,
   headers: Record<string, string> = {},

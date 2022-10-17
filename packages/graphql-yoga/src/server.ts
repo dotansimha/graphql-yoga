@@ -1,12 +1,20 @@
-import { print, ExecutionResult } from 'graphql'
+import {
+  print,
+  ExecutionResult,
+  execute,
+  parse,
+  validate,
+  subscribe,
+  specifiedRules,
+} from 'graphql'
 import {
   GetEnvelopedFn,
   envelop,
-  useMaskedErrors,
-  UseMaskedErrorsOpts,
+  useEngine,
   useExtendContext,
   useLogger,
   PromiseOrValue,
+  useMaskedErrors,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
@@ -96,7 +104,7 @@ export type YogaServerOptions<
    *
    * @default true
    */
-  maskedErrors?: boolean | UseMaskedErrorsOpts
+  maskedErrors?: boolean | Partial<YogaMaskedErrorOpts>
   /**
    * Context
    */
@@ -239,9 +247,13 @@ export class YogaServer<
       options?.maskedErrors === false
         ? null
         : {
-            formatError: yogaDefaultFormatError,
+            maskError: (error, message) =>
+              yogaDefaultFormatError({
+                error,
+                message,
+                isDev: this.maskedErrorsOpts?.isDev ?? false,
+              }),
             errorMessage: 'Unexpected error.',
-            isDev: globalThis.process?.env?.NODE_ENV === 'development',
             ...(typeof options?.maskedErrors === 'object'
               ? options.maskedErrors
               : {}),
@@ -263,6 +275,7 @@ export class YogaServer<
     const graphqlEndpoint = this.graphqlEndpoint
 
     this.plugins = [
+      useEngine({ parse, validate, execute, subscribe, specifiedRules }),
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
@@ -311,13 +324,14 @@ export class YogaServer<
           },
         }),
       options?.context != null &&
-        useExtendContext(async (initialContext) => {
+        useExtendContext((initialContext) => {
           if (options?.context) {
             if (typeof options.context === 'function') {
-              return (options.context as Function)(initialContext)
+              return options.context(initialContext)
             }
             return options.context
           }
+          return {}
         }),
       // Middlewares before processing the incoming HTTP request
       useHealthCheck({
@@ -395,7 +409,9 @@ export class YogaServer<
 
     this.getEnveloped = envelop({
       plugins: this.plugins,
-    }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
+    }) as unknown as GetEnvelopedFn<
+      TUserContext & TServerContext & YogaInitialContext
+    >
 
     this.onRequestHooks = []
     this.onRequestParseHooks = []

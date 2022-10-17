@@ -1,46 +1,61 @@
-import { FormatErrorHandler } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLError, GraphQLErrorExtensions } from 'graphql'
+import { GraphQLErrorExtensions } from 'graphql'
+import { isGraphQLError } from '../error.js'
 
-export const yogaDefaultFormatError: FormatErrorHandler = (
-  err,
+export const yogaDefaultFormatError = ({
+  error,
   message,
   isDev,
-) => {
-  if (err instanceof GraphQLError) {
-    if (err.originalError) {
-      if (err.originalError.name === 'GraphQLError') {
-        return err
+}: {
+  error: unknown
+  message: string
+  isDev?: boolean
+}) => {
+  const dev = isDev || globalThis.process?.env?.NODE_ENV === 'development'
+
+  if (isGraphQLError(error)) {
+    if (error.originalError) {
+      if (error.originalError.name === 'GraphQLError') {
+        return error
       }
       // Original error should be removed
       const extensions: GraphQLErrorExtensions = {
-        ...err.extensions,
+        ...error.extensions,
         http: {
           status: 500,
-          ...err.extensions?.http,
+          ...error.extensions?.http,
         },
       }
-      if (isDev) {
+      if (dev) {
         extensions.originalError = {
-          message: err.originalError.message,
-          stack: err.originalError.stack,
+          message: error.originalError.message,
+          stack: error.originalError.stack,
         }
       }
       return createGraphQLError(message, {
-        nodes: err.nodes,
-        source: err.source,
-        positions: err.positions,
-        path: err.path,
+        nodes: error.nodes,
+        source: error.source,
+        positions: error.positions,
+        path: error.path,
         extensions,
       })
     }
-    return err
+    return error
   }
+
   return createGraphQLError(message, {
     extensions: {
       http: {
         status: 500,
       },
+      originalError: dev
+        ? error instanceof Error
+          ? {
+              message: error.message,
+              stack: error.stack,
+            }
+          : error
+        : undefined,
     },
   })
 }
