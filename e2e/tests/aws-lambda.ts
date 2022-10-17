@@ -1,6 +1,6 @@
 import { Stack } from '@pulumi/pulumi/automation'
 import type { DeploymentConfiguration } from '../types'
-import { assertGraphiQL, assertQuery, env, execPromise } from '../utils.js'
+import { assertGraphiQL, assertQuery, env, execPromise } from '../utils'
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
