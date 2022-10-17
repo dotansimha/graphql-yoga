@@ -2330,12 +2330,20 @@
     apollo-server-types "^3.2.0"
     tslib "^2.4.0"
 
-"@envelop/core@3.0.1", "@envelop/core@^2.4.0":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@envelop/core/-/core-3.0.1.tgz#863d23a715972e0dbcf49f26dd4d9935fa16847c"
-  integrity sha512-5tRy0SggFuq8LE8nuWv40UWnn2whlVVdKCMgz1MNyMsF29QifI4uOBnVnSHrSeAi0Hp0vUaDkASuKg0SFtkgFw==
+"@envelop/core@3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@envelop/core/-/core-3.0.2.tgz#0c74b7cf2a1b3fc15bef29dfbebea084249bf5a3"
+  integrity sha512-0kYBq0gKIARF6vFYw5upUcBgI2oP3wYaDTUfjiX4RhMIkox3DiKPUwRiZHu16ILGr8Qi6p+HTKXRyoSdl9CCqA==
   dependencies:
     "@envelop/types" "3.0.0"
+    tslib "2.4.0"
+
+"@envelop/core@^2.4.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@envelop/core/-/core-2.6.0.tgz#1b7a346a37040c217f0f9b60c3358efc6c3b1b94"
+  integrity sha512-yTptKinJN//i6m1kXUbnLBl/FobzddI4ehURAMS08eRUOQwAuXqJU9r8VdTav8nIZLb4t6cuDWFb3n331LiwLw==
+  dependencies:
+    "@envelop/types" "2.4.0"
     tslib "2.4.0"
 
 "@envelop/disable-introspection@4.0.1":
@@ -2401,14 +2409,21 @@
     lru-cache "^6.0.0"
     tslib "^2.4.0"
 
-"@envelop/response-cache@4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@envelop/response-cache/-/response-cache-4.0.1.tgz#e37d7fdd4495373565ebbd2a285e317c91fbcc1a"
-  integrity sha512-qlOtuV7TfOYPcknQoZDW0FlhpeWnIiuqUY+eUN0yNd+T/rE9Rny51ZTY2K0Bi5aTzx+uqSmpZzvIHcCqa7wykg==
+"@envelop/response-cache@4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@envelop/response-cache/-/response-cache-4.0.2.tgz#272520da95250198fb99eecd38e27cb8f32a98db"
+  integrity sha512-rK7BmxAP+TQRbZZ/ykuU9mZVlQizpErlHqA+jdVUSA6AHK08E8ADqvQuUcQyJYCabSN6Hu2M4o/wPWw1XHaSJw==
   dependencies:
     "@graphql-tools/utils" "^8.8.0"
     fast-json-stable-stringify "^2.1.0"
     lru-cache "^6.0.0"
+    tslib "^2.4.0"
+
+"@envelop/types@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@envelop/types/-/types-2.4.0.tgz#129163df73503581b68950704f4064a6b0f2c6ed"
+  integrity sha512-pjxS98cDQBS84X29VcwzH3aJ/KiLCGwyMxuj7/5FkdiaCXAD1JEvKEj9LARWlFYj1bY43uII4+UptFebrhiIaw==
+  dependencies:
     tslib "^2.4.0"
 
 "@envelop/types@3.0.0":
