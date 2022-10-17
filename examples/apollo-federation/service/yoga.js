@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { parse } = require('graphql')
 const { buildSubgraphSchema } = require('@apollo/subgraph')
 const { createYoga } = require('graphql-yoga')

@@ -30,10 +30,11 @@ export function isAcceptableByRequest(
   const [askedPre, askedSuf] = askedMediaType.split('/')
   return mediaTypes.some((mediaType) => {
     const [pre, suf] = mediaType.split('/')
-    if (pre === '*' || pre === askedPre) {
-      if (suf === '*' || suf === askedSuf) {
-        return true
-      }
+    if (
+      (pre === '*' || pre === askedPre) &&
+      (suf === '*' || suf === askedSuf)
+    ) {
+      return true
     }
     return false
   })

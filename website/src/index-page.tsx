@@ -72,7 +72,6 @@ export const ITEMS: IHeroIllustrationProps[] = [
     },
   },
 ]
-import Link from 'next/link'
 
 export default function IndexPage() {
   return (

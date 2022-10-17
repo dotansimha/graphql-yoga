@@ -6,8 +6,8 @@ import {
   GraphQLError,
   DocumentNode,
 } from 'graphql'
-import { YogaInitialContext } from '../../types'
-import { Plugin } from '../types'
+import type { YogaInitialContext } from '../../types'
+import type { Plugin } from '../types'
 
 export function assertMutationViaGet(
   method: string,

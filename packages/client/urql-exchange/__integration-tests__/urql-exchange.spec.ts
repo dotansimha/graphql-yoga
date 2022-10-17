@@ -1,6 +1,5 @@
-import { Client, createClient, OperationResult } from '@urql/core'
+import { Client, createClient } from '@urql/core'
 import { yogaExchange } from '@graphql-yoga/urql-exchange'
-import { observableToAsyncIterable } from '@graphql-tools/utils'
 import { pipe, toObservable } from 'wonka'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { File } from '@whatwg-node/fetch'

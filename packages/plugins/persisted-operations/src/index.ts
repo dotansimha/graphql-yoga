@@ -41,6 +41,7 @@ export interface UsePersistedOperationsOptions {
 }
 
 export function usePersistedOperations<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TPluginContext extends Record<string, any>,
 >({
   getPersistedOperation,

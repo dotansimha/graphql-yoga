@@ -1,11 +1,5 @@
 import { GraphQLSchema } from 'graphql'
-import {
-  createSchema,
-  createYoga,
-  envelop,
-  useSchema,
-  YogaInitialContext,
-} from 'graphql-yoga'
+import { createSchema, createYoga, YogaInitialContext } from 'graphql-yoga'
 
 describe('schema', () => {
   it('missing schema causes a error', async () => {

@@ -1,6 +1,6 @@
 import { AggregateError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
-import { Plugin } from '../types'
+import type { Plugin } from '../types'
 
 export function getAggregateErrorFromErrors(
   errors: readonly GraphQLError[],

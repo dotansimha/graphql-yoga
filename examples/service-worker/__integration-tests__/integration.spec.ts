@@ -147,6 +147,7 @@ describe('Service worker', () => {
 
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toBe('text/event-stream')
+    // eslint-disable-next-line no-unreachable-loop, @typescript-eslint/no-explicit-any
     for await (const chunk of response.body as any) {
       expect(Buffer.from(chunk).toString('utf-8')).toMatch(/data: {/)
       break

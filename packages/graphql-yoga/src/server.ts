@@ -42,7 +42,7 @@ import { ServerAdapter, createServerAdapter } from '@whatwg-node/server'
 import {
   processRequest as processGraphQLParams,
   processResult,
-} from './processRequest.js'
+} from './process-request.js'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
@@ -79,7 +79,7 @@ import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheck
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
-import { yogaDefaultFormatError } from './utils/yogaDefaultFormatError.js'
+import { yogaDefaultFormatError } from './utils/yoga-default-format-error.ts.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
 
@@ -87,7 +87,9 @@ import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.j
  * Configuration options for the server
  */
 export type YogaServerOptions<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TServerContext extends Record<string, any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TUserContext extends Record<string, any>,
 > = {
   /**
@@ -155,6 +157,7 @@ export type YogaServerOptions<
    * @see https://envelop.dev/plugins
    */
   plugins?: Array<
+    // eslint-disable-next-line @typescript-eslint/ban-types
     Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
   >
 
@@ -236,10 +239,12 @@ export class YogaServer<
         ? logger === true
           ? defaultYogaLogger
           : {
+              /* eslint-disable */
               debug: () => {},
               error: () => {},
               warn: () => {},
               info: () => {},
+              /* eslint-enable */
             }
         : logger
 
@@ -262,7 +267,7 @@ export class YogaServer<
     const maskedErrors =
       this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
 
-    let batchingLimit: number = 0
+    let batchingLimit = 0
     if (options?.batching) {
       if (typeof options.batching === 'boolean') {
         batchingLimit = 10
@@ -302,6 +307,7 @@ export class YogaServer<
               case 'execute-start':
               case 'subscribe-start':
                 this.logger.debug(titleBold('Execution start'))
+                // eslint-disable-next-line no-case-declarations
                 const {
                   params: { query, operationName, variables, extensions },
                 }: YogaInitialContext = events.args.contextValue
@@ -447,6 +453,7 @@ export class YogaServer<
       params: GraphQLParams
       request: Request
     },
+    // eslint-disable-next-line @typescript-eslint/ban-types
     ...args: {} extends TServerContext
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
@@ -604,7 +611,7 @@ export class YogaServer<
         })
       }
       return response
-    } catch (e: any) {
+    } catch (e: unknown) {
       this.logger.error(e)
       return new this.fetchAPI.Response('Internal Server Error', {
         status: 500,
@@ -625,6 +632,7 @@ export class YogaServer<
    * expect(executionResult.data.ping).toBe('pong')
    * ```
    **/
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async inject<TData = any, TVariables = any>({
     document,
     variables,
@@ -664,6 +672,7 @@ export class YogaServer<
   }
 }
 
+/* eslint-disable */
 export type YogaServerInstance<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,

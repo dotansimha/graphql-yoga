@@ -42,7 +42,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
   }
 
   function removeCallback(topic: string, callback: (event: TEvent) => void) {
-    let callbacks = callbacksForTopic.get(topic)
+    const callbacks = callbacksForTopic.get(topic)
     if (callbacks === undefined) {
       return
     }

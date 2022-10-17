@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare module '@prisma/migrate' {
   // https://github.com/prisma/prisma/blob/main/packages/internals/src/cli/types.ts
   class Command {

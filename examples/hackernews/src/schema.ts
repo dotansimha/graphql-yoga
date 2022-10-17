@@ -92,7 +92,7 @@ const resolvers = {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
-    comments: (parent: Link, args: {}, context: GraphQLContext) => {
+    comments: (parent: Link, _: unknown, context: GraphQLContext) => {
       return context.prisma.comment.findMany({
         where: {
           linkId: parent.id,

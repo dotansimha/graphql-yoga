@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { IResolvers } from '@graphql-tools/utils'
 import { ClientRequest } from 'node:http'
 
 import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
 import type { GraphQLSchema } from 'graphql'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const schema: GraphQLSchema = null as any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const request: Request = null as any
 
 /**
@@ -34,6 +37,7 @@ const request: Request = null as any
   const server = createYoga<{ req: ClientRequest }>({
     schema,
   })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const clientRequest: ClientRequest = null as any
   server.handleRequest(request, { req: clientRequest })
 }

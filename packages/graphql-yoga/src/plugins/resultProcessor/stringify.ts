@@ -1,5 +1,5 @@
 import { ExecutionResult } from 'graphql'
-import { ExecutionPatchResult, MaybeArray } from '../../types'
+import type { ExecutionPatchResult, MaybeArray } from '../../types'
 
 // JSON stringifier that adjusts the result extensions while serialising
 export function jsonStringifyResult(
@@ -8,6 +8,7 @@ export function jsonStringifyResult(
   return JSON.stringify(result, (key, value) => {
     if (key === 'extensions') {
       // omit http extensions
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { http, ...extensions } = value
 
       // remove empty extensions object

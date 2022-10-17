@@ -3,6 +3,7 @@ import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
 import { CustomEvent, EventTarget } from '@whatwg-node/events'
 
 type PubSubPublishArgsByKey = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: [] | [any] | [number | string, any]
 }
 

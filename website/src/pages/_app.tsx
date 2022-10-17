@@ -1,6 +1,7 @@
 import '@theguild/components/style.css'
+import type { AppProps } from 'next/app'
 
-export default function App({ Component, pageProps }: any) {
+export default function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />
 }
 

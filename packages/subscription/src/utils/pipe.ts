@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /**
  * Pipes the value of an expression into a pipeline of functions.
  *
@@ -301,8 +303,10 @@ export function pipe(
     case 9:
       return hi!(gh!(fg!(ef!(de!(cd!(bc!(ab!(a))))))))
     default:
+      // eslint-disable-next-line no-case-declarations, prefer-rest-params
       let ret = arguments[0]
       for (let i = 1; i < arguments.length; i++) {
+        // eslint-disable-next-line prefer-rest-params
         ret = arguments[i](ret)
       }
       return ret

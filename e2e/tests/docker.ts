@@ -7,7 +7,7 @@ import {
 } from '../utils'
 import * as docker from '@pulumi/docker'
 import { interpolate } from '@pulumi/pulumi'
-import { join, resolve } from 'path'
+import { resolve } from 'path'
 
 export const dockerDeployment = (
   image: string,

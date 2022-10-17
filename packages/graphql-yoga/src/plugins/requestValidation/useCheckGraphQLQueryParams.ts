@@ -1,6 +1,6 @@
 import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLParams } from '../../types'
-import { Plugin } from '../types'
+import type { GraphQLParams } from '../../types'
+import type { Plugin } from '../types'
 
 const EXPECTED_PARAMS = ['query', 'variables', 'operationName', 'extensions']
 
