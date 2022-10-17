@@ -1,5 +1,16 @@
 # graphql-yoga
 
+## 3.0.0-next.5
+
+### Major Changes
+
+- [#1660](https://github.com/dotansimha/graphql-yoga/pull/1660) [`71554172`](https://github.com/dotansimha/graphql-yoga/commit/715541729f76be82d9f959a96e7af6126836df87) Thanks [@saihaj](https://github.com/saihaj)! - update to Envelop `useMaskedError` plugin
+
+  - Removed handleValidationErrors and handleParseErrors
+  - Renamed formatError to maskError
+
+  Checkout envelop docs for more details https://www.the-guild.dev/graphql/envelop/v3/guides/migrating-from-v2-to-v3#8-update-options-for-usemaskederrors-plugin
+
 ## 3.0.0-next.4
 
 ### Major Changes
