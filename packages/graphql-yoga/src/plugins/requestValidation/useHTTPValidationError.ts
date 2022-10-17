@@ -14,6 +14,7 @@ export function getAggregateErrorFromErrors(
 }
 
 export function useHTTPValidationError<
+  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
   PluginContext extends Record<string, any> = {},
 >(): Plugin<PluginContext> {
   return {
