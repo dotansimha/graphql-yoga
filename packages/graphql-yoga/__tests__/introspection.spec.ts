@@ -1,6 +1,18 @@
-import { useDisableIntrospection } from '@envelop/disable-introspection'
-import { getIntrospectionQuery, GraphQLError } from '@graphql-tools/graphql'
+import {
+  getIntrospectionQuery,
+  GraphQLError,
+  NoSchemaIntrospectionCustomRule,
+} from '@graphql-tools/graphql'
 import { createSchema, createYoga } from 'graphql-yoga'
+import type { Plugin } from '@envelop/core'
+
+const useDisableIntrospection = (): Plugin => {
+  return {
+    onValidate: ({ addValidationRule }) => {
+      addValidationRule(NoSchemaIntrospectionCustomRule)
+    },
+  }
+}
 
 function createTestSchema() {
   return createSchema<any>({
