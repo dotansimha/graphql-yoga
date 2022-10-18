@@ -284,20 +284,20 @@ export class YogaServer<
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
-      // // Performance things
-      // options?.parserCache !== false &&
-      //   useParserCache(
-      //     typeof options?.parserCache === 'object'
-      //       ? options.parserCache
-      //       : undefined,
-      //   ),
-      // options?.validationCache !== false &&
-      //   useValidationCache({
-      //     cache:
-      //       typeof options?.validationCache === 'object'
-      //         ? options.validationCache
-      //         : undefined,
-      //   }),
+      // Performance things
+      options?.parserCache !== false &&
+        useParserCache(
+          typeof options?.parserCache === 'object'
+            ? options.parserCache
+            : undefined,
+        ),
+      options?.validationCache !== false &&
+        useValidationCache({
+          cache:
+            typeof options?.validationCache === 'object'
+              ? options.validationCache
+              : undefined,
+        }),
       // Log events - useful for debugging purposes
       logger !== false &&
         useLogger({

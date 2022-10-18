@@ -1,5 +1,4 @@
-import { Plugin, PromiseOrValue } from 'graphql-yoga'
-import { GraphQLError } from 'graphql'
+import { Plugin, PromiseOrValue, GraphQLError } from 'graphql-yoga'
 import { lru } from 'tiny-lru'
 
 export async function hashSHA256(
