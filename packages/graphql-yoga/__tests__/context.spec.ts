@@ -55,10 +55,10 @@ describe('Context', () => {
     const response = await yoga.fetch('http://yoga/graphql?query={hello}')
     expect(response.status).toBe(200)
 
-    expect(onExecuteFn.mock.lastCall[0].args.contextValue.hi).toBe(
+    expect(onExecuteFn.mock.lastCall?.[0].args.contextValue.hi).toBe(
       userContext.hi,
     )
-    expect(onExecuteFn.mock.lastCall[0].args.contextValue.params)
+    expect(onExecuteFn.mock.lastCall?.[0].args.contextValue.params)
       .toMatchInlineSnapshot(`
       {
         "extensions": undefined,
@@ -67,7 +67,9 @@ describe('Context', () => {
         "variables": undefined,
       }
     `)
-    expect(onExecuteFn.mock.lastCall[0].args.contextValue.request).toBeDefined()
+    expect(
+      onExecuteFn.mock.lastCall?.[0].args.contextValue.request,
+    ).toBeDefined()
   })
 
   it('should provide intial and user context to onSubscribe', async () => {
@@ -98,10 +100,10 @@ describe('Context', () => {
 
     expect(response.status).toBe(200)
 
-    expect(onSubscribeFn.mock.lastCall[0].args.contextValue.hi).toBe(
+    expect(onSubscribeFn.mock.lastCall?.[0].args.contextValue.hi).toBe(
       userContext.hi,
     )
-    expect(onSubscribeFn.mock.lastCall[0].args.contextValue.params)
+    expect(onSubscribeFn.mock.lastCall?.[0].args.contextValue.params)
       .toMatchInlineSnapshot(`
       {
         "extensions": undefined,
@@ -111,7 +113,7 @@ describe('Context', () => {
       }
     `)
     expect(
-      onSubscribeFn.mock.lastCall[0].args.contextValue.request,
+      onSubscribeFn.mock.lastCall?.[0].args.contextValue.request,
     ).toBeDefined()
   })
 
@@ -146,16 +148,18 @@ describe('Context', () => {
       variables: undefined,
     }
 
-    expect(onEnvelopedFn.mock.lastCall[0].context?.params).toEqual(params)
-    expect(onEnvelopedFn.mock.lastCall[0].context?.request).toBeDefined()
+    expect(onEnvelopedFn.mock.lastCall?.[0].context?.params).toEqual(params)
+    expect(onEnvelopedFn.mock.lastCall?.[0].context?.request).toBeDefined()
 
-    expect(onParseFn.mock.lastCall[0].context.params).toEqual(params)
-    expect(onParseFn.mock.lastCall[0].context.request).toBeDefined()
+    expect(onParseFn.mock.lastCall?.[0].context.params).toEqual(params)
+    expect(onParseFn.mock.lastCall?.[0].context.request).toBeDefined()
 
-    expect(onValidateFn.mock.lastCall[0].context.params).toEqual(params)
-    expect(onValidateFn.mock.lastCall[0].context.request).toBeDefined()
+    expect(onValidateFn.mock.lastCall?.[0].context.params).toEqual(params)
+    expect(onValidateFn.mock.lastCall?.[0].context.request).toBeDefined()
 
-    expect(onContextBuildingFn.mock.lastCall[0].context.params).toEqual(params)
-    expect(onContextBuildingFn.mock.lastCall[0].context.request).toBeDefined()
+    expect(onContextBuildingFn.mock.lastCall?.[0].context.params).toEqual(
+      params,
+    )
+    expect(onContextBuildingFn.mock.lastCall?.[0].context.request).toBeDefined()
   })
 })

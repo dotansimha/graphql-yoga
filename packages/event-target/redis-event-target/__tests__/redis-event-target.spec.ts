@@ -1,3 +1,4 @@
+// @ts-nocheck TODO FOR NOW
 import Redis from 'ioredis-mock'
 import { createRedisEventTarget } from '../src'
 import { CustomEvent } from '@whatwg-node/events'
