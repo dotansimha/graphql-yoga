@@ -17,6 +17,7 @@ jobs:
     with:
       script: 'pnpm build && pnpm test'
       nodeVersions: '[14,16,18]'
+      packageManager: pnpm
 
   integration:
     name: integration / nodejs v${{ matrix.node-version }}
