@@ -17,25 +17,25 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-website-integrity
         with:
           path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
+          key: ${{runner.os}}-18-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
           restore-keys: |
-            ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
+            ${{runner.os}}-18-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
+      - name: Install Dependencies using pnpm
+        run: pnpm install --ignore-engines --frozen-lockfile --immutable
         if: steps.node-modules-cache-website-integrity.outputs.cache-hit != 'true'
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Typecheck
-        run: yarn workspace website run build
+        run: pnpm workspace website run build
 
       - name: Compare
         run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt

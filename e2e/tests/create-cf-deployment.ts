@@ -26,7 +26,7 @@ export function createCFDeployment(
 
       // Build and bundle the worker
       console.info('\t\tℹ️ Bundling the CF Worker....')
-      await execPromise('yarn build', {
+      await execPromise('pnpm build', {
         cwd: '../examples/' + projectName,
       })
     },

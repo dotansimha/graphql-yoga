@@ -14,8 +14,8 @@ cd graphql-yoga/examples/defer-stream
 **Install dependencies and run the app:**
 
 ```sh
-yarn install # or npm install
-yarn start   # or npm start
+pnpm install # or npm install
+pnpm start   # or npm start
 ```
 
 ## Testing

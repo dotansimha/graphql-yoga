@@ -29,22 +29,22 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: 18
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-deployment-e2e
         with:
           path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
+          key: ${{runner.os}}-18-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
           restore-keys: |
-            ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
+            ${{runner.os}}-18-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
+      - name: Install Dependencies using pnpm
+        run: pnpm install --ignore-engines --frozen-lockfile --immutable
         if: steps.node-modules-cache-deployment-e2e.outputs.cache-hit != 'true'
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Install pulumi
         uses: pulumi/setup-pulumi@v2
@@ -56,7 +56,7 @@ jobs:
           echo "::set-output name=docker_host::$(docker context inspect --format '{{.Endpoints.docker.Host}}')"
 
       - name: Provision & Test
-        run: yarn start
+        run: pnpm start
         working-directory: e2e
         env:
           # General

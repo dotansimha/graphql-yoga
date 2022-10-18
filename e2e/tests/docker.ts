@@ -15,7 +15,7 @@ export const dockerDeployment = (
   endpoint: string
 }> => ({
   prerequisites: async () => {
-    await execPromise('yarn build', {
+    await execPromise('pnpm build', {
       cwd: '../examples/node-ts',
     })
   },

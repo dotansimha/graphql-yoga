@@ -8,7 +8,7 @@ Use `http://localhost:3000/api/auth/callback/github` as the authorization callba
 
 Afterwards, you must copy the `.env.sample` to `.env` (`cp .env.sample .env`) and fill in the environment variables (`GITHUB_ID` and `GITHUB_SECRET`) you received from your GitHub OAuth application.
 
-Run the app with `yarn dev`.
+Run the app with `pnpm dev`.
 
 You can log in on `http://localhost:3000`.
 
@@ -36,7 +36,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
