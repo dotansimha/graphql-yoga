@@ -33,7 +33,7 @@ describe('SvelteKit integration', () => {
 			execSync('pnpm workspace example-sveltekit build');
 
 			// Start sveltekit
-			sveltekitProcess = spawn('yarn', ['workspace', 'example-sveltekit', 'preview']);
+			sveltekitProcess = spawn('pnpm', ['workspace', 'example-sveltekit', 'preview']);
 
 			// Wait for sveltekit to start
 			await new Promise((resolve) => setTimeout(resolve, timings.setup.waitAfterPreview));
