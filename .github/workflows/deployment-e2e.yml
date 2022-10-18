@@ -31,6 +31,11 @@ jobs:
           node-version: 18
           cache: 'pnpm'
 
+      - name: Use PNPM
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: latest
+
       - name: Cache Node Modules
         uses: actions/cache@v3
         id: node-modules-cache-deployment-e2e
