@@ -1,4 +1,4 @@
-import { ExecutionResult } from 'graphql'
+import { ExecutionResult } from '@graphql-tools/graphql'
 import { createSchema, createYoga, Repeater, Plugin } from 'graphql-yoga'
 
 describe('accept header', () => {

@@ -1,6 +1,6 @@
-import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLErrorExtensions } from 'graphql'
+import { GraphQLErrorExtensions } from '@graphql-tools/graphql'
 import { isGraphQLError } from '../error.js'
+import { GraphQLError } from '@graphql-tools/graphql'
 
 export const yogaDefaultFormatError = ({
   error,
@@ -32,7 +32,7 @@ export const yogaDefaultFormatError = ({
           stack: error.originalError.stack,
         }
       }
-      return createGraphQLError(message, {
+      return new GraphQLError(message, {
         nodes: error.nodes,
         source: error.source,
         positions: error.positions,
@@ -43,7 +43,7 @@ export const yogaDefaultFormatError = ({
     return error
   }
 
-  return createGraphQLError(message, {
+  return new GraphQLError(message, {
     extensions: {
       http: {
         status: 500,

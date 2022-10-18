@@ -1,4 +1,4 @@
-import { getOperationAST, ExecutionArgs } from 'graphql'
+import { getOperationAST, ExecutionArgs } from '@graphql-tools/graphql'
 import { FetchAPI, GraphQLParams } from './types.js'
 import {
   OnResultProcess,

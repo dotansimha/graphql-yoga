@@ -48,6 +48,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         const cachedResponse = await cache.get(operationId)
         if (cachedResponse) {
           if (options.includeExtensionMetadata) {
+            // @ts-ignore TODO FIX ME
             setResult({
               ...cachedResponse,
               extensions: {
@@ -57,6 +58,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
               },
             })
           } else {
+            // @ts-ignore TODO FIX ME
             setResult(cachedResponse)
           }
           return

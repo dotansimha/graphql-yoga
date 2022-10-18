@@ -1,5 +1,5 @@
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
+import { useLiveQuery } from '@envelop/live-query'
 import { CORSOptions, createYoga } from 'graphql-yoga'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import puppeteer from 'puppeteer'
@@ -13,10 +13,34 @@ import {
   GraphQLList,
   GraphQLFloat,
   GraphQLNonNull,
-} from 'graphql'
-import { GraphQLBigInt } from 'graphql-scalars'
+  GraphQLDirective,
+  DirectiveLocation,
+} from '@graphql-tools/graphql'
+import { GraphQLBigInt as GraphQLJSBigInt } from 'graphql-scalars'
 import 'json-bigint-patch'
 import { AddressInfo } from 'net'
+
+const GraphQLLiveDirective = new GraphQLDirective({
+  name: 'live',
+  description:
+    'Instruction for establishing a live connection that is updated once the underlying data changes.',
+  locations: [DirectiveLocation.QUERY],
+  args: {
+    if: {
+      type: GraphQLBoolean,
+      defaultValue: true,
+      description: 'Whether the query should be live or not.',
+    },
+    throttle: {
+      type: GraphQLInt,
+      description:
+        'Propose a desired throttle interval ot the server in order to receive updates to at most once per "throttle" milliseconds. The server must not accept this value.',
+    },
+  },
+})
+
+// @ts-expect-error this is okay since Config is compat between both
+export const GraphQLBigInt = new GraphQLScalarType(GraphQLJSBigInt.toConfig())
 
 export function createTestSchema() {
   let liveQueryCounter = 0

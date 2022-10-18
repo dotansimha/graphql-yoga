@@ -3,7 +3,7 @@ import { IResolvers } from '@graphql-tools/utils'
 import { ClientRequest } from 'node:http'
 
 import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
-import type { GraphQLSchema } from 'graphql'
+import type { GraphQLSchema } from '@graphql-tools/graphql'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const schema: GraphQLSchema = null as any

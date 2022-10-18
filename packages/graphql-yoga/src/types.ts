@@ -1,8 +1,8 @@
-import type { GraphQLError } from 'graphql'
+import type { GraphQLError } from '@graphql-tools/graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import type { MaskError, PromiseOrValue } from '@envelop/core'
 import type { createFetch } from '@whatwg-node/fetch'
-import type { GraphQLSchema } from 'graphql'
+import type { GraphQLSchema } from '@graphql-tools/graphql'
 
 export type GraphQLSchemaWithContext<TContext> = GraphQLSchema & {
   _context?: TContext

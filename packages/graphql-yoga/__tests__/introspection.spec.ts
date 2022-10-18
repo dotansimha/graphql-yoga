@@ -1,5 +1,5 @@
 import { useDisableIntrospection } from '@envelop/disable-introspection'
-import { getIntrospectionQuery, GraphQLError } from 'graphql'
+import { getIntrospectionQuery, GraphQLError } from '@graphql-tools/graphql'
 import { createSchema, createYoga } from 'graphql-yoga'
 
 function createTestSchema() {

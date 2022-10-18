@@ -1,9 +1,8 @@
-import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLError } from 'graphql'
+import { GraphQLError } from '@graphql-tools/graphql'
 import type { ResultProcessorInput } from './plugins/types'
 import type { YogaMaskedErrorOpts } from './types'
 
-declare module 'graphql' {
+declare module '@graphql-tools/graphql' {
   interface GraphQLHTTPErrorExtensions {
     status?: number
     headers?: Record<string, string>
@@ -57,7 +56,7 @@ export function handleError(
     errors.add(
       isGraphQLError(maskedError)
         ? maskedError
-        : createGraphQLError(maskedError.message, {
+        : new GraphQLError(maskedError.message, {
             originalError: maskedError,
           }),
     )
@@ -65,13 +64,13 @@ export function handleError(
     errors.add(error)
   } else if (error instanceof Error) {
     errors.add(
-      createGraphQLError(error.message, {
+      new GraphQLError(error.message, {
         originalError: error,
       }),
     )
   } else if (typeof error === 'string') {
     errors.add(
-      createGraphQLError(error, {
+      new GraphQLError(error, {
         extensions: {
           http: {
             status: 500,
@@ -81,7 +80,7 @@ export function handleError(
     )
   } else if (hasToString(error)) {
     errors.add(
-      createGraphQLError(error.toString(), {
+      new GraphQLError(error.toString(), {
         extensions: {
           http: {
             status: 500,
@@ -91,7 +90,7 @@ export function handleError(
     )
   } else {
     errors.add(
-      createGraphQLError('Unexpected error!', {
+      new GraphQLError('Unexpected error!', {
         extensions: {
           http: {
             status: 500,

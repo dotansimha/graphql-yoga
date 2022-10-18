@@ -2,7 +2,7 @@ import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
 import { fetch } from '@whatwg-node/fetch'
 import { AddressInfo } from 'net'
-import { ExecutionResult } from 'graphql'
+import { ExecutionResult } from '@graphql-tools/graphql'
 
 describe('subscription', () => {
   test('Subscription is closed properly', async () => {

@@ -1,11 +1,10 @@
 import { Maybe } from '@envelop/core'
-import { createGraphQLError } from '@graphql-tools/utils'
 import {
   OperationDefinitionNode,
   getOperationAST,
   GraphQLError,
   DocumentNode,
-} from 'graphql'
+} from '@graphql-tools/graphql'
 import type { YogaInitialContext } from '../../types'
 import type { Plugin } from '../types'
 
@@ -19,7 +18,7 @@ export function assertMutationViaGet(
     : undefined
 
   if (!operation) {
-    throw createGraphQLError('Could not determine what operation to execute.', {
+    throw new GraphQLError('Could not determine what operation to execute.', {
       extensions: {
         http: {
           status: 400,
@@ -29,7 +28,7 @@ export function assertMutationViaGet(
   }
 
   if (operation.operation === 'mutation' && method === 'GET') {
-    throw createGraphQLError(
+    throw new GraphQLError(
       'Can only perform a mutation operation from a POST request.',
       {
         extensions: {

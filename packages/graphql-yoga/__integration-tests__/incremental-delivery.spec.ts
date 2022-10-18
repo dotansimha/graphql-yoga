@@ -1,16 +1,16 @@
 import {
   ExecutionResult,
+  GraphQLError,
   GraphQLInt,
   GraphQLObjectType,
   GraphQLScalarType,
   GraphQLSchema,
   GraphQLString,
-} from 'graphql'
+} from '@graphql-tools/graphql'
 import { createYoga, Plugin, Repeater } from 'graphql-yoga'
 import { Push } from '@repeaterjs/repeater'
 import { createServer, Server } from 'http'
 import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
-import { createGraphQLError } from '@graphql-tools/utils'
 import { AddressInfo } from 'net'
 
 describe('incremental delivery', () => {
@@ -134,7 +134,7 @@ describe('incremental delivery: node-fetch', () => {
                       e instanceof Error &&
                       e.message.startsWith('File size limit exceeded: ')
                     ) {
-                      throw createGraphQLError(e.message, {
+                      throw new GraphQLError(e.message, {
                         extensions: {
                           http: {
                             status: 413,

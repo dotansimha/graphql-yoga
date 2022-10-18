@@ -1,4 +1,4 @@
-import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLError } from '@graphql-tools/graphql'
 import { dset } from 'dset'
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
@@ -18,13 +18,11 @@ export async function parsePOSTMultipartRequest(
   const operationsStr = requestBody.get('operations')
 
   if (!operationsStr) {
-    throw createGraphQLError('Missing multipart form field "operations"')
+    throw new GraphQLError('Missing multipart form field "operations"')
   }
 
   if (typeof operationsStr !== 'string') {
-    throw createGraphQLError(
-      'Multipart form field "operations" must be a string',
-    )
+    throw new GraphQLError('Multipart form field "operations" must be a string')
   }
 
   let operations: GraphQLParams
@@ -32,7 +30,7 @@ export async function parsePOSTMultipartRequest(
   try {
     operations = JSON.parse(operationsStr)
   } catch (err) {
-    throw createGraphQLError(
+    throw new GraphQLError(
       'Multipart form field "operations" must be a valid JSON string',
     )
   }
@@ -41,7 +39,7 @@ export async function parsePOSTMultipartRequest(
 
   if (mapStr != null) {
     if (typeof mapStr !== 'string') {
-      throw createGraphQLError('Multipart form field "map" must be a string')
+      throw new GraphQLError('Multipart form field "map" must be a string')
     }
 
     let map: Record<string, string[]>
@@ -49,7 +47,7 @@ export async function parsePOSTMultipartRequest(
     try {
       map = JSON.parse(mapStr)
     } catch (err) {
-      throw createGraphQLError(
+      throw new GraphQLError(
         'Multipart form field "map" must be a valid JSON string',
       )
     }

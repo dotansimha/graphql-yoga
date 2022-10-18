@@ -1,4 +1,4 @@
-import { GraphQLError } from 'graphql'
+import { GraphQLError } from '@graphql-tools/graphql'
 import { createSchema, createYoga } from 'graphql-yoga'
 
 describe('GraphQLError.extensions.http', () => {

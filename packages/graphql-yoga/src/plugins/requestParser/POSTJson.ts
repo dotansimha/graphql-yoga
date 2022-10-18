@@ -1,5 +1,4 @@
-import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLErrorExtensions } from 'graphql'
+import { GraphQLError, GraphQLErrorExtensions } from '@graphql-tools/graphql'
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 
@@ -29,13 +28,13 @@ export async function parsePOSTJsonRequest(
         message: err.message,
       }
     }
-    throw createGraphQLError('POST body sent invalid JSON.', {
+    throw new GraphQLError('POST body sent invalid JSON.', {
       extensions,
     })
   }
 
   if (requestBody == null) {
-    throw createGraphQLError(
+    throw new GraphQLError(
       `POST body is expected to be object but received ${requestBody}`,
       {
         extensions: {
@@ -49,7 +48,7 @@ export async function parsePOSTJsonRequest(
 
   const requestBodyTypeof = typeof requestBody
   if (requestBodyTypeof !== 'object') {
-    throw createGraphQLError(
+    throw new GraphQLError(
       `POST body is expected to be object but received ${requestBodyTypeof}`,
       {
         extensions: {

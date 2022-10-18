@@ -1,4 +1,4 @@
-import { GraphQLSchema } from 'graphql'
+import { GraphQLSchema } from '@graphql-tools/graphql'
 import { createSchema, createYoga, YogaInitialContext } from 'graphql-yoga'
 
 describe('schema', () => {

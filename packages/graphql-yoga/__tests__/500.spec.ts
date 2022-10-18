@@ -1,11 +1,11 @@
-import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLError } from '@graphql-tools/graphql'
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 
 describe('Handle non GraphQL Errors as 500 when error masking is disabled', () => {
   const errorVariationsForResolvers = {
     Error: new Error('Oops!'),
-    WrappedError: createGraphQLError('Oops!', {
+    WrappedError: new GraphQLError('Oops!', {
       originalError: new Error('Oops!'),
     }),
   }

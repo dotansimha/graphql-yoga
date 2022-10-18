@@ -4,7 +4,7 @@ import {
   OnExecuteHook,
   OnSubscribeHook,
 } from '@envelop/core'
-import { ExecutionResult } from 'graphql'
+import { ExecutionResult } from '@graphql-tools/graphql'
 import {
   ExecutionPatchResult,
   FetchAPI,

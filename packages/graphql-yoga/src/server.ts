@@ -6,7 +6,7 @@ import {
   validate,
   subscribe,
   specifiedRules,
-} from 'graphql'
+} from '@graphql-tools/graphql'
 import {
   GetEnvelopedFn,
   envelop,
@@ -284,20 +284,20 @@ export class YogaServer<
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
-      // Performance things
-      options?.parserCache !== false &&
-        useParserCache(
-          typeof options?.parserCache === 'object'
-            ? options.parserCache
-            : undefined,
-        ),
-      options?.validationCache !== false &&
-        useValidationCache({
-          cache:
-            typeof options?.validationCache === 'object'
-              ? options.validationCache
-              : undefined,
-        }),
+      // // Performance things
+      // options?.parserCache !== false &&
+      //   useParserCache(
+      //     typeof options?.parserCache === 'object'
+      //       ? options.parserCache
+      //       : undefined,
+      //   ),
+      // options?.validationCache !== false &&
+      //   useValidationCache({
+      //     cache:
+      //       typeof options?.validationCache === 'object'
+      //         ? options.validationCache
+      //         : undefined,
+      //   }),
       // Log events - useful for debugging purposes
       logger !== false &&
         useLogger({
@@ -654,6 +654,7 @@ export class YogaServer<
         body: JSON.stringify({
           query:
             document &&
+            // @ts-expect-error - DocumentNode between our graphql versions are compatible. So we can ignore types here.
             (typeof document === 'string' ? document : print(document)),
           variables,
           operationName,

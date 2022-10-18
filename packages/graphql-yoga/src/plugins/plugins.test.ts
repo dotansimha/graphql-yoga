@@ -1,5 +1,5 @@
 import { AfterValidateHook } from '@envelop/core'
-import { GraphQLError } from 'graphql'
+import { GraphQLError } from '@graphql-tools/graphql'
 import { Plugin } from './types'
 import { createYoga } from '../server'
 import { createSchema } from '../schema'
