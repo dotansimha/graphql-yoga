@@ -16,8 +16,6 @@ import {
   PromiseOrValue,
   useMaskedErrors,
 } from '@envelop/core'
-import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
-import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import {
   GraphQLServerInject,
   YogaInitialContext,
@@ -44,6 +42,11 @@ import {
   processResult,
 } from './process-request.js'
 import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
+import {
+  useValidationCache,
+  ValidationCache,
+} from './plugins/useValidationCache.js'
+import { ParserCacheOptions, useParserCache } from './plugins/useParserCache.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
 import {
