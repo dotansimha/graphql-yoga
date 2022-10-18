@@ -11,8 +11,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Fetch
         run: git fetch origin v3
+
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:

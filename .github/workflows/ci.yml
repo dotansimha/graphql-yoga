@@ -29,28 +29,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@master
+      - uses: the-guild-org/shared-config/setup@main
+        name: setup env
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Use PNPM
-        uses: pnpm/action-setup@v2.2.4
-        with:
-          version: latest
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-test-node
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
-          restore-keys: |
-            ${{runner.os}}-${{ matrix.node-version }}-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
-      - name: Install Dependencies using pnpm
-        run: pnpm install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-test-node.outputs.cache-hit != 'true'
+          nodeVersion: ${{ matrix.node-version }}
+          packageManager: pnpm
 
       - name: Build Packages
         run: pnpm build
@@ -68,6 +51,7 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 18
+          packageManager: pnpm
 
       - name: Build Packages
         run: pnpm build
@@ -85,6 +69,7 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 18
+          packageManager: pnpm
 
       - name: Setup Bun Runtime
         uses: antongolub/action-setup-bun@v1

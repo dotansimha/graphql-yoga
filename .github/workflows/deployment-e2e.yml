@@ -25,28 +25,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 18
-        uses: actions/setup-node@master
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 18
-          cache: 'pnpm'
-
-      - name: Use PNPM
-        uses: pnpm/action-setup@v2.2.4
-        with:
-          version: latest
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-deployment-e2e
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
-          restore-keys: |
-            ${{runner.os}}-18-node-modules-${{hashFiles('pnpm-lock.yaml')}}-${{hashFiles('patches/**/*')}}
-      - name: Install Dependencies using pnpm
-        run: pnpm install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-deployment-e2e.outputs.cache-hit != 'true'
+          nodeVersion: 18
+          packageManager: pnpm
 
       - name: Build Packages
         run: pnpm build

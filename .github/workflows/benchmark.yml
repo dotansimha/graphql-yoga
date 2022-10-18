@@ -19,6 +19,7 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 18
+          packageManager: pnpm
 
       - name: Build Packages
         run: pnpm build
