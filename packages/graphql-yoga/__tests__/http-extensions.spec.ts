@@ -183,7 +183,7 @@ describe('GraphQLError.extensions.http', () => {
       }),
     })
 
-    let response = await yoga.fetch('http://yoga/graphql', {
+    const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ query: '{ a }' }),

@@ -58,6 +58,7 @@ export const renderGraphiQL = (opts: GraphiQLRendererOptions) =>
 
 export type GraphiQLOptionsFactory<TServerContext> = (
   request: Request,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   ...args: {} extends TServerContext
     ? [serverContext?: TServerContext | undefined]
     : [serverContext: TServerContext]
@@ -77,6 +78,7 @@ export interface GraphiQLPluginConfig<TServerContext> {
 
 export function useGraphiQL<TServerContext>(
   config: GraphiQLPluginConfig<TServerContext>,
+  // eslint-disable-next-line @typescript-eslint/ban-types
 ): Plugin<{}, TServerContext> {
   const logger = config.logger ?? console
   let graphiqlOptionsFactory: GraphiQLOptionsFactory<TServerContext>

@@ -62,7 +62,7 @@ const resolvers: Resolvers<Context> = {
             console.log('push')
           }
           increment()
-          let interval = setInterval(increment, 1000)
+          const interval = setInterval(increment, 1000)
           stop.then(() => {
             clearInterval(interval)
             console.log('stop')

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type MessageTransformer = (msg: string) => string
 
 const ANSI_CODES = {

@@ -1,5 +1,5 @@
 import { createYoga, createSchema } from 'graphql-yoga'
-import { useApolloInlineTrace } from '../src'
+import { useApolloInlineTrace } from '../src/index.js'
 import { Trace } from 'apollo-reporting-protobuf'
 import { GraphQLError } from 'graphql'
 

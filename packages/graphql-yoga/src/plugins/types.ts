@@ -14,8 +14,11 @@ import {
 } from '../types.js'
 
 export type Plugin<
+  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
   PluginContext extends Record<string, any> = {},
+  // eslint-disable-next-line @typescript-eslint/ban-types
   TServerContext = {},
+  // eslint-disable-next-line @typescript-eslint/ban-types
   TUserContext = {},
 > = EnvelopPlugin<YogaInitialContext & PluginContext> & {
   /**

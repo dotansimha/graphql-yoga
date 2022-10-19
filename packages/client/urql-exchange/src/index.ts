@@ -18,7 +18,6 @@ import {
   Operation,
   OperationResult,
   getOperationName,
-  Client,
   OperationContext,
   ExchangeIO,
   AnyVariables,
@@ -36,10 +35,12 @@ export type YogaExchangeOptions = LoadFromUrlOptions
 
 export function yogaExchange(options?: YogaExchangeOptions): Exchange {
   const urlLoader = new UrlLoader()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function makeYogaSource<TData extends Record<string, any>>(
     operation: Operation<TData>,
   ): Source<OperationResult<TData>> {
     const operationName = getOperationName(operation.query)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const executionRequest: ExecutionRequest<any, OperationContext> = {
       document: operation.query,
       operationName,
@@ -108,7 +109,7 @@ export function yogaExchange(options?: YogaExchangeOptions): Exchange {
       }
     })
   }
-  return function yogaExchangeFn({ forward, client }): ExchangeIO {
+  return function yogaExchangeFn({ forward }): ExchangeIO {
     return function yogaExchangeIO<TData, TVariables extends AnyVariables>(
       ops$: Source<Operation<TData, TVariables>>,
     ): Source<OperationResult<TData>> {

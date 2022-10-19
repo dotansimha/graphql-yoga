@@ -1,7 +1,7 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
-import { ResultProcessorInput } from './plugins/types'
-import { YogaMaskedErrorOpts } from './types'
+import type { ResultProcessorInput } from './plugins/types'
+import type { YogaMaskedErrorOpts } from './types'
 
 declare module 'graphql' {
   interface GraphQLHTTPErrorExtensions {

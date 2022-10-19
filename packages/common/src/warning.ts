@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 console.warn(
   `@graphql-yoga/common package has been deprecated and will no longer receive updates in the next major.`,
 )

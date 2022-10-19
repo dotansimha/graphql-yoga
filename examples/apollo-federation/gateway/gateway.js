@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { createYoga } = require('graphql-yoga')
 const { ApolloGateway, RemoteGraphQLDataSource } = require('@apollo/gateway')
 const { useApolloFederation } = require('@envelop/apollo-federation')

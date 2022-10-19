@@ -19,6 +19,7 @@ export type CORSPluginOptions<TServerContext> =
 
 export type CORSOptionsFactory<TServerContext> = (
   request: Request,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   ...args: {} extends TServerContext
     ? [serverContext?: TServerContext | undefined]
     : [serverContext: TServerContext]
@@ -125,6 +126,7 @@ async function getCORSResponseHeaders<TServerContext>(
 
 export function useCORS<TServerContext>(
   options?: CORSPluginOptions<TServerContext>,
+  // eslint-disable-next-line @typescript-eslint/ban-types
 ): Plugin<{}, TServerContext> {
   let corsOptionsFactory: CORSOptionsFactory<TServerContext> = () => ({})
   if (options != null) {

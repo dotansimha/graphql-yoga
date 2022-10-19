@@ -1,6 +1,5 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 import Koa from 'koa'
-import { Readable } from 'stream'
 
 export function buildApp() {
   const app = new Koa()

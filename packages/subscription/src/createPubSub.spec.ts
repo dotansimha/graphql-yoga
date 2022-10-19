@@ -1,6 +1,6 @@
 import Redis from 'ioredis-mock'
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
-import { createPubSub } from './createPubSub.js'
+import { createPubSub } from './create-pub-sub.js'
 import { EventTarget } from '@whatwg-node/events'
 
 async function collectAsyncIterableValues<TType>(

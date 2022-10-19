@@ -41,11 +41,9 @@ function createYogaApolloRequestHandler(
               observer.next(result)
             }
             observer.complete()
-          } else {
-            if (!observer.closed) {
-              observer.next(results)
-              observer.complete()
-            }
+          } else if (!observer.closed) {
+            observer.next(results)
+            observer.complete()
           }
         })
         .catch((error) => {

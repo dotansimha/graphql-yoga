@@ -1,5 +1,5 @@
 import { createGraphQLError } from '@graphql-tools/utils'
-import { Plugin } from '../types'
+import type { Plugin } from '../types'
 
 export function isValidMethodForGraphQL(
   method: string,

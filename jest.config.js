@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path')
 const { pathsToModuleNameMapper } = require('ts-jest')
 const CI = !!process.env.CI
@@ -18,8 +19,7 @@ if (process.env.INTEGRATION_TEST === 'true') {
     '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
   )
   if (parseInt(process.versions.node.split('.')[0]) <= 14) {
-    testMatch.push('!**/examples/sveltekit/**')
-    testMatch.push('!**/examples/fastify*/**')
+    testMatch.push('!**/examples/sveltekit/**', '!**/examples/fastify*/**')
   }
   testMatch.push('!**/examples/bun*/**')
 } else {

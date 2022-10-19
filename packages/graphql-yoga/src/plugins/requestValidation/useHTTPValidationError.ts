@@ -1,6 +1,6 @@
 import { AggregateError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
-import { Plugin } from '../types'
+import type { Plugin } from '../types'
 
 export function getAggregateErrorFromErrors(
   errors: readonly GraphQLError[],
@@ -14,6 +14,7 @@ export function getAggregateErrorFromErrors(
 }
 
 export function useHTTPValidationError<
+  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
   PluginContext extends Record<string, any> = {},
 >(): Plugin<PluginContext> {
   return {

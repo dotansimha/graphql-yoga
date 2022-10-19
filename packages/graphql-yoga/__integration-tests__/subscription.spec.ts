@@ -50,6 +50,7 @@ describe('subscription', () => {
       const port = (server.address() as AddressInfo).port
 
       // Start and Close a HTTP SSE subscription
+      // eslint-disable-next-line no-async-promise-executor
       await new Promise<void>(async (res) => {
         const response = await fetch(
           `http://localhost:${port}/graphql?query=subscription{foo}`,

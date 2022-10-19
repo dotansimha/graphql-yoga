@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { build } = require('esbuild')
 const { writeFileSync } = require('fs')
 

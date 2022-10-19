@@ -6,7 +6,6 @@ import {
   ResultProcessorInput,
 } from './plugins/types.js'
 import { GetEnvelopedFn } from '@envelop/core'
-import { getMediaTypesForRequest } from './plugins/resultProcessor/accept.js'
 
 export async function processResult({
   request,

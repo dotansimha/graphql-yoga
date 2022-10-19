@@ -1,7 +1,4 @@
 import yoga from '../src'
-import { createServer, Server } from 'http'
-import { AddressInfo } from 'net'
-import { fetch } from '@whatwg-node/fetch'
 
 describe('netlify-edge example integration', () => {
   it('should execute query', async () => {

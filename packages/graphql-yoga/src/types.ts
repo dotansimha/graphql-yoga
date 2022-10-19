@@ -9,7 +9,9 @@ export type GraphQLSchemaWithContext<TContext> = GraphQLSchema & {
 }
 
 export interface ExecutionPatchResult<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TData = { [key: string]: any },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TExtensions = { [key: string]: any },
 > {
   errors?: ReadonlyArray<GraphQLError>
@@ -65,6 +67,7 @@ export type GraphQLServerInject<
   operationName?: string
   /** Set any headers for the GraphQL request */
   headers?: HeadersInit
+  // eslint-disable-next-line @typescript-eslint/ban-types
 } & ({} extends TServerContext
   ? { serverContext?: TServerContext }
   : { serverContext: TServerContext })

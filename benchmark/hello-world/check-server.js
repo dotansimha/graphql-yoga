@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-var-requires */
 require('@whatwg-node/fetch')
   .fetch(
     `http://localhost:4000/graphql?query=${encodeURIComponent(

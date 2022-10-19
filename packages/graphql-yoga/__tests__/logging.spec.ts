@@ -28,14 +28,17 @@ describe('logging', () => {
     it(`doesn't print debug messages if DEBUG env var isn't set`, () => {
       jest.spyOn(console, 'debug')
       defaultYogaLogger.debug('TEST')
+      // eslint-disable-next-line no-console
       expect(console.debug).not.toHaveBeenCalled()
     })
     it(`prints debug messages if DEBUG env var is set`, () => {
       const originalValue = process.env.DEBUG
       try {
         process.env.DEBUG = '1'
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
         defaultYogaLogger.debug('TEST')
+        // eslint-disable-next-line no-console
         expect(console.debug).toHaveBeenCalled()
       } finally {
         process.env.DEBUG = originalValue
