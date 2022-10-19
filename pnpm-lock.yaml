@@ -3,6 +3,22 @@ lockfileVersion: 5.4
 overrides:
   graphql: 16.6.0
   '@envelop/core': 3.0.2
+  '@changesets/assemble-release-plan': 5.2.1
+  '@sveltejs/kit': 1.0.0-next.511
+
+patchedDependencies:
+  '@changesets/assemble-release-plan@5.2.1':
+    hash: gxgixp7rzwjkputc2n2g47utqy
+    path: patches/@changesets__assemble-release-plan@5.2.1.patch
+  '@graphiql/react@0.13.3':
+    hash: oid7poj5wqi2rmwh6morrqyuy4
+    path: patches/@graphiql__react@0.13.3.patch
+  '@sveltejs/kit@1.0.0-next.511':
+    hash: ys6v7ltk7pv54xf5o6uij2dcfy
+    path: patches/@sveltejs__kit@1.0.0-next.511.patch
+  '@types/ioredis-mock@5.6.0':
+    hash: kzohbhhh2g5isrq6q2fcmcltka
+    path: patches/@types__ioredis-mock@5.6.0.patch
 
 importers:
 
@@ -828,6 +844,8 @@ importers:
       '@graphql-tools/utils': ^8.12.0
       '@graphql-typed-document-node/core': ^3.1.1
       '@graphql-yoga/subscription': ^3.0.0-next.0
+      '@n1ru4l/in-memory-live-query-store': 0.10.0
+      '@repeaterjs/repeater': ^3.0.4
       '@types/node': 16.11.64
       '@whatwg-node/fetch': 0.4.7
       '@whatwg-node/server': 0.4.11
@@ -853,6 +871,8 @@ importers:
       '@envelop/disable-introspection': 4.0.1_axa7s2mrdkjmrnvlx7f5pwyen4
       '@envelop/live-query': 5.0.1_axa7s2mrdkjmrnvlx7f5pwyen4
       '@graphql-tools/utils': 8.12.0_graphql@16.6.0
+      '@n1ru4l/in-memory-live-query-store': 0.10.0_graphql@16.6.0
+      '@repeaterjs/repeater': 3.0.4
       '@types/node': 16.11.64
       graphql: 16.6.0
       graphql-http: 1.6.1_graphql@16.6.0
@@ -3518,8 +3538,8 @@ packages:
       semver: 5.7.1
     dev: true
 
-  /@changesets/assemble-release-plan/5.2.2:
-    resolution: {integrity: sha512-B1qxErQd85AeZgZFZw2bDKyOfdXHhG+X5S+W3Da2yCem8l/pRy4G/S7iOpEcMwg6lH8q2ZhgbZZwZ817D+aLuQ==}
+  /@changesets/assemble-release-plan/5.2.1_gxgixp7rzwjkputc2n2g47utqy:
+    resolution: {integrity: sha512-d6ckasOWlKF9Mzs82jhl6TKSCgVvfLoUK1ERySrTg2TQJdrVUteZue6uEIYUTA7SgMu67UOSwol6R9yj1nTdjw==}
     dependencies:
       '@babel/runtime': 7.19.4
       '@changesets/errors': 0.1.4
@@ -3528,6 +3548,7 @@ packages:
       '@manypkg/get-packages': 1.1.3
       semver: 5.7.1
     dev: true
+    patched: true
 
   /@changesets/changelog-git/0.1.13:
     resolution: {integrity: sha512-zvJ50Q+EUALzeawAxax6nF2WIcSsC5PwbuLeWkckS8ulWnuPYx8Fn/Sjd3rF46OzeKA8t30loYYV6TIzp4DIdg==}
@@ -3551,7 +3572,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.19.4
       '@changesets/apply-release-plan': 6.1.1
-      '@changesets/assemble-release-plan': 5.2.2
+      '@changesets/assemble-release-plan': 5.2.1_gxgixp7rzwjkputc2n2g47utqy
       '@changesets/changelog-git': 0.1.13
       '@changesets/config': 2.2.0
       '@changesets/errors': 0.1.4
@@ -3625,7 +3646,7 @@ packages:
     resolution: {integrity: sha512-W1tFwxE178/en+zSj/Nqbc3mvz88mcdqUMJhRzN1jDYqN3QI4ifVaRF9mcWUU+KI0gyYEtYR65tour690PqTcA==}
     dependencies:
       '@babel/runtime': 7.19.4
-      '@changesets/assemble-release-plan': 5.2.2
+      '@changesets/assemble-release-plan': 5.2.1_gxgixp7rzwjkputc2n2g47utqy
       '@changesets/config': 2.2.0
       '@changesets/pre': 1.0.13
       '@changesets/read': 0.5.8
@@ -4712,7 +4733,7 @@ packages:
   /@graphql-tools/utils/8.12.0_graphql@16.6.0:
     resolution: {integrity: sha512-TeO+MJWGXjUTS52qfK4R8HiPoF/R7X+qmgtOYd8DTH0l6b+5Y/tlg5aGeUJefqImRq7nvi93Ms40k/Uz4D5CWw==}
     peerDependencies:
-      graphql: '*'
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.6.0
       tslib: 2.4.0
