@@ -78,7 +78,7 @@ GraphQL Yogas APIs are designed for code-splitting and supported by popular bund
 
 ### Better runtime performance
 
-GraphQL Yoga has significantly less latency and much higher requests rate than Apollo Server in all popular benchmarks.
+GraphQL Yoga has significantly less latency and much higher requests rate than Apollo Server in all [popular benchmarks](https://github.com/graphql-crystal/benchmarks).
 
 ### GraphiQL
 
@@ -94,6 +94,31 @@ https://www.graphql-yoga.com/docs/features/apollo-federation
 We believe GraphQL Yoga is the best Apollo Federation Server out there.
 
 The migration from Apollo Server to Yoga Server is easy and you can find [instructions here](https://www.the-guild.dev/graphql/yoga-server/v3/migration/migration-from-apollo-server).
+
+## GraphQL Yoga and express-graphql
+
+### Maintainability
+
+The express-graphql project has been unmaintained for many years now.
+
+Also, the project started as a small example of how to use GraphQL with a server and was never aimed to be used in production.
+
+It simply grew by itself without ever maturing in terms of code and ownership.
+
+### Better in everything else
+
+If you check out the [comparison above to Apollo Server](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#graphql-yoga-and-apollo-server), everything also applies also to the comparison with `express-graphql`. Same as with the Apollo Server Comparison, there isn't a single thing that express-graphql and Apollo Server are doing better than Yoga, including the express integration:
+
+* [No Framework-specific Packages](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#no-framework-specific-packages)
+* [Run anywhere](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#run-anywhere)
+* [Powerful Plugin System](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#powerful-plugin-system)
+* [Full Support of the GraphQL over HTTP specification](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#full-support-of-the-graphql-over-http-specification)
+* [File Uploads, Real time and GraphQL Subscriptions over Server-Sent-Events (SSE)](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#real-time-and-graphql-subscriptions-over-server-sent-events-sse)
+* [Bundle Size and lean Dependencies](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#bundle-size-and-lean-dependencies)
+* [Better runtime performance](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#better-runtime-performance)
+* [GraphiQL](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#graphiql)
+* [Compatibility with Apollo Federation](https://www.the-guild.dev/graphql/yoga-server/v3/comparison#compatibility-with-apollo-federation)
+
 
 ## GraphQL Yoga and GraphQL Helix
 
