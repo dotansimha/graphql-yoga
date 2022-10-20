@@ -34,7 +34,7 @@ describe('Bun integration', () => {
   })
 
   it('shows GraphiQL', async () => {
-    const response = await fetch(`http://localhost:3000/graphql`, {
+    const response = await fetch(`http://127.0.0.1:3000/graphql`, {
       method: 'GET',
       headers: {
         Accept: 'text/html',
@@ -47,7 +47,7 @@ describe('Bun integration', () => {
   })
 
   it('accepts a query', async () => {
-    const response = await fetch(`http://localhost:3000/graphql`, {
+    const response = await fetch(`http://127.0.0.1:3000/graphql`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
