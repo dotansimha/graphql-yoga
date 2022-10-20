@@ -9,7 +9,6 @@ import {
 } from 'graphql-yoga'
 import { createServer } from 'http'
 import { Resolvers } from './generated/graphql'
-import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -103,7 +102,6 @@ const yoga = createYoga<Context, any>({
   }),
   logging: true,
   context: { pubSub },
-  renderGraphiQL,
 })
 
 const server = createServer(yoga)
