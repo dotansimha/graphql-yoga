@@ -1,5 +1,11 @@
 lockfileVersion: 5.4
 
+overrides:
+  graphql: 16.6.0
+  '@envelop/core': 3.0.2
+  '@changesets/assemble-release-plan': 5.2.1
+  '@sveltejs/kit': 1.0.0-next.511
+
 patchedDependencies:
   '@changesets/assemble-release-plan@5.2.1':
     hash: gxgixp7rzwjkputc2n2g47utqy
@@ -13,6 +19,9 @@ patchedDependencies:
   formdata-node@4.4.1:
     hash: bwnmzlpvx75llwj7xwqbxbjtui
     path: patches/formdata-node@4.4.1.patch
+  '@sveltejs/kit@1.0.0-next.511':
+    hash: ys6v7ltk7pv54xf5o6uij2dcfy
+    path: patches/@sveltejs__kit@1.0.0-next.511.patch
 
 importers:
 
@@ -41,7 +50,7 @@ importers:
       eslint: ^8.21.0
       execa: 5.1.1
       formdata-node: 4.4.1
-      graphql: ^16.5.0
+      graphql: 16.6.0
       husky: ^8.0.0
       jest: ^29.0.0
       js-yaml: 4.1.0
@@ -134,7 +143,7 @@ importers:
     specifiers:
       '@apollo/gateway': ^0.52.0
       '@envelop/apollo-federation': 3.0.1
-      graphql: ^16.5.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
     dependencies:
       '@apollo/gateway': 0.52.1_graphql@16.6.0
@@ -145,7 +154,7 @@ importers:
   examples/apollo-federation/service:
     specifiers:
       '@apollo/subgraph': ^0.5.0
-      graphql: ^16.2.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
     dependencies:
       '@apollo/subgraph': 0.5.1_graphql@16.6.0
@@ -183,7 +192,7 @@ importers:
 
   examples/aws-lambda/lambda:
     specifiers:
-      graphql: ^16.3.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
     dependencies:
       graphql: 16.6.0
@@ -253,12 +262,12 @@ importers:
 
   examples/defer-stream:
     specifiers:
-      graphql: 16.0.0-experimental-stream-defer.5
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
       ts-node: 10.8.1
       typescript: 4.7.4
     dependencies:
-      graphql: 16.0.0-experimental-stream-defer.5
+      graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       ts-node: 10.8.1_typescript@4.7.4
@@ -270,7 +279,7 @@ importers:
   examples/error-handling:
     specifiers:
       '@whatwg-node/fetch': 0.4.7
-      graphql: ^16.1.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
       ts-node: 10.9.1
       typescript: 4.8.4
@@ -481,7 +490,7 @@ importers:
 
   examples/issue-template:
     specifiers:
-      graphql: ^16.3.0
+      graphql: 16.6.0
       graphql-yoga: ^3.0.0-next.6
       ts-node: 10.9.1
       ts-node-dev: 2.0.0
@@ -553,7 +562,7 @@ importers:
       esbuild: 0.15.10
       eslint: 8.25.0
       eslint-config-next: 12.3.1
-      graphql: ^16.1.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
       next: 12.3.1
       react: 18.2.0
@@ -579,7 +588,7 @@ importers:
       '@types/react': 18.0.21
       eslint: 8.25.0
       eslint-config-next: 12.3.1
-      graphql: ^16.1.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
       next: 12.3.1
       next-auth: 4.13.0
@@ -603,7 +612,7 @@ importers:
 
   examples/node-esm:
     specifiers:
-      graphql: ^16.3.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
     dependencies:
       graphql: 16.6.0
@@ -678,7 +687,7 @@ importers:
       '@graphql-codegen/cli': ^2.6.2
       '@graphql-codegen/typescript': ^2.4.11
       '@graphql-codegen/typescript-resolvers': ^2.6.4
-      graphql: ^16.1.0
+      graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
       ts-node: 10.9.1
       typescript: 4.8.4
@@ -697,7 +706,7 @@ importers:
       '@envelop/graphql-jit': 5.0.1
       '@graphql-yoga/render-graphiql': 3.0.0-next.6
       '@sveltejs/adapter-auto': 1.0.0-next.80
-      '@sveltejs/kit': 1.0.0-next.520
+      '@sveltejs/kit': 1.0.0-next.511
       '@types/jest': ^29.0.0
       '@typescript-eslint/eslint-plugin': 5.39.0
       '@typescript-eslint/parser': 5.39.0
@@ -723,7 +732,7 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@sveltejs/adapter-auto': 1.0.0-next.80
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.50.1+vite@3.1.6
+      '@sveltejs/kit': 1.0.0-next.511_ys6v7ltk7pv54xf5o6uij2dcfy_svelte@3.50.1+vite@3.1.6
       '@types/jest': 29.2.0
       '@typescript-eslint/eslint-plugin': 5.39.0_cfd7h3iktziq6hcwahu2qxhjhy
       '@typescript-eslint/parser': 5.39.0_z4bbprzjrhnsfa24uvmcbu7f5q
@@ -859,7 +868,7 @@ importers:
       '@whatwg-node/fetch': 0.4.7
       '@whatwg-node/server': 0.4.11
       dset: ^3.1.1
-      graphql: ^16.0.1
+      graphql: 16.6.0
       graphql-http: ^1.6.0
       graphql-scalars: 1.18.0
       html-minifier-terser: 7.0.0
@@ -3660,17 +3669,6 @@ packages:
     dev: true
     patched: true
 
-  /@changesets/assemble-release-plan/5.2.2:
-    resolution: {integrity: sha512-B1qxErQd85AeZgZFZw2bDKyOfdXHhG+X5S+W3Da2yCem8l/pRy4G/S7iOpEcMwg6lH8q2ZhgbZZwZ817D+aLuQ==}
-    dependencies:
-      '@babel/runtime': 7.19.4
-      '@changesets/errors': 0.1.4
-      '@changesets/get-dependents-graph': 1.3.4
-      '@changesets/types': 5.2.0
-      '@manypkg/get-packages': 1.1.3
-      semver: 5.7.1
-    dev: true
-
   /@changesets/changelog-git/0.1.13:
     resolution: {integrity: sha512-zvJ50Q+EUALzeawAxax6nF2WIcSsC5PwbuLeWkckS8ulWnuPYx8Fn/Sjd3rF46OzeKA8t30loYYV6TIzp4DIdg==}
     dependencies:
@@ -3767,7 +3765,7 @@ packages:
     resolution: {integrity: sha512-W1tFwxE178/en+zSj/Nqbc3mvz88mcdqUMJhRzN1jDYqN3QI4ifVaRF9mcWUU+KI0gyYEtYR65tour690PqTcA==}
     dependencies:
       '@babel/runtime': 7.19.4
-      '@changesets/assemble-release-plan': 5.2.2
+      '@changesets/assemble-release-plan': 5.2.1_gxgixp7rzwjkputc2n2g47utqy
       '@changesets/config': 2.2.0
       '@changesets/pre': 1.0.13
       '@changesets/read': 0.5.8
@@ -3891,18 +3889,6 @@ packages:
     transitivePeerDependencies:
       - encoding
     dev: false
-
-  /@envelop/core/2.6.0_graphql@16.6.0:
-    resolution: {integrity: sha512-yTptKinJN//i6m1kXUbnLBl/FobzddI4ehURAMS08eRUOQwAuXqJU9r8VdTav8nIZLb4t6cuDWFb3n331LiwLw==}
-    requiresBuild: true
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@envelop/types': 2.4.0_graphql@16.6.0
-      graphql: 16.6.0
-      tslib: 2.4.0
-    dev: false
-    optional: true
 
   /@envelop/core/3.0.2:
     resolution: {integrity: sha512-0kYBq0gKIARF6vFYw5upUcBgI2oP3wYaDTUfjiX4RhMIkox3DiKPUwRiZHu16ILGr8Qi6p+HTKXRyoSdl9CCqA==}
@@ -4038,16 +4024,6 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /@envelop/types/2.4.0_graphql@16.6.0:
-    resolution: {integrity: sha512-pjxS98cDQBS84X29VcwzH3aJ/KiLCGwyMxuj7/5FkdiaCXAD1JEvKEj9LARWlFYj1bY43uII4+UptFebrhiIaw==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      graphql: 16.6.0
-      tslib: 2.4.0
-    dev: false
-    optional: true
-
   /@envelop/types/3.0.0:
     resolution: {integrity: sha512-ohcZE+XNvgNqURdCA5RLN0yW3nbvi4Pkq8TA6RpG16PKakl3yDgzXBLit1SR6+9By0/XCBfto/9r48ZH25kmvw==}
     dependencies:
@@ -4115,7 +4091,7 @@ packages:
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
-      '@envelop/core': 2.6.0_graphql@16.6.0
+      '@envelop/core': 3.0.2
     dev: false
 
   /@escape.tech/graphql-armor-cost-limit/1.5.0:
@@ -4123,7 +4099,7 @@ packages:
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
-      '@envelop/core': 2.6.0_graphql@16.6.0
+      '@envelop/core': 3.0.2
       '@escape.tech/graphql-armor-types': 0.2.0
     dev: false
 
@@ -4132,7 +4108,7 @@ packages:
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
-      '@envelop/core': 2.6.0_graphql@16.6.0
+      '@envelop/core': 3.0.2
       '@escape.tech/graphql-armor-types': 0.2.0
     dev: false
 
@@ -4141,7 +4117,7 @@ packages:
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
-      '@envelop/core': 2.6.0_graphql@16.6.0
+      '@envelop/core': 3.0.2
       '@escape.tech/graphql-armor-types': 0.2.0
     dev: false
 
@@ -4150,7 +4126,7 @@ packages:
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
-      '@envelop/core': 2.6.0_graphql@16.6.0
+      '@envelop/core': 3.0.2
       '@escape.tech/graphql-armor-types': 0.2.0
     dev: false
 
@@ -4159,7 +4135,7 @@ packages:
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
-      '@envelop/core': 2.6.0_graphql@16.6.0
+      '@envelop/core': 3.0.2
       '@escape.tech/graphql-armor-types': 0.2.0
     dev: false
 
@@ -4190,7 +4166,7 @@ packages:
       '@escape.tech/graphql-armor-max-tokens': 1.2.0
       graphql: 16.6.0
     optionalDependencies:
-      '@envelop/core': 2.6.0_graphql@16.6.0
+      '@envelop/core': 3.0.2
       '@escape.tech/graphql-armor-types': 0.1.0
       apollo-server-core: 3.10.3_graphql@16.6.0
       apollo-server-types: 3.6.3_graphql@16.6.0
@@ -8126,8 +8102,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.520_svelte@3.50.1+vite@3.1.6:
-    resolution: {integrity: sha512-flroQQEwIHx6IEkskHGQ90Ri+gFCnAs4ZFRsG7QuTbuBu7XSeJNQs3J73pmBQoKp0pWnbwZ3YZMtwBJWF/I7qA==}
+  /@sveltejs/kit/1.0.0-next.511_ys6v7ltk7pv54xf5o6uij2dcfy_svelte@3.50.1+vite@3.1.6:
+    resolution: {integrity: sha512-A/fxd4qHWDD07Mjo6qEEEfsBEkoj5C4/dPSzx6xPUoWmPvRPhU8t+P0oMc8BOn5YHOhPDq3coH8bmafbh73zKg==}
     engines: {node: '>=16.14'}
     hasBin: true
     requiresBuild: true
@@ -8153,6 +8129,7 @@ packages:
       - diff-match-patch
       - supports-color
     dev: true
+    patched: true
 
   /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.50.1+vite@3.1.6:
     resolution: {integrity: sha512-+SDrAnT7TDi8sdj4OfD2SC4s9DNrpNVBrue8fT2PmKks9Ddu0JIfSeX91wXZb/1xHz4EkGb+rli8GTRI0yGOjg==}
@@ -16055,16 +16032,6 @@ packages:
     dependencies:
       graphql: 16.6.0
 
-  /graphql/16.0.0-experimental-stream-defer.5:
-    resolution: {integrity: sha512-bluMjYpxh3a1lwZuNP+FAaEDMWzccVhkv+STcw0ckB2EPtLRTYUdXQhF9YBbUHd3tZSAR7LXzsxIw2GZXhg5rw==}
-    engines: {node: ^12.22.0 || ^14.16.0 || >=16.0.0}
-    dev: false
-
-  /graphql/16.5.0:
-    resolution: {integrity: sha512-qbHgh8Ix+j/qY+a/ZcJnFQ+j8ezakqPiHwPiZhV/3PgGlgf96QMBB5/f2rkiC9sgLoy/xvT6TSiaf2nTHJh5iA==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-    dev: true
-
   /graphql/16.6.0:
     resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
@@ -20261,7 +20228,7 @@ packages:
   /netlify-onegraph-internal/0.10.1:
     resolution: {integrity: sha512-lGHBUfILWoMO2iJN3zmqd/S+pbgYyQI4WgWDiMrEPkDQPF6wO1JUmhcMOGiZfsmaX/leD9S+CKDKX7iDc440Hw==}
     dependencies:
-      graphql: 16.5.0
+      graphql: 16.6.0
       node-fetch: 2.6.7
       rusha: 0.8.14
       uuid: 8.3.2
