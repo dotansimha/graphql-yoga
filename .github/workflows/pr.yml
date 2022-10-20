@@ -13,6 +13,7 @@ jobs:
       buildScript: build
       nodeVersion: 18
       exitPre: true
+      packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
