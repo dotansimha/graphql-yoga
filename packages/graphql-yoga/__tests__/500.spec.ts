@@ -12,17 +12,6 @@ describe('Handle non GraphQL Errors as 500 when error masking is disabled', () =
     }),
   }
 
-  const plugin: Plugin = {
-    onValidate({ addValidationRule }) {
-      addValidationRule((ctx) => ({
-        Field(node) {
-          if (node.name.value === '_service') {
-            ctx.reportError(new GraphQLError('_service is not allowed'))
-          }
-        },
-      }))
-    },
-  }
   Object.entries(errorVariationsForResolvers).forEach(([name, error]) => {
     it(`${name} from resolvers`, async () => {
       const yoga = createYoga({
