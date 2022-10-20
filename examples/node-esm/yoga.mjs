@@ -12,5 +12,5 @@ export const yoga = createYoga({
         greetings: () => 'Hello world!',
       },
     },
-  })
+  }),
 })
