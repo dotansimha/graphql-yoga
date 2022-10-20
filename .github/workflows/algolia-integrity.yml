@@ -25,10 +25,10 @@ jobs:
         run: pnpm build
 
       - name: Typecheck
-        run: pnpm workspace website build
+        run: pnpm --filter website build
 
       - name: Algolia generate
-        run: pnpm workspace website algolia-sync
+        run: pnpm --filter website algolia-sync
         env:
           ALGOLIA_DRY_RUN: true
           SITE_URL: https://www.graphql-yoga.com/

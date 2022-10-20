@@ -24,7 +24,7 @@ jobs:
         run: pnpm build
 
       - name: Typecheck
-        run: pnpm workspace website run build
+        run: pnpm --filter website run build
 
       - name: Compare
         run: git diff origin/${{ github.base_ref }}.. -- website/route-lockfile.txt

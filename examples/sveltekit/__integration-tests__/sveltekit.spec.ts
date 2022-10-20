@@ -30,7 +30,7 @@ describe('SvelteKit integration', () => {
 			} catch (error) {}
 
 			// Build svelteKit
-			execSync('pnpm workspace example-sveltekit build');
+			execSync('pnpm --filter example-sveltekit build');
 
 			// Start sveltekit
 			sveltekitProcess = spawn('pnpm', ['workspace', 'example-sveltekit', 'preview']);
