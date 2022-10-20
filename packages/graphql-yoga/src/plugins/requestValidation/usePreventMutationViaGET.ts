@@ -53,7 +53,9 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
         result,
         context: {
           request,
-          params: { operationName },
+          // the `params` might be missing in cases where the user provided
+          // malformed context to getEnveloped (like `yoga.getEnveloped({})`)
+          params: { operationName } = {},
         },
       }) => {
         // Run only if this is a Yoga request

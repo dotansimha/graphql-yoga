@@ -309,7 +309,9 @@ export class YogaServer<
                 this.logger.debug(titleBold('Execution start'))
                 // eslint-disable-next-line no-case-declarations
                 const {
-                  params: { query, operationName, variables, extensions },
+                  // the `params` might be missing in cases where the user provided
+                  // malformed context to getEnveloped (like `yoga.getEnveloped({})`)
+                  params: { query, operationName, variables, extensions } = {},
                 }: YogaInitialContext = events.args.contextValue
                 this.logger.debug(titleBold('Received GraphQL operation:'))
                 this.logger.debug({
