@@ -210,6 +210,7 @@ importers:
 
   examples/bun:
     specifiers:
+      '@whatwg-node/fetch': 0.4.7
       bun-types: ^0.1.5
       graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
@@ -217,6 +218,8 @@ importers:
       bun-types: 0.1.11
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
+    devDependencies:
+      '@whatwg-node/fetch': 0.4.7
 
   examples/cloudflare-advanced:
     specifiers:
@@ -239,6 +242,7 @@ importers:
 
   examples/cloudflare-modules:
     specifiers:
+      '@cloudflare/workers-types': 3.17.0
       graphql: 16.6.0
       graphql-yoga: 3.0.0-next.6
       typescript: 4.8.4
@@ -247,6 +251,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
+      '@cloudflare/workers-types': 3.17.0
       typescript: 4.8.4
       wrangler: 2.1.10
 
