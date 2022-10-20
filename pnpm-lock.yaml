@@ -19,6 +19,9 @@ patchedDependencies:
   '@types/ioredis-mock@5.6.0':
     hash: kzohbhhh2g5isrq6q2fcmcltka
     path: patches/@types__ioredis-mock@5.6.0.patch
+  formdata-node@5.0.0:
+    hash: 6xbjykubn4b7radrgzkpzdjbv4
+    path: patches/formdata-node@5.0.0.patch
 
 importers:
 
@@ -14003,6 +14006,7 @@ packages:
   /eslint-plugin-jsx-a11y/6.6.1_eslint@8.25.0:
     resolution: {integrity: sha512-sXgFVNHiWffBq23uiS/JaP6eVR622DqwB4yTzKvGZGcPq6/yZ3WmOZfuBks/vHWo9GaFOqC2ZK4i6+C35knx7Q==}
     engines: {node: '>=4.0'}
+    requiresBuild: true
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
@@ -14065,6 +14069,7 @@ packages:
   /eslint-plugin-react-hooks/4.6.0_eslint@8.25.0:
     resolution: {integrity: sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==}
     engines: {node: '>=10'}
+    requiresBuild: true
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
     dependencies:
@@ -14074,6 +14079,7 @@ packages:
   /eslint-plugin-react/7.31.10_eslint@8.25.0:
     resolution: {integrity: sha512-e4N/nc6AAlg4UKW/mXeYWd3R++qUano5/o+t+wnWxIf+bLsOaH3a4q74kX3nDjYym3VBN4HyO9nEn1GcAqgQOA==}
     engines: {node: '>=4'}
+    requiresBuild: true
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
