@@ -79,7 +79,7 @@ import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheck
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
 import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
-import { yogaDefaultFormatError } from './utils/yoga-default-format-error.ts.js'
+import { yogaDefaultFormatError } from './utils/yoga-default-format-error.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
 
