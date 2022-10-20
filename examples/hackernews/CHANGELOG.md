@@ -1,5 +1,12 @@
 # hackernews
 
+## 2.0.0-next.6
+
+### Patch Changes
+
+- Updated dependencies [[`dc45a7b5`](https://github.com/dotansimha/graphql-yoga/commit/dc45a7b57d4248501429c1bf66c0cd6ca36926fd)]:
+  - graphql-yoga@3.0.0-next.6
+
 ## 2.0.0-next.5
 
 ### Patch Changes
