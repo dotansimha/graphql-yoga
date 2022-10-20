@@ -1,4 +1,6 @@
+import { Plugin } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLError } from 'graphql'
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 
@@ -8,6 +10,18 @@ describe('Handle non GraphQL Errors as 500 when error masking is disabled', () =
     WrappedError: createGraphQLError('Oops!', {
       originalError: new Error('Oops!'),
     }),
+  }
+
+  const plugin: Plugin = {
+    onValidate({ addValidationRule }) {
+      addValidationRule((ctx) => ({
+        Field(node) {
+          if (node.name.value === '_service') {
+            ctx.reportError(new GraphQLError('_service is not allowed'))
+          }
+        },
+      }))
+    },
   }
   Object.entries(errorVariationsForResolvers).forEach(([name, error]) => {
     it(`${name} from resolvers`, async () => {

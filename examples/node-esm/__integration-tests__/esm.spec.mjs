@@ -12,7 +12,7 @@ describe('Node ESM', () => {
       }),
     })
     const body = await response.json()
-    expect(body).toBe({
+    expect(body).toMatchObject({
       data: {
         greetings: 'Hello world!',
       },
