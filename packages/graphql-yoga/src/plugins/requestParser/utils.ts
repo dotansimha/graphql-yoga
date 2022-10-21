@@ -18,7 +18,11 @@ export function isContentTypeMatch(
   request: Request,
   expectedContentType: string,
 ): boolean {
-  const contentType = request.headers.get('content-type')
+  let contentType = request.headers.get('content-type')
+
+  // a list of content-types is not valid as per HTTP spec, but some proxies/gateways dont care
+  contentType = contentType?.split(',')[0] || null
+
   return (
     contentType === expectedContentType ||
     !!contentType?.startsWith(`${expectedContentType};`)
