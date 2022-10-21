@@ -1,8 +1,7 @@
-import { fetch } from '@whatwg-node/fetch'
-
 import { createYoga, createSchema } from 'graphql-yoga'
 
 import { describe, it, expect } from 'bun:test'
+import { Server } from 'bun'
 
 describe('Bun integration', () => {
   const yoga = createYoga({
@@ -20,47 +19,54 @@ describe('Bun integration', () => {
     }),
   })
 
+  let server: Server
+  let url: string
+  function beforeEach() {
+    server = Bun.serve({
+      fetch: yoga,
+      port: 3000,
+    })
+    url = `http://${server.hostname}:${server.port}${yoga.graphqlEndpoint}`
+  }
+
+  function afterEach() {
+    server.stop()
+  }
+
   it('shows GraphiQL', async () => {
-    const server = Bun.serve(yoga)
-    const response = await fetch(
-      new URL(
-        yoga.graphqlEndpoint,
-        `http://${server.hostname}:${server.port}`,
-      ).toString(),
-      {
+    beforeEach()
+    try {
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           Accept: 'text/html',
         },
-      },
-    )
-    expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('text/html')
-    const htmlContents = await response.text()
-    expect(htmlContents.includes('GraphiQL')).toBe(true)
-    server.stop()
+      })
+      expect(response.status).toBe(200)
+      expect(response.headers.get('content-type')).toBe('text/html')
+      const htmlContents = await response.text()
+      expect(htmlContents.includes('GraphiQL')).toBe(true)
+    } finally {
+      afterEach()
+    }
   })
 
-  // TODO: SegmentationFault at 0x0500000000000000
-  // it('accepts a query', async () => {
-  //   const server = Bun.serve(yoga)
-  //   const response = await fetch(
-  //     new URL(
-  //       yoga.graphqlEndpoint,
-  //       `http://${server.hostname}:${server.port}`,
-  //     ).toString(),
-  //     {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         query: `{ greetings }`,
-  //       }),
-  //     },
-  //   )
-  //   const result = await response.json()
-  //   expect(result.data.greetings).toBe('Hello Bun!')
-  //   server.stop()
-  // })
+  it('accepts a query', async () => {
+    beforeEach()
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `{ greetings }`,
+        }),
+      })
+      const result = await response.json()
+      expect(result.data.greetings).toBe('Hello Bun!')
+    } finally {
+      afterEach()
+    }
+  })
 })

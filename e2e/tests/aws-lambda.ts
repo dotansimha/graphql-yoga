@@ -16,7 +16,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
 
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the AWS Lambda Function....')
-    await execPromise('yarn bundle', {
+    await execPromise('pnpm bundle', {
       cwd: '../examples/aws-lambda',
     })
   },

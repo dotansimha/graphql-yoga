@@ -1,7 +1,7 @@
-diff --git a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
-index 97fead9..ae16bc2 100644
---- a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
-+++ b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.dev.js
+diff --git a/dist/assemble-release-plan.cjs.dev.js b/dist/assemble-release-plan.cjs.dev.js
+index 97fead9facaba8a6ffaa2a2e868173cdfc990116..6f0e2a47086cf09fc5bf853571bef78927eed4a3 100644
+--- a/dist/assemble-release-plan.cjs.dev.js
++++ b/dist/assemble-release-plan.cjs.dev.js
 @@ -75,7 +75,7 @@ function incrementVersion(release, preInfo) {
      // because semver.inc with prereleases is confusing and this seems easier
  
@@ -27,9 +27,9 @@ index 97fead9..ae16bc2 100644
 -            type = "major";
 -          } else {
 -            if ( // TODO validate this - I don't think it's right anymore
-+            if (['patch', 'minor', 'major'].indexOf(nextRelease.type) > ['patch', 'minor', 'major'].indexOf(type)) {
-+              type = nextRelease.type
-+            } else if ( // TODO validate this - I don't think it's right anymore
++          if (['patch', 'minor', 'major'].indexOf(nextRelease.type) > ['patch', 'minor', 'major'].indexOf(type)) {
++            type = nextRelease.type
++          } else if ( // TODO validate this - I don't think it's right anymore
              (!releases.has(dependent) || releases.get(dependent).type === "none") && (config.___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH.updateInternalDependents === "always" || !semver__default['default'].satisfies(incrementVersion(nextRelease, preInfo), versionRange))) {
                switch (depType) {
                  case "dependencies":
@@ -38,7 +38,7 @@ index 97fead9..ae16bc2 100644
                }
              }
 -          }
-+          
++
          }
        }
  
@@ -59,12 +59,12 @@ index 97fead9..ae16bc2 100644
 +      if (existing) {
 +        const index = ["patch", "minor", "major"].indexOf(existing.type)
 +        if (type === "major") {
-+          existing.type = "major";
++            existing.type = "major";
 +        } else if (type === "minor" && index < 1) {
-+          existing.type = "minor";
++            existing.type = "minor";
 +        } else if (type === "patch" && index < 0) {
-+          existing.type = "patch";
-+        }
++            existing.type = "patch";
++       }
 +        // pkgsToSearch.push(existing);
        } else {
 +        updated = true;
@@ -77,34 +77,29 @@ index 97fead9..ae16bc2 100644
    for (let release of releases) {
 -    switch (release.type) {
 -      case "major":
--        return "major";
++      console.log(release, release.type)
++      if (release.type === "major") {
+         return "major";
 -
 -      case "minor":
--        highestReleaseType = "minor";
++      } else if (release.type === "minor") {
+         highestReleaseType = "minor";
 -        break;
 -
 -      case "patch":
--        if (highestReleaseType === "none") {
--          highestReleaseType = "patch";
--        }
++      } else if (release.type === "patch") {
+         if (highestReleaseType === "none") {
+           highestReleaseType = "patch";
+         }
 -
 -        break;
-+    console.log(release, release.type)
-+    if (release.type === "major") {
-+      return "major";
-+    } else if (release.type === "minor") {
-+      highestReleaseType = "minor";
-+    } else if (release.type === "patch") {
-+      if (highestReleaseType === "none") {
-+        highestReleaseType = "patch";
-+      }
      }
    }
  
-diff --git a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js
-index f3beb31..42d1290 100644
---- a/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js
-+++ b/node_modules/@changesets/assemble-release-plan/dist/assemble-release-plan.cjs.js
+diff --git a/dist/assemble-release-plan.cjs.js b/dist/assemble-release-plan.cjs.js
+index f3beb3187f56b512830d4b4ed2724fcdeca8b7d4..42d129091a4a77599e1c6b14ccd5bd8596fbd6c3 100644
+--- a/dist/assemble-release-plan.cjs.js
++++ b/dist/assemble-release-plan.cjs.js
 @@ -1,7 +1,7 @@
  'use strict';
  

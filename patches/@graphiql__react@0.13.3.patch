@@ -1,8 +1,8 @@
-diff --git a/node_modules/@graphiql/react/dist/index.es.js b/node_modules/@graphiql/react/dist/index.es.js
-index f7ba535..3de8b0c 100644
---- a/node_modules/@graphiql/react/dist/index.es.js
-+++ b/node_modules/@graphiql/react/dist/index.es.js
-@@ -18882,7 +18882,7 @@ function ExecutionContextProvider(props2) {
+diff --git a/dist/index.es.js b/dist/index.es.js
+index d1cc5957de06bb3d42f5e853b8e2a25a219d0ed2..3e228bab9948c17043a12e2a352ffd2971625488 100644
+--- a/dist/index.es.js
++++ b/dist/index.es.js
+@@ -18913,7 +18913,7 @@ function ExecutionContextProvider(props2) {
          });
          try {
            for await (const result of value22) {
@@ -11,7 +11,7 @@ index f7ba535..3de8b0c 100644
            }
            setIsFetching(false);
            setSubscription(null);
-@@ -21891,12 +21891,16 @@ function hasStringOrNullKey(obj, key) {
+@@ -21880,12 +21880,16 @@ function hasStringOrNullKey(obj, key) {
  }
  __name(hasStringOrNullKey, "hasStringOrNullKey");
  __name$c(hasStringOrNullKey, "hasStringOrNullKey");
@@ -23,8 +23,8 @@ index f7ba535..3de8b0c 100644
    responseEditor
  }) {
 +  window.g.resultComponent = {
-+    viewer: responseEditor,
++     viewer: responseEditor,
 +  };
-   return useCallback(
-     (state2) => {
-       var _a, _b, _c, _d, _e;
+   return useCallback((state2) => {
+     var _a, _b, _c, _d, _e;
+     const query = (_a = queryEditor == null ? void 0 : queryEditor.getValue()) != null ? _a : null;

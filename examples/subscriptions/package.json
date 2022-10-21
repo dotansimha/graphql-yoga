@@ -4,9 +4,9 @@
   "version": "0.13.6",
   "scripts": {
     "codegen": "graphql-codegen --config codegen.yml",
-    "postinstall": "yarn run codegen",
+    "postinstall": "pnpm run codegen",
     "start": "ts-node src/index.ts",
-    "precheck": "yarn run codegen",
+    "precheck": "pnpm run codegen",
     "check": "tsc --pretty --noEmit"
   },
   "dependencies": {

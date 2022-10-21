@@ -4,19 +4,20 @@
 	"private": true,
 	"scripts": {
 		"sync": "svelte-kit sync",
-		"dev": "yarn sync && vite dev",
+		"dev": "pnpm sync && vite dev",
 		"test": "jest",
-		"build": "yarn sync && vite build",
+		"build": "pnpm sync && vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview --port 3007",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
-		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
+		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
+		"postinstall": "cd ./node_modules/puppeteer && npm install"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "1.0.0-next.80",
-		"@sveltejs/kit": "1.0.0-next.511",
+		"@sveltejs/adapter-auto": "1.0.0-next.84",
+		"@sveltejs/kit": "1.0.0-next.520",
 		"@types/jest": "^29.0.0",
 		"@typescript-eslint/eslint-plugin": "5.39.0",
 		"@typescript-eslint/parser": "5.39.0",
@@ -26,7 +27,7 @@
 		"jest": "^29.0.0",
 		"prettier": "2.7.1",
 		"prettier-plugin-svelte": "2.7.1",
-		"puppeteer": "18.2.1",
+		"puppeteer": "19.0.0",
 		"svelte": "3.50.1",
 		"svelte-check": "2.9.1",
 		"svelte-preprocess": "4.10.7",
@@ -37,6 +38,7 @@
 	"dependencies": {
 		"@envelop/graphql-jit": "5.0.1",
 		"graphql-yoga": "3.0.0-next.6",
+		"@graphql-yoga/render-graphiql": "3.0.0-next.6",
 		"graphql": "16.6.0"
 	},
 	"type": "module"

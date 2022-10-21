@@ -11,8 +11,12 @@ describe('Node ESM', () => {
         query: '{ greetings }',
       }),
     })
-    expect(response.status).toBe(200)
     const body = await response.json()
-    expect(body.data.greetings).toBe('Hello world!')
+    expect(body).toMatchObject({
+      data: {
+        greetings: 'Hello world!',
+      },
+    })
+    expect(response.status).toBe(200)
   })
 })

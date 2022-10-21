@@ -1,9 +1,4 @@
-yarn.lock
-.yarn/*
 .pnp.*
-!.yarn/patches
-!.yarn/sdks
-!.yarn/versions
 **/dist/**
 coverage/
 .next/
@@ -12,6 +7,7 @@ coverage/
 examples/sveltekit
 **/generated/**
 .next
+pnpm-lock.yaml
 
 # Custom Generated files
 packages/graphql-yoga/src/graphiql-html.ts

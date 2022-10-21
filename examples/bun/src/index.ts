@@ -18,8 +18,5 @@ const yoga = createYoga({
 const server = Bun.serve(yoga)
 
 console.info(
-  `Server is running on ${new URL(
-    yoga.graphqlEndpoint,
-    `http://${server.hostname}:${server.port}`,
-  )}`,
+  `Server is running on http://${server.hostname}:${server.port}${yoga.graphqlEndpoint}`,
 )

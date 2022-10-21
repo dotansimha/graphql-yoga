@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "concurrently \"yarn start:service\" \"yarn start:gateway\"",
-    "start:service": "cd service && yarn start",
-    "start:gateway": "cd gateway && yarn start",
+    "start": "concurrently \"pnpm start:service\" \"pnpm start:gateway\"",
+    "start:service": "cd service && pnpm start",
+    "start:gateway": "cd gateway && pnpm start",
     "check": "exit 0"
   },
   "dependencies": {

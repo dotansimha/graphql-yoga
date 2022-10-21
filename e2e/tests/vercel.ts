@@ -132,7 +132,7 @@ export const vercelDeployment: DeploymentConfiguration<{
   prerequisites: async () => {
     // Build and bundle the function
     console.info('\t\tℹ️ Bundling the Vercel Function....')
-    await execPromise('yarn bundle', {
+    await execPromise('pnpm bundle', {
       cwd: '../examples/nextjs',
     })
   },

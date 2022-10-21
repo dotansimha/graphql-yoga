@@ -17,15 +17,16 @@ jobs:
         uses: the-guild-org/shared-config/setup@main
         with:
           nodeVersion: 18
+          packageManager: pnpm
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Typecheck
-        run: yarn workspace website build
+        run: pnpm --filter website build
 
       - name: Algolia push
-        run: yarn workspace website algolia-sync
+        run: pnpm --filter website algolia-sync
         env:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
@@ -33,7 +34,7 @@ jobs:
           SITE_URL: https://www.graphql-yoga.com/
 
       - name: Format
-        run: yarn prettier
+        run: pnpm prettier
 
       - name: Compare
         run: git diff website/algolia-lockfile.json

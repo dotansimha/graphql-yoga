@@ -5,7 +5,7 @@
 ## Usage
 
 ```bash
-yarn workspace example-graphql-armor start
+pnpm --filter example-graphql-armor start
 ```
 
 ## Installation snippet

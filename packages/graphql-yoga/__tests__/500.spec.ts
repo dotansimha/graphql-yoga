@@ -1,4 +1,6 @@
+import { Plugin } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLError } from 'graphql'
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 
@@ -9,6 +11,7 @@ describe('Handle non GraphQL Errors as 500 when error masking is disabled', () =
       originalError: new Error('Oops!'),
     }),
   }
+
   Object.entries(errorVariationsForResolvers).forEach(([name, error]) => {
     it(`${name} from resolvers`, async () => {
       const yoga = createYoga({

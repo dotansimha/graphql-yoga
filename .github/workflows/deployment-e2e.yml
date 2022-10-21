@@ -25,26 +25,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Use Node 18
-        uses: actions/setup-node@master
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
         with:
-          node-version: 18
-          cache: 'yarn'
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        id: node-modules-cache-deployment-e2e
-        with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-          restore-keys: |
-            ${{runner.os}}-18-node-modules-${{hashFiles('yarn.lock')}}-${{hashFiles('patches/**/*')}}
-      - name: Install Dependencies using Yarn
-        run: yarn install --ignore-engines --frozen-lockfile --immutable
-        if: steps.node-modules-cache-deployment-e2e.outputs.cache-hit != 'true'
+          nodeVersion: 18
+          packageManager: pnpm
 
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
 
       - name: Install pulumi
         uses: pulumi/setup-pulumi@v2
@@ -56,7 +44,7 @@ jobs:
           echo "::set-output name=docker_host::$(docker context inspect --format '{{.Endpoints.docker.Host}}')"
 
       - name: Provision & Test
-        run: yarn start
+        run: pnpm start
         working-directory: e2e
         env:
           # General
