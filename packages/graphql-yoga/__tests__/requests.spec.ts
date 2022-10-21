@@ -335,7 +335,7 @@ describe('requests', () => {
     const response = await yoga.fetch('http://yoga/test-graphql', {
       method: 'POST',
       headers: {
-        // not valid as per HTTP spec, but some proxies/gateways dont care
+        // not valid as per HTTP spec, but some clients dont care
         'content-type': ['application/json', 'application/json'],
       },
       body: JSON.stringify({ query: '{ ping }' }),

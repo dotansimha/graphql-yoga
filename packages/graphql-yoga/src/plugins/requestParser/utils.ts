@@ -20,7 +20,7 @@ export function isContentTypeMatch(
 ): boolean {
   let contentType = request.headers.get('content-type')
 
-  // a list of content-types is not valid as per HTTP spec, but some proxies/gateways dont care
+  // a list of content-types is not valid as per HTTP spec, but some clients dont care
   contentType = contentType?.split(',')[0] || null
 
   return (
