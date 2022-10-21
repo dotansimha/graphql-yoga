@@ -309,4 +309,46 @@ describe('requests', () => {
       'Unexpected parameter "test" in the request body.',
     )
   })
+
+  it('should use supported accept header when multiple are provided', async () => {
+    const response = await yoga.fetch('http://yoga/test-graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: ['application/xml', 'application/json'],
+      },
+      body: JSON.stringify({ query: '{ ping }' }),
+    })
+
+    expect(response.ok).toBeTruthy()
+    const body = await response.json()
+    expect(body).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "ping": "pong",
+        },
+      }
+    `)
+  })
+
+  it('should parse when multiple content-type headers are provided', async () => {
+    const response = await yoga.fetch('http://yoga/test-graphql', {
+      method: 'POST',
+      headers: {
+        // not valid as per HTTP spec, but some clients dont care
+        'content-type': ['application/json', 'application/json'],
+      },
+      body: JSON.stringify({ query: '{ ping }' }),
+    })
+
+    expect(response.ok).toBeTruthy()
+    const body = await response.json()
+    expect(body).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "ping": "pong",
+        },
+      }
+    `)
+  })
 })
