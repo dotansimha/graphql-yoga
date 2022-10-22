@@ -23,7 +23,7 @@ const yoga = createYoga({
         hello
       }
     `,
-  }
+  },
 })
 
 const server = createServer(yoga)

@@ -12,8 +12,8 @@ export function assertInvalidParams(
       extensions: {
         http: {
           status: 400,
-        }
-      }
+        },
+      },
     })
   }
   for (const paramKey in params) {
