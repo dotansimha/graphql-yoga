@@ -13,8 +13,8 @@ export type SofaPluginConfig = Omit<
 >
 
 export type SofaWithSwaggerUIPluginConfig = SofaPluginConfig &
-  Parameters<typeof OpenAPI>[0] & {
-    swaggerUIEndpoint: string
+  Omit<Parameters<typeof OpenAPI>[0], 'schema'> & {
+    swaggerUIEndpoint?: string
   }
 
 export function useSofaWithSwaggerUI(
@@ -50,6 +50,15 @@ export function useSofaWithSwaggerUI(
           status: 200,
           headers: {
             'Content-Type': 'text/html',
+          },
+        })
+        endResponse(response)
+      }
+      if (url.pathname === '/swagger.json') {
+        const response = new fetchAPI.Response(JSON.stringify(openApi.get()), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
           },
         })
         endResponse(response)
