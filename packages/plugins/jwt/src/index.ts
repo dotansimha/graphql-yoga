@@ -1,7 +1,9 @@
 import { JwksClient } from 'jwks-rsa'
-import { decode, verify, JwtPayload, Algorithm } from 'jsonwebtoken'
+import jsonwebtoken, { JwtPayload, Algorithm } from 'jsonwebtoken'
 import { Plugin } from 'graphql-yoga'
 import { GraphQLError } from 'graphql'
+
+const { decode, verify } = jsonwebtoken
 
 export interface JwtPluginOptions {
   /**
@@ -97,7 +99,6 @@ export function useJwt(options: JwtPluginOptions): Plugin {
         }
         if (signingKey) {
           const verified = await new Promise((resolve, reject) => {
-             
             verify(
               token,
               signingKey!,
