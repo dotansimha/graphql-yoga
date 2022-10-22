@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Plugin as EnvelopPlugin,
   PromiseOrValue,
@@ -14,10 +15,10 @@ import {
 } from '../types.js'
 
 export type Plugin<
-  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/ban-types
   PluginContext extends Record<string, any> = {},
   // eslint-disable-next-line @typescript-eslint/ban-types
-  TServerContext = {},
+  TServerContext extends Record<string, any> = {},
   // eslint-disable-next-line @typescript-eslint/ban-types
   TUserContext = {},
 > = EnvelopPlugin<YogaInitialContext & PluginContext> & {
@@ -65,13 +66,14 @@ export type Plugin<
   onResponse?: OnResponseHook<TServerContext>
 }
 
-export type OnYogaInitHook<TServerContext> = (
+export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
   payload: OnYogaInitEventPayload<TServerContext>,
 ) => void
 
-export type OnYogaInitEventPayload<TServerContext> = {
-  yoga: YogaServer<TServerContext, any>
-}
+export type OnYogaInitEventPayload<TServerContext extends Record<string, any>> =
+  {
+    yoga: YogaServer<TServerContext, any>
+  }
 
 export type OnRequestHook<TServerContext> = (
   payload: OnRequestEventPayload<TServerContext>,
