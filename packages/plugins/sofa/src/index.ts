@@ -9,7 +9,7 @@ type SofaHandlerConfig = Parameters<typeof createSofaHandler>[0]
 
 export type SofaPluginConfig = Omit<
   SofaHandlerConfig,
-  'schema' | 'context' | 'execute' | 'subscribe'
+  'schema' | 'context' | 'execute' | 'subscribe' | 'errorHandler'
 >
 
 export type SofaWithSwaggerUIPluginConfig = SofaPluginConfig &
@@ -96,6 +96,35 @@ export function useSofa(config: SofaPluginConfig): Plugin {
             throw new TypeError('Illegal invocation.')
           }
           return enveloped.subscribe(args)
+        },
+        errorHandler(errors) {
+          let status: number | undefined
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json; charset=utf-8',
+          }
+
+          for (const error of errors) {
+            if ('extensions' in error && error.extensions?.http) {
+              if (
+                error.extensions.http.status &&
+                (!status || error.extensions.http.status > status)
+              ) {
+                status = error.extensions.http.status
+              }
+              if (error.extensions.http.headers) {
+                Object.assign(headers, error.extensions.http.headers)
+              }
+            }
+          }
+
+          if (!status) {
+            status = 500
+          }
+
+          return new Response(JSON.stringify({ errors }), {
+            status,
+            headers,
+          })
         },
       })
     },
