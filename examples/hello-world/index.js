@@ -1,7 +1,6 @@
+/* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line no-undef
 const { createServer } = require('node:http')
-// eslint-disable-next-line no-undef
 const { createYoga, createSchema } = require('graphql-yoga')
 
 const yoga = createYoga({

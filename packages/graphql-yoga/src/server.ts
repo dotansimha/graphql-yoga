@@ -188,7 +188,11 @@ export type BatchingOptions =
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  * @internal
  */
-export class YogaServer<TServerContext, TUserContext> {
+
+export class YogaServer<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+> {
   /**
    * Instance of envelop
    */
@@ -375,7 +379,7 @@ export class YogaServer<TServerContext, TUserContext> {
           )
         },
       },
-    ]
+    ] as Plugin[]
 
     this.getEnveloped = envelop({
       plugins,
@@ -384,7 +388,7 @@ export class YogaServer<TServerContext, TUserContext> {
     this.plugins = this.getEnveloped._plugins as Plugin<
       TUserContext & TServerContext & YogaInitialContext,
       TServerContext,
-      {}
+      TUserContext
     >[]
 
     this.onRequestHooks = []

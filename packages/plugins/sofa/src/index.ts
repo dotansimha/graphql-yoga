@@ -1,7 +1,7 @@
 import { OpenAPI, useSofa as createSofaHandler } from 'sofa-api'
 import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga'
-import { SofaHandler } from './types'
-import { getSwaggerUIHTMLForSofa } from './swaggerUI'
+import { SofaHandler } from './types.js'
+import { getSwaggerUIHTMLForSofa } from './swaggerUI.js'
 
 export { OpenAPI } from 'sofa-api'
 

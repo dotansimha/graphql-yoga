@@ -977,9 +977,9 @@ importers:
 
   packages/plugins/sofa:
     specifiers:
-      sofa-api: 0.12.0-alpha.0
+      sofa-api: 0.14.0
     dependencies:
-      sofa-api: 0.12.0-alpha.0
+      sofa-api: 0.14.0
     publishDirectory: dist
 
   packages/render-graphiql:
@@ -21185,6 +21185,10 @@ packages:
       is-wsl: 2.2.0
     dev: true
 
+  /openapi-types/12.0.2:
+    resolution: {integrity: sha512-GuTo7FyZjOIWVhIhQSWJVaws6A82sWIGyQogxxYBYKZ0NBdyP2CYSIgOwFfSB+UVoPExk/YzFpyYitHS8KVZtA==}
+    dev: false
+
   /opener/1.5.2:
     resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
     hasBin: true
@@ -24176,8 +24180,8 @@ packages:
       ip: 2.0.0
       smart-buffer: 4.2.0
 
-  /sofa-api/0.12.0-alpha.0:
-    resolution: {integrity: sha512-caR3WGCDbIAR7Rc9zQhSVnXFV6rU9AWsCdaENHza3TastpuEun+2czZNIJcyNl29mfA+gj+e1PExI8xwiXmLPQ==}
+  /sofa-api/0.14.0:
+    resolution: {integrity: sha512-NrGjW3+6jKgVlaE7jHi+7uQUMjoTjA24HuCwD6Ao2JVwpqXSHpUXcwhbyPomKKFkgzwYc+QibyPUce5bIi3v2Q==}
     peerDependencies:
       graphql: ^0.13.2 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
@@ -24186,10 +24190,10 @@ packages:
       '@whatwg-node/server': 0.4.12
       ansi-colors: 4.1.3
       itty-router: 2.6.6
+      openapi-types: 12.0.2
       param-case: 3.0.4
       title-case: 3.0.3
       tslib: 2.4.0
-      uuid: 8.3.2
     transitivePeerDependencies:
       - '@types/node'
       - encoding
