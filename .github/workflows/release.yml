@@ -12,6 +12,7 @@ jobs:
       releaseScript: release
       releasePrName: Upcoming Release Changes (${{ github.ref }})
       nodeVersion: 18
+      packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
       npmToken: ${{ secrets.NODE_AUTH_TOKEN }}
