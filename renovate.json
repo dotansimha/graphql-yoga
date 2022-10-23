@@ -4,10 +4,28 @@
     "github>the-guild-org/shared-config:renovate",
     ":preserveSemverRanges"
   ],
+  "automerge": true,
+  "major": {
+    "automerge": false
+  },
   "packageRules": [
     {
       "groupName": "envelop",
       "matchPackagePrefixes": "@envelop"
+    },
+    {
+      "excludePackagePatterns": [
+        "@changesets/*",
+        "typescript",
+        "typedoc*", 
+        "^@theguild/",
+        "@graphql-inspector/core", 
+        "next"
+      ],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
     }
   ],
   "ignoreDeps": ["@sveltejs/kit", "graphiql"],
