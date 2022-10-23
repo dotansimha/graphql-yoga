@@ -1,5 +1,13 @@
 # graphql-yoga
 
+## 3.0.0-next.7
+
+### Patch Changes
+
+- [#1920](https://github.com/dotansimha/graphql-yoga/pull/1920) [`cebca219`](https://github.com/dotansimha/graphql-yoga/commit/cebca219c4913f45509c3a40f0f5aa6697f5914d) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Handle edge case where Content-Type header provides a list
+
+- [#1911](https://github.com/dotansimha/graphql-yoga/pull/1911) [`5f5b1160`](https://github.com/dotansimha/graphql-yoga/commit/5f5b116084cff45ed49f0c74cc449ff20fd775ac) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Handle cases where user supplies a malformed/unexpected context
+
 ## 3.0.0-next.6
 
 ### Patch Changes
