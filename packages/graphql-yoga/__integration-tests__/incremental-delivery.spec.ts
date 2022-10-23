@@ -211,7 +211,6 @@ describe('incremental delivery: node-fetch', () => {
       useNodeFetch: true,
       formDataLimits: {
         fileSize: 12,
-        fieldsFirst: true,
       },
     }),
     schema,
