@@ -124,27 +124,7 @@ describe('incremental delivery: node-fetch', () => {
             fields: () => ({
               name: { type: GraphQLString },
               type: { type: GraphQLString },
-              text: {
-                type: GraphQLString,
-                resolve: async (file) => {
-                  try {
-                    return await file.text()
-                  } catch (e) {
-                    if (
-                      e instanceof Error &&
-                      e.message.startsWith('File size limit exceeded: ')
-                    ) {
-                      throw createGraphQLError(e.message, {
-                        extensions: {
-                          http: {
-                            status: 413,
-                          },
-                        },
-                      })
-                    }
-                  }
-                },
-              },
+              text: { type: GraphQLString },
             }),
           }),
           description: 'Upload a single file',
@@ -342,12 +322,12 @@ describe('incremental delivery: node-fetch', () => {
       body: formData,
     })
 
-    expect(response.status).toBe(413)
-
     const body = await response.json()
 
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('File size limit exceeded: 12 bytes')
+
+    expect(response.status).toBe(413)
   })
 
   it('should get subscription', async () => {
