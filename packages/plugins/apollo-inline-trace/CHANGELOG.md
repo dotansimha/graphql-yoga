@@ -1,5 +1,12 @@
 # @graphql-yoga/plugin-apollo-inline-trace
 
+## 1.0.0-next.7
+
+### Patch Changes
+
+- Updated dependencies [[`cebca219`](https://github.com/dotansimha/graphql-yoga/commit/cebca219c4913f45509c3a40f0f5aa6697f5914d), [`5f5b1160`](https://github.com/dotansimha/graphql-yoga/commit/5f5b116084cff45ed49f0c74cc449ff20fd775ac)]:
+  - graphql-yoga@3.0.0-next.7
+
 ## 1.0.0-next.6
 
 ### Patch Changes
