@@ -1,4 +1,5 @@
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLError as GraphQLExecuteError } from '@graphql-tools/graphql'
 import { GraphQLError } from 'graphql'
 import type { ResultProcessorInput } from './plugins/types'
 import type { YogaMaskedErrorOpts } from './types'
@@ -22,7 +23,7 @@ function hasToString(obj: any): obj is { toString(): string } {
 }
 
 export function isGraphQLError(val: unknown): val is GraphQLError {
-  return val instanceof GraphQLError
+  return val instanceof GraphQLError || val instanceof GraphQLExecuteError
 }
 
 export function isOriginalGraphQLError(

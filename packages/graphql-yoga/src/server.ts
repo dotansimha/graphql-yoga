@@ -1,7 +1,6 @@
 import {
   print,
   ExecutionResult,
-  execute,
   parse,
   validate,
   subscribe,
@@ -16,6 +15,8 @@ import {
   PromiseOrValue,
   useMaskedErrors,
 } from '@envelop/core'
+import { execute } from '@graphql-tools/graphql'
+import { compat } from '@graphql-tools/compat'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import {
@@ -277,7 +278,17 @@ export class YogaServer<
     const graphqlEndpoint = this.graphqlEndpoint
 
     this.plugins = [
-      useEngine({ parse, validate, execute, subscribe, specifiedRules }),
+      useEngine({
+        parse,
+        validate,
+        execute: (args) => {
+          const { schema } = args
+          const compatSchema = compat.toTools(schema)
+          return execute({ ...args, schema: compatSchema })
+        },
+        subscribe,
+        specifiedRules,
+      }),
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
