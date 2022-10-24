@@ -142,15 +142,8 @@ export function IndexPage(): ReactElement {
                     link: '/v3/features/apollo-federation',
                     icon: <SiApollographql size={36} />,
                     title: 'Apollo Federation',
-                    description: (
-                      <>
-                        The{' '}
-                        <TextLink href="/v3/comparison#compatibility-with-apollo-federation">
-                          best supergraph and subgraph
-                        </TextLink>{' '}
-                        for your GraphQL
-                      </>
-                    ),
+                    description:
+                      'The best supergraph and subgraph for your GraphQL',
                   },
                   {
                     link: '/v3/features/persisted-operations',
