@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
+    "build": "next build && next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "algolia-sync": "node scripts/algolia-ci.mjs",
     "dev": "next",
-    "start": "next start && next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
+    "start": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "check": "exit 0"
   },
