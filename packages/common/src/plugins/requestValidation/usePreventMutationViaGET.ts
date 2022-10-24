@@ -12,6 +12,9 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
         if (request != null) {
           if (result instanceof Error) {
             if (result instanceof GraphQLError) {
+              if (!result.extensions) {
+                result[<any>'extensions'] = {}
+              }
               result.extensions.http = {
                 status: 400,
               }
