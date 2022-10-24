@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build && next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
+    "build": "next build",
+    "postbuild": "next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "algolia-sync": "node scripts/algolia-ci.mjs",
     "dev": "next",
     "start": "next start",
