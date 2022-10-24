@@ -62,7 +62,7 @@ export function yogaExchange(options?: YogaExchangeOptions): Exchange {
         subscriptionsProtocol: SubscriptionProtocol.SSE,
         multipart: true,
         customFetch: operation.context.fetch,
-        useGETForQueries: operation.context.preferGetMethod,
+        useGETForQueries: !!operation.context.preferGetMethod,
         headers: extraFetchOptions?.headers as Record<string, string>,
         method: extraFetchOptions?.method as 'GET' | 'POST',
         credentials: extraFetchOptions?.credentials,
