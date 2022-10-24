@@ -6,9 +6,8 @@
   "scripts": {
     "build": "next build",
     "algolia-sync": "node scripts/algolia-ci.mjs",
-    "postbuild": "next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "dev": "next",
-    "start": "next start",
+    "start": "next start && next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "analyze": "cross-env ANALYZE=true next build",
     "check": "exit 0"
   },
