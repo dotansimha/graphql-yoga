@@ -18,6 +18,9 @@ patchedDependencies:
   formdata-node@4.4.1:
     hash: bwnmzlpvx75llwj7xwqbxbjtui
     path: patches/formdata-node@4.4.1.patch
+  nextra-theme-docs@2.0.0-beta.29:
+    hash: vsbnghpcde3z66antsf4otin3u
+    path: patches/nextra-theme-docs@2.0.0-beta.29.patch
 
 importers:
 
@@ -1644,6 +1647,7 @@ packages:
       '@aws-cdk/core': 1.178.0
       '@aws-cdk/custom-resources': 1.178.0_7tkfgmvtmyzyuu67rh4evbnl2q
       constructs: 3.4.127
+      punycode: 2.1.1
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -1949,6 +1953,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema/1.178.0:
     resolution: {integrity: sha512-15j1u+3/b4PCzKtHTCs1NRqvSN3w2qUZ4k/9Iid7tzBzgBd50aBEL8+50mRPIlY2sNzSFPL2XoxKB3ufz7YmmQ==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - jsonschema
@@ -1974,7 +1981,11 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 1.178.0
       '@aws-cdk/cx-api': 1.178.0
       '@aws-cdk/region-info': 1.178.0
+      '@balena/dockerignore': 1.0.2
       constructs: 3.4.127
+      fs-extra: 9.1.0
+      ignore: 5.2.0
+      minimatch: 3.1.2
     dev: false
     bundledDependencies:
       - fs-extra
@@ -2011,6 +2022,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.178.0
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -3690,6 +3702,9 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
     dev: true
+
+  /@balena/dockerignore/1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -8157,7 +8172,7 @@ packages:
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
       next-videos: 1.5.0
       nextra: 2.0.0-beta.29_azq6kxkn3od7qdylwkyksrwopy
-      nextra-theme-docs: 2.0.0-beta.29_azq6kxkn3od7qdylwkyksrwopy
+      nextra-theme-docs: 2.0.0-beta.29_vsbnghpcde3z66antsf4otin3u_azq6kxkn3od7qdylwkyksrwopy
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-instantsearch-dom: 6.36.0_fzyfqr3mixyxftdbf7mmfo2jb4
@@ -10036,7 +10051,6 @@ packages:
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-    dev: true
 
   /atob/2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
@@ -10090,6 +10104,16 @@ packages:
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
+    dependencies:
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.0
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.1.1
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -10872,6 +10896,11 @@ packages:
       no-case: 3.0.4
       tslib: 2.4.0
       upper-case-first: 2.0.2
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/1.1.0:
@@ -15475,7 +15504,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-jetpack/5.0.0:
     resolution: {integrity: sha512-0f9QoIbfAq/DuafAQisvsHJmLnJB2D53d9FXIu0UZPUg4Kzocez1+AinToPON6JD/C60kDlye121puiR5ivfdg==}
@@ -18120,11 +18148,13 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonify/0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
     dev: true
+
+  /jsonschema/1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -20413,7 +20443,7 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /nextra-theme-docs/2.0.0-beta.29_azq6kxkn3od7qdylwkyksrwopy:
+  /nextra-theme-docs/2.0.0-beta.29_vsbnghpcde3z66antsf4otin3u_azq6kxkn3od7qdylwkyksrwopy:
     resolution: {integrity: sha512-2oGsuOv7sMxnsYPM6+qI7F0Rcq9cMTtClwa8MeOdn0FCtMjhxJjfeLxpDvXrELkVNOU9/Bg1SFHxHTLpt0/Xjw==}
     peerDependencies:
       next: '>=9.5.3'
@@ -20437,6 +20467,7 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       scroll-into-view-if-needed: 2.2.29
     dev: false
+    patched: true
 
   /nextra/2.0.0-beta.29_azq6kxkn3od7qdylwkyksrwopy:
     resolution: {integrity: sha512-UjsaoMNsJRG0fbzqgoLDXgvJwcSJxwPr+ojBBjJsaZ6fu5+cwbCx8wXazA0y5sSxGw75fG6D1I7rS6pflHctuQ==}
@@ -25882,7 +25913,6 @@ packages:
   /universalify/2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /unixify/1.0.0:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}
