@@ -1,12 +1,5 @@
-import {
-  print,
-  ExecutionResult,
-  execute,
-  parse,
-  validate,
-  subscribe,
-  specifiedRules,
-} from 'graphql'
+import { print, parse, validate, subscribe, specifiedRules } from 'graphql'
+import { execute, ExecutionResult } from '@graphql-tools/executor'
 import {
   GetEnvelopedFn,
   envelop,
