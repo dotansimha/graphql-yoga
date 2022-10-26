@@ -504,6 +504,7 @@ function TextLink({
   className,
   noAnchor,
   href,
+  ref: _ref,
   ...props
 }: ComponentProps<typeof Anchor> & { noAnchor?: boolean }) {
   const router = useRouter()
