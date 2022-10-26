@@ -18,6 +18,7 @@ import { Anchor, Image } from '@theguild/components'
 import httpImage from 'public/assets/http.svg'
 import subscriptionsImage from 'public/assets/subscriptions.svg'
 import ecosystemImage from 'public/assets/ecosystem.svg'
+import { useRouter } from 'next/router'
 
 const gradients: [string, string][] = [
   ['#8b5cf6', '#6d28d9'], // violet
@@ -142,8 +143,18 @@ export function IndexPage(): ReactElement {
                     link: '/v3/features/apollo-federation',
                     icon: <SiApollographql size={36} />,
                     title: 'Apollo Federation',
-                    description:
-                      'The best supergraph and subgraph for your GraphQL',
+                    description: (
+                      <>
+                        The{' '}
+                        <TextLink
+                          noAnchor
+                          href="/v3/comparison#compatibility-with-apollo-federation"
+                        >
+                          best supergraph and subgraph
+                        </TextLink>{' '}
+                        for your GraphQL
+                      </>
+                    ),
                   },
                   {
                     link: '/v3/features/persisted-operations',
@@ -491,10 +502,31 @@ function ButtonLink({
 function TextLink({
   children,
   className,
+  noAnchor,
+  href,
   ...props
-}: ComponentProps<typeof Anchor>) {
+}: ComponentProps<typeof Anchor> & { noAnchor?: boolean }) {
+  const router = useRouter()
+  if (noAnchor) {
+    return (
+      <span
+        onClick={(e) => {
+          e.preventDefault()
+          router.push(href)
+        }}
+        className={clsx('text-primary-500', className)}
+        {...props}
+      >
+        {children}
+      </span>
+    )
+  }
   return (
-    <Anchor className={clsx('text-primary-500', className)} {...props}>
+    <Anchor
+      href={href}
+      className={clsx('text-primary-500', className)}
+      {...props}
+    >
       {children}
     </Anchor>
   )
