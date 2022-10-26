@@ -509,7 +509,7 @@ function TextLink({
   const router = useRouter()
   if (noAnchor) {
     return (
-      <span
+      <button
         onClick={(e) => {
           e.preventDefault()
           router.push(href)
@@ -518,7 +518,7 @@ function TextLink({
         {...props}
       >
         {children}
-      </span>
+      </button>
     )
   }
   return (
