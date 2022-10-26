@@ -468,7 +468,7 @@ function FeatureHighlights({
           <Comp
             key={title}
             className="flex flex-row md:flex-col lg:flex-row flex-1 gap-4"
-            {...(link && { href: link } as any)}
+            {...(link && ({ href: link } as any))}
           >
             {icon && (
               <div
