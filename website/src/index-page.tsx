@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, ComponentProps } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import clsx from 'clsx'
 import { FiGithub, FiUpload } from 'react-icons/fi'
 import { SiApollographql } from 'react-icons/si'
@@ -18,6 +18,7 @@ import { Anchor, Image } from '@theguild/components'
 import httpImage from 'public/assets/http.svg'
 import subscriptionsImage from 'public/assets/subscriptions.svg'
 import ecosystemImage from 'public/assets/ecosystem.svg'
+import { useRouter } from 'next/router'
 
 const gradients: [string, string][] = [
   ['#8b5cf6', '#6d28d9'], // violet
@@ -25,6 +26,12 @@ const gradients: [string, string][] = [
   ['#f59e0b', '#d97706'], // amber
   ['#ec4899', '#db2777'], // pink
 ]
+
+const classes = {
+  button:
+    'inline-block bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-gray-600 px-6 py-3 rounded-lg font-medium shadow-sm',
+  link: 'text-primary-500',
+}
 
 function pickGradient(i: number) {
   const gradient = gradients[i % gradients.length]
@@ -35,6 +42,7 @@ function pickGradient(i: number) {
 }
 
 export function IndexPage(): ReactElement {
+  const router = useRouter()
   return (
     <>
       <FeatureWrapper>
@@ -47,16 +55,24 @@ export function IndexPage(): ReactElement {
             performance and great developer experience.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <ButtonLink href="/v3">Documentation</ButtonLink>
-            <ButtonLink className="hidden lg:block" href="/tutorial/basic">
+            <Anchor className={classes.button} href="/v3">
+              Documentation
+            </Anchor>
+            <Anchor
+              className={clsx(classes.button, 'hidden lg:block')}
+              href="/tutorial/basic"
+            >
               Tutorial
-            </ButtonLink>
-            <ButtonLink
-              className="flex flex-row gap-2 items-center"
+            </Anchor>
+            <Anchor
+              className={clsx(
+                classes.button,
+                'flex flex-row gap-2 items-center',
+              )}
               href="https://github.com/dotansimha/graphql-yoga"
             >
               <FiGithub /> GitHub
-            </ButtonLink>
+            </Anchor>
           </div>
         </div>
       </FeatureWrapper>
@@ -119,19 +135,19 @@ export function IndexPage(): ReactElement {
             <div>
               <p>
                 because GraphQL Yoga is powered by{' '}
-                <TextLink
-                  href="https://www.the-guild.dev/graphql/envelop"
-                  className="text-primary-500"
+                <Anchor
+                  href="https://the-guild.dev/graphql/envelop"
+                  className={classes.link}
                 >
                   Envelop
-                </TextLink>{' '}
+                </Anchor>{' '}
                 you can use{' '}
-                <TextLink
+                <Anchor
                   href="/v3/features/envelop-plugins"
-                  className="text-primary-500"
+                  className={classes.link}
                 >
                   any plugin
-                </TextLink>
+                </Anchor>
               </p>
             </div>
             <div className="flex flex-col gap-y-12">
@@ -145,9 +161,17 @@ export function IndexPage(): ReactElement {
                     description: (
                       <>
                         The{' '}
-                        <TextLink href="/v3/comparison#compatibility-with-apollo-federation">
+                        <button
+                          className={classes.link}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            router.push(
+                              '/v3/comparison#compatibility-with-apollo-federation',
+                            )
+                          }}
+                        >
                           best supergraph and subgraph
-                        </TextLink>{' '}
+                        </button>{' '}
                         for your GraphQL
                       </>
                     ),
@@ -167,7 +191,7 @@ export function IndexPage(): ReactElement {
                       'Reducing server load by caching operation results',
                   },
                   {
-                    link: 'https://www.the-guild.dev/graphql/envelop/plugins/use-rate-limiter',
+                    link: 'https://the-guild.dev/graphql/envelop/plugins/use-rate-limiter',
                     title: 'Rate limiting',
                     icon: <BsFillStopwatchFill size={36} />,
                     description: 'Prevent denial of service attacks with ease',
@@ -188,12 +212,12 @@ export function IndexPage(): ReactElement {
             <div>
               <p>
                 following the{' '}
-                <TextLink
+                <Anchor
                   href="https://graphql.github.io/graphql-over-http"
-                  className="text-primary-500"
+                  className={classes.link}
                 >
                   GraphQL over HTTP specification
-                </TextLink>
+                </Anchor>
               </p>
             </div>
             <div className="flex flex-col gap-y-12">
@@ -206,12 +230,12 @@ export function IndexPage(): ReactElement {
                     description: (
                       <>
                         Tested using the graphql-http library.{' '}
-                        <TextLink
+                        <Anchor
                           href="https://github.com/enisdenjo/graphql-http/blob/master/implementations/graphql-yoga/README.md"
-                          className="text-primary-500"
+                          className={classes.link}
                         >
                           See the report
-                        </TextLink>{' '}
+                        </Anchor>{' '}
                         for more info.
                       </>
                     ),
@@ -222,12 +246,12 @@ export function IndexPage(): ReactElement {
                     description: (
                       <>
                         Built-in GraphQL{' '}
-                        <TextLink
+                        <Anchor
                           href="/v3/features/subscriptions"
-                          className="text-primary-500"
+                          className={classes.link}
                         >
                           Subscriptions over Server-Sent Events
-                        </TextLink>
+                        </Anchor>
                         .
                       </>
                     ),
@@ -238,12 +262,12 @@ export function IndexPage(): ReactElement {
                     description: (
                       <>
                         Through GraphQL out-of-the box leveraging the{' '}
-                        <TextLink
+                        <Anchor
                           href="https://github.com/jaydenseric/graphql-multipart-request-spec"
-                          className="text-primary-500"
+                          className={classes.link}
                         >
                           GraphQL multipart request specification
-                        </TextLink>
+                        </Anchor>
                         .
                       </>
                     ),
@@ -444,7 +468,7 @@ function FeatureHighlights({
           <Comp
             key={title}
             className="flex flex-row md:flex-col lg:flex-row flex-1 gap-4"
-            {...((link ? { href: link } : {}) as any)}
+            {...(link && ({ href: link } as any))}
           >
             {icon && (
               <div
@@ -474,35 +498,5 @@ function FeatureHighlights({
         )
       })}
     </>
-  )
-}
-
-function ButtonLink({
-  children,
-  className,
-  ...props
-}: ComponentProps<typeof Anchor>) {
-  return (
-    <Anchor
-      className={clsx(
-        'inline-block bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-gray-600 px-6 py-3 rounded-lg font-medium shadow-sm',
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </Anchor>
-  )
-}
-
-function TextLink({
-  children,
-  className,
-  ...props
-}: ComponentProps<typeof Anchor>) {
-  return (
-    <Anchor className={clsx('text-primary-500', className)} {...props}>
-      {children}
-    </Anchor>
   )
 }
