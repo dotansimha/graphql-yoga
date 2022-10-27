@@ -104,7 +104,7 @@ export function useGraphiQL<TServerContext>(
         endResponse(response)
       } else if (shouldRenderGraphiQL(request)) {
         logger.debug(`Rendering GraphiQL`)
-        const graphiqlOptions = graphiqlOptionsFactory(
+        const graphiqlOptions = await graphiqlOptionsFactory(
           request,
           serverContext as TServerContext,
         )
