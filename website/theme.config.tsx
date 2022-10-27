@@ -48,8 +48,8 @@ export default defineConfig({
 
     return (
       <>
-        {comments}
         {children}
+        {comments}
       </>
     )
   },
