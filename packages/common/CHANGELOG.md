@@ -1,5 +1,12 @@
 # @graphql-yoga/common
 
+## 3.0.0-next.8
+
+### Patch Changes
+
+- Updated dependencies [[`6e250209`](https://github.com/dotansimha/graphql-yoga/commit/6e25020916670fb50fecb5ff7c25f7216db3d78a)]:
+  - graphql-yoga@3.0.0-next.8
+
 ## 3.0.0-next.7
 
 ### Patch Changes

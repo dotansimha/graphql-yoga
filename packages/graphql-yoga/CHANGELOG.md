@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.0.0-next.8
+
+### Minor Changes
+
+- [#1966](https://github.com/dotansimha/graphql-yoga/pull/1966) [`6e250209`](https://github.com/dotansimha/graphql-yoga/commit/6e25020916670fb50fecb5ff7c25f7216db3d78a) Thanks [@saihaj](https://github.com/saihaj)! - use custom executor
+
 ## 3.0.0-next.7
 
 ### Patch Changes
