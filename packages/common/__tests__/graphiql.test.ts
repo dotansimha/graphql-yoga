@@ -1,6 +1,3 @@
-import { AfterValidateHook } from '@envelop/core'
-import { GraphQLError } from 'graphql'
-import { Plugin } from '../src/plugins/types'
 import { createServer } from '../src/server'
 
 describe('GraphiQL', () => {
