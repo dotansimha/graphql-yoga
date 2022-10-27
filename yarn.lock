@@ -2001,15 +2001,16 @@
     ts-node "^9"
     tslib "^2"
 
-"@envelop/apollo-federation@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@envelop/apollo-federation/-/apollo-federation-2.5.0.tgz#ce77e61c25314bced0043435f71f453a0b6c1b6d"
-  integrity sha512-1IOthv6kRvIunQu22j28BP6eF7pUc8IO+tDtnUT+IrX7ppv+tCt/hPlV6+b7ykh/2AbtQKwQ+Gl0lmWw99+7qw==
+"@envelop/apollo-federation@^3.0.0":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/apollo-federation/-/apollo-federation-3.0.3.tgz#2cb934710b32778998c38f2e14960a6ea8323542"
+  integrity sha512-LMGhsfjybiObUFipAXoy06XgO0bCykXD+pKQMP0jmItlo9J/EtQ8iav9goy/HmikZsCcb2inx1wQfisEYIaOYQ==
   dependencies:
     apollo-server-caching "^3.1.0"
     apollo-server-types "^3.2.0"
+    tslib "^2.4.0"
 
-"@envelop/core@^2.4.0", "@envelop/core@^2.5.0":
+"@envelop/core@^2.4.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@envelop/core/-/core-2.6.0.tgz#1b7a346a37040c217f0f9b60c3358efc6c3b1b94"
   integrity sha512-yTptKinJN//i6m1kXUbnLBl/FobzddI4ehURAMS08eRUOQwAuXqJU9r8VdTav8nIZLb4t6cuDWFb3n331LiwLw==
@@ -2017,49 +2018,57 @@
     "@envelop/types" "2.4.0"
     tslib "2.4.0"
 
-"@envelop/disable-introspection@3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@envelop/disable-introspection/-/disable-introspection-3.6.0.tgz#04b033389a83b9831442caabcbae30bde89857b9"
-  integrity sha512-Zf505LqWo2efM0EtTBvXyYPynSTSL2+Ps0X+dCH33vQ3wF6gxMui9g1pGa4MDcGjaXWG67qZcT4eojpGlmmavA==
+"@envelop/core@^3.0.0":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/core/-/core-3.0.3.tgz#bf07e690e905dfdfe59da636264fdfd6db081680"
+  integrity sha512-GXIb7HhsSYerMJR/AhJ6nN9F+w17bYRdUfu7ZXTixJEjS/3SXXK29qvr42iLLEqrnum57nk6cDyA3DBZLnuJ9w==
+  dependencies:
+    "@envelop/types" "3.0.0"
+    tslib "2.4.0"
+
+"@envelop/disable-introspection@4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/disable-introspection/-/disable-introspection-4.0.3.tgz#0b7314ffee207bc848d7580705e28cb9b1387614"
+  integrity sha512-tCWHQlKhC+ADOo0fFqliBYDRJYYPfIJA6QQiB/iKWpG2H5EhAAwzi8yYqYGBcgksb5M+HZ0ncwUxaf5CHHXO1g==
   dependencies:
     tslib "^2.4.0"
 
-"@envelop/extended-validation@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@envelop/extended-validation/-/extended-validation-1.9.0.tgz#a4634452797177e718302a8645a7c8d5381fe09b"
-  integrity sha512-Kf0xkTKRuP1XEgHa5Pi8+zaCUGYnFyiGPkb24Z/X1zKd8+s2gtuBmaw6GoROgaBoK0XIE+ZYne7BZCheUqfp+A==
+"@envelop/extended-validation@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/extended-validation/-/extended-validation-2.0.3.tgz#6e06496c64f53142c6c513a937b4a702b47a6667"
+  integrity sha512-Z6Kr6c4QnbGRk24bwBCOKp46vcv6ql+1HKIVC5sC4+LCL7842643d/Y328VGwjdRdDJ4fEmz4DNIllw7y4d9FA==
   dependencies:
     "@graphql-tools/utils" "^8.8.0"
     tslib "^2.4.0"
 
-"@envelop/generic-auth@4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@envelop/generic-auth/-/generic-auth-4.6.0.tgz#fb4622cfb66f78bff967c41fef71eb8438045ac1"
-  integrity sha512-PPGl7IvvSb9w4R7vWprMWSqPeMKfqtL1fGiV2qkGL4huZ7TLOGLGJzG6fjdsspSos2bzUVVnBwCWGTQqU1zRpg==
+"@envelop/generic-auth@5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/generic-auth/-/generic-auth-5.0.3.tgz#92f4a23e84bff072bec6a09ed541bfa5965c996a"
+  integrity sha512-RhPPEPle6sSCnxxg7ijklnD9Cxji076aSgCLhaEkZR9E5rcjRK4KVhT5Mz95IHJQwncJg1X5O1994j+onNw5hA==
   dependencies:
-    "@envelop/extended-validation" "^1.9.0"
+    "@envelop/extended-validation" "^2.0.3"
     tslib "^2.4.0"
 
-"@envelop/graphql-jit@4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@envelop/graphql-jit/-/graphql-jit-4.6.0.tgz#3b771d1fa7c6907f7d64120382a3e9f405a8cbaa"
-  integrity sha512-6RM+uSfKN7i9rlEcaAvraF/GsFNB4JoCuEUDEdMjOxJVoADvg1MsmzgGPoIAlpZZIQ//A8Pp+A+qWkJW4Wn4PA==
+"@envelop/graphql-jit@5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/graphql-jit/-/graphql-jit-5.0.3.tgz#949abeaacded3408a115fdd61435fd9c479c821f"
+  integrity sha512-pkHjrDFpfH+ADpFaRV+BxOOktFovrAVfLZgIdUzrYccxn8TCG0XgtblToM8zRIE+q72Nd/wc/a6cAAIzI/3DLg==
   dependencies:
     graphql-jit "^0.7.0"
     lru-cache "^6.0.0"
     tslib "^2.4.0"
 
-"@envelop/graphql-modules@3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@envelop/graphql-modules/-/graphql-modules-3.6.0.tgz#de9dfd5537ffd2da84be95d8c3a5ac02e645ece1"
-  integrity sha512-eLnlYholnvYKjdf4HhBHo6AhaYhONIjE3eSGLoZpkZjTuQBH0xmTrsJR5aNF0rgRD8l0qfWzI8QBmPaZuamCDw==
+"@envelop/graphql-modules@4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/graphql-modules/-/graphql-modules-4.0.3.tgz#fa7bf2c350d84810ef642805c42cef4a75be554f"
+  integrity sha512-Pf4Vs+A/+Aphg9NEnB1k90PA0yWy63dJW5yfPs+nRrP5prfiWkh9LYh3Ib1vxJsYbg9wI4lfReUQYnrFVRncnQ==
   dependencies:
     tslib "^2.4.0"
 
-"@envelop/live-query@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@envelop/live-query/-/live-query-4.2.0.tgz#170249026addcf07a58813dcbdb948e9b3c9f711"
-  integrity sha512-ady8RXwFx6bsoREkv4qeBPlpv/5smPvA/0x85gFWFWNI4HP0U0v4qWxOH8iZg59Gpwes/ADmvPkqwrKFI6JYoA==
+"@envelop/live-query@5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/live-query/-/live-query-5.0.3.tgz#b568b4a19982f9fa08565e4057a5947e82150dfa"
+  integrity sha512-qJWpiud46eD76SvqTDoer4ZLUWCONmopBIidhGuFLLpubrrgCRrjEOHDRdFeAqHtl0cFHJWQxiZB5Iq1IF5SwA==
   dependencies:
     "@graphql-tools/utils" "^8.8.0"
     "@n1ru4l/graphql-live-query" "^0.10.0"
@@ -2067,12 +2076,13 @@
     "@n1ru4l/in-memory-live-query-store" "^0.10.0"
     tslib "^2.4.0"
 
-"@envelop/parser-cache@^4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@envelop/parser-cache/-/parser-cache-4.6.0.tgz#3ff71acdfbc51097d0dd8051cb961f856cddc400"
-  integrity sha512-Oi3nX76tk5L7K6MdpPr4AjtpMW1XoyISeiaodYD8WxUWY7JzOA7qetuYguUZv/lK5VaLMsJuoWAwxbu1JKEe9A==
+"@envelop/parser-cache@^5.0.0":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/parser-cache/-/parser-cache-5.0.3.tgz#14f28a85d5986dee3911473961c91df7e5188ccc"
+  integrity sha512-3H3PZI//1ConuD0MmkKl3Sm9j7vRQvI/fIgvzXbE0n/OuuVV7D9rmtnSEqTkXufAgxKv674T2DJF4QPQHOy9Ag==
   dependencies:
     lru-cache "^6.0.0"
+    tslib "^2.4.0"
 
 "@envelop/types@2.4.0":
   version "2.4.0"
@@ -2081,12 +2091,20 @@
   dependencies:
     tslib "^2.4.0"
 
-"@envelop/validation-cache@^4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@envelop/validation-cache/-/validation-cache-4.6.0.tgz#c4ad678cffbbce05a6fbdd039e8cad20e01a2bbc"
-  integrity sha512-Xn5u/tQHid6GzWDenCJkIn5GsDm2fUCNnAudN1BGjXcRvAEFfTHuchpp1PJxvRAqGdYjznng+NkOcqrP5brQrw==
+"@envelop/types@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@envelop/types/-/types-3.0.0.tgz#33795a7826a541eff00c0d6fb4eab9c35fef784b"
+  integrity sha512-ohcZE+XNvgNqURdCA5RLN0yW3nbvi4Pkq8TA6RpG16PKakl3yDgzXBLit1SR6+9By0/XCBfto/9r48ZH25kmvw==
+  dependencies:
+    tslib "^2.4.0"
+
+"@envelop/validation-cache@^5.0.0":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@envelop/validation-cache/-/validation-cache-5.0.3.tgz#0151a42e80fb9667c418a8c94a7b888b7f6a0b4b"
+  integrity sha512-zJcP8CFCdeUTkIymbBnuRgp3+G/YCubl7Pi+WoM0W2LAsJl7yxvqoaHS5aPbpNJunqUomsnRwBtkcK966EzjsQ==
   dependencies:
     lru-cache "^6.0.0"
+    tslib "^2.4.0"
 
 "@esbuild-plugins/node-globals-polyfill@^0.1.1":
   version "0.1.1"
