@@ -13,8 +13,10 @@ export default defineConfig({
   getNextSeoProps() {
     return {
       openGraph: {
-        images: [{ url: 'https://the-guild.dev/graphql/yoga-server/cover.png' }]
-      }
+        images: [
+          { url: 'https://the-guild.dev/graphql/yoga-server/cover.png' },
+        ],
+      },
     }
   },
   logo: (
