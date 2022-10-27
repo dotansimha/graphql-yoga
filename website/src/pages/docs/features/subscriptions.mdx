@@ -9,7 +9,7 @@ Example use cases for subscriptions are applications that require real-time data
 GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for the subscription protocol.
 You don't need any extra packages to use subscriptions.
 
-<Callout type="warning" emoji="⚠️">
+<Callout type="warning">
   Compared to implementing query and mutation resolvers, subscriptions are more
   complex to implement as they require additional infrastructure for scenarios
   where you have more than one instance of your GraphQL server running as the
@@ -516,12 +516,12 @@ const eventTarget = createRedisEventTarget({
 const pubSub = createPubSub({ eventTarget })
 ```
 
-<Callout type="note">
+<Callout>
   **Please note** that Redis Pub/Sub requires a stable long-running connection
   and thus is not a suitable solution for serverless or edge function
   environments.
 </Callout>
-<Callout type="note">
+<Callout>
   **Please also note** that the event payloads must be JSON serializable. If you
   want to send complex data structures over the wire you can use tools such as
   [`superjson`](https://github.com/blitz-js/superjson).
