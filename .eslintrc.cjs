@@ -48,5 +48,23 @@ module.exports = {
         'import/no-default-export': 'off',
       },
     },
+    {
+      files: ['packages/**/*'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: 'graphql',
+                importNames: ['execute', 'subscribe'],
+                message:
+                  'Please use `execute` and `subscribe` from `@graphql-tools/executor` instead.',
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 }
