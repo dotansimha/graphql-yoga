@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e6850bcdb486 100644
+index a3cc089d05c6cdb503dc1c660d8fbf25ac17704c..fb5324811ed11cbe4cd78be88e0f894f80939217 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -51,16 +51,16 @@ var __async = (__this, __arguments, generator) => {
@@ -23,7 +23,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
  
  // src/components/anchor.tsx
  import React3, { forwardRef } from "react";
-@@ -1677,7 +1677,6 @@ function Head() {
+@@ -1685,7 +1685,6 @@ function Head() {
          :root {
            --nextra-primary-hue: ${lightHue}deg;
            --nextra-navbar-height: 4rem;
@@ -31,7 +31,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
            --nextra-banner-height: 2.5rem;
          }
          
-@@ -1729,10 +1728,46 @@ var NavLinks = ({
+@@ -1739,10 +1738,46 @@ var NavLinks = ({
  };
  
  // src/components/navbar.tsx
@@ -77,22 +77,22 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +}
 +
 +// src/components/navbar.tsx
- var classes2 = {
-   link: "nx-text-sm contrast-more:nx-text-gray-700 contrast-more:dark:nx-text-gray-100",
-   active: "nx-subpixel-antialiased contrast-more:nx-font-bold",
-@@ -1747,25 +1782,25 @@ function NavbarMenu({
+ var classes3 = {
+   link: cn12("nx-text-sm contrast-more:nx-text-gray-700 contrast-more:dark:nx-text-gray-100"),
+   active: cn12("nx-subpixel-antialiased contrast-more:nx-font-bold"),
+@@ -1757,25 +1792,25 @@ function NavbarMenu({
    const routes = Object.fromEntries(
      (menu.children || []).map((route) => [route.name, route])
    );
 -  return /* @__PURE__ */ React31.createElement("div", {
 +  return /* @__PURE__ */ React33.createElement("div", {
-     className: "nx-inline-block nx-relative"
+     className: "nx-relative nx-inline-block"
 -  }, /* @__PURE__ */ React31.createElement(Menu, null, /* @__PURE__ */ React31.createElement(Menu.Button, {
 +  }, /* @__PURE__ */ React33.createElement(Menu, null, /* @__PURE__ */ React33.createElement(Menu.Button, {
      className: cn12(
        className,
-       "nx-rounded nx-items-center -nx-ml-2 nx-hidden nx-whitespace-nowrap nx-p-2 md:nx-inline-flex",
-       classes2.inactive
+       "-nx-ml-2 nx-hidden nx-items-center nx-whitespace-nowrap nx-rounded nx-p-2 md:nx-inline-flex",
+       classes3.inactive
      )
 -  }, children), /* @__PURE__ */ React31.createElement(Transition3, {
 +  }, children), /* @__PURE__ */ React33.createElement(Transition3, {
@@ -111,8 +111,8 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +    }, /* @__PURE__ */ React33.createElement(Anchor, {
        href: item.href || ((_a = routes[key]) == null ? void 0 : _a.route) || menu.route + "/" + key,
        className: cn12(
-         "nx-hidden nx-whitespace-nowrap md:nx-inline-block nx-text-gray-600 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100 nx-relative nx-select-none nx-w-full",
-@@ -1777,32 +1812,45 @@ function NavbarMenu({
+         "nx-relative nx-hidden nx-w-full nx-select-none nx-whitespace-nowrap nx-text-gray-600 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100 md:nx-inline-block",
+@@ -1787,32 +1822,45 @@ function NavbarMenu({
  }
  function Navbar({ flatDirectories, items }) {
    const config = useConfig();
@@ -148,10 +148,10 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 -  }, config.logoLink ? /* @__PURE__ */ React31.createElement(Anchor, {
 +  }, config.logoLink ? /* @__PURE__ */ React33.createElement(Anchor, {
      href: typeof config.logoLink === "string" ? config.logoLink : "/",
-     className: "nx-flex ltr:nx-mr-auto rtl:nx-ml-auto nx-items-center hover:nx-opacity-75"
+     className: "nx-flex nx-items-center hover:nx-opacity-75 ltr:nx-mr-auto rtl:nx-ml-auto"
 -  }, renderComponent(config.logo)) : /* @__PURE__ */ React31.createElement("div", {
 +  }, renderComponent(config.logo)) : /* @__PURE__ */ React33.createElement("div", {
-     className: "nx-flex ltr:nx-mr-auto rtl:nx-ml-auto nx-items-center"
+     className: "nx-flex nx-items-center ltr:nx-mr-auto rtl:nx-ml-auto"
 -  }, renderComponent(config.logo)), items.map((pageOrMenu) => {
 +  }, renderComponent(config.logo)), versioned.length > 0 && /* @__PURE__ */ React33.createElement(VersionSwitch, {
 +    options: versioned
@@ -165,9 +165,9 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +      return /* @__PURE__ */ React33.createElement(NavbarMenu, {
          key: menu2.title,
          className: cn12(
-           classes2.link,
-@@ -1810,7 +1858,7 @@ function Navbar({ flatDirectories, items }) {
-           isActive2 ? classes2.active : classes2.inactive
+           classes3.link,
+@@ -1820,7 +1868,7 @@ function Navbar({ flatDirectories, items }) {
+           isActive2 ? classes3.active : classes3.inactive
          ),
          menu: menu2
 -      }, menu2.title, /* @__PURE__ */ React31.createElement(ArrowRightIcon, {
@@ -175,7 +175,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
          className: "nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5",
          pathClassName: "nx-origin-center nx-transition-transform nx-rotate-90"
        }));
-@@ -1821,7 +1869,7 @@ function Navbar({ flatDirectories, items }) {
+@@ -1831,7 +1879,7 @@ function Navbar({ flatDirectories, items }) {
        href = (page.withIndexPage ? page.route : page.firstChildRoute) || href;
      }
      const isActive = page.route === activeRoute || activeRoute.startsWith(page.route + "/");
@@ -184,7 +184,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
        href,
        key: page.route,
        className: cn12(
-@@ -1835,38 +1883,38 @@ function Navbar({ flatDirectories, items }) {
+@@ -1845,38 +1893,38 @@ function Navbar({ flatDirectories, items }) {
    }), renderComponent(config.search.component, {
      directories: flatDirectories,
      className: "nx-hidden md:nx-inline-block mx-min-w-[200px]"
@@ -202,7 +202,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +  }, renderComponent(config.chat.icon)) : config.chat.icon ? renderComponent(config.chat.icon) : null, /* @__PURE__ */ React33.createElement("button", {
      type: "button",
      "aria-label": "Menu",
-     className: "nextra-hamburger nx-rounded active:nx-bg-gray-400/20 nx-p-2 -nx-mr-2 md:nx-hidden",
+     className: "nextra-hamburger -nx-mr-2 nx-rounded nx-p-2 active:nx-bg-gray-400/20 md:nx-hidden",
      onClick: () => setMenu(!menu)
 -  }, /* @__PURE__ */ React31.createElement(MenuIcon, {
 +  }, /* @__PURE__ */ React33.createElement(MenuIcon, {
@@ -232,7 +232,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      href: getGitIssueUrl({
        repository: config.docsRepositoryBase,
        title: `Found broken \`${mounted ? asPath : ""}\` link. Please fix!`,
-@@ -1878,19 +1926,19 @@ function NotFoundPage() {
+@@ -1888,19 +1936,19 @@ function NotFoundPage() {
  }
  
  // src/components/server-side-error.tsx
@@ -257,7 +257,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      href: getGitIssueUrl({
        repository: config.docsRepositoryBase,
        title: `Got server-side error in \`${mounted ? asPath : ""}\` url. Please fix!`,
-@@ -1902,16 +1950,16 @@ function ServerSideErrorPage() {
+@@ -1912,16 +1960,16 @@ function ServerSideErrorPage() {
  }
  
  // src/components/sidebar.tsx
@@ -278,7 +278,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
  import scrollIntoView from "scroll-into-view-if-needed";
  var TreeState = /* @__PURE__ */ Object.create(null);
  var Folder = memo2(FolderImpl);
-@@ -1941,7 +1989,7 @@ function FolderImpl({
+@@ -1951,7 +1999,7 @@ function FolderImpl({
    item,
    anchors
  }) {
@@ -287,7 +287,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    const routeOriginal = getFSRoute(asPath, locale);
    const [route] = routeOriginal.split("#");
    const active = [route, route + "/"].includes(item.route + "/");
-@@ -1951,8 +1999,8 @@ function FolderImpl({
+@@ -1961,8 +2009,8 @@ function FolderImpl({
    const config = useConfig();
    const { theme } = item;
    const open = TreeState[item.route] !== void 0 ? TreeState[item.route] : active || activeRouteInside || (theme && "collapsed" in theme ? !theme.collapsed : folderLevel <= config.sidebar.defaultMenuCollapseLevel);
@@ -298,7 +298,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      if (activeRouteInside) {
        TreeState[item.route] = true;
      }
-@@ -1971,9 +2019,9 @@ function FolderImpl({
+@@ -1981,9 +2029,9 @@ function FolderImpl({
        return __spreadValues(__spreadValues({}, route2), item2);
      });
    }
@@ -309,8 +309,8 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +  }, /* @__PURE__ */ React36.createElement(Anchor, {
      href: item.withIndexPage ? item.route : "",
      className: cn13(
-       "nx-gap-2 nx-items-center nx-justify-between",
-@@ -2005,16 +2053,16 @@ function FolderImpl({
+       "nx-items-center nx-justify-between nx-gap-2",
+@@ -2015,16 +2063,16 @@ function FolderImpl({
    }, renderComponent(config.sidebar.titleComponent, {
      title: item.title,
      type: item.type
@@ -327,10 +327,10 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      open
 -  }, Array.isArray(item.children) ? /* @__PURE__ */ React35.createElement(Menu2, {
 +  }, Array.isArray(item.children) ? /* @__PURE__ */ React36.createElement(Menu2, {
-     className: cn13(classes3.border, "ltr:nx-ml-1 rtl:nx-mr-1"),
+     className: cn13(classes4.border, "ltr:nx-ml-1 rtl:nx-mr-1"),
      directories: item.children,
      base: item.route,
-@@ -2023,7 +2071,7 @@ function FolderImpl({
+@@ -2033,7 +2081,7 @@ function FolderImpl({
  }
  function Separator({ title }) {
    const config = useConfig();
@@ -338,8 +338,8 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +  return /* @__PURE__ */ React36.createElement("li", {
      className: cn13(
        "[word-break:break-word]",
-       title ? "first:nx-mt-0 nx-mt-5 nx-mb-2 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 dark:nx-text-gray-100" : "nx-my-4"
-@@ -2031,7 +2079,7 @@ function Separator({ title }) {
+       title ? "nx-mt-5 nx-mb-2 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100" : "nx-my-4"
+@@ -2041,7 +2089,7 @@ function Separator({ title }) {
    }, title ? renderComponent(config.sidebar.titleComponent, {
      title,
      type: "separator"
@@ -348,7 +348,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      className: "nx-mx-2 nx-border-t nx-border-gray-200 dark:nx-border-primary-100/10"
    }));
  }
-@@ -2039,7 +2087,7 @@ function File({
+@@ -2049,7 +2097,7 @@ function File({
    item,
    anchors
  }) {
@@ -357,7 +357,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    const route = getFSRoute(asPath, locale);
    const active = item.route && [route, route + "/"].includes(item.route + "/");
    const slugger = new Slugger();
-@@ -2047,13 +2095,13 @@ function File({
+@@ -2057,13 +2105,13 @@ function File({
    const { setMenu } = useMenu();
    const config = useConfig();
    if (item.type === "separator") {
@@ -368,22 +368,22 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    }
 -  return /* @__PURE__ */ React35.createElement("li", {
 +  return /* @__PURE__ */ React36.createElement("li", {
-     className: cn13(classes3.list, { active })
+     className: cn13(classes4.list, { active })
 -  }, /* @__PURE__ */ React35.createElement(Anchor, {
 +  }, /* @__PURE__ */ React36.createElement(Anchor, {
      href: item.href || item.route,
      newWindow: item.newWindow,
-     className: cn13(classes3.link, active ? classes3.active : classes3.inactive),
-@@ -2063,7 +2111,7 @@ function File({
+     className: cn13(classes4.link, active ? classes4.active : classes4.inactive),
+@@ -2073,7 +2121,7 @@ function File({
    }, renderComponent(config.sidebar.titleComponent, {
      title: item.title,
      type: item.type
 -  })), active && anchors.length > 0 && /* @__PURE__ */ React35.createElement("ul", {
 +  })), active && anchors.length > 0 && /* @__PURE__ */ React36.createElement("ul", {
      className: cn13(
-       classes3.list,
-       classes3.border,
-@@ -2072,9 +2120,9 @@ function File({
+       classes4.list,
+       classes4.border,
+@@ -2082,9 +2130,9 @@ function File({
    }, anchors.map((text) => {
      var _a;
      const slug = slugger.slug(text);
@@ -394,14 +394,14 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +    }, /* @__PURE__ */ React36.createElement("a", {
        href: `#${slug}`,
        className: cn13(
-         classes3.link,
-@@ -2093,14 +2141,14 @@ function Menu2({
+         classes4.link,
+@@ -2103,14 +2151,14 @@ function Menu2({
    className,
    onlyCurrentDocs
  }) {
 -  return /* @__PURE__ */ React35.createElement("ul", {
 +  return /* @__PURE__ */ React36.createElement("ul", {
-     className: cn13(classes3.list, className)
+     className: cn13(classes4.list, className)
    }, directories.map(
 -    (item) => !onlyCurrentDocs || item.isUnderCurrentDocsTree ? item.type === "menu" || item.children && (item.children.length || !item.withIndexPage) ? /* @__PURE__ */ React35.createElement(Folder, {
 +    (item) => !onlyCurrentDocs || item.isUnderCurrentDocsTree ? item.type === "menu" || item.children && (item.children.length || !item.withIndexPage) ? /* @__PURE__ */ React36.createElement(Folder, {
@@ -413,7 +413,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
        key: item.name,
        item,
        anchors
-@@ -2124,7 +2172,7 @@ function Sidebar({
+@@ -2134,7 +2182,7 @@ function Sidebar({
    );
    const sidebarRef = useRef4(null);
    const containerRef = useRef4(null);
@@ -422,7 +422,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      if (menu) {
        document.body.classList.add("nx-overflow-hidden", "md:nx-overflow-auto");
      } else {
-@@ -2134,7 +2182,7 @@ function Sidebar({
+@@ -2144,7 +2192,7 @@ function Sidebar({
        );
      }
    }, [menu]);
@@ -431,13 +431,13 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      var _a;
      const activeElement = (_a = sidebarRef.current) == null ? void 0 : _a.querySelector("li.active");
      if (activeElement && (window.innerWidth > 767 || menu)) {
-@@ -2154,15 +2202,15 @@ function Sidebar({
+@@ -2164,15 +2212,15 @@ function Sidebar({
      }
    }, [menu]);
    const hasMenu = config.i18n.length > 0 || config.darkMode;
 -  return /* @__PURE__ */ React35.createElement(React35.Fragment, null, includePlaceholder && asPopover ? /* @__PURE__ */ React35.createElement("div", {
 +  return /* @__PURE__ */ React36.createElement(React36.Fragment, null, includePlaceholder && asPopover ? /* @__PURE__ */ React36.createElement("div", {
-     className: "nx-hidden nx-h-0 nx-w-64 nx-flex-shrink-0 xl:nx-block"
+     className: "nx-hidden nx-h-0 nx-w-64 nx-shrink-0 xl:nx-block"
 -  }) : null, /* @__PURE__ */ React35.createElement("div", {
 +  }) : null, /* @__PURE__ */ React36.createElement("div", {
      className: cn13(
@@ -449,8 +449,8 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +  }), /* @__PURE__ */ React36.createElement("aside", {
      className: cn13(
        "nextra-sidebar-container nx-flex nx-flex-col",
-       "md:nx-top-16 md:nx-flex-shrink-0 md:nx-w-64 md:nx-transform-none",
-@@ -2170,7 +2218,7 @@ function Sidebar({
+       "md:nx-top-16 md:nx-w-64 md:nx-shrink-0 md:nx-transform-none",
+@@ -2180,7 +2228,7 @@ function Sidebar({
        menu ? "[transform:translate3d(0,0,0)]" : "[transform:translate3d(0,-100%,0)]"
      ),
      ref: containerRef
@@ -458,15 +458,15 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +  }, /* @__PURE__ */ React36.createElement("div", {
      className: cn13(
        "nx-z-[1]",
-       "md:nx-hidden nx-p-4",
-@@ -2179,22 +2227,22 @@ function Sidebar({
+       "nx-p-4 md:nx-hidden",
+@@ -2189,22 +2237,22 @@ function Sidebar({
      )
    }, renderComponent(config.search.component, {
      directories: flatDirectories
 -  })), /* @__PURE__ */ React35.createElement("div", {
 +  })), /* @__PURE__ */ React36.createElement("div", {
      className: cn13(
-       "nx-px-4 nx-pb-4 md:nx-pt-4 nx-overflow-y-auto nextra-scrollbar",
+       "nextra-scrollbar nx-overflow-y-auto nx-px-4 nx-pb-4 md:nx-pt-4",
        "nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-3.75rem)]"
      ),
      ref: sidebarRef
@@ -484,11 +484,11 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 -  })), hasMenu && /* @__PURE__ */ React35.createElement("div", {
 +  })), hasMenu && /* @__PURE__ */ React36.createElement("div", {
      className: cn13(
-       "nx-z-[1] nx-relative",
-       "nx-mx-4 nx-py-4 nx-border-t nx-shadow-[0_-12px_16px_#fff]",
-@@ -2202,16 +2250,16 @@ function Sidebar({
+       "nx-relative nx-z-[1]",
+       "nx-mx-4 nx-border-t nx-py-4 nx-shadow-[0_-12px_16px_#fff]",
+@@ -2212,16 +2260,16 @@ function Sidebar({
        "dark:nx-border-neutral-800 dark:nx-shadow-[0_-12px_16px_#111]",
-       "contrast-more:nx-shadow-none contrast-more:dark:nx-shadow-none contrast-more:nx-border-neutral-400"
+       "contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-shadow-none"
      )
 -  }, config.i18n.length > 0 && /* @__PURE__ */ React35.createElement(LocaleSwitch, {
 +  }, config.i18n.length > 0 && /* @__PURE__ */ React36.createElement(LocaleSwitch, {
@@ -506,7 +506,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
  import cn14 from "clsx";
  import { Tab as HeadlessTab } from "@headlessui/react";
  function isTabItem(item) {
-@@ -2232,17 +2280,17 @@ function Tabs({
+@@ -2242,17 +2290,17 @@ function Tabs({
    onChange,
    children
  }) {
@@ -517,7 +517,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      onChange
 -  }, /* @__PURE__ */ React36.createElement("div", {
 +  }, /* @__PURE__ */ React37.createElement("div", {
-     className: "nx-no-scrollbar -nx-m-2 nx-overflow-x-auto nx-overflow-y-hidden nx-overscroll-x-contain nx-p-2"
+     className: "no-scrollbar -nx-m-2 nx-overflow-x-auto nx-overflow-y-hidden nx-overscroll-x-contain nx-p-2"
 -  }, /* @__PURE__ */ React36.createElement(HeadlessTab.List, {
 +  }, /* @__PURE__ */ React37.createElement(HeadlessTab.List, {
      className: "nx-mt-4 nx-flex nx-w-max nx-min-w-full nx-border-b nx-border-gray-200 nx-pb-px dark:nx-border-neutral-800"
@@ -528,7 +528,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
        key: index,
        disabled,
        className: ({ selected }) => cn14(
-@@ -2253,7 +2301,7 @@ function Tabs({
+@@ -2262,7 +2310,7 @@ function Tabs({
          disabled && "nx-pointer-events-none nx-text-gray-400 dark:nx-text-neutral-600"
        )
      }, renderTab(item));
@@ -537,13 +537,13 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
  }
  function Tab(_a) {
    var _b = _a, {
-@@ -2261,13 +2309,13 @@ function Tab(_a) {
+@@ -2270,13 +2318,13 @@ function Tab(_a) {
    } = _b, props = __objRest(_b, [
      "children"
    ]);
 -  return /* @__PURE__ */ React36.createElement(HeadlessTab.Panel, __spreadProps(__spreadValues({}, props), {
 +  return /* @__PURE__ */ React37.createElement(HeadlessTab.Panel, __spreadProps(__spreadValues({}, props), {
-     className: "nx-rounded"
+     className: "nx-rounded nx-pt-6"
    }), children);
  }
  
@@ -553,7 +553,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
  import cn15 from "clsx";
  import Slugger2 from "github-slugger";
  import scrollIntoView2 from "scroll-into-view-if-needed";
-@@ -2295,7 +2343,7 @@ function TOC({ headings, filePath }) {
+@@ -2304,7 +2352,7 @@ function TOC({ headings, filePath }) {
    const activeSlug = (_a = Object.entries(activeAnchor).find(
      ([, { isActive }]) => isActive
    )) == null ? void 0 : _a[0];
@@ -562,7 +562,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      var _a2;
      if (!activeSlug)
        return;
-@@ -2314,20 +2362,20 @@ function TOC({ headings, filePath }) {
+@@ -2323,20 +2371,20 @@ function TOC({ headings, filePath }) {
      "nx-text-xs nx-font-medium nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100",
      "contrast-more:nx-text-gray-800 contrast-more:dark:nx-text-gray-50"
    );
@@ -570,8 +570,8 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +  return /* @__PURE__ */ React38.createElement("div", {
      ref: tocRef,
      className: cn15(
-       "nextra-scrollbar nx-sticky nx-top-16 nx-overflow-y-auto nx-pr-4 nx-pt-8 nx-text-sm nx-[hyphens:auto]",
-       "ltr:-nx-mr-4 rtl:-nx-ml-4 nx-max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))]"
+       "nextra-scrollbar nx-sticky nx-top-16 nx-overflow-y-auto nx-pr-4 nx-pt-8 nx-text-sm [hyphens:auto]",
+       "nx-max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))] ltr:-nx-mr-4 rtl:-nx-ml-4"
      )
 -  }, hasHeadings && /* @__PURE__ */ React37.createElement(React37.Fragment, null, /* @__PURE__ */ React37.createElement("p", {
 +  }, hasHeadings && /* @__PURE__ */ React38.createElement(React38.Fragment, null, /* @__PURE__ */ React38.createElement("p", {
@@ -588,7 +588,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
        href: `#${slug}`,
        className: cn15(
          {
-@@ -2342,13 +2390,13 @@ function TOC({ headings, filePath }) {
+@@ -2351,13 +2399,13 @@ function TOC({ headings, filePath }) {
          "contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50"
        )
      }, text));
@@ -596,15 +596,15 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +  }))), hasMetaInfo && /* @__PURE__ */ React38.createElement("div", {
      className: cn15(
        hasHeadings && "nx-mt-8 nx-border-t nx-bg-white nx-pt-8 nx-shadow-[0_-12px_16px_white] dark:nx-bg-dark dark:nx-shadow-[0_-12px_16px_#111]",
-       "nx-sticky nx-bottom-0 nx-pb-8 dark:nx-border-neutral-800 nx-flex nx-flex-col nx-items-start nx-gap-2",
-       "contrast-more:nx-shadow-none contrast-more:nx-border-t contrast-more:nx-border-neutral-400 contrast-more:dark:nx-border-neutral-400"
+       "nx-sticky nx-bottom-0 nx-flex nx-flex-col nx-items-start nx-gap-2 nx-pb-8 dark:nx-border-neutral-800",
+       "contrast-more:nx-border-t contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-border-neutral-400"
      )
 -  }, config.feedback.content ? /* @__PURE__ */ React37.createElement(Anchor, {
 +  }, config.feedback.content ? /* @__PURE__ */ React38.createElement(Anchor, {
      className: linkClassName,
      href: getGitIssueUrl({
        repository: config.docsRepositoryBase,
-@@ -2364,19 +2412,19 @@ function TOC({ headings, filePath }) {
+@@ -2373,19 +2421,19 @@ function TOC({ headings, filePath }) {
  }
  
  // src/components/match-sorter-search.tsx
@@ -627,7 +627,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
            value: title,
            match: search
          })
-@@ -2384,7 +2432,7 @@ function MatchSorterSearch({
+@@ -2393,7 +2441,7 @@ function MatchSorterSearch({
      ) : [],
      [search]
    );
@@ -636,7 +636,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      value: search,
      onChange: setSearch,
      className,
-@@ -2402,7 +2450,7 @@ var DEFAULT_THEME = {
+@@ -2411,7 +2459,7 @@ var DEFAULT_THEME = {
      key: "nextra-banner"
    },
    chat: {
@@ -645,7 +645,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
        className: "nx-sr-only"
      }, "Discord"))
    },
-@@ -2415,7 +2463,7 @@ var DEFAULT_THEME = {
+@@ -2424,7 +2472,7 @@ var DEFAULT_THEME = {
        if (!editUrl) {
          return null;
        }
@@ -654,7 +654,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
          className,
          href: editUrl
        }, children);
-@@ -2429,42 +2477,42 @@ var DEFAULT_THEME = {
+@@ -2438,42 +2486,42 @@ var DEFAULT_THEME = {
    },
    getNextSeoProps: () => ({ titleTemplate: "%s \u2013 Nextra" }),
    gitTimestamp({ timestamp }) {
@@ -703,13 +703,13 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    i18n: [],
 -  logo: /* @__PURE__ */ React39.createElement(React39.Fragment, null, /* @__PURE__ */ React39.createElement("span", {
 +  logo: /* @__PURE__ */ React40.createElement(React40.Fragment, null, /* @__PURE__ */ React40.createElement("span", {
-     className: "font-extrabold"
+     className: "nx-font-extrabold"
 -  }, "Nextra"), /* @__PURE__ */ React39.createElement("span", {
 +  }, "Nextra"), /* @__PURE__ */ React40.createElement("span", {
-     className: "ml-2 hidden font-normal text-gray-600 md:inline"
+     className: "nx-ml-2 nx-hidden nx-font-normal nx-text-gray-600 md:nx-inline"
    }, "The Next Docs Builder")),
    logoLink: true,
-@@ -2486,25 +2534,25 @@ var DEFAULT_THEME = {
+@@ -2495,25 +2543,25 @@ var DEFAULT_THEME = {
      light: 212
    },
    project: {
@@ -732,7 +732,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      },
 -    emptyResult: /* @__PURE__ */ React39.createElement("span", {
 +    emptyResult: /* @__PURE__ */ React40.createElement("span", {
-       className: "block select-none p-8 text-center text-sm text-gray-400"
+       className: "nx-block nx-select-none nx-p-8 nx-text-center nx-text-sm nx-text-gray-400"
      }, "No results found."),
      placeholder() {
 -      const { locale } = useRouter8();
@@ -740,7 +740,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
        if (locale === "zh-CN")
          return "\u641C\u7D22\u6587\u6863\u2026";
        if (locale === "ru-RU")
-@@ -2520,7 +2568,7 @@ var DEFAULT_THEME = {
+@@ -2529,7 +2577,7 @@ var DEFAULT_THEME = {
    },
    sidebar: {
      defaultMenuCollapseLevel: 2,
@@ -749,7 +749,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    },
    toc: {
      component: TOC,
-@@ -2588,10 +2636,10 @@ if (IS_BROWSER) {
+@@ -2597,10 +2645,10 @@ if (IS_BROWSER) {
  }
  
  // src/mdx-components.tsx
@@ -763,7 +763,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    cloneElement,
    Children
  } from "react";
-@@ -2599,11 +2647,11 @@ import "intersection-observer";
+@@ -2608,11 +2656,11 @@ import "intersection-observer";
  import cn16 from "clsx";
  
  // ../nextra/dist/components/index.mjs
@@ -778,7 +778,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
  } from "react";
  import React310 from "react";
  import React43, { useCallback as useCallback22 } from "react";
-@@ -2619,7 +2667,7 @@ var Button = (_a) => {
+@@ -2628,7 +2676,7 @@ var Button = (_a) => {
      "children",
      "className"
    ]);
@@ -787,7 +787,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      className: [
        "nextra-button nx-transition-colors",
        "nx-bg-primary-700/5 nx-border nx-border-black/5 nx-text-gray-600 hover:nx-text-gray-900 nx-rounded-md nx-p-2",
-@@ -2634,8 +2682,8 @@ var CopyToClipboard = (_a) => {
+@@ -2643,8 +2691,8 @@ var CopyToClipboard = (_a) => {
    } = _b, props = __objRest2(_b, [
      "value"
    ]);
@@ -798,7 +798,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      if (!isCopied)
        return;
      const timerId = setTimeout(() => {
-@@ -2807,7 +2855,7 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
+@@ -2816,7 +2864,7 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
    ]);
    setActiveAnchor != null ? setActiveAnchor : setActiveAnchor = useSetActiveAnchor();
    const obRef = useRef6(null);
@@ -807,7 +807,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      const heading = obRef.current;
      if (!heading)
        return;
-@@ -2823,7 +2871,7 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
+@@ -2832,7 +2880,7 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
        });
      };
    }, []);
@@ -816,7 +816,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      className: cn16(
        "nx-font-semibold nx-tracking-tight",
        {
-@@ -2834,11 +2882,11 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
+@@ -2843,11 +2891,11 @@ var createHeaderLink = (Tag, context) => function HeaderLink(_a) {
          h6: "nx-mt-8 nx-text-base"
        }[Tag]
      )
@@ -830,7 +830,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      href: `#${id}`,
      className: "subheading-anchor"
    }));
-@@ -2873,10 +2921,10 @@ var Details = (_a) => {
+@@ -2882,10 +2930,10 @@ var Details = (_a) => {
      "children",
      "open"
    ]);
@@ -844,13 +844,13 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      if (openState) {
        setDelayedOpenState(true);
      } else {
-@@ -2884,19 +2932,19 @@ var Details = (_a) => {
+@@ -2893,19 +2941,19 @@ var Details = (_a) => {
        return () => clearTimeout(timeout);
      }
    }, [openState]);
 -  return /* @__PURE__ */ React41.createElement("details", __spreadValues(__spreadProps(__spreadValues({
 +  return /* @__PURE__ */ React44.createElement("details", __spreadValues(__spreadProps(__spreadValues({
-     className: "nx-my-4 nx-rounded nx-border nx-border-gray-200 nx-bg-white nx-p-2 nx-shadow-sm dark:nx-border-neutral-800 dark:nx-bg-neutral-900"
+     className: "nx-my-4 nx-rounded nx-border nx-border-gray-200 nx-bg-white nx-p-2 nx-shadow-sm first:nx-mt-0 dark:nx-border-neutral-800 dark:nx-bg-neutral-900"
    }, props), {
      open: delayedOpenState
 -  }), openState && { "data-expanded": true }), /* @__PURE__ */ React41.createElement(DetailsProvider, {
@@ -866,9 +866,9 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 -  return /* @__PURE__ */ React41.createElement("summary", __spreadProps(__spreadValues({
 +  return /* @__PURE__ */ React44.createElement("summary", __spreadProps(__spreadValues({
      className: cn16(
-       "nx-list-none nx-cursor-pointer nx-p-1 nx-transition-colors hover:nx-bg-gray-100 dark:hover:nx-bg-neutral-800",
-       "before:nx-mr-1 before:content-[''] before:nx-inline-block before:nx-transition-transform dark:before:nx-invert",
-@@ -2911,7 +2959,7 @@ var Summary = (props) => {
+       "nx-cursor-pointer nx-list-none nx-p-1 nx-transition-colors hover:nx-bg-gray-100 dark:hover:nx-bg-neutral-800",
+       "before:nx-mr-1 before:nx-inline-block before:nx-transition-transform before:nx-content-[''] dark:before:nx-invert",
+@@ -2920,7 +2968,7 @@ var Summary = (props) => {
  };
  var A = (_a) => {
    var _b = _a, { href = "" } = _b, props = __objRest(_b, ["href"]);
@@ -877,7 +877,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      href,
      newWindow: href.startsWith("https://")
    }, props));
-@@ -2925,7 +2973,7 @@ var getComponents = ({
+@@ -2934,7 +2982,7 @@ var getComponents = ({
    }
    const context = { index: 0 };
    return __spreadValues({
@@ -886,17 +886,17 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
        className: "nx-mt-2 nx-text-4xl nx-font-bold nx-tracking-tight"
      }, props)),
      h2: createHeaderLink("h2", context),
-@@ -2933,31 +2981,31 @@ var getComponents = ({
+@@ -2942,31 +2990,31 @@ var getComponents = ({
      h4: createHeaderLink("h4", context),
      h5: createHeaderLink("h5", context),
      h6: createHeaderLink("h6", context),
 -    ul: (props) => /* @__PURE__ */ React41.createElement("ul", __spreadValues({
 +    ul: (props) => /* @__PURE__ */ React44.createElement("ul", __spreadValues({
-       className: "ltr:nx-ml-6 rtl:nx-mr-6 nx-mt-6 nx-list-disc"
+       className: "nx-mt-6 nx-list-disc first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6"
      }, props)),
 -    ol: (props) => /* @__PURE__ */ React41.createElement("ol", __spreadValues({
 +    ol: (props) => /* @__PURE__ */ React44.createElement("ol", __spreadValues({
-       className: "ltr:nx-ml-6 rtl:nx-mr-6 nx-mt-6 nx-list-decimal"
+       className: "nx-mt-6 nx-list-decimal first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6"
      }, props)),
 -    li: (props) => /* @__PURE__ */ React41.createElement("li", __spreadValues({
 +    li: (props) => /* @__PURE__ */ React44.createElement("li", __spreadValues({
@@ -906,7 +906,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 +    blockquote: (props) => /* @__PURE__ */ React44.createElement("blockquote", __spreadValues({
        className: cn16(
          "nx-mt-6 nx-border-gray-300 nx-italic nx-text-gray-700 dark:nx-border-gray-700 dark:nx-text-gray-400",
-         "rtl:nx-border-r-2 rtl:nx-pr-6 ltr:nx-border-l-2 ltr:nx-pl-6"
+         "first:nx-mt-0 ltr:nx-border-l-2 ltr:nx-pl-6 rtl:nx-border-r-2 rtl:nx-pr-6"
        )
      }, props)),
 -    hr: (props) => /* @__PURE__ */ React41.createElement("hr", __spreadValues({
@@ -919,14 +919,14 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      })),
 -    table: (props) => /* @__PURE__ */ React41.createElement(Table, __spreadValues({
 +    table: (props) => /* @__PURE__ */ React44.createElement(Table, __spreadValues({
-       className: "nextra-scrollbar nx-mt-6 nx-p-0"
+       className: "nextra-scrollbar nx-mt-6 nx-p-0 first:nx-mt-0"
      }, props)),
 -    p: (props) => /* @__PURE__ */ React41.createElement("p", __spreadValues({
 +    p: (props) => /* @__PURE__ */ React44.createElement("p", __spreadValues({
-       className: "nx-mt-6 nx-leading-7"
+       className: "nx-mt-6 nx-leading-7 first:nx-mt-0"
      }, props)),
      tr: Tr,
-@@ -2974,7 +3022,7 @@ var getComponents = ({
+@@ -2983,7 +3031,7 @@ var getComponents = ({
  import { useMDXComponents } from "@mdx-js/react";
  import { useTheme as useTheme3 } from "next-themes";
  function useDirectoryInfo(pageMap) {
@@ -935,7 +935,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    return useMemo5(() => {
      const fsPath = getFSRoute(route, locale);
      return normalizePages({
-@@ -2995,29 +3043,29 @@ var Body = ({
+@@ -3004,29 +3052,29 @@ var Body = ({
    var _a;
    const config = useConfig();
    if (themeContext.layout === "raw") {
@@ -947,7 +947,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
    const date = themeContext.timestamp && config.gitTimestamp && timestamp ? new Date(timestamp) : null;
 -  const gitTimestampEl = date ? /* @__PURE__ */ React44.createElement("div", {
 +  const gitTimestampEl = date ? /* @__PURE__ */ React45.createElement("div", {
-     className: "nx-pointer-default nx-mt-12 nx-mb-8 nx-block ltr:nx-text-right rtl:nx-text-left nx-text-xs nx-text-gray-500 dark:nx-text-gray-400"
+     className: "nx-mt-12 nx-mb-8 nx-block nx-text-xs nx-text-gray-500 ltr:nx-text-right rtl:nx-text-left dark:nx-text-gray-400"
 -  }, renderComponent(config.gitTimestamp, { timestamp: date })) : /* @__PURE__ */ React44.createElement("div", {
 +  }, renderComponent(config.gitTimestamp, { timestamp: date })) : /* @__PURE__ */ React45.createElement("div", {
      className: "nx-mt-16"
@@ -964,7 +964,7 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
 -  return /* @__PURE__ */ React44.createElement("article", {
 +  return /* @__PURE__ */ React45.createElement("article", {
      className: cn17(
-       "nx-min-h-[calc(100vh-4rem)] nx-w-full nx-flex nx-min-w-0 nx-max-w-full nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]",
+       "nx-flex nx-min-h-[calc(100vh-4rem)] nx-w-full nx-min-w-0 nx-max-w-full nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]",
        themeContext.typesetting === "article" && "nextra-body-typesetting-article"
      )
 -  }, /* @__PURE__ */ React44.createElement("main", {
@@ -972,10 +972,10 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      className: "nx-w-full nx-min-w-0 nx-max-w-4xl nx-px-6 nx-pt-4 md:nx-px-8"
    }, breadcrumb, body));
  };
-@@ -3044,50 +3092,50 @@ var InnerLayout = ({
+@@ -3053,50 +3101,50 @@ var InnerLayout = ({
    const themeContext = __spreadValues(__spreadValues({}, activeThemeContext), frontMatter);
    const hideSidebar = !themeContext.sidebar || themeContext.layout === "raw" || activeType === "page";
-   const tocClassName = "nextra-toc nx-order-last nx-hidden nx-w-64 nx-flex-shrink-0 xl:nx-block";
+   const tocClassName = "nextra-toc nx-order-last nx-hidden nx-w-64 nx-shrink-0 xl:nx-block";
 -  const tocEl = activeType === "page" || !themeContext.toc || themeContext.layout !== "default" ? themeContext.layout !== "full" && themeContext.layout !== "raw" && /* @__PURE__ */ React44.createElement("div", {
 +  const tocEl = activeType === "page" || !themeContext.toc || themeContext.layout !== "default" ? themeContext.layout !== "full" && themeContext.layout !== "raw" && /* @__PURE__ */ React45.createElement("div", {
      className: tocClassName
@@ -1035,3 +1035,21 @@ index 6048d4e6eecb0b44caab369e829ec24351c5bc44..3521bb280c397d71835e8f198ad6e685
      components: getComponents({
        isRawLayout: themeContext.layout === "raw",
        components: config.components
+@@ -3104,14 +3152,14 @@ var InnerLayout = ({
+   }, children)))), themeContext.footer && renderComponent(config.footer.component, { menu: hideSidebar }));
+ };
+ function Layout(props) {
+-  const { route } = useRouter9();
++  const { route } = useRouter10();
+   const context = globalThis.__nextra_pageContext__[route];
+   if (!context)
+     throw new Error(`No content found for ${route}.`);
+   const { pageOpts, Content } = context;
+-  return /* @__PURE__ */ React44.createElement(ConfigProvider, {
++  return /* @__PURE__ */ React45.createElement(ConfigProvider, {
+     value: context
+-  }, /* @__PURE__ */ React44.createElement(InnerLayout, __spreadValues({}, pageOpts), /* @__PURE__ */ React44.createElement(Content, __spreadValues({}, props))));
++  }, /* @__PURE__ */ React45.createElement(InnerLayout, __spreadValues({}, pageOpts), /* @__PURE__ */ React45.createElement(Content, __spreadValues({}, props))));
+ }
+ export {
+   Bleed,
