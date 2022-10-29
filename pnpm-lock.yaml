@@ -45,7 +45,7 @@ importers:
       babel-plugin-transform-typescript-metadata: 0.3.2
       bob-the-bundler: 4.0.0
       cross-env: 7.0.3
-      denoify: 1.4.1
+      denoify: 1.4.2
       eslint: ^8.21.0
       execa: 5.1.1
       formdata-node: 4.4.1
@@ -83,7 +83,7 @@ importers:
       babel-plugin-transform-typescript-metadata: 0.3.2
       bob-the-bundler: 4.0.0_typescript@4.8.4
       cross-env: 7.0.3
-      denoify: 1.4.1
+      denoify: 1.4.2
       eslint: 8.25.0
       execa: 5.1.1
       formdata-node: 4.4.1_bwnmzlpvx75llwj7xwqbxbjtui
@@ -116,18 +116,18 @@ importers:
       '@pulumi/awsx': 0.40.1
       '@pulumi/azure-native': 1.84.0
       '@pulumi/cloudflare': 4.12.1
-      '@pulumi/docker': 3.4.1
-      '@pulumi/pulumi': 3.44.2
+      '@pulumi/docker': 3.5.0
+      '@pulumi/pulumi': 3.44.3
       '@types/node': 18.11.7
       ts-node: 10.9.1
       typescript: 4.8.4
     dependencies:
       '@pulumi/aws': 5.19.0
-      '@pulumi/awsx': 0.40.1_ceqod3zz3s2huy2dwatmew2z6u
+      '@pulumi/awsx': 0.40.1_x2bekm6zthpndjdamt5vtqlljm
       '@pulumi/azure-native': 1.84.0
       '@pulumi/cloudflare': 4.12.1
-      '@pulumi/docker': 3.4.1
-      '@pulumi/pulumi': 3.44.2
+      '@pulumi/docker': 3.5.0
+      '@pulumi/pulumi': 3.44.3
       '@types/node': 18.11.7
       ts-node: 10.9.1_evej5wzm4hojmu6uzxwpspdmsu
       typescript: 4.8.4
@@ -162,14 +162,14 @@ importers:
 
   examples/aws-lambda:
     specifiers:
-      '@aws-cdk/assert': 2.48.0
+      '@aws-cdk/assert': 2.49.0
       '@aws-cdk/aws-apigateway': 1.179.0
       '@aws-cdk/aws-lambda': 1.179.0
       '@aws-cdk/core': 1.179.0
       '@types/aws-lambda': 8.10.108
       '@types/node': 18.11.7
-      aws-cdk: 2.48.0
-      aws-cdk-lib: 2.48.0
+      aws-cdk: 2.49.0
+      aws-cdk-lib: 2.49.0
       esbuild: 0.15.12
       source-map-support: ^0.5.16
       ts-node: 10.9.1
@@ -180,11 +180,11 @@ importers:
       '@aws-cdk/core': 1.179.0
       source-map-support: 0.5.21
     devDependencies:
-      '@aws-cdk/assert': 2.48.0_aws-cdk-lib@2.48.0
+      '@aws-cdk/assert': 2.49.0_aws-cdk-lib@2.49.0
       '@types/aws-lambda': 8.10.108
       '@types/node': 18.11.7
-      aws-cdk: 2.48.0
-      aws-cdk-lib: 2.48.0
+      aws-cdk: 2.49.0
+      aws-cdk-lib: 2.49.0
       esbuild: 0.15.12
       ts-node: 10.9.1_evej5wzm4hojmu6uzxwpspdmsu
       typescript: 4.8.4
@@ -214,7 +214,7 @@ importers:
 
   examples/bun:
     specifiers:
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       bun-types: ^0.2.0
       graphql: 16.6.0
       graphql-yoga: 3.0.0-next.8
@@ -223,7 +223,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
 
   examples/cloudflare-advanced:
     specifiers:
@@ -277,13 +277,13 @@ importers:
 
   examples/error-handling:
     specifiers:
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       graphql: 16.6.0
       graphql-yoga: 3.0.0-next.8
       ts-node: 10.9.1
       typescript: 4.8.4
     dependencies:
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -353,7 +353,7 @@ importers:
 
   examples/file-upload-nextjs-pothos:
     specifiers:
-      '@pothos/core': 3.22.8
+      '@pothos/core': 3.22.9
       '@types/react': ^18.0.17
       eslint: 8.26.0
       eslint-config-next: 12.3.1
@@ -364,7 +364,7 @@ importers:
       react-dom: 18.2.0
       typescript: 4.8.4
     dependencies:
-      '@pothos/core': 3.22.8_graphql@16.6.0
+      '@pothos/core': 3.22.9_graphql@16.6.0
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
@@ -632,13 +632,13 @@ importers:
 
   examples/pothos:
     specifiers:
-      '@pothos/core': 3.22.8
+      '@pothos/core': 3.22.9
       graphql: 16.6.0
       graphql-yoga: 3.0.0-next.8
       ts-node: 10.9.1
       typescript: 4.8.4
     dependencies:
-      '@pothos/core': 3.22.8_graphql@16.6.0
+      '@pothos/core': 3.22.9_graphql@16.6.0
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -704,7 +704,7 @@ importers:
     specifiers:
       '@envelop/graphql-jit': 5.0.3
       '@graphql-yoga/render-graphiql': 3.0.0-next.8
-      '@sveltejs/adapter-auto': 1.0.0-next.84
+      '@sveltejs/adapter-auto': 1.0.0-next.85
       '@sveltejs/kit': 1.0.0-next.520
       '@types/jest': ^29.0.0
       '@typescript-eslint/eslint-plugin': 5.41.0
@@ -723,15 +723,15 @@ importers:
       svelte-preprocess: 4.10.7
       tslib: 2.4.0
       typescript: 4.8.4
-      vite: 3.2.0
+      vite: 3.2.1
     dependencies:
       '@envelop/graphql-jit': 5.0.3_graphql@16.6.0
       '@graphql-yoga/render-graphiql': link:../../packages/render-graphiql
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@sveltejs/adapter-auto': 1.0.0-next.84
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.52.0+vite@3.2.0
+      '@sveltejs/adapter-auto': 1.0.0-next.85
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.52.0+vite@3.2.1
       '@types/jest': 29.2.0
       '@typescript-eslint/eslint-plugin': 5.41.0_huremdigmcnkianavgfk3x6iou
       '@typescript-eslint/parser': 5.41.0_wyqvi574yv7oiwfeinomdzmc3m
@@ -747,7 +747,7 @@ importers:
       svelte-preprocess: 4.10.7_besnmoibwkhwtentvwuriss7pa
       tslib: 2.4.0
       typescript: 4.8.4
-      vite: 3.2.0
+      vite: 3.2.1
 
   packages/client/apollo-link:
     specifiers:
@@ -832,7 +832,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       use-url-search-params: 2.5.1
-      vite: 3.2.0
+      vite: 3.2.1
     dependencies:
       '@graphiql/plugin-explorer': 0.1.6_2lxakhra3cgab7s7kikw27nlxy
       '@graphiql/toolkit': 0.8.0_graphql@16.6.0
@@ -847,7 +847,7 @@ importers:
       '@types/react': 17.0.52
       '@types/react-dom': 17.0.18
       '@vitejs/plugin-react': 1.3.2
-      vite: 3.2.0
+      vite: 3.2.1
 
   packages/graphql-yoga:
     specifiers:
@@ -865,8 +865,8 @@ importers:
       '@n1ru4l/in-memory-live-query-store': 0.10.0
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.11.7
-      '@whatwg-node/fetch': 0.5.0
-      '@whatwg-node/server': 0.4.13
+      '@whatwg-node/fetch': 0.5.1
+      '@whatwg-node/server': 0.4.14
       dset: ^3.1.1
       graphql: 16.6.0
       graphql-http: ^1.6.0
@@ -882,8 +882,8 @@ importers:
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
-      '@whatwg-node/fetch': 0.5.0
-      '@whatwg-node/server': 0.4.13_@types+node@18.11.7
+      '@whatwg-node/fetch': 0.5.1
+      '@whatwg-node/server': 0.4.14_@types+node@18.11.7
       dset: 3.1.2
       tslib: 2.4.0
     devDependencies:
@@ -913,12 +913,12 @@ importers:
   packages/plugins/apollo-inline-trace:
     specifiers:
       '@envelop/on-resolve': ^2.0.2
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       apollo-reporting-protobuf: ^3.3.2
       graphql-yoga: ^3.0.0-next.8
     dependencies:
       '@envelop/on-resolve': 2.0.2
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       apollo-reporting-protobuf: 3.3.3
     devDependencies:
       graphql-yoga: link:../../graphql-yoga
@@ -926,10 +926,10 @@ importers:
 
   packages/plugins/apq:
     specifiers:
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       tiny-lru: ^9.0.0
     dependencies:
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       tiny-lru: 9.0.3
     publishDirectory: dist
 
@@ -1476,16 +1476,16 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@aws-cdk/assert/2.48.0_aws-cdk-lib@2.48.0:
-    resolution: {integrity: sha512-gNPeEzwYb40VH5bSiN6Nf5sPVFtjH+Ppag0rkg0om2aCtOKWkflzf5nRwHAWddXc2GqSTEHqd8vxj573si0YxQ==}
+  /@aws-cdk/assert/2.49.0_aws-cdk-lib@2.49.0:
+    resolution: {integrity: sha512-RJTqQEgUgYfJjura+Zg1WzldfVcka7ztJnCOAs96v4T90s7dLVJJI4tJu1ymPLUJF6cRfMYypMEjD519HuyThw==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
-      aws-cdk-lib: ^2.48.0
+      aws-cdk-lib: ^2.49.0
       constructs: ^10.0.0
       jest: '>=26.6.3'
     dependencies:
-      '@aws-cdk/cloudformation-diff': 2.48.0
-      aws-cdk-lib: 2.48.0
+      '@aws-cdk/cloudformation-diff': 2.49.0
+      aws-cdk-lib: 2.49.0
     dev: true
 
   /@aws-cdk/assets/1.179.0_i6j3i47tgq6aun5u6uvm5v7xqi:
@@ -1945,8 +1945,8 @@ packages:
       constructs: 3.4.127
     dev: false
 
-  /@aws-cdk/cfnspec/2.48.0:
-    resolution: {integrity: sha512-PgSg3XwBDkIl+N4Tat3Toz4DymQLrNqETlQhbmcFNwWP4zd71DZ3ahpmEXgHA9upC2HboSaL6CerVqSrI2n7Ag==}
+  /@aws-cdk/cfnspec/2.49.0:
+    resolution: {integrity: sha512-lvRNrBoNjvJAhQIRQMf6YWk2mY3zvmeXQVr+DTm1MFyZKL6kXzFkVsER4Yzy/oATLSkXBFWCbIrruQtG6KKDiA==}
     dependencies:
       fs-extra: 9.1.0
       md5: 2.3.0
@@ -1963,11 +1963,11 @@ packages:
       - jsonschema
       - semver
 
-  /@aws-cdk/cloudformation-diff/2.48.0:
-    resolution: {integrity: sha512-QHyalKyTSQikAERZTff4PYxRRNZDoiaLHoDfQuN4UtDj6o9tber9xN5Vfk4AifJNcv931VXJEEnbU6xrMb7IDg==}
+  /@aws-cdk/cloudformation-diff/2.49.0:
+    resolution: {integrity: sha512-aas+aEAEE/S7UpTQc88HB0bsTDFen6yXZJmT2Gk9X/iZNlDoqBUlmzDK953vfsEDi34SPC9wd7jRU2FU67svcQ==}
     engines: {node: '>= 14.15.0'}
     dependencies:
-      '@aws-cdk/cfnspec': 2.48.0
+      '@aws-cdk/cfnspec': 2.49.0
       '@types/node': 14.18.32
       chalk: 4.1.2
       diff: 5.1.0
@@ -3707,6 +3707,7 @@ packages:
 
   /@balena/dockerignore/1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
+    dev: false
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -5028,7 +5029,7 @@ packages:
       '@graphql-tools/utils': 8.13.0
       '@graphql-tools/wrap': 9.2.4
       '@types/ws': 8.5.3
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       dset: 3.1.2
       extract-files: 11.0.0
       graphql-ws: 5.11.2
@@ -5054,7 +5055,7 @@ packages:
       '@graphql-tools/utils': 8.13.0_graphql@16.6.0
       '@graphql-tools/wrap': 9.2.4_graphql@16.6.0
       '@types/ws': 8.5.3
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       dset: 3.1.2
       extract-files: 11.0.0
       graphql: 16.6.0
@@ -7259,8 +7260,8 @@ packages:
     resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
     dev: false
 
-  /@pothos/core/3.22.8_graphql@16.6.0:
-    resolution: {integrity: sha512-kij/rlEx2uphk4NFVhlrVI8g8fbFE32JxgYF5UVqHG32SfcanDW8jDOlE4PW89/p5L4Mg8cSkPzauTMYVtlq6A==}
+  /@pothos/core/3.22.9_graphql@16.6.0:
+    resolution: {integrity: sha512-yIgmJBL1L2JRrZTZ3d+9JzCzfpMXZV8aHy5oK5KhonO7dFruBtzbJlsgx4T4zQieKigBh8MSo9fbjCq1Z9Oklg==}
     peerDependencies:
       graphql: '>=15.1.0'
     dependencies:
@@ -7503,7 +7504,7 @@ packages:
     resolution: {integrity: sha512-kuSJfRn03AT92nwvKHRt9PFaEkMB3M33BRWWOteHlIFHHQi8ZRQI5b2XLNMADlp4Q3YVnObiuwMjgSTulNdgZQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.44.2
+      '@pulumi/pulumi': 3.44.3
       aws-sdk: 2.1235.0
       builtin-modules: 3.0.0
       mime: 2.6.0
@@ -7513,15 +7514,15 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx/0.40.1_ceqod3zz3s2huy2dwatmew2z6u:
+  /@pulumi/awsx/0.40.1_x2bekm6zthpndjdamt5vtqlljm:
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
       '@pulumi/pulumi': ^3.0.0
     dependencies:
       '@pulumi/aws': 5.19.0
-      '@pulumi/docker': 3.4.1
-      '@pulumi/pulumi': 3.44.2
+      '@pulumi/docker': 3.5.0
+      '@pulumi/pulumi': 3.44.3
       '@types/aws-lambda': 8.10.93
       mime: 2.6.0
     transitivePeerDependencies:
@@ -7532,7 +7533,7 @@ packages:
     resolution: {integrity: sha512-VdB94YRIRlQbY+IKAVgLtB7/BQrwpxmZUETS+rC8PQCIBD3NmjeoI6TM1yzNj1/JBBsVS6UIhaQFltANkdeq8Q==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.44.2
+      '@pulumi/pulumi': 3.44.3
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7541,23 +7542,23 @@ packages:
     resolution: {integrity: sha512-ee7x+hK3qA+dfwynJ9oFbQ3vGqygIXc/Wf+UjbLPcfezMntIKiJmE5HcXlnpJayOEd8LzIRKutpVf2196A2hbQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.44.2
+      '@pulumi/pulumi': 3.44.3
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/docker/3.4.1:
-    resolution: {integrity: sha512-SOZ7Cz6JrUnbTbOrwL5tuiGnFq3IIvGQqZnksIoPuJAjEKYB1bsc3EUtrLVLlLYKQAP/vML0YQVY6BWYXoidtg==}
+  /@pulumi/docker/3.5.0:
+    resolution: {integrity: sha512-TbmKhjkenUHHgsLl4BKE0bFtLjUD182J60Lk/4ZfiD9OmQff6fVLbvNt6QxBqq95PxCUg1s5Y5RyWyk0Bz/2Tg==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.44.2
+      '@pulumi/pulumi': 3.44.3
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/pulumi/3.44.2:
-    resolution: {integrity: sha512-CQ+T11yb8hLv0LyEU9CtGhvTVGh/OZuGLG1zu2gybM5+UbOjLdlPv/HwW8/kExnKioQc+l4huDAF3dtAGOOv3w==}
+  /@pulumi/pulumi/3.44.3:
+    resolution: {integrity: sha512-EVNcNynwbg8JcF0VM/52HJtD9+fOkea+2END2q9GksW8x0iQfBenzcv3cd0Lqmlzx8nH/My4xSWwRkeHvXu83A==}
     engines: {node: '>=8.13.0 || >=10.10.0'}
     dependencies:
       '@grpc/grpc-js': 1.3.8
@@ -8142,11 +8143,11 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@sveltejs/adapter-auto/1.0.0-next.84:
-    resolution: {integrity: sha512-95NI5dZ3ZNd4vs1/N5knTcArBlWL9pBw2IANCBAcGzwVMoGPjKyyMKZt1gEX74LVwCN6RSRPZ36+6Z6HEb/ojQ==}
+  /@sveltejs/adapter-auto/1.0.0-next.85:
+    resolution: {integrity: sha512-lyByWPm7nYVACRfGuz68Xwfu/zU1THhKJSEXzFXW4cFsYxEGRkUOqzPX+xzwXMvFSLz68yu4dcodo1HlNrHWtA==}
     dependencies:
       '@sveltejs/adapter-cloudflare': 1.0.0-next.39
-      '@sveltejs/adapter-netlify': 1.0.0-next.81
+      '@sveltejs/adapter-netlify': 1.0.0-next.82
       '@sveltejs/adapter-vercel': 1.0.0-next.80
     transitivePeerDependencies:
       - encoding
@@ -8161,8 +8162,8 @@ packages:
       worktop: 0.8.0-next.14
     dev: true
 
-  /@sveltejs/adapter-netlify/1.0.0-next.81:
-    resolution: {integrity: sha512-jWZHw2uqUMJk8lFPzRm0xxmBZoDc430tbeCU9EtYhG+ypze2B6pJAlNTtcN3/J7wapHq19TgEK5oNt4LqORfNg==}
+  /@sveltejs/adapter-netlify/1.0.0-next.82:
+    resolution: {integrity: sha512-UIgwWMbMbBXMdNPFp1sPbSManB0HPJZTFq5blN/wP5+IxloQ7vKVfxU7I3KrPX49FwjH1+ze7caxr9JGtAD/6A==}
     dependencies:
       '@iarna/toml': 2.2.5
       esbuild: 0.15.12
@@ -8179,7 +8180,7 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.520_svelte@3.52.0+vite@3.2.0:
+  /@sveltejs/kit/1.0.0-next.520_svelte@3.52.0+vite@3.2.1:
     resolution: {integrity: sha512-flroQQEwIHx6IEkskHGQ90Ri+gFCnAs4ZFRsG7QuTbuBu7XSeJNQs3J73pmBQoKp0pWnbwZ3YZMtwBJWF/I7qA==}
     engines: {node: '>=16.14'}
     hasBin: true
@@ -8188,7 +8189,7 @@ packages:
       svelte: ^3.44.0
       vite: ^3.1.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.52.0+vite@3.2.0
+      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.52.0+vite@3.2.1
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.0.1
@@ -8201,13 +8202,13 @@ packages:
       svelte: 3.52.0
       tiny-glob: 0.2.9
       undici: 5.11.0
-      vite: 3.2.0
+      vite: 3.2.1
     transitivePeerDependencies:
       - diff-match-patch
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.52.0+vite@3.2.0:
+  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.52.0+vite@3.2.1:
     resolution: {integrity: sha512-+SDrAnT7TDi8sdj4OfD2SC4s9DNrpNVBrue8fT2PmKks9Ddu0JIfSeX91wXZb/1xHz4EkGb+rli8GTRI0yGOjg==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
@@ -8225,7 +8226,7 @@ packages:
       magic-string: 0.26.7
       svelte: 3.52.0
       svelte-hmr: 0.15.0_svelte@3.52.0
-      vite: 3.2.0
+      vite: 3.2.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9431,7 +9432,7 @@ packages:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1_bwnmzlpvx75llwj7xwqbxbjtui
       node-fetch: 2.6.7
-      undici: 5.11.0
+      undici: 5.12.0
       web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - encoding
@@ -9446,14 +9447,14 @@ packages:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1_bwnmzlpvx75llwj7xwqbxbjtui
       node-fetch: 2.6.7
-      undici: 5.11.0
+      undici: 5.12.0
       web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@whatwg-node/fetch/0.5.0:
-    resolution: {integrity: sha512-nTHF6qVIWFHU/F8JfXc6u5GwTg1F1UWLc1F3eaGAGjUACvMJ/iy9256xu80KgylwbOzUZgKnRtdWdPDPf16OmQ==}
+  /@whatwg-node/fetch/0.5.1:
+    resolution: {integrity: sha512-RBZS60EU6CbRJ370BVVKW4F9csZuGh0OQNrUDhJ0IaIFLsXsJorFCM2iwaDWZTAPMqxW1TmuVcVKJ3d/H1dV1g==}
     dependencies:
       '@peculiar/webcrypto': 1.4.0
       abort-controller: 3.0.0
@@ -9461,18 +9462,18 @@ packages:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1_bwnmzlpvx75llwj7xwqbxbjtui
       node-fetch: 2.6.7
-      undici: 5.11.0
+      undici: 5.12.0
       web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - encoding
 
-  /@whatwg-node/server/0.4.13_@types+node@18.11.7:
-    resolution: {integrity: sha512-XuzOyyryZqdJWYzfjFwMKoeNdsUl8Pp8A08kD1nYOfDm8zPq/7wNGPoAj5J4zDQi2dUtWA4Z6hrxprimJi9mIA==}
+  /@whatwg-node/server/0.4.14_@types+node@18.11.7:
+    resolution: {integrity: sha512-wRPkrqpHHqEFV+AVnAS2c5NlQ6zdiduT4k9f0tTh+Qy6l5ZY2p0a3PxUcBL8V1hzT6dXlP7PRNFdd//L/UyN7g==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
       '@types/node': 18.11.7
-      '@whatwg-node/fetch': 0.5.0
+      '@whatwg-node/fetch': 0.5.1
       tslib: 2.4.0
     transitivePeerDependencies:
       - encoding
@@ -10226,21 +10227,11 @@ packages:
       - supports-color
     dev: false
 
-  /aws-cdk-lib/2.48.0:
-    resolution: {integrity: sha512-aVvKdFzCljXlTi4zPj13hbLnb4SIkvNNu9gbgI0JzVnIgQ/dn+FRSv2fnqAteVgvw37CAHYx3ZomFvPWGKUR2Q==}
+  /aws-cdk-lib/2.49.0:
+    resolution: {integrity: sha512-HMrV41VaYVLFhm5i35bXuxiiib8IXPwuspDF7W3LJ4WVwxQZWx4eGcvRAdaXuNM7dDwM52cF5BNl8lYa/xCt5Q==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
-    dependencies:
-      '@balena/dockerignore': 1.0.2
-      case: 1.6.3
-      fs-extra: 9.1.0
-      ignore: 5.2.0
-      jsonschema: 1.4.1
-      minimatch: 3.1.2
-      punycode: 2.1.1
-      semver: 7.3.8
-      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -10253,8 +10244,8 @@ packages:
       - semver
       - yaml
 
-  /aws-cdk/2.48.0:
-    resolution: {integrity: sha512-7X94dgrHCnnLGwKltj5bOUn7FCmEcP2jNiTvosMFXYBZ7GqHVedvQ1LjnMzQO3DpnjTXvYgyzEAtVOMoXPWQLw==}
+  /aws-cdk/2.49.0:
+    resolution: {integrity: sha512-C+/B8mO85wlKv+/pDtm1OlObIRVaj/XSpWOR31Q6TgxVxJeLnH2K4B/aik+l7yZK45arpUpK2Ka0fvSfTDJvqQ==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
     optionalDependencies:
@@ -11023,11 +11014,6 @@ packages:
       no-case: 3.0.4
       tslib: 2.4.0
       upper-case-first: 2.0.2
-    dev: true
-
-  /case/1.6.3:
-    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
-    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/1.1.0:
@@ -12842,8 +12828,8 @@ packages:
   /delegates/1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
 
-  /denoify/1.4.1:
-    resolution: {integrity: sha512-LbPAbQw2aUQvffiXdU4i7jUZxeG7Ix2iuoDoN/VEK01YpxKdleMfBNMEoM0rtWBuJ8u1qYFpN9lnhcJB5mP2Mw==}
+  /denoify/1.4.2:
+    resolution: {integrity: sha512-bUZCQfmuQv8WCjzomolULRsOZ5I8MiID2tFoyGBMTABh8Z2Ao3jwGBDEo1YbYlwFaik5OuVTRHwLm1I84gXpBA==}
     hasBin: true
     dependencies:
       '@octokit/rest': 18.12.0
@@ -12857,9 +12843,10 @@ packages:
       glob: 7.2.3
       minimal-polyfills: 2.2.2
       node-fetch: 2.6.7
+      parse-dont-validate: 4.0.1
       path-depth: 1.0.0
       scripting-tools: 0.19.14
-      tsafe: 1.1.3
+      tsafe: 1.2.1
       url-join: 4.0.1
     transitivePeerDependencies:
       - encoding
@@ -18305,6 +18292,7 @@ packages:
 
   /jsonschema/1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
+    dev: false
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -21416,6 +21404,10 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       callsites: 3.1.0
+    dev: true
+
+  /parse-dont-validate/4.0.1:
+    resolution: {integrity: sha512-GquPPUA2y7mUnfSS5BpuLTfKs/l2LQ77LFg5k84tFiPKuXZD/6S/mT8NFF+hU6TBmbl+17i9LeiCBVipmaAJsg==}
     dev: true
 
   /parse-entities/2.0.0:
@@ -25616,10 +25608,6 @@ packages:
     resolution: {integrity: sha512-Bq44KCEt7JVaNLa148mBCJkcQf4l7jtLEBDuDdeuLynWDA+1a60P4D0rMkqSM9mOKLQbIWUddE9h3XKyKwBeqA==}
     dev: true
 
-  /tsafe/1.1.3:
-    resolution: {integrity: sha512-QQQoed5Acb7Qe/sjMwE/qg57mxD5MXqY5HcGN4i3QyhJiplpo79ABEZiOBvL1cRTOYIzeryWvWQ3xsotTA49MQ==}
-    dev: true
-
   /tsafe/1.2.1:
     resolution: {integrity: sha512-fDDbPiAG6xjZuyXXakHZi8ewGx7ERxGVJ3dwFtcoex+9lvp/nHm5ROlFAB6lyZSmspG0cjpYpFxrKyRnniiOdQ==}
     dev: true
@@ -25854,6 +25842,13 @@ packages:
 
   /undici/5.11.0:
     resolution: {integrity: sha512-oWjWJHzFet0Ow4YZBkyiJwiK5vWqEYoH7BINzJAJOLedZ++JpAlCbUktW2GQ2DS2FpKmxD/JMtWUUWl1BtghGw==}
+    engines: {node: '>=12.18'}
+    dependencies:
+      busboy: 1.6.0
+    dev: true
+
+  /undici/5.12.0:
+    resolution: {integrity: sha512-zMLamCG62PGjd9HHMpo05bSLvvwWOZgGeiWlN/vlqu3+lRo3elxktVGEyLMX+IO7c2eflLjcW74AlkhEZm15mg==}
     engines: {node: '>=12.18'}
     dependencies:
       busboy: 1.6.0
@@ -26403,8 +26398,8 @@ packages:
       vfile-message: 3.1.2
     dev: false
 
-  /vite/3.2.0:
-    resolution: {integrity: sha512-Ovj7+cqIdM1I0LPCk2CWxzgADXMix3NLXpUT6g7P7zg/a9grk/TaC3qn9YMg7w7M0POIVCBOp1aBANJW+RH7oA==}
+  /vite/3.2.1:
+    resolution: {integrity: sha512-ADtMkfHuWq4tskJsri2n2FZkORO8ZyhI+zIz7zTrDAgDEtct1jdxOg3YsZBfHhKjmMoWLOSCr+64qrEDGo/DbQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
