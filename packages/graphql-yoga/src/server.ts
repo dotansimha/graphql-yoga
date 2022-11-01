@@ -80,6 +80,10 @@ import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yoga-default-format-error.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
+import { OverlappingFieldsCanBeMergedRule } from './validations/overlapping-fields-can-be-merged.js'
+import { DeferStreamDirectiveOnRootFieldRule } from './validations/defer-stream-directive-on-root-field.js'
+import { DeferStreamDirectiveLabelRule } from './validations/defer-stream-directive-label.js'
+import { StreamDirectiveOnListFieldRule } from './validations/stream-directive-on-list-field.js'
 
 /**
  * Configuration options for the server
@@ -280,7 +284,16 @@ export class YogaServer<
         validate,
         execute: normalizedExecutor,
         subscribe: normalizedExecutor,
-        specifiedRules,
+        specifiedRules: [
+          ...specifiedRules.filter(
+            // We do not want to use the default one cause it does not account for `@defer` and `@stream`
+            ({ name }) => !['OverlappingFieldsCanBeMergedRule'].includes(name),
+          ),
+          OverlappingFieldsCanBeMergedRule,
+          DeferStreamDirectiveOnRootFieldRule,
+          DeferStreamDirectiveLabelRule,
+          StreamDirectiveOnListFieldRule,
+        ],
       }),
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
