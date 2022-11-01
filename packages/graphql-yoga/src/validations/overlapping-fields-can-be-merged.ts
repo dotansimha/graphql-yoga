@@ -631,6 +631,7 @@ function findConflict(
     )
     return subfieldConflicts(conflicts, responseName, node1, node2)
   }
+  return
 }
 
 function stringifyArguments(fieldNode: FieldNode | DirectiveNode): string {
@@ -663,7 +664,8 @@ function sameStreams(
   if (!stream1 && !stream2) {
     // both fields do not have streams
     return true
-  } if (stream1 && stream2) {
+  }
+  if (stream1 && stream2) {
     // check if both fields have equivalent streams
     return stringifyArguments(stream1) === stringifyArguments(stream2)
   }
@@ -807,6 +809,7 @@ function subfieldConflicts(
       [node2, ...conflicts.map(([, , fields2]) => fields2).flat()],
     ]
   }
+  return
 }
 
 /**
