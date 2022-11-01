@@ -29,6 +29,11 @@ if (process.env.INTEGRATION_TEST === 'true') {
   )
 }
 
+// tests that leak due to external dependencies
+if (process.env.LEAKS_TEST === 'true') {
+  testMatch.push('!hackernews.spec')
+}
+
 testMatch.push('!**/dist/**', '!**/.bob/**')
 
 module.exports = {
