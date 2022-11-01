@@ -1,16 +1,20 @@
+import path from 'path'
 import { DbDrop, MigrateDev } from '@prisma/migrate'
 import { PrismaClient } from '@prisma/client'
 import { createYoga, YogaServerInstance } from 'graphql-yoga'
 import { schema } from '../src/schema'
 import type { GraphQLContext } from '../src/context'
 
-describe.skip('hackernews example integration', () => {
+describe('hackernews example integration', () => {
   let yoga: YogaServerInstance<Record<string, any>, GraphQLContext>
   beforeAll(async () => {
     const { createContext } = await import('../src/context')
     yoga = createYoga({ schema, context: createContext })
+
     // migrate
-    await MigrateDev.new().parse([])
+    await MigrateDev.new().parse([
+      `--schema=${path.resolve(__dirname, '..', 'prisma', 'schema.prisma')}`,
+    ])
 
     // seed
     const client = new PrismaClient()
@@ -26,6 +30,7 @@ describe.skip('hackernews example integration', () => {
   afterAll(async () => {
     // drop
     await DbDrop.new().parse([
+      `--schema=${path.resolve(__dirname, '..', 'prisma', 'schema.prisma')}`,
       '--preview-feature', // DbDrop is an experimental feature
       '--force',
     ])
