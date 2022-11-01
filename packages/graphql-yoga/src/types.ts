@@ -1,4 +1,3 @@
-import type { GraphQLError } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import type { MaskError, PromiseOrValue } from '@envelop/core'
 import type { createFetch } from '@whatwg-node/fetch'
@@ -6,20 +5,6 @@ import type { GraphQLSchema } from 'graphql'
 
 export type GraphQLSchemaWithContext<TContext> = GraphQLSchema & {
   _context?: TContext
-}
-
-export interface ExecutionPatchResult<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TData = { [key: string]: any },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TExtensions = { [key: string]: any },
-> {
-  errors?: ReadonlyArray<GraphQLError>
-  data?: TData | null
-  path?: ReadonlyArray<string | number>
-  label?: string
-  hasNext: boolean
-  extensions?: TExtensions
 }
 
 export interface GraphQLParams<

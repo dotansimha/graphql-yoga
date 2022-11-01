@@ -5,7 +5,7 @@ import {
   validate,
   specifiedRules,
 } from 'graphql'
-import { execute, subscribe } from '@graphql-tools/executor'
+import { normalizedExecutor } from '@graphql-tools/executor'
 import {
   GetEnvelopedFn,
   envelop,
@@ -25,7 +25,6 @@ import {
   YogaMaskedErrorOpts,
 } from './types.js'
 import {
-  ExecutorResult,
   OnParamsHook,
   OnRequestHook,
   OnRequestParseDoneHook,
@@ -276,7 +275,13 @@ export class YogaServer<
     const graphqlEndpoint = this.graphqlEndpoint
 
     this.plugins = [
-      useEngine({ parse, validate, execute, subscribe, specifiedRules }),
+      useEngine({
+        parse,
+        validate,
+        execute: normalizedExecutor,
+        subscribe: normalizedExecutor,
+        specifiedRules,
+      }),
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
@@ -457,7 +462,7 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) {
     try {
-      let result: ExecutorResult | undefined
+      let result: ExecutionResult | undefined
 
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({

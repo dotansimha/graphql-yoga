@@ -41,6 +41,7 @@ export function processMultipartResult(
     },
     async pull(controller) {
       const { done, value } = await iterator.next()
+      let hasNext = !done
       if (value != null) {
         controller.enqueue(textEncoder.encode('\r\n'))
 
@@ -48,6 +49,10 @@ export function processMultipartResult(
           textEncoder.encode('Content-Type: application/json; charset=utf-8'),
         )
         controller.enqueue(textEncoder.encode('\r\n'))
+
+        if (value.hasNext == false) {
+          hasNext = false
+        }
 
         const chunk = jsonStringifyResult(value)
         const encodedChunk = textEncoder.encode(chunk)
@@ -63,7 +68,7 @@ export function processMultipartResult(
 
         controller.enqueue(textEncoder.encode('---'))
       }
-      if (done) {
+      if (!hasNext) {
         controller.enqueue(textEncoder.encode('\r\n-----\r\n'))
         controller.close()
       }
