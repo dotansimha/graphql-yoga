@@ -2,6 +2,7 @@ import { yoga } from '../src/yoga'
 
 describe('Defer / Stream', () => {
   it('stream', async () => {
+    const start = Date.now()
     const response = await yoga.fetch('/graphql', {
       method: 'POST',
       headers: {
@@ -20,9 +21,14 @@ describe('Defer / Stream', () => {
     const contentType = response.headers.get('Content-Type')
     expect(contentType).toEqual('multipart/mixed; boundary="-"')
     const responseText = await response.text()
+    const end = Date.now()
     expect(responseText).toMatchSnapshot('stream')
+    const diff = end - start
+    expect(diff).toBeLessThan(2650)
+    expect(diff > 2550).toBeTruthy()
   })
   it('defer', async () => {
+    const start = Date.now()
     const response = await yoga.fetch('/graphql', {
       method: 'POST',
       headers: {
@@ -44,6 +50,10 @@ describe('Defer / Stream', () => {
     const contentType = response.headers.get('Content-Type')
     expect(contentType).toEqual('multipart/mixed; boundary="-"')
     const responseText = await response.text()
+    const end = Date.now()
     expect(responseText).toMatchSnapshot('defer')
+    const diff = end - start
+    expect(diff).toBeLessThan(1600)
+    expect(diff > 1450).toBeTruthy()
   })
 })
