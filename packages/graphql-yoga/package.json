@@ -12,7 +12,8 @@
   "scripts": {
     "prepack": "bob prepack",
     "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
-    "check": "tsc --pretty --noEmit"
+    "check": "tsc --pretty --noEmit",
+    "postinstall": "node node_modules/puppeteer/install.js"
   },
   "keywords": [
     "graphql",
