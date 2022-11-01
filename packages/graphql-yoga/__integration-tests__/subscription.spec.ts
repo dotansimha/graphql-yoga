@@ -43,6 +43,7 @@ describe('subscription', () => {
           },
         },
       }),
+      maskedErrors: false,
     })
     const server = createServer(yoga)
     try {
