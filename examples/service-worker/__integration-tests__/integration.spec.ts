@@ -54,11 +54,25 @@ describe('Service worker', () => {
           time: {
             subscribe: () =>
               new Repeater(async (push, end) => {
-                const interval = setInterval(() => {
-                  push(new Date().toISOString())
-                }, 1000)
-                end.then(() => clearInterval(interval))
-                await end
+                let ended = false
+                let i = 3
+                async function pushTime() {
+                  if (ended) {
+                    return end()
+                  }
+                  if (i) {
+                    await new Promise((resolve) => setTimeout(resolve, 300))
+                    await push(new Date().toISOString())
+                    i--
+                    return pushTime()
+                  }
+                }
+
+                end.then(() => {
+                  ended = true
+                })
+
+                return pushTime()
               }),
             resolve: (value) => value,
           },
@@ -125,6 +139,7 @@ describe('Service worker', () => {
   })
 
   it('handles subscriptions', async () => {
+    expect.assertions(5)
     const response: Response = await new Promise((respondWith) => {
       trigger('fetch', {
         request: new Request('http://localhost:3000/graphql', {
@@ -147,11 +162,13 @@ describe('Service worker', () => {
 
     expect(response.status).toBe(200)
     expect(response.headers.get('content-type')).toBe('text/event-stream')
-    // eslint-disable-next-line no-unreachable-loop, @typescript-eslint/no-explicit-any
+    let counter = 0
     for await (const chunk of response.body as any) {
       expect(Buffer.from(chunk).toString('utf-8')).toMatch(/data: {/)
-      break
+      counter++
+      if (counter === 3) {
+        break
+      }
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000))
   })
 })

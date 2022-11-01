@@ -4,9 +4,8 @@ import {
   OnExecuteHook,
   OnSubscribeHook,
 } from '@envelop/core'
-import { ExecutionResult } from 'graphql'
+import { ExecutionResult } from '@graphql-tools/utils'
 import {
-  ExecutionPatchResult,
   FetchAPI,
   GraphQLParams,
   MaybeArray,
@@ -108,7 +107,7 @@ export interface OnParamsEventPayload {
   params: GraphQLParams
   request: Request
   setParams: (params: GraphQLParams) => void
-  setResult: (result: ExecutorResult) => void
+  setResult: (result: ExecutionResult) => void
   fetchAPI: FetchAPI
 }
 
@@ -116,15 +115,9 @@ export type OnResultProcess = (
   payload: OnResultProcessEventPayload,
 ) => PromiseOrValue<void>
 
-export type ExecutorResult =
-  | ExecutionResult
-  | AsyncIterable<ExecutionResult>
-  | AsyncIterable<ExecutionPatchResult>
-
 export type ResultProcessorInput =
   | MaybeArray<ExecutionResult>
   | AsyncIterable<ExecutionResult>
-  | AsyncIterable<ExecutionPatchResult>
 
 export type ResultProcessor = (
   result: ResultProcessorInput,

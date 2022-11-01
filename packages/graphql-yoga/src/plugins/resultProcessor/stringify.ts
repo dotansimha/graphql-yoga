@@ -1,10 +1,8 @@
-import { ExecutionResult } from 'graphql'
-import type { ExecutionPatchResult, MaybeArray } from '../../types'
+import { ExecutionResult } from '@graphql-tools/utils'
+import type { MaybeArray } from '../../types'
 
 // JSON stringifier that adjusts the result extensions while serialising
-export function jsonStringifyResult(
-  result: MaybeArray<ExecutionResult | ExecutionPatchResult>,
-) {
+export function jsonStringifyResult(result: MaybeArray<ExecutionResult>) {
   return JSON.stringify(result, (key, value) => {
     if (key === 'extensions') {
       // omit http extensions

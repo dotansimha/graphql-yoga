@@ -12,7 +12,8 @@
   "scripts": {
     "prepack": "bob prepack",
     "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
-    "check": "tsc --pretty --noEmit"
+    "check": "tsc --pretty --noEmit",
+    "postinstall": "node node_modules/puppeteer/install.js"
   },
   "keywords": [
     "graphql",
@@ -51,7 +52,7 @@
     "@envelop/core": "3.0.3",
     "@envelop/parser-cache": "5.0.3",
     "@envelop/validation-cache": "5.0.3",
-    "@graphql-tools/executor": "^0.0.2",
+    "@graphql-tools/executor": "^0.0.4",
     "@graphql-tools/schema": "^9.0.0",
     "@graphql-typed-document-node/core": "^3.1.1",
     "@graphql-yoga/subscription": "^3.0.0-next.0",

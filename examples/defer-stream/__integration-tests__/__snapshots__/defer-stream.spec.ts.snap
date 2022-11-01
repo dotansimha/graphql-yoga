@@ -1,0 +1,163 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Defer / Stream defer: defer 1`] = `
+"---
+Content-Type: application/json; charset=utf-8
+Content-Length: 50
+
+{"data":{"fastField":"I am speed"},"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 78
+
+{"incremental":[{"data":{"slowField":"I am slow"},"path":[]}],"hasNext":false}
+---
+-----
+"
+`;
+
+exports[`Defer / Stream stream: stream 1`] = `
+"---
+Content-Type: application/json; charset=utf-8
+Content-Length: 39
+
+{"data":{"alphabet":[]},"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["a"],"path":["alphabet",0]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["b"],"path":["alphabet",1]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["c"],"path":["alphabet",2]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["d"],"path":["alphabet",3]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["e"],"path":["alphabet",4]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["f"],"path":["alphabet",5]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["g"],"path":["alphabet",6]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["h"],"path":["alphabet",7]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["i"],"path":["alphabet",8]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 70
+
+{"incremental":[{"items":["j"],"path":["alphabet",9]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["k"],"path":["alphabet",10]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["l"],"path":["alphabet",11]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["m"],"path":["alphabet",12]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["n"],"path":["alphabet",13]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["o"],"path":["alphabet",14]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["p"],"path":["alphabet",15]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["q"],"path":["alphabet",16]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["r"],"path":["alphabet",17]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["s"],"path":["alphabet",18]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["t"],"path":["alphabet",19]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["u"],"path":["alphabet",20]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["v"],"path":["alphabet",21]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["w"],"path":["alphabet",22]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["x"],"path":["alphabet",23]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["y"],"path":["alphabet",24]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 71
+
+{"incremental":[{"items":["z"],"path":["alphabet",25]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 17
+
+{"hasNext":false}
+---
+-----
+"
+`;
