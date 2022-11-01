@@ -30,7 +30,10 @@ export function useResultProcessors(
           ) {
             continue
           }
-          for (const processorMediaType of resultProcessorConfig.mediaTypes) {
+          const processorMediaTypesInOrder = [
+            ...resultProcessorConfig.mediaTypes,
+          ].reverse()
+          for (const processorMediaType of processorMediaTypesInOrder) {
             acceptableMediaTypes.push(processorMediaType)
             if (isMatchingMediaType(processorMediaType, requestMediaType)) {
               setResultProcessor(
