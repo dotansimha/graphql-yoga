@@ -63,7 +63,7 @@ import {
   isPOSTGraphQLStringRequest,
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString.js'
-import { useResultProcessor } from './plugins/useResultProcessor.js'
+import { useResultProcessors } from './plugins/useResultProcessor.js'
 import { processRegularResult } from './plugins/resultProcessor/regular.js'
 import { processPushResult } from './plugins/resultProcessor/push.js'
 import { processMultipartResult } from './plugins/resultProcessor/multipart.js'
@@ -381,18 +381,21 @@ export class YogaServer<
         parse: parsePOSTFormUrlEncodedRequest,
       }),
       // Middlewares after the GraphQL execution
-      useResultProcessor({
-        mediaTypes: ['multipart/mixed'],
-        processResult: processMultipartResult,
-      }),
-      useResultProcessor({
-        mediaTypes: ['text/event-stream'],
-        processResult: processPushResult,
-      }),
-      useResultProcessor({
-        mediaTypes: ['application/graphql-response+json', 'application/json'],
-        processResult: processRegularResult,
-      }),
+      useResultProcessors([
+        {
+          mediaTypes: ['multipart/mixed'],
+          processResult: processMultipartResult,
+        },
+        {
+          mediaTypes: ['text/event-stream'],
+          processResult: processPushResult,
+        },
+        {
+          mediaTypes: ['application/graphql-response+json', 'application/json'],
+          noAsyncIterable: true,
+          processResult: processRegularResult,
+        },
+      ]),
       ...(options?.plugins ?? []),
       useLimitBatching(batchingLimit),
       useCheckGraphQLQueryParams(),

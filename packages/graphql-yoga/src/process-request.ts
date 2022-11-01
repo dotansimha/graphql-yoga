@@ -23,7 +23,7 @@ export async function processResult({
 }) {
   let resultProcessor: ResultProcessor | undefined
 
-  const acceptableMediaTypes = new Set<string>()
+  const acceptableMediaTypes: string[] = []
   let acceptedMediaType = '*/*'
 
   for (const onResultProcessHook of onResultProcessHooks) {
@@ -45,7 +45,7 @@ export async function processResult({
       status: 406,
       statusText: 'Not Acceptable',
       headers: {
-        accept: [...acceptableMediaTypes].join('; charset=utf-8, '),
+        accept: acceptableMediaTypes.join('; charset=utf-8, '),
       },
     })
   }

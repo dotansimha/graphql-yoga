@@ -129,7 +129,7 @@ export interface OnResultProcessEventPayload {
   request: Request
   result: ResultProcessorInput
   resultProcessor?: ResultProcessor
-  acceptableMediaTypes: Set<string>
+  acceptableMediaTypes: string[]
   setResultProcessor(
     resultProcessor: ResultProcessor,
     acceptedMediaType: string,
