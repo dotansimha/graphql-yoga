@@ -1,5 +1,15 @@
 # graphql-yoga
 
+## 3.0.0-next.9
+
+### Minor Changes
+
+- [#1936](https://github.com/dotansimha/graphql-yoga/pull/1936) [`87a6c333`](https://github.com/dotansimha/graphql-yoga/commit/87a6c3331a81503c07f211296e75ca0c5e060f0a) Thanks [@renovate](https://github.com/apps/renovate)! - Engine and graphql-js version agnostic Defer/Stream support
+
+### Patch Changes
+
+- [#1988](https://github.com/dotansimha/graphql-yoga/pull/1988) [`b19a9104`](https://github.com/dotansimha/graphql-yoga/commit/b19a910447d27e2203bb5e22aaba6ab72d54b560) Thanks [@ardatan](https://github.com/ardatan)! - Respect the order of mime types given in the accept header by the client
+
 ## 3.0.0-next.8
 
 ### Minor Changes
