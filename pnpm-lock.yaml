@@ -917,26 +917,36 @@ importers:
   packages/plugins/apollo-inline-trace:
     specifiers:
       '@envelop/on-resolve': ^2.0.2
+      '@whatwg-node/fetch': ^0.5.1
       apollo-reporting-protobuf: ^3.3.2
+      graphql-yoga: ^3.0.0-next.9
     dependencies:
       '@envelop/on-resolve': 2.0.2
       apollo-reporting-protobuf: 3.3.3
+    devDependencies:
+      '@whatwg-node/fetch': 0.5.1
+      graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/apq:
     specifiers:
       '@whatwg-node/fetch': 0.5.1
+      graphql-yoga: ^3.0.0-next.9
       tiny-lru: ^10.0.0
     dependencies:
       '@whatwg-node/fetch': 0.5.1
       tiny-lru: 10.0.0
+    devDependencies:
+      graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/persisted-operations:
     specifiers:
       '@types/lru-cache': 7.10.9
+      graphql-yoga: ^3.0.0-next.9
     devDependencies:
       '@types/lru-cache': 7.10.9
+      graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/prometheus:
