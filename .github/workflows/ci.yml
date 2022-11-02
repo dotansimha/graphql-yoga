@@ -22,16 +22,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
           version: 7
 
-      - name: Install Node
-        uses: actions/setup-node@v3
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: pnpm
+          path: ${{ steps.pnpm-store.outputs.PATH }}
+          key: ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
 
       - name: Set GraphQL Version
         run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
