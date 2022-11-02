@@ -1,5 +1,5 @@
 import { Plugin } from 'graphql-yoga'
-import { GraphQLSchema, GraphQLDirective } from 'graphql'
+import { GraphQLSchema, GraphQLDirective, specifiedRules } from 'graphql'
 import { GraphQLDeferDirective } from './directives/defer.js'
 import { GraphQLStreamDirective } from './directives/stream.js'
 import { DeferStreamDirectiveLabelRule } from './validations/defer-stream-directive-label.js'
@@ -31,12 +31,25 @@ export function useDeferStream<
         )
       }
     },
-    onValidate: ({ addValidationRule }) => {
-      addValidationRule(DeferStreamDirectiveLabelRule)
-      addValidationRule(DeferStreamDirectiveOnRootFieldRule)
-      addValidationRule(StreamDirectiveOnListFieldRule)
-      // graphql-js older version without defer/stream do not account of overlapping with defer/stream
-      addValidationRule(OverlappingFieldsCanBeMergedRule)
+    onValidate: ({ validateFn, setValidationFn }) => {
+      setValidationFn((schema, doc, _, ...rest) =>
+        validateFn(
+          schema,
+          doc,
+          [
+            ...specifiedRules.filter(
+              // We do not want to use the default one cause it does not account for `@defer` and `@stream`
+              ({ name }) =>
+                !['OverlappingFieldsCanBeMergedRule'].includes(name),
+            ),
+            OverlappingFieldsCanBeMergedRule,
+            DeferStreamDirectiveOnRootFieldRule,
+            DeferStreamDirectiveLabelRule,
+            StreamDirectiveOnListFieldRule,
+          ],
+          rest,
+        ),
+      )
     },
   }
 }
