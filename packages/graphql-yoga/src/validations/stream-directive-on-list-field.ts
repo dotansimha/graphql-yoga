@@ -6,6 +6,7 @@ import {
   DirectiveNode,
   ASTVisitor,
 } from 'graphql'
+import { createGraphQLError } from '../error.js'
 import { GraphQLStreamDirective } from '../directives/stream.js'
 
 /**

@@ -1,4 +1,9 @@
-import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
+import {
+  isAsyncIterable,
+  Plugin,
+  YogaInitialContext,
+  createGraphQLError,
+} from 'graphql-yoga'
 import { GraphQLError, ResponsePath } from 'graphql'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import { btoa } from '@whatwg-node/fetch'

@@ -3,6 +3,8 @@ import { GraphQLError } from 'graphql'
 import type { ResultProcessorInput } from './plugins/types'
 import type { YogaMaskedErrorOpts } from './types'
 
+export { createGraphQLError }
+
 declare module 'graphql' {
   interface GraphQLHTTPErrorExtensions {
     status?: number

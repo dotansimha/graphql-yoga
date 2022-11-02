@@ -1,5 +1,9 @@
-import { createYoga, Plugin, createSchema } from 'graphql-yoga'
-import { GraphQLError } from 'graphql'
+import {
+  createYoga,
+  Plugin,
+  createSchema,
+  createGraphQLError,
+} from 'graphql-yoga'
 
 // available when handling requests, needs to be provided by the implementor
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -52,7 +56,7 @@ function useDisableSubscription(): Plugin<
   return {
     onSubscribe({ args }) {
       if (args.contextValue.disableSubscription) {
-        throw new GraphQLError('Subscriptions have been disabled', {
+        throw createGraphQLError('Subscriptions have been disabled', {
           extensions: {
             http: {
               status: 400, // report error with a 400

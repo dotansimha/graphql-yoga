@@ -1,5 +1,4 @@
-import { createGraphQLError } from '@graphql-tools/utils'
-import { createSchema, createYoga } from '../src'
+import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
 
 describe('error masking', () => {
   function createTestSchema() {

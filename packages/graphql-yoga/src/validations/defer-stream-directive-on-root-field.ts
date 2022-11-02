@@ -1,7 +1,7 @@
-import { createGraphQLError } from '@graphql-tools/utils'
 import { ASTVisitor, ValidationContext } from 'graphql'
 import { GraphQLDeferDirective } from '../directives/defer.js'
 import { GraphQLStreamDirective } from '../directives/stream.js'
+import { createGraphQLError } from '../error.js'
 
 /**
  * Stream directive on list field
