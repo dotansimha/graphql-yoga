@@ -19,6 +19,7 @@ import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 
 const typeDefs = /* GraphQL */ `
   type Query {
+    alphabet: [String!]!
     """
     A field that resolves fast.
     """
@@ -37,6 +38,12 @@ const wait = (time: number) =>
 
 const resolvers = {
   Query: {
+    async *alphabet() {
+      for (const character of ['a', 'b', 'c', 'd', 'e', 'f', 'g']) {
+        yield character
+        await wait(1000)
+      }
+    },
     fastField: async () => {
       await wait(100)
       return 'I am speed'
@@ -63,7 +70,11 @@ server.listen(4000, () => {
 })
 ```
 
-Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
+Start the server
+
+### Defer Example
+
+Visit http://localhost:4000/graphql and paste the following operation into the left panel.
 
 ```graphql
 query SlowAndFastFieldWithDefer {
@@ -80,4 +91,22 @@ Alternatively, you can also send the subscription operation via curl.
 
 ```sh
 curl -g -X POST -H "accept:text/event-stream" -H "content-type: application/json" -d '{"query":"query SlowAndFastFieldWithDefer { ... on Query @defer { slowField } fastField }"}' http://localhost:4000/graphql
+```
+
+### Stream Example
+
+Visit http://localhost:4000/graphql and paste the following operation into the left panel.
+
+```graphql
+query StreamAlphabet {
+  alphabet @stream
+}
+```
+
+Then press the Play (Execute Query) button.
+
+Alternatively, you can also send the subscription operation via curl.
+
+```sh
+curl -g -X POST -H "accept:text/event-stream" -H "content-type: application/json" -d '{"query":"query StreamAlphabet { alphabet @stream }"}' http://localhost:4000/graphql
 ```
