@@ -5,8 +5,10 @@ import {
   DirectiveNode,
   ASTVisitor,
 } from 'graphql'
-import { createGraphQLError } from '../error.js'
-import { GraphQLStreamDirective } from '../directives/stream.js'
+import {
+  createGraphQLError,
+  GraphQLStreamDirective,
+} from '@graphql-tools/utils'
 
 /**
  * Stream directive on list field

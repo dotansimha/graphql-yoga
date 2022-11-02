@@ -1,7 +1,9 @@
 import { Kind, ASTVisitor, ValidationContext } from 'graphql'
-import { createGraphQLError } from '../error.js'
-import { GraphQLDeferDirective } from '../directives/defer.js'
-import { GraphQLStreamDirective } from '../directives/stream.js'
+import {
+  createGraphQLError,
+  GraphQLDeferDirective,
+  GraphQLStreamDirective,
+} from '@graphql-tools/utils'
 
 /**
  * Stream directive on list field

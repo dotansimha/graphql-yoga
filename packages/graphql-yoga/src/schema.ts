@@ -10,19 +10,5 @@ export function createSchema<TContext = {}>(
 ): GraphQLSchemaWithContext<TContext> {
   return makeExecutableSchema<TContext & YogaInitialContext>({
     ...opts,
-    typeDefs: [
-      /* GraphQL */ `
-        directive @defer(
-          if: Boolean
-          label: String
-        ) on FRAGMENT_SPREAD | INLINE_FRAGMENT
-        directive @stream(
-          if: Boolean
-          label: String
-          initialCount: Int = 0
-        ) on FIELD
-      `,
-      opts.typeDefs,
-    ],
   })
 }
