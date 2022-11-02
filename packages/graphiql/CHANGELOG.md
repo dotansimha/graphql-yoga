@@ -1,5 +1,11 @@
 # @graphql-yoga/graphiql
 
+## 3.0.0-next.2
+
+### Patch Changes
+
+- [#1996](https://github.com/dotansimha/graphql-yoga/pull/1996) [`cedde92f`](https://github.com/dotansimha/graphql-yoga/commit/cedde92fead65bcc4c08bb31d4c2400f92fd83d2) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Support older version of GraphQLjs
+
 ## 3.0.0-next.1
 
 ### Patch Changes
