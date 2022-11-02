@@ -37,7 +37,7 @@ jobs:
         run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
 
       - name: Install Dependencies
-        run: pnpm i --frozen-lockfile
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
 
       - name: Build Packages
         run: pnpm build
