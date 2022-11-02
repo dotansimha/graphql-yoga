@@ -1,5 +1,83 @@
+import { PackageCmd } from '@theguild/components'
+
 # Incremental Delivery
 
 As our app grows, the queries get bigger and grow with GraphQL's request/response model. Usually, the server will only send the response back once all the data requested in the query is ready. However, not all requested data is of equal importance, and the client may not need all of the data at once. To remedy this, GraphQL specification working group is working on [introducing new `@defer` and `@stream` directives](https://github.com/graphql/graphql-wg/blob/main/rfcs/DeferStream.md) which allows applications to request a subset of data which is critical and get the rest of the data in subsequent responses from the server. This [proposal](https://github.com/graphql/graphql-spec/pull/742) is in [Stage 2](https://github.com/graphql/graphql-spec/blob/main/CONTRIBUTING.md#stage-2-draft), meaning GraphQL libraries can start implementing this as experimental feature to provide feedback to the working group.
 
-GraphQL Yoga supports incremental delivery out of the box! Thanks to the custom built execution engine, it works with any version of GraphQL.js. Clients can simply use the `@defer` and `@stream` directives to get benefits of incremental delivery.
+GraphQL Yoga comes with a plugin to enable incremental delivery!
+
+## Installation
+
+<PackageCmd packages={['@graphql-yoga/plugin-defer-stream']} />
+
+## Quick Start
+
+```ts filename="server.ts"
+import { createYoga, createSchema } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+
+const typeDefs = /* GraphQL */ `
+  type Query {
+    """
+    A field that resolves fast.
+    """
+    fastField: String!
+
+    """
+    A field that resolves slowly.
+    Maybe you want to @defer this field ;)
+    """
+    slowField(waitFor: Int! = 5000): String
+  }
+`
+
+const wait = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time))
+
+const resolvers = {
+  Query: {
+    fastField: async () => {
+      await wait(100)
+      return 'I am speed'
+    },
+    slowField: async (_, { waitFor }) => {
+      await wait(waitFor)
+      return 'I am slow'
+    }
+  }
+}
+
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs,
+    resolvers
+  }),
+  plugins: [useDeferStream()]
+})
+
+const server = createServer(yoga)
+
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
+
+Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
+
+```graphql
+query SlowAndFastFieldWithDefer {
+  ... on Query @defer {
+    slowField
+  }
+  fastField
+}
+```
+
+Then press the Play (Execute Query) button.
+
+Alternatively, you can also send the subscription operation via curl.
+
+```sh
+curl -g -X POST -H "accept:text/event-stream" -H "content-type: application/json" -d '{"query":"query SlowAndFastFieldWithDefer { ... on Query @defer { slowField } fastField }"}' http://localhost:4000/graphql
+```
