@@ -12,7 +12,7 @@ on:
 
 jobs:
   unit:
-    name: unit / nodejs v${{ matrix.node-version }}
+    name: unit / nodejs v${{ matrix.node-version }} / graphql ${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
