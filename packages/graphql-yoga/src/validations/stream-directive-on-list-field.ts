@@ -1,4 +1,3 @@
-import { createGraphQLError } from '@graphql-tools/utils'
 import {
   ValidationContext,
   isListType,

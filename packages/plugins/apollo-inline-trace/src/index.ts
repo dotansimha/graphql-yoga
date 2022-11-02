@@ -8,7 +8,6 @@ import { GraphQLError, ResponsePath } from 'graphql'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import { btoa } from '@whatwg-node/fetch'
 import { useOnResolve } from '@envelop/on-resolve'
-import { createGraphQLError } from '@graphql-tools/utils'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]
