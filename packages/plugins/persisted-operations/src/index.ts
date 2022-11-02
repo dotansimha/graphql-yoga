@@ -4,7 +4,6 @@ import {
   PromiseOrValue,
   createGraphQLError,
 } from 'graphql-yoga'
-import { GraphQLError } from 'graphql'
 
 export type ExtractPersistedOperationId = (
   params: GraphQLParams,
