@@ -19,11 +19,49 @@ import {
   isObjectType,
   typeFromAST,
   ValidationContext,
+  ObjectFieldNode,
+  ValueNode,
 } from 'graphql'
 import { inspect } from 'graphql/jsutils/inspect.js'
 import type { Maybe } from 'graphql/jsutils/Maybe.js'
 import type { ObjMap } from 'graphql/jsutils/ObjMap.js'
-import { sortValueNode } from 'graphql/utilities/sortValueNode.js'
+import { naturalCompare } from 'graphql/jsutils/naturalCompare.js'
+
+function sortValueNode(valueNode: ValueNode): ValueNode {
+  switch (valueNode.kind) {
+    case Kind.OBJECT:
+      return {
+        ...valueNode,
+        fields: sortFields(valueNode.fields),
+      }
+    case Kind.LIST:
+      return {
+        ...valueNode,
+        values: valueNode.values.map(sortValueNode),
+      }
+    case Kind.INT:
+    case Kind.FLOAT:
+    case Kind.STRING:
+    case Kind.BOOLEAN:
+    case Kind.NULL:
+    case Kind.ENUM:
+    case Kind.VARIABLE:
+      return valueNode
+  }
+}
+
+function sortFields(
+  fields: ReadonlyArray<ObjectFieldNode>,
+): Array<ObjectFieldNode> {
+  return fields
+    .map((fieldNode) => ({
+      ...fieldNode,
+      value: sortValueNode(fieldNode.value),
+    }))
+    .sort((fieldA, fieldB) =>
+      naturalCompare(fieldA.name.value, fieldB.name.value),
+    )
+}
 
 function reasonMessage(reason: ConflictReasonMessage): string {
   if (Array.isArray(reason)) {
