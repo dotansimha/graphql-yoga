@@ -17,6 +17,8 @@ import {
 import { GraphQLBigInt } from 'graphql-scalars'
 import 'json-bigint-patch'
 import { AddressInfo } from 'net'
+import { GraphQLStreamDirective } from '../src/directives/stream'
+import { GraphQLDeferDirective } from '../src/directives/defer'
 
 export function createTestSchema() {
   let liveQueryCounter = 0
@@ -124,7 +126,11 @@ export function createTestSchema() {
         },
       }),
     }),
-    directives: [GraphQLLiveDirective],
+    directives: [
+      GraphQLLiveDirective,
+      GraphQLStreamDirective,
+      GraphQLDeferDirective,
+    ],
   })
 }
 
@@ -246,6 +252,52 @@ describe('browser', () => {
           2,
         ),
       )
+    })
+
+    test('execute @stream operation', async () => {
+      await page.goto(
+        `http://localhost:${port}${endpoint}?query={ stream @stream(initialCount: 1) }`,
+      )
+      await page.click('.graphiql-execute-button')
+
+      await new Promise((res) => setTimeout(res, 100))
+
+      const [resultContents, isShowingStopButton] = await page.evaluate(
+        (stopButtonSelector) => {
+          return [
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.g.resultComponent.viewer.getValue(),
+            !!window.document.querySelector(stopButtonSelector),
+          ]
+        },
+        stopButtonSelector,
+      )
+      console.log('resultContents', resultContents)
+      expect(JSON.parse(resultContents)).toEqual({
+        data: {
+          stream: ['A'],
+        },
+      })
+      expect(isShowingStopButton).toEqual(true)
+      await new Promise((resolve) => setTimeout(resolve, 2200))
+      const [resultContents1, isShowingPlayButton] = await page.evaluate(
+        (playButtonSelector) => {
+          return [
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.g.resultComponent.viewer.getValue(),
+            !!window.document.querySelector(playButtonSelector),
+          ]
+        },
+        playButtonSelector,
+      )
+      expect(JSON.parse(resultContents1)).toEqual({
+        data: {
+          stream: ['A', 'B', 'C'],
+        },
+      })
+      expect(isShowingPlayButton).toEqual(true)
     })
 
     test('execute SSE (subscription) operation', async () => {
