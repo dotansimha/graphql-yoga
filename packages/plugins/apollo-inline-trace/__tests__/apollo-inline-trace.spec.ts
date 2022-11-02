@@ -1,7 +1,7 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 import { useApolloInlineTrace } from '../src/index.js'
 import { Trace } from 'apollo-reporting-protobuf'
-import { GraphQLError } from 'graphql'
+import { createGraphQLError } from '@graphql-tools/utils'
 
 describe('Inline Trace', () => {
   const schema = createSchema({
@@ -411,7 +411,7 @@ describe('Inline Trace', () => {
       plugins: [
         useApolloInlineTrace({
           rewriteError: () =>
-            new GraphQLError('bim', { extensions: { str: 'ing' } }),
+            createGraphQLError('bim', { extensions: { str: 'ing' } }),
         }),
       ],
     })

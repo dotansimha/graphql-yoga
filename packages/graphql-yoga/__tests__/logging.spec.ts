@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { defaultYogaLogger, createYoga } from 'graphql-yoga'
+import { createYoga, defaultYogaLogger } from '../src'
 
 describe('logging', () => {
   it('use custom logger', async () => {

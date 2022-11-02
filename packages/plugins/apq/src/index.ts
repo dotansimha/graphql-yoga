@@ -1,6 +1,6 @@
 import { Plugin, PromiseOrValue } from 'graphql-yoga'
-import { GraphQLError } from 'graphql'
 import { lru } from 'tiny-lru'
+import { createGraphQLError } from '@graphql-tools/utils'
 
 export async function hashSHA256(
   str: string,
@@ -81,7 +81,7 @@ export function useAPQ<TPluginContext extends Record<string, any>>(
       if (params.query == null) {
         const persistedQuery = await store.get(persistedQueryData.sha256Hash)
         if (persistedQuery == null) {
-          throw new GraphQLError('PersistedQueryNotFound', {
+          throw createGraphQLError('PersistedQueryNotFound', {
             extensions: {
               http: {
                 status: 404,
@@ -96,7 +96,7 @@ export function useAPQ<TPluginContext extends Record<string, any>>(
       } else {
         const expectedHash = await hash(params.query, fetchAPI)
         if (persistedQueryData.sha256Hash !== expectedHash) {
-          throw new GraphQLError('PersistedQueryMismatch', {
+          throw createGraphQLError('PersistedQueryMismatch', {
             extensions: {
               http: {
                 status: 400,

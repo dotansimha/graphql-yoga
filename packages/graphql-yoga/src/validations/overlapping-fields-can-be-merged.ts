@@ -1,5 +1,4 @@
 import {
-  GraphQLError,
   DirectiveNode,
   FieldNode,
   FragmentDefinitionNode,
@@ -22,7 +21,7 @@ import {
   ObjectFieldNode,
   ValueNode,
 } from 'graphql'
-import { inspect, Maybe } from '@graphql-tools/utils'
+import { createGraphQLError, inspect, Maybe } from '@graphql-tools/utils'
 
 interface ObjMap<T> {
   [key: string]: T
@@ -170,7 +169,7 @@ export function OverlappingFieldsCanBeMergedRule(
       for (const [[responseName, reason], fields1, fields2] of conflicts) {
         const reasonMsg = reasonMessage(reason)
         context.reportError(
-          new GraphQLError(
+          createGraphQLError(
             `Fields "${responseName}" conflict because ${reasonMsg}. Use different aliases on the fields to fetch both if this was intentional.`,
             { nodes: fields1.concat(fields2) },
           ),

@@ -1,5 +1,5 @@
-import { GraphQLError } from 'graphql'
-import { createSchema, createYoga } from 'graphql-yoga'
+import { createGraphQLError } from '@graphql-tools/utils'
+import { createSchema, createYoga } from '../src'
 
 describe('error masking', () => {
   function createTestSchema() {
@@ -13,7 +13,7 @@ describe('error masking', () => {
       resolvers: {
         Query: {
           hello: () => {
-            throw new GraphQLError('This error never gets masked.')
+            throw createGraphQLError('This error never gets masked.')
           },
           hi: () => {
             throw new Error(
@@ -218,7 +218,7 @@ describe('error masking', () => {
     const yoga = createYoga({
       logging: false,
       context: () => {
-        throw new GraphQLError('I like turtles')
+        throw createGraphQLError('I like turtles')
       },
       schema: createTestSchema(),
     })
@@ -242,7 +242,7 @@ describe('error masking', () => {
     const yoga = createYoga({
       logging: false,
       context: () => {
-        throw new GraphQLError('I like turtles', {
+        throw createGraphQLError('I like turtles', {
           extensions: {
             foo: 1,
           },

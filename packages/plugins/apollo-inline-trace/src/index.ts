@@ -3,6 +3,7 @@ import { GraphQLError, ResponsePath } from 'graphql'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import { btoa } from '@whatwg-node/fetch'
 import { useOnResolve } from '@envelop/on-resolve'
+import { createGraphQLError } from '@graphql-tools/utils'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]
@@ -112,7 +113,7 @@ export function useApolloInlineTrace(
           handleErrors(
             ctx,
             [
-              new GraphQLError(result.message, {
+              createGraphQLError(result.message, {
                 originalError: result,
               }),
             ],
@@ -292,7 +293,7 @@ function handleErrors(
     }
 
     // only message and extensions can be rewritten
-    errToReport = new GraphQLError(errToReport.message, {
+    errToReport = createGraphQLError(errToReport.message, {
       extensions: errToReport.extensions || err.extensions,
       nodes: err.nodes,
       source: err.source,

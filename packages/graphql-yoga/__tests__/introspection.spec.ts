@@ -1,6 +1,7 @@
 import { useDisableIntrospection } from '@envelop/disable-introspection'
-import { getIntrospectionQuery, GraphQLError } from 'graphql'
-import { createSchema, createYoga } from 'graphql-yoga'
+import { createGraphQLError } from '@graphql-tools/utils'
+import { getIntrospectionQuery } from 'graphql'
+import { createSchema, createYoga } from '../src'
 
 function createTestSchema() {
   return createSchema<any>({
@@ -13,7 +14,7 @@ function createTestSchema() {
     resolvers: {
       Query: {
         hello: () => {
-          throw new GraphQLError('This error never gets masked.')
+          throw createGraphQLError('This error never gets masked.')
         },
         hi: () => {
           throw new Error('This error will get mask if you enable maskedError.')
