@@ -1,5 +1,6 @@
 import { createSchema, createYoga } from 'graphql-yoga'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))
@@ -78,6 +79,7 @@ export const yoga = createYoga({
     typeDefs,
     resolvers,
   }),
+  plugins: [useDeferStream()],
   renderGraphiQL,
   graphiql: {
     defaultQuery: /* GraphQL */ `

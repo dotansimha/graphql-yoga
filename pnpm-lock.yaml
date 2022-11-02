@@ -261,12 +261,14 @@ importers:
 
   examples/defer-stream:
     specifiers:
+      '@graphql-yoga/plugin-defer-stream': 0.0.0
       '@graphql-yoga/render-graphiql': 3.0.0-next.9
       graphql: 16.6.0
       graphql-yoga: 3.0.0-next.9
       ts-node: 10.8.1
       typescript: 4.7.4
     dependencies:
+      '@graphql-yoga/plugin-defer-stream': link:../../packages/plugins/defer-stream
       '@graphql-yoga/render-graphiql': link:../../packages/render-graphiql
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
