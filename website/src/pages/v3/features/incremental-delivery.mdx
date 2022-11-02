@@ -1,0 +1,5 @@
+# Incremental Delivery
+
+As our app grows the queries get bigger and with GraphQL's request/response model. The server will only send response back once all the data requested in query is ready. Not all requested data is of equal importance, and the client may not need all of the data at once. GraphQL specification working group is working on [introducing new `@defer` and `@stream` directives](https://github.com/graphql/graphql-wg/blob/main/rfcs/DeferStream.md) which allows applications to request subset of data which is critical and rest of the data is sent in subsequent responses from the server. This [proposal](https://github.com/graphql/graphql-spec/pull/742) is in [Stage 2](https://github.com/graphql/graphql-spec/blob/main/CONTRIBUTING.md#stage-2-draft) meaning GraphQL libraries can start implementing this as experimental feature to provide feedback to the working group.
+
+GraphQL Yoga support incremental delivery out of the box! Thanks to the custom built execution engine, it works with any version of GraphQL.js and clients can simply use the `@defer` and `@stream` directives to get benefits of incremental delivery.
