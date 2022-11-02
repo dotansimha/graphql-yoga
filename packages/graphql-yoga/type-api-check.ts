@@ -92,11 +92,13 @@ const request: Request = null as any
       },
     },
   }
+  const schema = createSchema<YogaInitialContext & Context>({
+    typeDefs: ``,
+    resolvers,
+  })
+
   createYoga<Context>({
-    schema: createSchema({
-      typeDefs: ``,
-      resolvers,
-    }),
+    schema,
   })
 }
 
