@@ -22,8 +22,7 @@ import {
   ObjectFieldNode,
   ValueNode,
 } from 'graphql'
-import { inspect } from 'graphql/jsutils/inspect.js'
-import type { Maybe } from 'graphql/jsutils/Maybe.js'
+import { inspect, Maybe } from '@graphql-tools/utils'
 import type { ObjMap } from 'graphql/jsutils/ObjMap.js'
 import { naturalCompare } from 'graphql/jsutils/naturalCompare.js'
 
