@@ -21,12 +21,15 @@ export function useDeferStream<
       if (schema.getDirective('stream') == null) {
         directives.push(GraphQLStreamDirective)
       }
-      replaceSchema(
-        new GraphQLSchema({
-          ...schema.toConfig(),
-          directives: [...schema.getDirectives(), ...directives],
-        }),
-      )
+
+      if (directives.length) {
+        replaceSchema(
+          new GraphQLSchema({
+            ...schema.toConfig(),
+            directives: [...schema.getDirectives(), ...directives],
+          }),
+        )
+      }
     },
     onValidate: ({ addValidationRule }) => {
       addValidationRule(DeferStreamDirectiveLabelRule)

@@ -10,6 +10,5 @@ export function createSchema<TContext = {}>(
 ): GraphQLSchemaWithContext<TContext> {
   return makeExecutableSchema<TContext & YogaInitialContext>({
     ...opts,
-    typeDefs: [opts.typeDefs],
   })
 }
