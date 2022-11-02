@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { IResolvers } from '@graphql-tools/utils'
-import { ClientRequest } from 'node:http'
+import { ClientRequest } from 'http'
 
 import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
 import type { GraphQLSchema } from 'graphql'

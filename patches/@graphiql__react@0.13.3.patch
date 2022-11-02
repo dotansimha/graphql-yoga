@@ -7,7 +7,7 @@ index d1cc5957de06bb3d42f5e853b8e2a25a219d0ed2..3e228bab9948c17043a12e2a352ffd29
          try {
            for await (const result of value22) {
 -            handleResponse(result);
-+            setResponse(formatResult(result));
++            result && setResponse(formatResult(result));
            }
            setIsFetching(false);
            setSubscription(null);
