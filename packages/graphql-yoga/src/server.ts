@@ -150,9 +150,7 @@ export type YogaServerOptions<
 
   renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
 
-  schema?: YogaSchemaDefinition<
-    TUserContext & TServerContext & YogaInitialContext
-  >
+  schema?: YogaSchemaDefinition<TUserContext & TServerContext>
 
   /**
    * Envelop Plugins

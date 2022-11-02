@@ -4,8 +4,8 @@ import {
   isWrappingType,
   DirectiveNode,
   ASTVisitor,
-  GraphQLError,
 } from 'graphql'
+import { createGraphQLError } from '../error.js'
 import { GraphQLStreamDirective } from '../directives/stream.js'
 
 /**
@@ -30,7 +30,7 @@ export function StreamDirectiveOnListFieldRule(
         )
       ) {
         context.reportError(
-          new GraphQLError(
+          createGraphQLError(
             `Stream directive cannot be used on non-list field "${fieldDef.name}" on type "${parentType.name}".`,
             { nodes: node },
           ),

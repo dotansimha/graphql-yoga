@@ -1,6 +1,7 @@
-import { GraphQLError, ASTVisitor, ValidationContext } from 'graphql'
+import { ASTVisitor, ValidationContext } from 'graphql'
 import { GraphQLDeferDirective } from '../directives/defer.js'
 import { GraphQLStreamDirective } from '../directives/stream.js'
+import { createGraphQLError } from '../error.js'
 
 /**
  * Stream directive on list field
@@ -18,7 +19,7 @@ export function DeferStreamDirectiveOnRootFieldRule(
       if (parentType && node.name.value === GraphQLDeferDirective.name) {
         if (mutationType && parentType === mutationType) {
           context.reportError(
-            new GraphQLError(
+            createGraphQLError(
               `Defer directive cannot be used on root mutation type "${parentType.name}".`,
               { nodes: node },
             ),
@@ -26,7 +27,7 @@ export function DeferStreamDirectiveOnRootFieldRule(
         }
         if (subscriptionType && parentType === subscriptionType) {
           context.reportError(
-            new GraphQLError(
+            createGraphQLError(
               `Defer directive cannot be used on root subscription type "${parentType.name}".`,
               { nodes: node },
             ),
@@ -36,7 +37,7 @@ export function DeferStreamDirectiveOnRootFieldRule(
       if (parentType && node.name.value === GraphQLStreamDirective.name) {
         if (mutationType && parentType === mutationType) {
           context.reportError(
-            new GraphQLError(
+            createGraphQLError(
               `Stream directive cannot be used on root mutation type "${parentType.name}".`,
               { nodes: node },
             ),
@@ -44,7 +45,7 @@ export function DeferStreamDirectiveOnRootFieldRule(
         }
         if (subscriptionType && parentType === subscriptionType) {
           context.reportError(
-            new GraphQLError(
+            createGraphQLError(
               `Stream directive cannot be used on root subscription type "${parentType.name}".`,
               { nodes: node },
             ),

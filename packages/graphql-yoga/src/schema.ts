@@ -4,10 +4,11 @@ import {
 } from '@graphql-tools/schema'
 import { GraphQLSchemaWithContext, YogaInitialContext } from './types.js'
 
-export function createSchema<TContext = YogaInitialContext>(
-  opts: IExecutableSchemaDefinition<TContext>,
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function createSchema<TContext = {}>(
+  opts: IExecutableSchemaDefinition<TContext & YogaInitialContext>,
 ): GraphQLSchemaWithContext<TContext> {
-  return makeExecutableSchema<TContext>({
+  return makeExecutableSchema<TContext & YogaInitialContext>({
     ...opts,
     typeDefs: [
       /* GraphQL */ `

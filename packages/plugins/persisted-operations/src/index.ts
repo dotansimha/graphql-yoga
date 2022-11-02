@@ -1,5 +1,9 @@
-import { GraphQLParams, Plugin, PromiseOrValue } from 'graphql-yoga'
-import { GraphQLError } from 'graphql'
+import {
+  GraphQLParams,
+  Plugin,
+  PromiseOrValue,
+  createGraphQLError,
+} from 'graphql-yoga'
 
 export type ExtractPersistedOperationId = (
   params: GraphQLParams,
@@ -56,7 +60,7 @@ export function usePersistedOperations<
             ? allowArbitraryOperations
             : await allowArbitraryOperations(request)) === false
         ) {
-          throw new GraphQLError('PersistedQueryOnly')
+          throw createGraphQLError('PersistedQueryOnly')
         }
         return
       }
@@ -64,12 +68,12 @@ export function usePersistedOperations<
       const persistedOperationKey = extractPersistedOperationId(params)
 
       if (persistedOperationKey == null) {
-        throw new GraphQLError('PersistedQueryNotFound')
+        throw createGraphQLError('PersistedQueryNotFound')
       }
 
       const persistedQuery = await getPersistedOperation(persistedOperationKey)
       if (persistedQuery == null) {
-        throw new GraphQLError('PersistedQueryNotFound')
+        throw createGraphQLError('PersistedQueryNotFound')
       }
       setParams({
         query: persistedQuery,

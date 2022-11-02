@@ -1,4 +1,5 @@
-import { GraphQLError, Kind, ASTVisitor, ValidationContext } from 'graphql'
+import { Kind, ASTVisitor, ValidationContext } from 'graphql'
+import { createGraphQLError } from '../error.js'
 import { GraphQLDeferDirective } from '../directives/defer.js'
 import { GraphQLStreamDirective } from '../directives/stream.js'
 
@@ -26,14 +27,14 @@ export function DeferStreamDirectiveLabelRule(
         }
         if (labelValue.kind !== Kind.STRING) {
           context.reportError(
-            new GraphQLError(
+            createGraphQLError(
               `Directive "${node.name.value}"'s label argument must be a static string.`,
               { nodes: node },
             ),
           )
         } else if (knownLabels[labelValue.value]) {
           context.reportError(
-            new GraphQLError(
+            createGraphQLError(
               'Defer/Stream directive label argument must be unique.',
               { nodes: [knownLabels[labelValue.value], node] },
             ),

@@ -133,7 +133,7 @@ describe('incremental delivery: node-fetch', () => {
               type: GraphQLFile,
             },
           },
-          resolve: async (_, { file }: { file: File }) => file,
+          resolve: async (_, { file }) => file,
         },
         parseFileStream: {
           type: GraphQLString,
@@ -144,7 +144,7 @@ describe('incremental delivery: node-fetch', () => {
               type: GraphQLFile,
             },
           },
-          resolve: async (_, { file }: { file: File }) => {
+          resolve: async (_, { file }) => {
             const chunks = []
             for await (const chunk of file.stream()) {
               chunks.push(Buffer.from(chunk))
@@ -161,7 +161,7 @@ describe('incremental delivery: node-fetch', () => {
               type: GraphQLFile,
             },
           },
-          resolve: async (_, { file }: { file: File }) => {
+          resolve: async (_, { file }) => {
             return Buffer.from(await file.arrayBuffer()).toString('utf8')
           },
         },

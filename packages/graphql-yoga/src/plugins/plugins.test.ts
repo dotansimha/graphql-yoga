@@ -1,8 +1,8 @@
 import { AfterValidateHook } from '@envelop/core'
-import { GraphQLError } from 'graphql'
 import { Plugin } from './types'
 import { createYoga } from '../server'
 import { createSchema } from '../schema'
+import { createGraphQLError } from '../error'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -18,7 +18,7 @@ describe('Yoga Plugins', () => {
       .fn()
       .mockImplementation(({ setResult }) => {
         setResult([
-          new GraphQLError('My Error', { extensions: { my: 'error' } }),
+          createGraphQLError('My Error', { extensions: { my: 'error' } }),
         ])
       })
     const testPlugin: Plugin = {

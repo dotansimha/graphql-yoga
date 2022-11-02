@@ -860,7 +860,7 @@ importers:
       '@envelop/validation-cache': 5.0.3
       '@graphql-tools/executor': 0.0.6
       '@graphql-tools/schema': ^9.0.0
-      '@graphql-tools/utils': ^8.12.0
+      '@graphql-tools/utils': ^9.0.1
       '@graphql-typed-document-node/core': ^3.1.1
       '@graphql-yoga/subscription': ^3.0.0-next.0
       '@jest/globals': ^29.2.1
@@ -874,6 +874,7 @@ importers:
       graphql-http: ^1.6.0
       graphql-scalars: 1.20.0
       html-minifier-terser: 7.0.0
+      json-bigint-patch: 0.0.8
       puppeteer: 19.2.0
       tslib: ^2.3.1
     dependencies:
@@ -882,6 +883,7 @@ importers:
       '@envelop/validation-cache': 5.0.3_pbptz7adnmiijjca652cpfgxr4
       '@graphql-tools/executor': 0.0.6_graphql@16.6.0
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
+      '@graphql-tools/utils': 9.0.1_graphql@16.6.0
       '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
       '@whatwg-node/fetch': 0.5.1
@@ -891,7 +893,6 @@ importers:
     devDependencies:
       '@envelop/disable-introspection': 4.0.3_pbptz7adnmiijjca652cpfgxr4
       '@envelop/live-query': 5.0.3_pbptz7adnmiijjca652cpfgxr4
-      '@graphql-tools/utils': 8.12.0_graphql@16.6.0
       '@jest/globals': 29.2.1
       '@n1ru4l/in-memory-live-query-store': 0.10.0_graphql@16.6.0
       '@repeaterjs/repeater': 3.0.4
@@ -900,6 +901,7 @@ importers:
       graphql-http: 1.6.1_graphql@16.6.0
       graphql-scalars: 1.20.0_graphql@16.6.0
       html-minifier-terser: 7.0.0
+      json-bigint-patch: 0.0.8
       puppeteer: 19.2.0
     publishDirectory: dist
 
@@ -915,31 +917,36 @@ importers:
   packages/plugins/apollo-inline-trace:
     specifiers:
       '@envelop/on-resolve': ^2.0.2
-      '@whatwg-node/fetch': 0.5.1
+      '@whatwg-node/fetch': ^0.5.1
       apollo-reporting-protobuf: ^3.3.2
       graphql-yoga: ^3.0.0-next.9
     dependencies:
       '@envelop/on-resolve': 2.0.2
-      '@whatwg-node/fetch': 0.5.1
       apollo-reporting-protobuf: 3.3.3
     devDependencies:
+      '@whatwg-node/fetch': 0.5.1
       graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/apq:
     specifiers:
       '@whatwg-node/fetch': 0.5.1
+      graphql-yoga: ^3.0.0-next.9
       tiny-lru: ^10.0.0
     dependencies:
       '@whatwg-node/fetch': 0.5.1
       tiny-lru: 10.0.0
+    devDependencies:
+      graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/persisted-operations:
     specifiers:
       '@types/lru-cache': 7.10.9
+      graphql-yoga: ^3.0.0-next.9
     devDependencies:
       '@types/lru-cache': 7.10.9
+      graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/prometheus:
@@ -18324,7 +18331,6 @@ packages:
 
   /json-bigint-patch/0.0.8:
     resolution: {integrity: sha512-xa0LTQsyaq8awYyZyuUsporWisZFiyqzxGW8CKM3t7oouf0GFAKYJnqAm6e9NLNBQOCtOLvy614DEiRX/rPbnA==}
-    dev: false
 
   /json-buffer/3.0.0:
     resolution: {integrity: sha1-Wx85evx11ne96Lz8Dkfh+aPZqJg=}

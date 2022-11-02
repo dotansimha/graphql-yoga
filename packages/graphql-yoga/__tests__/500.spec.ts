@@ -1,6 +1,4 @@
-import { Plugin } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
-import { GraphQLError } from 'graphql'
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 

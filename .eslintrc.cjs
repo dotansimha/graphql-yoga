@@ -51,15 +51,25 @@ module.exports = {
     {
       files: ['packages/**/*'],
       rules: {
+        'import/no-extraneous-dependencies': [
+          'error',
+          { devDependencies: ['**/*.test.ts', '**/*.spec.ts'] },
+        ],
         'no-restricted-imports': [
           'error',
           {
             paths: [
               {
                 name: 'graphql',
-                importNames: ['execute', 'subscribe'],
+                importNames: [
+                  'execute',
+                  'subscribe',
+                  'graphql',
+                  'executeSync',
+                  'graphqlSync',
+                ],
                 message:
-                  'Please use `execute` and `subscribe` from `@graphql-tools/executor` instead.',
+                  'Please use `normalizedExecutor` from `@graphql-tools/executor` instead.',
               },
             ],
           },

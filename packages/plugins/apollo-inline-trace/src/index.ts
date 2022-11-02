@@ -1,4 +1,9 @@
-import { isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
+import {
+  isAsyncIterable,
+  Plugin,
+  YogaInitialContext,
+  createGraphQLError,
+} from 'graphql-yoga'
 import { GraphQLError, ResponsePath } from 'graphql'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import { btoa } from '@whatwg-node/fetch'
@@ -112,7 +117,7 @@ export function useApolloInlineTrace(
           handleErrors(
             ctx,
             [
-              new GraphQLError(result.message, {
+              createGraphQLError(result.message, {
                 originalError: result,
               }),
             ],
@@ -292,7 +297,7 @@ function handleErrors(
     }
 
     // only message and extensions can be rewritten
-    errToReport = new GraphQLError(errToReport.message, {
+    errToReport = createGraphQLError(errToReport.message, {
       extensions: errToReport.extensions || err.extensions,
       nodes: err.nodes,
       source: err.source,
