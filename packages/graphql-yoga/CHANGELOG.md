@@ -1,5 +1,15 @@
 # graphql-yoga
 
+## 3.0.0-next.10
+
+### Patch Changes
+
+- [#1997](https://github.com/dotansimha/graphql-yoga/pull/1997) [`8773a27f`](https://github.com/dotansimha/graphql-yoga/commit/8773a27ffb7f50a4b1f8c044d2a0c428d14e4fee) Thanks [@saihaj](https://github.com/saihaj)! - introduce a new plugin for defer and stream instead of making it default in yoga
+
+- [#1996](https://github.com/dotansimha/graphql-yoga/pull/1996) [`cedde92f`](https://github.com/dotansimha/graphql-yoga/commit/cedde92fead65bcc4c08bb31d4c2400f92fd83d2) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Support older version of GraphQLjs
+
+- [#1992](https://github.com/dotansimha/graphql-yoga/pull/1992) [`bf69a561`](https://github.com/dotansimha/graphql-yoga/commit/bf69a561b3c18b8b2736c2a72da0a59244f6f62b) Thanks [@saihaj](https://github.com/saihaj)! - inline functions to support multiple version of graphql-js
+
 ## 3.0.0-next.9
 
 ### Minor Changes
