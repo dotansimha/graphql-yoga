@@ -17,8 +17,7 @@ import {
 import { GraphQLBigInt } from 'graphql-scalars'
 import 'json-bigint-patch'
 import { AddressInfo } from 'net'
-import { GraphQLStreamDirective } from '../src/directives/stream'
-import { GraphQLDeferDirective } from '../src/directives/defer'
+import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 
 export function createTestSchema() {
   let liveQueryCounter = 0
@@ -126,11 +125,7 @@ export function createTestSchema() {
         },
       }),
     }),
-    directives: [
-      GraphQLLiveDirective,
-      GraphQLStreamDirective,
-      GraphQLDeferDirective,
-    ],
+    directives: [GraphQLLiveDirective],
   })
 }
 
@@ -147,6 +142,7 @@ describe('browser', () => {
       useLiveQuery({
         liveQueryStore,
       }),
+      useDeferStream(),
     ],
     renderGraphiQL,
   })
