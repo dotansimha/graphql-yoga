@@ -33,7 +33,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
 
-      - name: Set GraphQL Cersion
+      - name: Set GraphQL Version
         run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
 
       - name: Install Dependencies
