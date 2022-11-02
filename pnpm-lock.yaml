@@ -941,7 +941,10 @@ importers:
     publishDirectory: dist
 
   packages/plugins/defer-stream:
-    specifiers: {}
+    specifiers:
+      '@graphql-tools/utils': ^9.0.1
+    dependencies:
+      '@graphql-tools/utils': 9.0.1
     publishDirectory: dist
 
   packages/plugins/persisted-operations:
