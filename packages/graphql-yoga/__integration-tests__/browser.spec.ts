@@ -256,7 +256,7 @@ describe('browser', () => {
 
     test('execute @stream operation', async () => {
       await page.goto(
-        `http://localhost:${port}${endpoint}?query={ stream @stream(initialCount: 1) }`,
+        `http://localhost:${port}${endpoint}?query={ stream @stream }`,
       )
       await page.click('.graphiql-execute-button')
 
@@ -273,7 +273,6 @@ describe('browser', () => {
         },
         stopButtonSelector,
       )
-      console.log('resultContents', resultContents)
       expect(JSON.parse(resultContents)).toEqual({
         data: {
           stream: ['A'],

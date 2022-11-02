@@ -1,4 +1,4 @@
-import { yoga } from './yoga.js'
+import { yoga } from './yoga'
 import { createServer } from 'http'
 
 const server = createServer(yoga)

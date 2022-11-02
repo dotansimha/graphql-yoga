@@ -1,4 +1,5 @@
 import { createSchema, createYoga } from 'graphql-yoga'
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
 const wait = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time))
@@ -77,6 +78,7 @@ export const yoga = createYoga({
     typeDefs,
     resolvers,
   }),
+  renderGraphiQL,
   graphiql: {
     defaultQuery: /* GraphQL */ `
       # Slow alphabet

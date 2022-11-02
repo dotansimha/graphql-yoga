@@ -4,7 +4,7 @@ import { createServer, Server } from 'http'
 import { parse } from 'graphql'
 import { YogaLink } from '@graphql-yoga/apollo-link'
 import { File } from '@whatwg-node/fetch'
-import { AddressInfo } from 'node:net'
+import { AddressInfo } from 'net'
 
 describe.skip('Yoga Apollo Link', () => {
   const endpoint = '/graphql'

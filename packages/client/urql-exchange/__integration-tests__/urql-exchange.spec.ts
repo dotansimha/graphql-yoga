@@ -4,7 +4,7 @@ import { pipe, toObservable } from 'wonka'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { File } from '@whatwg-node/fetch'
 import { createServer, Server } from 'http'
-import { AddressInfo } from 'node:net'
+import { AddressInfo } from 'net'
 
 describe.skip('URQL Yoga Exchange', () => {
   const endpoint = '/graphql'
