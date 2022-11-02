@@ -2,7 +2,7 @@
 import { IResolvers } from '@graphql-tools/utils'
 import { ClientRequest } from 'http'
 
-import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
+import { createYoga, createSchema, YogaInitialContext } from './src/index.js'
 import type { GraphQLSchema } from 'graphql'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,7 +92,7 @@ const request: Request = null as any
       },
     },
   }
-  const schema = createSchema<YogaInitialContext & Context>({
+  const schema = createSchema<Context>({
     typeDefs: ``,
     resolvers,
   })

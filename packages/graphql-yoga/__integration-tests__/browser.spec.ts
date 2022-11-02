@@ -1,6 +1,6 @@
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
-import { CORSOptions, createYoga } from 'graphql-yoga'
+import { CORSOptions, createYoga } from '../src/index.js'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import puppeteer from 'puppeteer'
 import { createServer, Server } from 'http'

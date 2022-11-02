@@ -6,14 +6,15 @@ import type { Plugin } from './types'
 export type YogaSchemaDefinition<TContext> =
   | PromiseOrValue<GraphQLSchemaWithContext<TContext>>
   | ((
-      context: TContext & { request: Request },
+      context: TContext & YogaInitialContext,
     ) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>)
 
 export const useSchema = <
-  TContext extends YogaInitialContext = YogaInitialContext,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  TContext = {},
 >(
   schemaDef?: YogaSchemaDefinition<TContext>,
-): Plugin<TContext> => {
+): Plugin<YogaInitialContext & TContext> => {
   if (schemaDef == null) {
     return {}
   }
@@ -54,7 +55,7 @@ export const useSchema = <
           const schema = await schemaDef({
             ...serverContext,
             request,
-          } as TContext & { request: Request })
+          } as TContext & YogaInitialContext)
           schemaByRequest.set(request, schema)
         },
       }

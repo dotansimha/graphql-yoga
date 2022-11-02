@@ -28,7 +28,7 @@ describe('schema', () => {
   it('schema factory function', async () => {
     const schemaFactory = async (ctx: YogaInitialContext) => {
       const strFromContext = ctx.request.headers.get('str')
-      return createSchema<YogaInitialContext>({
+      return createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             foo: String
