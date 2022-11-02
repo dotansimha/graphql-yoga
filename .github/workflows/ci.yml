@@ -13,11 +13,37 @@ on:
 jobs:
   unit:
     name: unit / nodejs v${{ matrix.node-version }}
-    uses: the-guild-org/shared-config/.github/workflows/ci-node-matrix.yml@main
-    with:
-      script: 'pnpm build && pnpm test'
-      nodeVersions: '[14,16,18]'
-      packageManager: pnpm
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+        graphql-version: ['15.8.0', '16.6.0']
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - name: Set GraphQL Cersion
+        run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Build Packages
+        run: pnpm build
+
+      - name: Run Tests
+        run: pnpm test --ci
 
   integration:
     name: integration / nodejs v${{ matrix.node-version }}
