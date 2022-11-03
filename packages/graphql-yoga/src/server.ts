@@ -11,7 +11,6 @@ import {
   envelop,
   useEngine,
   useExtendContext,
-  useLogger,
   PromiseOrValue,
   useMaskedErrors,
 } from '@envelop/core'
@@ -41,7 +40,7 @@ import {
   processRequest as processGraphQLParams,
   processResult,
 } from './process-request.js'
-import { defaultYogaLogger, titleBold, YogaLogger } from './logger.js'
+import { defaultYogaLogger, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
 import {
@@ -84,12 +83,7 @@ import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.j
 /**
  * Configuration options for the server
  */
-export type YogaServerOptions<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TServerContext extends Record<string, any>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TUserContext extends Record<string, any>,
-> = {
+export type YogaServerOptions<TServerContext, TUserContext> = {
   /**
    * Enable/disable logging or provide a custom logger.
    * @default true
@@ -194,6 +188,7 @@ export type BatchingOptions =
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
  * @internal
  */
+
 export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
@@ -297,39 +292,6 @@ export class YogaServer<
               ? options.validationCache
               : undefined,
         }),
-      // Log events - useful for debugging purposes
-      logger !== false &&
-        useLogger({
-          skipIntrospection: true,
-          logFn: (eventName, events) => {
-            switch (eventName) {
-              case 'execute-start':
-              case 'subscribe-start':
-                this.logger.debug(titleBold('Execution start'))
-                // eslint-disable-next-line no-case-declarations
-                const {
-                  // the `params` might be missing in cases where the user provided
-                  // malformed context to getEnveloped (like `yoga.getEnveloped({})`)
-                  params: { query, operationName, variables, extensions } = {},
-                }: YogaInitialContext = events.args.contextValue
-                this.logger.debug(titleBold('Received GraphQL operation:'))
-                this.logger.debug({
-                  query,
-                  operationName,
-                  variables,
-                  extensions,
-                })
-                break
-              case 'execute-end':
-              case 'subscribe-end':
-                this.logger.debug(titleBold('Execution end'))
-                this.logger.debug({
-                  result: events.result,
-                })
-                break
-            }
-          },
-        }),
       options?.context != null &&
         useExtendContext((initialContext) => {
           if (options?.context) {
@@ -395,17 +357,23 @@ export class YogaServer<
         },
       ]),
       ...(options?.plugins ?? []),
-      useLimitBatching(batchingLimit),
-      useCheckGraphQLQueryParams(),
-      useUnhandledRoute({
-        graphqlEndpoint,
-        showLandingPage: options?.landingPage ?? true,
-      }),
-      // We make sure that the user doesn't send a mutation with GET
-      usePreventMutationViaGET(),
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
+          // @ts-expect-error Add plugins has context but this hook doesn't care
+          addPlugin(useLimitBatching(batchingLimit))
+          // @ts-expect-error Add plugins has context but this hook doesn't care
+          addPlugin(useCheckGraphQLQueryParams())
+          addPlugin(
+            // @ts-expect-error Add plugins has context but this hook doesn't care
+            useUnhandledRoute({
+              graphqlEndpoint,
+              showLandingPage: options?.landingPage ?? true,
+            }),
+          )
+          // We make sure that the user doesn't send a mutation with GET
+          // @ts-expect-error Add plugins has context but this hook doesn't care
+          addPlugin(usePreventMutationViaGET())
           if (maskedErrors) {
             addPlugin(useMaskedErrors(maskedErrors))
           }
@@ -423,6 +391,12 @@ export class YogaServer<
       TUserContext & TServerContext & YogaInitialContext
     >
 
+    this.plugins = this.getEnveloped._plugins as Plugin<
+      TUserContext & TServerContext & YogaInitialContext,
+      TServerContext,
+      TUserContext
+    >[]
+
     this.onRequestHooks = []
     this.onRequestParseHooks = []
     this.onParamsHooks = []
@@ -430,6 +404,11 @@ export class YogaServer<
     this.onResponseHooks = []
     for (const plugin of this.plugins) {
       if (plugin) {
+        if (plugin.onYogaInit) {
+          plugin.onYogaInit({
+            yoga: this,
+          })
+        }
         if (plugin.onRequest) {
           this.onRequestHooks.push(plugin.onRequest)
         }

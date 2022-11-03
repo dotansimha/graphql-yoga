@@ -1,7 +1,6 @@
+/* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line no-undef
 const { createServer } = require('node:http')
-// eslint-disable-next-line no-undef
 const { createYoga, createSchema } = require('graphql-yoga')
 
 const yoga = createYoga({
@@ -29,6 +28,5 @@ const yoga = createYoga({
 
 const server = createServer(yoga)
 server.listen(4000, () => {
-  // eslint-disable-next-line no-undef
-  console.log('Server listening on http://localhost:4000/graphql')
+  console.log('Server is running on http://localhost:4000/graphql')
 })

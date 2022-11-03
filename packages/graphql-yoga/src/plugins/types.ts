@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Plugin as EnvelopPlugin,
   PromiseOrValue,
@@ -5,6 +6,7 @@ import {
   OnSubscribeHook,
 } from '@envelop/core'
 import { ExecutionResult } from '@graphql-tools/utils'
+import { YogaServer } from '../server.js'
 import {
   FetchAPI,
   GraphQLParams,
@@ -13,10 +15,10 @@ import {
 } from '../types.js'
 
 export type Plugin<
-  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/ban-types
   PluginContext extends Record<string, any> = {},
   // eslint-disable-next-line @typescript-eslint/ban-types
-  TServerContext = {},
+  TServerContext extends Record<string, any> = {},
   // eslint-disable-next-line @typescript-eslint/ban-types
   TUserContext = {},
 > = EnvelopPlugin<YogaInitialContext & PluginContext> & {
@@ -32,6 +34,11 @@ export type Plugin<
     YogaInitialContext & PluginContext & TUserContext
   >
 } & {
+  /**
+   * Use this hook with your own risk. It is still experimental and may change in the future.
+   * @internal
+   */
+  onYogaInit?: OnYogaInitHook<TServerContext>
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
    * @internal
@@ -58,6 +65,15 @@ export type Plugin<
    */
   onResponse?: OnResponseHook<TServerContext>
 }
+
+export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
+  payload: OnYogaInitEventPayload<TServerContext>,
+) => void
+
+export type OnYogaInitEventPayload<TServerContext extends Record<string, any>> =
+  {
+    yoga: YogaServer<TServerContext, any>
+  }
 
 export type OnRequestHook<TServerContext> = (
   payload: OnRequestEventPayload<TServerContext>,

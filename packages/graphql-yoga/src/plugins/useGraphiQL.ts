@@ -76,7 +76,7 @@ export interface GraphiQLPluginConfig<TServerContext> {
   logger?: YogaLogger
 }
 
-export function useGraphiQL<TServerContext>(
+export function useGraphiQL<TServerContext extends Record<string, any>>(
   config: GraphiQLPluginConfig<TServerContext>,
   // eslint-disable-next-line @typescript-eslint/ban-types
 ): Plugin<{}, TServerContext> {
