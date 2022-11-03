@@ -360,15 +360,19 @@ export class YogaServer<
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
+          // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(useLimitBatching(batchingLimit))
+          // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(useCheckGraphQLQueryParams())
           addPlugin(
+            // @ts-expect-error Add plugins has context but this hook doesn't care
             useUnhandledRoute({
               graphqlEndpoint,
               showLandingPage: options?.landingPage ?? true,
             }),
           )
           // We make sure that the user doesn't send a mutation with GET
+          // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(usePreventMutationViaGET())
           if (maskedErrors) {
             addPlugin(useMaskedErrors(maskedErrors))
@@ -379,11 +383,13 @@ export class YogaServer<
           )
         },
       },
-    ] as Plugin[]
+    ]
 
     this.getEnveloped = envelop({
-      plugins,
-    }) as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
+      plugins: this.plugins,
+    }) as unknown as GetEnvelopedFn<
+      TUserContext & TServerContext & YogaInitialContext
+    >
 
     this.plugins = this.getEnveloped._plugins as Plugin<
       TUserContext & TServerContext & YogaInitialContext,
