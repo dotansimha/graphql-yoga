@@ -92,14 +92,14 @@ export function useSofa(config: SofaPluginConfig): Plugin {
           envelopedByContext.set(contextValue, enveloped)
           return contextValue
         },
-        execute(args) {
+        execute(args: any) {
           const enveloped = envelopedByContext.get(args.contextValue)
           if (!enveloped) {
             throw new TypeError('Illegal invocation.')
           }
           return enveloped.execute(args)
         },
-        subscribe(args) {
+        subscribe(args: any) {
           const enveloped = envelopedByContext.get(args.contextValue)
           if (!enveloped) {
             throw new TypeError('Illegal invocation.')
