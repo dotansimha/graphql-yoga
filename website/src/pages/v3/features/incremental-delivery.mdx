@@ -90,7 +90,7 @@ Then press the Play (Execute Query) button.
 Alternatively, you can also send the defer operation via curl.
 
 ```sh
-curl -g -X POST -H "accept:text/event-stream" -H "content-type: application/json" -d '{"query":"query SlowAndFastFieldWithDefer { ... on Query @defer { slowField } fastField }"}' http://localhost:4000/graphql
+curl -g -X POST -H "accept:multipart/mixed" -H "content-type: application/json" -d '{"query":"query SlowAndFastFieldWithDefer { ... on Query @defer { slowField } fastField }"}' http://localhost:4000/graphql
 ```
 
 ### Stream Example
@@ -108,5 +108,5 @@ Then press the Play (Execute Query) button.
 Alternatively, you can also send the stream operation via curl.
 
 ```sh
-curl -g -X POST -H "accept:text/event-stream" -H "content-type: application/json" -d '{"query":"query StreamAlphabet { alphabet @stream }"}' http://localhost:4000/graphql
+curl -g -X POST -H "accept:multipart/mixed" -H "content-type: application/json" -d '{"query":"query StreamAlphabet { alphabet @stream }"}' http://localhost:4000/graphql
 ```
