@@ -83,7 +83,6 @@ describe('Defer/Stream', () => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        Accept: 'text/event-stream',
       },
       body: JSON.stringify({ query: '{ ... @defer { goodbye } }' }),
     })
@@ -126,7 +125,6 @@ describe('Defer/Stream', () => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        Accept: 'text/event-stream',
       },
       body: JSON.stringify({ query: '{ stream @stream(initialCount: 2) }' }),
     })
