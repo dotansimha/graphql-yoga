@@ -102,29 +102,12 @@ const request: Request = null as any
   })
 }
 
-// inject usage optional serverContext
+// fetch usage optional serverContext
 {
   const server = createYoga<{}>({
     schema,
   })
-  server.inject({
-    document: `{ __typename }`,
-  })
-}
-
-// inject usage required serverContext
-{
-  type Context = {
-    brrt: 1
-  }
-
-  const server = createYoga<Context>({
-    schema,
-  })
-  // @ts-expect-error Property 'serverContext' is missing in type '{ document: string; }' but required in type '{ serverContext: Context; }
-  server.inject({
-    document: `{ __typename }`,
-  })
+  server.fetch('http://yoga/graphql?query={greetings}')
 }
 
 createYoga({

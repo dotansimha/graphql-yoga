@@ -13,13 +13,8 @@ describe('logging', () => {
       logging: logger,
     })
 
-    await yogaApp.inject({
-      document: /* GraphQL */ `
-        {
-          greetings
-        }
-      `,
-    })
+    await yogaApp.fetch('http://yoga/graphql?query={greetings}')
+
     expect(logger.debug).toHaveBeenCalledWith(
       `Parsing request to extract GraphQL parameters`,
     )

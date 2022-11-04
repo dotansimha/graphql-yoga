@@ -1,10 +1,4 @@
-import {
-  print,
-  ExecutionResult,
-  parse,
-  validate,
-  specifiedRules,
-} from 'graphql'
+import { ExecutionResult, parse, validate, specifiedRules } from 'graphql'
 import { normalizedExecutor } from '@graphql-tools/executor'
 import {
   GetEnvelopedFn,
@@ -17,7 +11,6 @@ import {
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import {
-  GraphQLServerInject,
   YogaInitialContext,
   FetchAPI,
   GraphQLParams,
@@ -599,58 +592,6 @@ export class YogaServer<
       return new this.fetchAPI.Response('Internal Server Error', {
         status: 500,
       })
-    }
-  }
-
-  /**
-   * Testing utility to mock http request for GraphQL endpoint
-   *
-   *
-   * Example - Test a simple query
-   * ```ts
-   * const { response, executionResult } = await yoga.inject({
-   *  document: "query { ping }",
-   * })
-   * expect(response.status).toBe(200)
-   * expect(executionResult.data.ping).toBe('pong')
-   * ```
-   **/
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async inject<TData = any, TVariables = any>({
-    document,
-    variables,
-    operationName,
-    headers,
-    serverContext,
-  }: GraphQLServerInject<TData, TVariables, TServerContext>): Promise<{
-    response: Response
-    executionResult: ExecutionResult<TData> | null
-  }> {
-    const request = new this.fetchAPI.Request(
-      'http://localhost' + this.graphqlEndpoint,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers,
-        },
-        body: JSON.stringify({
-          query:
-            document &&
-            (typeof document === 'string' ? document : print(document)),
-          variables,
-          operationName,
-        }),
-      },
-    )
-    const response = await this.handle(request, serverContext as TServerContext)
-    let executionResult: ExecutionResult<TData> | null = null
-    if (response.headers.get('content-type') === 'application/json') {
-      executionResult = await response.json()
-    }
-    return {
-      response,
-      executionResult,
     }
   }
 }
