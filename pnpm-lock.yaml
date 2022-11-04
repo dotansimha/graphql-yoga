@@ -594,7 +594,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: 3.0.0-next.10
       next: 12.3.2
-      next-auth: 4.15.0
+      next-auth: 4.15.1
       react: 18.2.0
       react-dom: 18.2.0
       tslib: 2.4.1
@@ -603,7 +603,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
       next: 12.3.2_biqbaboplfbrettd7655fr4n2y
-      next-auth: 4.15.0_o3dmoitd6lovh72xiz6lllvwai
+      next-auth: 4.15.1_o3dmoitd6lovh72xiz6lllvwai
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       tslib: 2.4.1
@@ -5372,7 +5372,7 @@ packages:
       jest-validate: 29.2.0
       jest-watcher: 29.2.0
       micromatch: 4.0.5
-      pretty-format: 29.2.0
+      pretty-format: 29.2.1
       slash: 3.0.0
       strip-ansi: 6.0.1
     transitivePeerDependencies:
@@ -17937,7 +17937,7 @@ packages:
       chalk: 4.1.2
       jest-diff: 29.2.0
       jest-get-type: 29.2.0
-      pretty-format: 29.2.0
+      pretty-format: 29.2.1
     dev: true
 
   /jest-matcher-utils/29.2.1:
@@ -17960,7 +17960,7 @@ packages:
       chalk: 4.1.2
       graceful-fs: 4.2.10
       micromatch: 4.0.5
-      pretty-format: 29.2.0
+      pretty-format: 29.2.1
       slash: 3.0.0
       stack-utils: 2.0.5
     dev: true
@@ -20608,11 +20608,11 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /next-auth/4.15.0_o3dmoitd6lovh72xiz6lllvwai:
-    resolution: {integrity: sha512-IasNzGLM2VlmyioDdZaRwBBBm8b5xo+zbbqVWHFh0bY6iQUZ3vuudrsdHNdxkXV3LSHdKNaoWEpYr4BydB7mCw==}
-    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0}
+  /next-auth/4.15.1_o3dmoitd6lovh72xiz6lllvwai:
+    resolution: {integrity: sha512-yB/cSEqslaXAsLZ3lvkJbB7bRR5JeZvfUXSw0CmWeP+TaMZWB85fG9PWdfBeFrDCLBsoyATw9FF6fzApE0SxSw==}
+    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0}
     peerDependencies:
-      next: ^12.2.5
+      next: ^12.2.5 || ^13
       nodemailer: ^6.6.5
       react: ^17.0.2 || ^18
       react-dom: ^17.0.2 || ^18
