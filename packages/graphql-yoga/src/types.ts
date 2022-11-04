@@ -1,4 +1,3 @@
-import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import type { MaskError, PromiseOrValue } from '@envelop/core'
 import type { createFetch } from '@whatwg-node/fetch'
 import type { GraphQLSchema } from 'graphql'
@@ -38,24 +37,6 @@ export type CORSOptions =
       maxAge?: number
     }
   | false
-
-export type GraphQLServerInject<
-  TData = any,
-  TVariables = Record<string, any>,
-  TServerContext = Record<string, any>,
-> = {
-  /** GraphQL Operation to execute */
-  document: string | TypedDocumentNode<TData, TVariables>
-  /** Variables for GraphQL Operation */
-  variables?: TVariables
-  /** Name for GraphQL Operation */
-  operationName?: string
-  /** Set any headers for the GraphQL request */
-  headers?: HeadersInit
-  // eslint-disable-next-line @typescript-eslint/ban-types
-} & ({} extends TServerContext
-  ? { serverContext?: TServerContext }
-  : { serverContext: TServerContext })
 
 declare global {
   interface ReadableStream<R = any> {
