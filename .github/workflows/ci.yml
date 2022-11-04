@@ -15,6 +15,7 @@ jobs:
     name: unit / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version: [14, 16, 18]
         graphql-version: ['15.8.0', '16.6.0']
@@ -54,12 +55,17 @@ jobs:
         run: pnpm build
 
       - name: Run Tests
-        run: pnpm run test --ci
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: pnpm run test --ci
 
   integration:
     name: integration / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version: [14, 16, 18]
         graphql-version: ['15.8.0', '16.6.0']
@@ -99,12 +105,17 @@ jobs:
         run: pnpm build
 
       - name: Run Tests
-        run: pnpm test:integration --ci
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: pnpm test:integration --ci
 
   leaks:
     name: leaks / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version: [14, 16, 18]
         graphql-version: ['15.8.0', '16.6.0']
