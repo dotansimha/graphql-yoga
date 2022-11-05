@@ -23,10 +23,6 @@ import {
 } from 'graphql'
 import { inspect, Maybe, createGraphQLError } from '@graphql-tools/utils'
 
-interface ObjMap<T> {
-  [key: string]: T
-}
-
 /**
  * Returns a number indicating whether a reference string comes before, or after,
  * or is the same as the given string in natural sort order.
@@ -191,7 +187,7 @@ type NodeAndDef = [
   Maybe<GraphQLField<unknown, unknown>>,
 ]
 // Map of array of those.
-type NodeAndDefCollection = ObjMap<Array<NodeAndDef>>
+type NodeAndDefCollection = Record<string, Array<NodeAndDef>>
 type FragmentNames = ReadonlyArray<string>
 type FieldsAndFragmentNames = readonly [NodeAndDefCollection, FragmentNames]
 
