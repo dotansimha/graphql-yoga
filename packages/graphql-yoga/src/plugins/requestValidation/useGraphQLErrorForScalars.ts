@@ -14,7 +14,12 @@ export function useGraphQLErrorForScalars<
 
               // a graphql-scalar type error looks like this:
               // TypeError('Unable to parse', { path: any, extensions: any, locations: any })
-              if ('message' in err && 'path' in err && 'extensions' in err) {
+              if (
+                String(err.stack).includes('graphql-scalars') &&
+                'message' in err &&
+                'path' in err &&
+                'extensions' in err
+              ) {
                 // @ts-expect-error easier to just mutate the original
                 result.errors[i] = createGraphQLError(err.message, {
                   path: err.path,
