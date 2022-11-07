@@ -105,18 +105,18 @@ const yoga = createYoga({
       Query: {
         someNumber(_, _args, context) {
           return context.someNumber
-        },
-      },
-    }),
-  },
+        }
+      }
+    }
+  }),
   context() {
     return { someNumber: 13 }
-  },
+  }
 })
 
 const server = createServer(yoga)
 server.listen(4000, () => {
-    console.info('Server is running on http://localhost:4000/graphql')
+  console.info('Server is running on http://localhost:4000/graphql')
 })
 ```
 
@@ -162,7 +162,7 @@ There are in total four steps that GraphQL Yoga follows to generate the final co
 
 - [Default Context](#default-context) - created for each incoming request and the same on all platforms
 - [Server Context](#server-context) - depends on the platform (Node.js/Deno/etc.) and the framework (raw Node.js/express/fastify)
-- [User Context](#user-context) -  created for each incoming request with access to the default and server context
+- [User Context](#user-context) - created for each incoming request with access to the default and server context
 - [Envelop Plugin Context](#envelop-plugins) - created last, the plugins have access to the default context, server context and user context
 
 ### Default Context
@@ -175,7 +175,7 @@ When creating the server instance, GraphQL Yoga accepts an additional object fro
 
 #### Node.js (standalone, express and Next.js etc.)
 
-If you are using GraphQL Yoga as a standalone server with `.start()` method or exposing it as a middleware as we show in our [express](/docs/integrations/integration-with-express) and [Next.js](/docs/integrations/integration-with-nextjs) recipes.
+If you are using GraphQL Yoga as a standalone server with `createServer` from the `http(s)` module or exposing it as a middleware as we show in the [express](/v3/integrations/integration-with-express) or [Next.js](/v3/integrations/integration-with-nextjs) integration recipes.
 
 - `req` - Node.js [`IncomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage) object
 - `res` - Node.js [`ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse) object
@@ -186,13 +186,13 @@ The `req` and `res` objects are added to the initial context object.
 const serverContext = { ...defaultContext, req, res }
 ```
 
-Thus when using `@graphql-yoga/node`, it is possible to access `context.req` and `context.res` within the GraphQL resolvers or the user context factory function.
+Thus, when using `@graphql-yoga/node`, it is possible to access `context.req` and `context.res` within the GraphQL resolvers or the user context factory function.
 
-However, we recommend avoiding using `context.req` and `context.res` wherever possible and instead favor `context.request`, as it is more future-proof (as Node.js HTTP servers adopt the Fetch Response API).
+However, we recommend avoiding using `context.req` and `context.res` wherever possible and instead favor `context.request`, as it is more future-proof and platform independent (as Node.js HTTP servers adopt the Fetch Response API).
 
 #### Advanced Node.js frameworks (Fastify/Koa)
 
-You might notice that the middleware implementation is more complex for server frameworks like [Fastify](/docs/integrations/integration-with-fastify) and [koa](/docs/integrations/integration-with-koa), because of their custom request handling behavior.
+You might notice that the middleware implementation is more complex for server frameworks like [Fastify](/docs/integrations/integration-with-fastify) and [koa](/docs/integrations/integration-with-koa), because of their custom non standard request handling behavior.
 It is not possible to use a basic Node.js [RequestListener](https://nodejs.org/api/http.html#http_class_http_incomingmessage) function.
 
 Since they limit the access to the underlying raw `ServerResponse` object, the recipes use the `.handleIncomingMessage` method and pass the server context as the second parameter.
@@ -227,20 +227,19 @@ That function will receive the combination of the standard initial context and t
 
 ```ts
 import { createYoga } from 'graphql-yoga'
+import { createServer } from 'http'
 
 const yoga = createYoga({
   context: async ({ request }) => {
     // get custom header value
     const foo = request.headers.get('x-foo') ?? null
     return { foo }
-server.listen(4000, () => {
-    console.info('Server is running on http://localhost:4000/graphql')
-})
+  }
 })
 
 const server = createServer(yoga)
 server.listen(4000, () => {
-    console.info('Server is running on http://localhost:4000/graphql')
+  console.info('Server is running on http://localhost:4000/graphql')
 })
 ```
 
