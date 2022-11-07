@@ -1,5 +1,5 @@
 import type { Plugin } from '../types'
-import { createGraphQLError } from '@graphql-tools/utils'
+import { createGraphQLError } from '../../error.js'
 
 export function useGraphQLErrorForScalars<
   PluginContext extends Record<string, unknown> = Record<string, unknown>,
