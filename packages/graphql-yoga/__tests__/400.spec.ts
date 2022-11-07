@@ -1,7 +1,6 @@
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 import { DateTimeResolver, DateTimeTypeDefinition } from 'graphql-scalars'
-import { expect } from '@jest/globals'
 
 describe('400 status code errors', () => {
   it('Handle invalid data type usage errors as 400', async () => {
