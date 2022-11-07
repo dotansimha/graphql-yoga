@@ -1,43 +1,83 @@
-import { createSchema, createYoga } from 'graphql-yoga'
-import { DateResolver } from 'graphql-scalars'
+import { createSchema, createYoga } from '../src/index.js'
+import {
+  typeDefs as scalarsTypeDefs,
+  resolvers as scalarsResolvers,
+} from 'graphql-scalars'
+import { specifiedScalarTypes } from 'graphql'
 
 describe('graphql-scalars', () => {
+  const ignoredScalars = [
+    'Void',
+    'NonEmptyString',
+    'JSON',
+    'String',
+    'USCurrency',
+    'ID',
+    'Locale',
+    'Currency',
+    'Timestamp',
+  ]
+  const allScalars = [
+    ...specifiedScalarTypes,
+    ...Object.values(scalarsResolvers),
+  ].filter((type) => !ignoredScalars.includes(type.name))
   const yoga = createYoga({
     schema: createSchema({
-      typeDefs: /* GraphQL */ `
-        scalar Date
-
+      typeDefs: [
+        scalarsTypeDefs,
+        /* GraphQL */ `
         type Query {
-          getDate(date: Date!): Date!
+          ${allScalars
+            .map(
+              (scalar) =>
+                `get${scalar.name}(input: ${scalar.name}!): ${scalar.name}!`,
+            )
+            .join('\n')}
         }
       `,
-      resolvers: {
-        Date: DateResolver,
-        Query: {
-          getDate: (_, { date }) => {
-            return date
+      ],
+      resolvers: [
+        scalarsResolvers,
+        ...allScalars.map((scalar) => ({
+          Query: {
+            [`get${scalar.name}`]: (_: never, { input }: any) => input,
           },
-        },
-      },
+        })),
+      ],
     }),
   })
-
-  it('should respond with 400 if scalar parsing fails', async () => {
-    const res = await yoga.fetch('http://yoga/graphql', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        query: /* GraphQL */ `
-          query GetDate($date: Date!) {
-            getDate(date: $date)
+  allScalars.forEach(({ name: typeName }) => {
+    it(`should respond with 400 if ${typeName} scalar parsing fails from "variables"`, async () => {
+      const res = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          query: /* GraphQL */ `
+          query Get${typeName}($input: ${typeName}!) {
+            get${typeName}(input: $input)
           }
         `,
-        variables: {
-          date: 'NaD',
-        },
-      }),
+          variables: {
+            input: 'NaD',
+          },
+        }),
+      })
+      expect(res.status).toBe(400)
     })
+    it(`should respond with 400 if ${typeName} scalar parsing fails from "SDL"`, async () => {
+      const res = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          query: /* GraphQL */ `
+          query Get${typeName} {
+            get${typeName}(input: "NaD")
+          }
+        `,
+        }),
+      })
 
-    expect(res.status).toBe(400)
+      expect(res.status).toBe(400)
+    })
   })
 })

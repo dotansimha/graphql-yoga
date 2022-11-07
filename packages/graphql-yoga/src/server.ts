@@ -72,7 +72,6 @@ import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
 import { yogaDefaultFormatError } from './utils/yoga-default-format-error.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
-import { useGraphQLErrorForScalars } from './plugins/requestValidation/useGraphQLErrorForScalars.js'
 
 /**
  * Configuration options for the server
@@ -368,8 +367,6 @@ export class YogaServer<
           // We make sure that the user doesn't send a mutation with GET
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(usePreventMutationViaGET())
-          // Make sure graphql-scalars errors are cast to GraphQLError
-          addPlugin(useGraphQLErrorForScalars())
           if (maskedErrors) {
             addPlugin(useMaskedErrors(maskedErrors))
           }
