@@ -1,12 +1,12 @@
 # Parsing and Validation Caching
 
-By default, Yoga will maintain a parsing and validation cache. If requests contain queries that have been executed already before, they will not be parsed and validated again - only once, on the first request.
+By default, Yoga will maintain a parsing and validation cache. If requests contain documents that have been executed before, they will not be parsed and validated again.
 
-Note that using the parser cache can improve performance up to ~60%, and using the validation cache up to ~50% (based on benchmarks).
+Using the parser cache can improve performance up to ~60%, and using the validation cache up to ~50% (based on benchmarks).
 
 This behavior is built-in and can be optionally disabled using the `parserCache` and `validationCache` options:
 
-```ts
+```ts filename="Disable validation and parser caching" {7-8}
 import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
 import { schema } from './my-schema'
@@ -25,7 +25,7 @@ server.listen(4000, () => {
 
 Furthermore, you can provide your own cache store to both of these plugins by implementing the following interface:
 
-```ts
+```ts filename="Custom cache store" {11-14,18-22}
 import { DocumentNode, GraphQLError } from 'graphql'
 import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
