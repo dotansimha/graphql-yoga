@@ -2,4 +2,6 @@
 'graphql-yoga': patch
 ---
 
-introduce a new plugin for defer and stream instead of making it default in yoga
+**Defer and Stream Support**
+
+[See the docs for more information](https://www.the-guild.dev/graphql/yoga-server/v3/features/defer-stream)

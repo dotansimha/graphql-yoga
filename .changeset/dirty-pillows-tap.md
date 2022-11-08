@@ -2,4 +2,4 @@
 'graphql-yoga': minor
 ---
 
-use custom executor
+Use `@graphql-tools/executor` as a default GraphQL Executor in favor of `graphql-js`.

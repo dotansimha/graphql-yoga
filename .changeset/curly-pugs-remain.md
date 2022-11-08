@@ -10,7 +10,6 @@ import { schema } from './schema'
 
 const yoga = createYoga({ schema })
 
-
 - const { response, executionResult } = await yoga.inject({
 -   document: "query { ping }",
 - })

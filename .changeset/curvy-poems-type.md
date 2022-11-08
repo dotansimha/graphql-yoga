@@ -2,4 +2,4 @@
 'graphql-yoga': patch
 ---
 
-graphql-scalars parsing issues return status code 400 instead of 500
+Ensure all parsing failures in `GraphQLScalarType` are caught and handled with 400 status code.
