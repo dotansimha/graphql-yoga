@@ -20,19 +20,12 @@
         background-color: black;
       }
 
-      main {
-        min-height: 80%;
-      }
-
       main > section.hero {
         display: flex;
         height: 90vh;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        filter: drop-shadow(0 0 50rem rgba(255, 0, 255, 0.3))
-          drop-shadow(-10px -10px 50px rgba(237, 46, 126, 0.3));
-        animation: pulsate 30s ease-in-out infinite;
       }
 
       .logo {
@@ -42,54 +35,6 @@
 
       .buttons {
         margin-top: 24px;
-      }
-
-      /* rgb(125, 85, 245) */
-      @keyframes pulsate {
-        0% {
-          filter: drop-shadow(0 0 50rem rgba(255, 0, 255, 0.3))
-            drop-shadow(-10px -10px 50px rgba(237, 46, 126, 0.3));
-        }
-        10% {
-          filter: drop-shadow(0 0 50rem rgba(255, 0, 255, 0.5))
-            drop-shadow(-10px -10px 50px rgba(237, 46, 126, 0.5));
-        }
-        20% {
-          filter: drop-shadow(0 0 50rem rgba(28, 200, 238, 0.5))
-            drop-shadow(-10px -10px 50px rgba(28, 200, 238, 0.5));
-        }
-        30% {
-          filter: drop-shadow(0 0 50rem rgba(28, 200, 238, 0.3))
-            drop-shadow(-10px -10px 50px rgba(28, 200, 238, 0.23));
-        }
-        40% {
-          filter: drop-shadow(0 0 50rem rgba(125, 85, 245, 0.4))
-            drop-shadow(-10px -10px 50px rgb(125, 85, 245, 0.4));
-        }
-        50% {
-          filter: drop-shadow(0 0 50rem rgba(125, 85, 245, 0.3))
-            drop-shadow(-10px -10px 50px rgb(125, 85, 245, 0.3));
-        }
-        60% {
-          filter: drop-shadow(0 0 50rem rgba(125, 85, 245, 0.5))
-            drop-shadow(-10px -10px 50px rgba(125, 85, 245, 0.5));
-        }
-        70% {
-          filter: drop-shadow(0 0 50rem rgba(255, 0, 255, 0.5))
-            drop-shadow(-10px -10px 50px rgba(255, 0, 255, 0.5));
-        }
-        80% {
-          filter: drop-shadow(0 0 50rem rgba(255, 0, 255, 0.4))
-            drop-shadow(-10px -10px 50px rgba(255, 0, 255, 0.4));
-        }
-        80% {
-          filter: drop-shadow(0 0 50rem rgba(255, 0, 255, 0.5))
-            drop-shadow(-10px -10px 50px rgba(255, 0, 255, 0.5));
-        }
-        100% {
-          filter: drop-shadow(0 0 2rem rgba(255, 0, 255, 0.3))
-            drop-shadow(-10px -10px 50px rgba(255, 0, 255, 0.3));
-        }
       }
 
       h1 {
