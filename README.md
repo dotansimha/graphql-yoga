@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/dotansimha/graphql-yoga/raw/v3/website/public/cover.png" width="720" /></p>
+<p align="center"><img src="https://github.com/dotansimha/graphql-yoga/raw/main/website/public/cover.png" width="720" /></p>
 
 # GraphQL Yoga
 
