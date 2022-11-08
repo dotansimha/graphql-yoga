@@ -1,27 +1,42 @@
-import { PackageCmd } from '@theguild/components'
+import { PackageCmd, Callout } from '@theguild/components'
 
 # Automatic Persisted Queries
 
 Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL documents to the server over and over again.
-Since the upload speed can be the bottleneck from client to server, reducing the payload size can improve the performance.
+Thus reducing client to server upstream traffic.
 
-GraphQL Yoga's Automatic Persisted Queries plugin follows [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine)
+Since the upload speed can be the bottleneck from client to server, reducing the payload size can improve the performance especially for huge GraphQL documents.
 
-> **NOTE:** Automatic Persisted Queries do not provide any security features, the benefit of using them is to reduce network overhead.
-> If you want to avoid executing arbitrary GraphQL operations please use the Persisted Documents plugin.
+The GraphQL Yoga's Automatic Persisted Queries plugin follows [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine).
+
+<Callout>
+  Automatic Persisted Queries do not provide any security features, the benefit
+  of using them is to reduce network overhead. If you want to avoid executing
+  arbitrary GraphQL operations please use [Persisted
+  Operations](/v3/features/persisted-operations).
+</Callout>
 
 ## Installation
 
-<PackageCmd packages={['@graphql-yoga/plugin-apq']} />
-
 ## Quick Start
 
-```ts
-import { createYoga } from 'graphql-yoga'
+Using Automatic Persisted Queries requires installing a separate package.
+
+<PackageCmd packages={['@graphql-yoga/plugin-apq']} />
+
+```ts filename="Automatic Persisted Queries Yoga setup" {3, 13}
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
 import { useAPQ } from '@graphql-yoga/plugin-apq'
 
 const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `
+  }),
   plugins: [useAPQ()]
 })
 
@@ -31,18 +46,18 @@ server.listen(4000, () => {
 })
 ```
 
-Start your yoga server and send a request for priming the cache.
+Start your yoga server and send a request for priming the cache (register the operation).
 
-```bash
+```bash filename="Execute GraphQL Operation to prime the cache"
 curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
--d '{"query":"{__typename}","extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
+  -d '{"query":"{__typename}","extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
 ```
 
 Then afterwards we can send the same payload again, but this time omit the `query` field.
 
-```bash
+```bash filename="Execute GraphQL Operation without query payload"
 curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
--d '{"extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
+  -d '{"extensions":{"persistedQuery":{"version":1,"sha256Hash":"ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38"}}}'
 ```
 
 Especially for big GraphQL document strings, the subsequent payload can be much smaller.
@@ -61,8 +76,8 @@ By default all the documents strings are stored in memory with an LRU cache that
 
 A custom store implementation can be provided via the `store` option.
 
-```ts
-import { createYoga } from 'graphql-yoga'
+```ts filename="Automatic Persisted Operations with a custom store" {16}
+import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
 import { useAPQ } from '@graphql-yoga/plugin-apq'
 
@@ -70,6 +85,13 @@ import { useAPQ } from '@graphql-yoga/plugin-apq'
 const store: APQStore = new Map()
 
 const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `
+  }),
   plugins: [useAPQ({ store })]
 })
 
@@ -79,4 +101,4 @@ server.listen(4000, () => {
 })
 ```
 
-The `set` and `get` properties on the store can also return a `Promise`.
+For external stores the `set` and `get` properties on the store can also return a `Promise`.
