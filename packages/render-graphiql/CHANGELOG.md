@@ -1,5 +1,12 @@
 # @graphql-yoga/render-graphiql
 
+## 2.13.13
+
+### Patch Changes
+
+- Updated dependencies [[`406d83eb`](https://github.com/dotansimha/graphql-yoga/commit/406d83eb68095d38ccfae23b3dc7c319520b0e4f), [`78eaafca`](https://github.com/dotansimha/graphql-yoga/commit/78eaafcaaed73a1dcff1654ad0696319416f0e67), [`c263c055`](https://github.com/dotansimha/graphql-yoga/commit/c263c0555c1734f0c89323471c814207354ccebd), [`69b593e8`](https://github.com/dotansimha/graphql-yoga/commit/69b593e891739228a9e8c6597ef07598968d4858)]:
+  - @graphql-yoga/common@2.12.13
+
 ## 2.13.12
 
 ### Patch Changes

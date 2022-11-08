@@ -1,5 +1,12 @@
 # example-live-query
 
+## 0.13.14
+
+### Patch Changes
+
+- Updated dependencies [[`406d83eb`](https://github.com/dotansimha/graphql-yoga/commit/406d83eb68095d38ccfae23b3dc7c319520b0e4f), [`78eaafca`](https://github.com/dotansimha/graphql-yoga/commit/78eaafcaaed73a1dcff1654ad0696319416f0e67)]:
+  - @graphql-yoga/node@2.13.14
+
 ## 0.13.13
 
 ### Patch Changes
