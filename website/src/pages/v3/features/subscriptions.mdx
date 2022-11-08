@@ -20,8 +20,9 @@ You don't need any extra packages to use subscriptions.
 
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
-```ts filename="server.ts"
-import { createYoga } from 'graphql-yoga'
+```ts filename="Subscription countdown implementation"
+import { createYoga, createSchema } from 'graphql-yoga'
+import { createServer } from 'node:http'
 
 // Provide your schema
 const yoga = createYoga({
@@ -62,7 +63,7 @@ server.listen(4000, () => {
 
 Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
 
-```graphql
+```graphql filename="Subscription countdown operation"
 subscription {
   countdown(from: 5)
 }
@@ -466,48 +467,50 @@ source.return()
 ```
 
 ```ts filename="Example Random number stream transform"
-import { createServer, createPubSub } from 'graphql-yoga'
+import { createPubSub, createYoga, createSchema } from 'graphql-yoga'
+import { createServer } from 'node:http'
 
 const pubSub = createPubSub()
 
-// Provide your schema
 const yoga = createYoga({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-
-    type Subscription {
-      randomNumber(multiplyBy: Int!, lessThan: Float!): Float!
-    }
-
-    type Mutation {
-      broadcastRandomNumber: Boolean
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world'
-    },
-    Subscription: {
-      randomNumber: {
-        // subscribe to the randomNumber event
-        subscribe: (_, args) =>
-          pipe(
-            pubSub.subscribe('randomNumber'),
-            map((publishedNumber) => publishedNumber * args.multiplyBy),
-            filter((multipliedNumber) => multipliedNumber < args.lessThan)
-          ),
-        resolve: (payload) => payload
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
       }
-    },
-    Mutation: {
-      broadcastRandomNumber: (_, args) => {
-        // publish a random number
-        pubSub.publish('randomNumber', Math.random())
+
+      type Subscription {
+        randomNumber(multiplyBy: Int!, lessThan: Float!): Float!
+      }
+
+      type Mutation {
+        broadcastRandomNumber: Boolean
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'world'
+      },
+      Subscription: {
+        randomNumber: {
+          // subscribe to the randomNumber event
+          subscribe: (_, args) =>
+            pipe(
+              pubSub.subscribe('randomNumber'),
+              map((publishedNumber) => publishedNumber * args.multiplyBy),
+              filter((multipliedNumber) => multipliedNumber < args.lessThan)
+            ),
+          resolve: (payload) => payload
+        }
+      },
+      Mutation: {
+        broadcastRandomNumber: (_, args) => {
+          // publish a random number
+          pubSub.publish('randomNumber', Math.random())
+        }
       }
     }
-  }
+  })
 })
 
 const server = createServer(yoga)
@@ -528,58 +531,67 @@ GraphQL subscriptions are implemented using [Async Iteration](https://developer.
 Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org/) ("The missing constructor for creating safe async iterators") for providing a friendly developer experience.
 
 ```ts
-import { createServer, createPubSub, Repeater, pipe, map } from 'graphql-yoga'
+import {
+  createYoga,
+  createSchema,
+  createPubSub,
+  Repeater,
+  pipe,
+  map
+} from 'graphql-yoga'
+import { createServer } from 'node:http'
 
 let globalCounter = 0
 const pubSub = createPubSub()
 
-// Provide your schema
 const yoga = createYoga({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-
-    type Subscription {
-      globalCounter: Int!
-    }
-
-    type Mutation {
-      incrementGlobalCounter: Int!
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world'
-    },
-    Subscription: {
-      globalCounter: {
-        // Merge initial value with source stream of new values
-        subscribe: () =>
-          pipe(
-            Repeater.merge([
-              // cause an initial event so the
-              // globalCounter is streamed to the client
-              // upon initiating the subscription
-              undefined,
-              // event stream for future updates
-              pubSub.subscribe('globalCounter:change')
-            ]),
-            // map all stream values to the latest globalCounter
-            map(() => globalCounter)
-          ),
-        resolve: (payload) => payload
+  schema: createServer({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
       }
-    },
-    Mutation: {
-      incrementGlobalCounter: () => {
-        globalCounter = globalCounter + 1
-        // publish a global counter increment event
-        pubSub.publish('globalCounter:change')
-        return globalCounter
+
+      type Subscription {
+        globalCounter: Int!
+      }
+
+      type Mutation {
+        incrementGlobalCounter: Int!
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'world'
+      },
+      Subscription: {
+        globalCounter: {
+          // Merge initial value with source stream of new values
+          subscribe: () =>
+            pipe(
+              Repeater.merge([
+                // cause an initial event so the
+                // globalCounter is streamed to the client
+                // upon initiating the subscription
+                undefined,
+                // event stream for future updates
+                pubSub.subscribe('globalCounter:change')
+              ]),
+              // map all stream values to the latest globalCounter
+              map(() => globalCounter)
+            ),
+          resolve: (payload) => payload
+        }
+      },
+      Mutation: {
+        incrementGlobalCounter: () => {
+          globalCounter = globalCounter + 1
+          // publish a global counter increment event
+          pubSub.publish('globalCounter:change')
+          return globalCounter
+        }
       }
     }
-  }
+  })
 })
 
 const server = createServer(yoga)
@@ -593,7 +605,8 @@ server.listen(4000, () => {
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 
 ```ts
-import { createServer, createPubSub, Repeater } from 'graphql-yoga'
+import { createYoga, createSchema, createPubSub, Repeater } from 'graphql-yoga'
+import { createServer } from 'node:http'
 
 type User = {
   id: string
@@ -610,63 +623,64 @@ const pubSub = createPubSub<{
   userDeleted: []
 }>()
 
-// Provide your schema
 const yoga = createYoga({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String
-    }
-
-    type User {
-      id: ID!
-      login: String
-    }
-
-    type Subscription {
-      user: User
-    }
-
-    type Mutation {
-      deleteUser: Boolean
-      updateUserLogin(newLogin: String!): Boolean
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'world'
-    },
-    Subscription: {
-      user: {
-        // Merge initial value with source streams of new values
-        subscribe: () =>
-          pipe(
-            Repeater.merge([
-              undefined,
-              pubSub.subscribe('userLoginChanged'),
-              pubSub.subscribe('userDeleted')
-            ]),
-            // map all stream values to the latest user
-            map(() => user)
-          ),
-        resolve: (payload) => payload
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
       }
-    },
-    Mutation: {
-      deleteUser() {
-        user = null
-        pubSub.publish('userDeleted')
-        return true
+
+      type User {
+        id: ID!
+        login: String
+      }
+
+      type Subscription {
+        user: User
+      }
+
+      type Mutation {
+        deleteUser: Boolean
+        updateUserLogin(newLogin: String!): Boolean
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'world'
       },
-      updateUserLogin(_, args) {
-        if (!user) {
-          return false
+      Subscription: {
+        user: {
+          // Merge initial value with source streams of new values
+          subscribe: () =>
+            pipe(
+              Repeater.merge([
+                undefined,
+                pubSub.subscribe('userLoginChanged'),
+                pubSub.subscribe('userDeleted')
+              ]),
+              // map all stream values to the latest user
+              map(() => user)
+            ),
+          resolve: (payload) => payload
         }
-        user.login = args.newLogin
-        pubSub.publish('userLoginChanged')
-        return true
+      },
+      Mutation: {
+        deleteUser() {
+          user = null
+          pubSub.publish('userDeleted')
+          return true
+        },
+        updateUserLogin(_, args) {
+          if (!user) {
+            return false
+          }
+          user.login = args.newLogin
+          pubSub.publish('userLoginChanged')
+          return true
+        }
       }
     }
-  }
+  })
 })
 
 const server = createServer(yoga)
