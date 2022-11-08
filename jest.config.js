@@ -42,11 +42,9 @@ module.exports = {
   restoreMocks: true,
   reporters: ['default'],
   modulePathIgnorePatterns: ['dist'],
-  moduleNameMapper: {
-    ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
-      prefix: `${ROOT_DIR}/`,
-    }),
-  },
+  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+    prefix: `${ROOT_DIR}/`,
+  }),
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
