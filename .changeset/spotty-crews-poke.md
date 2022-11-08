@@ -2,4 +2,4 @@
 '@graphql-yoga/graphiql': major
 ---
 
-upgrade to GraphiQL v2
+Upgrade to GraphiQL v2
