@@ -9,7 +9,7 @@ export default defineConfig({
     link: 'https://discord.gg/94CDTmgmbs',
   },
   docsRepositoryBase:
-    'https://github.com/dotansimha/graphql-yoga/tree/v3/website',
+    'https://github.com/dotansimha/graphql-yoga/tree/main/website',
   getNextSeoProps() {
     return {
       openGraph: {
