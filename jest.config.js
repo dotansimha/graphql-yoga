@@ -46,7 +46,6 @@ module.exports = {
     ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
       prefix: `${ROOT_DIR}/`,
     }),
-    'formdata-node': '<rootDir>/node_modules/formdata-node/lib/cjs/index.js',
   },
   collectCoverage: false,
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
