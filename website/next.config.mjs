@@ -10,6 +10,7 @@ export default withGuildDocs({
       '/docs/integrations': '/docs',
       '/docs/features': '/docs',
       '/examples/graphql-ws': '/docs/features/subscriptions',
+      '/v3/features/incremental-delivery': '/v3/features/defer-stream',
     }).map(([from, to]) => ({
       source: from,
       destination: to,
