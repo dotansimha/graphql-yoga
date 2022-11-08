@@ -1,4 +1,4 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { PackageCmd, Callout, Tabs, Tab } from '@theguild/components'
 
 # Subscriptions
 
@@ -129,11 +129,27 @@ eventsource.onmessage = function (event) {
 
 ### Client Usage with Apollo
 
+You can either decide to use the pre-built Yoga Apollo Link, or build your own from scratch.
+The Yoga Apollo Link requires you to install an additional package, while the custom link requires you to write more code.
+However, by writing the link yourself you get full control over the link and can customize it to your needs.
+
+<Callout>
+  The Yoga Link can drastically increase your client bundle size, as it has a
+  lot of dependencies. If this is a concern to you should consider using the
+  `Custom Link Recipe` instead.
+</Callout>
+
+<Tabs items={['Yoga Apollo Link', 'Custom Link Recipe']}>
+
+<Tab>
+
+Install the `@graphql-yoga/apollo-link` package.
+
+<PackageCmd packages={['@graphql-yoga/apollo-link']} />
+
 You need to use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads in Apollo Client.
 
-<PackageCmd packages={['@graphql-yoga/urql-exchange']} />
-
-```ts
+```ts filename="YogaLink apollo client usage"
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { YogaLink } from '@graphql-yoga/apollo-link'
 
@@ -145,7 +161,111 @@ const client = new ApolloClient({
 })
 ```
 
+</Tab>
+
+<Tab>
+You can create an `SSELink` to use with Apollo Client.
+To send non Subscription operations via the default HTTP protocol, the `split` function from the Apollo Link package is used.
+[For more information please refer to the Apollo Link documentation](https://apollographql.com/docs/react/api/link/introduction).
+
+```ts filename="SSELink apollo client usage"
+import {
+  ApolloLink,
+  Operation,
+  FetchResult,
+  Observable,
+  ApolloClient,
+  InMemoryCache
+} from '@apollo/client/core'
+import { split } from '@apollo/client/link/core'
+import { HttpLink } from '@apollo/client/link/http'
+import { print, getOperationAST } from 'graphql'
+
+type SSELinkOptions = EventSourceInit & { uri: string }
+
+class SSELink extends ApolloLink {
+  constructor(private options: SSELinkOptions) {
+    super()
+  }
+
+  request(operation: Operation): Observable<FetchResult> {
+    const url = new URL(this.options.uri)
+    url.searchParams.append('query', print(operation.query))
+    if (operation.operationName) {
+      url.searchParams.append(
+        'operationName',
+        JSON.stringify(operation.operationName)
+      )
+    }
+    if (operation.variables) {
+      url.searchParams.append('variables', JSON.stringify(operation.variables))
+    }
+    if (operation.extensions) {
+      url.searchParams.append(
+        'extensions',
+        JSON.stringify(operation.extensions)
+      )
+    }
+
+    return new Observable((sink) => {
+      const eventsource = new EventSource(url.toString(), this.options)
+      eventsource.onmessage = function (event) {
+        const data = JSON.parse(event.data)
+        sink.next(data)
+        if (eventsource.readyState === 2) {
+          sink.complete()
+        }
+      }
+      eventsource.onerror = function (error) {
+        sink.error(error)
+      }
+      return () => eventsource.close()
+    })
+  }
+}
+
+const uri = 'http://localhost:4000/graphql'
+const sseLink = new SSELink({ uri })
+const httpLink = new HttpLink({ uri })
+
+const link = split(
+  ({ query, operationName }) => {
+    const definition = getOperationAST(query, operationName)
+
+    return (
+      definition?.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  sseLink,
+  httpLink
+)
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache()
+})
+```
+
+</Tab>
+
+</Tabs>
+
 ### Client Usage with urql
+
+You can either decide to use the pre-built Yoga Urql Exchange, or build your own from scratch.
+The Yoga Urql Exchange requires you to install an additional package, while the custom link requires you to write more code.
+However, by writing the link yourself you get full control over the link and can customize it to your needs.
+
+<Callout>
+  The Yoga Urql Exchange can drastically increase your client bundle size, as it
+  has a lot of dependencies. If this is a concern to you should consider using
+  the `Custom Exchange Recipe` instead.
+</Callout>
+
+<Tabs items={['Yoga Urql Exchange', 'Custom Exchange Recipe']}>
+
+<Tab>
 
 You need to install `@urql/exchange-graphql` for GraphQL Yoga, and use `yogaExchange` from that package.
 
@@ -160,6 +280,57 @@ const client = createClient({
   exchanges: [...defaultExchanges, yogaExchange()]
 })
 ```
+
+</Tab>
+
+<Tab>
+
+```ts
+import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
+
+const client = createClient({
+  url: 'http://localhost:4000/graphql',
+  exchanges: [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription(operation) {
+        const url = new URL('http://localhost:4000/graphql')
+        url.searchParams.append('query', operation.query)
+        if (operation.variables) {
+          url.searchParams.append(
+            'variables',
+            JSON.stringify(operation.variables)
+          )
+        }
+        return {
+          subscribe(sink) {
+            const eventsource = new EventSource(url.toString(), {
+              withCredentials: true // This is required for cookies
+            })
+            eventsource.onmessage = (event) => {
+              const data = JSON.parse(event.data)
+              sink.next(data)
+              if (eventsource.readyState === 2) {
+                sink.complete()
+              }
+            }
+            eventsource.onerror = (error) => {
+              sink.error(error)
+            }
+            return {
+              unsubscribe: () => eventsource.close()
+            }
+          }
+        }
+      }
+    })
+  ]
+})
+```
+
+</Tab>
+
+</Tabs>
 
 ## Subscriptions over WebSockets with `graphql-ws`
 
