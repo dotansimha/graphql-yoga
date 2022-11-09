@@ -60,7 +60,7 @@ describe.skip('Yoga Apollo Link', () => {
     client = new ApolloClient({
       link: new YogaLink({
         endpoint: url,
-        customFetch: yoga.fetch as WindowOrWorkerGlobalScope['fetch'],
+        fetch: yoga.fetch as WindowOrWorkerGlobalScope['fetch'],
       }),
       cache: new InMemoryCache(),
     })

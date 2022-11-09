@@ -133,12 +133,6 @@ You can either decide to use the pre-built Yoga Apollo Link, or build your own f
 The Yoga Apollo Link requires you to install an additional package, while the custom link requires you to write more code.
 However, by writing the link yourself you get full control over the link and can customize it to your needs.
 
-<Callout>
-  The Yoga Link can drastically increase your client bundle size, as it has a
-  lot of dependencies. If this is a concern to you should consider using the
-  `Custom Link Recipe` instead.
-</Callout>
-
 <Tabs items={['Yoga Apollo Link', 'Custom Link Recipe']}>
 
 <Tab>
@@ -147,7 +141,7 @@ Install the `@graphql-yoga/apollo-link` package.
 
 <PackageCmd packages={['@graphql-yoga/apollo-link']} />
 
-You need to use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads in Apollo Client.
+You can use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads and defer/stream in Apollo Client.
 
 ```ts filename="YogaLink apollo client usage"
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
@@ -256,12 +250,6 @@ const client = new ApolloClient({
 You can either decide to use the pre-built Yoga Urql Exchange, or build your own from scratch.
 The Yoga Urql Exchange requires you to install an additional package, while the custom link requires you to write more code.
 However, by writing the link yourself you get full control over the link and can customize it to your needs.
-
-<Callout>
-  The Yoga Urql Exchange can drastically increase your client bundle size, as it
-  has a lot of dependencies. If this is a concern to you should consider using
-  the `Custom Exchange Recipe` instead.
-</Callout>
 
 <Tabs items={['Yoga Urql Exchange', 'Custom Exchange Recipe']}>
 
