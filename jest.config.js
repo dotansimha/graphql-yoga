@@ -31,7 +31,7 @@ if (process.env.INTEGRATION_TEST === 'true') {
 
 // tests that leak due to external dependencies
 if (process.env.LEAKS_TEST === 'true') {
-  testMatch.push('!**/hackernews.spec.ts', '!**/urql-exchange.spec.ts', '!**/apollo-link.spec.ts')');
+  testMatch.push('!**/hackernews.spec.ts', '!**/urql-exchange.spec.ts', '!**/apollo-link.spec.ts');
 }
 
 testMatch.push('!**/dist/**', '!**/.bob/**')
