@@ -19,6 +19,25 @@ import 'json-bigint-patch'
 import { AddressInfo } from 'net'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 
+let resolveOnReturn: VoidFunction
+const timeouts = new Set<NodeJS.Timeout>()
+
+let charCode = 'A'.charCodeAt(0)
+const fakeAsyncIterable = {
+  [Symbol.asyncIterator]() {
+    return this
+  },
+  next: () =>
+    sleep(300, (timeout) => timeouts.add(timeout)).then(() => ({
+      value: String.fromCharCode(charCode++),
+      done: false,
+    })),
+  return: () => {
+    resolveOnReturn()
+    timeouts.forEach(clearTimeout)
+    return Promise.resolve({ done: true })
+  },
+}
 export function createTestSchema() {
   let liveQueryCounter = 0
 
@@ -56,13 +75,7 @@ export function createTestSchema() {
         },
         stream: {
           type: new GraphQLList(GraphQLString),
-          async *resolve() {
-            yield 'A'
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-            yield 'B'
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-            yield 'C'
-          },
+          resolve: () => fakeAsyncIterable,
         },
         bigint: {
           type: GraphQLBigInt,
@@ -254,11 +267,12 @@ describe('browser', () => {
       await page.goto(
         `http://localhost:${port}${endpoint}?query={ stream @stream }`,
       )
+      const returnPromise$ = new Promise<void>((resolve) => {
+        resolveOnReturn = resolve
+      })
       await page.click('.graphiql-execute-button')
-
-      await new Promise((res) => setTimeout(res, 100))
-
-      const [resultContents, isShowingStopButton] = await page.evaluate(
+      await sleep(900)
+      const [resultContents1, isShowingStopButton] = await page.evaluate(
         (stopButtonSelector) => {
           return [
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -269,30 +283,15 @@ describe('browser', () => {
         },
         stopButtonSelector,
       )
-      expect(JSON.parse(resultContents)).toEqual({
-        data: {
-          stream: ['A'],
-        },
-      })
       expect(isShowingStopButton).toEqual(true)
-      await new Promise((resolve) => setTimeout(resolve, 2200))
-      const [resultContents1, isShowingPlayButton] = await page.evaluate(
-        (playButtonSelector) => {
-          return [
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            window.g.resultComponent.viewer.getValue(),
-            !!window.document.querySelector(playButtonSelector),
-          ]
-        },
-        playButtonSelector,
-      )
       expect(JSON.parse(resultContents1)).toEqual({
         data: {
           stream: ['A', 'B', 'C'],
         },
       })
-      expect(isShowingPlayButton).toEqual(true)
+      await page.click(stopButtonSelector)
+      await returnPromise$
+      expect(isShowingStopButton).toEqual(true)
     })
 
     test('execute SSE (subscription) operation', async () => {
@@ -537,3 +536,12 @@ describe('browser', () => {
     })
   })
 })
+
+function sleep<T = void>(
+  ms: number,
+  onTimeout: (timeout: NodeJS.Timeout) => T = () => {
+    return undefined as T
+  },
+) {
+  return new Promise((resolve) => onTimeout(setTimeout(resolve, ms)))
+}
