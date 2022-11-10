@@ -1,4 +1,4 @@
-import { createYoga } from 'graphql-yoga'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 import {
   GraphQLList,
@@ -169,4 +169,124 @@ describe('Defer/Stream', () => {
       ]
     `)
   })
+
+  it('correctly deals with the source upon aborted requests', async () => {
+    const { source, push, terminate } = createPushPullAsyncIterable<string>()
+    push('A')
+
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hi: [String]
+          }
+        `,
+        resolvers: {
+          Query: {
+            hi: () => source,
+          },
+        },
+      }),
+      plugins: [useDeferStream()],
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ hi @stream }' }),
+    })
+
+    if (!response.body) {
+      throw new Error('Missing body.')
+    }
+
+    let counter = 0
+
+    for await (const chunk of response.body!) {
+      // eslint-disable-next-line no-console
+      console.log('case', counter)
+      if (counter === 0) {
+        expect(chunk.toString()).toBe(
+          `data: {"data":{"hi":[]},"hasNext":true}\n\n`,
+        )
+      } else if (counter === 1) {
+        expect(chunk.toString()).toBe(
+          `data: {"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}\n\n`,
+        )
+        push('B')
+      } else if (counter === 2) {
+        expect(chunk.toString()).toBe(
+          `data: {"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}\n\n`,
+        )
+        push('C')
+      } else if (counter === 3) {
+        expect(chunk.toString()).toBe(
+          `data: {"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}\n\n`,
+        )
+        // when the source is returned this stream/loop should be exited.
+        terminate()
+      } else if (counter === 4) {
+        expect(chunk.toString()).toBe(`data: {"hasNext":false}\n\n`)
+      } else {
+        throw new Error("LOL, this shouldn't happen.")
+      }
+
+      counter++
+    }
+  })
 })
+
+type Deferred<T = void> = {
+  resolve: (value: T) => void
+  reject: (value: unknown) => void
+  promise: Promise<T>
+}
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve
+    d.reject = reject
+  })
+  return d
+}
+
+const createPushPullAsyncIterable = <T>(): {
+  source: AsyncGenerator<T>
+  push: (item: T) => void
+  terminate: () => void
+} => {
+  const queue: Array<T> = []
+  let d = createDeferred()
+  let terminated = false
+
+  const source = new Repeater<T>(async (push, stop) => {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      if (terminated) {
+        stop()
+        return
+      }
+      let item: T | undefined
+      while ((item = queue.shift())) {
+        push(item)
+      }
+      await d.promise
+    }
+  })
+
+  return {
+    source,
+    push: (item) => {
+      queue.push(item)
+      d.resolve()
+      d = createDeferred()
+    },
+    terminate: () => {
+      terminated = true
+      d.resolve()
+    },
+  }
+}
