@@ -196,6 +196,7 @@ describe('Defer/Stream', () => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
+        accept: 'multipart/mixed',
       },
       body: JSON.stringify({ query: '{ hi @stream }' }),
     })
@@ -208,34 +209,39 @@ describe('Defer/Stream', () => {
     const toStr = (arr: Uint8Array) => Buffer.from(arr).toString('utf-8')
 
     for await (const chunk of response.body!) {
-      // eslint-disable-next-line no-console
-      console.log('case', counter)
-      if (counter === 0) {
-        expect(toStr(chunk)).toBe(`data: {"data":{"hi":[]},"hasNext":true}\n\n`)
-      } else if (counter === 1) {
-        expect(toStr(chunk)).toBe(
-          `data: {"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}\n\n`,
-        )
-        push('B')
-      } else if (counter === 2) {
-        expect(toStr(chunk)).toBe(
-          `data: {"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}\n\n`,
-        )
-        push('C')
-      } else if (counter === 3) {
-        expect(toStr(chunk)).toBe(
-          `data: {"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}\n\n`,
-        )
-        // when the source is returned this stream/loop should be exited.
-        terminate()
-        push('D')
-      } else if (counter === 4) {
-        expect(toStr(chunk)).toBe(`data: {"hasNext":false}\n\n`)
-      } else {
-        throw new Error("LOL, this shouldn't happen.")
-      }
+      const parts = toStr(chunk)
+        .split('\r\n')
+        .filter((p) => p.startsWith('{'))
+      for (const part of parts) {
+        // eslint-disable-next-line no-console
+        console.log('case', counter)
+        if (counter === 0) {
+          expect(part).toBe(`{"data":{"hi":[]},"hasNext":true}`)
+        } else if (counter === 1) {
+          expect(part).toBe(
+            `{"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}`,
+          )
+          push('B')
+        } else if (counter === 2) {
+          expect(part).toBe(
+            `{"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}`,
+          )
+          push('C')
+        } else if (counter === 3) {
+          expect(part).toBe(
+            `{"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}`,
+          )
+          // when the source is returned this stream/loop should be exited.
+          terminate()
+          push('D')
+        } else if (counter === 4) {
+          expect(toStr(chunk)).toBe(`{"hasNext":false}`)
+        } else {
+          throw new Error("LOL, this shouldn't happen.")
+        }
 
-      counter++
+        counter++
+      }
     }
   })
 
@@ -277,45 +283,55 @@ describe('Defer/Stream', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
+          accept: 'multipart/mixed',
         },
-        body: JSON.stringify({ query: '{ hi @stream }' }),
+        body: JSON.stringify({
+          query: '{ hi @stream }',
+        }),
       })
       let counter = 0
       const toStr = (arr: Uint8Array) => Buffer.from(arr).toString('utf-8')
       for await (const chunk of response.body!) {
-        // eslint-disable-next-line no-console
-        console.log('case', counter)
-        if (counter === 0) {
-          expect(toStr(chunk)).toBe(
-            `data: {"data":{"hi":[]},"hasNext":true}\n\n`,
-          )
-        } else if (counter === 1) {
-          expect(toStr(chunk)).toBe(
-            `data: {"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}\n\n`,
-          )
-          push('B')
-        } else if (counter === 2) {
-          expect(toStr(chunk)).toBe(
-            `data: {"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}\n\n`,
-          )
-          push('C')
-        } else if (counter === 3) {
-          expect(toStr(chunk)).toBe(
-            `data: {"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}\n\n`,
-          )
-          // when the source is returned this stream/loop should be exited.
-          terminate()
-          push('D')
-        } else if (counter === 4) {
-          expect(toStr(chunk)).toBe(`data: {"hasNext":false}\n\n`)
-        } else {
-          throw new Error("LOL, this shouldn't happen.")
-        }
+        const parts = toStr(chunk)
+          .split('\r\n')
+          .filter((p) => p.startsWith('{'))
+        for (const part of parts) {
+          // eslint-disable-next-line no-console
+          console.log('case', counter)
+          if (counter === 0) {
+            expect(part).toBe(`{"data":{"hi":[]},"hasNext":true}`)
+          } else if (counter === 1) {
+            expect(part).toBe(
+              `{"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}`,
+            )
+            push('B')
+          } else if (counter === 2) {
+            expect(part).toBe(
+              `{"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}`,
+            )
+            push('C')
+          } else if (counter === 3) {
+            expect(part).toBe(
+              `{"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}`,
+            )
+            // when the source is returned this stream/loop should be exited.
+            terminate()
+            push('D')
+          } else if (counter === 4) {
+            expect(part).toBe(`{"hasNext":false}`)
+          } else {
+            throw new Error("LOL, this shouldn't happen.")
+          }
 
-        counter++
+          counter++
+        }
       }
     } finally {
-      server.close()
+      await new Promise<void>((res) => {
+        server.close(() => {
+          res()
+        })
+      })
     }
   })
 })
