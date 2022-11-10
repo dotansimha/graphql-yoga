@@ -89,31 +89,28 @@ describe('Defer/Stream', () => {
       body: JSON.stringify({ query: '{ ... @defer { goodbye } }' }),
     })
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('text/event-stream')
+    expect(response.headers.get('content-type')).toBe(
+      'multipart/mixed; boundary="-"',
+    )
     const chunks: string[] = []
     for await (const chunk of response.body!) {
       chunks.push(chunk.toString())
     }
 
-    expect(chunks.length).toBe(2)
-    expect(JSON.parse(chunks[0].replace('data:', ''))).toMatchInlineSnapshot(`
-      {
-        "data": {},
-        "hasNext": true,
-      }
-    `)
-    expect(JSON.parse(chunks[1].replace('data:', ''))).toMatchInlineSnapshot(`
-      {
-        "hasNext": false,
-        "incremental": [
-          {
-            "data": {
-              "goodbye": "goodbye",
-            },
-            "path": [],
-          },
-        ],
-      }
+    expect(chunks.join('')).toMatchInlineSnapshot(`
+      "---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 26
+
+      {"data":{},"hasNext":true}
+      ---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 74
+
+      {"incremental":[{"data":{"goodbye":"goodbye"},"path":[]}],"hasNext":false}
+      ---
+      -----
+      "
     `)
   })
 
@@ -132,43 +129,33 @@ describe('Defer/Stream', () => {
     })
 
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('text/event-stream')
+    expect(response.headers.get('content-type')).toBe(
+      'multipart/mixed; boundary="-"',
+    )
     const chunks: string[] = []
     for await (const chunk of response.body!) {
       chunks.push(chunk.toString())
     }
 
-    expect(chunks.length).toBe(3)
-    expect(chunks.map((c) => JSON.parse(c.replace('data:', ''))))
-      .toMatchInlineSnapshot(`
-      [
-        {
-          "data": {
-            "stream": [
-              "A",
-              "B",
-            ],
-          },
-          "hasNext": true,
-        },
-        {
-          "hasNext": true,
-          "incremental": [
-            {
-              "items": [
-                "C",
-              ],
-              "path": [
-                "stream",
-                2,
-              ],
-            },
-          ],
-        },
-        {
-          "hasNext": false,
-        },
-      ]
+    expect(chunks.join('')).toMatchInlineSnapshot(`
+      "---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 44
+
+      {"data":{"stream":["A","B"]},"hasNext":true}
+      ---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 68
+
+      {"incremental":[{"items":["C"],"path":["stream",2]}],"hasNext":true}
+      ---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 17
+
+      {"hasNext":false}
+      ---
+      -----
+      "
     `)
   })
 
@@ -213,8 +200,6 @@ describe('Defer/Stream', () => {
         .split('\r\n')
         .filter((p) => p.startsWith('{'))
       for (const part of parts) {
-        // eslint-disable-next-line no-console
-        console.log('case', counter)
         if (counter === 0) {
           expect(part).toBe(`{"data":{"hi":[]},"hasNext":true}`)
         } else if (counter === 1) {
@@ -296,8 +281,6 @@ describe('Defer/Stream', () => {
           .split('\r\n')
           .filter((p) => p.startsWith('{'))
         for (const part of parts) {
-          // eslint-disable-next-line no-console
-          console.log('case', counter)
           if (counter === 0) {
             expect(part).toBe(`{"data":{"hi":[]},"hasNext":true}`)
           } else if (counter === 1) {
@@ -395,14 +378,13 @@ describe('Defer/Stream', () => {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          accept: 'multipart/mixed',
+          accept: 'application/json',
         },
         body: JSON.stringify({ query: '{ hi @stream }' }),
       })
       expect(response.status).toEqual(406)
       // TODO: what else?
     })
-
     it('accept: multipart/mixed', async () => {
       const yoga = createYoga({
         schema: createSchema({

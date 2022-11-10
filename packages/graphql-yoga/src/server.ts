@@ -56,9 +56,6 @@ import {
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString.js'
 import { useResultProcessors } from './plugins/useResultProcessor.js'
-import { processRegularResult } from './plugins/resultProcessor/regular.js'
-import { processPushResult } from './plugins/resultProcessor/push.js'
-import { processMultipartResult } from './plugins/resultProcessor/multipart.js'
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
@@ -334,21 +331,7 @@ export class YogaServer<
         parse: parsePOSTFormUrlEncodedRequest,
       }),
       // Middlewares after the GraphQL execution
-      useResultProcessors([
-        {
-          mediaTypes: ['multipart/mixed'],
-          processResult: processMultipartResult,
-        },
-        {
-          mediaTypes: ['text/event-stream'],
-          processResult: processPushResult,
-        },
-        {
-          mediaTypes: ['application/graphql-response+json', 'application/json'],
-          noAsyncIterable: true,
-          processResult: processRegularResult,
-        },
-      ]),
+      useResultProcessors(),
       ...(options?.plugins ?? []),
       // To make sure those are called at the end
       {
