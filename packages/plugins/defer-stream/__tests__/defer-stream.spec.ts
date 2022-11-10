@@ -437,6 +437,41 @@ describe('Defer/Stream', () => {
         'multipart/mixed; boundary="-"',
       )
     })
+
+    it('accept: */*', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: '*/*',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('content-type')).toEqual(
+        'multipart/mixed; boundary="-"',
+      )
+    })
   })
 })
 
