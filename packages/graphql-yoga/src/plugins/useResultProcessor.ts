@@ -39,7 +39,9 @@ export function useResultProcessors(): Plugin {
   const isSubscriptionRequestMap = new WeakMap<Request, boolean>()
   return {
     onSubscribe({ args: { contextValue } }) {
-      isSubscriptionRequestMap.set(contextValue.request, true)
+      if (contextValue.request) {
+        isSubscriptionRequestMap.set(contextValue.request, true)
+      }
     },
     onResultProcess({
       request,
