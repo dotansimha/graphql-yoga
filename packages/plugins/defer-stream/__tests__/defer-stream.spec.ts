@@ -205,33 +205,32 @@ describe('Defer/Stream', () => {
     }
 
     let counter = 0
+    const toStr = (arr: Uint8Array) => Buffer.from(arr).toString('utf-8')
 
     for await (const chunk of response.body!) {
       // eslint-disable-next-line no-console
       console.log('case', counter)
       if (counter === 0) {
-        expect(chunk.toString()).toBe(
-          `data: {"data":{"hi":[]},"hasNext":true}\n\n`,
-        )
+        expect(toStr(chunk)).toBe(`data: {"data":{"hi":[]},"hasNext":true}\n\n`)
       } else if (counter === 1) {
-        expect(chunk.toString()).toBe(
+        expect(toStr(chunk)).toBe(
           `data: {"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}\n\n`,
         )
         push('B')
       } else if (counter === 2) {
-        expect(chunk.toString()).toBe(
+        expect(toStr(chunk)).toBe(
           `data: {"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}\n\n`,
         )
         push('C')
       } else if (counter === 3) {
-        expect(chunk.toString()).toBe(
+        expect(toStr(chunk)).toBe(
           `data: {"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}\n\n`,
         )
         // when the source is returned this stream/loop should be exited.
         terminate()
         push('D')
       } else if (counter === 4) {
-        expect(chunk.toString()).toBe(`data: {"hasNext":false}\n\n`)
+        expect(toStr(chunk)).toBe(`data: {"hasNext":false}\n\n`)
       } else {
         throw new Error("LOL, this shouldn't happen.")
       }
@@ -282,7 +281,7 @@ describe('Defer/Stream', () => {
         body: JSON.stringify({ query: '{ hi @stream }' }),
       })
       let counter = 0
-      const toStr = (arr: Uint8Array) => Buffer.from(arr.buffer).toString()
+      const toStr = (arr: Uint8Array) => Buffer.from(arr).toString('utf-8')
       for await (const chunk of response.body!) {
         // eslint-disable-next-line no-console
         console.log('case', counter)
