@@ -334,6 +334,110 @@ describe('Defer/Stream', () => {
       })
     }
   })
+
+  describe('Content-Types', () => {
+    it('accept: <void>', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('content-type')).toEqual(
+        'multipart/mixed; boundary="-"',
+      )
+    })
+
+    it('accept: application/json', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'multipart/mixed',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(406)
+      // TODO: what else?
+    })
+
+    it('accept: multipart/mixed', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'multipart/mixed',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('content-type')).toEqual(
+        'multipart/mixed; boundary="-"',
+      )
+    })
+  })
 })
 
 type Deferred<T = void> = {
