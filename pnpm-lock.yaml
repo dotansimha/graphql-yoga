@@ -872,7 +872,7 @@ importers:
       '@envelop/live-query': 5.0.3
       '@envelop/parser-cache': 5.0.3
       '@envelop/validation-cache': 5.0.3
-      '@graphql-tools/executor': 0.0.7
+      '@graphql-tools/executor': 0.0.8
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.0.1
       '@graphql-yoga/subscription': ^3.0.0-next.0
@@ -894,7 +894,7 @@ importers:
       '@envelop/core': 3.0.3
       '@envelop/parser-cache': 5.0.3_pbptz7adnmiijjca652cpfgxr4
       '@envelop/validation-cache': 5.0.3_pbptz7adnmiijjca652cpfgxr4
-      '@graphql-tools/executor': 0.0.7_graphql@16.6.0
+      '@graphql-tools/executor': 0.0.8_graphql@16.6.0
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.0.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
@@ -4693,6 +4693,19 @@ packages:
       graphql: 16.6.0
       tslib: 2.4.1
       value-or-promise: 1.0.11
+
+  /@graphql-tools/executor/0.0.8_graphql@16.6.0:
+    resolution: {integrity: sha512-3I9LnwapdMRPlMQolR/GM+5M0qtSSzWy+5v5dxmhVX/hxda4LCKVNvjqW1sQWKGTGpXxCmSpjsmX/sB8aQsJIA==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/utils': 9.1.0_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
+      '@repeaterjs/repeater': 3.0.4
+      graphql: 16.6.0
+      tslib: 2.4.1
+      value-or-promise: 1.0.11
+    dev: false
 
   /@graphql-tools/git-loader/7.2.6_graphql@16.6.0:
     resolution: {integrity: sha512-QA94Gjp70xcdIYUbZDIm8fnuDN0IvoIIVVU+lXQemoV+vDeJKIjrP9tfOTjVDPIDXQnCYswvu9HLe8BlEApQYw==}

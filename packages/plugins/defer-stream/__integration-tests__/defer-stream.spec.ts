@@ -1,6 +1,6 @@
 import { createSchema, createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { fetch } from '@whatwg-node/fetch'
+import { AbortController, fetch } from '@whatwg-node/fetch'
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 
@@ -161,9 +161,15 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
     })
 
     try {
-      for await (const _chunk of response.body!) {
-        // Consume the stream :)
-        console.log('next', Buffer.from(_chunk).toString('utf-8'))
+      for await (const chunk of response.body!) {
+        expect(Buffer.from(chunk).toString('utf-8')).toMatchInlineSnapshot(`
+          "---
+          Content-Type: application/json; charset=utf-8
+          Content-Length: 33
+
+          {"data":{"hi":[]},"hasNext":true}
+          ---"
+        `)
       }
     } catch (err: any) {
       expect(err.message).toMatchInlineSnapshot(`"The operation was aborted."`)
