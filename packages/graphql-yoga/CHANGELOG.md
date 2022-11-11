@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.0.0-next.12
+
+### Patch Changes
+
+- [`73e56068`](https://github.com/dotansimha/graphql-yoga/commit/73e56068fd1c1c06a0cf08150d5b79ce7c49992a) Thanks [@ardatan](https://github.com/ardatan)! - Fix cancellation logic for defer/stream queries
+
 ## 3.0.0-next.11
 
 ### Major Changes
