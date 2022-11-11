@@ -226,20 +226,35 @@ export class YogaServer<
             }
         : logger
 
+    const maskErrorFn =
+      (typeof options?.maskedErrors === 'object' &&
+        options.maskedErrors.maskError) ||
+      yogaDefaultFormatError
+
     this.maskedErrorsOpts =
       options?.maskedErrors === false
         ? null
         : {
-            maskError: (error, message) =>
-              yogaDefaultFormatError({
-                error,
-                message,
-                isDev: this.maskedErrorsOpts?.isDev ?? false,
-              }),
             errorMessage: 'Unexpected error.',
             ...(typeof options?.maskedErrors === 'object'
               ? options.maskedErrors
               : {}),
+            maskError: (error, message) => {
+              const newError = maskErrorFn(
+                {
+                  error,
+                  message,
+                  isDev: this.maskedErrorsOpts?.isDev ?? false,
+                },
+                message,
+              )
+
+              if (newError !== error) {
+                this.logger.error(error)
+              }
+
+              return newError
+            },
           }
 
     const maskedErrors =
@@ -450,11 +465,13 @@ export class YogaServer<
           params,
           enveloped,
         })
+
+        this.logger.debug(`Processing GraphQL Parameters done.`)
       }
 
       return result
     } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts)
+      const errors = handleError(error, this.maskedErrorsOpts, this.logger)
 
       const result: ExecutionResult = {
         errors,
@@ -541,7 +558,7 @@ export class YogaServer<
             serverContext,
           ))) as ResultProcessorInput
     } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts)
+      const errors = handleError(error, this.maskedErrorsOpts, this.logger)
 
       result = {
         errors,
