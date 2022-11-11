@@ -91,3 +91,94 @@ it('correctly deals with the source upon aborted requests', async () => {
     })
   }
 })
+
+it('memory/cleanup leak by source that never publishes a value', async () => {
+  let sourceGotCleanedUp = false
+  let i = 1
+  let interval: any
+  const controller = new AbortController()
+
+  const noop = new Promise<{ done: true; value: undefined }>(() => undefined)
+  const source = {
+    [Symbol.asyncIterator]() {
+      return this
+    },
+    next() {
+      interval = setInterval(() => {
+        i++
+        if (i === 3) {
+          controller.abort()
+        }
+      }, 10)
+      return noop
+    },
+    return() {
+      clearInterval(interval)
+      sourceGotCleanedUp = true
+      return Promise.resolve({ done: true, value: undefined })
+    },
+  }
+
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hi: [String]
+        }
+      `,
+      resolvers: {
+        Query: {
+          hi: () => source,
+        },
+      },
+    }),
+    plugins: [useDeferStream()],
+  })
+
+  const server = createServer(yoga)
+  try {
+    await new Promise<void>((resolve) => {
+      server.listen(() => {
+        resolve()
+      })
+    })
+
+    const port = (server.address() as any)?.port ?? null
+    if (port === null) {
+      throw new Error('Missing port...')
+    }
+
+    const response = await fetch(`http://localhost:${port}/graphql`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'multipart/mixed',
+      },
+      body: JSON.stringify({
+        query: '{ hi @stream }',
+      }),
+      signal: controller.signal,
+    })
+
+    try {
+      for await (const _chunk of response.body!) {
+        // Consume the stream :)
+        console.log('next', Buffer.from(_chunk).toString('utf-8'))
+      }
+    } catch (err: any) {
+      expect(err.message).toMatchInlineSnapshot(`"The operation was aborted."`)
+    }
+
+    // Wait a bit - just to make sure the time is cleaned up for sure...
+    await new Promise((res) => setTimeout(res, 50))
+
+    expect(i).toEqual(3)
+    expect(sourceGotCleanedUp).toBe(true)
+  } finally {
+    await new Promise<void>((res) => {
+      server.close(() => {
+        res()
+      })
+    })
+  }
+})
