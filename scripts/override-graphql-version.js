@@ -20,15 +20,36 @@ const graphql15AndLess = parseInt(graphqlVersion.split('.')[0]) <= 15
 ;[`examples/apollo-federation`].forEach((testPath) => {
   if (graphql15AndLess) {
     // disable
-    fs.renameSync(
-      path.resolve(__dirname, '..', testPath, '__integration-tests__'),
-      path.resolve(__dirname, '..', testPath, '__DISABLED_integration-tests__'),
+    const testPathAbs = path.resolve(
+      __dirname,
+      '..',
+      testPath,
+      '__integration-tests__',
     )
+    if (fs.existsSync(testPathAbs)) {
+      fs.renameSync(
+        testPathAbs,
+        path.resolve(
+          __dirname,
+          '..',
+          testPath,
+          '__DISABLED_integration-tests__',
+        ),
+      )
+    }
   } else {
     // enable if disabled
-    fs.renameSync(
-      path.resolve(__dirname, '..', testPath, '__DISABLED_integration-tests__'),
-      path.resolve(__dirname, '..', testPath, '__integration-tests__'),
+    const testPathAbs = path.resolve(
+      __dirname,
+      '..',
+      testPath,
+      '__DISABLED_integration-tests__',
     )
+    if (fs.existsSync(testPathAbs)) {
+      fs.renameSync(
+        testPathAbs,
+        path.resolve(__dirname, '..', testPath, '__integration-tests__'),
+      )
+    }
   }
 })
