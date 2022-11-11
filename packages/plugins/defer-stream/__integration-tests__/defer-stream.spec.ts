@@ -1,8 +1,9 @@
 import { createSchema, createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { fetch } from '@whatwg-node/fetch'
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { fetch, AbortController } from '@whatwg-node/fetch'
+import { get, IncomingMessage } from 'http'
 
 it('correctly deals with the source upon aborted requests', async () => {
   const { source, push, terminate } = createPushPullAsyncIterable<string>()
@@ -83,6 +84,111 @@ it('correctly deals with the source upon aborted requests', async () => {
         counter++
       }
     }
+  } finally {
+    await new Promise<void>((res) => {
+      server.close(() => {
+        res()
+      })
+    })
+  }
+})
+
+it('memory/cleanup leak by source that never publishes a value', async () => {
+  let sourceGotCleanedUp = false
+  let i = 1
+  let interval: any
+  const controller = new AbortController()
+
+  const noop = new Promise<{ done: true; value: undefined }>(() => undefined)
+  const source = {
+    [Symbol.asyncIterator]() {
+      return this
+    },
+    next() {
+      interval = setInterval(() => {
+        i++
+        if (i === 3) {
+          controller.abort()
+        }
+      }, 10)
+      return noop
+    },
+    return() {
+      clearInterval(interval)
+      sourceGotCleanedUp = true
+      return Promise.resolve({ done: true, value: undefined })
+    },
+  }
+
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hi: [String]
+        }
+      `,
+      resolvers: {
+        Query: {
+          hi: () => source,
+        },
+      },
+    }),
+    plugins: [useDeferStream()],
+  })
+
+  const server = createServer(yoga)
+  try {
+    await new Promise<void>((resolve) => {
+      server.listen(() => {
+        resolve()
+      })
+    })
+
+    const port = (server.address() as any)?.port ?? null
+    if (port === null) {
+      throw new Error('Missing port...')
+    }
+
+    const response = await new Promise<IncomingMessage>((resolve) => {
+      const request = get(
+        `http://localhost:${port}/graphql?query={hi @stream}`,
+        {
+          headers: {
+            accept: 'multipart/mixed',
+          },
+        },
+        (res) => resolve(res),
+      )
+      controller.signal.addEventListener(
+        'abort',
+        () => {
+          request.destroy()
+        },
+        { once: true },
+      )
+    })
+
+    try {
+      for await (const chunk of response) {
+        const chunkStr = Buffer.from(chunk).toString('utf-8')
+        expect(chunkStr).toMatchInlineSnapshot(`
+          "---
+          Content-Type: application/json; charset=utf-8
+          Content-Length: 33
+
+          {"data":{"hi":[]},"hasNext":true}
+          ---"
+        `)
+      }
+    } catch (err: any) {
+      expect(err.message).toContain('aborted')
+    }
+
+    // Wait a bit - just to make sure the time is cleaned up for sure...
+    await new Promise((res) => setTimeout(res, 50))
+
+    expect(i).toEqual(3)
+    expect(sourceGotCleanedUp).toBe(true)
   } finally {
     await new Promise<void>((res) => {
       server.close(() => {

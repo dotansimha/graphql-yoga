@@ -91,12 +91,10 @@ describe('Defer/Stream', () => {
     expect(response.headers.get('content-type')).toBe(
       'multipart/mixed; boundary="-"',
     )
-    const chunks: string[] = []
-    for await (const chunk of response.body!) {
-      chunks.push(chunk.toString())
-    }
 
-    expect(chunks.join('')).toMatchInlineSnapshot(`
+    const finalText = await response.text()
+
+    expect(finalText).toMatchInlineSnapshot(`
       "---
       Content-Type: application/json; charset=utf-8
       Content-Length: 26
@@ -131,12 +129,10 @@ describe('Defer/Stream', () => {
     expect(response.headers.get('content-type')).toBe(
       'multipart/mixed; boundary="-"',
     )
-    const chunks: string[] = []
-    for await (const chunk of response.body!) {
-      chunks.push(chunk.toString())
-    }
 
-    expect(chunks.join('')).toMatchInlineSnapshot(`
+    const finalText = await response.text()
+
+    expect(finalText).toMatchInlineSnapshot(`
       "---
       Content-Type: application/json; charset=utf-8
       Content-Length: 44
