@@ -16,7 +16,7 @@ const noop = () => {}
  * utility for creating a conditional logger for tests.
  */
 export const createCustomLogger = (
-  logLevel: LogLevel | 'silent' = globalThis?.process.env['DEBUG'] === '1'
+  logLevel: LogLevel | 'silent' = globalThis.process?.env['DEBUG'] === '1'
     ? 'debug'
     : 'info',
 ) => {

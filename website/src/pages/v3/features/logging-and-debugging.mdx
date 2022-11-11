@@ -1,22 +1,93 @@
+import { Callout } from '@theguild/components'
+
 # Logging and Debugging
 
 ## Logging
 
-The default logger in Yoga is the [JavaScript console](https://developer.mozilla.org/en-US/docs/Web/API/console) and its respective methods ([debug](https://developer.mozilla.org/en-US/docs/Web/API/console/debug) _when `DEBUG=1` in environment_, [info](https://developer.mozilla.org/en-US/docs/Web/API/console/info), [warn](https://developer.mozilla.org/en-US/docs/Web/API/console/warn) and [error](https://developer.mozilla.org/en-US/docs/Web/API/console/error)) matching the log level.
+Yoga uses 4 log levels `debug`, `info`, `warn` and `error`. By default, Yoga will only log `info`, `warn` and `error` messages.
+
+### Log Level Overview
+
+#### `error`
+
+- Only log unexpected errors
+
+#### `warn`
+
+- All prior log levels
+- deprecation notices
+
+#### `info`
+
+- All prior log levels
+- Information about the current state of the system
+
+#### `debug`
+
+- All prior log levels
+- Processing of GraphQL parameters
+- Parsing of GraphQL parameters
+- Execution or subscription start
+- Received GraphQL operation variables
+- Execution or subscription end
+- [GraphiQL](https://github.com/graphql/graphiql) rendering
+- Health checks
+
+### Enabling Debug Logging
+
+<Callout>
+  Instead, on JavaScript environments that support environment variables via
+  `process.env` (e.g. Node.js), you can also conditionally enable `debug`
+  logging by setting the `DEBUG` environment variable to `1`.
+</Callout>
+
+```ts filename="Custom log level" {7}
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { schema } from './my-schema.js'
+
+const yoga = createYoga({
+  schema,
+  logging: 'debug'
+})
+```
+
+### Change log level
+
+You can customize the log lovel by passing on of the 4 levels to the `logging` option:
+
+<Callout>
+  We recommend not changing the default log level and only recommend changing it
+  if you know what you are doing.
+</Callout>
+
+```ts filename="Custom log level" {7}
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { schema } from './my-schema.js'
+
+const yoga = createYoga({
+  schema,
+  logging: 'warn'
+})
+```
+
+Specifying the log level of `warn` will only log `warn` and `error` messages being logged.
+
+### Custom logger
 
 You can of course provide your own logger for piping to your favorite logging service/utility:
 
 ```ts
 import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { schema } from './my-schema'
-import { logger } from './my-logger'
+import { schema } from './my-schema.js'
+import { logger } from './my-logger.js'
 
 const yoga = createYoga({
   schema,
   logging: {
     debug(...args) {
-      // will only get triggered if DEBUG=1 in environment
       logger.debug(...args)
     },
     info(...args) {
@@ -65,15 +136,3 @@ server.listen(4000, () => {
   console.info('Server is running on http://localhost:4000/graphql')
 })
 ```
-
-## Debugging
-
-Note that Yoga can run in debug when having `DEBUG=1` in the environment. Doing so will increase verbosity of the logger delivering additional information including:
-
-- Processing of GraphQL parameters
-- Parsing of GraphQL parameters
-- Execution or subscription start
-- Received GraphQL operation variables
-- Execution or subscription end
-- [GraphiQL](https://github.com/graphql/graphiql) rendering
-- Health checks
