@@ -14,3 +14,42 @@ pkg.resolutions = {
 }
 
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, undefined, '  ') + '\n')
+
+// disable apollo federation testing with <16 versions
+const graphql15AndLess = parseInt(graphqlVersion.split('.')[0]) <= 15
+;[`examples/apollo-federation`].forEach((testPath) => {
+  if (graphql15AndLess) {
+    // disable
+    const testPathAbs = path.resolve(
+      __dirname,
+      '..',
+      testPath,
+      '__integration-tests__',
+    )
+    if (fs.existsSync(testPathAbs)) {
+      fs.renameSync(
+        testPathAbs,
+        path.resolve(
+          __dirname,
+          '..',
+          testPath,
+          '__DISABLED_integration-tests__',
+        ),
+      )
+    }
+  } else {
+    // enable if disabled
+    const testPathAbs = path.resolve(
+      __dirname,
+      '..',
+      testPath,
+      '__DISABLED_integration-tests__',
+    )
+    if (fs.existsSync(testPathAbs)) {
+      fs.renameSync(
+        testPathAbs,
+        path.resolve(__dirname, '..', testPath, '__integration-tests__'),
+      )
+    }
+  }
+})
