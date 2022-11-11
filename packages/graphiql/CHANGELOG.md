@@ -1,5 +1,11 @@
 # @graphql-yoga/graphiql
 
+## 3.0.0-next.3
+
+### Patch Changes
+
+- [#2051](https://github.com/dotansimha/graphql-yoga/pull/2051) [`7a5f92c1`](https://github.com/dotansimha/graphql-yoga/commit/7a5f92c163cfd75197f72240440a2e05569b7407) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Dedent GraphiQL placeholder text
+
 ## 3.0.0-next.2
 
 ### Patch Changes
