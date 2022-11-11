@@ -12,9 +12,6 @@ patchedDependencies:
   '@graphiql/react@0.13.3':
     hash: yqm362ey3efuxzwgojxfo6tq5i
     path: patches/@graphiql__react@0.13.3.patch
-  '@types/ioredis-mock@5.6.0':
-    hash: kzohbhhh2g5isrq6q2fcmcltka
-    path: patches/@types__ioredis-mock@5.6.0.patch
   formdata-node@4.4.1:
     hash: bwnmzlpvx75llwj7xwqbxbjtui
     path: patches/formdata-node@4.4.1.patch
@@ -812,7 +809,7 @@ importers:
   packages/event-target/redis-event-target:
     specifiers:
       '@graphql-yoga/typed-event-target': ^1.0.0-next.0
-      '@types/ioredis-mock': 5.6.0
+      '@types/ioredis-mock': 8.2.0
       '@whatwg-node/events': 0.0.2
       ioredis: 5.2.4
       ioredis-mock: 8.2.2
@@ -820,7 +817,7 @@ importers:
       '@graphql-yoga/typed-event-target': link:../typed-event-target
       '@whatwg-node/events': 0.0.2
     devDependencies:
-      '@types/ioredis-mock': 5.6.0_kzohbhhh2g5isrq6q2fcmcltka
+      '@types/ioredis-mock': 8.2.0
       ioredis: 5.2.4
       ioredis-mock: 8.2.2_ioredis@5.2.4
     publishDirectory: dist
@@ -1005,7 +1002,7 @@ importers:
     specifiers:
       '@graphql-yoga/typed-event-target': ^1.0.0-next.0
       '@repeaterjs/repeater': ^3.0.4
-      '@types/ioredis-mock': 5.6.0
+      '@types/ioredis-mock': 8.2.0
       '@whatwg-node/events': 0.0.2
       ioredis-mock: 8.2.2
       tslib: ^2.3.1
@@ -1015,7 +1012,7 @@ importers:
       '@whatwg-node/events': 0.0.2
       tslib: 2.4.0
     devDependencies:
-      '@types/ioredis-mock': 5.6.0_kzohbhhh2g5isrq6q2fcmcltka
+      '@types/ioredis-mock': 8.2.0
       ioredis-mock: 8.2.2
     publishDirectory: dist
 
@@ -8642,17 +8639,12 @@ packages:
       '@types/node': 18.11.9
     dev: true
 
-  /@types/ioredis-mock/5.6.0_kzohbhhh2g5isrq6q2fcmcltka:
-    resolution: {integrity: sha512-2L20NMYTzNlCeLbi7aXQ/VlFTBu7qYoGefwB0NIDYN5TWzOslzvfl7ttoIN9IVO2LEeY+MBpSWO8oJQklL/o4Q==}
+  /@types/ioredis-mock/8.2.0:
+    resolution: {integrity: sha512-6t7PNRw2TY5nizHaU0uTRq9w521XsgjjapRTTbFzk7gtReWnhLWaFfrP5g7wWBlvniCxhC6H/OUCH3+eV4gMpg==}
     dependencies:
-      '@types/ioredis': 4.28.10
-    dev: true
-    patched: true
-
-  /@types/ioredis/4.28.10:
-    resolution: {integrity: sha512-69LyhUgrXdgcNDv7ogs1qXZomnfOEnSmrmMFqKgt1XMJxmoOSG/u3wYy13yACIfKuMJ8IhKgHafDO3sx19zVQQ==}
-    dependencies:
-      '@types/node': 18.11.9
+      ioredis: 5.2.4
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@types/is-ci/3.0.0:
