@@ -4,15 +4,8 @@ import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
 import { fetch } from '@whatwg-node/fetch'
 import type { GatewayConfig } from '@apollo/gateway'
-import { versionInfo as gqlVersion } from 'graphql'
 
 describe('apollo-federation example integration', () => {
-  if (gqlVersion.major < 16) {
-    it('skips the test', () => {
-      console.log('skips the test')
-    })
-    return
-  }
   let gatewayServer: Server
   let serviceServer: Server
   let gatewayPort: number
