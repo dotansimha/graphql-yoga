@@ -61,7 +61,7 @@ describe.skip('URQL Yoga Exchange', () => {
       url,
       exchanges: [
         yogaExchange({
-          customFetch: yoga.fetch as WindowOrWorkerGlobalScope['fetch'],
+          fetch: yoga.fetch as WindowOrWorkerGlobalScope['fetch'],
         }),
       ],
     })
