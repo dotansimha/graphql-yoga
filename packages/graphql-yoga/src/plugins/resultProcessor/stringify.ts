@@ -7,7 +7,7 @@ export function jsonStringifyResult(result: MaybeArray<ExecutionResult>) {
     if (key === 'extensions') {
       // omit http extensions
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { http, ...extensions } = value
+      const { http, unexpected, ...extensions } = value
 
       // remove empty extensions object
       if (Object.keys(extensions).length === 0) {

@@ -12,6 +12,7 @@ declare module 'graphql' {
   }
   interface GraphQLErrorExtensions {
     http?: GraphQLHTTPErrorExtensions
+    unexpected?: boolean
   }
 }
 
@@ -75,9 +76,7 @@ export function handleError(
     errors.add(
       createGraphQLError(error, {
         extensions: {
-          http: {
-            status: 500,
-          },
+          unexpected: true,
         },
       }),
     )
@@ -85,9 +84,7 @@ export function handleError(
     errors.add(
       createGraphQLError(error.toString(), {
         extensions: {
-          http: {
-            status: 500,
-          },
+          unexpected: true,
         },
       }),
     )
@@ -96,7 +93,7 @@ export function handleError(
       createGraphQLError('Unexpected error!', {
         extensions: {
           http: {
-            status: 500,
+            unexpected: true,
           },
         },
       }),
@@ -109,6 +106,7 @@ export function getResponseInitByRespectingErrors(
   headers: Record<string, string> = {},
 ) {
   let status: number | undefined
+  let unexpectedErrorExists = false
 
   if ('errors' in result && result.errors?.length) {
     for (const error of result.errors) {
@@ -122,8 +120,11 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
-      } else if (!isOriginalGraphQLError(error)) {
-        status = 500
+      } else if (
+        !isOriginalGraphQLError(error) ||
+        error.extensions?.unexpected
+      ) {
+        unexpectedErrorExists = true
       }
     }
   } else {
@@ -131,7 +132,11 @@ export function getResponseInitByRespectingErrors(
   }
 
   if (!status) {
-    status = 200
+    if (unexpectedErrorExists && !('data' in result)) {
+      status = 500
+    } else {
+      status = 200
+    }
   }
 
   return {
