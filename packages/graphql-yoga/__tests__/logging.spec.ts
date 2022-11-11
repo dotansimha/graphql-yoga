@@ -5,7 +5,7 @@ import {
   createGraphQLError,
   createSchema,
   createYoga,
-  defaultYogaLogger,
+  createYogaLogger,
 } from 'graphql-yoga'
 import { createCustomLogger } from './logging'
 
@@ -30,7 +30,8 @@ describe('logging', () => {
   describe('default logger', () => {
     it(`doesn't print debug messages if DEBUG env var isn't set`, () => {
       jest.spyOn(console, 'debug')
-      defaultYogaLogger.debug('TEST')
+      const logger = createYogaLogger()
+      logger.debug('TEST')
       // eslint-disable-next-line no-console
       expect(console.debug).not.toHaveBeenCalled()
     })
@@ -40,7 +41,8 @@ describe('logging', () => {
         process.env.DEBUG = '1'
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
-        defaultYogaLogger.debug('TEST')
+        const logger = createYogaLogger()
+        logger.debug('TEST')
         // eslint-disable-next-line no-console
         expect(console.debug).toHaveBeenCalled()
       } finally {

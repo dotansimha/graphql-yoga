@@ -36,75 +36,93 @@ const LEVEL_COLOR = {
   reset: ANSI_CODES.reset,
 }
 
-export interface YogaLogger {
-  debug: (...args: any[]) => void
-  info: (...args: any[]) => void
-  warn: (...args: any[]) => void
-  error: (...args: any[]) => void
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
+
+export type YogaLogger = Record<LogLevel, (...args: any[]) => void>
+
+const logLevelScores: Record<LogLevel | 'silent', number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+  silent: 4,
 }
 
-const isDebug = () => !!globalThis.process?.env?.DEBUG
+const noop = () => undefined
+
+export const createYogaLogger = (
+  logLevel: LogLevel | 'silent' = globalThis?.process.env['DEBUG'] === '1'
+    ? 'debug'
+    : 'info',
+): YogaLogger => {
+  const score = logLevelScores[logLevel]
+  return {
+    debug: score > logLevelScores.debug ? noop : debugLog,
+    info: score > logLevelScores.info ? noop : infoLog,
+    warn: score > logLevelScores.warn ? noop : warnLog,
+    error: score > logLevelScores.silent ? noop : errorLog,
+  }
+}
 
 const prefix = [LEVEL_COLOR.title, `🧘 Yoga -`, LEVEL_COLOR.reset]
 
-export const defaultYogaLogger: YogaLogger = {
-  debug(...args: any[]) {
-    if (isDebug()) {
-      const fullMessage = [
-        `🐛 `,
-        ...prefix,
-        LEVEL_COLOR.debug,
-        ...args,
-        LEVEL_COLOR.reset,
-      ]
-      // Some environments don't have other console methods
-      if (console.debug) {
-        console.debug(...fullMessage)
-      } else {
-        console.log(...fullMessage)
-      }
-    }
-  },
-  info(...args: any[]) {
-    const fullMessage = [
-      `💡 `,
-      ...prefix,
-      LEVEL_COLOR.info,
-      ...args,
-      LEVEL_COLOR.reset,
-    ]
-    if (console.info) {
-      console.info(...fullMessage)
-    } else {
-      console.log(...fullMessage)
-    }
-  },
-  warn(...args: any[]) {
-    const fullMessage = [
-      `⚠️ `,
-      ...prefix,
-      LEVEL_COLOR.warn,
-      ...args,
-      LEVEL_COLOR.reset,
-    ]
-    if (console.warn) {
-      console.warn(...fullMessage)
-    } else {
-      console.log(...fullMessage)
-    }
-  },
-  error(...args: any[]) {
-    const fullMessage = [
-      `❌ `,
-      ...prefix,
-      LEVEL_COLOR.error,
-      ...args,
-      LEVEL_COLOR.reset,
-    ]
-    if (console.error) {
-      console.error(...fullMessage)
-    } else {
-      console.log(...fullMessage)
-    }
-  },
+const debugLog = (...args: any[]) => {
+  const fullMessage = [
+    `🐛 `,
+    ...prefix,
+    LEVEL_COLOR.debug,
+    ...args,
+    LEVEL_COLOR.reset,
+  ]
+  // Some environments don't have other console methods
+  if (console.debug) {
+    console.debug(...fullMessage)
+  } else {
+    console.log(...fullMessage)
+  }
+}
+
+const infoLog = (...args: any[]) => {
+  const fullMessage = [
+    `💡 `,
+    ...prefix,
+    LEVEL_COLOR.info,
+    ...args,
+    LEVEL_COLOR.reset,
+  ]
+  if (console.info) {
+    console.info(...fullMessage)
+  } else {
+    console.log(...fullMessage)
+  }
+}
+
+const warnLog = (...args: any[]) => {
+  const fullMessage = [
+    `⚠️ `,
+    ...prefix,
+    LEVEL_COLOR.warn,
+    ...args,
+    LEVEL_COLOR.reset,
+  ]
+  if (console.warn) {
+    console.warn(...fullMessage)
+  } else {
+    console.log(...fullMessage)
+  }
+}
+
+const errorLog = (...args: any[]) => {
+  const fullMessage = [
+    `❌ `,
+    ...prefix,
+    LEVEL_COLOR.error,
+    ...args,
+    LEVEL_COLOR.reset,
+  ]
+  if (console.error) {
+    console.error(...fullMessage)
+  } else {
+    console.log(...fullMessage)
+  }
 }

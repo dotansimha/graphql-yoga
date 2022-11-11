@@ -33,7 +33,7 @@ import {
   processRequest as processGraphQLParams,
   processResult,
 } from './process-request.js'
-import { defaultYogaLogger, YogaLogger } from './logger.js'
+import { createYogaLogger, LogLevel, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
 import {
@@ -78,7 +78,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * Enable/disable logging or provide a custom logger.
    * @default true
    */
-  logging?: boolean | YogaLogger
+  logging?: boolean | YogaLogger | LogLevel
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `EnvelopError`/`GraphQLError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -215,15 +215,10 @@ export class YogaServer<
     this.logger =
       typeof logger === 'boolean'
         ? logger === true
-          ? defaultYogaLogger
-          : {
-              /* eslint-disable */
-              debug: () => {},
-              error: () => {},
-              warn: () => {},
-              info: () => {},
-              /* eslint-enable */
-            }
+          ? createYogaLogger()
+          : createYogaLogger('silent')
+        : typeof logger === 'string'
+        ? createYogaLogger(logger)
         : logger
 
     const maskErrorFn =
