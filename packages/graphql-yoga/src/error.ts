@@ -1,7 +1,8 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
-import type { ResultProcessorInput } from './plugins/types'
-import type { YogaMaskedErrorOpts } from './types'
+import type { YogaLogger } from './logger.js'
+import type { ResultProcessorInput } from './plugins/types.js'
+import type { YogaMaskedErrorOpts } from './types.js'
 
 export { createGraphQLError }
 
@@ -16,11 +17,11 @@ declare module 'graphql' {
   }
 }
 
-function isAggregateError(obj: any): obj is AggregateError {
+function isAggregateError(obj: unknown): obj is AggregateError {
   return obj != null && typeof obj === 'object' && 'errors' in obj
 }
 
-function hasToString(obj: any): obj is { toString(): string } {
+function hasToString(obj: unknown): obj is { toString(): string } {
   return obj != null && typeof obj.toString === 'function'
 }
 
@@ -43,11 +44,12 @@ export function isOriginalGraphQLError(
 export function handleError(
   error: unknown,
   maskedErrorsOpts: YogaMaskedErrorOpts | null,
+  logger: YogaLogger,
 ): GraphQLError[] {
   const errors = new Set<GraphQLError>()
   if (isAggregateError(error)) {
     for (const singleError of error.errors) {
-      const handledErrors = handleError(singleError, maskedErrorsOpts)
+      const handledErrors = handleError(singleError, maskedErrorsOpts, logger)
       for (const handledError of handledErrors) {
         errors.add(handledError)
       }
@@ -57,6 +59,11 @@ export function handleError(
       error,
       maskedErrorsOpts.errorMessage,
     )
+
+    if (maskedError !== error) {
+      logger.error(error)
+    }
+
     errors.add(
       isGraphQLError(maskedError)
         ? maskedError
@@ -90,7 +97,7 @@ export function handleError(
     )
   } else {
     errors.add(
-      createGraphQLError('Unexpected error!', {
+      createGraphQLError('Unexpected error.', {
         extensions: {
           http: {
             unexpected: true,
