@@ -414,38 +414,4 @@ describe('error masking', () => {
       ],
     })
   })
-
-  it('masked error from the resolvers should return 500 status code', async () => {
-    const yoga = createYoga({
-      logging: false,
-      schema: createSchema({
-        typeDefs: /* GraphQL */ `
-          type Query {
-            a: String!
-          }
-        `,
-        resolvers: {
-          Query: {
-            a: () => {
-              throw new Error('I like turtles')
-            },
-          },
-        },
-      }),
-    })
-
-    const response = await yoga.fetch('http://yoga/graphql', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ query: '{ a }' }),
-    })
-    expect(response.status).toEqual(500)
-    expect(await response.json()).toMatchObject({
-      errors: [
-        {
-          message: 'Unexpected error.',
-        },
-      ],
-    })
-  })
 })

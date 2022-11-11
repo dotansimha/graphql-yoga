@@ -21,10 +21,7 @@ export const yogaDefaultFormatError = ({
       // Original error should be removed
       const extensions: GraphQLErrorExtensions = {
         ...error.extensions,
-        http: {
-          status: 500,
-          ...error.extensions?.http,
-        },
+        unexpected: true,
       }
       if (dev) {
         extensions.originalError = {
@@ -45,9 +42,7 @@ export const yogaDefaultFormatError = ({
 
   return createGraphQLError(message, {
     extensions: {
-      http: {
-        status: 500,
-      },
+      unexpected: true,
       originalError: dev
         ? error instanceof Error
           ? {
