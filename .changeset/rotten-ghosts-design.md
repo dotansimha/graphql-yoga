@@ -1,6 +1,5 @@
 ---
 'graphql-yoga': major
-'@graphql-yoga/plugin-readiness-check': major
 ---
 
 Drop `readinessCheckEndpoint` and introduce `useReadinessCheck` plugin
