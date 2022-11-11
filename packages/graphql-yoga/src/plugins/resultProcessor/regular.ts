@@ -29,19 +29,6 @@ export function processRegularResult(
     headersInit,
   )
 
-  if (
-    responseInit.status >= 400 &&
-    acceptedHeader === 'application/graphql-response+json' &&
-    !Array.isArray(executionResult) && // array responses are not defined in the spec, ignore them
-    'data' in executionResult &&
-    executionResult.errors?.length
-  ) {
-    // if the data field is present (even if present but null), always respond with 200 for 'application/graphql-response+json'
-    // see more: https://graphql.github.io/graphql-over-http/draft/#sel-FANNNFCAACKNz-e
-    // and here: https://graphql.github.io/graphql-over-http/draft/#sel-FANNNJCAACKN__I
-    responseInit.status = 200
-  }
-
   if (responseInit.status >= 400 && acceptedHeader === 'application/json') {
     // regular responses accepting 'application/json' are recommended to always respond with 200
     // see more: https://graphql.github.io/graphql-over-http/draft/#sel-EANNLDFAADHCAx5H
