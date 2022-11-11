@@ -955,8 +955,11 @@ importers:
   packages/plugins/defer-stream:
     specifiers:
       '@graphql-tools/utils': ^9.0.1
+      '@whatwg-node/fetch': 0.5.1
     dependencies:
       '@graphql-tools/utils': 9.0.1
+    devDependencies:
+      '@whatwg-node/fetch': 0.5.1
     publishDirectory: dist
 
   packages/plugins/persisted-operations:

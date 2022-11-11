@@ -3,37 +3,64 @@ import {
   getMediaTypesForRequestInOrder,
   isMatchingMediaType,
 } from './resultProcessor/accept.js'
+import { processMultipartResult } from './resultProcessor/multipart.js'
+import { processPushResult } from './resultProcessor/push.js'
+import { processRegularResult } from './resultProcessor/regular.js'
 import { Plugin, ResultProcessor } from './types.js'
 
-export interface ResultProcessorConfig {
+interface ResultProcessorConfig {
   processResult: ResultProcessor
-  noAsyncIterable?: boolean
+  asyncIterables: boolean
   mediaTypes: string[]
 }
 
-export function useResultProcessors(
-  resultProcessors: ResultProcessorConfig[],
-): Plugin {
+const multipart: ResultProcessorConfig = {
+  mediaTypes: ['multipart/mixed'],
+  asyncIterables: true,
+  processResult: processMultipartResult,
+}
+
+const textEventStream: ResultProcessorConfig = {
+  mediaTypes: ['text/event-stream'],
+  asyncIterables: true,
+  processResult: processPushResult,
+}
+
+const regular: ResultProcessorConfig = {
+  mediaTypes: ['application/json', 'application/graphql-response+json'],
+  asyncIterables: false,
+  processResult: processRegularResult,
+}
+
+const defaultList = [textEventStream, multipart, regular]
+const subscriptionList = [multipart, textEventStream, regular]
+
+export function useResultProcessors(): Plugin {
+  const isSubscriptionRequestMap = new WeakMap<Request, boolean>()
   return {
+    onSubscribe({ args: { contextValue } }) {
+      if (contextValue.request) {
+        isSubscriptionRequestMap.set(contextValue.request, true)
+      }
+    },
     onResultProcess({
       request,
       result,
       acceptableMediaTypes,
       setResultProcessor,
     }) {
+      const isSubscriptionRequest = isSubscriptionRequestMap.get(request)
+      const processorConfigList = isSubscriptionRequest
+        ? subscriptionList
+        : defaultList
       const requestMediaTypes = getMediaTypesForRequestInOrder(request)
+      const isAsyncIterableResult = isAsyncIterable(result)
       for (const requestMediaType of requestMediaTypes) {
-        for (const resultProcessorConfig of resultProcessors) {
-          if (
-            isAsyncIterable(result) &&
-            resultProcessorConfig.noAsyncIterable
-          ) {
+        for (const resultProcessorConfig of processorConfigList) {
+          if (isAsyncIterableResult && !resultProcessorConfig.asyncIterables) {
             continue
           }
-          const processorMediaTypesInOrder = [
-            ...resultProcessorConfig.mediaTypes,
-          ].reverse()
-          for (const processorMediaType of processorMediaTypesInOrder) {
+          for (const processorMediaType of resultProcessorConfig.mediaTypes) {
             acceptableMediaTypes.push(processorMediaType)
             if (isMatchingMediaType(processorMediaType, requestMediaType)) {
               setResultProcessor(

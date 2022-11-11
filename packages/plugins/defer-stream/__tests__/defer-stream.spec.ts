@@ -1,4 +1,4 @@
-import { createYoga } from 'graphql-yoga'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 import {
   GraphQLList,
@@ -6,6 +6,7 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
+import { createPushPullAsyncIterable } from './push-pull-async-iterable'
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -24,9 +25,9 @@ const schema = new GraphQLSchema({
         type: new GraphQLList(GraphQLString),
         async *resolve() {
           yield 'A'
-          await new Promise((resolve) => setTimeout(resolve, 1000))
+          await new Promise((resolve) => setTimeout(resolve, 5))
           yield 'B'
-          await new Promise((resolve) => setTimeout(resolve, 1000))
+          await new Promise((resolve) => setTimeout(resolve, 5))
           yield 'C'
         },
       },
@@ -87,31 +88,28 @@ describe('Defer/Stream', () => {
       body: JSON.stringify({ query: '{ ... @defer { goodbye } }' }),
     })
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('text/event-stream')
+    expect(response.headers.get('content-type')).toBe(
+      'multipart/mixed; boundary="-"',
+    )
     const chunks: string[] = []
     for await (const chunk of response.body!) {
       chunks.push(chunk.toString())
     }
 
-    expect(chunks.length).toBe(2)
-    expect(JSON.parse(chunks[0].replace('data:', ''))).toMatchInlineSnapshot(`
-      {
-        "data": {},
-        "hasNext": true,
-      }
-    `)
-    expect(JSON.parse(chunks[1].replace('data:', ''))).toMatchInlineSnapshot(`
-      {
-        "hasNext": false,
-        "incremental": [
-          {
-            "data": {
-              "goodbye": "goodbye",
-            },
-            "path": [],
-          },
-        ],
-      }
+    expect(chunks.join('')).toMatchInlineSnapshot(`
+      "---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 26
+
+      {"data":{},"hasNext":true}
+      ---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 74
+
+      {"incremental":[{"data":{"goodbye":"goodbye"},"path":[]}],"hasNext":false}
+      ---
+      -----
+      "
     `)
   })
 
@@ -130,43 +128,243 @@ describe('Defer/Stream', () => {
     })
 
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('text/event-stream')
+    expect(response.headers.get('content-type')).toBe(
+      'multipart/mixed; boundary="-"',
+    )
     const chunks: string[] = []
     for await (const chunk of response.body!) {
       chunks.push(chunk.toString())
     }
 
-    expect(chunks.length).toBe(3)
-    expect(chunks.map((c) => JSON.parse(c.replace('data:', ''))))
-      .toMatchInlineSnapshot(`
-      [
-        {
-          "data": {
-            "stream": [
-              "A",
-              "B",
-            ],
-          },
-          "hasNext": true,
-        },
-        {
-          "hasNext": true,
-          "incremental": [
-            {
-              "items": [
-                "C",
-              ],
-              "path": [
-                "stream",
-                2,
-              ],
-            },
-          ],
-        },
-        {
-          "hasNext": false,
-        },
-      ]
+    expect(chunks.join('')).toMatchInlineSnapshot(`
+      "---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 44
+
+      {"data":{"stream":["A","B"]},"hasNext":true}
+      ---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 68
+
+      {"incremental":[{"items":["C"],"path":["stream",2]}],"hasNext":true}
+      ---
+      Content-Type: application/json; charset=utf-8
+      Content-Length: 17
+
+      {"hasNext":false}
+      ---
+      -----
+      "
     `)
+  })
+
+  it('correctly deals with the source upon aborted requests', async () => {
+    const { source, push, terminate } = createPushPullAsyncIterable<string>()
+    push('A')
+
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hi: [String]
+          }
+        `,
+        resolvers: {
+          Query: {
+            hi: () => source,
+          },
+        },
+      }),
+      plugins: [useDeferStream()],
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'multipart/mixed',
+      },
+      body: JSON.stringify({ query: '{ hi @stream }' }),
+    })
+
+    if (!response.body) {
+      throw new Error('Missing body.')
+    }
+
+    let counter = 0
+    const toStr = (arr: Uint8Array) => Buffer.from(arr).toString('utf-8')
+
+    for await (const chunk of response.body!) {
+      const parts = toStr(chunk)
+        .split('\r\n')
+        .filter((p) => p.startsWith('{'))
+      for (const part of parts) {
+        if (counter === 0) {
+          expect(part).toBe(`{"data":{"hi":[]},"hasNext":true}`)
+        } else if (counter === 1) {
+          expect(part).toBe(
+            `{"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}`,
+          )
+          push('B')
+        } else if (counter === 2) {
+          expect(part).toBe(
+            `{"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}`,
+          )
+          push('C')
+        } else if (counter === 3) {
+          expect(part).toBe(
+            `{"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}`,
+          )
+          // when the source is returned this stream/loop should be exited.
+          terminate()
+          push('D')
+        } else if (counter === 4) {
+          expect(toStr(chunk)).toBe(`{"hasNext":false}`)
+        } else {
+          throw new Error("LOL, this shouldn't happen.")
+        }
+
+        counter++
+      }
+    }
+  })
+
+  describe('Content-Types', () => {
+    it('accept: <void>', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('content-type')).toEqual(
+        'multipart/mixed; boundary="-"',
+      )
+    })
+
+    it('accept: application/json', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(406)
+      expect(response.headers.get('content-type')).toEqual(null)
+      expect(await response.text()).toEqual('')
+    })
+    it('accept: multipart/mixed', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'multipart/mixed',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('content-type')).toEqual(
+        'multipart/mixed; boundary="-"',
+      )
+    })
+
+    it('accept: */*', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () =>
+                new Repeater(async (push, stop) => {
+                  await push('A')
+                  stop()
+                }),
+            },
+          },
+        }),
+        plugins: [useDeferStream()],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: '*/*',
+        },
+        body: JSON.stringify({ query: '{ hi @stream }' }),
+      })
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('content-type')).toEqual(
+        'multipart/mixed; boundary="-"',
+      )
+    })
   })
 })
