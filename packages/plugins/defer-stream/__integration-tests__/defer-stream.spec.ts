@@ -1,8 +1,9 @@
 import { createSchema, createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { AbortController, fetch } from '@whatwg-node/fetch'
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { fetch, AbortController } from '@whatwg-node/fetch'
+import { get, IncomingMessage } from 'http'
 
 it('correctly deals with the source upon aborted requests', async () => {
   const { source, push, terminate } = createPushPullAsyncIterable<string>()
@@ -148,21 +149,29 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
       throw new Error('Missing port...')
     }
 
-    const response = await fetch(`http://localhost:${port}/graphql`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        accept: 'multipart/mixed',
-      },
-      body: JSON.stringify({
-        query: '{ hi @stream }',
-      }),
-      signal: controller.signal,
+    const response = await new Promise<IncomingMessage>((resolve) => {
+      const request = get(
+        `http://localhost:${port}/graphql?query={hi @stream}`,
+        {
+          headers: {
+            accept: 'multipart/mixed',
+          },
+        },
+        (res) => resolve(res),
+      )
+      controller.signal.addEventListener(
+        'abort',
+        () => {
+          request.destroy()
+        },
+        { once: true },
+      )
     })
 
     try {
-      for await (const chunk of response.body!) {
-        expect(Buffer.from(chunk).toString('utf-8')).toMatchInlineSnapshot(`
+      for await (const chunk of response) {
+        const chunkStr = Buffer.from(chunk).toString('utf-8')
+        expect(chunkStr).toMatchInlineSnapshot(`
           "---
           Content-Type: application/json; charset=utf-8
           Content-Length: 33
@@ -172,7 +181,7 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
         `)
       }
     } catch (err: any) {
-      expect(err.message).toMatchInlineSnapshot(`"The operation was aborted."`)
+      expect(err.message).toContain('aborted')
     }
 
     // Wait a bit - just to make sure the time is cleaned up for sure...
