@@ -51,7 +51,7 @@ const logLevelScores: Record<LogLevel | 'silent', number> = {
 const noop = () => undefined
 
 export const createYogaLogger = (
-  logLevel: LogLevel | 'silent' = globalThis?.process.env['DEBUG'] === '1'
+  logLevel: LogLevel | 'silent' = globalThis.process?.env['DEBUG'] === '1'
     ? 'debug'
     : 'info',
 ): YogaLogger => {
