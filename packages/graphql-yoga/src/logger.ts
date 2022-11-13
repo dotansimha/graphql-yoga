@@ -47,7 +47,7 @@ const errorLog = console.error
   : consoleLog(errorPrefix)
 
 export const createLogger = (
-  logLevel: LogLevel | 'silent' = globalThis?.process.env['DEBUG'] === '1'
+  logLevel: LogLevel | 'silent' = globalThis.process?.env['DEBUG'] === '1'
     ? 'debug'
     : 'info',
 ) => {
