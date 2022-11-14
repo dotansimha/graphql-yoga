@@ -19,6 +19,8 @@ export {
   finalAsyncIterator,
   errorAsyncIterator,
   isAsyncIterable,
+} from '@envelop/core'
+export type {
   // Handy type utils
   Maybe,
   Optional,
