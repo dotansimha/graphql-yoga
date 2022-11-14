@@ -1,4 +1,6 @@
-# Comparison with other JavaScript GraphQL server libraries
+import { Callout } from '@theguild/components'
+
+# Comparison with other JavaScript GraphQL Server Libraries
 
 ## GraphQL Yoga and Apollo Server
 
@@ -15,6 +17,13 @@ For Node.js environments and frameworks (which unfortunately do not have full W3
 Read more about the underlying technology [here](https://the-guild.dev/blog/fetch-for-servers).
 
 You only need to search for [`apollo-server-` on NPM](https://www.npmjs.com/search?q=apollo-server-) to see how many variants and packages there are for apollo and how hard it is to maintain.
+
+<Callout>
+  **Note** Since Apollo Server v4, Apollo does no longer maintain the
+  `apollo-server-` packages and instead relies on community contributors to step
+  up and take over ownership and maintenance of HTTP frameworks specific adapter
+  packages.
+</Callout>
 
 ### Run anywhere
 
@@ -48,31 +57,40 @@ You can find a list of all available Envelop plugins over on [the envelop plugin
 
 GraphQL Yoga is fully compatible with the GraphQL over HTTP specification (including the incremental delivery over HTTP specification).
 
+[You can find a full GraphQL over HTTP compliance audit result on the `graphql-http` repository.](https://github.com/graphql/graphql-http/tree/master/implementations/graphql-yoga)
+
+[In comparison Apollo Server is not fully compliant with the GraphQL over HTTP specification.](https://github.com/graphql/graphql-http/tree/master/implementations/apollo-server)
+
 ### File Uploads
 
 GraphQL Yoga supports [file uploads out of the box](/v3/features/file-uploads#enable-file-uploads-in-graphql-yoga) and fully supports the [GraphQL-Multipart-Request](https://github.com/jaydenseric/graphql-multipart-request-spec).
 
 ### Real time and GraphQL Subscriptions over Server-Sent-Events (SSE)
 
-The current version of GraphQL Subscriptions by Apollo hasn't received any major updates in the last couple of years.
+Apollo Server does not provide built-in solution for GraphQL Subscriptions.
+You can wire up `graphql-ws` or `graphql-sse` for adding either GraphQL over WebSocket or GraphQL over Server Sent Events support.
 
-GraphQL Yoga supports [GraphQL Subscriptions over Server-Sent-Events (SSE)](/v3/features/subscriptions#subscriptions) out of the box with fully typed implementation without the need of any additional libraries.
-It also support GraphQL Subscriptions over WS and in addition to that, we added the ability to use GraphQL Live Queries.
+GraphQL Yoga has built-in support for [GraphQL Subscriptions over Server-Sent-Events (SSE)](/v3/features/subscriptions#subscriptions) without the need of any additional libraries.
 
-### Bundle Size and lean Dependencies
+In addition GraphQL Yoga also support GraphQL Subscriptions over WS (via `graphql-ws`).
+
+In addition to GraphQL Subscriptions, Yoga users can also use GraphQL Live Queries.
+
+### Bundle Size and Dependencies
 
 For serverless/edge (service worker) environments, the size of the server code can be crucial for cold-start time and performance.
 
-Here you can see a comparison of bundle sizes:
+GraphQL Yoga and Apollo server have relatively similar bundle sizes, where Apollo Server is slightly smaller, at the cost of being less feature rich.
 
-- [Bundlephobia graphql-yoga](https://bundlephobia.com/package/graphql-yoga@x.x.x)
+Here you can see a comparison of bundle sizes on Bundlephobia>
 
-- [Bundlephobia apollo-server-micro](https://bundlephobia.com/package/apollo-server-micro@x.x.x)
+- [Bundlephobia `graphql-yoga`](https://bundlephobia.com/package/graphql-yoga@three)
+- [Bundlephobia `@apollo/server`](https://bundlephobia.com/package/@apollo/server)
 
 GraphQL Yoga only has a fraction of the dependencies of Apollo Server, and in general is much smaller.
 
 - [Dependency visualizer `graphql-yoga`](https://npm.anvaka.com/#/view/2d/graphql-yoga)
-- [Dependency visualizer `apollo-server-micro`](https://npm.anvaka.com/#/view/2d/apollo-server-micro)
+- [Dependency visualizer `@apollo/server`](https://npm.anvaka.com/#/view/2d/@apollo/server)
 
 GraphQL Yogas APIs are designed for code-splitting and supported by popular bundlers.
 
@@ -83,7 +101,7 @@ GraphQL Yoga has significantly less latency and much higher requests rate than A
 ### GraphiQL
 
 While Apollo Server is shipping with their proprietary and less updated hosted IDE and removed the default open source GraphiQL,
-GraphQL Yoga ships with the latest and greatest from the open source, Foundation backed [GraphiQL IDE](https://github.com/graphql/graphiql) and we support and contribute to the project.
+GraphQL Yoga ships with the latest and open source [GraphiQL 2 IDE](https://github.com/graphql/graphiql).
 
 ### Compatibility with Apollo Federation
 
