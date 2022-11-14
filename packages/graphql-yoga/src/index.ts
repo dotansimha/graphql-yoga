@@ -2,7 +2,29 @@ export * from './types.js'
 export * from './logger.js'
 export * from './server.js'
 
-export * from '@envelop/core'
+export {
+  // useful for anyone creating a new envelop instance
+  envelop,
+  // Default plugins
+  useEnvelop,
+  useLogger,
+  useExtendContext,
+  usePayloadFormatter,
+  // useful helpers
+  isIntrospectionOperationString,
+  makeSubscribe,
+  mapAsyncIterator,
+  makeExecute,
+  handleStreamOrSingleExecutionResult,
+  finalAsyncIterator,
+  errorAsyncIterator,
+  isAsyncIterable,
+  // Handy type utils
+  Maybe,
+  Optional,
+  PromiseOrValue,
+  Spread,
+} from '@envelop/core'
 export type { CORSOptions } from './plugins/useCORS.js'
 export type { GraphiQLOptions } from './plugins/useGraphiQL.js'
 export type { Plugin } from './plugins/types.js'
