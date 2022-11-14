@@ -33,7 +33,7 @@ import {
   processRequest as processGraphQLParams,
   processResult,
 } from './process-request.js'
-import { createYogaLogger, LogLevel, YogaLogger } from './logger.js'
+import { createLogger, LogLevel, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
 import {
@@ -215,10 +215,10 @@ export class YogaServer<
     this.logger =
       typeof logger === 'boolean'
         ? logger === true
-          ? createYogaLogger()
-          : createYogaLogger('silent')
+          ? createLogger()
+          : createLogger('silent')
         : typeof logger === 'string'
-        ? createYogaLogger(logger)
+        ? createLogger(logger)
         : logger
 
     const maskErrorFn =

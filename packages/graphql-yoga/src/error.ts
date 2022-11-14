@@ -1,8 +1,8 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
 import type { YogaLogger } from './logger.js'
-import type { ResultProcessorInput } from './plugins/types.js'
-import type { YogaMaskedErrorOpts } from './types.js'
+import type { ResultProcessorInput } from './plugins/types'
+import type { YogaMaskedErrorOpts } from './types'
 
 export { createGraphQLError }
 
@@ -96,6 +96,7 @@ export function handleError(
       }),
     )
   } else {
+    logger.error(error)
     errors.add(
       createGraphQLError('Unexpected error.', {
         extensions: {

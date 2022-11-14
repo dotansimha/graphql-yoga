@@ -2,15 +2,14 @@
 import { jest } from '@jest/globals'
 import { GraphQLError } from 'graphql'
 import {
-  createGraphQLError,
-  createSchema,
   createYoga,
-  createYogaLogger,
-} from 'graphql-yoga'
-import { createCustomLogger } from './logging'
+  createLogger,
+  createSchema,
+  createGraphQLError,
+} from '../src'
 
 describe('logging', () => {
-  it('use custom logger', async () => {
+  it('custom logger', async () => {
     const logger = {
       debug: jest.fn(),
       info: jest.fn(),
@@ -30,7 +29,7 @@ describe('logging', () => {
   describe('default logger', () => {
     it(`doesn't print debug messages if DEBUG env var isn't set`, () => {
       jest.spyOn(console, 'debug')
-      const logger = createYogaLogger()
+      const logger = createLogger()
       logger.debug('TEST')
       // eslint-disable-next-line no-console
       expect(console.debug).not.toHaveBeenCalled()
@@ -41,7 +40,7 @@ describe('logging', () => {
         process.env.DEBUG = '1'
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
-        const logger = createYogaLogger()
+        const logger = createLogger()
         logger.debug('TEST')
         // eslint-disable-next-line no-console
         expect(console.debug).toHaveBeenCalled()
@@ -53,7 +52,7 @@ describe('logging', () => {
 
   describe('GraphQL error handling', () => {
     it('logs unexpected Errors', async () => {
-      const logger = createCustomLogger('error')
+      const logger = createLogger('error')
       const yoga = createYoga({
         logging: logger,
         schema: createSchema({
@@ -97,8 +96,8 @@ describe('logging', () => {
       `)
     })
 
-    it('does not log unexpeted GraphQL Errors (GraphQLError)', async () => {
-      const logger = createCustomLogger('error')
+    it('does not log unexpected GraphQL Errors (GraphQLError)', async () => {
+      const logger = createLogger('error')
       const yoga = createYoga({
         logging: logger,
         schema: createSchema({
@@ -136,7 +135,7 @@ describe('logging', () => {
     })
 
     it('does not log unexpeted GraphQL Errors (createGraphQLError)', async () => {
-      const logger = createCustomLogger('error')
+      const logger = createLogger('error')
       const yoga = createYoga({
         logging: logger,
         schema: createSchema({
