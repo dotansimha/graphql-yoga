@@ -78,7 +78,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * Enable/disable logging or provide a custom logger.
    * @default true
    */
-  logging?: boolean | YogaLogger | LogLevel
+  logging?: boolean | YogaLogger | LogLevel | undefined
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `EnvelopError`/`GraphQLError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -88,7 +88,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default true
    */
-  maskedErrors?: boolean | Partial<YogaMaskedErrorOpts>
+  maskedErrors?: boolean | Partial<YogaMaskedErrorOpts> | undefined
   /**
    * Context
    */
@@ -98,8 +98,9 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
       ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
+    | undefined
 
-  cors?: CORSPluginOptions<TServerContext>
+  cors?: CORSPluginOptions<TServerContext> | undefined
 
   /**
    * GraphQL endpoint
@@ -107,30 +108,30 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default "/graphql"
    */
-  graphqlEndpoint?: string
+  graphqlEndpoint?: string | undefined
 
   /**
    * Readiness check endpoint
    *
    * @default "/health"
    */
-  healthCheckEndpoint?: string
+  healthCheckEndpoint?: string | undefined
 
   /**
    * Whether the landing page should be shown.
    */
-  landingPage?: boolean
+  landingPage?: boolean | undefined
 
   /**
    * GraphiQL options
    *
    * @default true
    */
-  graphiql?: GraphiQLOptionsOrFactory<TServerContext>
+  graphiql?: GraphiQLOptionsOrFactory<TServerContext> | undefined
 
-  renderGraphiQL?: (options?: GraphiQLOptions) => PromiseOrValue<BodyInit>
+  renderGraphiQL?: ((options?: GraphiQLOptions) => PromiseOrValue<BodyInit>) | undefined
 
-  schema?: YogaSchemaDefinition<TUserContext & TServerContext>
+  schema?: YogaSchemaDefinition<TUserContext & TServerContext> | undefined
 
   /**
    * Envelop Plugins
@@ -139,11 +140,11 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
   plugins?: Array<
     // eslint-disable-next-line @typescript-eslint/ban-types
     Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
-  >
+  > | undefined
 
-  parserCache?: boolean | ParserCacheOptions
-  validationCache?: boolean | ValidationCache
-  fetchAPI?: FetchAPI
+  parserCache?: boolean | ParserCacheOptions | undefined
+  validationCache?: boolean | ValidationCache | undefined
+  fetchAPI?: FetchAPI | undefined
   /**
    * GraphQL Multipart Request spec support
    *
@@ -151,8 +152,8 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default true
    */
-  multipart?: boolean
-  id?: string
+  multipart?: boolean | undefined
+  id?: string | undefined
   /**
    * Batching RFC Support configuration
    *
@@ -160,7 +161,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default false
    */
-  batching?: BatchingOptions
+  batching?: BatchingOptions | undefined
 }
 
 export type BatchingOptions =
