@@ -1,30 +1,33 @@
+import { LatestVersionNotice } from '../../../components/latest-version-notice'
+
+<LatestVersionNotice />
+
 # Other Environments
 
 If you have a different environment that you want to integrate with, you can implement your middleware/handler like the example below.
 
-GraphQL Yoga understands [WHATWG `Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request) object to consume your HTTP request. So you need an adapter implementation between your environment and WHATWG standard objects.
+GraphQL Yoga understands [WHATWG `Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request) to consume your HTTP request. So you need an adapter implementation between your environment and WHATWG standard objects.
 
 ```ts
-import { createYoga } from 'graphql-yoga'
+import { createServer } from '@graphql-yoga/common'
+import { Request } from '@whatwg-node/fetch' // or fetch-like library
 
-const yoga = createYoga<MyRandomCtx>()
+const yoga = createServer<MyRandomCtx>()
 
 export async function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
   // req.url is a full url here not a relative path
-  const response = await yoga.fetch(
-    req.url,
-    {
-      method: req.method,
-      headers: req.headers,
-      body: req.body // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
-    },
-    // Third parameter becomes your server context
-    ctx
-  )
+  const request = new Request(req.url, {
+    method: req.method,
+    headers: req.headers,
+    body: req.body // req.body should be a valid BodyInit like an AsyncIterable, a ReadableStream, a Node.js Readable, a string or a Buffer etc...
+  })
+
+  // Second parameter becomes your server context
+  const response = await yoga.handleRequest(req, ctx)
   // response is a WHATWG `Response` object
 
   // Create a headers object for your middleware response
-  const headersObj: Record<string, string> = {}
+  const headersObj: any = {}
 
   response.headers.forEach((value, key) => {
     headersObj[key] = value

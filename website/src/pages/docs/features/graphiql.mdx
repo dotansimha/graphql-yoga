@@ -1,19 +1,21 @@
-import { Callout, PackageCmd } from '@theguild/components'
+import { PackageCmd, Callout } from '@theguild/components'
 
 # GraphiQL
 
 [GraphiQL](https://github.com/graphql/graphiql) is an in-browser IDE for writing, validating, and testing GraphQL queries.
 
+By default, GraphiQL is enabled and served under the `/graphql` route for `GET` requests with a `accept: text/html` header.
 You can configure or completely disable GraphiQL with the `graphiql` option.
-By default, GraphiQL is only enabled.
 
-## Example
+## Default Document String
 
-```ts
-import { createServer } from '@graphql-yoga/node'
+You can set the default document string for GraphiQL by setting the `defaultQuery` option.
+
+```ts filename="Set the default Document String" {6}
+import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   graphiql: {
     defaultQuery: /* GraphQL */ `
       query {
@@ -22,81 +24,50 @@ const server = createServer({
     `
   }
 })
-// Start the server and explore http://localhost:4000/graphql
-server.start()
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
-## Disabling GraphiQL
+## Disable GraphiQL
 
-You can disable GraphiQL by simply setting the `graphiql` option to `false`.
+You can disable GraphiQL simply by setting `graphiql: false{:ts}`.
 
-```ts
-import { createServer } from '@graphql-yoga/node'
+<Callout>
+  Be aware that disabling GraphiQL does not really make your GraphQL server more secure. As
+  long as the introspection and/or the "did you mean x" suggestion feature of
+  GraphQL are enabled.
 
-// Provide your schema
-const server = createServer({ graphiql: false })
+You can further decrease your attack surface by disabling GraphQL introspection.
 
-// Start the server and explore http://localhost:4000/graphql
-server.start()
-```
+[Learn more about disabling introspection](/v3/features/introspection)
 
-<Callout type="warning">
-  Be aware that this does not make your GraphQL server more secure. As long as
-  the introspection and/or the "did you mean x" suggestion feature of GraphQL
-  are enabled.
 </Callout>
 
-```ts
-import { createServer } from '@graphql-yoga/node'
-import { useDisableIntrospection } from '@envelop/disable-introspection'
+```ts filename="Disable GraphiQL" {4}
+import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
-const server = createServer({
-  graphiql: false,
-  plugins: [useDisableIntrospection()]
-})
+const yoga = createYoga({ graphiql: false })
 
-// Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
-Disabling the "did you mean x" suggestion feature is not possible at the moment ([see the corresponding graphql-js GitHub issue](https://github.com/graphql/graphql-js/issues/2247)).
-
-As a workaround, you can use the `maskedError` option for masking `validation` and `parse` errors.
-
-```ts
-import { createServer } from '@graphql-yoga/node'
-import { useDisableIntrospection } from '@envelop/disable-introspection'
-
-// Provide your schema
-const server = createServer({
-  graphiql: false,
-  plugins: [useDisableIntrospection()],
-  maskedErrors: {
-    handleParseErrors: true,
-    handleValidationErrors: true
-  }
-})
-
-// Start the server and explore http://localhost:4000/graphql
-server.start()
-```
-
-So if your goal is to avoid unknown actors from reverse-engineering your GraphQL schema and executing arbitary operations, it is highly recommended to use persisted operations.
-Envelop has the plugin [`@envelop/persisted-operations`](https://www.npmjs.com/package/@envelop/persisted-operations) that can be used with GraphQL Yoga.
-
-A more detailed guide and example for adding persisted operations to GraphQL Yoga will follow.
-
-## Dynamic Options
+## Dynamic Options per Request
 
 You can also dynamically set GraphiQL options based on the incoming request.
 This allows rendering GraphiQL conditionally e.g. based on a header presence or value.
 
-```ts
-import { createServer } from '@graphql-yoga/node'
+```ts filename="Dynamic options based on the incoming request"
+import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   graphiql(request) {
     if (request.headers.get('graphiql-enabled')) {
       return true
@@ -105,18 +76,20 @@ const server = createServer({
   }
 })
 
-// Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 Within the function passed to `graphiql` you also have access to the `serverContext`.
 E.g. on Node.js it contains the `http.Request` and `http.Response` objects.
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 
 // Provide your schema
-const server = createServer({
+const yoga = createYoga({
   graphiql(request, { req, res }) {
     // access something attached to the request object
     // e.g. an user object added by an auth middleware.
@@ -127,24 +100,24 @@ const server = createServer({
   }
 })
 
-// Start the server and explore http://localhost:4000/graphql
-server.start()
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
 
 ## Offline Usage
 
-By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc.).
+By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc).
 If you want to use GraphiQL from a local version, you need to install it manually.
 
 <PackageCmd packages={['@graphql-yoga/render-graphiql']} />
 
 And you need to pass imported `renderGraphiQL` to `createServer` like below:
 
-```ts
-import { createServer } from '@graphql-yoga/node'
+```ts filename="Render GraphiQL offline"
+import { createYoga } from 'graphql-yoga'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
-const yoga = createServer({ renderGraphiQL })
-
-yoga.start()
+const yoga = createYoga({ renderGraphiQL })
 ```

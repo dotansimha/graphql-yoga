@@ -1,4 +1,7 @@
 import { Callout, PackageCmd } from '@theguild/components'
+import { LatestVersionNotice } from '../../../components/latest-version-notice'
+
+<LatestVersionNotice />
 
 # Apollo Federation
 
@@ -26,20 +29,28 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 
 <PackageCmd
   packages={[
-    'graphql-yoga',
-    '@apollo/gateway',
-    '@envelop/apollo-federation',
-    'graphql@15'
+    '@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15'
   ]}
 />
 
 ### Example Gateway
 
 ```ts
-import { createYoga } from 'graphql-yoga'
-import { createServer } from 'http'
-import { ApolloGateway } from '@apollo/gateway'
+import { createServer } from '@graphql-yoga/node'
+import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { useApolloFederation } from '@envelop/apollo-federation'
+
+/**
+ * Needed since federation remote data source fetcher
+ * doesn't support `application/graphql-response+json` content type
+ * https://github.com/apollographql/federation/issues/2161
+ * And yoga defaults to `application/graphql-response+json` as per the spec.
+ */
+class DataSource extends RemoteGraphQLDataSource {
+  willSendRequest({ request }) {
+    request.http.headers.set('accept', 'application/json')
+  }
+}
 
 // Initialize the gateway
 const gateway = new ApolloGateway({
@@ -47,25 +58,24 @@ const gateway = new ApolloGateway({
     { name: 'accounts', url: 'http://localhost:4001' },
     { name: 'products', url: 'http://localhost:4002' }
     // ...additional subgraphs...
-  ]
+  ],
+  introspectionHeaders: {
+    accept: 'application/json'
+  },
+  buildService({ url }) {
+    return new DataSource({ url })
+  }
 })
 
 // Make sure all services are loaded
 await gateway.load()
 
-const yoga = createYoga({
-  plugins: [
-    useApolloFederation({
-      gateway
-    })
-  ]
+const server = createServer({
+  plugins: [useApolloFederation({ gateway })]
 })
 
 // Start the server and explore http://localhost:4000/graphql
-const server = createServer(yoga)
-server.listen(4000, () => {
-  console.info('Server is running on http://localhost:4000/graphql')
-})
+server.start()
 ```
 
 ## Federation Service
@@ -74,15 +84,14 @@ You don't need any extra plugins for Yoga for Federation Service.
 
 ### Installation
 
-<PackageCmd packages={['graphql-yoga', '@apollo/subgraph', 'graphql']} />
+<PackageCmd packages={['@graphql-yoga/node @apollo/subgraph graphql']} />
 
 ### Example User Service
 
 ```ts
 const { parse } = require('graphql')
 const { buildSubgraphSchema } = require('@apollo/subgraph')
-const { createYoga } = require('graphql-yoga')
-const { createServer } = require('http')
+const { createServer } = require('@graphql-yoga/node')
 
 const typeDefs = parse(/* GraphQL */ `
   type Query {
@@ -107,54 +116,16 @@ const resolvers = {
     }
   }
 }
-const yoga = createYoga({
-  schema: buildSubgraphSchema([{ typeDefs, resolvers }])
+const server = createServer({
+  schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
+  port: 4001
 })
 
-const server = createServer(yoga)
-
-server.listen(4001, () => {
+server.start().then(() => {
   console.log(`🚀 Server ready at http://localhost:4001`)
-})
-```
-
-## Federated tracing
-
-Inject additional metrics for [Apollo's federated tracing](https://www.apollographql.com/docs/federation/metrics/).
-
-You'll need the `@graphql-yoga/plugin-apollo-inline-trace` Yoga plugin for this.
-
-### Installation
-
-<PackageCmd
-  packages={[
-    'graphql-yoga',
-    '@graphql-yoga/plugin-apollo-inline-trace',
-    'graphql'
-  ]}
-/>
-
-### Example Federated tracing
-
-```ts
-import { createYoga } from 'graphql-yoga'
-import { createServer } from 'http'
-import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace'
-
-const yoga = createYoga({
-  plugins: [
-    useApolloInlineTrace()
-    // ...rest of your Apollo federation plugins
-  ]
-})
-
-// Start the server and explore http://localhost:4000/graphql
-const server = createServer(yoga)
-server.listen(4000, () => {
-  console.info('Server is running on http://localhost:4000/graphql')
 })
 ```
 
 ## Working Example
 
-Check our [working example](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/apollo-federation) to try it out.
+Check our [working example](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/apollo-federation) to try it out.
