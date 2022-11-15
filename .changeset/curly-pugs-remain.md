@@ -2,7 +2,9 @@
 'graphql-yoga': major
 ---
 
-Remove `.inject` method to mock testing. Users should replace to use `fetch` method for testing. Checkout our docs on testing https://www.the-guild.dev/graphql/yoga-server/v3/features/testing.
+Remove `.inject` method to mock testing. Users should replace to use `fetch` method for testing.
+
+Checkout our docs on testing https://www.the-guild.dev/graphql/yoga-server/v3/features/testing.
 
 ```diff
 import { createYoga } from 'graphql-yoga'
@@ -14,7 +16,7 @@ const yoga = createYoga({ schema })
 -   document: "query { ping }",
 - })
 
-+ const response = await yoga.fetch('http://localhost:4000/graphql', {
++ const response = await yoga.fetch('http://yoga/graphql', {
 +   method: 'POST',
 +   headers: {
 +     'Content-Type': 'application/json',

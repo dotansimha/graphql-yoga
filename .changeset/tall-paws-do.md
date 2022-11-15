@@ -2,4 +2,4 @@
 'graphql-yoga': patch
 ---
 
-Support `application/graphql-response+json` as `Accept`ed content type for the response
+Allow the content type `application/graphql-response+json` as the `Accept` header value.

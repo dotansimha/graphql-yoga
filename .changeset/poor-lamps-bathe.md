@@ -3,4 +3,4 @@
 '@graphql-yoga/plugin-defer-stream': patch
 ---
 
-Fix cancellation logic for defer/stream queries
+Fix cancellation logic for defer/stream queries.

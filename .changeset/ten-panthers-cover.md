@@ -2,4 +2,4 @@
 'graphql-yoga': patch
 ---
 
-Context typings improvements
+Improve the context type for server and request context.
