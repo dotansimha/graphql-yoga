@@ -12,7 +12,6 @@ jobs:
       npmTag: alpha
       buildScript: build
       nodeVersion: 18
-      exitPre: true
       packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
