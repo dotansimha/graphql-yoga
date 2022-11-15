@@ -1,5 +1,15 @@
 # @graphql-yoga/urql-exchange
 
+## 1.0.0
+
+### Major Changes
+
+- [`87d1070a`](https://github.com/dotansimha/graphql-yoga/commit/87d1070a01e48f45d6afd7ee6b88faf8e5612297) Thanks [@ardatan](https://github.com/ardatan)! - New lean urql exchange.
+
+### Patch Changes
+
+- [`13ecb7f4`](https://github.com/dotansimha/graphql-yoga/commit/13ecb7f4425152dbcc2e2fcb03adcd910dbaa85b) Thanks [@ardatan](https://github.com/ardatan)! - Thinner Client integration packages
+
 ## 1.0.0-next.1
 
 ### Patch Changes

@@ -1,5 +1,139 @@
 # graphql-yoga
 
+## 3.0.0
+
+### Major Changes
+
+- [`2e0c4824`](https://github.com/dotansimha/graphql-yoga/commit/2e0c482418af2281c9cf0c34dd16f207d850cdb7) Thanks [@b4s36t4](https://github.com/b4s36t4)! - _Drop Node 12 Support_
+
+  GraphQL Yoga no longer supports Node 12 which is no longer an LTS version. GraphQL Yoga now needs Node 14 at least.
+
+- [#2012](https://github.com/dotansimha/graphql-yoga/pull/2012) [`720898db`](https://github.com/dotansimha/graphql-yoga/commit/720898dbf923a7aa52ff63e50e25527be1e8921b) Thanks [@saihaj](https://github.com/saihaj)! - Remove `.inject` method to mock testing. Users should replace to use `fetch` method for testing.
+
+  Checkout our docs on testing https://www.the-guild.dev/graphql/yoga-server/v3/features/testing.
+
+  ```diff
+  import { createYoga } from 'graphql-yoga'
+  import { schema } from './schema'
+
+  const yoga = createYoga({ schema })
+
+  - const { response, executionResult } = await yoga.inject({
+  -   document: "query { ping }",
+  - })
+
+  + const response = await yoga.fetch('http://yoga/graphql', {
+  +   method: 'POST',
+  +   headers: {
+  +     'Content-Type': 'application/json',
+  +   },
+  +   body: JSON.stringify({
+  +     query: 'query { ping }',
+  +   }),
+  + })
+  + const executionResult = await response.json()
+
+  console.assert(response.status === 200, 'Response status should be 200')
+  console.assert(executionResult.data.ping === 'pong',`Expected 'pong'`)
+  ```
+
+- [#1753](https://github.com/dotansimha/graphql-yoga/pull/1753) [`eeaced00`](https://github.com/dotansimha/graphql-yoga/commit/eeaced008fdd1b209d6db81f3351803f2a0a1089) Thanks [@ardatan](https://github.com/ardatan)! - `schema` no longer accepts an object of `typeDefs` and `resolvers` but instead you can use `createSchema` to create a GraphQL schema.
+
+- [#1516](https://github.com/dotansimha/graphql-yoga/pull/1516) [`209b1620`](https://github.com/dotansimha/graphql-yoga/commit/209b1620055cf64647943b1c334852a314aff3a4) Thanks [@ardatan](https://github.com/ardatan)! - Now it is possible to decide the returned `Content-Type` by specifying the `Accept` header. So if `Accept` header has `text/event-stream` without `application/json`, Yoga respects that returns `text/event-stream` instead of `application/json`.
+
+- [#1808](https://github.com/dotansimha/graphql-yoga/pull/1808) [`02d2aecd`](https://github.com/dotansimha/graphql-yoga/commit/02d2aecdee55e4c54454c48c2ca0fd7425796ae0) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Drop `readinessCheckEndpoint` in favor of the `useReadinessCheck` plugin
+
+  [See docs for more information](https://www.the-guild.dev/graphql/yoga-server/v3/features/health-check#readiness)
+
+- [#1473](https://github.com/dotansimha/graphql-yoga/pull/1473) [`c4b3a9c8`](https://github.com/dotansimha/graphql-yoga/commit/c4b3a9c8031f7b61420bb9cdc4bc6e7fc22615a5) Thanks [@ardatan](https://github.com/ardatan)! - Replace `GraphQLYogaError` in favor of `GraphQLError`.
+
+  [Check the documentation to see how to use `GraphQLError`](https://www.graphql-yoga.com/v3/guides/error-masking)
+
+- [#1660](https://github.com/dotansimha/graphql-yoga/pull/1660) [`71554172`](https://github.com/dotansimha/graphql-yoga/commit/715541729f76be82d9f959a96e7af6126836df87) Thanks [@saihaj](https://github.com/saihaj)! - Update to the latest version of the envelop `useMaskedError` plugin.
+
+  - Removed `handleValidationErrors` and `handleParseErrors`
+  - Renamed `formatError` to `maskError`
+
+  [Checkout Envelop docs for more details](https://www.the-guild.dev/graphql/envelop/v3/guides/migrating-from-v2-to-v3#8-update-options-for-usemaskederrors-plugin)
+
+- [#2091](https://github.com/dotansimha/graphql-yoga/pull/2091) [`1d508495`](https://github.com/dotansimha/graphql-yoga/commit/1d50849526f5a8b23beac3c542826a70ac286ae7) Thanks [@ardatan](https://github.com/ardatan)! - Export only specific utilities from `@envelop/core`.
+
+### Minor Changes
+
+- [#1966](https://github.com/dotansimha/graphql-yoga/pull/1966) [`6e250209`](https://github.com/dotansimha/graphql-yoga/commit/6e25020916670fb50fecb5ff7c25f7216db3d78a) Thanks [@saihaj](https://github.com/saihaj)! - Use `@graphql-tools/executor` as a default GraphQL Executor in favor of `graphql-js`.
+
+- [#1497](https://github.com/dotansimha/graphql-yoga/pull/1497) [`1d7f810a`](https://github.com/dotansimha/graphql-yoga/commit/1d7f810a8ee3fc00f6dbde461010683eb354da2d) Thanks [@ardatan](https://github.com/ardatan)! - Support a schema factory function that runs per request or a promise to be resolved before the first request.
+
+  ```ts
+  createYoga({
+    schema(request: Request) {
+      return getSchemaForToken(request.headers.get('x-my-token'))
+    }
+  })
+  ```
+
+  ```ts
+  async function buildSchemaAsync() {
+    const typeDefs = await fs.promises.readFile('./schema.graphql', 'utf8')
+    const resolvers = await import('./resolvers.js')
+    return makeExecutableSchema({ typeDefs, resolvers })
+  }
+
+  createYoga({
+    schema: buildSchemaAsync()
+  })
+  ```
+
+- [#1662](https://github.com/dotansimha/graphql-yoga/pull/1662) [`098e139f`](https://github.com/dotansimha/graphql-yoga/commit/098e139f2b08196bfee04a71bcd024501dceacd8) Thanks [@ardatan](https://github.com/ardatan)! - - Batching RFC support with `batchingLimit` option to enable batching with an exact limit of requests per batch.
+  - New `onParams` hook that takes a single `GraphQLParams` object
+  - Changes in `onRequestParse` and `onRequestParseDone` hook
+  - Now `onRequestParseDone` receives the exact object that is passed by the request parser so it can be `GraphQLParams` or an array of `GraphQLParams` so use `onParams` if you need to manipulate batched execution params individually.
+
+### Patch Changes
+
+- [#1997](https://github.com/dotansimha/graphql-yoga/pull/1997) [`8773a27f`](https://github.com/dotansimha/graphql-yoga/commit/8773a27ffb7f50a4b1f8c044d2a0c428d14e4fee) Thanks [@saihaj](https://github.com/saihaj)! - **Defer and Stream Support**
+
+  [See the docs for more information](https://www.the-guild.dev/graphql/yoga-server/v3/features/defer-stream)
+
+- [#2024](https://github.com/dotansimha/graphql-yoga/pull/2024) [`9f991a27`](https://github.com/dotansimha/graphql-yoga/commit/9f991a2767d374f1d6ab37445e65f748d5a1fe6d) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Ensure all parsing failures in `GraphQLScalarType` are caught and handled with 400 status code.
+
+- [#1920](https://github.com/dotansimha/graphql-yoga/pull/1920) [`cebca219`](https://github.com/dotansimha/graphql-yoga/commit/cebca219c4913f45509c3a40f0f5aa6697f5914d) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Handle edge case where `Content-Type` header provides a list like;
+
+  ```
+  Content-Type: application/json, text/plain, */*
+  ```
+
+- [#1609](https://github.com/dotansimha/graphql-yoga/pull/1609) [`74e1f830`](https://github.com/dotansimha/graphql-yoga/commit/74e1f830b09bc21a970f7468af1363a22b8b592b) Thanks [@enisdenjo](https://github.com/enisdenjo)! - `usePreventMutationViaGET` doesn't do assertion if it is not `YogaContext`, so it is possible to use Yoga's Envelop instance with other server implementations like `graphql-ws`.
+
+- [#1567](https://github.com/dotansimha/graphql-yoga/pull/1567) [`e7a47b56`](https://github.com/dotansimha/graphql-yoga/commit/e7a47b56fbdf3abbb8f0d590ade867805a84157e) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Handle invalid POST body gracefully. Reject `null`, non-object bodies or invalid JSON bodies.
+
+- [#1911](https://github.com/dotansimha/graphql-yoga/pull/1911) [`5f5b1160`](https://github.com/dotansimha/graphql-yoga/commit/5f5b116084cff45ed49f0c74cc449ff20fd775ac) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Handle cases where user supplies a malformed/unexpected context. Preventing GraphQL Yoga to crash and existing prematurely.
+
+- [`73e56068`](https://github.com/dotansimha/graphql-yoga/commit/73e56068fd1c1c06a0cf08150d5b79ce7c49992a) Thanks [@ardatan](https://github.com/ardatan)! - Fix cancellation logic for defer/stream queries.
+
+- [#1609](https://github.com/dotansimha/graphql-yoga/pull/1609) [`74e1f830`](https://github.com/dotansimha/graphql-yoga/commit/74e1f830b09bc21a970f7468af1363a22b8b592b) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Expose readonly `graphqlEndpoint` in `YogaServerInstance`
+
+  ```ts
+  const yoga = createYoga({
+    /*...*/
+  })
+  console.log(yoga.graphqlEndpoint) // /graphql by default
+  ```
+
+- [#1844](https://github.com/dotansimha/graphql-yoga/pull/1844) [`b079c93b`](https://github.com/dotansimha/graphql-yoga/commit/b079c93ba47dc94d58f7d2b738a9423c29a149a1) Thanks [@ardatan](https://github.com/ardatan)! - All unexpected errors even if they are masked/wrapped
+  The HTTP status code will be determined by the specific protocol the client is sending.
+
+  > "Unexpected error." means an Error that is not an instance of GraphQLError or an instance of GraphQLError with an `originalError` that is not an instance of GraphQLError recursively.
+
+- [#1988](https://github.com/dotansimha/graphql-yoga/pull/1988) [`b19a9104`](https://github.com/dotansimha/graphql-yoga/commit/b19a910447d27e2203bb5e22aaba6ab72d54b560) Thanks [@ardatan](https://github.com/ardatan)! - Respect the order of mime types given in the accept header by the client.
+
+- [#1616](https://github.com/dotansimha/graphql-yoga/pull/1616) [`1d5cde96`](https://github.com/dotansimha/graphql-yoga/commit/1d5cde96ce5b7647de7d329f9f56e398463a9152) Thanks [@ardatan](https://github.com/ardatan)! - Allow the content type `application/graphql-response+json` as the `Accept` header value.
+
+- [#1775](https://github.com/dotansimha/graphql-yoga/pull/1775) [`44878a5b`](https://github.com/dotansimha/graphql-yoga/commit/44878a5b1be937ab0ffefccc327400c80bd62847) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Improve the context type for server and request context.
+
+- Updated dependencies [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
+  - @graphql-yoga/subscription@3.0.0
+
 ## 3.0.0-next.12
 
 ### Patch Changes
