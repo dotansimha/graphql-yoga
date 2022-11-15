@@ -2,4 +2,4 @@
 '@graphql-yoga/apollo-link': major
 ---
 
-New Apollo Link
+New lean Apollo Client link.

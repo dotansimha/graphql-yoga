@@ -2,4 +2,4 @@
 '@graphql-yoga/urql-exchange': major
 ---
 
-New URQL Exchange
+New lean urql exchange.
