@@ -1,4 +1,4 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { PackageCmd } from '@theguild/components'
 
 # Integration with Cloudflare Workers
 
@@ -6,59 +6,51 @@ GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily int
 
 [Cloudflare Workers](https://developers.cloudflare.com/workers) provides a serverless execution environment that allows you to create entirely new applications or augment existing ones without configuring or maintaining infrastructure.
 
-You will want to use the package `@graphql-yoga/common` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects when building GraphQL powered Cloudflare Workers.
+You will want to use the package `graphql-yoga` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects when building GraphQL powered Cloudflare Workers.
 
-<Callout>
-  Watch [Episode #48 of
-  `graphql.wtf`](https://graphql.wtf/episodes/48-graphql-yoga-cloudflare-workers-kv)
-  for a quick introduction to using GraphQL Yoga with Cloudflare Workers, and
-  KV:
-</Callout>
+> Watch [Episode #48 of `graphql.wtf`](https://graphql.wtf/episodes/48-graphql-yoga-cloudflare-workers-kv) for a quick introduction to using GraphQL Yoga with Cloudflare Workers, and KV:
 
 <iframe
-  src="https://youtube.com/embed/xibiwSXMLsc"
+  src="https://www.youtube.com/embed/xibiwSXMLsc"
   title="Using GraphQL Yoga with Cloudflare Workers, and KV"
 />
 
 ## Installation
 
-<PackageCmd packages={['@graphql-yoga/common graphql']} />
+<PackageCmd packages={['graphql', 'graphql-yoga']} />
 
-## Example with Regular `fetch` Event Listener
+## Example with regular `fetch` event listener
 
 ```ts filename="listener.mjs"
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
-const server = createServer()
+const yoga = createYoga()
 
-server.start()
+self.addEventListener('fetch', yoga)
 ```
 
-<Callout>
-  You can also check a full example on our GitHub repository
-  [here](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/service-worker).
-</Callout>
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/service-worker)
 
 ## Example with Modules Approach
 
 ```ts filename="modules.mjs"
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
-export default createServer()
+export default createYoga()
 ```
 
 ### Access to environmental values (KV Namespaces etc.)
 
-You can access your KV namespaces etc. through the context.
+You can access your KV namespaces etc through the context.
 
 ```ts
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
 interface Env {
   MY_NAMESPACE: KVNamespace
 }
 
-export default createServer<Env>({
+const yoga = createYoga<Env>({
   typeDefs: /* GraphQL */ `
     type Query {
       todo(id: ID!): String
@@ -72,7 +64,7 @@ export default createServer<Env>({
   resolvers: {
     Query: {
       todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
-      todos: (_, _2, { MY_NAMESPACE }) => MY_NAMESPACE.list()
+      todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list()
     },
     Mutation: {
       // MY_NAMESPACE is available as a GraphQL context
@@ -85,18 +77,20 @@ export default createServer<Env>({
     }
   }
 })
+
+export default { fetch: yoga.handleRequest }
 ```
 
 If you need `ExecutionContext` as well inside your resolvers, you can set the `context` on your GraphQL server similar to what you see here:
 
 ```ts
-import { createServer } from '@graphql-yoga/common'
+import { createYoga } from 'graphql-yoga'
 
 interface Env {
   MY_NAMESPACE: KVNamespace
 }
 
-const yoga = createServer<{ env: Env; ctx: ExecutionContext }>()
+const yoga = createYoga<{ env: Env; ctx: ExecutionContext }>()
 
 export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
@@ -105,14 +99,11 @@ export default {
 }
 ```
 
-<Callout>
-  You can also check a full example on our GitHub repository
-  [here](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/cloudflare-modules).
-</Callout>
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/cloudflare-modules)
 
 ## Enabling Subscriptions
 
-To enable Server-Sent Events based subscriptions with Cloudflare Workers, you should add a compatibility flag in your wrangler configuration file like below:
+In order to enable Server Sent Events based subscriptions with Cloudflare Workers, you should add a compatibility flag in your wrangler configuration file like below;
 
 ```toml
 compatibility_flags = ["streams_enable_constructors"]

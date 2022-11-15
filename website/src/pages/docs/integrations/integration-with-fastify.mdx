@@ -1,27 +1,27 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { PackageCmd } from '@theguild/components'
 
 # Integration with Fastify
 
-[Fastify](https://fastify.io) is one of the popular HTTP server frameworks for Node.js. It is a very simple, yet powerful framework that is easy to learn and use.
+[Fastify is one of the popular HTTP server frameworks for Node.js.](https://www.fastify.io/) It is a very simple, yet powerful framework that is easy to learn and use.
 You can easily integrate GraphQL Yoga with Fastify.
 
-So you can benefit from the powerful plugins of the Fastify ecosystem with GraphQL Yoga.
-[See the ecosystem](https://www.fastify.io/docs/latest/Guides/Ecosystem).
+So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Yoga.
+[See the ecosystem](https://www.fastify.io/docs/latest/Guides/Ecosystem/)
 
 ## Installation
 
-<PackageCmd packages={['@graphql-yoga/node fastify graphql']} />
+<PackageCmd packages={['fastify', 'graphql', 'graphql-yoga']} />
 
 ## Example
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
+import { createYoga } from 'graphql-yoga'
 import fastify, { FastifyRequest, FastifyReply } from 'fastify'
 
 // This is the fastify instance you have created
 const app = fastify({ logger: true })
 
-const graphQLServer = createServer<{
+const yoga = createYoga<{
   req: FastifyRequest
   reply: FastifyReply
 }>({
@@ -42,9 +42,9 @@ const graphQLServer = createServer<{
 app.route({
   url: '/graphql',
   method: ['GET', 'POST', 'OPTIONS'],
-  async handler(req, reply) {
+  handler: async (req, reply) => {
     // Second parameter adds Fastify's `req` and `reply` to the GraphQL Context
-    const response = await graphQLServer.handleIncomingMessage(req, {
+    const response = await yoga.handleNodeRequest(req, {
       req,
       reply
     })
@@ -63,9 +63,9 @@ app.route({
 app.listen(4000)
 ```
 
-## Add Dummy Content Type Parser for File Uploads
+## Add dummy content type parser for File Uploads
 
-Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requests because otherwise, it will throw an error something like `Unsupported media type`.
+Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requests because otherwise it will throw an error something like `Unsupported media type`.
 
 ```ts
 // This will allow Fastify to forward multipart requests to GraphQL Yoga
@@ -74,7 +74,4 @@ app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
 )
 ```
 
-<Callout>
-  You can also check a full example on our GitHub repository
-  [here](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/fastify).
-</Callout>
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/fastify)

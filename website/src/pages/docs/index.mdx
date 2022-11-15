@@ -1,67 +1,176 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { PackageCmd, Tabs, Tab } from '@theguild/components'
 
-# Quick Start
+# Quick start
 
-GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP](https://github.com/graphql/graphql-over-http) spec-compliant GraphQL Server using [Envelop](https://envelop.dev), and [GraphQL Tools](https://graphql-tools.com) that runs anywhere.
+GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga) GraphQL server powered by [Envelop](https://envelop.dev) and [GraphQL Tools](https://graphql-tools.com) that runs anywhere; focused on easy setup, performance and great developer experience.
 
 ## Installation
 
-<PackageCmd packages={['@graphql-yoga/node graphql']} />
+<PackageCmd packages={['graphql graphql-yoga']} />
 
-## Usage
+## Schema
 
-You will need to provide a schema to Yoga, either by an existing executable schema or by providing your type definitions and resolver map.
+You will need to provide a schema to Yoga, there are many ways to assemble a GraphQL schema, here's just a few:
 
-```ts
-import { createServer } from '@graphql-yoga/node'
+<Tabs items={['graphql-yoga', '@graphql-tools/schema', 'Pothos', 'GraphQL Nexus', 'gqtx', 'graphql-js']}>
+  <Tab>
+Use the `createSchema` function included in Yoga. It actually reuses the [`makeExecutableSchema` from @graphql-tools/schema](https://www.graphql-tools.com/docs/generate-schema).
 
-const server = createServer({
-  schema: {
-    typeDefs: /* GraphQL */ `
-      type Query {
-        hello: String
-      }
-    `,
-    resolvers: {
-      Query: {
-        hello: () => 'Hello from Yoga!'
-      }
+```js filename="schema.js"
+import { createSchema } from 'graphql-yoga'
+
+export const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world'
     }
   }
 })
-
-server.start()
 ```
 
-<Callout>
-  Yoga uses GraphQL Tools under the hood so you'll want to follow the
-  [`makeExecutableSchema`](https://graphql-tools.com/docs/generate-schema)
-  pattern.
-</Callout>
+  </Tab>
 
-**That is it!**
+  <Tab>
+[`makeExecutableSchema` from @graphql-tools/schema](https://www.graphql-tools.com/docs/generate-schema) is very simple, but powerful. Install it and create a schema.
 
-Now visit [`http://localhost:4000/graphql`](http://localhost:4000/graphql) to execute the following query operation:
+<PackageCmd packages={['@graphql-tools/schema']} />
 
-```graphql
-query HelloWorld {
-  hello
-}
+```js filename="schema.js"
+import { makeExecutableSchema } from '@graphql-tools/schema'
+
+export const schema = makeExecutableSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      hello: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => 'world'
+    }
+  }
+})
 ```
 
-## Using Existing Schema
+  </Tab>
 
-You can also pass an existing `GraphQLSchema` instance to `createServer`.
+  <Tab>
 
-If you're using a library such as [Pothos](https://pothos-graphql.dev), [GraphQL Nexus](https://nexusjs.org), [gqtx](https://github.com/sikanhe/gqtx), or vanilla [`graphql-js`](https://graphql.org/graphql-js/type/#graphqlschema), you simply can pass the `GraphQLSchema` to `schema`:
+[Pothos](https://pothos-graphql.dev) is a plugin based GraphQL schema builder for TypeScript. Install it and create a schema.
 
-```ts
-import { createServer } from '@graphql-yoga/node'
+<PackageCmd packages={['@pothos/core']} />
+
+```js filename="schema.js"
+import SchemaBuilder from '@pothos/core'
+
+const builder = new SchemaBuilder({})
+
+builder.queryType({
+  fields: (t) => ({
+    hello: t.string({
+      resolve: () => 'world'
+    })
+  })
+})
+
+export const schema = builder.toSchema()
+```
+
+  </Tab>
+
+  <Tab>
+Declarative, Code-First GraphQL Schemas for JavaScript/TypeScript through [Nexus GraphQL](https://nexusjs.org/). Install it and create schema.
+
+<PackageCmd packages={['nexus']} />
+
+```js filename="schema.js"
+import { makeSchema, queryField } from 'nexus'
+
+const helloField = queryField('hello', {
+  type: 'String',
+  resolve: () => 'world'
+})
+
+export const schema = makeSchema({ types: [helloField] })
+```
+
+  </Tab>
+
+  <Tab>
+Code-first type-safe GraphQL schema without codegen or metaprogramming using [gqtx](https://github.com/sikanhe/gqtx). Install it and create schema.
+
+<PackageCmd packages={['gqtx']} />
+
+```js filename="schema.js"
+import { createTypesFactory, buildGraphQLSchema } from 'gqtx'
+
+const t = createTypesFactory()
+
+const Query = t.queryType({
+  fields: () => [
+    t.field({
+      name: 'hello',
+      type: t.String,
+      resolve: () => 'world'
+    })
+  ]
+})
+
+export const schema = buildGraphQLSchema({ query: Query })
+```
+
+  </Tab>
+
+  <Tab>
+[graphql-js](https://github.com/graphql/graphql-js) is a reference implementation of GraphQL for JavaScript. You should already have it installed, just create schema.
+
+```js filename="schema.js"
+import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
+
+export const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'Query',
+    fields: {
+      hello: {
+        type: GraphQLString,
+        resolve: () => 'world'
+      }
+    }
+  })
+})
+```
+
+  </Tab>
+</Tabs>
+
+## Server
+
+After you have created a GraphQL schema, simply pass it in to Yoga and liftoff! 🚀
+
+```js
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
 import { schema } from './schema'
 
-const server = createServer({ schema })
+// Create a Yoga instance with a GraphQL schema.
+const yoga = createYoga({ schema })
 
-server.start()
+// Pass it into a server to hook into request handlers.
+const server = createServer(yoga)
+
+// Start the server and you're done!
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
 ```
+
+Visit [`http://localhost:4000/graphql`](http://localhost:4000/graphql) to see Yoga in action.
+
+## Showcase
 
 <iframe src="https://youtube.com/embed/_-B6QIFSSwo" title="GraphQL Yoga 2" />
