@@ -23,7 +23,7 @@
 ### Install
 
 ```sh
-pnpm add graphql-yoga@three graphql
+pnpm add graphql-yoga graphql
 ```
 
 ### Start

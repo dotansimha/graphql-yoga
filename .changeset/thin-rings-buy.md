@@ -2,4 +2,4 @@
 'graphql-yoga': major
 ---
 
-export only specific things from `@envelop/core`
+Export only specific things from `@envelop/core`
