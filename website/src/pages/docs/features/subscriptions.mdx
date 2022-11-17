@@ -344,7 +344,7 @@ const httpServer = createServer(yogaApp)
 // Create WebSocket server instance from our Node server
 const wsServer = new WebSocketServer({
   server: httpServer,
-  path: yogaApp.getAddressInfo().endpoint
+  path: yogaApp.graphqlEndpoint
 })
 
 // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
@@ -381,7 +381,7 @@ useServer(
   wsServer
 )
 
-server.listen(4000, () => {
+httpServer.listen(4000, () => {
   console.log('Server is running on port 4000')
 })
 ```
