@@ -1019,7 +1019,7 @@ importers:
   website:
     specifiers:
       '@theguild/algolia': 1.0.1
-      '@theguild/components': 4.3.3
+      '@theguild/components': 4.3.6
       '@theguild/tailwind-config': 0.2.1
       '@types/node': 18.11.9
       '@types/react': 18.0.25
@@ -1034,7 +1034,7 @@ importers:
       react-icons: 4.6.0
       typescript: 4.9.3
     dependencies:
-      '@theguild/components': 4.3.3_axequwibc5yadwk55bo7ehxsoe
+      '@theguild/components': 4.3.6_axequwibc5yadwk55bo7ehxsoe
       clsx: 1.2.1
       graphql: 16.6.0
       next: 12.3.3_biqbaboplfbrettd7655fr4n2y
@@ -4327,13 +4327,13 @@ packages:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: false
 
-  /@giscus/react/2.2.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-UXU2pzJEnsjEh36//UlqmWd7j3FJTGL7ijZIaijwbrsERtzkPkRhOkJ7eqRytCOdpcJSji3XX07/5rPGknmm3w==}
+  /@giscus/react/2.2.3_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-zsu+ADvxR12PyGZBYMFxYfSQL1eefq/Wkh5g0Eg75BWBiaIT8jSFss4l0Xb2BLQpNAjZ5bzLfJcirz/dPQOkGQ==}
     peerDependencies:
       react: ^16 || ^17 || ^18
       react-dom: ^16 || ^17 || ^18
     dependencies:
-      giscus: 1.2.2
+      giscus: 1.2.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
@@ -8270,8 +8270,8 @@ packages:
       remove-markdown: 0.5.0
     dev: true
 
-  /@theguild/components/4.3.3_axequwibc5yadwk55bo7ehxsoe:
-    resolution: {integrity: sha512-dDetmW5Au6OzfDN0ZcQdAtbhlekHkr5Si/fhy8PXdGD9spLFTx/lSTJofbwT0/Mm6OksXZ/+gze5ydzhfhWxtA==}
+  /@theguild/components/4.3.6_axequwibc5yadwk55bo7ehxsoe:
+    resolution: {integrity: sha512-d31sH22IqolPMzjuOOnbEw6DRp6j+6Pkf3u4fZZlG9fh87lKma/VyH2TL5SvGxQipyy3tF1oojUMW3i4GMioXA==}
     peerDependencies:
       next: ^12.3.1
       react: ^18.2.0
@@ -8281,7 +8281,7 @@ packages:
       '@algolia/autocomplete-plugin-algolia-insights': 1.7.3_nl7ecob7oenl7dfhoewptlc4ye
       '@algolia/autocomplete-plugin-query-suggestions': 1.7.3_algoliasearch@4.14.2
       '@algolia/autocomplete-theme-classic': 1.7.3
-      '@giscus/react': 2.2.2_biqbaboplfbrettd7655fr4n2y
+      '@giscus/react': 2.2.3_biqbaboplfbrettd7655fr4n2y
       '@headlessui/react': 1.7.3_biqbaboplfbrettd7655fr4n2y
       '@next/bundle-analyzer': 12.3.3
       '@radix-ui/react-navigation-menu': 1.1.1_biqbaboplfbrettd7655fr4n2y
@@ -8295,7 +8295,7 @@ packages:
       nextra-theme-docs: 2.0.0-beta.41_4o3yddyxulwzj2ws6hg7qxbfki_axequwibc5yadwk55bo7ehxsoe
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-instantsearch-dom: 6.38.0_fzyfqr3mixyxftdbf7mmfo2jb4
+      react-instantsearch-dom: 6.38.1_fzyfqr3mixyxftdbf7mmfo2jb4
       react-paginate: 8.1.4_react@18.2.0
       react-player: 2.11.0_react@18.2.0
       remark-mdx-disable-explicit-jsx: 0.1.0
@@ -9902,6 +9902,7 @@ packages:
   /apollo-server-core/3.10.3_graphql@16.6.0:
     resolution: {integrity: sha512-PiTirlcaszgnJGzSsGui9XWh0KAh0BUW+GvRKN6O0H0qOSXSLmoqqyL83J+u+HaUZGyyiE0+VOkyCcuF+kKbEw==}
     engines: {node: '>=12.0'}
+    deprecated: The `apollo-server-core` package is part of Apollo Server v2 and v3, which are now deprecated (end-of-life October 22nd 2023). This package's functionality is now found in the `@apollo/server` package. See https://www.apollographql.com/docs/apollo-server/previous-versions/ for more details.
     requiresBuild: true
     peerDependencies:
       graphql: ^15.3.0 || ^16.0.0
@@ -15849,8 +15850,8 @@ packages:
       - encoding
     dev: true
 
-  /giscus/1.2.2:
-    resolution: {integrity: sha512-H71M3V5K/mmWr5/OwCMCH+s7Z2wVT6uQ1AXe5B0f0jjAGvJ9unAklfp4cNJU5zamjDdMZFVFi/9xhhbHIG3ZTQ==}
+  /giscus/1.2.3:
+    resolution: {integrity: sha512-1sYu6B3cUzPVZHH93f1DX5PJHf5ak2bPp8N1xZrAPxqccN7C/R6r93usllmCVESJ8cvnyYUaNVyXzOYz9B6OxQ==}
     dependencies:
       lit: 2.4.1
     dev: false
@@ -22757,8 +22758,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-instantsearch-core/6.38.0_jz5z4e34rsiperspnjrg6onci4:
-    resolution: {integrity: sha512-Y5denvptL+qDOHY3LxipULNun8f3t2WeO9UdiWJd9FER1vn1VBrDdSyZ5b+idxqVWhSeVbncbf98zr7EW/kFvA==}
+  /react-instantsearch-core/6.38.1_jz5z4e34rsiperspnjrg6onci4:
+    resolution: {integrity: sha512-14gy/jsakJELVeMEO+QmsHcugIyaU1pRyyuQjuXuBvF+TMHiWUjfYw7de3Lc4oYcTYIeSllYIxLHxdUoxLWZaA==}
     peerDependencies:
       algoliasearch: '>= 3.1 < 5'
       react: '>= 16.3.0 < 19'
@@ -22771,8 +22772,8 @@ packages:
       react-fast-compare: 3.2.0
     dev: false
 
-  /react-instantsearch-dom/6.38.0_fzyfqr3mixyxftdbf7mmfo2jb4:
-    resolution: {integrity: sha512-yE0y9U1GCPZ/Jqzbd2BHTdx83/DYIEbXqAt7a+a5TLi4qQgwjTpVrtAkqzhT8f1/TRhNqu0wYAT4HFixVsW8FA==}
+  /react-instantsearch-dom/6.38.1_fzyfqr3mixyxftdbf7mmfo2jb4:
+    resolution: {integrity: sha512-Wyzm4JW8O79zwsaWqOBdKbg69O7OcUDiF+p+/LW7zdRZ3RK4mO/q5CZDcziwDbNKqC4OEuG+IpIZuCjcJQrFcQ==}
     peerDependencies:
       algoliasearch: '>= 3.1 < 5'
       react: '>= 16.3.0 < 19'
@@ -22786,7 +22787,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-fast-compare: 3.2.0
-      react-instantsearch-core: 6.38.0_jz5z4e34rsiperspnjrg6onci4
+      react-instantsearch-core: 6.38.1_jz5z4e34rsiperspnjrg6onci4
     dev: false
 
   /react-is/16.13.1:
