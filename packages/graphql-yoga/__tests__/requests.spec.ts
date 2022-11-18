@@ -69,6 +69,9 @@ describe('requests', () => {
       )}`,
       {
         method: 'GET',
+        headers: {
+          accept: 'application/graphql-response+json',
+        },
       },
     )
 
@@ -126,7 +129,10 @@ describe('requests', () => {
   it('should error on malformed JSON parameters', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: '{ "query": "{ ping }"',
     })
     expect(response.status).toBe(400)
@@ -140,7 +146,10 @@ describe('requests', () => {
   it('should error on invalid JSON parameters', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: '{ "query": "',
     })
     expect(response.status).toBe(400)
@@ -155,7 +164,10 @@ describe('requests', () => {
   it('should error on nullish JSON body', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: 'null',
     })
     expect(response.status).toBe(400)
@@ -172,7 +184,10 @@ describe('requests', () => {
   it('should error on non-object JSON body', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: '"body"',
     })
     expect(response.status).toBe(400)
@@ -189,7 +204,10 @@ describe('requests', () => {
   it('should error on malformed query string', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ query { ping }' }),
     })
 
@@ -204,7 +222,10 @@ describe('requests', () => {
   it('should error missing query', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: null }),
     })
 
@@ -218,7 +239,10 @@ describe('requests', () => {
   it('should error if query is not a string', async () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: { ping: 'pong' } }),
     })
 
@@ -297,6 +321,7 @@ describe('requests', () => {
     const response = await yoga.fetch(`http://yoga/test-graphql`, {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'content-type': 'application/graphql+json',
       },
       body: JSON.stringify({ query: '{ ping }', test: 'a' }),
