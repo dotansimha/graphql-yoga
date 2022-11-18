@@ -1,6 +1,6 @@
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
-import { CORSOptions, createYoga } from '../src/index.js'
+import { CORSOptions, createYoga, Repeater } from '../src/index.js'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import puppeteer from 'puppeteer'
 import { createServer, Server } from 'http'
@@ -109,6 +109,17 @@ export function createTestSchema() {
     subscription: new GraphQLObjectType({
       name: 'Subscription',
       fields: () => ({
+        counter: {
+          type: GraphQLInt,
+          subscribe: () =>
+            new Repeater((push, end) => {
+              let counter = 0
+              const send = () => push(counter++)
+              const interval = setInterval(() => send(), 1000)
+              end.then(() => clearInterval(interval))
+            }),
+          resolve: (value) => value,
+        },
         error: {
           type: GraphQLBoolean,
           // eslint-disable-next-line require-yield
@@ -533,6 +544,46 @@ describe('browser', () => {
           },
         }),
       )
+    })
+  })
+
+  describe('EventSource', () => {
+    test('can execute subscription', async () => {
+      await page.goto(`http://localhost:${port}/`)
+
+      const result = await page.evaluate((urlStr) => {
+        const url = new URL(urlStr)
+        url.searchParams.set('query', 'subscription { counter }')
+        const source = new EventSource(url.toString())
+
+        return new Promise<
+          | { error: string; data?: never }
+          | { error?: never; data: Array<string> }
+        >((res) => {
+          const values: Array<string> = []
+          source.onmessage = (event) => {
+            values.push(event.data)
+            if (values.length === 2) {
+              res({ data: values })
+              source.close()
+            }
+          }
+          source.onerror = (err) => {
+            res({ error: String(err) })
+          }
+        })
+      }, `http://localhost:${port}${endpoint}`)
+
+      if (result.error) {
+        throw new Error(result.error)
+      }
+
+      expect(result.data).toMatchInlineSnapshot(`
+        [
+          "{"data":{"counter":0}}",
+          "{"data":{"counter":1}}",
+        ]
+      `)
     })
   })
 })
