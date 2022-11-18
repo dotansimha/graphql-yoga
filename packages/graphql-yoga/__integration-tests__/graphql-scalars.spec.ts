@@ -50,7 +50,10 @@ describe('graphql-scalars', () => {
     it(`should respond with 400 if ${typeName} scalar parsing fails from "variables"`, async () => {
       const res = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          accept: 'application/graphql-response+json',
+          'content-type': 'application/json',
+        },
         body: JSON.stringify({
           query: /* GraphQL */ `
           query Get${typeName}($input: ${typeName}!) {
@@ -67,7 +70,10 @@ describe('graphql-scalars', () => {
     it(`should respond with 400 if ${typeName} scalar parsing fails from "SDL"`, async () => {
       const res = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          accept: 'application/graphql-response+json',
+          'content-type': 'application/json',
+        },
         body: JSON.stringify({
           query: /* GraphQL */ `
           query Get${typeName} {

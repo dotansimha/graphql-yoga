@@ -15,9 +15,6 @@ function getTests(app: Express.Application) {
       .post('/graphql')
       .send({ query: '{ hello }' })
     expect(response.statusCode).toBe(200)
-    expect(response.headers['content-type']).toContain(
-      'application/graphql-response+json',
-    )
     expect(response.body).toStrictEqual({
       data: {
         hello: 'world',
@@ -40,9 +37,6 @@ function getTests(app: Express.Application) {
         contentType: 'plain/text',
       })
     expect(response.statusCode).toBe(200)
-    expect(response.headers['content-type']).toContain(
-      'application/graphql-response+json',
-    )
     expect(response.body).toStrictEqual({
       data: {
         getFileName: 'file.txt',
