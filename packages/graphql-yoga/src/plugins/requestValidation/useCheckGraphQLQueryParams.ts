@@ -2,7 +2,13 @@ import { createGraphQLError } from '@graphql-tools/utils'
 import type { GraphQLParams } from '../../types'
 import type { Plugin } from '../types'
 
-const EXPECTED_PARAMS = ['query', 'variables', 'operationName', 'extensions']
+const EXPECTED_PARAMS = [
+  'query',
+  'variables',
+  'operationName',
+  'extensions',
+  'id',
+]
 
 export function assertInvalidParams(
   params: unknown,
