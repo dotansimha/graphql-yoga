@@ -548,12 +548,19 @@ describe('browser', () => {
   })
 
   describe('EventSource', () => {
-    test('can execute subscription', async () => {
+    test('subscription operation', async () => {
       await page.goto(`http://localhost:${port}/`)
 
       const result = await page.evaluate((urlStr) => {
         const url = new URL(urlStr)
-        url.searchParams.set('query', 'subscription { counter }')
+        url.searchParams.set(
+          'query',
+          /* GraphQL */ `
+            subscription {
+              counter
+            }
+          `,
+        )
         const source = new EventSource(url.toString())
 
         return new Promise<
