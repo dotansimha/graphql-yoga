@@ -6,7 +6,28 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { createPushPullAsyncIterable } from './push-pull-async-iterable'
+import { createPushPullAsyncIterable } from './push-pull-async-iterable.js'
+
+function multipartStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
+  return new Repeater<TType>(async (push, end) => {
+    const cancel: Promise<{ done: true }> = end.then(() => ({ done: true }))
+    const iterable = source[Symbol.asyncIterator]()
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const result = await Promise.race([cancel, iterable.next()])
+      if (result.done) {
+        break
+      }
+      const value = result.value.toString()
+      if (value.startsWith('{"')) {
+        push(JSON.parse(value))
+      }
+    }
+
+    iterable.return?.()
+    end()
+  })
+}
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -225,7 +246,80 @@ describe('Defer/Stream', () => {
     }
   })
 
-  describe('Content-Types', () => {
+  it('multipart/mixed parser', async () => {
+    const yoga = createYoga({
+      schema,
+      plugins: [useDeferStream()],
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ stream @stream }' }),
+    })
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-type')).toBe(
+      'multipart/mixed; boundary="-"',
+    )
+
+    const source = multipartStream(response.body!)
+    let counter = 0
+
+    for await (const value of source) {
+      if (counter === 0) {
+        expect(value).toEqual({
+          data: {
+            stream: [],
+          },
+          hasNext: true,
+        })
+        counter++
+      } else if (counter === 1) {
+        expect(value).toEqual({
+          hasNext: true,
+          incremental: [
+            {
+              items: ['A'],
+              path: ['stream', 0],
+            },
+          ],
+        })
+        counter++
+      } else if (counter === 2) {
+        expect(value).toEqual({
+          hasNext: true,
+          incremental: [
+            {
+              items: ['B'],
+              path: ['stream', 1],
+            },
+          ],
+        })
+        counter++
+      } else if (counter === 3) {
+        expect(value).toEqual({
+          hasNext: true,
+          incremental: [
+            {
+              items: ['C'],
+              path: ['stream', 2],
+            },
+          ],
+        })
+        counter++
+      } else if (counter === 4) {
+        expect(value).toEqual({
+          hasNext: false,
+        })
+        counter++
+      }
+    }
+  })
+
+  describe('Accept header', () => {
     it('accept: <void>', async () => {
       const yoga = createYoga({
         schema: createSchema({
@@ -293,6 +387,7 @@ describe('Defer/Stream', () => {
       expect(response.headers.get('content-type')).toEqual(null)
       expect(await response.text()).toEqual('')
     })
+
     it('accept: multipart/mixed', async () => {
       const yoga = createYoga({
         schema: createSchema({
