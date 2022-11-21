@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.0.1
+
+### Patch Changes
+
+- [#2125](https://github.com/dotansimha/graphql-yoga/pull/2125) [`d63fe841`](https://github.com/dotansimha/graphql-yoga/commit/d63fe84157662896c372feb013b73c6f290a2d3b) Thanks [@enisdenjo](https://github.com/enisdenjo)! - application/json is the default when accept is missing until watershed
+
 ## 3.0.0
 
 ### Major Changes
