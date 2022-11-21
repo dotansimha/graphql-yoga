@@ -65,7 +65,7 @@ export function processMultipartResult(
         controller.enqueue(textEncoder.encode('---'))
       }
       if (done) {
-        controller.enqueue(textEncoder.encode('\r\n-----\r\n'))
+        controller.enqueue(textEncoder.encode('--\r\n'))
         controller.close()
       }
     },

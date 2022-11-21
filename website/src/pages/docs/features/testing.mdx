@@ -1,30 +1,311 @@
+import { PackageCmd, Tabs, Tab, Callout } from '@theguild/components'
+
 # Testing
 
 GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection. You can use any testing framework of your choice.
 
 You can use the `fetch` method on your yoga instance for calling the yoga instance as if you were doing an HTTP request.
 
-```ts
-import { createYoga } from 'graphql-yoga'
-import { schema } from './schema'
+<Callout>
+  Callign the `yoga.fetch` method does not send an actual HTTP request. It
+  basically simulates the HTTP request which is 100% conform with how
+  Request/Response work.
+</Callout>
+
+## Test Utility
+
+Writing parsers for the Subscription or Incremental Delivery (`@defer`/`@stream`) protocol is annoying and cumbersome.
+Instead you can use the `buildHTTPExecutor` utility function from `@graphql-tools/executor-http`.
+
+<PackageCmd packages={['@graphql-tools/executor-http']} />
+
+```ts filename="Building an executor"
+import { createYoga, createSchema } from 'graphql-yoga'
+import { buildHTTPExecutor } from '@graphql-tools/executor-http'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      greetings: String!
+    }
+  `,
+  resolvers: {
+    Query: {
+      greetings: () => 'Hello World!'
+    }
+  }
+})
 
 const yoga = createYoga({ schema })
 
-const response = await yoga.fetch('http://localhost:4000/graphql', {
+const executor = buildHTTPExecutor({
+  fetch: yoga.fetch
+})
+```
+
+### Mutation and Query Operations
+
+```ts filename="Mutation and Query Operations"
+import { createYoga, createSchema } from 'graphql-yoga'
+import { buildHTTPExecutor } from '@graphql-tools/executor-http'
+import { parse } from 'graphql'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      greetings: String!
+    }
+  `,
+  resolvers: {
+    Query: {
+      greetings: () => 'Hello World!'
+    }
+  }
+})
+
+function assertSingleValue<TValue extends object>(
+  value: TValue | AsyncIterable<TValue>
+): asserts value is TValue {
+  if (Symbol.asyncIterator in value) {
+    throw new Error('Expected single value')
+  }
+}
+
+const executor = buildHTTPExecutor({
+  fetch: yoga.fetch
+})
+
+const result = await executor({
+  document: parse(/* GraphQL */ `
+    query {
+      greetings
+    }
+  `)
+})
+
+assertSingleValue(result)
+
+console.assert(
+  executionResult.data?.greetings === 'Hello World!',
+  `Expected 'Hello World!' but got ${executionResult.data.greetings}`
+)
+```
+
+### Subscription Operations
+
+```ts filename="Subscription Operations"
+import { createYoga, createSchema, Repeater } from 'graphql-yoga'
+import { buildHTTPExecutor } from '@graphql-tools/executor-http'
+import { parse } from 'graphql'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      greetings: String!
+    }
+
+    type Subscription {
+      counter: Int!
+    }
+  `,
+  resolvers: {
+    Subscription: {
+      counter: {
+        subscribe: () =>
+          new Repeater((push, end) => {
+            let i = 0
+            const interval = setInterval(() => {
+              push({ counter: i++ })
+            }, 100)
+
+            end.then(() => clearInterval(interval))
+          })
+      }
+    }
+  }
+})
+
+function assertStreamValue<TValue extends object>(
+  value: TValue | AsyncIterable<TValue>
+): asserts value is TValue {
+  if (Symbol.asyncIterator in value) {
+    return
+  }
+  throw new Error('Expected single value')
+}
+
+const executor = buildHTTPExecutor({
+  fetch: yoga.fetch
+})
+
+const result = await executor({
+  document: parse(/* GraphQL */ `
+    subscription {
+      counter
+    }
+  `)
+})
+
+assertStreamValue(result)
+
+let iterationCounter = 0
+
+for await (const value of result) {
+  if (iterationCounter === 0) {
+    console.assert(
+      executionResult.data?.counter === 1,
+      `Expected 1 but got ${executionResult.data?.counter}`
+    )
+    iterationCounter++
+  } else if (iterationCounter === 1) {
+    console.assert(
+      executionResult.data?.counter === 1,
+      `Expected 2 but got ${executionResult.data?.counter}`
+    )
+    break
+  } else {
+    throw new Error('Expected only two iterations')
+  }
+}
+```
+
+## Advanced
+
+Instead of using the convinient `@graphql-tools/executor-http` package you can also process the request body from scratch.
+
+### Mutation and Query Operation
+
+```ts filename="Query Operation Test"
+import { createYoga, createSchema } from 'graphql-yoga'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      greetings: String!
+    }
+  `,
+  resolvers: {
+    Query: {
+      greetings: () => 'Hello World!'
+    }
+  }
+})
+
+const yoga = createYoga({ schema })
+
+const response = await yoga.fetch('http://yoga/graphql', {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    query: '{ greetings }',
-  }),
+    query: '{ greetings }'
+  })
 })
 
 console.assert(response.status === 200, 'Response status should be 200')
 const executionResult = await response.json()
 console.assert(
-  executionResult.data.greetings ===
-    'This is the `greetings` field of the root `Query` type',
-  `Expected 'This is the `greetings` field of the root `Query` type' but got ${executionResult.data.greetings}`,
+  executionResult.data?.greetings === 'Hello World!',
+  `Expected 'Hello World!' but got ${executionResult.data?.greetings}`
 )
+```
+
+### Subscription Operation
+
+```ts filename="Query Operation Test"
+import { createYoga, createSchema, Repeater } from 'graphql-yoga'
+
+const schema = createSchema({
+  typeDefs: /* GraphQL */ `
+    type Query {
+      greetings: String!
+    }
+
+    type Subscription {
+      counter: Int!
+    }
+  `,
+  resolvers: {
+    Subscription: {
+      counter: {
+        subscribe: () =>
+          new Repeater((push, end) => {
+            let i = 0
+            const interval = setInterval(() => {
+              push({ counter: i++ })
+            }, 100)
+
+            end.then(() => clearInterval(interval))
+          })
+      }
+    }
+  }
+})
+
+const yoga = createYoga({ schema })
+
+function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
+  return new Repeater<TType>(async (push, end) => {
+    const cancel: Promise<{ done: true }> = end.then(() => ({ done: true }))
+    const iterable = source[Symbol.asyncIterator]()
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const result = await Promise.race([cancel, iterable.next()])
+
+      if (result.done) {
+        break
+      }
+
+      const values = result.value.toString().split('\n\n').filter(Boolean)
+      for (const value of values) {
+        if (!value.startsWith('data: ')) {
+          continue
+        }
+        const result = value.replace('data: ', '')
+        push(JSON.parse(result))
+      }
+    }
+
+    iterable.return?.()
+    end()
+  })
+}
+
+const response = await yoga.fetch('http://yoga/graphql', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    query: 'subscription { counter }'
+  })
+})
+
+console.assert(response.status === 200, 'Response status should be 200')
+let iterationCounter = 0
+
+for await (const executionResult of eventStream(response.body!)) {
+  if (iterationCounter === 0) {
+    console.assert(
+      executionResult.data?.counter === 1,
+      `Expected 1 but got ${executionResult.data?.counter}`
+    )
+    iterationCounter++
+  } else if (iterationCounter === 1) {
+    console.assert(
+      executionResult.data?.counter === 2,
+      `Expected 2 but got ${executionResult.data?.counter}`
+    )
+    iterationCounter++
+  } else if (iterationCounter === 2) {
+    console.assert(
+      executionResult.data?.counter === 3,
+      `Expected 3 but got ${executionResult.data?.counter}`
+    )
+    break
+  } else {
+    throw new Error('Expected only three iterations')
+  }
+}
 ```

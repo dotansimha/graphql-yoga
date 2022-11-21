@@ -1026,11 +1026,13 @@ importers:
 
   packages/plugins/defer-stream:
     specifiers:
+      '@graphql-tools/executor-http': 0.1.2
       '@graphql-tools/utils': ^9.0.1
       '@whatwg-node/fetch': 0.6.5
     dependencies:
       '@graphql-tools/utils': 9.0.1
     devDependencies:
+      '@graphql-tools/executor-http': 0.1.2
       '@whatwg-node/fetch': 0.6.5
     publishDirectory: dist
 
@@ -5245,7 +5247,6 @@ packages:
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
-    dev: false
 
   /@graphql-tools/executor-http/0.1.2_graphql@16.6.0:
     resolution: {integrity: sha512-XowkX6UwVxe80N4YMBLlojZJS8PhqC5KaxckyZjlIx6ratmF+sMn/IHAc0Ea4kEXsBHs6JoE3mZrQ6NGVGRY2w==}
@@ -5783,7 +5784,6 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       tslib: 2.5.0
-    dev: false
 
   /@graphql-tools/utils/9.1.4_graphql@16.6.0:
     resolution: {integrity: sha512-hgIeLt95h9nQgQuzbbdhuZmh+8WV7RZ/6GbTj6t3IU4Zd2zs9yYJ2jgW/krO587GMOY8zCwrjNOMzD40u3l7Vg==}
