@@ -318,6 +318,9 @@ describe('incremental delivery: node-fetch', () => {
     formData.set('0', new File([fileContent], fileName, { type: fileType }))
     const response = await fetch(url, {
       method: 'POST',
+      headers: {
+        accept: 'application/graphql-response+json',
+      },
       body: formData,
     })
 

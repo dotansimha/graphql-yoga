@@ -31,7 +31,10 @@ describe('GraphQLError.extensions.http', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ a }' }),
     })
 
@@ -75,7 +78,10 @@ describe('GraphQLError.extensions.http', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ a b }' }),
     })
 
@@ -184,7 +190,10 @@ describe('GraphQLError.extensions.http', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ a }' }),
     })
     expect(response.status).toBe(418)
@@ -207,14 +216,20 @@ describe('GraphQLError.extensions.http', () => {
 
     let response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
     expect(response.status).toBe(400)
 
     response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
     expect(response.status).toBe(400)
@@ -233,14 +248,20 @@ describe('GraphQLError.extensions.http', () => {
 
     let response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ notme }' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
     expect(response.status).toBe(400)
 
     response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ notme }' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
     expect(response.status).toBe(400)

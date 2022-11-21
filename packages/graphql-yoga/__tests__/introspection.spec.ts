@@ -46,7 +46,10 @@ describe('introspection', () => {
     })
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: getIntrospectionQuery() }),
     })
 

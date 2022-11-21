@@ -45,9 +45,6 @@ describe('SOFA', () => {
       }),
     })
     expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toBe(
-      'application/graphql-response+json; charset=utf-8',
-    )
     const json = await response.json()
     expect(json).toMatchSnapshot('sofa-graphql')
   })

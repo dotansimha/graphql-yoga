@@ -27,7 +27,7 @@ const textEventStream: ResultProcessorConfig = {
 }
 
 const regular: ResultProcessorConfig = {
-  mediaTypes: ['application/json', 'application/graphql-response+json'],
+  mediaTypes: ['application/graphql-response+json', 'application/json'],
   asyncIterables: false,
   processResult: processRegularResult,
 }
