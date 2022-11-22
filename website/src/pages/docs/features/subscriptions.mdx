@@ -320,6 +320,54 @@ const client = createClient({
 
 </Tabs>
 
+### Client usage with Relay
+
+```ts filename="Relay Subscription client."
+import {
+  type RequestParameters,
+  type GraphQLResponse,
+  Observable,
+  Network
+} from 'relay-runtime'
+import type { Variables } from 'react-relay'
+import { executeQueryOrMutation } from './execute-query-or-mutation.js'
+
+const executeSubscription = (
+  request: RequestParameters,
+  variables: Variables
+): Observable<GraphQLResponse> => {
+  if (!request.text) throw new Error('Missing document.')
+  const { text: operation, name } = request
+
+  const url = new URL('http://localhost:4000/graphql')
+  url.searchParams.append('query', operation)
+  if (name) {
+    url.searchParams.append('operationName', name)
+  }
+  if (variables) {
+    url.searchParams.append('variables', JSON.stringify(variables))
+  }
+
+  return Observable.create<GraphQLResponse>((sink) => {
+    const source = new EventSource(url.toString())
+    source.onmessage = function (event) {
+      const data = JSON.parse(event.data)
+      sink.next(data)
+      if (source.readyState === 2) {
+        sink.complete()
+      }
+    }
+    source.onerror = function (ev) {
+      console.error(ev)
+      sink.error(new Error('Unexpected error.'))
+    }
+    return () => source.close()
+  })
+}
+
+const network = Network.create(executeQueryOrMutation, executeSubscription)
+```
+
 ## Subscriptions over WebSockets with `graphql-ws`
 
 Suppose you want to use the [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol with GraphQL Yoga, you can use the [`graphql-ws`](https://github.com/enisdenjo/graphql-ws) library.
