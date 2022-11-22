@@ -2,7 +2,12 @@ import { createGraphQLError } from '@graphql-tools/utils'
 import type { GraphQLParams } from '../../types'
 import type { Plugin } from '../types'
 
-const EXPECTED_PARAMS = ['query', 'variables', 'operationName', 'extensions']
+const expectedParameters = new Set([
+  'query',
+  'variables',
+  'operationName',
+  'extensions',
+])
 
 export function assertInvalidParams(
   params: unknown,
@@ -17,7 +22,10 @@ export function assertInvalidParams(
     })
   }
   for (const paramKey in params) {
-    if (!EXPECTED_PARAMS.includes(paramKey)) {
+    if (params[paramKey] == null) {
+      continue
+    }
+    if (!expectedParameters.has(paramKey)) {
       throw createGraphQLError(
         `Unexpected parameter "${paramKey}" in the request body.`,
         {
