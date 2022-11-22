@@ -57,7 +57,7 @@ importers:
       ts-jest: ^29.0.0
       typescript: 4.9.3
       weak-napi: 2.0.2
-      wrangler: 2.4.2
+      wrangler: 2.4.4
     devDependencies:
       '@babel/core': 7.20.2
       '@babel/plugin-proposal-class-properties': 7.18.6_@babel+core@7.20.2
@@ -93,7 +93,7 @@ importers:
       ts-jest: 29.0.3_misqb73dzb2ywoj4b3ieyhdpkq
       typescript: 4.9.3
       weak-napi: 2.0.2
-      wrangler: 2.4.2
+      wrangler: 2.4.4
 
   benchmark/hello-world:
     specifiers:
@@ -226,7 +226,7 @@ importers:
       ts-loader: 9.4.1
       typescript: 4.9.3
       webpack: 5.75.0
-      wrangler: 2.4.2
+      wrangler: 2.4.4
     dependencies:
       '@cloudflare/workers-types': 4.20221111.1
       graphql: 16.6.0
@@ -235,7 +235,7 @@ importers:
       ts-loader: 9.4.1_vfotqvx6lgcbf3upbs6hgaza4q
       typescript: 4.9.3
       webpack: 5.75.0
-      wrangler: 2.4.2
+      wrangler: 2.4.4
 
   examples/cloudflare-modules:
     specifiers:
@@ -243,14 +243,14 @@ importers:
       graphql: 16.6.0
       graphql-yoga: 3.0.1
       typescript: 4.9.3
-      wrangler: 2.4.2
+      wrangler: 2.4.4
     dependencies:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@cloudflare/workers-types': 4.20221111.1
       typescript: 4.9.3
-      wrangler: 2.4.2
+      wrangler: 2.4.4
 
   examples/defer-stream:
     specifiers:
@@ -411,7 +411,7 @@ importers:
 
   examples/graphql-armor:
     specifiers:
-      '@escape.tech/graphql-armor': 1.4.0
+      '@escape.tech/graphql-armor': 1.5.0
       '@types/node': 18.11.9
       cross-env: 7.0.3
       graphql: 16.6.0
@@ -420,7 +420,7 @@ importers:
       ts-node-dev: 2.0.0
       typescript: 4.9.3
     dependencies:
-      '@escape.tech/graphql-armor': 1.4.0
+      '@escape.tech/graphql-armor': 1.5.0
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -674,13 +674,13 @@ importers:
       graphql: 16.6.0
       graphql-yoga: 3.0.1
       typescript: 4.9.3
-      wrangler: 2.4.2
+      wrangler: 2.4.4
     dependencies:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       typescript: 4.9.3
-      wrangler: 2.4.2
+      wrangler: 2.4.4
 
   examples/sofa:
     specifiers:
@@ -798,14 +798,14 @@ importers:
     specifiers:
       '@types/node': 18.11.9
       graphql-yoga: 3.0.1
-      html-minifier-terser: 7.0.0
+      html-minifier-terser: 7.1.0
       tslib: ^2.3.1
     dependencies:
       graphql-yoga: link:../graphql-yoga
       tslib: 2.4.0
     devDependencies:
       '@types/node': 18.11.9
-      html-minifier-terser: 7.0.0
+      html-minifier-terser: 7.1.0
     publishDirectory: dist
 
   packages/event-target/redis-event-target:
@@ -885,7 +885,7 @@ importers:
       graphql: 16.6.0
       graphql-http: ^1.7.2
       graphql-scalars: 1.20.1
-      html-minifier-terser: 7.0.0
+      html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
       puppeteer: 19.2.2
       tslib: ^2.3.1
@@ -911,7 +911,7 @@ importers:
       graphql: 16.6.0
       graphql-http: 1.7.2_graphql@16.6.0
       graphql-scalars: 1.20.1_graphql@16.6.0
-      html-minifier-terser: 7.0.0
+      html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
       puppeteer: 19.2.2
     publishDirectory: dist
@@ -4213,80 +4213,80 @@ packages:
     dev: true
     optional: true
 
-  /@escape.tech/graphql-armor-block-field-suggestions/1.3.1:
-    resolution: {integrity: sha512-rtUlqz/HAqMBHO+eOIgUHlAOVynE2ytY3p5Ez6zdNAO2UQf+9G0sErEECG/DnBGtRABn/I+9VIGGWkVpwmMFcQ==}
+  /@escape.tech/graphql-armor-block-field-suggestions/1.4.0:
+    resolution: {integrity: sha512-PkGxPCOXWuVA+NlF/aSSFVMravhUm6fP+oVXiq1GOVS5mPVhEKoyHk9j1UeF96/qHzkIsEUsfbLKP3IkygpSLA==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.3
     dev: false
 
-  /@escape.tech/graphql-armor-cost-limit/1.5.0:
-    resolution: {integrity: sha512-TOE8vyOzH/+eLg3FxTG4739QkBh5lbboqWTO5mqQXPQpOaC7JRkbhHzs/RkPmnADPX66+oQZKYSaUnzvXcKcDw==}
+  /@escape.tech/graphql-armor-cost-limit/1.6.0:
+    resolution: {integrity: sha512-WG9gCpBwQlexCJEvxBGacMXRDRl4c8odgbsLWVW8XFmLZVzjwT/UdDf5VdhL7LGIwsoiwUIztUeFmwbUj6cuzg==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.3
-      '@escape.tech/graphql-armor-types': 0.2.0
+      '@escape.tech/graphql-armor-types': 0.3.0
     dev: false
 
-  /@escape.tech/graphql-armor-max-aliases/1.5.0:
-    resolution: {integrity: sha512-3IahPNXrf0JUs/yA8dQqsH1vbjG4bcO8W9kQvSEeApTyaYx21kb3yd7lxEALVFCaoQM8AsLyGqWzFOHHmFH/ng==}
+  /@escape.tech/graphql-armor-max-aliases/1.6.0:
+    resolution: {integrity: sha512-NjIVxch/qd5dNc5DPo8Q8y+yqB0ZKLS8pK87ZjCUYGf8lanPKS0lxVSr/dLZRbxCc7sKhLGkbzfg081hhU3kQQ==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.3
-      '@escape.tech/graphql-armor-types': 0.2.0
+      '@escape.tech/graphql-armor-types': 0.3.0
     dev: false
 
-  /@escape.tech/graphql-armor-max-depth/1.7.0:
-    resolution: {integrity: sha512-LK1b7VVsboeso457RFa6N3kUL+GXgdVsD5Y49DwB0zHu0F7p9XCgMrWkZzRLGCVLASX329WTjhU1pSOedR/K/A==}
+  /@escape.tech/graphql-armor-max-depth/1.8.0:
+    resolution: {integrity: sha512-7fjhDI+U29AINCMC7b4GealX6TQDIXUSotgZLv8NXuMM56XbnIfYji9j2ssGwZK1FJOf9tzk/vy3ldOsG/Xa5A==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.3
-      '@escape.tech/graphql-armor-types': 0.2.0
+      '@escape.tech/graphql-armor-types': 0.3.0
     dev: false
 
-  /@escape.tech/graphql-armor-max-directives/1.5.0:
-    resolution: {integrity: sha512-GH0jiOZQZm57EyR64OI2f09cPS1aC7IGSANAFgZsR7QSXnZsODPIq6gd5NxRCIY7nOWOcer67vkShetVIuMYEQ==}
+  /@escape.tech/graphql-armor-max-directives/1.6.0:
+    resolution: {integrity: sha512-so0mHWlJig+lzhFuiQVI0+bePBoPqFxWUKrPq1KyIQNOKudFxDkPqZFWCgcekJGp+ezTJ1Z8/9AImito0Fn9pw==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.3
-      '@escape.tech/graphql-armor-types': 0.2.0
+      '@escape.tech/graphql-armor-types': 0.3.0
     dev: false
 
-  /@escape.tech/graphql-armor-max-tokens/1.2.0:
-    resolution: {integrity: sha512-x5MrwCJPrZoOWR6rgTA1jjVyAajS8524+Kno8DTN4beLCzz2srXaAM/4haf3txJeGRovsOY//MLpx+9CFV0q6A==}
+  /@escape.tech/graphql-armor-max-tokens/1.3.0:
+    resolution: {integrity: sha512-OiQpVTUZpD33zvqJ1hsS8eNGGl8SWQE33w2H7s/lB4GGO1WLZNQRXofXCJIMKuwjkD8HsJG2hxDHknE4AMgMpw==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.3
-      '@escape.tech/graphql-armor-types': 0.2.0
+      '@escape.tech/graphql-armor-types': 0.3.0
     dev: false
 
-  /@escape.tech/graphql-armor-types/0.2.0:
-    resolution: {integrity: sha512-Kd6qP4GuluoKaYcUGib5/b0aFmTxwmKbN1cLEY4xvC0YQoTM0tbiaVxeJlu9JxWkm0We+5/JufD86W9nzst7Ow==}
+  /@escape.tech/graphql-armor-types/0.3.0:
+    resolution: {integrity: sha512-As+57ZkwCuKe2zuEcNESL22g+3lkd/jh37qJAUD7z5WKYlbtp3JpZXFNMyDOjTTcof2EDlbeE9uTOXbg9rfjpQ==}
     requiresBuild: true
     dependencies:
       graphql: 16.6.0
     dev: false
     optional: true
 
-  /@escape.tech/graphql-armor/1.4.0:
-    resolution: {integrity: sha512-uLyqW5JhkNvbKOsQysyzSb95y302vDFiaNVIFSQGWKYnTtdZFrgVRr6UlLoWahH4S+M78t9oHhQllYjQZ0YacA==}
+  /@escape.tech/graphql-armor/1.5.0:
+    resolution: {integrity: sha512-QSSXROjpk8ELcflMCO5srIntZlYs3V+jtgq5J4i9lwAMA4XJPpsjRxq1X7cUMUjdL2St/rqBpyEoCMv2r0hmuw==}
     dependencies:
-      '@escape.tech/graphql-armor-block-field-suggestions': 1.3.1
-      '@escape.tech/graphql-armor-cost-limit': 1.5.0
-      '@escape.tech/graphql-armor-max-aliases': 1.5.0
-      '@escape.tech/graphql-armor-max-depth': 1.7.0
-      '@escape.tech/graphql-armor-max-directives': 1.5.0
-      '@escape.tech/graphql-armor-max-tokens': 1.2.0
+      '@escape.tech/graphql-armor-block-field-suggestions': 1.4.0
+      '@escape.tech/graphql-armor-cost-limit': 1.6.0
+      '@escape.tech/graphql-armor-max-aliases': 1.6.0
+      '@escape.tech/graphql-armor-max-depth': 1.8.0
+      '@escape.tech/graphql-armor-max-directives': 1.6.0
+      '@escape.tech/graphql-armor-max-tokens': 1.3.0
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.3
-      '@escape.tech/graphql-armor-types': 0.2.0
+      '@escape.tech/graphql-armor-types': 0.3.0
       apollo-server-core: 3.10.3_graphql@16.6.0
       apollo-server-types: 3.6.3_graphql@16.6.0
     transitivePeerDependencies:
@@ -9889,6 +9889,7 @@ packages:
   /apollo-datasource/3.3.2:
     resolution: {integrity: sha512-L5TiS8E2Hn/Yz7SSnWIVbZw0ZfEIXZCa5VUiVxD9P53JvSrf4aStvsFDlGWPvpIdCR+aly2CfoB79B9/JjKFqg==}
     engines: {node: '>=12.0'}
+    deprecated: The `apollo-datasource` package is part of Apollo Server v2 and v3, which are now deprecated (end-of-life October 22nd 2023). See https://www.apollographql.com/docs/apollo-server/previous-versions/ for more details.
     dependencies:
       '@apollo/utils.keyvaluecache': 1.0.1
       apollo-server-env: 4.2.1
@@ -9958,6 +9959,7 @@ packages:
   /apollo-server-errors/3.3.1_graphql@16.6.0:
     resolution: {integrity: sha512-xnZJ5QWs6FixHICXHxUfm+ZWqqxrNuPlQ+kj5m6RtEgIpekOPssH/SD9gf2B4HuWV0QozorrygwZnux8POvyPA==}
     engines: {node: '>=12.0'}
+    deprecated: The `apollo-server-errors` package is part of Apollo Server v2 and v3, which are now deprecated (end-of-life October 22nd 2023). This package's functionality is now found in the `@apollo/server` package. See https://www.apollographql.com/docs/apollo-server/previous-versions/ for more details.
     peerDependencies:
       graphql: ^15.3.0 || ^16.0.0
     dependencies:
@@ -9968,6 +9970,7 @@ packages:
   /apollo-server-plugin-base/3.6.3_graphql@16.6.0:
     resolution: {integrity: sha512-/Q0Zx8N8La97faKV0siGHDzfZ56ygN6ovtUpPbr+1GIbNmUzkte3lWW2YV08HmxiRmC2i2OGN80exNJEvbKvNA==}
     engines: {node: '>=12.0'}
+    deprecated: The `apollo-server-plugin-base` package is part of Apollo Server v2 and v3, which are now deprecated (end-of-life October 22nd 2023). This package's functionality is now found in the `@apollo/server` package. See https://www.apollographql.com/docs/apollo-server/previous-versions/ for more details.
     peerDependencies:
       graphql: ^15.3.0 || ^16.0.0
     dependencies:
@@ -16554,8 +16557,8 @@ packages:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
     dev: true
 
-  /html-minifier-terser/7.0.0:
-    resolution: {integrity: sha512-Adqk0b/pWKIQiGvEAuzPKpBKNHiwblr3QSGS7TTr6v+xXKV9AI2k4vWW+6Oytt6Z5SeBnfvYypKOnz8r75pz3Q==}
+  /html-minifier-terser/7.1.0:
+    resolution: {integrity: sha512-BvPO2S7Ip0Q5qt+Y8j/27Vclj6uHC6av0TMoDn7/bJPhMWHI2UtR2e/zEgJn3/qYAmxumrGp9q4UHurL6mtW9Q==}
     engines: {node: ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -26717,8 +26720,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /wrangler/2.4.2:
-    resolution: {integrity: sha512-fgcP+y4aEXozeP0hGKohfodxBm1ah/qwclw499TvoBogLKEhkPHH2w+MHh2PBFek467I4iaOLpSh4Sho+J6GuQ==}
+  /wrangler/2.4.4:
+    resolution: {integrity: sha512-Of3O/7RzIcGWGmt7dd5JevvP419De55smr4Hi07REKt9oXYhMNeaFy4wX35fHlv5e0pVCyGB3Fna8mI4Ib2pew==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
