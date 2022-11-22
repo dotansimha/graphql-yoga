@@ -632,6 +632,7 @@ importers:
   examples/pothos:
     specifiers:
       '@pothos/core': 3.23.0
+      '@types/node': 18.11.9
       graphql: 16.6.0
       graphql-yoga: 3.0.1
       ts-node: 10.9.1
@@ -641,7 +642,8 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      ts-node: 10.9.1_typescript@4.9.3
+      '@types/node': 18.11.9
+      ts-node: 10.9.1_wup25etrarvlqkprac7h35hj7u
       typescript: 4.9.3
 
   examples/redis-pub-sub:
@@ -878,7 +880,7 @@ importers:
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.11.9
       '@whatwg-node/fetch': 0.5.3
-      '@whatwg-node/server': 0.4.16
+      '@whatwg-node/server': 0.4.17
       dset: ^3.1.1
       graphql: 16.6.0
       graphql-http: ^1.7.2
@@ -896,7 +898,7 @@ importers:
       '@graphql-tools/utils': 9.0.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
       '@whatwg-node/fetch': 0.5.3
-      '@whatwg-node/server': 0.4.16_@types+node@18.11.9
+      '@whatwg-node/server': 0.4.17_@types+node@18.11.9
       dset: 3.1.2
       tslib: 2.4.0
     devDependencies:
@@ -9514,8 +9516,8 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@whatwg-node/server/0.4.16:
-    resolution: {integrity: sha512-fDYg7M/wLDkzUoymD85T3hlLkHufrddB4587BANf62spPbWRV9bu5rlYdUDgWd/XNuEye06M9KjduSKl32KQgw==}
+  /@whatwg-node/server/0.4.17:
+    resolution: {integrity: sha512-kq1AHyi87VWfiDqiSTAOY+py83HMJg42+fI8JAe1wjmMkJ8v/E5mKq5NpLNRM9Cnf7NHsQR0AwQgvX/RFuptaA==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -9525,8 +9527,8 @@ packages:
       - encoding
     dev: false
 
-  /@whatwg-node/server/0.4.16_@types+node@18.11.9:
-    resolution: {integrity: sha512-fDYg7M/wLDkzUoymD85T3hlLkHufrddB4587BANf62spPbWRV9bu5rlYdUDgWd/XNuEye06M9KjduSKl32KQgw==}
+  /@whatwg-node/server/0.4.17_@types+node@18.11.9:
+    resolution: {integrity: sha512-kq1AHyi87VWfiDqiSTAOY+py83HMJg42+fI8JAe1wjmMkJ8v/E5mKq5NpLNRM9Cnf7NHsQR0AwQgvX/RFuptaA==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -24109,7 +24111,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 8.12.0
       '@whatwg-node/fetch': 0.4.7
-      '@whatwg-node/server': 0.4.16
+      '@whatwg-node/server': 0.4.17
       ansi-colors: 4.1.3
       itty-router: 2.6.6
       openapi-types: 12.0.2

@@ -1,4 +1,5 @@
-import { Plugin, FetchAPI } from 'graphql-yoga'
+import { FetchAPI } from '../types.js'
+import { Plugin } from './types.js'
 
 export interface ReadinessCheckPluginOptions {
   /**
