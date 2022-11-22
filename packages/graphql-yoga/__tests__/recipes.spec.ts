@@ -34,11 +34,8 @@ describe('recipe', () => {
                 function process(requestParserResult: GraphQLParams) {
                   if ('id' in requestParserResult) {
                     return {
-                      ...Object.fromEntries(
-                        Object.entries(requestParserResult).filter(
-                          ([key]) => key !== 'id',
-                        ),
-                      ),
+                      ...requestParserResult,
+                      id: undefined,
                       extensions: {
                         ...requestParserResult.extensions,
                         id: requestParserResult.id,
