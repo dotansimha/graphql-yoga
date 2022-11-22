@@ -4,11 +4,12 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "sourceMap": true,
-    "lib": ["esnext", "DOM", "DOM.Iterable"],
+    "lib": ["esnext"],
+    "typeRoots": ["./node_modules/@types"],
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "strict": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "test"]
+  "files": ["./src/index.ts"],
+  "exclude": ["**/node_modules", "**/dist"]
 }
