@@ -1,5 +1,13 @@
 # graphql-yoga
 
+## 3.0.2
+
+### Patch Changes
+
+- [#2154](https://github.com/dotansimha/graphql-yoga/pull/2154) [`0007c58d`](https://github.com/dotansimha/graphql-yoga/commit/0007c58d3ebc13cac694e561409fb2578ca5b882) Thanks [@ardatan](https://github.com/ardatan)! - Only Yoga's errors are now 200 when content-type is application/json
+
+- [#2147](https://github.com/dotansimha/graphql-yoga/pull/2147) [`39a8fe89`](https://github.com/dotansimha/graphql-yoga/commit/39a8fe8977ec3c85d5ce5c643002aa79e6283f79) Thanks [@ardatan](https://github.com/ardatan)! - Bump @whatwg-node/server to fix the conflict issue between webworker & dom TS typing libs
+
 ## 3.0.1
 
 ### Patch Changes
