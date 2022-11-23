@@ -1,4 +1,5 @@
 import { createGraphQLError } from '@graphql-tools/utils'
+import { YOGA_ERROR } from '../../error.js'
 import type { GraphQLParams } from '../../types'
 import type { Plugin } from '../types'
 
@@ -13,6 +14,7 @@ export function assertInvalidParams(
         http: {
           status: 400,
         },
+        [YOGA_ERROR]: true,
       },
     })
   }
@@ -25,6 +27,7 @@ export function assertInvalidParams(
             http: {
               status: 400,
             },
+            [YOGA_ERROR]: true,
           },
         },
       )
@@ -43,6 +46,7 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
             headers: {
               Allow: 'GET, POST',
             },
+            [YOGA_ERROR]: true,
           },
         },
       },
@@ -60,6 +64,7 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
             Allow: 'GET, POST',
           },
         },
+        [YOGA_ERROR]: true,
       },
     })
   }
@@ -76,6 +81,7 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
               Allow: 'GET, POST',
             },
           },
+          [YOGA_ERROR]: true,
         },
       },
     )
@@ -93,6 +99,7 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
               Allow: 'GET, POST',
             },
           },
+          [YOGA_ERROR]: true,
         },
       },
     )
@@ -110,6 +117,7 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
               Allow: 'GET, POST',
             },
           },
+          [YOGA_ERROR]: true,
         },
       },
     )

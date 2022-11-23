@@ -6,6 +6,7 @@ import {
   GraphQLError,
   DocumentNode,
 } from 'graphql'
+import { YOGA_ERROR } from '../../error.js'
 import type { YogaInitialContext } from '../../types'
 import type { Plugin } from '../types'
 
@@ -24,6 +25,7 @@ export function assertMutationViaGet(
         http: {
           status: 400,
         },
+        [YOGA_ERROR]: true,
       },
     })
   }
@@ -70,6 +72,7 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
             result.extensions.http = {
               status: 400,
             }
+            result.extensions[YOGA_ERROR] = true
           }
           throw result
         }
