@@ -20,6 +20,7 @@ export async function parsePOSTJsonRequest(
   } catch (err) {
     const extensions: GraphQLErrorExtensions = {
       http: {
+        spec: true,
         status: 400,
       },
     }
