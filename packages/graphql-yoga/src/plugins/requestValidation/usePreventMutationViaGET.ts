@@ -22,9 +22,9 @@ export function assertMutationViaGet(
     throw createGraphQLError('Could not determine what operation to execute.', {
       extensions: {
         http: {
+          spec: true,
           status: 400,
         },
-        spec: true,
       },
     })
   }
@@ -69,9 +69,9 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
         if (result instanceof Error) {
           if (result instanceof GraphQLError) {
             result.extensions.http = {
+              spec: true,
               status: 400,
             }
-            result.extensions.spec = true
           }
           throw result
         }

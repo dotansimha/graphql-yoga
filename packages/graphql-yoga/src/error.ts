@@ -8,13 +8,13 @@ export { createGraphQLError }
 
 declare module 'graphql' {
   interface GraphQLHTTPErrorExtensions {
+    spec?: boolean
     status?: number
     headers?: Record<string, string>
   }
   interface GraphQLErrorExtensions {
     http?: GraphQLHTTPErrorExtensions
     unexpected?: boolean
-    spec?: boolean
   }
 }
 
@@ -124,7 +124,7 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
-        if (isApplicationJson && error.extensions.spec) {
+        if (isApplicationJson && error.extensions.http.spec) {
           continue
         }
         if (

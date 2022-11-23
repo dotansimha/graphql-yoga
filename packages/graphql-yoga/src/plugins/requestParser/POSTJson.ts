@@ -20,9 +20,9 @@ export async function parsePOSTJsonRequest(
   } catch (err) {
     const extensions: GraphQLErrorExtensions = {
       http: {
+        spec: true,
         status: 400,
       },
-      spec: true,
     }
     if (err instanceof Error) {
       extensions.originalError = {

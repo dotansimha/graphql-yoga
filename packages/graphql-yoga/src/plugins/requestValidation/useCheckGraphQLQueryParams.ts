@@ -11,9 +11,9 @@ export function assertInvalidParams(
     throw createGraphQLError('Invalid "params" in the request body', {
       extensions: {
         http: {
+          spec: true,
           status: 400,
         },
-        spec: true,
       },
     })
   }
@@ -24,9 +24,9 @@ export function assertInvalidParams(
         {
           extensions: {
             http: {
+              spec: true,
               status: 400,
             },
-            spec: true,
           },
         },
       )
@@ -41,11 +41,11 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
+            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',
             },
-            spec: true,
           },
         },
       },
@@ -58,12 +58,12 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
     throw createGraphQLError('Must provide query string.', {
       extensions: {
         http: {
+          spec: true,
           status: 400,
           headers: {
             Allow: 'GET, POST',
           },
         },
-        spec: true,
       },
     })
   }
@@ -75,12 +75,12 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
+            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',
             },
           },
-          spec: true,
         },
       },
     )
@@ -93,12 +93,12 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
+            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',
             },
           },
-          spec: true,
         },
       },
     )
@@ -111,12 +111,12 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
+            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',
             },
           },
-          spec: true,
         },
       },
     )

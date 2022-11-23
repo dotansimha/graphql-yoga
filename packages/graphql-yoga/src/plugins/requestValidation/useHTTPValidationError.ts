@@ -7,9 +7,9 @@ export function getAggregateErrorFromErrors(
 ): AggregateError {
   errors.forEach((error) => {
     error.extensions.http = {
+      spec: true,
       status: 400,
     }
-    error.extensions.spec = true
   })
   throw new AggregateError(errors)
 }
