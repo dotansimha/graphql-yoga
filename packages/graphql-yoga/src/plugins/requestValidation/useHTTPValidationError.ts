@@ -9,6 +9,7 @@ export function getAggregateErrorFromErrors(
     error.extensions.http = {
       status: 400,
     }
+    error.extensions.spec = true
   })
   throw new AggregateError(errors)
 }
