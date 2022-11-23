@@ -8,7 +8,7 @@ export function useUnhandledRoute(args: {
   return {
     onRequest({ request, fetchAPI, endResponse, url }) {
       const { pathname: requestPath } = url
-      if (requestPath !== args.graphqlEndpoint) {
+      if (!requestPath.startsWith(args.graphqlEndpoint)) {
         if (
           args.showLandingPage === true &&
           request.method === 'GET' &&
