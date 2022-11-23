@@ -1,6 +1,5 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLErrorExtensions } from 'graphql'
-import { YOGA_ERROR } from '../../error.js'
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 
@@ -23,7 +22,7 @@ export async function parsePOSTJsonRequest(
       http: {
         status: 400,
       },
-      [YOGA_ERROR]: true,
+      spec: true,
     }
     if (err instanceof Error) {
       extensions.originalError = {

@@ -6,8 +6,6 @@ import type { YogaMaskedErrorOpts } from './types'
 
 export { createGraphQLError }
 
-export const YOGA_ERROR = Symbol('YOGA_ERROR')
-
 declare module 'graphql' {
   interface GraphQLHTTPErrorExtensions {
     status?: number
@@ -16,7 +14,7 @@ declare module 'graphql' {
   interface GraphQLErrorExtensions {
     http?: GraphQLHTTPErrorExtensions
     unexpected?: boolean
-    [YOGA_ERROR]?: boolean
+    spec?: boolean
   }
 }
 
@@ -126,7 +124,7 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
-        if (isApplicationJson && error.extensions[YOGA_ERROR]) {
+        if (isApplicationJson && error.extensions.spec) {
           continue
         }
         if (
