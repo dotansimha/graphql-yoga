@@ -115,7 +115,7 @@ export function handleError(
 export function getResponseInitByRespectingErrors(
   result: ResultProcessorInput,
   headers: Record<string, string> = {},
-  isApplicationJson: boolean,
+  isApplicationJson = false,
 ) {
   let status: number | undefined
   let unexpectedErrorExists = false
