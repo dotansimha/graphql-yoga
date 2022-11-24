@@ -53,12 +53,12 @@ export async function processResult({
   return resultProcessor(result, fetchAPI, acceptedMediaType)
 }
 
-export async function processRequest<TContext>({
+export async function processRequest({
   params,
   enveloped,
 }: {
   params: GraphQLParams
-  enveloped: ReturnType<GetEnvelopedFn<TContext>>
+  enveloped: ReturnType<GetEnvelopedFn<unknown>>
 }) {
   // Parse GraphQLParams
   const document = enveloped.parse(params.query!)
@@ -67,7 +67,7 @@ export async function processRequest<TContext>({
   enveloped.validate(enveloped.schema, document)
 
   // Build the context for the execution
-  const contextValue = (await enveloped.contextFactory()) as TContext
+  const contextValue = await enveloped.contextFactory()
 
   const executionArgs: ExecutionArgs = {
     schema: enveloped.schema,

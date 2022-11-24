@@ -2,7 +2,7 @@ import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
 import { CORSOptions, createYoga, Repeater } from '../src/index.js'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
-import puppeteer from 'puppeteer'
+import puppeteer, { Browser, Page } from 'puppeteer';
 import { createServer, Server } from 'http'
 import {
   GraphQLObjectType,
@@ -171,8 +171,8 @@ describe('browser', () => {
     renderGraphiQL,
   })
 
-  let browser: puppeteer.Browser
-  let page: puppeteer.Page
+  let browser: Browser
+  let page: Page
 
   const playButtonSelector = `[aria-label^="Execute"]`
   const stopButtonSelector = `[aria-label^="Stop"]`
