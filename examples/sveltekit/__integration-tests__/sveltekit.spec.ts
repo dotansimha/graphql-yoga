@@ -1,8 +1,8 @@
 import { execSync, spawn } from 'child_process';
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser, Page } from 'puppeteer';
 
-let browser: puppeteer.Browser;
-let page: puppeteer.Page;
+let browser: Browser;
+let page: Page;
 let sveltekitProcess: ReturnType<typeof spawn>;
 
 const timings = {
