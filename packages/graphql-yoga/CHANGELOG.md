@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 3.0.3
+
+### Patch Changes
+
+- [#2156](https://github.com/dotansimha/graphql-yoga/pull/2156) [`491ef5da`](https://github.com/dotansimha/graphql-yoga/commit/491ef5da7c6bcc3038fdb0909fd333a2b5217046) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@envelop/core@3.0.4` ↗︎](https://www.npmjs.com/package/@envelop/core/v/3.0.4) (from `3.0.3`, in `dependencies`)
+  - Updated dependency [`@envelop/parser-cache@5.0.4` ↗︎](https://www.npmjs.com/package/@envelop/parser-cache/v/5.0.4) (from `5.0.3`, in `dependencies`)
+  - Updated dependency [`@envelop/validation-cache@5.0.4` ↗︎](https://www.npmjs.com/package/@envelop/validation-cache/v/5.0.4) (from `5.0.3`, in `dependencies`)
+
 ## 3.0.2
 
 ### Patch Changes
