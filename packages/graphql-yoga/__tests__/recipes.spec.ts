@@ -28,34 +28,16 @@ describe('recipe', () => {
            * Plugin for allowing the client to send the query ID as a custom POST body query parameter.
            * Before the query parameter validation is happening it is moved to the extensions object.
            */
-          onRequestParse() {
-            return {
-              onRequestParseDone(ctx) {
-                function process(requestParserResult: GraphQLParams) {
-                  if ('id' in requestParserResult) {
-                    return {
-                      ...requestParserResult,
-                      id: undefined,
-                      extensions: {
-                        ...requestParserResult.extensions,
-                        id: requestParserResult.id,
-                      },
-                    }
-                  }
-
-                  return requestParserResult
-                }
-
-                if (Array.isArray(ctx.requestParserResult)) {
-                  // also handle batching :)
-                  ctx.setRequestParserResult(
-                    ctx.requestParserResult.map(process),
-                  )
-                  return
-                }
-
-                ctx.setRequestParserResult(process(ctx.requestParserResult))
-              },
+          onParams({ params, setParams }) {
+            if ('id' in params) {
+              setParams({
+                ...params,
+                id: undefined,
+                extensions: {
+                  ...params.extensions,
+                  id: params.id,
+                },
+              } as GraphQLParams)
             }
           },
         },
