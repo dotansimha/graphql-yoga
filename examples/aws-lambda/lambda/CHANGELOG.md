@@ -1,5 +1,12 @@
 # graphql-lambda
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`491ef5da`](https://github.com/dotansimha/graphql-yoga/commit/491ef5da7c6bcc3038fdb0909fd333a2b5217046)]:
+  - graphql-yoga@3.0.3
+
 ## 1.0.2
 
 ### Patch Changes
