@@ -7,6 +7,7 @@ export {
   envelop,
   // Default plugins
   useEnvelop,
+  useErrorHandler,
   useLogger,
   useExtendContext,
   usePayloadFormatter,
