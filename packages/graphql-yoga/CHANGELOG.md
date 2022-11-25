@@ -1,5 +1,17 @@
 # graphql-yoga
 
+## 3.1.0
+
+### Minor Changes
+
+- [#2145](https://github.com/dotansimha/graphql-yoga/pull/2145) [`ea81e1dd`](https://github.com/dotansimha/graphql-yoga/commit/ea81e1dda6c074e384221f19bd8a925693fa3427) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Skip nullish query parameters in assertion.
+
+### Patch Changes
+
+- [#2165](https://github.com/dotansimha/graphql-yoga/pull/2165) [`86fe453c`](https://github.com/dotansimha/graphql-yoga/commit/86fe453c0ae1183af62359df0d61bba421d9f627) Thanks [@ardatan](https://github.com/ardatan)! - Export `useErrorHandler` to revert the unexpected breaking change
+
+- [#2145](https://github.com/dotansimha/graphql-yoga/pull/2145) [`ea81e1dd`](https://github.com/dotansimha/graphql-yoga/commit/ea81e1dda6c074e384221f19bd8a925693fa3427) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Avoid unnecessary iteration within internals
+
 ## 3.0.3
 
 ### Patch Changes
