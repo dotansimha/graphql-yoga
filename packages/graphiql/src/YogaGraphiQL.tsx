@@ -113,7 +113,6 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       credentials: 'same-origin',
       specifiedByUrl: true,
       directiveIsRepeatable: true,
-      schemaDescription: true,
       ...props,
       headers: props.additionalHeaders || {},
     })
@@ -152,6 +151,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       <GraphiQLProvider
         plugins={[explorerPlugin]}
         query={query}
+        schemaDescription={true}
         fetcher={fetcher}
       >
         <GraphiQLInterface
