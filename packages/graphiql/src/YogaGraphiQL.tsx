@@ -151,6 +151,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       <GraphiQLProvider
         plugins={[explorerPlugin]}
         query={query}
+        headers={props.headers}
         schemaDescription={true}
         fetcher={fetcher}
       >
