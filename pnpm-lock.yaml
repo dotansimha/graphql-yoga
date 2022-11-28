@@ -155,14 +155,14 @@ importers:
 
   examples/aws-lambda:
     specifiers:
-      '@aws-cdk/assert': 2.51.1
+      '@aws-cdk/assert': 2.52.0
       '@aws-cdk/aws-apigateway': 1.181.0
       '@aws-cdk/aws-lambda': 1.181.0
       '@aws-cdk/core': 1.181.0
       '@types/aws-lambda': 8.10.109
       '@types/node': 18.11.9
-      aws-cdk: 2.51.1
-      aws-cdk-lib: 2.51.1
+      aws-cdk: 2.52.0
+      aws-cdk-lib: 2.52.0
       esbuild: 0.15.16
       source-map-support: ^0.5.16
       ts-node: 10.9.1
@@ -173,11 +173,11 @@ importers:
       '@aws-cdk/core': 1.181.0
       source-map-support: 0.5.21
     devDependencies:
-      '@aws-cdk/assert': 2.51.1_aws-cdk-lib@2.51.1
+      '@aws-cdk/assert': 2.52.0_aws-cdk-lib@2.52.0
       '@types/aws-lambda': 8.10.109
       '@types/node': 18.11.9
-      aws-cdk: 2.51.1
-      aws-cdk-lib: 2.51.1
+      aws-cdk: 2.52.0
+      aws-cdk-lib: 2.52.0
       esbuild: 0.15.16
       ts-node: 10.9.1_wup25etrarvlqkprac7h35hj7u
       typescript: 4.9.3
@@ -1530,16 +1530,16 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@aws-cdk/assert/2.51.1_aws-cdk-lib@2.51.1:
-    resolution: {integrity: sha512-Ja/7fTZj0VgjDQPZe+Jc+uzbhIXftvw6++pjdoEGgyfZLsmC8uWETUhIpxeNCRrNwnSoJr9HQYiVuSlsIW9A3w==}
+  /@aws-cdk/assert/2.52.0_aws-cdk-lib@2.52.0:
+    resolution: {integrity: sha512-5X+LEQDyFMK1G5Kmfr3xji9axzDPMOwPvHEYEcUW1K+M/DRYmOIpg1j6W1UxeESjVDFtNtZMjsOo/dvghtI3tQ==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
-      aws-cdk-lib: ^2.51.1
+      aws-cdk-lib: ^2.52.0
       constructs: ^10.0.0
       jest: '>=26.6.3'
     dependencies:
-      '@aws-cdk/cloudformation-diff': 2.51.1
-      aws-cdk-lib: 2.51.1
+      '@aws-cdk/cloudformation-diff': 2.52.0
+      aws-cdk-lib: 2.52.0
     dev: true
 
   /@aws-cdk/asset-awscli-v1/2.2.11:
@@ -2011,8 +2011,8 @@ packages:
       constructs: 3.4.127
     dev: false
 
-  /@aws-cdk/cfnspec/2.51.1:
-    resolution: {integrity: sha512-WI1TQeMEzquRR2UUFO4Pwb+mbOnrDjeAgRr3IxuofoBamfxW8qzKXObmfYOTL/TSMkdOG8jXTkWGSC1sGI1SxQ==}
+  /@aws-cdk/cfnspec/2.52.0:
+    resolution: {integrity: sha512-yvIX26RoR3S42WRNNZ81BHbnAXBdhLTmJq7Sfpjtu4AITtJCBajbeajgxpqZexCMoWcBzCpz307zIwhSeMXB7g==}
     dependencies:
       fs-extra: 9.1.0
       md5: 2.3.0
@@ -2029,11 +2029,11 @@ packages:
       - jsonschema
       - semver
 
-  /@aws-cdk/cloudformation-diff/2.51.1:
-    resolution: {integrity: sha512-Fwluttvy3sfQ58eXagv2T4UA/SS8uAkazti1jd7crDK6bwK9DhWp0KLK1qFn7rT6tw91kN/cU6R2AbDzYg625Q==}
+  /@aws-cdk/cloudformation-diff/2.52.0:
+    resolution: {integrity: sha512-2LkM06W86FAsT4nQgeR27YdiI7cJQMureyveMYm/GQPkYsZdHYm/xnCEj/rNrvmI5Ry44k3jq0NPkWiwATfYgg==}
     engines: {node: '>= 14.15.0'}
     dependencies:
-      '@aws-cdk/cfnspec': 2.51.1
+      '@aws-cdk/cfnspec': 2.52.0
       '@types/node': 14.18.33
       chalk: 4.1.2
       diff: 5.1.0
@@ -3635,6 +3635,7 @@ packages:
 
   /@balena/dockerignore/1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
+    dev: false
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -10312,8 +10313,8 @@ packages:
       - supports-color
     dev: false
 
-  /aws-cdk-lib/2.51.1:
-    resolution: {integrity: sha512-88HC6giHaShsP1z7z1+7gdY3bmHUrp77hWefutE1JcH3O2nzCpFnd6exDQLjFyzauJa+uEFo1u5ToXynfQi2zg==}
+  /aws-cdk-lib/2.52.0:
+    resolution: {integrity: sha512-6pIPiDiSsyPAmRxf/EzIHoHkTEfkhr9GPhQgIWAUmlTnQ2hirvdSPpOzqyNUcE9DOEzrir9Kg3kjVqVa0my13Q==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
@@ -10321,15 +10322,6 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.11
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.17
-      '@balena/dockerignore': 1.0.2
-      case: 1.6.3
-      fs-extra: 9.1.0
-      ignore: 5.2.0
-      jsonschema: 1.4.1
-      minimatch: 3.1.2
-      punycode: 2.1.1
-      semver: 7.3.8
-      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -10342,8 +10334,8 @@ packages:
       - semver
       - yaml
 
-  /aws-cdk/2.51.1:
-    resolution: {integrity: sha512-c60bIcMfe/gn4qkw/TZvqw+DxVGFn25D624RcciLxIAI/t9v2taaPfIdlCVXDSr3qfy0Oc7GpEh3jL9I/RpVFw==}
+  /aws-cdk/2.52.0:
+    resolution: {integrity: sha512-48MO8W2l+m+vGWmV3yPO67MBP/U1AjmNDhiWpxvGUcPuHHNe6C86/m5yhieXmB8j/WeMxG6p7GsLcjQtwoFvTA==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
     optionalDependencies:
@@ -11099,11 +11091,6 @@ packages:
       no-case: 3.0.4
       tslib: 2.4.1
       upper-case-first: 2.0.2
-    dev: true
-
-  /case/1.6.3:
-    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
-    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/2.0.1:
@@ -18443,6 +18430,7 @@ packages:
 
   /jsonschema/1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
+    dev: false
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
