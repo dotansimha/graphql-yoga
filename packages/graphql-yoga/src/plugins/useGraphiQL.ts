@@ -31,7 +31,7 @@ export type GraphiQLOptions = {
    */
   headerEditorEnabled?: boolean
   /**
-   * The title to display at the top of the page. Defaults to `"YogaGraphiQL"`.
+   * The title to display at the top of the page. Defaults to `"Yoga GraphiQL"`.
    */
   title?: string
   /**
