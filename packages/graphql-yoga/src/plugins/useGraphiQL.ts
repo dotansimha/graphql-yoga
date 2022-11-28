@@ -20,6 +20,8 @@ export type GraphiQLOptions = {
   defaultVariableEditorOpen?: boolean
   /**
    * The initial headers to render inside the header editor. Defaults to `"{}"`.
+   * The value should be a JSON encoded string, for example:
+   * `headers: JSON.stringify({Authorization: "Bearer your-auth-key"})`
    */
   headers?: string
   /**
