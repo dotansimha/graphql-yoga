@@ -1,6 +1,6 @@
 import { createGraphQLError } from '@graphql-tools/utils'
-import type { GraphQLParams } from '../../types'
-import type { Plugin } from '../types'
+import type { GraphQLParams } from '../../types.js'
+import type { Plugin } from '../types.js'
 
 const expectedParameters = new Set([
   'query',

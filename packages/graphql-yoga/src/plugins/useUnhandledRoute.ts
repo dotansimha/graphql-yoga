@@ -1,4 +1,4 @@
-import type { Plugin } from './types'
+import type { Plugin } from './types.js'
 import landingPageBody from '../landing-page-html.js'
 
 export function useUnhandledRoute(args: {

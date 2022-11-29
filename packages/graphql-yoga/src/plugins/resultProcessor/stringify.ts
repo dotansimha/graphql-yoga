@@ -1,5 +1,5 @@
 import { ExecutionResult } from '@graphql-tools/utils'
-import type { MaybeArray } from '../../types'
+import type { MaybeArray } from '../../types.js'
 
 // JSON stringifier that adjusts the result extensions while serialising
 export function jsonStringifyResult(result: MaybeArray<ExecutionResult>) {
