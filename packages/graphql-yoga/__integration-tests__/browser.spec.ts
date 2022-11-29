@@ -2,7 +2,7 @@ import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
 import { CORSOptions, createYoga, Repeater } from '../src/index.js'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
-import puppeteer, { Browser, Page } from 'puppeteer'
+import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer'
 import { createServer, Server } from 'http'
 import {
   GraphQLObjectType,
@@ -231,7 +231,62 @@ describe('browser', () => {
     return resultContents
   }
 
+  const showGraphiQLSidebar = async () => {
+    // Click to show sidebar
+    await page.click(
+      '.graphiql-sidebar [aria-label="Show Documentation Explorer"]',
+    )
+  }
+
+  const getElementText = async (element: ElementHandle<Element>) =>
+    element.evaluate((el) => el.textContent?.trim())
+
   describe('GraphiQL', () => {
+    it('should show default title', async () => {
+      await page.goto(`http://localhost:${port}${endpoint}`)
+
+      const title = await page.evaluate(() => document.title)
+
+      expect(title).toBe('Yoga GraphiQL')
+    })
+
+    it('should show default schema docs', async () => {
+      await page.goto(`http://localhost:${port}${endpoint}`)
+
+      // Click to show sidebar
+      await showGraphiQLSidebar()
+
+      const docsElement = await page.waitForSelector(
+        '.graphiql-markdown-description',
+      )
+
+      expect(docsElement).not.toBeNull()
+      const docs = await getElementText(docsElement!)
+
+      expect(docs).toBe(
+        'A GraphQL schema provides a root type for each kind of operation.',
+      )
+    })
+
+    it('should show editor tools by default', async () => {
+      await page.goto(`http://localhost:${port}${endpoint}`)
+
+      // If this button is visible, that mean editor tools is showing
+      const buttonHideEditor = await page.$(
+        'button[aria-label="Hide editor tools"]',
+      )
+
+      const editorTabs = await page.evaluate(() =>
+        Array.from(
+          document.querySelectorAll('.graphiql-editor-tools-tabs button'),
+          (e) => e.textContent,
+        ),
+      )
+
+      expect(buttonHideEditor).not.toBeNull()
+      expect(editorTabs).toEqual(['Variables', 'Headers'])
+    })
+
     it('execute simple query operation', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`)
       await typeOperationText('{ alwaysTrue }')
@@ -434,6 +489,79 @@ describe('browser', () => {
         },
         isLive: true,
       })
+    })
+  })
+
+  describe('GraphiQL with custom options', () => {
+    let customGraphQLEndpoint: string
+
+    const schemaWithDescription = createTestSchema()
+    schemaWithDescription.description = 'Here is the custom docs for schema'
+
+    const defaultHeader = '{"Authorization":"Bearer test-auth-header"}'
+    const customServer = createServer(
+      createYoga({
+        schema: schemaWithDescription,
+        logging: false,
+        graphqlEndpoint: endpoint,
+        graphiql: {
+          title: 'GraphiQL Custom title here',
+          headers: defaultHeader,
+        },
+        renderGraphiQL,
+      }),
+    )
+
+    beforeAll(async () => {
+      await new Promise<void>((resolve) => customServer.listen(0, resolve))
+      const port = (customServer.address() as AddressInfo).port
+      customGraphQLEndpoint = `http://localhost:${port}${endpoint}`
+    })
+
+    afterAll(async () => {
+      await new Promise((resolve) => customServer.close(resolve))
+    })
+
+    it('should show custom title', async () => {
+      await page.goto(customGraphQLEndpoint)
+
+      const title = await page.evaluate(() => document.title)
+
+      expect(title).toBe('GraphiQL Custom title here')
+    })
+
+    it('should show custom schema docs', async () => {
+      await page.goto(customGraphQLEndpoint)
+
+      await showGraphiQLSidebar()
+      const docsElement = await page.waitForSelector(
+        '.graphiql-markdown-description',
+      )
+
+      expect(docsElement).not.toBeNull()
+      const docs = await getElementText(docsElement!)
+
+      expect(docs).toBe(schemaWithDescription.description)
+    })
+
+    it('should include default header', async () => {
+      await page.goto(customGraphQLEndpoint)
+
+      await page.evaluate(() => {
+        const tabs = Array.from(
+          document.querySelectorAll('.graphiql-editor-tools-tabs button'),
+        ) as HTMLButtonElement[]
+        tabs.find((tab) => tab.textContent === 'Headers')!.click()
+      })
+
+      const headerContentEl = await page.waitForSelector(
+        'section.graphiql-editor-tool .graphiql-editor:not(.hidden) pre.CodeMirror-line',
+      )
+
+      expect(headerContentEl).not.toBeNull()
+      const headerContent = await getElementText(headerContentEl!)
+
+      expect(headerContent).toBe(defaultHeader)
     })
   })
 
