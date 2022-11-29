@@ -1,8 +1,8 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
 import type { YogaLogger } from './logger.js'
-import type { ResultProcessorInput } from './plugins/types'
-import type { YogaMaskedErrorOpts } from './types'
+import type { ResultProcessorInput } from './plugins/types.js'
+import type { YogaMaskedErrorOpts } from './types.js'
 
 export { createGraphQLError }
 

@@ -1,8 +1,8 @@
 import { AfterValidateHook } from '@envelop/core'
-import { Plugin } from './types'
-import { createYoga } from '../server'
-import { createSchema } from '../schema'
-import { createGraphQLError } from '../error'
+import { Plugin } from './types.js'
+import { createYoga } from '../server.js'
+import { createSchema } from '../schema.js'
+import { createGraphQLError } from '../error.js'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
