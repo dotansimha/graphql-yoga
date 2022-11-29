@@ -16,10 +16,14 @@ export type GraphiQLOptions = {
   defaultQuery?: string
   /**
    * Whether to open the variable editor by default. Defaults to `true`.
+   *
+   * @deprecated Obsolete option. Variable editor was opened by default
    */
   defaultVariableEditorOpen?: boolean
   /**
    * The initial headers to render inside the header editor. Defaults to `"{}"`.
+   * The value should be a JSON encoded string, for example:
+   * `headers: JSON.stringify({Authorization: "Bearer your-auth-key"})`
    */
   headers?: string
   /**
@@ -28,10 +32,12 @@ export type GraphiQLOptions = {
   credentials?: RequestCredentials
   /**
    * Whether the header editor is enabled. Defaults to `true`.
+   *
+   * @deprecated Obsolete option. Header editor was enabled by default
    */
   headerEditorEnabled?: boolean
   /**
-   * The title to display at the top of the page. Defaults to `"YogaGraphiQL"`.
+   * The title to display at the top of the page. Defaults to `"Yoga GraphiQL"`.
    */
   title?: string
   /**
