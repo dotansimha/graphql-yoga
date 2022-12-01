@@ -1,5 +1,19 @@
 # @graphql-yoga/graphiql
 
+## 3.0.1
+
+### Patch Changes
+
+- [#2167](https://github.com/dotansimha/graphql-yoga/pull/2167) [`a7bfdf2e`](https://github.com/dotansimha/graphql-yoga/commit/a7bfdf2e7b6c8d4a0578cf4db1770d6e04fb28a8) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/url-loader@7.16.20` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/7.16.20) (from `7.16.19`, in `dependencies`)
+
+- [#2183](https://github.com/dotansimha/graphql-yoga/pull/2183) [`e3ace6e7`](https://github.com/dotansimha/graphql-yoga/commit/e3ace6e794a8aed6b62dbee4446edbafa46e036c) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/url-loader@7.16.22` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/7.16.22) (from `7.16.20`, in `dependencies`)
+
+- [#2172](https://github.com/dotansimha/graphql-yoga/pull/2172) [`62fc9e43`](https://github.com/dotansimha/graphql-yoga/commit/62fc9e43f0c6714139b32dd2ee33c2895281df2e) Thanks [@tuanpt-0634](https://github.com/tuanpt-0634)! - - fix: enable graphiql schema description, default headers prop
+
 ## 3.0.0
 
 ### Major Changes
