@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.1.1
+
+### Patch Changes
+
+- [#2179](https://github.com/dotansimha/graphql-yoga/pull/2179) [`534780c9`](https://github.com/dotansimha/graphql-yoga/commit/534780c99ed61dd761826d44d99a83748630cb61) Thanks [@ardatan](https://github.com/ardatan)! - Add missing .js extension to type imports
+
 ## 3.1.0
 
 ### Minor Changes
