@@ -227,7 +227,7 @@ export class YogaServer<
         options.maskedErrors.maskError) ||
       yogaDefaultFormatError
 
-    const maskedErrorSet = new WeakSet();
+    const maskedErrorSet = new WeakSet()
 
     this.maskedErrorsOpts =
       options?.maskedErrors === false
