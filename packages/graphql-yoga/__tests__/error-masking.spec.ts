@@ -1,3 +1,4 @@
+import { inspect } from '@graphql-tools/utils'
 import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
 
 describe('error masking', () => {
@@ -418,6 +419,51 @@ describe('error masking', () => {
       errors: [
         {
           message: 'Unexpected error.',
+        },
+      ],
+    })
+  })
+
+  it('call the custom maskError function with correct parameters', async () => {
+    const yoga = createYoga({
+      logging: false,
+      context: () => {
+        throw new Error('I like turtles')
+      },
+      maskedErrors: {
+        errorMessage: 'My message',
+        maskError: (error, message, isDev) => {
+          return createGraphQLError(
+            inspect({
+              errorStr: String(error),
+              message,
+              isDev,
+            }),
+          )
+        },
+        isDev: true,
+      },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ __typename }' }),
+    })
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message:
+            '{ errorStr: "Error: I like turtles", message: "My message", isDev: true }',
         },
       ],
     })

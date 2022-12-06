@@ -1,4 +1,4 @@
-import type { MaskError, PromiseOrValue } from '@envelop/core'
+import type { PromiseOrValue } from '@envelop/core'
 import type { createFetch } from '@whatwg-node/fetch'
 import type { GraphQLSchema } from 'graphql'
 
@@ -56,5 +56,11 @@ export type YogaMaskedErrorOpts = {
   errorMessage: string
   isDev?: boolean
 }
+
+export type MaskError = (
+  error: unknown,
+  message: string,
+  isDev?: boolean,
+) => Error
 
 export type MaybeArray<T> = T | T[]

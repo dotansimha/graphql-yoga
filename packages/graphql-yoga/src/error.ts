@@ -59,6 +59,7 @@ export function handleError(
     const maskedError = maskedErrorsOpts.maskError(
       error,
       maskedErrorsOpts.errorMessage,
+      maskedErrorsOpts.isDev,
     )
 
     if (maskedError !== error) {
