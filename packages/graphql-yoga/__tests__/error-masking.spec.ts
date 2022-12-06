@@ -424,7 +424,7 @@ describe('error masking', () => {
     })
   })
 
-  it('should call the custom maskError function with correct parameters', async () => {
+  it('call the custom maskError function with correct parameters', async () => {
     const yoga = createYoga({
       logging: false,
       context: () => {
