@@ -57,7 +57,7 @@ importers:
       ts-jest: ^29.0.0
       typescript: 4.9.3
       weak-napi: 2.0.2
-      wrangler: 2.6.0
+      wrangler: 2.6.1
     devDependencies:
       '@babel/core': 7.20.5
       '@babel/plugin-proposal-class-properties': 7.18.6_@babel+core@7.20.5
@@ -93,7 +93,7 @@ importers:
       ts-jest: 29.0.3_325vkrdmmxxbippmn7o7l27dce
       typescript: 4.9.3
       weak-napi: 2.0.2
-      wrangler: 2.6.0
+      wrangler: 2.6.1
 
   benchmark/hello-world:
     specifiers:
@@ -226,7 +226,7 @@ importers:
       ts-loader: 9.4.2
       typescript: 4.9.3
       webpack: 5.75.0
-      wrangler: 2.6.0
+      wrangler: 2.6.1
     dependencies:
       '@cloudflare/workers-types': 4.20221111.1
       graphql: 16.6.0
@@ -235,7 +235,7 @@ importers:
       ts-loader: 9.4.2_vfotqvx6lgcbf3upbs6hgaza4q
       typescript: 4.9.3
       webpack: 5.75.0
-      wrangler: 2.6.0
+      wrangler: 2.6.1
 
   examples/cloudflare-modules:
     specifiers:
@@ -243,14 +243,14 @@ importers:
       graphql: 16.6.0
       graphql-yoga: 3.1.1
       typescript: 4.9.3
-      wrangler: 2.6.0
+      wrangler: 2.6.1
     dependencies:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@cloudflare/workers-types': 4.20221111.1
       typescript: 4.9.3
-      wrangler: 2.6.0
+      wrangler: 2.6.1
 
   examples/defer-stream:
     specifiers:
@@ -505,14 +505,14 @@ importers:
     specifiers:
       '@types/koa': 2.13.5
       graphql-yoga: 3.1.1
-      koa: 2.13.4
+      koa: 2.14.0
       supertest: ^6.1.6
       ts-node: 10.9.1
       typescript: 4.9.3
     dependencies:
       '@types/koa': 2.13.5
       graphql-yoga: link:../../packages/graphql-yoga
-      koa: 2.13.4
+      koa: 2.14.0
       supertest: 6.3.0
     devDependencies:
       ts-node: 10.9.1_typescript@4.9.3
@@ -674,13 +674,13 @@ importers:
       graphql: 16.6.0
       graphql-yoga: 3.1.1
       typescript: 4.9.3
-      wrangler: 2.6.0
+      wrangler: 2.6.1
     dependencies:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       typescript: 4.9.3
-      wrangler: 2.6.0
+      wrangler: 2.6.1
 
   examples/sofa:
     specifiers:
@@ -733,7 +733,7 @@ importers:
       prettier: 2.8.0
       prettier-plugin-svelte: 2.8.1
       puppeteer: 19.3.0
-      svelte: 3.53.1
+      svelte: 3.54.0
       svelte-check: 2.10.1
       svelte-preprocess: 4.10.7
       tslib: 2.4.1
@@ -746,36 +746,36 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@sveltejs/adapter-auto': 1.0.0-next.90
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.53.1+vite@3.2.5
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.54.0+vite@3.2.5
       '@types/jest': 29.2.0
       '@typescript-eslint/eslint-plugin': 5.45.1_tdm6ms4ntwhlpozn7kjqrhum74
       '@typescript-eslint/parser': 5.45.1_s5ps7njkmjlaqajutnox5ntcla
       eslint: 8.29.0
       eslint-config-prettier: 8.5.0_eslint@8.29.0
-      eslint-plugin-svelte3: 4.0.0_kzv3boqmfymw5ol254gxmp75rq
+      eslint-plugin-svelte3: 4.0.0_2aagxyyd66x6iymg5nfckajqjq
       jest: 29.2.0
       prettier: 2.8.0
-      prettier-plugin-svelte: 2.8.1_3ndnxlh52lolrqe4kgjgbxb3xa
+      prettier-plugin-svelte: 2.8.1_kaioqtfwjumrsfopsgfoca65re
       puppeteer: 19.3.0
-      svelte: 3.53.1
-      svelte-check: 2.10.1_svelte@3.53.1
-      svelte-preprocess: 4.10.7_7dvewpees4iyn2tkw2qzal77a4
+      svelte: 3.54.0
+      svelte-check: 2.10.1_svelte@3.54.0
+      svelte-preprocess: 4.10.7_gf4dcx76vtk2o62ixxeqx7chra
       tslib: 2.4.1
       typescript: 4.9.3
       vite: 3.2.5
 
   packages/client/apollo-link:
     specifiers:
-      '@apollo/client': 3.7.1
+      '@apollo/client': 3.7.2
       '@graphql-tools/executor-apollo-link': 0.0.3
       '@graphql-tools/executor-http': 0.0.4
       tslib: ^2.3.1
     dependencies:
-      '@graphql-tools/executor-apollo-link': 0.0.3_@apollo+client@3.7.1
+      '@graphql-tools/executor-apollo-link': 0.0.3_@apollo+client@3.7.2
       '@graphql-tools/executor-http': 0.0.4
       tslib: 2.4.0
     devDependencies:
-      '@apollo/client': 3.7.1
+      '@apollo/client': 3.7.2
     publishDirectory: dist
 
   packages/client/urql-exchange:
@@ -1220,8 +1220,8 @@ packages:
       graphql: 16.6.0
     dev: false
 
-  /@apollo/client/3.7.1:
-    resolution: {integrity: sha512-xu5M/l7p9gT9Fx7nF3AQivp0XukjB7TM7tOd5wifIpI8RskYveL4I+rpTijzWrnqCPZabkbzJKH7WEAKdctt9w==}
+  /@apollo/client/3.7.2:
+    resolution: {integrity: sha512-ohAIpXl3mTa1Fd3GT/K37VwQJfTIuuJRp4aOlJ4q/hlx0Wxh+RqDrbn0awtVCOdhGDQN+CQQmVzIqFKn6GziXQ==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
@@ -4712,13 +4712,13 @@ packages:
       value-or-promise: 1.0.11
     dev: true
 
-  /@graphql-tools/executor-apollo-link/0.0.3_@apollo+client@3.7.1:
+  /@graphql-tools/executor-apollo-link/0.0.3_@apollo+client@3.7.2:
     resolution: {integrity: sha512-r0qttQs721k/H3Ev+oG6qI0bJBHxah0KS5qcl6p3F8xZw0tPmTtLdArs14CTynzADNXR9vNedmdFdcFQmNohIg==}
     peerDependencies:
       '@apollo/client': ^3.5.9
       graphql: ^15.2.0 || ^16.0.0
     dependencies:
-      '@apollo/client': 3.7.1
+      '@apollo/client': 3.7.2
       '@graphql-tools/utils': 9.1.1
       tslib: 2.4.1
     dev: false
@@ -8359,7 +8359,7 @@ packages:
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.520_svelte@3.53.1+vite@3.2.5:
+  /@sveltejs/kit/1.0.0-next.520_svelte@3.54.0+vite@3.2.5:
     resolution: {integrity: sha512-flroQQEwIHx6IEkskHGQ90Ri+gFCnAs4ZFRsG7QuTbuBu7XSeJNQs3J73pmBQoKp0pWnbwZ3YZMtwBJWF/I7qA==}
     engines: {node: '>=16.14'}
     hasBin: true
@@ -8368,7 +8368,7 @@ packages:
       svelte: ^3.44.0
       vite: ^3.1.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.53.1+vite@3.2.5
+      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.54.0+vite@3.2.5
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.0.1
@@ -8378,7 +8378,7 @@ packages:
       sade: 1.8.1
       set-cookie-parser: 2.5.1
       sirv: 2.0.2
-      svelte: 3.53.1
+      svelte: 3.54.0
       tiny-glob: 0.2.9
       undici: 5.11.0
       vite: 3.2.5
@@ -8387,7 +8387,7 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.53.1+vite@3.2.5:
+  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.54.0+vite@3.2.5:
     resolution: {integrity: sha512-+SDrAnT7TDi8sdj4OfD2SC4s9DNrpNVBrue8fT2PmKks9Ddu0JIfSeX91wXZb/1xHz4EkGb+rli8GTRI0yGOjg==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
@@ -8403,8 +8403,8 @@ packages:
       deepmerge: 4.2.2
       kleur: 4.1.5
       magic-string: 0.26.7
-      svelte: 3.53.1
-      svelte-hmr: 0.15.0_svelte@3.53.1
+      svelte: 3.54.0
+      svelte-hmr: 0.15.0_svelte@3.54.0
       vite: 3.2.5
     transitivePeerDependencies:
       - supports-color
@@ -14868,14 +14868,14 @@ packages:
       eslint: 8.25.0
     dev: true
 
-  /eslint-plugin-svelte3/4.0.0_kzv3boqmfymw5ol254gxmp75rq:
+  /eslint-plugin-svelte3/4.0.0_2aagxyyd66x6iymg5nfckajqjq:
     resolution: {integrity: sha512-OIx9lgaNzD02+MDFNLw0GEUbuovNcglg+wnd/UY0fbZmlQSz7GlQiQ1f+yX0XvC07XPcDOnFcichqI3xCwp71g==}
     peerDependencies:
       eslint: '>=8.0.0'
       svelte: ^3.2.0
     dependencies:
       eslint: 8.29.0
-      svelte: 3.53.1
+      svelte: 3.54.0
     dev: true
 
   /eslint-plugin-unicorn/45.0.0_eslint@8.25.0:
@@ -18892,8 +18892,8 @@ packages:
       koa-compose: 4.1.0
     dev: false
 
-  /koa/2.13.4:
-    resolution: {integrity: sha512-43zkIKubNbnrULWlHdN5h1g3SEKXOEzoAlRsHOTFpnlDu8JlAOZSMJBLULusuXRequboiwJcj5vtYXKB3k7+2g==}
+  /koa/2.14.0:
+    resolution: {integrity: sha512-VQ03/Qc98oV/ddvsFZGJ0YZgQy/aoUJpBYDUXe5i2C8UmHE5qt/n+zbxaNTZMpGe1CC5L4Xd0vCgyFRu9byb9g==}
     engines: {node: ^4.8.4 || ^6.10.1 || ^7.10.1 || >= 8.1.4}
     dependencies:
       accepts: 1.3.8
@@ -22737,14 +22737,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /prettier-plugin-svelte/2.8.1_3ndnxlh52lolrqe4kgjgbxb3xa:
+  /prettier-plugin-svelte/2.8.1_kaioqtfwjumrsfopsgfoca65re:
     resolution: {integrity: sha512-KA3K1J3/wKDnCxW7ZDRA/QL2Q67N7Xs3gOERqJ5X1qFjq1DdnN3K1R29scSKwh+kA8FF67pXbYytUpvN/i3iQw==}
     peerDependencies:
       prettier: ^1.16.4 || ^2.0.0
       svelte: ^3.2.0
     dependencies:
       prettier: 2.8.0
-      svelte: 3.53.1
+      svelte: 3.54.0
     dev: true
 
   /prettier/2.7.1:
@@ -25062,7 +25062,7 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check/2.10.1_svelte@3.53.1:
+  /svelte-check/2.10.1_svelte@3.54.0:
     resolution: {integrity: sha512-uscZovyuOPA89NuAkc4vO27mzx//2wFBNtwTsgYcNs7JwaFpJ2TqBawQ/avG7gkieYQ3QXqFUggJZ+s51fQGDQ==}
     hasBin: true
     peerDependencies:
@@ -25074,8 +25074,8 @@ packages:
       import-fresh: 3.3.0
       picocolors: 1.0.0
       sade: 1.8.1
-      svelte: 3.53.1
-      svelte-preprocess: 4.10.7_7dvewpees4iyn2tkw2qzal77a4
+      svelte: 3.54.0
+      svelte-preprocess: 4.10.7_gf4dcx76vtk2o62ixxeqx7chra
       typescript: 4.9.3
     transitivePeerDependencies:
       - '@babel/core'
@@ -25090,16 +25090,16 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-hmr/0.15.0_svelte@3.53.1:
+  /svelte-hmr/0.15.0_svelte@3.54.0:
     resolution: {integrity: sha512-Aw21SsyoohyVn4yiKXWPNCSW2DQNH/76kvUnE9kpt4h9hcg9tfyQc6xshx9hzgMfGF0kVx0EGD8oBMWSnATeOg==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
     peerDependencies:
       svelte: '>=3.19.0'
     dependencies:
-      svelte: 3.53.1
+      svelte: 3.54.0
     dev: true
 
-  /svelte-preprocess/4.10.7_7dvewpees4iyn2tkw2qzal77a4:
+  /svelte-preprocess/4.10.7_gf4dcx76vtk2o62ixxeqx7chra:
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
     requiresBuild: true
@@ -25146,12 +25146,12 @@ packages:
       magic-string: 0.25.9
       sorcery: 0.10.0
       strip-indent: 3.0.0
-      svelte: 3.53.1
+      svelte: 3.54.0
       typescript: 4.9.3
     dev: true
 
-  /svelte/3.53.1:
-    resolution: {integrity: sha512-Q4/hHkktZogGhN5iqxqSi9sjEVoe/NbIxX4hXEHoasTxj+TxEQVAq66LnDMdAZxjmsodkoI5F3slqsS68U7FNw==}
+  /svelte/3.54.0:
+    resolution: {integrity: sha512-tdrgeJU0hob0ZWAMoKXkhcxXA7dpTg6lZGxUeko5YqvPdJBiyRspGsCwV27kIrbrqPP2WUoSV9ca0gnLlw8YzQ==}
     engines: {node: '>= 8'}
     dev: true
 
@@ -26966,8 +26966,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /wrangler/2.6.0:
-    resolution: {integrity: sha512-ktAH4lwOfl3cjNzgURiT9Au3ZOB5wMibbCJZ6cWSavhC4ctrsEc6FTi19h3cYHjNhDFCipj9UUuKPG/eeYWlzw==}
+  /wrangler/2.6.1:
+    resolution: {integrity: sha512-v0Kh8KQC33xP82pGXZ+67pJMQIx0CHI+gF2nLIcdZbrB0wAQLQ6lsQYS9UpuTupQg4+RetHToDwk+lzRM0J0cQ==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
