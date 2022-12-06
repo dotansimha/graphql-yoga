@@ -8,7 +8,5 @@ import { GraphQLSchemaWithContext, YogaInitialContext } from './types.js'
 export function createSchema<TContext = {}>(
   opts: IExecutableSchemaDefinition<TContext & YogaInitialContext>,
 ): GraphQLSchemaWithContext<TContext> {
-  return makeExecutableSchema<TContext & YogaInitialContext>({
-    ...opts,
-  })
+  return makeExecutableSchema<TContext & YogaInitialContext>(opts)
 }

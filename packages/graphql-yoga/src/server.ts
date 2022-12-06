@@ -15,6 +15,7 @@ import {
   FetchAPI,
   GraphQLParams,
   YogaMaskedErrorOpts,
+  MaskError,
 } from './types.js'
 import {
   OnParamsHook,
@@ -221,10 +222,12 @@ export class YogaServer<
         ? createLogger(logger)
         : logger
 
-    const maskErrorFn =
+    const maskErrorFn: MaskError =
       (typeof options?.maskedErrors === 'object' &&
         options.maskedErrors.maskError) ||
       yogaDefaultFormatError
+
+    const maskedErrorSet = new WeakSet();
 
     this.maskedErrorsOpts =
       options?.maskedErrors === false
@@ -235,18 +238,20 @@ export class YogaServer<
               ? options.maskedErrors
               : {}),
             maskError: (error, message) => {
+              if (maskedErrorSet.has(error as Error)) {
+                return error as Error
+              }
               const newError = maskErrorFn(
-                {
-                  error,
-                  message,
-                  isDev: this.maskedErrorsOpts?.isDev ?? false,
-                },
+                error,
                 message,
+                this.maskedErrorsOpts?.isDev,
               )
 
               if (newError !== error) {
                 this.logger.error(error)
               }
+
+              maskedErrorSet.add(newError)
 
               return newError
             },
