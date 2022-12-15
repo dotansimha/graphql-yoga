@@ -188,7 +188,7 @@ class SSELink extends ApolloLink {
     if (operation.operationName) {
       url.searchParams.append(
         'operationName',
-        JSON.stringify(operation.operationName)
+        operation.operationName
       )
     }
     if (operation.variables) {
