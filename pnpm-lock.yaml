@@ -961,6 +961,13 @@ importers:
       '@whatwg-node/fetch': 0.5.3
     publishDirectory: dist
 
+  packages/plugins/disable-introspection:
+    specifiers:
+      graphql-yoga: workspace:*
+    devDependencies:
+      graphql-yoga: link:../../graphql-yoga
+    publishDirectory: dist
+
   packages/plugins/persisted-operations:
     specifiers:
       '@types/lru-cache': 7.10.9
