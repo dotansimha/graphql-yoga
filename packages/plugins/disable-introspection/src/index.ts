@@ -18,7 +18,6 @@ export const useDisableIntrospection = (
       store.set(request, isDisabled)
     },
     onValidate({ addValidationRule, context }) {
-      console.log(store.get(context.request))
       const isDisabled = store.get(context.request) ?? true
       if (isDisabled) {
         addValidationRule(NoSchemaIntrospectionCustomRule)

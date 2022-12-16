@@ -99,17 +99,18 @@
     "weak-napi": "2.0.2",
     "wrangler": "2.6.1"
   },
-  "resolutions": {
-    "graphql": "16.6.0",
-    "@envelop/core": "3.0.4",
-    "@changesets/assemble-release-plan": "5.2.1"
-  },
   "pnpm": {
     "patchedDependencies": {
       "@changesets/assemble-release-plan@5.2.1": "patches/@changesets__assemble-release-plan@5.2.1.patch",
       "@graphiql/react@0.13.3": "patches/@graphiql__react@0.13.3.patch",
       "formdata-node@4.4.1": "patches/formdata-node@4.4.1.patch",
       "nextra-theme-docs@2.0.0-beta.43": "patches/nextra-theme-docs@2.0.0-beta.43.patch"
+    },
+    "overrides": {
+      "graphql": "16.6.0",
+      "@envelop/core": "3.0.4",
+      "@changesets/assemble-release-plan": "5.2.1",
+      "@envelop/validation-cache": "5.0.5-alpha-20221216222744-232e3b3d"
     }
   }
 }

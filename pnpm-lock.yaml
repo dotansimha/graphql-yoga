@@ -4,6 +4,7 @@ overrides:
   graphql: 16.6.0
   '@envelop/core': 3.0.4
   '@changesets/assemble-release-plan': 5.2.1
+  '@envelop/validation-cache': 5.0.5-alpha-20221216222744-232e3b3d
 
 patchedDependencies:
   '@changesets/assemble-release-plan@5.2.1':
@@ -870,7 +871,7 @@ importers:
       '@envelop/disable-introspection': 4.0.4
       '@envelop/live-query': 5.0.4
       '@envelop/parser-cache': 5.0.4
-      '@envelop/validation-cache': 5.0.4
+      '@envelop/validation-cache': 5.0.5-alpha-20221216222744-232e3b3d
       '@graphql-tools/executor': 0.0.9
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.0.1
@@ -892,7 +893,7 @@ importers:
     dependencies:
       '@envelop/core': 3.0.4
       '@envelop/parser-cache': 5.0.4_a6sekiasy2tqr6d5gj7n2wtjli
-      '@envelop/validation-cache': 5.0.4_a6sekiasy2tqr6d5gj7n2wtjli
+      '@envelop/validation-cache': 5.0.5-alpha-20221216222744-232e3b3d_a6sekiasy2tqr6d5gj7n2wtjli
       '@graphql-tools/executor': 0.0.9_graphql@16.6.0
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.0.1_graphql@16.6.0
@@ -4216,8 +4217,8 @@ packages:
     dependencies:
       tslib: 2.4.1
 
-  /@envelop/validation-cache/5.0.4_a6sekiasy2tqr6d5gj7n2wtjli:
-    resolution: {integrity: sha512-7b4BWtNMxSdXspwzFN2qmkEaaHfmuDz60uMlVFaMN4nA1Vc5duAV7GQWfAKl56VoePU6UwQ0i49Dm/plJfwxIQ==}
+  /@envelop/validation-cache/5.0.5-alpha-20221216222744-232e3b3d_a6sekiasy2tqr6d5gj7n2wtjli:
+    resolution: {integrity: sha512-U3ekSc0TANnFlsMH96ZcY6vL5N65o44n6x1s8+hQLoe74VxjYWrG14emMylxOG519b+mXVf3mTadkYm4bgvzeQ==}
     peerDependencies:
       '@envelop/core': ^3.0.4
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
