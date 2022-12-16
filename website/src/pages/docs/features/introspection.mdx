@@ -20,12 +20,39 @@ GraphQL schema introspection is also a feature that allows clients to ask a Grap
 
 ```ts "Disabling GraphQL schema introspection with a plugin" {7}
 import { createYoga } from 'graphql-yoga'
-import { useDisableIntrospection } from '@envelop/disable-introspection'
+import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
 
 // Provide your schema
 const yoga = createYoga({
   graphiql: false,
   plugins: [useDisableIntrospection()]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
+
+## Disable Introspection based on the GraphQL Request
+
+Somnetimes you want to allow introspectition for certain users.
+You can access the `Request` object and determine based on that whether introspection should be enabled or not.
+E.g. you can check the headers.
+
+```ts "Disabling GraphQL schema introspection conditionally" {7}
+import { createYoga } from 'graphql-yoga'
+import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
+
+// Provide your schema
+const yoga = createYoga({
+  graphiql: false,
+  plugins: [
+    useDisableIntrospection({
+      isDisabled: (request) =>
+        request.headers.get('x-allow-introspection') !== 'secret-access-key'
+    })
+  ]
 })
 
 const server = createServer(yoga)
