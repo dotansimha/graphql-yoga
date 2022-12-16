@@ -186,10 +186,7 @@ class SSELink extends ApolloLink {
     const url = new URL(this.options.uri)
     url.searchParams.append('query', print(operation.query))
     if (operation.operationName) {
-      url.searchParams.append(
-        'operationName',
-        operation.operationName
-      )
+      url.searchParams.append('operationName', operation.operationName)
     }
     if (operation.variables) {
       url.searchParams.append('variables', JSON.stringify(operation.variables))
