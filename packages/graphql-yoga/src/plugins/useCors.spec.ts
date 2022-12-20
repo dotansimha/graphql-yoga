@@ -1,7 +1,39 @@
 import { Request } from '@whatwg-node/fetch'
+import { createSchema } from '../schema.js'
+import { createYoga } from '../server.js'
+import { YogaInitialContext } from '../types.js'
 import { getCORSHeadersByRequestAndOptions, CORSOptions } from './useCORS.js'
 
 describe('CORS', () => {
+  describe('OPTIONS call', () => {
+    it('should respond with correct status & headers', async () => {
+      const schemaFactory = async (ctx: YogaInitialContext) => {
+        return createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              foo: String
+            }
+          `,
+          resolvers: {
+            Query: {
+              foo: () => 'bar',
+            },
+          },
+        })
+      }
+      const yoga = createYoga({
+        schema: schemaFactory,
+      })
+      let result = await yoga.fetch('http://yoga/graphql', {
+        method: 'OPTIONS',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      expect(result.status).toEqual(204)
+      expect(result.headers.get('Content-Length')).toEqual('0')
+    })
+  })
   describe('No origins specified', () => {
     const corsOptionsWithNoOrigins = {}
     it('should return the wildcard if no origin is sent with header', () => {

@@ -146,6 +146,12 @@ export function useCORS<TServerContext extends Record<string, any>>(
       if (request.method.toUpperCase() === 'OPTIONS') {
         const response = new fetchAPI.Response(null, {
           status: 204,
+          // Safari (and potentially other browsers) need content-length 0,
+          // for 204 or they just hang waiting for a body
+          // see: https://github.com/expressjs/cors/blob/master/lib/index.js#L176
+          headers: {
+            'Content-Length': '0',
+          },
         })
         endResponse(response)
       }
