@@ -144,14 +144,8 @@ export function useCORS<TServerContext extends Record<string, any>>(
   return {
     async onRequest({ request, serverContext, fetchAPI, endResponse }) {
       if (request.method.toUpperCase() === 'OPTIONS') {
-        const headers = await getCORSResponseHeaders<any>(
-          request,
-          corsOptionsFactory,
-          serverContext,
-        )
         const response = new fetchAPI.Response(null, {
           status: 204,
-          headers,
         })
         endResponse(response)
       }
