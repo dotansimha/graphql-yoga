@@ -6,18 +6,18 @@ overrides:
   '@changesets/assemble-release-plan': 5.2.1
 
 patchedDependencies:
-  '@changesets/assemble-release-plan@5.2.1':
-    hash: gxgixp7rzwjkputc2n2g47utqy
-    path: patches/@changesets__assemble-release-plan@5.2.1.patch
-  '@graphiql/react@0.13.3':
-    hash: yqm362ey3efuxzwgojxfo6tq5i
-    path: patches/@graphiql__react@0.13.3.patch
   formdata-node@4.4.1:
     hash: bwnmzlpvx75llwj7xwqbxbjtui
     path: patches/formdata-node@4.4.1.patch
+  '@changesets/assemble-release-plan@5.2.1':
+    hash: gxgixp7rzwjkputc2n2g47utqy
+    path: patches/@changesets__assemble-release-plan@5.2.1.patch
   nextra-theme-docs@2.0.0-beta.43:
     hash: sy7yomed2xkhjwtql55f5gmmlm
     path: patches/nextra-theme-docs@2.0.0-beta.43.patch
+  '@graphiql/react@0.13.3':
+    hash: yqm362ey3efuxzwgojxfo6tq5i
+    path: patches/@graphiql__react@0.13.3.patch
 
 importers:
 
@@ -966,6 +966,20 @@ importers:
       graphql-yoga: workspace:*
     devDependencies:
       graphql-yoga: link:../../graphql-yoga
+    publishDirectory: dist
+
+  packages/plugins/graphql-sse:
+    specifiers:
+      '@envelop/core': 3.0.4
+      graphql-sse: ^2.0.0
+      graphql-yoga: ^3.1.1
+      tslib: ^2.4.1
+    dependencies:
+      '@envelop/core': 3.0.4
+      graphql-sse: 2.0.0
+    devDependencies:
+      graphql-yoga: link:../../graphql-yoga
+      tslib: 2.4.1
     publishDirectory: dist
 
   packages/plugins/persisted-operations:
@@ -16509,6 +16523,13 @@ packages:
       graphql: 16.6.0
       tslib: 2.4.1
     dev: true
+
+  /graphql-sse/2.0.0:
+    resolution: {integrity: sha512-TTdFwxGM9RY68s22XWyhc+SyQn3PLbELDD2So0K6Cc6EIlBAyPuNV8VlPfNKa/la7gEf2SwHY7JoJplOmOY4LA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      graphql: '>=0.11 <=16'
+    dev: false
 
   /graphql-tag/2.12.6:
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}

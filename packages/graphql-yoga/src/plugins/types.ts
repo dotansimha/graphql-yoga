@@ -4,6 +4,7 @@ import {
   PromiseOrValue,
   OnExecuteHook,
   OnSubscribeHook,
+  GetEnvelopedFn,
 } from '@envelop/core'
 import { ExecutionResult } from '@graphql-tools/utils'
 import { YogaServer } from '../server.js'
@@ -85,6 +86,7 @@ export interface OnRequestEventPayload<TServerContext> {
   fetchAPI: FetchAPI
   endResponse(response: Response): void
   url: URL
+  getEnveloped: GetEnvelopedFn<TServerContext & YogaInitialContext>
 }
 
 export type OnRequestParseHook<TServerContext> = (
