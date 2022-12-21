@@ -1,4 +1,5 @@
 import { createYoga, createSchema } from 'graphql-yoga'
+import { createClient } from 'graphql-sse'
 import { useGraphQLSSE } from '../src/index.js'
 
 describe('graphql-sse', () => {
@@ -35,29 +36,176 @@ describe('graphql-sse', () => {
     maskedErrors: false,
   })
 
-  it('should', async () => {
-    const response = await yoga.fetch('http://yoga/graphql', {
-      method: 'POST',
-      body: JSON.stringify({
-        query: /* GraphQL */ `
-          {
-            hello
-          }
-        `,
-      }),
-      headers: {
-        'content-type': 'application/json',
-      },
+  it('should stream using distinct connection mode', async () => {
+    const client = createClient({
+      url: 'http://yoga/graphql/stream',
+      fetchFn: yoga.fetch,
+      singleConnection: false, // distinct connection mode
+      retryAttempts: 0,
     })
 
-    expect(response.ok).toBeTruthy()
-
-    await expect(response.json()).resolves.toMatchInlineSnapshot(`
-      {
-        "data": {
-          "hello": "world",
+    await expect(
+      new Promise((resolve, reject) => {
+        const msgs: unknown[] = []
+        client.subscribe(
+          {
+            query: /* GraphQL */ `
+              subscription {
+                greetings
+              }
+            `,
+          },
+          {
+            next: (msg) => msgs.push(msg),
+            error: reject,
+            complete: () => resolve(msgs),
+          },
+        )
+      }),
+    ).resolves.toMatchInlineSnapshot(`
+      [
+        {
+          "data": {
+            "greetings": "Hi",
+          },
         },
-      }
+        {
+          "data": {
+            "greetings": "Bonjour",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Hola",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Ciao",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Zdravo",
+          },
+        },
+      ]
+    `)
+  })
+
+  it('should stream using single connection and lazy mode', async () => {
+    const client = createClient({
+      url: 'http://yoga/graphql/stream',
+      fetchFn: yoga.fetch,
+      singleConnection: true, // single connection mode
+      lazy: true,
+      retryAttempts: 0,
+    })
+
+    await expect(
+      new Promise((resolve, reject) => {
+        const msgs: unknown[] = []
+        client.subscribe(
+          {
+            query: /* GraphQL */ `
+              subscription {
+                greetings
+              }
+            `,
+          },
+          {
+            next: (msg) => msgs.push(msg),
+            error: reject,
+            complete: () => resolve(msgs),
+          },
+        )
+      }),
+    ).resolves.toMatchInlineSnapshot(`
+      [
+        {
+          "data": {
+            "greetings": "Hi",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Bonjour",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Hola",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Ciao",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Zdravo",
+          },
+        },
+      ]
+    `)
+  })
+
+  it('should stream using single connection and non-lazy mode', async () => {
+    const client = createClient({
+      url: 'http://yoga/graphql/stream',
+      fetchFn: yoga.fetch,
+      singleConnection: true, // single connection mode
+      lazy: false,
+      retryAttempts: 0,
+    })
+
+    await expect(
+      new Promise((resolve, reject) => {
+        const msgs: unknown[] = []
+        client.subscribe(
+          {
+            query: /* GraphQL */ `
+              subscription {
+                greetings
+              }
+            `,
+          },
+          {
+            next: (msg) => msgs.push(msg),
+            error: reject,
+            complete: () => resolve(msgs),
+          },
+        )
+      }),
+    ).resolves.toMatchInlineSnapshot(`
+      [
+        {
+          "data": {
+            "greetings": "Hi",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Bonjour",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Hola",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Ciao",
+          },
+        },
+        {
+          "data": {
+            "greetings": "Zdravo",
+          },
+        },
+      ]
     `)
   })
 })
