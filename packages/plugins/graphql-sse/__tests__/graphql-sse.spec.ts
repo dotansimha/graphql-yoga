@@ -91,6 +91,8 @@ describe('graphql-sse', () => {
         },
       ]
     `)
+
+    client.dispose()
   })
 
   it('should stream using single connection and lazy mode', async () => {
@@ -149,6 +151,8 @@ describe('graphql-sse', () => {
         },
       ]
     `)
+
+    client.dispose()
   })
 
   it('should stream using single connection and non-lazy mode', async () => {
@@ -207,5 +211,7 @@ describe('graphql-sse', () => {
         },
       ]
     `)
+
+    client.dispose()
   })
 })
