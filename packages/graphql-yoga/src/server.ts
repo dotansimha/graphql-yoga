@@ -322,7 +322,6 @@ export class YogaServer<
           logger: this.logger,
         }),
       // Middlewares before the GraphQL execution
-      useCheckMethodForGraphQL(),
       useRequestParser({
         match: isGETRequest,
         parse: parseGETRequest,
@@ -362,6 +361,9 @@ export class YogaServer<
               showLandingPage: options?.landingPage ?? true,
             }),
           )
+          // We check the method after user-land plugins because the plugin might support more methods (like graphql-sse).
+          // @ts-expect-error Add plugins has context but this hook doesn't care
+          addPlugin(useCheckMethodForGraphQL())
           // We make sure that the user doesn't send a mutation with GET
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(usePreventMutationViaGET())
