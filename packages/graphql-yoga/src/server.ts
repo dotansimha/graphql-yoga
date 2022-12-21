@@ -495,8 +495,6 @@ export class YogaServer<
         endResponse(newResponse) {
           response = newResponse
         },
-        // @ts-expect-error is missing the TUserContext
-        getEnveloped: this.getEnveloped,
       })
       if (response) {
         return response

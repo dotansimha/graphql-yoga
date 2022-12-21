@@ -86,7 +86,6 @@ export interface OnRequestEventPayload<TServerContext> {
   fetchAPI: FetchAPI
   endResponse(response: Response): void
   url: URL
-  getEnveloped: GetEnvelopedFn<TServerContext & YogaInitialContext>
 }
 
 export type OnRequestParseHook<TServerContext> = (
