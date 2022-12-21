@@ -1,6 +1,8 @@
 import { getOperationAST } from 'graphql'
-import { Plugin, YogaInitialContext } from 'graphql-yoga'
-import { createHandler } from 'graphql-sse/lib/use/fetch'
+import { Plugin, YogaInitialContext, FetchAPI } from 'graphql-yoga'
+import { createHandler } from 'graphql-sse'
+// TODO: not using fetch adapter because we need the FetchAPI too early.
+// import { createHandler } from 'graphql-sse/lib/use/fetch'
 import { GetEnvelopedFn } from '@envelop/core'
 
 export interface GraphQLSSEPluginOptions {
@@ -20,7 +22,7 @@ export function useGraphQLSSE(
     Request,
     { serverContext: any; getEnveloped: GetEnvelopedFn<unknown> }
   >()
-  const handler = createHandler({
+  const handler = createHandler<Request, FetchAPI>({
     async onSubscribe(req, params) {
       const { serverContext, getEnveloped } = envelopedForReq.get(req.raw) || {}
       if (!getEnveloped) {
@@ -58,11 +60,61 @@ export function useGraphQLSSE(
     },
   })
   return {
-    async onRequest({ request, getEnveloped, endResponse, serverContext }) {
+    async onRequest({
+      request,
+      getEnveloped,
+      endResponse,
+      serverContext,
+      fetchAPI,
+    }) {
       const [path, _search] = request.url.split('?')
       if (path.endsWith(endpoint)) {
         envelopedForReq.set(request, { serverContext, getEnveloped })
-        endResponse(await handler(request))
+
+        const [resp, init] = await handler({
+          method: request.method,
+          url: request.url,
+          headers: request.headers,
+          body: () => request.text(),
+          raw: request,
+          context: fetchAPI,
+        })
+
+        if (!resp || typeof resp === 'string') {
+          return endResponse(new fetchAPI.Response(resp, init))
+        }
+
+        let cancelled = false
+        const enc = new fetchAPI.TextEncoder()
+        const stream = new fetchAPI.ReadableStream({
+          async pull(controller) {
+            const { done, value } = await resp.next()
+            if (value != null) {
+              controller.enqueue(enc.encode(value))
+            }
+            if (done) {
+              controller.close()
+            }
+          },
+          async cancel(e) {
+            cancelled = true
+            await resp.return(e)
+          },
+        })
+
+        if (request.signal.aborted) {
+          // it's possible that the request was aborted before listening
+          resp.return(undefined)
+        } else {
+          // make sure to connect the signals as well
+          request.signal.addEventListener('abort', () => {
+            if (!cancelled) {
+              resp.return()
+            }
+          })
+        }
+
+        endResponse(new fetchAPI.Response(stream, init))
       }
     },
   }
