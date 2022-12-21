@@ -4,7 +4,6 @@ import {
   PromiseOrValue,
   OnExecuteHook,
   OnSubscribeHook,
-  GetEnvelopedFn,
 } from '@envelop/core'
 import { ExecutionResult } from '@graphql-tools/utils'
 import { YogaServer } from '../server.js'
