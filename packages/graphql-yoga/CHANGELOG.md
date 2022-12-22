@@ -1,5 +1,20 @@
 # graphql-yoga
 
+## 3.1.2
+
+### Patch Changes
+
+- [#2231](https://github.com/dotansimha/graphql-yoga/pull/2231) [`c5b1cc46`](https://github.com/dotansimha/graphql-yoga/commit/c5b1cc46f67c4516fcaeb6247f56da4ca7dd7511) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@envelop/parser-cache@^5.0.4` ↗︎](https://www.npmjs.com/package/@envelop/parser-cache/v/5.0.4) (from `5.0.4`, in `dependencies`)
+  - Updated dependency [`@envelop/validation-cache@^5.0.5` ↗︎](https://www.npmjs.com/package/@envelop/validation-cache/v/5.0.5) (from `5.0.4`, in `dependencies`)
+
+- [#2238](https://github.com/dotansimha/graphql-yoga/pull/2238) [`c152105e`](https://github.com/dotansimha/graphql-yoga/commit/c152105eeed34be2f6380406739a57310729f353) Thanks [@ardatan](https://github.com/ardatan)! - Do not call CORS headers factory twice
+
+- [#2206](https://github.com/dotansimha/graphql-yoga/pull/2206) [`26d780cd`](https://github.com/dotansimha/graphql-yoga/commit/26d780cd683b15d38880387081455311b57da4ec) Thanks [@ardatan](https://github.com/ardatan)! - Correct Mask Error Factory signature
+
+- [#2239](https://github.com/dotansimha/graphql-yoga/pull/2239) [`d2958781`](https://github.com/dotansimha/graphql-yoga/commit/d2958781d4f3959f89056092f6f12a2953f5497b) Thanks [@davidruisinger](https://github.com/davidruisinger)! - Add content-length: 0 header if 204 is returned by OPTIONS request
+
 ## 3.1.1
 
 ### Patch Changes
