@@ -172,12 +172,12 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
       for await (const chunk of response) {
         const chunkStr = Buffer.from(chunk).toString('utf-8')
         expect(chunkStr).toMatchInlineSnapshot(`
-          "---
+          ---
           Content-Type: application/json; charset=utf-8
           Content-Length: 33
 
           {"data":{"hi":[]},"hasNext":true}
-          ---"
+          ---
         `)
       }
     } catch (err: any) {

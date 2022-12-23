@@ -72,7 +72,7 @@ describe('Defer/Stream', () => {
     const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toMatchInlineSnapshot(
-      `"Unknown directive "@defer"."`,
+      'Unknown directive "@defer".',
     )
   })
 
@@ -91,7 +91,7 @@ describe('Defer/Stream', () => {
     const body = await response.json()
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toMatchInlineSnapshot(
-      `"Unknown directive "@stream"."`,
+      'Unknown directive "@stream".',
     )
   })
 
@@ -116,7 +116,7 @@ describe('Defer/Stream', () => {
     const finalText = await response.text()
 
     expect(finalText).toMatchInlineSnapshot(`
-      "---
+      ---
       Content-Type: application/json; charset=utf-8
       Content-Length: 26
 
@@ -128,7 +128,6 @@ describe('Defer/Stream', () => {
       {"incremental":[{"data":{"goodbye":"goodbye"},"path":[]}],"hasNext":false}
       ---
       -----
-      "
     `)
   })
 
@@ -154,7 +153,7 @@ describe('Defer/Stream', () => {
     const finalText = await response.text()
 
     expect(finalText).toMatchInlineSnapshot(`
-      "---
+      ---
       Content-Type: application/json; charset=utf-8
       Content-Length: 44
 
@@ -171,7 +170,6 @@ describe('Defer/Stream', () => {
       {"hasNext":false}
       ---
       -----
-      "
     `)
   })
 

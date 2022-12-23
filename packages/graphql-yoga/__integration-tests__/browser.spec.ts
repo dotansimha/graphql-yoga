@@ -715,8 +715,8 @@ describe('browser', () => {
 
       expect(result.data).toMatchInlineSnapshot(`
         [
-          "{"data":{"counter":0}}",
-          "{"data":{"counter":1}}",
+          {"data":{"counter":0}},
+          {"data":{"counter":1}},
         ]
       `)
     })
