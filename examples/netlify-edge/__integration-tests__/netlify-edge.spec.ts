@@ -9,7 +9,7 @@ describe('netlify-edge example integration', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data).toMatchInlineSnapshot(`
       {
-        "greetings": "This is the \`greetings\` field of the root \`Query\` type",
+        greetings: This is the \`greetings\` field of the root \`Query\` type,
       }
     `)
   })

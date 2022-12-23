@@ -65,9 +65,9 @@ describe.skip('Yoga Apollo Link', () => {
       cache: new InMemoryCache(),
     })
   })
-  afterAll((done) => {
-    server.close(() => done())
-  })
+  afterAll(() => new Promise(resolve => {
+    server.close(() => resolve())
+  }))
   it('should handle queries correctly', async () => {
     const result = await client.query({
       query: parse(/* GraphQL */ `

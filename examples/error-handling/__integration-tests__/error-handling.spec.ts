@@ -25,18 +25,18 @@ describe('error-handling example integration', () => {
 
     expect(body).toMatchInlineSnapshot(`
       {
-        "data": null,
-        "errors": [
+        data: null,
+        errors: [
           {
-            "locations": [
+            locations: [
               {
-                "column": 7,
-                "line": 1,
+                column: 7,
+                line: 1,
               },
             ],
-            "message": "Unexpected error.",
-            "path": [
-              "greeting",
+            message: Unexpected error.,
+            path: [
+              greeting,
             ],
           },
         ],
@@ -52,24 +52,24 @@ describe('error-handling example integration', () => {
 
     expect(body).toMatchInlineSnapshot(`
       {
-        "data": null,
-        "errors": [
+        data: null,
+        errors: [
           {
-            "extensions": {
-              "code": "USER_NOT_FOUND",
-              "someRandomExtensions": {
-                "aaaa": 3,
+            extensions: {
+              code: USER_NOT_FOUND,
+              someRandomExtensions: {
+                aaaa: 3,
               },
             },
-            "locations": [
+            locations: [
               {
-                "column": 7,
-                "line": 1,
+                column: 7,
+                line: 1,
               },
             ],
-            "message": "User with id '6' not found.",
-            "path": [
-              "user",
+            message: User with id '6' not found.,
+            path: [
+              user,
             ],
           },
         ],

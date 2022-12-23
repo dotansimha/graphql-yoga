@@ -44,11 +44,11 @@ describe('hackernews example integration', () => {
     const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       {
-        "data": {
-          "feed": [
+        data: {
+          feed: [
             {
-              "description": "Prisma replaces traditional ORMs",
-              "url": "https://www.prisma.io",
+              description: Prisma replaces traditional ORMs,
+              url: https://www.prisma.io,
             },
           ],
         },
@@ -78,10 +78,10 @@ describe('hackernews example integration', () => {
     const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       {
-        "data": {
-          "postLink": {
-            "description": "Time to Relax with GraphQL Yoga",
-            "url": "https://www.the-guild.dev/graphql/yoga-server",
+        data: {
+          postLink: {
+            description: Time to Relax with GraphQL Yoga,
+            url: https://www.the-guild.dev/graphql/yoga-server,
           },
         },
       }

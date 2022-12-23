@@ -6,7 +6,7 @@ describe('pothos example integration', () => {
 
     expect(response.status).toBe(200)
     expect(await response.text()).toMatchInlineSnapshot(
-      `"{"data":{"hello":"world"}}"`,
+      '{"data":{"hello":"world"}}',
     )
   })
 
@@ -22,7 +22,7 @@ describe('pothos example integration', () => {
 
     expect(response.status).toBe(200)
     expect(await response.text()).toMatchInlineSnapshot(`
-      "data: {"data":{"greetings":"Hi"}}
+      data: {"data":{"greetings":"Hi"}}
 
       data: {"data":{"greetings":"Bonjour"}}
 
@@ -31,8 +31,6 @@ describe('pothos example integration', () => {
       data: {"data":{"greetings":"Ciao"}}
 
       data: {"data":{"greetings":"Zdravo"}}
-
-      "
     `)
   })
 })

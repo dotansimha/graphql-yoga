@@ -349,8 +349,8 @@ describe('requests', () => {
     const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       {
-        "data": {
-          "ping": "pong",
+        data: {
+          ping: pong,
         },
       }
     `)
@@ -370,8 +370,8 @@ describe('requests', () => {
     const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       {
-        "data": {
-          "ping": "pong",
+        data: {
+          ping: pong,
         },
       }
     `)

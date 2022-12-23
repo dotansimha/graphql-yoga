@@ -60,13 +60,13 @@ describe('Context', () => {
     )
     expect(onExecuteFn.mock.lastCall?.[0].args.contextValue.params)
       .toMatchInlineSnapshot(`
-      {
-        "extensions": undefined,
-        "operationName": undefined,
-        "query": "{hello}",
-        "variables": undefined,
-      }
-    `)
+        {
+          extensions: undefined,
+          operationName: undefined,
+          query: {hello},
+          variables: undefined,
+        }
+      `)
     expect(
       onExecuteFn.mock.lastCall?.[0].args.contextValue.request,
     ).toBeDefined()
@@ -105,13 +105,13 @@ describe('Context', () => {
     )
     expect(onSubscribeFn.mock.lastCall?.[0].args.contextValue.params)
       .toMatchInlineSnapshot(`
-      {
-        "extensions": undefined,
-        "operationName": undefined,
-        "query": "subscription{greetings}",
-        "variables": undefined,
-      }
-    `)
+        {
+          extensions: undefined,
+          operationName: undefined,
+          query: subscription{greetings},
+          variables: undefined,
+        }
+      `)
     expect(
       onSubscribeFn.mock.lastCall?.[0].args.contextValue.request,
     ).toBeDefined()

@@ -6,7 +6,7 @@ describe('node-ts example integration', () => {
 
     expect(response.status).toBe(200)
     expect(await response.text()).toMatchInlineSnapshot(
-      `"{"data":{"greetings":"This is the \`greetings\` field of the root \`Query\` type"}}"`,
+      '{"data":{"greetings":"This is the `greetings` field of the root `Query` type"}}',
     )
   })
 
@@ -21,10 +21,6 @@ describe('node-ts example integration', () => {
     )
 
     expect(response.status).toBe(400)
-    expect(await response.text()).toMatchInlineSnapshot(`
-      "data: {"errors":[{"message":"Subscriptions have been disabled"}]}
-
-      "
-    `)
+    expect(await response.text()).toMatchInlineSnapshot('data: {"errors":[{"message":"Subscriptions have been disabled"}]}')
   })
 })

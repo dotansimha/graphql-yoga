@@ -84,7 +84,7 @@ describe('logging', () => {
       })
 
       expect(await response.text()).toMatchInlineSnapshot(
-        `"{"errors":[{"message":"Unexpected error.","locations":[{"line":1,"column":2}],"path":["hi"]}],"data":{"hi":null}}"`,
+        '{"errors":[{"message":"Unexpected error.","locations":[{"line":1,"column":2}],"path":["hi"]}],"data":{"hi":null}}',
       )
 
       expect(logger.error).toHaveBeenCalledTimes(1)
@@ -127,7 +127,7 @@ describe('logging', () => {
       })
 
       expect(await response.text()).toMatchInlineSnapshot(
-        `"{"errors":[{"message":"No hi for you ok.","locations":[{"line":1,"column":2}],"path":["hi"]}],"data":{"hi":null}}"`,
+        '{"errors":[{"message":"No hi for you ok.","locations":[{"line":1,"column":2}],"path":["hi"]}],"data":{"hi":null}}',
       )
 
       expect(logger.error).toHaveBeenCalledTimes(0)
@@ -165,7 +165,7 @@ describe('logging', () => {
       })
 
       expect(await response.text()).toMatchInlineSnapshot(
-        `"{"errors":[{"message":"No hi for you ok.","locations":[{"line":1,"column":2}],"path":["hi"]}],"data":{"hi":null}}"`,
+        '{"errors":[{"message":"No hi for you ok.","locations":[{"line":1,"column":2}],"path":["hi"]}],"data":{"hi":null}}',
       )
 
       expect(logger.error).toHaveBeenCalledTimes(0)

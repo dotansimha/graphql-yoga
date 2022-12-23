@@ -9,12 +9,12 @@ describe('graphql-auth example integration', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data).toMatchInlineSnapshot(`
       {
-        "books": [
+        books: [
           {
-            "title": "The Awakening",
+            title: The Awakening,
           },
           {
-            "title": "City of Glass",
+            title: City of Glass,
           },
         ],
       }
@@ -29,13 +29,13 @@ describe('graphql-auth example integration', () => {
     expect(body.errors).toMatchInlineSnapshot(`
       [
         {
-          "locations": [
+          locations: [
             {
-              "column": 13,
-              "line": 1,
+              column: 13,
+              line: 1,
             },
           ],
-          "message": "Cannot query field "titlee" on type "Book". [Suggestion hidden]?",
+          message: Cannot query field "titlee" on type "Book". [Suggestion hidden]?,
         },
       ]
     `)

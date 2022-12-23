@@ -139,7 +139,7 @@ describe('fastify example integration', () => {
       })
     expect(response.statusCode).toEqual(200)
     expect(response.text).toMatchInlineSnapshot(`
-      "data: {"data":{"countdown":10}}
+      data: {"data":{"countdown":10}}
 
       data: {"data":{"countdown":9}}
 
@@ -160,8 +160,6 @@ describe('fastify example integration', () => {
       data: {"data":{"countdown":1}}
 
       data: {"data":{"countdown":0}}
-
-      "
     `)
   })
   it('handles subscription operations via POST', async () => {
@@ -180,7 +178,7 @@ describe('fastify example integration', () => {
       })
     expect(response.statusCode).toEqual(200)
     expect(response.text).toMatchInlineSnapshot(`
-      "data: {"data":{"countdown":10}}
+      data: {"data":{"countdown":10}}
 
       data: {"data":{"countdown":9}}
 
@@ -201,8 +199,6 @@ describe('fastify example integration', () => {
       data: {"data":{"countdown":1}}
 
       data: {"data":{"countdown":0}}
-
-      "
     `)
   })
   it('should handle file uploads', async () => {
