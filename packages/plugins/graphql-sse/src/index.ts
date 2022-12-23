@@ -1,8 +1,13 @@
 import { getOperationAST } from 'graphql'
 import { Plugin, YogaInitialContext } from 'graphql-yoga'
-import { createHandler } from 'graphql-sse/lib/use/fetch'
+import { HandlerOptions } from 'graphql-sse'
+import { createHandler, RequestContext } from 'graphql-sse/lib/use/fetch'
 
-export interface GraphQLSSEPluginOptions {
+export interface GraphQLSSEPluginOptions
+  extends Omit<
+    HandlerOptions<Request, RequestContext, any>,
+    'validate' | 'execute' | 'subscribe' | 'schema' | 'onSubscribe'
+  > {
   /**
    * Endpoint location where GraphQL over SSE will be served.
    *
@@ -19,12 +24,13 @@ export interface GraphQLSSEPluginOptions {
 export function useGraphQLSSE(
   options: GraphQLSSEPluginOptions = {},
 ): Plugin<YogaInitialContext> {
-  const { endpoint = '/graphql/stream' } = options
+  const { endpoint = '/graphql/stream', ...handlerOptions } = options
   let handler!: (request: Request) => Promise<Response>
   return {
     onYogaInit({ yoga }) {
       handler = createHandler(
         {
+          ...handlerOptions,
           async onSubscribe(req, params) {
             const enveloped = yoga.getEnveloped({
               // TODO: serverContext
