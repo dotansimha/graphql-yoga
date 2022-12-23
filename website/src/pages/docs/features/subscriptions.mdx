@@ -16,7 +16,7 @@ You don't need any extra packages to use subscriptions.
   event streams must be distributed across all servers.
 </Callout>
 
-## Quick Start with Server Sent Events (SSE)
+## Quick Start with simple Server-Sent Events (SSE)
 
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
@@ -365,7 +365,47 @@ const executeSubscription = (
 const network = Network.create(executeQueryOrMutation, executeSubscription)
 ```
 
-## Subscriptions over WebSockets with `graphql-ws`
+## GraphQL over Server-Sent Events Protocol (via `graphql-sse`)
+
+In case you want the subscriptions to be transported following the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md), you simply use the `@graphql-yoga/plugin-graphql-sse` plugin for GraphQL Yoga that exposes an additional endpoint (defaulting to `/graphql/stream`) used for [graphql-sse](https://github.com/enisdenjo/graphql-sse) clients.
+
+The plugin will hijack the request from the `onRequest` hook and will use **all** envelop plugins provided.
+
+Also, consider setting the `subscriptionsProtocol` in GraphiQL options to `GRAPHQL_SSE` in order to have it use [graphql-sse](https://github.com/enisdenjo/graphql-sse).
+
+```ts filename="yoga-with-graphql-sse.ts"
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
+import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
+
+const yogaApp = createYoga({
+  graphiql: {
+    // Use graphql-sse in GraphiQL.
+    subscriptionsProtocol: 'GRAPHQL_SSE'
+  },
+  plugins: [
+    // Simply install the graphql-sse plugin and you're off!
+    useGraphQLSSE()
+  ]
+})
+
+// Get NodeJS Server from Yoga
+const httpServer = createServer(yogaApp)
+
+httpServer.listen(4000, () => {
+  console.log('Server is running on port 4000')
+})
+```
+
+<Callout>
+  Check out [our working example](/examples/graphql-sse) for this integration.
+</Callout>
+
+### Client Integration
+
+Please refer to the [`graphql-sse` client recipes](https://github.com/enisdenjo/graphql-sse#recipes).
+
+## GraphQL over WebSocket Protocol (via `graphql-ws`)
 
 Suppose you want to use the [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol with GraphQL Yoga, you can use the [`graphql-ws`](https://github.com/enisdenjo/graphql-ws) library.
 To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
@@ -439,7 +479,7 @@ httpServer.listen(4000, () => {
 
 Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/graphql-ws#recipes).
 
-### SSE vs WebSocket
+## SSE vs WebSocket
 
 #### Advantages of SSE over WebSockets
 
@@ -454,7 +494,7 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 
 #### SSE Gotchas
 
-- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x) ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2))
+- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x) ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2)). In this case, consider using the [`graphql-sse` integration](#graphql-over-server-sent-events-protocol-via-graphql-sse) with ["single connection mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode).
 
 ## PubSub
 

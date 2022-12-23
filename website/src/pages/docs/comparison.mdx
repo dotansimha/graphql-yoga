@@ -65,16 +65,13 @@ GraphQL Yoga is fully compatible with the GraphQL over HTTP specification (inclu
 
 GraphQL Yoga supports [file uploads out of the box](/v3/features/file-uploads#enable-file-uploads-in-graphql-yoga) and fully supports the [GraphQL-Multipart-Request](https://github.com/jaydenseric/graphql-multipart-request-spec).
 
-### Real time and GraphQL Subscriptions over Server-Sent-Events (SSE)
+### Real time and GraphQL Subscriptions
 
-Apollo Server does not provide built-in solution for GraphQL Subscriptions.
-You can wire up `graphql-ws` or `graphql-sse` for adding either GraphQL over WebSocket or GraphQL over Server Sent Events support.
+GraphQL Yoga, compared to Apollo Server, has built-in support for [simple subscriptions over Server-Sent Events (SSE)](/v3/features/subscriptions#subscriptions) without the need of any additional libraries.
 
-GraphQL Yoga has built-in support for [GraphQL Subscriptions over Server-Sent-Events (SSE)](/v3/features/subscriptions#subscriptions) without the need of any additional libraries.
+Of course, in addition to that, GraphQL Yoga has integrations supporting the [GraphQL over WebSocket Protocol](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) (via `graphql-ws`) and the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md) (via `graphql-sse`).
 
-In addition GraphQL Yoga also support GraphQL Subscriptions over WS (via `graphql-ws`).
-
-In addition to GraphQL Subscriptions, Yoga users can also use GraphQL Live Queries.
+Besides GraphQL Subscriptions, Yoga users can also use GraphQL Live Queries.
 
 ### Bundle Size and Dependencies
 
