@@ -11,6 +11,11 @@ export interface GraphQLSSEPluginOptions {
   endpoint?: string
 }
 
+/**
+ * Get [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md) integration with GraphQL Yoga by simply installing this plugin!
+ *
+ * Note that the endpoint defaults to `/graphql/stream`, this is where your [graphql-sse](https://github.com/enisdenjo/graphql-sse) client should connect.
+ */
 export function useGraphQLSSE(
   options: GraphQLSSEPluginOptions = {},
 ): Plugin<YogaInitialContext> {
