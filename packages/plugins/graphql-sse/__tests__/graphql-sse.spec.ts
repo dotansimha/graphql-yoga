@@ -217,4 +217,44 @@ describe('graphql-sse', () => {
 
     client.dispose()
   })
+
+  it('should use CORS settings from the server', async () => {
+    const yoga = createYoga({
+      schema,
+      cors: {
+        origin: 'http://yoga',
+        credentials: true,
+        allowedHeaders: ['x-some-header'],
+        methods: ['GET', 'POST', 'DELETE', 'PUT'],
+      },
+      plugins: [useGraphQLSSE()],
+      maskedErrors: false,
+    })
+
+    const res = await yoga.fetch('http://yoga/graphql/stream', {
+      method: 'OPTIONS',
+    })
+
+    expect(res.headers).toMatchInlineSnapshot(`
+      Headers {
+        Symbol(map): {
+          "Access-Control-Allow-Credentials": [
+            "true",
+          ],
+          "Access-Control-Allow-Headers": [
+            "x-some-header",
+          ],
+          "Access-Control-Allow-Methods": [
+            "GET, POST, DELETE, PUT",
+          ],
+          "Access-Control-Allow-Origin": [
+            "http://yoga",
+          ],
+          "Content-Length": [
+            "0",
+          ],
+        },
+      }
+    `)
+  })
 })
