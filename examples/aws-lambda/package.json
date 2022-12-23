@@ -10,7 +10,7 @@
     "bundle": "node scripts/bundle.js",
     "watch": "tsc -w",
     "check": "tsc --noEmit",
-    "test": "jest",
+    "test": "vitest .",
     "predeploy": "build",
     "deploy": "cdk deploy",
     "postdeploy": "rm -rf cdk-out"

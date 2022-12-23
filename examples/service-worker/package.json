@@ -5,7 +5,7 @@
   "scripts": {
     "build": "wrangler publish --dry-run --outdir=dist",
     "start": "wrangler dev",
-    "test": "jest",
+    "test": "vitest .",
     "check": "tsc --pretty --noEmit"
   },
   "dependencies": {

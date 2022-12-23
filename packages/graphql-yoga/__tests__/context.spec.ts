@@ -36,7 +36,7 @@ describe('Context', () => {
   })
 
   it('should provide intial and user context to onExecute', async () => {
-    const onExecuteFn = jest.fn((() => {}) as Plugin<
+    const onExecuteFn = vi.fn((() => {}) as Plugin<
       {},
       {},
       UserContext
@@ -73,7 +73,7 @@ describe('Context', () => {
   })
 
   it('should provide intial and user context to onSubscribe', async () => {
-    const onSubscribeFn = jest.fn((() => {}) as Plugin<
+    const onSubscribeFn = vi.fn((() => {}) as Plugin<
       {},
       {},
       UserContext
@@ -118,10 +118,10 @@ describe('Context', () => {
   })
 
   it('should provide intial context to rest of envelop hooks', async () => {
-    const onEnvelopedFn = jest.fn((() => {}) as Plugin['onEnveloped'])
-    const onParseFn = jest.fn((() => {}) as Plugin['onParse'])
-    const onValidateFn = jest.fn((() => {}) as Plugin['onValidate'])
-    const onContextBuildingFn = jest.fn(
+    const onEnvelopedFn = vi.fn((() => {}) as Plugin['onEnveloped'])
+    const onParseFn = vi.fn((() => {}) as Plugin['onParse'])
+    const onValidateFn = vi.fn((() => {}) as Plugin['onValidate'])
+    const onContextBuildingFn = vi.fn(
       (() => {}) as Plugin['onContextBuilding'],
     )
 

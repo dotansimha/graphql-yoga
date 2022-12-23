@@ -14,7 +14,7 @@ const schema = createSchema({
 
 describe('Yoga Plugins', () => {
   it(`should respect Envelop's OnPluginInit's addPlugin`, async () => {
-    const afterValidateHook: AfterValidateHook<any> = jest
+    const afterValidateHook: AfterValidateHook<any> = vi
       .fn()
       .mockImplementation(({ setResult }) => {
         setResult([

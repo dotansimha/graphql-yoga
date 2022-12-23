@@ -5,7 +5,7 @@
 	"scripts": {
 		"sync": "svelte-kit sync",
 		"dev": "pnpm sync && vite dev",
-		"test": "jest",
+		"test": "vitest .",
 		"build": "pnpm sync && vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview --port 3007",
@@ -18,13 +18,11 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "1.0.0-next.90",
 		"@sveltejs/kit": "1.0.0-next.520",
-		"@types/jest": "^29.0.0",
 		"@typescript-eslint/eslint-plugin": "5.47.0",
 		"@typescript-eslint/parser": "5.47.0",
 		"eslint": "8.29.0",
 		"eslint-config-prettier": "8.5.0",
 		"eslint-plugin-svelte3": "4.0.0",
-		"jest": "^29.0.0",
 		"prettier": "2.8.0",
 		"prettier-plugin-svelte": "2.8.1",
 		"puppeteer": "19.3.0",

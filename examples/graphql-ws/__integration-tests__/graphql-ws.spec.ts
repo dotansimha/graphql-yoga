@@ -17,7 +17,7 @@ describe('graphql-ws example integration', () => {
       retryAttempts: 0, // fail right away
     })
 
-    const onNext = jest.fn()
+    const onNext = vi.fn()
 
     await new Promise<void>((resolve, reject) => {
       client.subscribe(
@@ -40,7 +40,7 @@ describe('graphql-ws example integration', () => {
       retryAttempts: 0, // fail right away
     })
 
-    const onNext = jest.fn()
+    const onNext = vi.fn()
 
     await new Promise<void>((resolve, reject) => {
       client.subscribe(
@@ -63,7 +63,7 @@ describe('graphql-ws example integration', () => {
       retryAttempts: 0, // fail right away
     })
 
-    const onNext = jest.fn()
+    const onNext = vi.fn()
 
     await new Promise<void>((resolve, reject) => {
       client.subscribe(
@@ -149,7 +149,7 @@ describe('graphql-ws example integration', () => {
       retryAttempts: 0, // fail right away
     })
 
-    const onNext = jest.fn()
+    const onNext = vi.fn()
 
     await new Promise<void>((resolve, reject) => {
       client.subscribe(

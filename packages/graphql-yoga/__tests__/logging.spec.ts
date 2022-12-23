@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { jest } from '@jest/globals'
 import { GraphQLError } from 'graphql'
 import {
   createYoga,
@@ -11,10 +10,10 @@ import {
 describe('logging', () => {
   it('custom logger', async () => {
     const logger = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
     }
     const yogaApp = createYoga({
       logging: logger,
@@ -28,7 +27,7 @@ describe('logging', () => {
   })
   describe('default logger', () => {
     it(`doesn't print debug messages if DEBUG env var isn't set`, () => {
-      jest.spyOn(console, 'debug')
+      vi.spyOn(console, 'debug')
       const logger = createLogger()
       logger.debug('TEST')
       // eslint-disable-next-line no-console
@@ -39,7 +38,7 @@ describe('logging', () => {
       try {
         process.env.DEBUG = '1'
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
+        vi.spyOn(console, 'debug').mockImplementationOnce(() => {})
         const logger = createLogger()
         logger.debug('TEST')
         // eslint-disable-next-line no-console
@@ -71,7 +70,7 @@ describe('logging', () => {
         }),
       })
 
-      const mock = jest
+      const mock = vi
         .spyOn(logger, 'error')
         .mockImplementation(() => undefined)
 
@@ -116,7 +115,7 @@ describe('logging', () => {
         }),
       })
 
-      jest.spyOn(logger, 'error').mockImplementation(() => undefined)
+      vi.spyOn(logger, 'error').mockImplementation(() => undefined)
 
       const response = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',
@@ -154,7 +153,7 @@ describe('logging', () => {
         }),
       })
 
-      jest.spyOn(logger, 'error').mockImplementation(() => undefined)
+      vi.spyOn(logger, 'error').mockImplementation(() => undefined)
 
       const response = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',

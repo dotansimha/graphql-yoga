@@ -222,8 +222,8 @@ describe('schema', () => {
 
   it('schema promise is not resolved until GraphQL execution starts', async () => {
     const schemaPromise: PromiseLike<GraphQLSchema> = {
-      then: jest.fn(async (callback) => {
-        return callback!(
+      then: vi.fn(async (callback) =>
+        callback!(
           createSchema({
             typeDefs: /* GraphQL */ `
               type Query {
@@ -236,8 +236,8 @@ describe('schema', () => {
               },
             },
           }),
-        )
-      }),
+        ),
+      ),
     }
     const yoga = createYoga({
       schema: schemaPromise as Promise<GraphQLSchema>,
@@ -267,8 +267,8 @@ describe('schema', () => {
   })
 
   it('schema factory should never been called until GraphQL execution starts', async () => {
-    const schemaFactory = jest.fn(async () => {
-      return createSchema({
+    const schemaFactory = vi.fn(async () =>
+      createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
             foo: Boolean
@@ -279,8 +279,8 @@ describe('schema', () => {
             foo: () => true,
           },
         },
-      })
-    })
+      }),
+    )
     const yoga = createYoga({
       schema: schemaFactory,
       plugins: [

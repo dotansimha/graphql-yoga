@@ -21,7 +21,7 @@ describe('subscription', () => {
           },
         }
       },
-      return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
+      return: vi.fn(() => Promise.resolve({ done: true, value: undefined })),
     }
     const yoga = createYoga({
       logging: false,
