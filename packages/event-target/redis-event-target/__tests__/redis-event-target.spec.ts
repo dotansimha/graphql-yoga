@@ -51,7 +51,7 @@ describe('createRedisEventTarget', () => {
       })
       eventTarget.dispatchEvent(event)
     }))
-  
+
   it('distributes the event to all event listeners', () =>
     new Promise<void>((done) => {
       const eventTarget = createRedisEventTarget({
