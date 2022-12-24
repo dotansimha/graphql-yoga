@@ -1,5 +1,5 @@
 import { buildApp } from '../src/app.js'
-import WebSocket from 'ws'
+import WebSocket, { WebSocketServer } from 'ws'
 import { createClient } from 'graphql-ws'
 import { createServer } from 'http'
 import { createYoga, createSchema } from 'graphql-yoga'
@@ -129,7 +129,7 @@ describe('graphql-ws example integration', () => {
           return args
         },
       },
-      new WebSocket.WebSocketServer({
+      new WebSocketServer({
         server,
         path: yoga.graphqlEndpoint,
       }),
