@@ -49,16 +49,17 @@
     "access": "public"
   },
   "dependencies": {
-    "@graphql-tools/executor-http": "0.0.4",
     "@graphql-tools/executor-apollo-link": "0.0.3",
+    "@graphql-tools/executor-http": "0.0.4",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@apollo/client": "3.7.2"
+    "@apollo/client": "3.7.2",
+    "@whatwg-node/fetch": "^0.5.3"
   },
   "peerDependencies": {
-    "graphql": "^15.2.0 || ^16.0.0",
-    "@apollo/client": "^3.5.9"
+    "@apollo/client": "^3.5.9",
+    "graphql": "^15.2.0 || ^16.0.0"
   },
   "type": "module"
 }

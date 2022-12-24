@@ -105,9 +105,12 @@ importers:
 
   examples/apollo-federation:
     specifiers:
+      '@whatwg-node/fetch': ^0.5.3
       concurrently: ^7.0.0
     dependencies:
       concurrently: 7.4.0
+    devDependencies:
+      '@whatwg-node/fetch': 0.5.3
 
   examples/apollo-federation/gateway:
     specifiers:
@@ -218,6 +221,7 @@ importers:
   examples/cloudflare-modules:
     specifiers:
       '@cloudflare/workers-types': 4.20221111.1
+      '@whatwg-node/fetch': ^0.5.3
       graphql: 16.6.0
       graphql-yoga: 3.1.2
       typescript: 4.9.4
@@ -227,6 +231,7 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@cloudflare/workers-types': 4.20221111.1
+      '@whatwg-node/fetch': 0.5.3
       typescript: 4.9.4
       wrangler: 2.6.1
 
@@ -318,6 +323,7 @@ importers:
 
   examples/file-upload:
     specifiers:
+      '@whatwg-node/fetch': ^0.5.3
       graphql: 16.6.0
       graphql-yoga: 3.1.2
       ts-node: 10.9.1
@@ -325,11 +331,14 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
       ts-node: 10.9.1
+    devDependencies:
+      '@whatwg-node/fetch': 0.5.3
 
   examples/file-upload-nextjs-pothos:
     specifiers:
       '@pothos/core': 3.23.1
       '@types/react': ^18.0.17
+      '@whatwg-node/fetch': ^0.5.3
       eslint: 8.29.0
       eslint-config-next: 13.1.0
       graphql: 16.6.0
@@ -347,12 +356,14 @@ importers:
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
       '@types/react': 18.0.21
+      '@whatwg-node/fetch': 0.5.3
       eslint: 8.29.0
       eslint-config-next: 13.1.0_ha6vam6werchizxrnqvarmz2zu
       typescript: 4.9.4
 
   examples/file-upload-nexus:
     specifiers:
+      '@whatwg-node/fetch': ^0.5.3
       graphql: 16.6.0
       graphql-yoga: 3.1.2
       nexus: ^1.3.0
@@ -363,6 +374,7 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
       nexus: 1.3.0_graphql@16.6.0
     devDependencies:
+      '@whatwg-node/fetch': 0.5.3
       ts-node: 10.9.1_typescript@4.9.4
       typescript: 4.9.4
 
@@ -370,6 +382,7 @@ importers:
     specifiers:
       '@envelop/generic-auth': 5.0.4
       '@types/node': 18.11.11
+      '@whatwg-node/fetch': ^0.5.3
       cross-env: 7.0.3
       graphql: 16.6.0
       graphql-yoga: 3.1.2
@@ -382,6 +395,7 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@types/node': 18.11.11
+      '@whatwg-node/fetch': 0.5.3
       cross-env: 7.0.3
       ts-node: 10.9.1_bspv7bpieoza2i5ctiw2ofswem
       ts-node-dev: 2.0.0_bspv7bpieoza2i5ctiw2ofswem
@@ -651,6 +665,7 @@ importers:
 
   examples/service-worker:
     specifiers:
+      '@whatwg-node/fetch': ^0.5.3
       graphql: 16.6.0
       graphql-yoga: 3.1.2
       typescript: 4.9.4
@@ -659,6 +674,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
+      '@whatwg-node/fetch': 0.5.3
       typescript: 4.9.4
       wrangler: 2.6.1
 
@@ -745,6 +761,7 @@ importers:
       '@apollo/client': 3.7.2
       '@graphql-tools/executor-apollo-link': 0.0.3
       '@graphql-tools/executor-http': 0.0.4
+      '@whatwg-node/fetch': ^0.5.3
       tslib: ^2.3.1
     dependencies:
       '@graphql-tools/executor-apollo-link': 0.0.3_@apollo+client@3.7.2
@@ -752,6 +769,7 @@ importers:
       tslib: 2.4.0
     devDependencies:
       '@apollo/client': 3.7.2
+      '@whatwg-node/fetch': 0.5.3
     publishDirectory: dist
 
   packages/client/urql-exchange:
@@ -759,6 +777,7 @@ importers:
       '@graphql-tools/executor-http': 0.0.4
       '@graphql-tools/executor-urql-exchange': 0.0.3
       '@urql/core': 3.0.5
+      '@whatwg-node/fetch': ^0.5.3
       tslib: ^2.4.0
       wonka: 6.1.2
     dependencies:
@@ -767,6 +786,7 @@ importers:
       tslib: 2.4.0
     devDependencies:
       '@urql/core': 3.0.5
+      '@whatwg-node/fetch': 0.5.3
       wonka: 6.1.2
     publishDirectory: dist
 
