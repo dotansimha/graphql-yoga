@@ -25,6 +25,7 @@ export function useGraphQLSSE(
   options: GraphQLSSEPluginOptions = {},
 ): Plugin<YogaInitialContext> {
   const { endpoint = '/graphql/stream', ...handlerOptions } = options
+  const ctxForReq = new WeakMap<Request, any>()
   let handler!: (request: Request) => Promise<Response>
   return {
     onYogaInit({ yoga }) {
@@ -33,7 +34,7 @@ export function useGraphQLSSE(
           ...handlerOptions,
           async onSubscribe(req, params) {
             const enveloped = yoga.getEnveloped({
-              // TODO: serverContext
+              ...ctxForReq.get(req.raw),
               request: req.raw,
               params,
             })
@@ -65,9 +66,10 @@ export function useGraphQLSSE(
         yoga.fetchAPI,
       )
     },
-    async onRequest({ request, endResponse }) {
+    async onRequest({ request, endResponse, serverContext }) {
       const [path, _search] = request.url.split('?')
       if (path.endsWith(endpoint)) {
+        ctxForReq.set(request, serverContext)
         endResponse(await handler(request))
       }
     },
