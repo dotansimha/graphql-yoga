@@ -22,9 +22,10 @@ function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
   return operationIdByRequest.get(request)
 }
 
-const cacheKeyFactoryForEnvelop: BuildResponseCacheKeyFunction = async function cacheKeyFactoryForEnvelop({ sessionId }) {
-  return sessionId!;
-}
+const cacheKeyFactoryForEnvelop: BuildResponseCacheKeyFunction =
+  async function cacheKeyFactoryForEnvelop({ sessionId }) {
+    return sessionId!
+  }
 
 export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
@@ -46,15 +47,15 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       if (enabled(request)) {
         const operationId = request.headers.get('If-None-Match')
         if (operationId) {
-          const cachedResponse = await cache.get(operationId);
+          const cachedResponse = await cache.get(operationId)
           if (cachedResponse) {
             const okResponse = new fetchAPI.Response(null, {
               status: 304,
               headers: {
-                'ETag': operationId,
+                ETag: operationId,
               },
-            });
-            endResponse(okResponse);
+            })
+            endResponse(okResponse)
           }
         }
       }
@@ -90,10 +91,10 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       if (enabled(request)) {
         const operationId = operationIdByRequest.get(request)
         if (operationId) {
-          response.headers.set('ETag', operationId);
+          response.headers.set('ETag', operationId)
         }
       }
-    }
+    },
   }
 }
 
