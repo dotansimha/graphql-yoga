@@ -7,6 +7,68 @@ const schema = createSchema({
       _: String
     }
   `,
+  resolvers: {
+    Query: {
+      _: () => 'DUMMY',
+    },
+  },
+})
+
+it('should not hit GraphQL pipeline if cached', async () => {
+  const onEnveloped = jest.fn()
+  const yoga = createYoga({
+    schema,
+    plugins: [
+      useResponseCache({
+        session: () => null,
+        includeExtensionMetadata: true,
+      }),
+      {
+        onEnveloped,
+      },
+    ],
+  })
+  const response = await yoga.fetch('http://localhost:3000/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ query: '{ _ }' }),
+  })
+
+  expect(response.status).toEqual(200)
+  const body = await response.json()
+  expect(body).toEqual({
+    data: {
+      _: 'DUMMY',
+    },
+    extensions: {
+      responseCache: {
+        didCache: true,
+        hit: false,
+        ttl: null,
+      },
+    },
+  })
+  const response2 = await yoga.fetch('http://localhost:3000/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ query: '{ _ }' }),
+  })
+  const body2 = await response2.json()
+  expect(body2).toEqual({
+    data: {
+      _: 'DUMMY',
+    },
+    extensions: {
+      responseCache: {
+        hit: true,
+      },
+    },
+  })
+  expect(onEnveloped).toHaveBeenCalledTimes(1)
 })
 
 it('cache a query operation', async () => {
