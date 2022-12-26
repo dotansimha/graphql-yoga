@@ -1,6 +1,7 @@
 module.exports = {
   extends: ['@theguild'],
   parserOptions: {
+    tsconfigRootDir: __dirname,
     project: './tsconfig.json',
   },
   overrides: [
@@ -13,6 +14,7 @@ module.exports = {
     {
       files: ['website/**'],
       parserOptions: {
+        tsconfigRootDir: __dirname,
         project: './website/tsconfig.json',
       },
       rules: { 'import/no-default-export': 'off' },
