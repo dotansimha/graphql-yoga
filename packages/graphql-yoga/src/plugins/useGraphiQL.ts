@@ -107,7 +107,7 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
         config.graphqlEndpoint === url.pathname
       ) {
         logger.debug(`Rendering GraphiQL`)
-        const graphiqlOptions = graphiqlOptionsFactory(
+        const graphiqlOptions = await graphiqlOptionsFactory(
           request,
           serverContext as TServerContext,
         )
