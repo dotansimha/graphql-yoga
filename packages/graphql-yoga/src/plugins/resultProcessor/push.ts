@@ -14,7 +14,6 @@ export function processPushResult(
   const headersInit = {
     'Content-Type': 'text/event-stream',
     Connection: 'keep-alive',
-    'Keep-Alive': `timeout=${timeoutInSeconds}`,
     'Cache-Control': 'no-cache',
     'Content-Encoding': 'none',
   }
