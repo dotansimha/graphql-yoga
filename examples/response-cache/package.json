@@ -1,0 +1,27 @@
+{
+  "name": "example-response-cache",
+  "version": "0.1.11",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
+    "start": "ts-node src/main.ts",
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "18.11.11",
+    "cross-env": "7.0.3",
+    "ts-node": "10.9.1",
+    "ts-node-dev": "2.0.0",
+    "typescript": "4.9.4"
+  },
+  "dependencies": {
+    "graphql-yoga": "3.1.2",
+    "@graphql-yoga/plugin-response-cache": "1.1.2",
+    "graphql": "16.6.0"
+  },
+  "module": "commonjs"
+}

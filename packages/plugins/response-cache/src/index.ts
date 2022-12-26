@@ -22,6 +22,10 @@ function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
   return operationIdByRequest.get(request)
 }
 
+const cacheKeyFactoryForEnvelop: BuildResponseCacheKeyFunction = async function cacheKeyFactoryForEnvelop({ sessionId }) {
+  return sessionId!;
+}
+
 export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey
@@ -34,8 +38,26 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           ...options,
           cache,
           session: sessionFactoryForEnvelop,
+          buildResponseCacheKey: cacheKeyFactoryForEnvelop,
         }),
       )
+    },
+    async onRequest({ request, fetchAPI, endResponse }) {
+      if (enabled(request)) {
+        const operationId = request.headers.get('If-None-Match')
+        if (operationId) {
+          const cachedResponse = await cache.get(operationId);
+          if (cachedResponse) {
+            const okResponse = new fetchAPI.Response(null, {
+              status: 304,
+              headers: {
+                'ETag': operationId,
+              },
+            });
+            endResponse(okResponse);
+          }
+        }
+      }
     },
     async onParams({ params, request, setResult }) {
       if (enabled(request)) {
@@ -45,6 +67,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           operationName: params.operationName,
           sessionId: await options.session(request),
         })
+        operationIdByRequest.set(request, operationId)
         const cachedResponse = await cache.get(operationId)
         if (cachedResponse) {
           if (options.includeExtensionMetadata) {
@@ -61,9 +84,16 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           }
           return
         }
-        operationIdByRequest.set(request, operationId)
       }
     },
+    onResponse({ response, request }) {
+      if (enabled(request)) {
+        const operationId = operationIdByRequest.get(request)
+        if (operationId) {
+          response.headers.set('ETag', operationId);
+        }
+      }
+    }
   }
 }
 
