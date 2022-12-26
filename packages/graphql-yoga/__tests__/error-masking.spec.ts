@@ -1,8 +1,10 @@
 import { inspect } from '@graphql-tools/utils'
-import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
+
+import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
 
 describe('error masking', () => {
   function createTestSchema() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return createSchema<any>({
       typeDefs: /* GraphQL */ `
         type Query {

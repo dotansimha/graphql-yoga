@@ -1,10 +1,9 @@
-import { Client, createClient } from '@urql/core'
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { yogaExchange } from '@graphql-yoga/urql-exchange'
+import { Client, createClient } from '@urql/core'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { pipe, toObservable } from 'wonka'
-import { createYoga, createSchema } from 'graphql-yoga'
-import { File } from '@whatwg-node/fetch'
-import { createServer, Server } from 'http'
-import { AddressInfo } from 'net'
 
 describe.skip('URQL Yoga Exchange', () => {
   const endpoint = '/graphql'
@@ -133,7 +132,9 @@ describe.skip('URQL Yoga Exchange', () => {
     `
     const result = await client
       .mutation(query, {
-        file: new File(['Hello World'], 'file.txt', { type: 'text/plain' }),
+        file: new yoga.fetchAPI.File(['Hello World'], 'file.txt', {
+          type: 'text/plain',
+        }),
       })
       .toPromise()
     expect(result.error).toBeFalsy()

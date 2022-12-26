@@ -1,5 +1,8 @@
 module.exports = {
   extends: ['@theguild'],
+  parserOptions: {
+    project: './tsconfig.json',
+  },
   overrides: [
     {
       files: ['packages/graphql-yoga/src/plugins/**/*.ts'],
@@ -9,6 +12,9 @@ module.exports = {
     },
     {
       files: ['website/**'],
+      parserOptions: {
+        project: './website/tsconfig.json',
+      },
       rules: { 'import/no-default-export': 'off' },
     },
     {
@@ -53,7 +59,14 @@ module.exports = {
       rules: {
         'import/no-extraneous-dependencies': [
           'error',
-          { devDependencies: ['**/*.test.ts', '**/*.spec.ts'] },
+          {
+            devDependencies: [
+              '**/*.test.ts',
+              '**/*.spec.ts',
+              '**/scripts/*.js',
+              '**/vite.config.ts',
+            ],
+          },
         ],
         'no-restricted-imports': [
           'error',

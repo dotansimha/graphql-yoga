@@ -1,24 +1,23 @@
 import { ReactElement, ReactNode } from 'react'
+import { useRouter } from 'next/router'
+import { Anchor, Image } from '@theguild/components'
 import clsx from 'clsx'
-import { FiGithub, FiUpload } from 'react-icons/fi'
-import { SiApollographql } from 'react-icons/si'
-import { TbPlugConnected } from 'react-icons/tb'
+import ecosystemImage from 'public/assets/ecosystem.svg'
+import httpImage from 'public/assets/http.svg'
+import subscriptionsImage from 'public/assets/subscriptions.svg'
 import { AiFillAppstore } from 'react-icons/ai'
-import { GiHealthNormal } from 'react-icons/gi'
-import { GrGraphQl } from 'react-icons/gr'
 import {
   BsCheckCircle,
   BsFillPlayFill,
   BsFillSafeFill,
   BsFillStopwatchFill,
 } from 'react-icons/bs'
+import { FiGithub, FiUpload } from 'react-icons/fi'
+import { GiHealthNormal } from 'react-icons/gi'
+import { GrGraphQl } from 'react-icons/gr'
 import { MdCached, MdError } from 'react-icons/md'
-import { Anchor, Image } from '@theguild/components'
-
-import httpImage from 'public/assets/http.svg'
-import subscriptionsImage from 'public/assets/subscriptions.svg'
-import ecosystemImage from 'public/assets/ecosystem.svg'
-import { useRouter } from 'next/router'
+import { SiApollographql } from 'react-icons/si'
+import { TbPlugConnected } from 'react-icons/tb'
 
 const gradients: [string, string][] = [
   ['#8b5cf6', '#6d28d9'], // violet
@@ -468,6 +467,7 @@ function FeatureHighlights({
           <Comp
             key={title}
             className="flex flex-row md:flex-col lg:flex-row flex-1 gap-4"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             {...(link && ({ href: link } as any))}
           >
             {icon && (

@@ -1,3 +1,5 @@
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import {
   ExecutionResult,
   GraphQLInt,
@@ -6,11 +8,10 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { createYoga, Plugin, Repeater } from 'graphql-yoga'
 import { Push } from '@repeaterjs/repeater'
-import { createServer, Server } from 'http'
 import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
-import { AddressInfo } from 'net'
+
+import { createYoga, Plugin, Repeater } from '../src'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
@@ -18,6 +19,7 @@ describe('incremental delivery', () => {
 
     const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
+      // eslint-disable-next-line @typescript-eslint/require-await
       async next() {
         counter++
         return {
@@ -33,7 +35,7 @@ describe('incremental delivery', () => {
     }
     const plugin: Plugin = {
       onExecute(ctx) {
-        ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as any)
+        ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as unknown)
       },
       /* skip validation :) */
       onValidate(ctx) {
@@ -133,7 +135,7 @@ describe('incremental delivery: node-fetch', () => {
               type: GraphQLFile,
             },
           },
-          resolve: async (_, { file }) => file,
+          resolve: (_, { file }) => file,
         },
         parseFileStream: {
           type: GraphQLString,

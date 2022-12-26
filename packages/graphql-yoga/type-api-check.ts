@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
+import { ClientRequest } from 'node:http'
 import { IResolvers } from '@graphql-tools/utils'
-import { ClientRequest } from 'http'
-
-import { createYoga, createSchema, YogaInitialContext } from './src/index.js'
 import type { GraphQLSchema } from 'graphql'
+
+import { createSchema, createYoga, YogaInitialContext } from './src/index.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const schema: GraphQLSchema = null as any

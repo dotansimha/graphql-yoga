@@ -1,4 +1,4 @@
-import { Kind, ASTVisitor, ValidationContext } from 'graphql'
+import { ASTVisitor, Kind, ValidationContext } from 'graphql'
 import {
   createGraphQLError,
   GraphQLDeferDirective,

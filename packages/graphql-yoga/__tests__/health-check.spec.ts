@@ -1,4 +1,4 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga } from '../src/index.js'
 
 describe('health check', () => {
   it('return 200 status code for health check endpoint', async () => {

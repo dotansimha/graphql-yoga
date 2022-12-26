@@ -13,7 +13,7 @@ export function useHealthCheck({
   endpoint = '/health',
 }: HealthCheckPluginOptions = {}): Plugin {
   return {
-    async onRequest({ endResponse, fetchAPI, url }) {
+    onRequest({ endResponse, fetchAPI, url }) {
       const { pathname: requestPath } = url
       if (requestPath === endpoint) {
         logger.debug('Responding Health Check')

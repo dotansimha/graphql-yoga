@@ -1,8 +1,9 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import { createServer } from 'http'
-import { fetch } from '@whatwg-node/fetch'
-import { AddressInfo } from 'net'
+import { createServer } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { ExecutionResult } from 'graphql'
+import { fetch } from '@whatwg-node/fetch'
+
+import { createSchema, createYoga } from '../src'
 
 describe('subscription', () => {
   test('Subscription is closed properly', async () => {
@@ -10,6 +11,7 @@ describe('subscription', () => {
 
     const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
+      // eslint-disable-next-line @typescript-eslint/require-await
       async next() {
         counter++
         return {

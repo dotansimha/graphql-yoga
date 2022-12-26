@@ -1,5 +1,5 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `

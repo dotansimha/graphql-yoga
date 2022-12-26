@@ -1,22 +1,43 @@
-import { ExecutionResult, parse, validate, specifiedRules } from 'graphql'
-import { normalizedExecutor } from '@graphql-tools/executor'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
 import {
-  GetEnvelopedFn,
   envelop,
+  GetEnvelopedFn,
+  PromiseOrValue,
   useEngine,
   useExtendContext,
-  PromiseOrValue,
   useMaskedErrors,
 } from '@envelop/core'
-import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
+import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
+import { normalizedExecutor } from '@graphql-tools/executor'
+import { createFetch } from '@whatwg-node/fetch'
+import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
+
+import { handleError } from './error.js'
+import { createLogger, LogLevel, YogaLogger } from './logger.js'
+import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
 import {
-  YogaInitialContext,
-  FetchAPI,
-  GraphQLParams,
-  YogaMaskedErrorOpts,
-  MaskError,
-} from './types.js'
+  isPOSTFormUrlEncodedRequest,
+  parsePOSTFormUrlEncodedRequest,
+} from './plugins/requestParser/POSTFormUrlEncoded.js'
+import {
+  isPOSTGraphQLStringRequest,
+  parsePOSTGraphQLStringRequest,
+} from './plugins/requestParser/POSTGraphQLString.js'
+import {
+  isPOSTJsonRequest,
+  parsePOSTJsonRequest,
+} from './plugins/requestParser/POSTJson.js'
+import {
+  isPOSTMultipartRequest,
+  parsePOSTMultipartRequest,
+} from './plugins/requestParser/POSTMultipart.js'
+import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
+import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
+import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
+import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
+import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
 import {
   OnParamsHook,
   OnRequestHook,
@@ -28,48 +49,29 @@ import {
   RequestParser,
   ResultProcessorInput,
 } from './plugins/types.js'
-import { createFetch } from '@whatwg-node/fetch'
-import { ServerAdapter, createServerAdapter } from '@whatwg-node/server'
-import {
-  processRequest as processGraphQLParams,
-  processResult,
-} from './process-request.js'
-import { createLogger, LogLevel, YogaLogger } from './logger.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
-import { useHealthCheck } from './plugins/useHealthCheck.js'
 import {
   GraphiQLOptions,
   GraphiQLOptionsOrFactory,
   useGraphiQL,
 } from './plugins/useGraphiQL.js'
+import { useHealthCheck } from './plugins/useHealthCheck.js'
 import { useRequestParser } from './plugins/useRequestParser.js'
-import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
-import {
-  isPOSTJsonRequest,
-  parsePOSTJsonRequest,
-} from './plugins/requestParser/POSTJson.js'
-import {
-  isPOSTMultipartRequest,
-  parsePOSTMultipartRequest,
-} from './plugins/requestParser/POSTMultipart.js'
-import {
-  isPOSTGraphQLStringRequest,
-  parsePOSTGraphQLStringRequest,
-} from './plugins/requestParser/POSTGraphQLString.js'
 import { useResultProcessors } from './plugins/useResultProcessor.js'
-import {
-  isPOSTFormUrlEncodedRequest,
-  parsePOSTFormUrlEncodedRequest,
-} from './plugins/requestParser/POSTFormUrlEncoded.js'
-import { handleError } from './error.js'
-import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
-import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
-import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
-import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
-import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
-import { yogaDefaultFormatError } from './utils/yoga-default-format-error.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
-import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
+import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
+import {
+  processRequest as processGraphQLParams,
+  processResult,
+} from './process-request.js'
+import {
+  FetchAPI,
+  GraphQLParams,
+  MaskError,
+  YogaInitialContext,
+  YogaMaskedErrorOpts,
+} from './types.js'
+import { yogaDefaultFormatError } from './utils/yoga-default-format-error.js'
 
 /**
  * Configuration options for the server
@@ -281,7 +283,7 @@ export class YogaServer<
         specifiedRules,
       }),
       // Use the schema provided by the user
-      !!options?.schema && useSchema(options.schema),
+      Boolean(options?.schema) && useSchema(options!.schema),
 
       // Performance things
       options?.parserCache !== false &&
@@ -521,9 +523,9 @@ export class YogaServer<
       this.logger.debug(`Parsing request to extract GraphQL parameters`)
 
       if (!requestParser) {
-        return new this.fetchAPI.Response('Request is not valid', {
-          status: 400,
-          statusText: 'Bad Request',
+        return new this.fetchAPI.Response(null, {
+          status: 415,
+          statusText: 'Unsupported Media Type',
         })
       }
 

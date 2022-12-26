@@ -1,9 +1,9 @@
 import {
-  usePrometheus as useEnvelopPrometheus,
   PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
+  usePrometheus as useEnvelopPrometheus,
 } from '@envelop/prometheus'
-import { Histogram, register as defaultRegistry } from 'prom-client'
 import { Plugin } from 'graphql-yoga'
+import { Histogram, register as defaultRegistry } from 'prom-client'
 
 export interface PrometheusTracingPluginConfig
   extends EnvelopPrometheusTracingPluginConfig {
@@ -23,9 +23,7 @@ function headersToObj(headers: Headers) {
   return obj
 }
 
-export function usePrometheus(
-  options: PrometheusTracingPluginConfig,
-): Plugin<any> {
+export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics'
   const registry = options.registry || defaultRegistry
 
@@ -47,7 +45,7 @@ export function usePrometheus(
 
   return {
     onPluginInit({ addPlugin }) {
-      addPlugin(useEnvelopPrometheus({ ...options, registry }))
+      addPlugin(useEnvelopPrometheus({ ...options, registry }) as Plugin)
     },
     async onRequest({ request, url, fetchAPI, endResponse }) {
       startByRequest.set(request, Date.now())

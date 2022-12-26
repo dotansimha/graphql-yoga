@@ -1,8 +1,8 @@
 import {
+  createGraphQLError,
   GraphQLParams,
   Plugin,
   PromiseOrValue,
-  createGraphQLError,
 } from 'graphql-yoga'
 
 export type ExtractPersistedOperationId = (
