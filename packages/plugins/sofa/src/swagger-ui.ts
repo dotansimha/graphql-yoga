@@ -1,4 +1,5 @@
 import { memoize1 } from '@graphql-tools/utils'
+
 import { OpenAPIInstance } from './types.js'
 
 export const getSwaggerUIHTMLForSofa = memoize1(

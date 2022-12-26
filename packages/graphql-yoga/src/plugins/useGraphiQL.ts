@@ -1,10 +1,13 @@
 import { PromiseOrValue } from '@envelop/core'
+
+import graphiqlHTML from '../graphiql-html.js'
 import { YogaLogger } from '../logger.js'
 import { Plugin } from './types.js'
-import graphiqlHTML from '../graphiql-html.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
-  return method === 'GET' && !!headers?.get('accept')?.includes('text/html')
+  return (
+    method === 'GET' && Boolean(headers?.get('accept')?.includes('text/html'))
+  )
 }
 
 export type GraphiQLOptions = {
@@ -82,6 +85,7 @@ export interface GraphiQLPluginConfig<TServerContext> {
   logger?: YogaLogger
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useGraphiQL<TServerContext extends Record<string, any>>(
   config: GraphiQLPluginConfig<TServerContext>,
   // eslint-disable-next-line @typescript-eslint/ban-types

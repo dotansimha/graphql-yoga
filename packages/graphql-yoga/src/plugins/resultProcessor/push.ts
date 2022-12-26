@@ -1,5 +1,6 @@
-import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
+import { isAsyncIterable } from '@envelop/core'
+
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'

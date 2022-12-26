@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
-import { jest } from '@jest/globals'
 import { GraphQLError } from 'graphql'
+import { jest } from '@jest/globals'
+
 import {
-  createYoga,
+  createGraphQLError,
   createLogger,
   createSchema,
-  createGraphQLError,
+  createYoga,
 } from '../src'
 
 describe('logging', () => {
@@ -31,7 +32,7 @@ describe('logging', () => {
       jest.spyOn(console, 'debug')
       const logger = createLogger()
       logger.debug('TEST')
-      // eslint-disable-next-line no-console
+
       expect(console.debug).not.toHaveBeenCalled()
     })
     it(`prints debug messages if DEBUG env var is set`, () => {
@@ -42,7 +43,7 @@ describe('logging', () => {
         jest.spyOn(console, 'debug').mockImplementationOnce(() => {})
         const logger = createLogger()
         logger.debug('TEST')
-        // eslint-disable-next-line no-console
+
         expect(console.debug).toHaveBeenCalled()
       } finally {
         process.env.DEBUG = originalValue

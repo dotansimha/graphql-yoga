@@ -1,4 +1,4 @@
-import { Plugin, PromiseOrValue, createGraphQLError } from 'graphql-yoga'
+import { createGraphQLError, Plugin, PromiseOrValue } from 'graphql-yoga'
 import { lru } from 'tiny-lru'
 
 export async function hashSHA256(
@@ -27,7 +27,7 @@ export interface APQStoreOptions {
 export function createInMemoryAPQStore(
   options: APQStoreOptions = {},
 ): APQStore {
-  return lru(options.max ?? 1000, options.ttl ?? 36000)
+  return lru(options.max ?? 1000, options.ttl ?? 36_000)
 }
 
 export interface APQOptions {
@@ -40,6 +40,7 @@ export interface APQOptions {
 
 export interface APQStore {
   get(key: string): PromiseOrValue<string | null | undefined>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   set(key: string, query: string): PromiseOrValue<any>
 }
 
@@ -48,23 +49,27 @@ export interface APQExtension {
   sha256Hash: string
 }
 
-function decodeAPQExtension(
-  input: Record<string, any> | null | undefined,
-): null | APQExtension {
-  if (
+function isAPQExtension(input: unknown): input is APQExtension {
+  return (
     input != null &&
     typeof input === 'object' &&
+    'version' in input &&
     input?.version === 1 &&
+    'sha256Hash' in input &&
     typeof input?.sha256Hash === 'string'
-  ) {
+  )
+}
+
+function decodeAPQExtension(
+  input: Record<string, unknown> | null | undefined,
+): null | APQExtension {
+  if (isAPQExtension(input)) {
     return input as APQExtension
   }
   return null
 }
 
-export function useAPQ<TPluginContext extends Record<string, any>>(
-  options: APQOptions = {},
-): Plugin<TPluginContext> {
+export function useAPQ(options: APQOptions = {}): Plugin {
   const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options
 
   return {

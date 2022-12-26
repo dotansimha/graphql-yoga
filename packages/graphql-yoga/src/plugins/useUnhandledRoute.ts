@@ -1,5 +1,5 @@
-import type { Plugin } from './types.js'
 import landingPageBody from '../landing-page-html.js'
+import type { Plugin } from './types.js'
 
 export function useUnhandledRoute(args: {
   graphqlEndpoint: string
@@ -12,7 +12,7 @@ export function useUnhandledRoute(args: {
         if (
           args.showLandingPage === true &&
           request.method === 'GET' &&
-          !!request.headers?.get('accept')?.includes('text/html')
+          Boolean(request.headers?.get('accept')?.includes('text/html'))
         ) {
           endResponse(
             new fetchAPI.Response(

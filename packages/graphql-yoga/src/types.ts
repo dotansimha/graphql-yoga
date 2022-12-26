@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PromiseOrValue } from '@envelop/core'
 import type { createFetch } from '@whatwg-node/fetch'
 import type { GraphQLSchema } from 'graphql'

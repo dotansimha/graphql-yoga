@@ -1,4 +1,4 @@
-import { createSchema, createYoga, Repeater } from 'graphql-yoga'
+import { createSchema, createYoga, Repeater } from '../src/index.js'
 
 function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
   return new Repeater<TType>(async (push, end) => {
@@ -29,6 +29,7 @@ function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
 
 describe('Subscription', () => {
   test('eventStream', async () => {
+    // eslint-disable-next-line @typescript-eslint/require-await
     const source = (async function* foo() {
       yield { hi: 'hi' }
       yield { hi: 'hello' }

@@ -1,11 +1,12 @@
-import * as fs from 'fs'
-import * as crypto from 'crypto'
-import * as path from 'path'
-import * as os from 'os'
-import { createServer } from 'http'
-import { createYoga, createSchema } from 'graphql-yoga'
+import * as crypto from 'node:crypto'
+import * as fs from 'node:fs'
+import { createServer } from 'node:http'
+import { AddressInfo } from 'node:net'
+import * as os from 'node:os'
+import * as path from 'node:path'
 import { fetch, File, FormData } from '@whatwg-node/fetch'
-import { AddressInfo } from 'net'
+
+import { createSchema, createYoga } from '../src'
 
 function md5File(path: string) {
   return new Promise((resolve, reject) => {

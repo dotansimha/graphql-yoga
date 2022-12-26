@@ -25,6 +25,6 @@ export function isContentTypeMatch(
 
   return (
     contentType === expectedContentType ||
-    !!contentType?.startsWith(`${expectedContentType};`)
+    Boolean(contentType?.startsWith(`${expectedContentType};`))
   )
 }

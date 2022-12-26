@@ -1,5 +1,5 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createInMemoryAPQStore, useAPQ } from '@graphql-yoga/plugin-apq'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `

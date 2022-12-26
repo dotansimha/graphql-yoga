@@ -1,6 +1,8 @@
-import { createYoga, createSchema, createGraphQLError } from 'graphql-yoga'
-import { useApolloInlineTrace } from '../src/index.js'
+/* eslint-disable @typescript-eslint/require-await */
 import { Trace } from 'apollo-reporting-protobuf'
+import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
+
+import { useApolloInlineTrace } from '../src/index.js'
 
 describe('Inline Trace', () => {
   const schema = createSchema({

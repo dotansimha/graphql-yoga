@@ -1,4 +1,5 @@
 import { PromiseOrValue } from '@envelop/core'
+
 import { Plugin } from './types.js'
 
 export type CORSOptions =
@@ -124,6 +125,7 @@ async function getCORSResponseHeaders<TServerContext>(
   return getCORSHeadersByRequestAndOptions(request, corsOptions)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useCORS<TServerContext extends Record<string, any>>(
   options?: CORSPluginOptions<TServerContext>,
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -142,7 +144,7 @@ export function useCORS<TServerContext extends Record<string, any>>(
     }
   }
   return {
-    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
+    onRequest({ request, fetchAPI, endResponse }) {
       if (request.method.toUpperCase() === 'OPTIONS') {
         const response = new fetchAPI.Response(null, {
           status: 204,
@@ -157,6 +159,7 @@ export function useCORS<TServerContext extends Record<string, any>>(
       }
     },
     async onResponse({ request, serverContext, response }) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const headers = await getCORSResponseHeaders<any>(
         request,
         corsOptionsFactory,

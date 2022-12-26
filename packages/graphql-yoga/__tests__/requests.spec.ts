@@ -1,4 +1,4 @@
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from '../src'
 
 describe('requests', () => {
   const schema = createSchema({
@@ -345,7 +345,7 @@ describe('requests', () => {
       body: JSON.stringify({ query: '{ ping }' }),
     })
 
-    expect(response.ok).toBeTruthy()
+    expect(response.status).toBe(200)
     const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       {
@@ -375,5 +375,18 @@ describe('requests', () => {
         },
       }
     `)
+  })
+
+  it('should return 415 unsupported media type when content-type is not supported', async () => {
+    const response = await yoga.fetch('http://yoga/test-graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/xml',
+      },
+      body: `<query>{ ping }</query>`,
+    })
+    expect(response.status).toBe(415)
+    const body = await response.text()
+    expect(body).toBeFalsy()
   })
 })

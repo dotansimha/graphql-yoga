@@ -1,23 +1,24 @@
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
-import { CORSOptions, createYoga, Repeater } from '../src/index.js'
-import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
-import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer'
-import { createServer, Server } from 'http'
+import 'json-bigint-patch'
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import {
+  GraphQLBoolean,
+  GraphQLFloat,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-  GraphQLInt,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLFloat,
-  GraphQLNonNull,
 } from 'graphql'
-import { GraphQLBigInt } from 'graphql-scalars'
-import 'json-bigint-patch'
-import { AddressInfo } from 'net'
+import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import { GraphQLBigInt } from 'graphql-scalars'
+import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer'
+
+import { CORSOptions, createYoga, Repeater } from '../src/index.js'
 
 let resolveOnReturn: VoidFunction
 const timeouts = new Set<NodeJS.Timeout>()
@@ -122,13 +123,14 @@ export function createTestSchema() {
         },
         error: {
           type: GraphQLBoolean,
-          // eslint-disable-next-line require-yield
+          // eslint-disable-next-line
           async *subscribe() {
             throw new Error('This is not okay')
           },
         },
         eventEmitted: {
           type: GraphQLFloat,
+          // eslint-disable-next-line
           async *subscribe() {
             yield { eventEmitted: Date.now() }
           },
@@ -220,7 +222,7 @@ describe('browser', () => {
     await page.waitForFunction(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      () => !!window.g.resultComponent.viewer.getValue(),
+      () => Boolean(window.g.resultComponent.viewer.getValue()),
     )
     const resultContents = await page.evaluate(() => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -344,7 +346,7 @@ describe('browser', () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.g.resultComponent.viewer.getValue(),
-            !!window.document.querySelector(stopButtonSelector),
+            Boolean(window.document.querySelector(stopButtonSelector)),
           ]
         },
         stopButtonSelector,
@@ -373,7 +375,7 @@ describe('browser', () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.g.resultComponent.viewer.getValue(),
-            !!window.document.querySelector(stopButtonSelector),
+            Boolean(window.document.querySelector(stopButtonSelector)),
           ]
         },
         stopButtonSelector,
@@ -391,7 +393,7 @@ describe('browser', () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.g.resultComponent.viewer.getValue(),
-            !!window.document.querySelector(playButtonSelector),
+            Boolean(window.document.querySelector(playButtonSelector)),
           ]
         },
         playButtonSelector,
@@ -451,7 +453,7 @@ describe('browser', () => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(stopButtonSelector),
+          Boolean(window.document.querySelector(stopButtonSelector)),
         ]
       }, stopButtonSelector)
       const resultJson = JSON.parse(resultContents)
@@ -479,7 +481,7 @@ describe('browser', () => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(playButtonSelector),
+          Boolean(window.document.querySelector(playButtonSelector)),
         ]
       }, playButtonSelector)
       const resultJson1 = JSON.parse(resultContents1)

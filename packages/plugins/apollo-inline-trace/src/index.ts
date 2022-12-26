@@ -1,13 +1,13 @@
+import { GraphQLError, ResponsePath } from 'graphql'
+import { useOnResolve } from '@envelop/on-resolve'
+import { btoa } from '@whatwg-node/fetch'
+import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
 import {
+  createGraphQLError,
   isAsyncIterable,
   Plugin,
   YogaInitialContext,
-  createGraphQLError,
 } from 'graphql-yoga'
-import { GraphQLError, ResponsePath } from 'graphql'
-import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
-import { btoa } from '@whatwg-node/fetch'
-import { useOnResolve } from '@envelop/on-resolve'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]

@@ -1,5 +1,5 @@
 import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 describe('disable introspection', () => {
   test('can disable introspection', async () => {

@@ -1,11 +1,12 @@
-import { getOperationAST, ExecutionArgs } from 'graphql'
-import { FetchAPI, GraphQLParams } from './types.js'
+import { ExecutionArgs, getOperationAST } from 'graphql'
+import { GetEnvelopedFn } from '@envelop/core'
+
 import {
   OnResultProcess,
   ResultProcessor,
   ResultProcessorInput,
 } from './plugins/types.js'
-import { GetEnvelopedFn } from '@envelop/core'
+import { FetchAPI, GraphQLParams } from './types.js'
 
 export async function processResult({
   request,

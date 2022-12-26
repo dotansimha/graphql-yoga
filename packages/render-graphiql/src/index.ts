@@ -1,5 +1,6 @@
 import type { GraphiQLOptions } from 'graphql-yoga'
-import { js, css } from './graphiql.js'
+
+import { css, js } from './graphiql.js'
 
 export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
   <!DOCTYPE html>

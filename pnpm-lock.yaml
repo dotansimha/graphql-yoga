@@ -769,6 +769,7 @@ importers:
       '@apollo/client': 3.7.2
       '@graphql-tools/executor-apollo-link': 0.0.3
       '@graphql-tools/executor-http': 0.0.4
+      graphql-yoga: 3.1.2
       tslib: ^2.3.1
     dependencies:
       '@graphql-tools/executor-apollo-link': 0.0.3_@apollo+client@3.7.2
@@ -776,6 +777,7 @@ importers:
       tslib: 2.4.0
     devDependencies:
       '@apollo/client': 3.7.2
+      graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/client/urql-exchange:
@@ -783,6 +785,7 @@ importers:
       '@graphql-tools/executor-http': 0.0.4
       '@graphql-tools/executor-urql-exchange': 0.0.3
       '@urql/core': 3.0.5
+      graphql-yoga: 3.1.2
       tslib: ^2.4.0
       wonka: 6.1.2
     dependencies:
@@ -791,6 +794,7 @@ importers:
       tslib: 2.4.0
     devDependencies:
       '@urql/core': 3.0.5
+      graphql-yoga: link:../../graphql-yoga
       wonka: 6.1.2
     publishDirectory: dist
 
@@ -874,6 +878,7 @@ importers:
       '@graphql-tools/executor': 0.0.9
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.0.1
+      '@graphql-yoga/render-graphiql': 3.1.2
       '@graphql-yoga/subscription': ^3.0.0
       '@jest/globals': ^29.2.1
       '@n1ru4l/in-memory-live-query-store': 0.10.0
@@ -904,6 +909,7 @@ importers:
     devDependencies:
       '@envelop/disable-introspection': 4.0.4_a6sekiasy2tqr6d5gj7n2wtjli
       '@envelop/live-query': 5.0.4_a6sekiasy2tqr6d5gj7n2wtjli
+      '@graphql-yoga/render-graphiql': link:../render-graphiql
       '@jest/globals': 29.2.1
       '@n1ru4l/in-memory-live-query-store': 0.10.0_graphql@16.6.0
       '@repeaterjs/repeater': 3.0.4
@@ -1009,6 +1015,7 @@ importers:
 
   packages/subscription:
     specifiers:
+      '@graphql-yoga/redis-event-target': 1.0.0
       '@graphql-yoga/typed-event-target': ^1.0.0
       '@repeaterjs/repeater': ^3.0.4
       '@types/ioredis-mock': 8.2.0
@@ -1021,6 +1028,7 @@ importers:
       '@whatwg-node/events': 0.0.2
       tslib: 2.4.0
     devDependencies:
+      '@graphql-yoga/redis-event-target': link:../event-target/redis-event-target
       '@types/ioredis-mock': 8.2.0
       ioredis-mock: 8.2.2
     publishDirectory: dist

@@ -1,5 +1,5 @@
-import type { Plugin, PromiseOrValue } from 'graphql-yoga'
 import { NoSchemaIntrospectionCustomRule } from 'graphql'
+import type { Plugin, PromiseOrValue } from 'graphql-yoga'
 
 type UseDisableIntrospectionArgs = {
   isDisabled?: (request: Request) => PromiseOrValue<boolean>

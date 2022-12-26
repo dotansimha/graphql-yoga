@@ -1,9 +1,10 @@
-import { createSchema, createYoga } from '../src/index.js'
-import {
-  typeDefs as scalarsTypeDefs,
-  resolvers as scalarsResolvers,
-} from 'graphql-scalars'
 import { specifiedScalarTypes } from 'graphql'
+import {
+  resolvers as scalarsResolvers,
+  typeDefs as scalarsTypeDefs,
+} from 'graphql-scalars'
+
+import { createSchema, createYoga } from '../src/index.js'
 
 describe('graphql-scalars', () => {
   const ignoredScalars = [
@@ -40,7 +41,8 @@ describe('graphql-scalars', () => {
         scalarsResolvers,
         ...allScalars.map((scalar) => ({
           Query: {
-            [`get${scalar.name}`]: (_: never, { input }: any) => input,
+            [`get${scalar.name}`]: (_: never, { input }: { input: unknown }) =>
+              input,
           },
         })),
       ],

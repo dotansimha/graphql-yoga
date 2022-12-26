@@ -1,7 +1,7 @@
 import {
-  parse,
-  GraphQLSchema,
   buildSchema,
+  GraphQLSchema,
+  parse,
   validate,
   ValidationRule,
 } from 'graphql'
@@ -59,8 +59,8 @@ export function expectJSON(actual: unknown) {
 
   return {
     toDeepEqual(expected: unknown) {
-      const expectedJSON = toJSONDeep(expected)
-      expect(actualJSON).toMatchObject(expectedJSON as any)
+      const expectedJSON = toJSONDeep(expected) as Record<string, unknown>
+      expect(actualJSON).toMatchObject(expectedJSON)
     },
     toDeepNestedProperty(path: string, expected: unknown) {
       const expectedJSON = toJSONDeep(expected)
@@ -189,16 +189,13 @@ export function expectValidationErrorsWithSchema(
   schema: GraphQLSchema,
   rule: ValidationRule,
   queryStr: string,
-): any {
+) {
   const doc = parse(queryStr)
   const errors = validate(schema, doc, [rule])
   return expectJSON(errors)
 }
 
-export function expectValidationErrors(
-  rule: ValidationRule,
-  queryStr: string,
-): any {
+export function expectValidationErrors(rule: ValidationRule, queryStr: string) {
   return expectValidationErrorsWithSchema(testSchema, rule, queryStr)
 }
 
@@ -206,7 +203,7 @@ export function expectSDLValidationErrors(
   schema: Maybe<GraphQLSchema>,
   rule: SDLValidationRule,
   sdlStr: string,
-): any {
+) {
   const doc = parse(sdlStr)
   const errors = validateSDL(doc, schema, [rule])
   return expectJSON(errors)
