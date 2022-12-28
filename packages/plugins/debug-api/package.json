@@ -1,0 +1,72 @@
+{
+  "name": "@graphql-yoga/plugin-debug-api",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/plugins/debug-api"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "scripts": {
+    "app:dev": "vite",
+    "app:build": "tsc && vite build",
+    "app:preview": "vite preview",
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "license": "MIT",
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typings": "dist/typings/index.d.ts",
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "dependencies": {
+    "graphql-scalars": "1.20.1"
+  },
+  "peerDependencies": {
+    "graphql": "^15.2.0 || ^16.0.0",
+    "graphql-yoga": "^3.1.2"
+  },
+  "devDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@types/react": "18.0.26",
+    "@types/react-dom": "18.0.10",
+    "@vitejs/plugin-react": "3.0.0",
+    "typescript": "4.9.4",
+    "vite": "4.0.3",
+    "vite-plugin-singlefile": "0.13.2"
+  },
+  "type": "module"
+}
