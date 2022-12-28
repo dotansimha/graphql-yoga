@@ -80,8 +80,6 @@ import { createYoga } from 'graphql-yoga'
 
 createYoga({
   fetchAPI: createFetch({
-    // We prefer `node-fetch` over `undici` and current unstable Node's implementation
-    useNodeFetch: true,
     formDataLimits: {
       // Maximum allowed file size (in bytes)
       fileSize: 1000000,
