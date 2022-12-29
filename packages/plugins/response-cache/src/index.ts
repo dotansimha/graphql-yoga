@@ -2,6 +2,7 @@ import {
   BuildResponseCacheKeyFunction,
   createInMemoryCache,
   defaultBuildResponseCacheKey,
+  GetDocumentStringFunction,
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache'
@@ -24,22 +25,42 @@ function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
 
 const cacheKeyFactoryForEnvelop: BuildResponseCacheKeyFunction =
   async function cacheKeyFactoryForEnvelop({ sessionId }) {
-    return sessionId!
+    if (sessionId == null) {
+      throw new Error(
+        '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
+      )
+    }
+    return sessionId
   }
+
+const getDocumentStringForEnvelop: GetDocumentStringFunction = (
+  executionArgs,
+) => {
+  const context = executionArgs.contextValue as YogaInitialContext
+  if (context.params?.query == null) {
+    throw new Error(
+      '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
+    )
+  }
+  return context.params.query as string
+}
 
 export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey
   const cache = options.cache ?? createInMemoryCache()
   const enabled = options.enabled ?? (() => true)
+  const cachedByRequest = new WeakMap<Request, boolean>()
   return {
     onPluginInit({ addPlugin }) {
       addPlugin(
         useEnvelopResponseCache({
           ...options,
           cache,
+          getDocumentString: getDocumentStringForEnvelop,
           session: sessionFactoryForEnvelop,
           buildResponseCacheKey: cacheKeyFactoryForEnvelop,
+          includeExtensionMetadata: true,
         }),
       )
     },
@@ -63,7 +84,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
     async onParams({ params, request, setResult }) {
       if (enabled(request)) {
         const operationId = await buildResponseCacheKey({
-          documentString: params.query!,
+          documentString: params.query || '',
           variableValues: params.variables,
           operationName: params.operationName,
           sessionId: await options.session(request),
@@ -87,8 +108,16 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }
       }
     },
+    onResultProcess({ request, result }) {
+      if ('extensions' in result && result.extensions?.responseCache != null) {
+        cachedByRequest.set(request, true)
+        if (!options.includeExtensionMetadata) {
+          result.extensions.responseCache = undefined
+        }
+      }
+    },
     onResponse({ response, request }) {
-      if (enabled(request)) {
+      if (cachedByRequest.get(request)) {
         const operationId = operationIdByRequest.get(request)
         if (operationId) {
           response.headers.set('ETag', operationId)
