@@ -216,3 +216,13 @@ useResponseCache({
   cache
 })
 ```
+
+## HTTP Caching via `ETag` and `If-None-Match` headers
+
+Response Caching plugin sends `ETag` headers to the client, and respects `If-None-Match` headers in the HTTP request.
+
+If the client sends an `If-None-Match` header with the same value as the `ETag` header, the server will respond with a `304 Not Modified` status code without any content, which allows you to reduce the server load.
+
+Most of the browsers and some HTTP clients support this behavior, so you can use it to improve the performance of your frontend application.
+
+[Learn more about `ETag` and `If-None-Match` headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
