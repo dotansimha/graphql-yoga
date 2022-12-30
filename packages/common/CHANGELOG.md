@@ -1,5 +1,14 @@
 # @graphql-yoga/common
 
+## 3.2.0
+
+### Patch Changes
+
+- [#2246](https://github.com/dotansimha/graphql-yoga/pull/2246) [`d3d0004f`](https://github.com/dotansimha/graphql-yoga/commit/d3d0004f1b2c0ff6253d15baeb6aff68867cbe2d) Thanks [@izumin5210](https://github.com/izumin5210)! - Fixed graphiql ignoring options if `GraphiQLOptionFactory` returns Promise
+
+- Updated dependencies [[`a86aaa0f`](https://github.com/dotansimha/graphql-yoga/commit/a86aaa0f673037e9207ca12e48f54e7e43963a47), [`82f58934`](https://github.com/dotansimha/graphql-yoga/commit/82f5893446e3c55519194a1ca1d784120cbe7098), [`290c7f7f`](https://github.com/dotansimha/graphql-yoga/commit/290c7f7fde5e604b2a8ac90f93b15e143ea09a92)]:
+  - graphql-yoga@3.2.0
+
 ## 3.1.2
 
 ### Patch Changes
