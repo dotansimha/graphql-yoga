@@ -1,5 +1,4 @@
 import { AfterValidateHook } from '@envelop/core'
-
 import { createGraphQLError } from '../error.js'
 import { createSchema } from '../schema.js'
 import { createYoga } from '../server.js'
@@ -52,6 +51,43 @@ describe('Yoga Plugins', () => {
           extensions: {
             my: 'error',
           },
+          message: 'My Error',
+        },
+      ],
+    })
+  })
+  it('should process errors from onRequest hook correctly', async () => {
+    const expectedStatus = 321
+    const yoga = createYoga({
+      schema,
+      plugins: [
+        {
+          onRequest() {
+            throw createGraphQLError('My Error', {
+              extensions: {
+                http: {
+                  status: expectedStatus,
+                },
+              },
+            })
+          },
+        },
+      ],
+    })
+    const response = await yoga.fetch('http://localhost:3000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{hello}',
+      }),
+    })
+    expect(response.status).toBe(expectedStatus)
+    const body = await response.json()
+    expect(body).toMatchObject({
+      errors: [
+        {
           message: 'My Error',
         },
       ],
