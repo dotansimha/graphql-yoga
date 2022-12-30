@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.2.1
+
+### Patch Changes
+
+- [#2257](https://github.com/dotansimha/graphql-yoga/pull/2257) [`5528d312`](https://github.com/dotansimha/graphql-yoga/commit/5528d312d46281651b330c12f1b9f7a7d64ef3da) Thanks [@ardatan](https://github.com/ardatan)! - Handle errors thrown in onRequest correctly
+
 ## 3.2.0
 
 ### Minor Changes
