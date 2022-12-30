@@ -1,5 +1,7 @@
 # @graphql-yoga/apollo-link
 
+## 1.1.1
+
 ## 1.1.0
 
 ### Patch Changes
