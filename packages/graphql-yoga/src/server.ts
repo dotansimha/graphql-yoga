@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
 import {
   envelop,
   GetEnvelopedFn,
@@ -13,7 +12,7 @@ import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { normalizedExecutor } from '@graphql-tools/executor'
 import { createFetch } from '@whatwg-node/fetch'
 import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
-
+import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
 import { handleError } from './error.js'
 import { createLogger, LogLevel, YogaLogger } from './logger.js'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
@@ -484,28 +483,27 @@ export class YogaServer<
   }
 
   async getResponse(request: Request, serverContext: TServerContext) {
-    const url = new URL(request.url, 'http://localhost')
-    for (const onRequestHook of this.onRequestHooks) {
-      let response: Response | undefined
-      await onRequestHook({
-        request,
-        serverContext,
-        fetchAPI: this.fetchAPI,
-        url,
-        endResponse(newResponse) {
-          response = newResponse
-        },
-      })
-      if (response) {
-        return response
-      }
-    }
-
-    let requestParser: RequestParser | undefined
-    const onRequestParseDoneList: OnRequestParseDoneHook[] = []
     let result: ResultProcessorInput
-
     try {
+      const url = new URL(request.url, 'http://localhost')
+      for (const onRequestHook of this.onRequestHooks) {
+        let response: Response | undefined
+        await onRequestHook({
+          request,
+          serverContext,
+          fetchAPI: this.fetchAPI,
+          url,
+          endResponse(newResponse) {
+            response = newResponse
+          },
+        })
+        if (response) {
+          return response
+        }
+      }
+
+      let requestParser: RequestParser | undefined
+      const onRequestParseDoneList: OnRequestParseDoneHook[] = []
       for (const onRequestParse of this.onRequestParseHooks) {
         const onRequestParseResult = await onRequestParse({
           request,
