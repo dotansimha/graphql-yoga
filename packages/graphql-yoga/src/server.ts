@@ -145,7 +145,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
 
   parserCache?: boolean | ParserCacheOptions
   validationCache?: boolean | ValidationCache
-  fetchAPI?: FetchAPI
+  fetchAPI?: Partial<FetchAPI>
   /**
    * GraphQL Multipart Request spec support
    *
@@ -207,11 +207,12 @@ export class YogaServer<
 
   constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
     this.id = options?.id ?? 'yoga'
-    this.fetchAPI =
-      options?.fetchAPI ??
-      createFetch({
+    this.fetchAPI = {
+      ...createFetch({
         useNodeFetch: true,
-      })
+      }),
+      ...options?.fetchAPI,
+    }
 
     const logger = options?.logging != null ? options.logging : true
     this.logger =
