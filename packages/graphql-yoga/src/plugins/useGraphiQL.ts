@@ -1,5 +1,4 @@
 import { PromiseOrValue } from '@envelop/core'
-
 import graphiqlHTML from '../graphiql-html.js'
 import { YogaLogger } from '../logger.js'
 import { Plugin } from './types.js'
@@ -103,13 +102,15 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
   }
 
   const renderer = config?.render ?? renderGraphiQL
-
+  let urlPattern: URLPattern
   return {
-    async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
-      if (
-        shouldRenderGraphiQL(request) &&
-        config.graphqlEndpoint === url.pathname
-      ) {
+    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
+      if (!urlPattern) {
+        urlPattern = new fetchAPI.URLPattern({
+          pathname: config.graphqlEndpoint,
+        })
+      }
+      if (shouldRenderGraphiQL(request) && urlPattern.test(request.url)) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = await graphiqlOptionsFactory(
           request,
