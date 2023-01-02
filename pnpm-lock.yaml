@@ -305,12 +305,12 @@ importers:
   examples/fastify:
     specifiers:
       '@types/node': 18.11.18
-      fastify: 4.10.2
+      fastify: 4.11.0
       graphql-yoga: 3.2.1
       pino-pretty: 9.1.1
       ts-node: 10.9.1
     dependencies:
-      fastify: 4.10.2
+      fastify: 4.11.0
       graphql-yoga: link:../../packages/graphql-yoga
       pino-pretty: 9.1.1
     devDependencies:
@@ -322,7 +322,7 @@ importers:
       '@envelop/graphql-modules': 4.0.4
       '@graphql-tools/load-files': 6.6.1
       '@types/node': 18.11.18
-      fastify: 4.10.2
+      fastify: 4.11.0
       graphql-modules: 2.1.0
       graphql-yoga: 3.2.1
       reflect-metadata: 0.1.13
@@ -330,7 +330,7 @@ importers:
     dependencies:
       '@envelop/graphql-modules': 4.0.4_graphql-modules@2.1.0
       '@graphql-tools/load-files': 6.6.1
-      fastify: 4.10.2
+      fastify: 4.11.0
       graphql-modules: 2.1.0
       graphql-yoga: link:../../packages/graphql-yoga
       reflect-metadata: 0.1.13
@@ -725,7 +725,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.47.1
       '@typescript-eslint/parser': 5.47.1
       eslint: 8.31.0
-      eslint-config-prettier: 8.5.0
+      eslint-config-prettier: 8.6.0
       eslint-plugin-svelte3: 4.0.0
       graphql: 16.6.0
       graphql-yoga: 3.2.1
@@ -751,7 +751,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.47.1_axni7f4fgvh6tlufnh6hwgsifq
       '@typescript-eslint/parser': 5.47.1_iukboom6ndih5an6iafl45j2fe
       eslint: 8.31.0
-      eslint-config-prettier: 8.5.0_eslint@8.31.0
+      eslint-config-prettier: 8.6.0_eslint@8.31.0
       eslint-plugin-svelte3: 4.0.0_6go7qzsvzihesfwmyvq3tnl5qq
       jest: 29.2.0
       prettier: 2.8.1
@@ -885,7 +885,7 @@ importers:
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.11.18
       '@whatwg-node/fetch': 0.6.1
-      '@whatwg-node/server': 0.5.3
+      '@whatwg-node/server': 0.5.4
       dset: ^3.1.1
       graphql: 16.6.0
       graphql-http: ^1.7.2
@@ -903,7 +903,7 @@ importers:
       '@graphql-tools/utils': 9.0.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
       '@whatwg-node/fetch': 0.6.1
-      '@whatwg-node/server': 0.5.3_@types+node@18.11.18
+      '@whatwg-node/server': 0.5.4_@types+node@18.11.18
       dset: 3.1.2
       tslib: 2.4.0
     devDependencies:
@@ -986,11 +986,11 @@ importers:
   packages/plugins/prometheus:
     specifiers:
       '@envelop/prometheus': 7.0.4
-      prom-client: 14.1.0
+      prom-client: 14.1.1
     dependencies:
-      '@envelop/prometheus': 7.0.4_prom-client@14.1.0
+      '@envelop/prometheus': 7.0.4_prom-client@14.1.1
     devDependencies:
-      prom-client: 14.1.0
+      prom-client: 14.1.1
     publishDirectory: dist
 
   packages/plugins/response-cache:
@@ -4218,7 +4218,7 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@envelop/prometheus/7.0.4_prom-client@14.1.0:
+  /@envelop/prometheus/7.0.4_prom-client@14.1.1:
     resolution: {integrity: sha512-gtyOGs6X7uGXUg5IJ+nIi4prW2bMHSmzEzlkKmqvhFHFsMigzHcy+IEb+1PuY/Eml3VqRkccmMj/WXjatpHYHg==}
     peerDependencies:
       '@envelop/core': ^3.0.4
@@ -4226,7 +4226,7 @@ packages:
       prom-client: ^13 || ^14.0.0
     dependencies:
       '@envelop/on-resolve': 2.0.4
-      prom-client: 14.1.0
+      prom-client: 14.1.1
       tslib: 2.4.1
     dev: false
 
@@ -9949,8 +9949,8 @@ packages:
       - encoding
     dev: false
 
-  /@whatwg-node/server/0.5.3_@types+node@18.11.18:
-    resolution: {integrity: sha512-Iq3B8Mjiqb4YNazAM7dltGpvcubBJfpDLVqGzelCaVZ2mtGdMgmGUVfDilftQnWYtX0fOyM4+gdHGNexrNuBeg==}
+  /@whatwg-node/server/0.5.4_@types+node@18.11.18:
+    resolution: {integrity: sha512-JDMmRyyQXdXOzPY2hhJNR+n4K3F2+LuReHbnF81oi+pnNAgHiffr6s9ZGVI3bO9p/Hv/3v0ur3VaMmTPGtxdUA==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -14436,8 +14436,8 @@ packages:
       eslint: 8.25.0
     dev: true
 
-  /eslint-config-prettier/8.5.0_eslint@8.31.0:
-    resolution: {integrity: sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==}
+  /eslint-config-prettier/8.6.0_eslint@8.31.0:
+    resolution: {integrity: sha512-bAF0eLpLVqP5oEVUFKpMA+NnRFICwn9X8B5jrR9FcqnYBuPbqWEjTEspPWMj5ye6czoSLDweCzSo3Ko7gGrZaA==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
@@ -15530,8 +15530,8 @@ packages:
       strnum: 1.0.5
     dev: true
 
-  /fastify/4.10.2:
-    resolution: {integrity: sha512-0T+4zI6N3S8ex0LCZi3H4FasJR4AzWw834fUkPWvV8r6GBJkLmAOfFxH8f5V29Plef24IK0QSQD/tz1Nx+1UOA==}
+  /fastify/4.11.0:
+    resolution: {integrity: sha512-JteZ8pjEqd+6n+azQnQfSJV8MUMxAmxbvC2Dx/Mybj039Lf/u3kda9Kq84uy/huCpqCzZoyHIZS5JFGF3wLztw==}
     dependencies:
       '@fastify/ajv-compiler': 3.3.1
       '@fastify/error': 3.0.0
@@ -22853,8 +22853,8 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: true
 
-  /prom-client/14.1.0:
-    resolution: {integrity: sha512-iFWCchQmi4170omLpFXbzz62SQTmPhtBL35v0qGEVRHKcqIeiexaoYeP0vfZTujxEq3tA87iqOdRbC9svS1B9A==}
+  /prom-client/14.1.1:
+    resolution: {integrity: sha512-hFU32q7UZQ59bVJQGUtm3I2PrJ3gWvoCkilX9sF165ks1qflhugVCeK+S1JjJYHvyt3o5kj68+q3bchormjnzw==}
     engines: {node: '>=10'}
     dependencies:
       tdigest: 0.1.2
