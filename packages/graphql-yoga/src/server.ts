@@ -207,12 +207,10 @@ export class YogaServer<
 
   constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
     this.id = options?.id ?? 'yoga'
-    this.fetchAPI = {
-      ...createFetch({
-        useNodeFetch: true,
-      }),
-      ...options?.fetchAPI,
-    }
+    const defaultFetchAPI = createFetch({
+      useNodeFetch: true,
+    })
+    this.fetchAPI = Object.assign(defaultFetchAPI, options?.fetchAPI ?? {})
 
     const logger = options?.logging != null ? options.logging : true
     this.logger =
