@@ -207,7 +207,7 @@ importers:
 
   examples/bun:
     specifiers:
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
       bun-types: ^0.4.0
       graphql: 16.6.0
       graphql-yoga: 3.2.1
@@ -216,7 +216,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
 
   examples/cloudflare-advanced:
     specifiers:
@@ -274,13 +274,13 @@ importers:
 
   examples/error-handling:
     specifiers:
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
       graphql: 16.6.0
       graphql-yoga: 3.2.1
       ts-node: 10.9.1
       typescript: 4.9.4
     dependencies:
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -884,8 +884,8 @@ importers:
       '@n1ru4l/in-memory-live-query-store': 0.10.0
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.11.18
-      '@whatwg-node/fetch': 0.6.0
-      '@whatwg-node/server': 0.5.2
+      '@whatwg-node/fetch': 0.6.1
+      '@whatwg-node/server': 0.5.3
       dset: ^3.1.1
       graphql: 16.6.0
       graphql-http: ^1.7.2
@@ -902,8 +902,8 @@ importers:
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.0.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
-      '@whatwg-node/fetch': 0.6.0
-      '@whatwg-node/server': 0.5.2_@types+node@18.11.18
+      '@whatwg-node/fetch': 0.6.1
+      '@whatwg-node/server': 0.5.3_@types+node@18.11.18
       dset: 3.1.2
       tslib: 2.4.0
     devDependencies:
@@ -934,24 +934,24 @@ importers:
   packages/plugins/apollo-inline-trace:
     specifiers:
       '@envelop/on-resolve': ^2.0.2
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
       apollo-reporting-protobuf: ^3.3.2
       graphql-yoga: 3.2.1
     dependencies:
       '@envelop/on-resolve': 2.0.2
       apollo-reporting-protobuf: 3.3.3
     devDependencies:
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
       graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/apq:
     specifiers:
-      '@whatwg-node/fetch': ^0.6.0
+      '@whatwg-node/fetch': ^0.6.1
       graphql-yoga: 3.2.1
       tiny-lru: ^10.0.0
     dependencies:
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
       tiny-lru: 10.0.0
     devDependencies:
       graphql-yoga: link:../../graphql-yoga
@@ -960,11 +960,11 @@ importers:
   packages/plugins/defer-stream:
     specifiers:
       '@graphql-tools/utils': ^9.0.1
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
     dependencies:
       '@graphql-tools/utils': 9.0.1
     devDependencies:
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
     publishDirectory: dist
 
   packages/plugins/disable-introspection:
@@ -9922,8 +9922,8 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@whatwg-node/fetch/0.6.0:
-    resolution: {integrity: sha512-Yg6DN1iMg7TiCEsp3f/MVPmevGGatg9S5UZPuMeR9d2KBCu3WCRgZoviccEIwG/CviDlfOc3A1k5bMRPJy8ijw==}
+  /@whatwg-node/fetch/0.6.1:
+    resolution: {integrity: sha512-sG39WLvcJxGZ+gDstnLSXR2IcnuvIOB51KxCFo0mEhFW0q2u8fZgolr0HPkL+zXwOJsnmT+9V3IRcqLnTXdqVQ==}
     dependencies:
       '@peculiar/webcrypto': 1.4.0
       abort-controller: 3.0.0
@@ -9948,13 +9948,13 @@ packages:
       - encoding
     dev: false
 
-  /@whatwg-node/server/0.5.2_@types+node@18.11.18:
-    resolution: {integrity: sha512-v1ohpEWxsQUlhSr/lvtjmBSOFQZ451iSNeTmZ44kYY0mlfqwg9S7u7EmgIM2pKOiFusqZR2SuVeSRVg53QFwzA==}
+  /@whatwg-node/server/0.5.3_@types+node@18.11.18:
+    resolution: {integrity: sha512-Iq3B8Mjiqb4YNazAM7dltGpvcubBJfpDLVqGzelCaVZ2mtGdMgmGUVfDilftQnWYtX0fOyM4+gdHGNexrNuBeg==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
       '@types/node': 18.11.18
-      '@whatwg-node/fetch': 0.6.0
+      '@whatwg-node/fetch': 0.6.1
       tslib: 2.4.1
     transitivePeerDependencies:
       - encoding
