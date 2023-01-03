@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.3.1
+
+### Patch Changes
+
+- [#2275](https://github.com/dotansimha/graphql-yoga/pull/2275) [`d4dab446`](https://github.com/dotansimha/graphql-yoga/commit/d4dab446046695932a92ea4ccabb537a57bf3d00) Thanks [@ardatan](https://github.com/ardatan)! - Do not pass an explicit endpoint for GraphiQL
+
 ## 3.3.0
 
 ### Minor Changes
