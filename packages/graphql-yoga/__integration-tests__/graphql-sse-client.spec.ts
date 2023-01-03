@@ -38,6 +38,7 @@ describe('GraphQL SSE Client compatibility', () => {
   const client = createClient({
     url: 'http://localhost:4000/graphql',
     fetchFn: yoga.fetch,
+    abortControllerImpl: yoga.fetchAPI.AbortController,
     retryAttempts: 0,
   })
   let unsubscribe: () => void

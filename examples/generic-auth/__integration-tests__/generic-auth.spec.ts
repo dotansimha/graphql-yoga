@@ -57,7 +57,6 @@ describe('graphql-auth example integration', () => {
   })
 
   it('should execute on public field with subscription', async () => {
-    expect.assertions(1)
     const response = await fetch(
       `http://localhost:${port}/graphql?query=subscription{public}`,
       {
@@ -67,17 +66,12 @@ describe('graphql-auth example integration', () => {
       },
     )
 
-    for await (const chunk of response.body!) {
-      const chunkString = Buffer.from(chunk).toString('utf-8')
-      if (chunkString.includes('data:')) {
-        expect(chunkString.trim()).toBe('data: {"data":{"public":"hi"}}')
-        break
-      }
-    }
+    const responseText = await response.text()
+
+    expect(responseText).toContain('data: {"data":{"public":"hi"}}')
   })
 
   it('should execute on auth required field with subscription', async () => {
-    expect.assertions(1)
     const response = await fetch(
       `http://localhost:${port}/graphql?query=subscription{requiresAuth}`,
       {
@@ -88,19 +82,14 @@ describe('graphql-auth example integration', () => {
       },
     )
 
-    for await (const chunk of response.body!) {
-      const chunkStr = Buffer.from(chunk).toString('utf-8')
-      if (chunkStr.startsWith('data:')) {
-        expect(chunkStr.trim()).toBe(
-          'data: {"data":{"requiresAuth":"hi foo@foo.com"}}',
-        )
-        break
-      }
-    }
+    const responseText = await response.text()
+
+    expect(responseText).toContain(
+      'data: {"data":{"requiresAuth":"hi foo@foo.com"}}',
+    )
   })
 
   it('should not execute on auth required field with subscription', async () => {
-    expect.assertions(1)
     const response = await fetch(
       `http://localhost:${port}/graphql?query=subscription{requiresAuth}`,
       {
@@ -109,14 +98,11 @@ describe('graphql-auth example integration', () => {
         },
       },
     )
-    for await (const chunk of response.body!) {
-      const chunkStr = Buffer.from(chunk).toString('utf-8')
-      if (chunkStr.startsWith('data:')) {
-        expect(chunkStr.trim()).toBe(
-          'data: {"data":null,"errors":[{"message":"Accessing \'Subscription.requiresAuth\' requires authentication.","locations":[{"line":1,"column":14}]}]}',
-        )
-        break
-      }
-    }
+
+    const responseText = await response.text()
+
+    expect(responseText).toContain(
+      'data: {"data":null,"errors":[{"message":"Accessing \'Subscription.requiresAuth\' requires authentication.","locations":[{"line":1,"column":14}]}]}',
+    )
   })
 })
