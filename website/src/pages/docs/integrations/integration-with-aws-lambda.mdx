@@ -44,9 +44,12 @@ export async function handler(
   let fullPath = event.path
 
   if (event.queryStringParameters != null) {
-    fullPath +=
-      '?' +
-      new URLSearchParams(event.queryStringParameters as Record<string, string>)
+    const queryPart = new URLSearchParams(
+      event.queryStringParameters as Record<string, string>
+    ).toString()
+    if (queryPart) {
+      fullPath += `?${queryPart}`
+    }
   }
 
   const response = await yoga.fetch(
