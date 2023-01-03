@@ -1,6 +1,5 @@
-import { ExecutionResult } from 'graphql'
 import { isAsyncIterable } from '@envelop/core'
-
+import { ExecutionResult } from 'graphql'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
@@ -55,9 +54,12 @@ export function processPushResult(
       const { done, value } = await iterator.next()
       if (value != null) {
         const chunk = jsonStringifyResult(value)
-        controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
+        controller.enqueue(
+          textEncoder.encode(`event: next\ndata: ${chunk}\n\n`),
+        )
       }
       if (done) {
+        controller.enqueue(textEncoder.encode(`event: complete\n\n`))
         clearInterval(pingInterval)
         controller.close()
       }
