@@ -699,7 +699,9 @@ describe('browser', () => {
         >((res) => {
           const values: Array<string> = []
           source.onmessage = (event) => {
-            values.push(event.data)
+            if (event.data) {
+              values.push(event.data)
+            }
             if (values.length === 2) {
               res({ data: values })
               source.close()
