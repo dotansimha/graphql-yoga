@@ -1,6 +1,5 @@
 import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga'
 import { OpenAPI, useSofa as createSofaHandler } from 'sofa-api'
-
 import { getSwaggerUIHTMLForSofa } from './swagger-ui.js'
 import { SofaHandler } from './types.js'
 
@@ -123,7 +122,10 @@ export function useSofa(config: SofaPluginConfig): Plugin {
     },
     async onRequest({ request, serverContext, endResponse }) {
       requestByContext.set(serverContext as YogaInitialContext, request)
-      const response = await sofaHandler.handle(request, serverContext)
+      const response = await sofaHandler.handle(
+        request,
+        serverContext as Record<string, unknown>,
+      )
       if (response) {
         endResponse(response)
       }
