@@ -41,10 +41,16 @@ export async function handler(
   event: APIGatewayEvent,
   lambdaContext: Context
 ): Promise<APIGatewayProxyResult> {
-  const searchParams = new URLSearchParams(event.queryStringParameters)
+  let fullPath = event.path
+
+  if (event.queryStringParameters != null) {
+    fullPath +=
+      '?' +
+      new URLSearchParams(event.queryStringParameters as Record<string, string>)
+  }
 
   const response = await yoga.fetch(
-    event.path + '?' + searchParams.toString(),
+    fullPath,
     {
       method: event.httpMethod,
       headers: event.headers as HeadersInit,
