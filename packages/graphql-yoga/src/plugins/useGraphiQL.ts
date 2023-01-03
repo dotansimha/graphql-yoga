@@ -56,7 +56,7 @@ export type GraphiQLRendererOptions = {
   /**
    * The endpoint requests should be sent. Defaults to `"/graphql"`.
    */
-  endpoint: string
+  endpoint?: string
 } & GraphiQLOptions
 
 export const renderGraphiQL = (opts: GraphiQLRendererOptions) =>
@@ -119,7 +119,6 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
 
         if (graphiqlOptions) {
           const graphiQLBody = await renderer({
-            endpoint: config.graphqlEndpoint,
             ...(graphiqlOptions === true ? {} : graphiqlOptions),
           })
 
