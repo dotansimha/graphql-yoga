@@ -347,8 +347,8 @@ describe('incremental delivery: node-fetch', () => {
     })
     for await (const chunk of response.body!) {
       const chunkString = Buffer.from(chunk).toString('utf-8')
-      if (chunkString.includes('data:')) {
-        const result = JSON.parse(chunkString.replace('data:', ''))
+      if (chunkString.includes('event: next\ndata:')) {
+        const result = JSON.parse(chunkString.replace('event: next\ndata:', ''))
         if (counter === 0) {
           expect(result.data.counter).toBe(0)
           counter++
