@@ -316,7 +316,7 @@ export class YogaServer<
       options?.cors !== false && useCORS(options?.cors),
       options?.graphiql !== false &&
         useGraphiQL({
-          graphqlEndpoint: this.graphqlEndpoint,
+          graphqlEndpoint,
           options: options?.graphiql,
           render: options?.renderGraphiQL,
           logger: this.logger,

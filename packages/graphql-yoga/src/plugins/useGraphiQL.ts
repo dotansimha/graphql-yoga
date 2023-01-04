@@ -104,13 +104,13 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
   const renderer = config?.render ?? renderGraphiQL
   let urlPattern: URLPattern
   return {
-    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
+    async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
       if (!urlPattern) {
         urlPattern = new fetchAPI.URLPattern({
           pathname: config.graphqlEndpoint,
         })
       }
-      if (shouldRenderGraphiQL(request) && urlPattern.test(request.url)) {
+      if (shouldRenderGraphiQL(request) && urlPattern.test(url)) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = await graphiqlOptionsFactory(
           request,
