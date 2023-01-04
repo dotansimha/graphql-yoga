@@ -1522,8 +1522,8 @@
               },
               {
                 "children": [],
-                "title": "Real time and GraphQL Subscriptions over Server-Sent-Events (SSE)",
-                "anchor": "real-time-and-graphql-subscriptions-over-server-sent-events-sse"
+                "title": "Real time and GraphQL Subscriptions",
+                "anchor": "real-time-and-graphql-subscriptions"
               },
               {
                 "children": [],
@@ -1576,7 +1576,7 @@
         "anchor": "graphql-yoga-and-graphql-helix"
       }
     ],
-    "content": "e10d56c51b32ec2ba4598a125cb4ef57",
+    "content": "1f8172a067be4d635775e74d9c15d3a5",
     "url": "https://www.graphql-yoga.com/docs/comparison",
     "domain": "https://www.graphql-yoga.com/",
     "hierarchy": ["v3 (latest)"],
@@ -2272,17 +2272,19 @@
   {
     "objectID": "yoga-v3-latest-features-subscriptions",
     "headings": [
-      "Quick Start with Server Sent Events (SSE)",
+      "Quick Start with simple Server-Sent Events (SSE)",
       "Handling Subscriptions on the Client",
-      "Subscriptions over WebSockets with `graphql-ws`",
+      "GraphQL over Server-Sent Events Protocol (via `graphql-sse`)",
+      "GraphQL over WebSocket Protocol (via `graphql-ws`)",
+      "SSE vs WebSocket",
       "PubSub",
       "Advanced"
     ],
     "toc": [
       {
         "children": [],
-        "title": "Quick Start with Server Sent Events (SSE)",
-        "anchor": "quick-start-with-server-sent-events-sse"
+        "title": "Quick Start with simple Server-Sent Events (SSE)",
+        "anchor": "quick-start-with-simple-server-sent-events-sse"
       },
       {
         "children": [
@@ -2309,19 +2311,29 @@
       {
         "children": [
           {
-            "children": [
-              {
-                "children": [],
-                "title": "SSE vs WebSocket",
-                "anchor": "sse-vs-websocket"
-              }
-            ],
+            "children": [],
             "title": "Client Integration",
             "anchor": "client-integration"
           }
         ],
-        "title": "Subscriptions over WebSockets with `graphql-ws`",
-        "anchor": "subscriptions-over-websockets-with-graphql-ws"
+        "title": "GraphQL over Server-Sent Events Protocol (via `graphql-sse`)",
+        "anchor": "graphql-over-server-sent-events-protocol-via-graphql-sse"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "title": "Client Integration",
+            "anchor": "client-integration-1"
+          }
+        ],
+        "title": "GraphQL over WebSocket Protocol (via `graphql-ws`)",
+        "anchor": "graphql-over-websocket-protocol-via-graphql-ws"
+      },
+      {
+        "children": [],
+        "title": "SSE vs WebSocket",
+        "anchor": "sse-vs-websocket"
       },
       {
         "children": [
@@ -2368,7 +2380,7 @@
         "anchor": "advanced"
       }
     ],
-    "content": "82c760b25906e6e7768b89256c78e4de",
+    "content": "415ebc17966c910294deda3c5019b006",
     "url": "https://www.graphql-yoga.com/docs/features/subscriptions",
     "domain": "https://www.graphql-yoga.com/",
     "hierarchy": ["v3 (latest)", "Features"],
