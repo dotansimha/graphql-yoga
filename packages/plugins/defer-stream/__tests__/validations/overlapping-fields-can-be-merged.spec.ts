@@ -1,4 +1,5 @@
 import { buildSchema, GraphQLSchema } from 'graphql'
+
 import { OverlappingFieldsCanBeMergedRule } from '../../src/validations/overlapping-fields-can-be-merged.js'
 import {
   expectValidationErrors,

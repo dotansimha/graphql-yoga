@@ -1,4 +1,3 @@
-import { createGraphQLError } from '@graphql-tools/utils'
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 

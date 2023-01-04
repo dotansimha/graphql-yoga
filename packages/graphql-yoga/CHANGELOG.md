@@ -1,5 +1,54 @@
 # graphql-yoga
 
+## 3.3.1
+
+### Patch Changes
+
+- [#2275](https://github.com/dotansimha/graphql-yoga/pull/2275) [`d4dab446`](https://github.com/dotansimha/graphql-yoga/commit/d4dab446046695932a92ea4ccabb537a57bf3d00) Thanks [@ardatan](https://github.com/ardatan)! - Do not pass an explicit endpoint for GraphiQL
+
+## 3.3.0
+
+### Minor Changes
+
+- [#2266](https://github.com/dotansimha/graphql-yoga/pull/2266) [`3e5f688f`](https://github.com/dotansimha/graphql-yoga/commit/3e5f688f2cbe02dd2fb4be69831d268aee52c5b5) Thanks [@ardatan](https://github.com/ardatan)! - Accept URL patterns like `/:path` and `*` in `graphqlEndpoint`
+
+### Patch Changes
+
+- [#2266](https://github.com/dotansimha/graphql-yoga/pull/2266) [`3e5f688f`](https://github.com/dotansimha/graphql-yoga/commit/3e5f688f2cbe02dd2fb4be69831d268aee52c5b5) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@0.6.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.1) (from `0.5.4`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.5.3` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.3) (from `0.5.1`, in `dependencies`)
+
+- [#2269](https://github.com/dotansimha/graphql-yoga/pull/2269) [`8b288a23`](https://github.com/dotansimha/graphql-yoga/commit/8b288a23c882ec643406c7e3cf7a19980abdd381) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/server@0.5.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.4) (from `0.5.3`, in `dependencies`)
+
+## 3.2.1
+
+### Patch Changes
+
+- [#2257](https://github.com/dotansimha/graphql-yoga/pull/2257) [`5528d312`](https://github.com/dotansimha/graphql-yoga/commit/5528d312d46281651b330c12f1b9f7a7d64ef3da) Thanks [@ardatan](https://github.com/ardatan)! - Handle errors thrown in onRequest correctly
+
+## 3.2.0
+
+### Minor Changes
+
+- [#2150](https://github.com/dotansimha/graphql-yoga/pull/2150) [`290c7f7f`](https://github.com/dotansimha/graphql-yoga/commit/290c7f7fde5e604b2a8ac90f93b15e143ea09a92) Thanks [@ardatan](https://github.com/ardatan)! - Ping the client every 12 seconds to keep the connection alive
+
+### Patch Changes
+
+- [#2213](https://github.com/dotansimha/graphql-yoga/pull/2213) [`a86aaa0f`](https://github.com/dotansimha/graphql-yoga/commit/a86aaa0f673037e9207ca12e48f54e7e43963a47) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@0.0.11` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.11) (from `0.0.9`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/fetch@0.5.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.5.4) (from `0.5.3`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.5.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.1) (from `0.4.17`, in `dependencies`)
+
+- [#2250](https://github.com/dotansimha/graphql-yoga/pull/2250) [`82f58934`](https://github.com/dotansimha/graphql-yoga/commit/82f5893446e3c55519194a1ca1d784120cbe7098) Thanks [@ardatan](https://github.com/ardatan)! - More accurate HTTP status code when unsupported media type is sent as a request body.
+
+  Before it was returning `400: Bad Request` with `Request is not valid` text body in the response but now it returns `415: Unsupported Media Type` with an empty body.
+
+  Also see this unit test;
+  https://github.com/dotansimha/graphql-yoga/pull/2250/files#diff-78bcfa5f6d33aceeabdacd26e353641fea6fd125838ed0e1565762221568c777R380
+
 ## 3.1.2
 
 ### Patch Changes

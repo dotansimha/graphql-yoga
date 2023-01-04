@@ -1,16 +1,17 @@
-import { Plugin } from 'graphql-yoga'
-import { GraphQLSchema, GraphQLDirective, ValidationRule } from 'graphql'
+import { GraphQLDirective, GraphQLSchema, ValidationRule } from 'graphql'
 import {
   GraphQLDeferDirective,
   GraphQLStreamDirective,
 } from '@graphql-tools/utils'
+import { Plugin } from 'graphql-yoga'
+
 import { DeferStreamDirectiveLabelRule } from './validations/defer-stream-directive-label.js'
 import { DeferStreamDirectiveOnRootFieldRule } from './validations/defer-stream-directive-on-root-field.js'
 import { OverlappingFieldsCanBeMergedRule } from './validations/overlapping-fields-can-be-merged.js'
 import { StreamDirectiveOnListFieldRule } from './validations/stream-directive-on-list-field.js'
 
 export function useDeferStream<
-  TPluginContext extends Record<string, any>,
+  TPluginContext extends Record<string, unknown>,
 >(): Plugin<TPluginContext> {
   return {
     onSchemaChange: ({

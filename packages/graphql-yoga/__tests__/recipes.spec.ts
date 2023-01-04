@@ -3,7 +3,7 @@ import {
   createYoga,
   GraphQLParams,
   YogaInitialContext,
-} from 'graphql-yoga'
+} from '../src/index.js'
 
 describe('recipe', () => {
   it('id as custom top level POST body query parameter', async () => {

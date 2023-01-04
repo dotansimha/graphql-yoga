@@ -1,4 +1,5 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
+
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'

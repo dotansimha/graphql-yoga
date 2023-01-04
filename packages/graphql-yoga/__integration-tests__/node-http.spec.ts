@@ -1,7 +1,13 @@
-import { IncomingMessage, ServerResponse, createServer, Server } from 'http'
-import { createYoga, createSchema } from 'graphql-yoga'
+import {
+  createServer,
+  IncomingMessage,
+  Server,
+  ServerResponse,
+} from 'node:http'
+import { AddressInfo } from 'node:net'
 import { fetch } from '@whatwg-node/fetch'
-import { AddressInfo } from 'net'
+
+import { createSchema, createYoga } from '../src/index.js'
 
 it('should expose Node req and res objects in the context', async () => {
   let server: Server
@@ -18,7 +24,7 @@ it('should expose Node req and res objects in the context', async () => {
         `,
         resolvers: {
           Query: {
-            isNode: (_, __, { req, res }) => !!req && !!res,
+            isNode: (_, __, { req, res }) => Boolean(req) && Boolean(res),
           },
         },
       }),

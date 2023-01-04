@@ -1,5 +1,6 @@
-import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLErrorExtensions } from 'graphql'
+import { createGraphQLError } from '@graphql-tools/utils'
+
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 

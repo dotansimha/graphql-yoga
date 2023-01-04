@@ -1,10 +1,11 @@
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from '../src'
 
 describe('requests', () => {
   const schema = createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         ping: String
+        requestUrl: String
       }
       type Mutation {
         echo(str: String): String
@@ -13,6 +14,7 @@ describe('requests', () => {
     resolvers: {
       Query: {
         ping: () => 'pong',
+        requestUrl: (_, __, ctx) => ctx.request.url,
       },
       Mutation: {
         echo(root, args) {
@@ -35,6 +37,41 @@ describe('requests', () => {
     expect(response.status).toBe(404)
   })
 
+  it('should support path patterns', async () => {
+    const yoga = createYoga({
+      schema,
+      logging: false,
+      graphqlEndpoint: '/:version/:path',
+    })
+    const response = await yoga.fetch('http://yoga/v1/mypath', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ requestUrl }' }),
+    })
+
+    expect(response.status).toBe(200)
+    const body = await response.json()
+    expect(body.errors).toBeUndefined()
+    expect(body.data.requestUrl).toBe('http://yoga/v1/mypath')
+  })
+
+  it('allows you to bypass endpoint check with wildcard', async () => {
+    const yoga = createYoga({
+      schema,
+      logging: false,
+      graphqlEndpoint: '*',
+    })
+    const response = await yoga.fetch('http://yoga/random', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ ping }' }),
+    })
+
+    expect(response.status).toBe(200)
+    const body = await response.json()
+    expect(body.errors).toBeUndefined()
+    expect(body.data.ping).toBe('pong')
+  })
   it('should send basic query', async () => {
     const response = await yoga.fetch('http://yoga/test-graphql', {
       method: 'POST',
@@ -345,7 +382,7 @@ describe('requests', () => {
       body: JSON.stringify({ query: '{ ping }' }),
     })
 
-    expect(response.ok).toBeTruthy()
+    expect(response.status).toBe(200)
     const body = await response.json()
     expect(body).toMatchInlineSnapshot(`
       {
@@ -375,5 +412,18 @@ describe('requests', () => {
         },
       }
     `)
+  })
+
+  it('should return 415 unsupported media type when content-type is not supported', async () => {
+    const response = await yoga.fetch('http://yoga/test-graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/xml',
+      },
+      body: `<query>{ ping }</query>`,
+    })
+    expect(response.status).toBe(415)
+    const body = await response.text()
+    expect(body).toBeFalsy()
   })
 })

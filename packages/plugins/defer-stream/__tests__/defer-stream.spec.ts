@@ -1,11 +1,12 @@
-import { createSchema, createYoga, Repeater } from 'graphql-yoga'
-import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 import {
   GraphQLList,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
+import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
+
 import { createPushPullAsyncIterable } from './push-pull-async-iterable.js'
 
 function multipartStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
@@ -236,7 +237,7 @@ describe('Defer/Stream', () => {
           terminate()
           push('D')
         } else if (counter === 4) {
-          expect(toStr(chunk)).toBe(`{"hasNext":false}`)
+          expect(part).toBe(`{"hasNext":false}`)
         } else {
           throw new Error("LOL, this shouldn't happen.")
         }

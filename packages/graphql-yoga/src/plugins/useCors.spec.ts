@@ -1,13 +1,14 @@
 import { Request } from '@whatwg-node/fetch'
+
 import { createSchema } from '../schema.js'
 import { createYoga } from '../server.js'
-import { YogaInitialContext } from '../types.js'
-import { getCORSHeadersByRequestAndOptions, CORSOptions } from './useCORS.js'
+import { CORSOptions, getCORSHeadersByRequestAndOptions } from './useCORS.js'
 
 describe('CORS', () => {
   describe('OPTIONS call', () => {
     it('should respond with correct status & headers', async () => {
-      const schemaFactory = async (ctx: YogaInitialContext) => {
+      // eslint-disable-next-line @typescript-eslint/require-await
+      const schemaFactory = async () => {
         return createSchema({
           typeDefs: /* GraphQL */ `
             type Query {
@@ -24,7 +25,7 @@ describe('CORS', () => {
       const yoga = createYoga({
         schema: schemaFactory,
       })
-      let result = await yoga.fetch('http://yoga/graphql', {
+      const result = await yoga.fetch('http://yoga/graphql', {
         method: 'OPTIONS',
         headers: {
           'Content-Type': 'application/json',

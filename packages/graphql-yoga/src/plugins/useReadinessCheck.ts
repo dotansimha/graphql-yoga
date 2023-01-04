@@ -34,10 +34,13 @@ export function useReadinessCheck({
   endpoint = '/ready',
   check,
 }: ReadinessCheckPluginOptions): Plugin {
+  let urlPattern: URLPattern
   return {
-    async onRequest({ request, endResponse, fetchAPI, url }) {
-      const { pathname: requestPath } = url
-      if (requestPath === endpoint) {
+    async onRequest({ request, endResponse, fetchAPI }) {
+      if (!urlPattern) {
+        urlPattern = new fetchAPI.URLPattern({ pathname: endpoint })
+      }
+      if (urlPattern.test(request.url)) {
         let response: Response
         try {
           const readyOrResponse = await check({ request, fetchAPI })

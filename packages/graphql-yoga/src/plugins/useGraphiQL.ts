@@ -1,10 +1,12 @@
 import { PromiseOrValue } from '@envelop/core'
+import graphiqlHTML from '../graphiql-html.js'
 import { YogaLogger } from '../logger.js'
 import { Plugin } from './types.js'
-import graphiqlHTML from '../graphiql-html.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
-  return method === 'GET' && !!headers?.get('accept')?.includes('text/html')
+  return (
+    method === 'GET' && Boolean(headers?.get('accept')?.includes('text/html'))
+  )
 }
 
 export type GraphiQLOptions = {
@@ -54,7 +56,7 @@ export type GraphiQLRendererOptions = {
   /**
    * The endpoint requests should be sent. Defaults to `"/graphql"`.
    */
-  endpoint: string
+  endpoint?: string
 } & GraphiQLOptions
 
 export const renderGraphiQL = (opts: GraphiQLRendererOptions) =>
@@ -82,6 +84,7 @@ export interface GraphiQLPluginConfig<TServerContext> {
   logger?: YogaLogger
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useGraphiQL<TServerContext extends Record<string, any>>(
   config: GraphiQLPluginConfig<TServerContext>,
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -99,22 +102,23 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
   }
 
   const renderer = config?.render ?? renderGraphiQL
-
+  let urlPattern: URLPattern
   return {
-    async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
-      if (
-        shouldRenderGraphiQL(request) &&
-        config.graphqlEndpoint === url.pathname
-      ) {
+    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
+      if (!urlPattern) {
+        urlPattern = new fetchAPI.URLPattern({
+          pathname: config.graphqlEndpoint,
+        })
+      }
+      if (shouldRenderGraphiQL(request) && urlPattern.test(request.url)) {
         logger.debug(`Rendering GraphiQL`)
-        const graphiqlOptions = graphiqlOptionsFactory(
+        const graphiqlOptions = await graphiqlOptionsFactory(
           request,
           serverContext as TServerContext,
         )
 
         if (graphiqlOptions) {
           const graphiQLBody = await renderer({
-            endpoint: config.graphqlEndpoint,
             ...(graphiqlOptions === true ? {} : graphiqlOptions),
           })
 

@@ -1,5 +1,6 @@
 import { createGraphQLError } from '@graphql-tools/utils'
 import { dset } from 'dset'
+
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 

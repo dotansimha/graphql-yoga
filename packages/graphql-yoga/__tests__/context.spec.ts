@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { Plugin } from '../src/plugins/types'
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 import { YogaInitialContext } from '../src/types'
-import { Plugin } from '../src/plugins/types'
 
 describe('Context', () => {
   interface UserContext {
@@ -27,6 +27,7 @@ describe('Context', () => {
       },
       Subscription: {
         greetings: {
+          // eslint-disable-next-line @typescript-eslint/require-await
           async *subscribe() {
             yield { greetings: 'Hi' }
           },

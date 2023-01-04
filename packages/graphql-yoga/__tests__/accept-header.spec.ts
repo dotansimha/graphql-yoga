@@ -1,5 +1,6 @@
 import { ExecutionResult } from 'graphql'
-import { createSchema, createYoga, Repeater, Plugin } from 'graphql-yoga'
+
+import { createSchema, createYoga, Plugin, Repeater } from '../src/index.js'
 
 describe('accept header', () => {
   it('instruct server to return an event-stream with GET parameters', async () => {
@@ -77,7 +78,7 @@ describe('accept header', () => {
     const expectedStrs = [
       `Content-Type: application/json; charset=utf-8`,
       `Content-Length: 24`,
-      `${JSON.stringify({ data: { ping: 'pong' } })}`,
+      JSON.stringify({ data: { ping: 'pong' } }),
     ]
     for await (const chunk of response.body!) {
       const valueStr = Buffer.from(chunk).toString('utf-8')
@@ -115,21 +116,23 @@ describe('accept header', () => {
     expect(response.headers.get('content-type')).toEqual(
       'multipart/mixed; boundary="-"',
     )
-    const expectedStrs = [
+    const expectedStrs = new Set([
       `Content-Type: application/json; charset=utf-8`,
       `Content-Length: 24`,
-      `${JSON.stringify({ data: { ping: 'pong' } })}`,
-    ]
+      JSON.stringify({ data: { ping: 'pong' } }),
+    ])
     for await (const chunk of response.body!) {
       const valueStr = Buffer.from(chunk).toString('utf-8')
-      if (expectedStrs.includes(valueStr)) {
-        expectedStrs.splice(expectedStrs.indexOf(valueStr), 1)
+      for (const expectedStr of expectedStrs) {
+        if (valueStr.includes(expectedStr)) {
+          expectedStrs.delete(expectedStr)
+        }
       }
-      if (expectedStrs.length === 0) {
+      if (expectedStrs.size === 0) {
         break
       }
     }
-    expect(expectedStrs.length).toEqual(0)
+    expect(expectedStrs.size).toEqual(0)
   })
 
   it('server rejects request for AsyncIterable source (subscription) when client only accepts application/json', async () => {
@@ -176,9 +179,9 @@ describe('accept header', () => {
       onExecute(args) {
         args.setExecuteFn(() =>
           Promise.resolve(
-            new Repeater<ExecutionResult<any, any>>((_push, end) => {
+            new Repeater<ExecutionResult>((_push, end) => {
               end()
-            }) as any,
+            }),
           ),
         )
       },

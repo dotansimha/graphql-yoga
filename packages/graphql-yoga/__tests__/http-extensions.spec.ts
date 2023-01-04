@@ -1,4 +1,4 @@
-import { createSchema, createYoga, createGraphQLError } from 'graphql-yoga'
+import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
 
 describe('GraphQLError.extensions.http', () => {
   it('sets correct status code and headers for thrown GraphQLError in a resolver', async () => {

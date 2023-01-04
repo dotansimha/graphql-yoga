@@ -1,4 +1,4 @@
-import { createYoga } from 'graphql-yoga'
+import { createYoga } from '../src/index.js'
 
 describe('404', () => {
   it('returns 404 if request path does not match with the defined graphql endpoint (POST)', async () => {

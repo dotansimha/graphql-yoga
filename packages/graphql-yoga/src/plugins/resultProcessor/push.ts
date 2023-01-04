@@ -1,5 +1,6 @@
-import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
+import { isAsyncIterable } from '@envelop/core'
+
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
@@ -9,6 +10,8 @@ export function processPushResult(
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
+  const timeoutInSeconds = 12
+
   const headersInit = {
     'Content-Type': 'text/event-stream',
     Connection: 'keep-alive',
@@ -20,9 +23,19 @@ export function processPushResult(
 
   let iterator: AsyncIterator<MaybeArray<ExecutionResult>>
 
+  let pingInterval: number
   const textEncoder = new fetchAPI.TextEncoder()
   const readableStream = new fetchAPI.ReadableStream({
-    start() {
+    start(controller) {
+      // ping client every 12 seconds to keep the connection alive
+      pingInterval = setInterval(() => {
+        if (!controller.desiredSize) {
+          clearInterval(pingInterval)
+          return
+        }
+        controller.enqueue(textEncoder.encode(':\n\n'))
+      }, timeoutInSeconds * 1000) as unknown as number
+
       if (isAsyncIterable(result)) {
         iterator = result[Symbol.asyncIterator]()
       } else {
@@ -45,10 +58,12 @@ export function processPushResult(
         controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
       }
       if (done) {
+        clearInterval(pingInterval)
         controller.close()
       }
     },
     async cancel(e) {
+      clearInterval(pingInterval)
       await iterator.return?.(e)
     },
   })

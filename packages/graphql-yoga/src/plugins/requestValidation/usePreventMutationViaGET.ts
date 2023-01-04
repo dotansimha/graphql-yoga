@@ -1,11 +1,12 @@
-import { Maybe } from '@envelop/core'
-import { createGraphQLError } from '@graphql-tools/utils'
 import {
-  OperationDefinitionNode,
+  DocumentNode,
   getOperationAST,
   GraphQLError,
-  DocumentNode,
+  OperationDefinitionNode,
 } from 'graphql'
+import { Maybe } from '@envelop/core'
+import { createGraphQLError } from '@graphql-tools/utils'
+
 import type { YogaInitialContext } from '../../types.js'
 import type { Plugin } from '../types.js'
 

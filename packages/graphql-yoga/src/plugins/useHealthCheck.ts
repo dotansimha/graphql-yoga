@@ -12,10 +12,13 @@ export function useHealthCheck({
   logger = console,
   endpoint = '/health',
 }: HealthCheckPluginOptions = {}): Plugin {
+  let urlPattern: URLPattern
   return {
-    async onRequest({ endResponse, fetchAPI, url }) {
-      const { pathname: requestPath } = url
-      if (requestPath === endpoint) {
+    onRequest({ request, endResponse, fetchAPI }) {
+      if (!urlPattern) {
+        urlPattern = new fetchAPI.URLPattern({ pathname: endpoint })
+      }
+      if (urlPattern.test(request.url)) {
         logger.debug('Responding Health Check')
         const response = new fetchAPI.Response(null, {
           status: 200,

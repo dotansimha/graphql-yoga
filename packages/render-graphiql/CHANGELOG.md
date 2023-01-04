@@ -1,5 +1,33 @@
 # @graphql-yoga/render-graphiql
 
+## 3.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`d4dab446`](https://github.com/dotansimha/graphql-yoga/commit/d4dab446046695932a92ea4ccabb537a57bf3d00)]:
+  - graphql-yoga@3.3.1
+
+## 3.3.0
+
+### Patch Changes
+
+- Updated dependencies [[`3e5f688f`](https://github.com/dotansimha/graphql-yoga/commit/3e5f688f2cbe02dd2fb4be69831d268aee52c5b5), [`3e5f688f`](https://github.com/dotansimha/graphql-yoga/commit/3e5f688f2cbe02dd2fb4be69831d268aee52c5b5), [`8b288a23`](https://github.com/dotansimha/graphql-yoga/commit/8b288a23c882ec643406c7e3cf7a19980abdd381)]:
+  - graphql-yoga@3.3.0
+
+## 3.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`5528d312`](https://github.com/dotansimha/graphql-yoga/commit/5528d312d46281651b330c12f1b9f7a7d64ef3da)]:
+  - graphql-yoga@3.2.1
+
+## 3.2.0
+
+### Patch Changes
+
+- Updated dependencies [[`a86aaa0f`](https://github.com/dotansimha/graphql-yoga/commit/a86aaa0f673037e9207ca12e48f54e7e43963a47), [`82f58934`](https://github.com/dotansimha/graphql-yoga/commit/82f5893446e3c55519194a1ca1d784120cbe7098), [`290c7f7f`](https://github.com/dotansimha/graphql-yoga/commit/290c7f7fde5e604b2a8ac90f93b15e143ea09a92)]:
+  - graphql-yoga@3.2.0
+
 ## 3.1.2
 
 ### Patch Changes

@@ -1,9 +1,9 @@
 import {
-  ValidationContext,
+  ASTVisitor,
+  DirectiveNode,
   isListType,
   isWrappingType,
-  DirectiveNode,
-  ASTVisitor,
+  ValidationContext,
 } from 'graphql'
 import {
   createGraphQLError,
