@@ -45,7 +45,7 @@ export type GraphiQLOptions = {
   /**
    * Protocol for subscriptions
    */
-  subscriptionsProtocol?: 'SSE' | 'WS' | 'LEGACY_WS'
+  subscriptionsProtocol?: 'SSE' | 'GRAPHQL_SSE' | 'WS' | 'LEGACY_WS'
   /**
    * Extra headers you always want to pass with users' headers input
    */
