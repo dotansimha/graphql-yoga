@@ -997,6 +997,15 @@ importers:
       graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
+  packages/plugins/csrf-prevention:
+    specifiers:
+      graphql-yoga: ^3.1.1
+      tslib: ^2.4.1
+    devDependencies:
+      graphql-yoga: link:../../graphql-yoga
+      tslib: 2.4.1
+    publishDirectory: dist
+
   packages/plugins/defer-stream:
     specifiers:
       '@graphql-tools/utils': ^9.0.1
