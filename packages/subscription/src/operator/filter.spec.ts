@@ -12,7 +12,6 @@ async function collectAsyncIterableValues<TType>(
 
 describe('filter', () => {
   it('filters source stream', async () => {
-     
     async function* source() {
       yield 1
       yield 2
