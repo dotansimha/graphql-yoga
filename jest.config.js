@@ -35,7 +35,7 @@ if (process.env.LEAKS_TEST === 'true') {
     '!**/hackernews.spec.ts',
     '!**/urql-exchange.spec.ts',
     '!**/apollo-link.spec.ts',
-    '!**/uwebsocket.test.ts',
+    '!**/uwebsockets.test.ts',
   )
 }
 
