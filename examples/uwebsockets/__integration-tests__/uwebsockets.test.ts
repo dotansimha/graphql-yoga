@@ -3,17 +3,12 @@ import { createServer, AddressInfo } from 'net'
 import { us_listen_socket, us_listen_socket_close } from 'uWebSockets.js'
 import { fetch } from '@whatwg-node/fetch'
 
-async function getPortFree() {
-  return new Promise<number>((res) => {
-    const srv = createServer()
-    srv.listen(0, () => {
-      const port = (srv.address() as AddressInfo).port
-      srv.close((err) => res(port))
-    })
-  })
-}
-
 describe('uWebSockets', () => {
+  const nodeMajor = parseInt(process.versions.node.split('.')[0], 10)
+  if (nodeMajor < 16) {
+    it('should be skipped', () => {})
+    return
+  }
   let listenSocket: us_listen_socket
   let port: number
   beforeAll(async () => {
@@ -64,4 +59,13 @@ describe('uWebSockets', () => {
       },
     })
   })
+  async function getPortFree() {
+    return new Promise<number>((res) => {
+      const srv = createServer()
+      srv.listen(0, () => {
+        const port = (srv.address() as AddressInfo).port
+        srv.close((err) => res(port))
+      })
+    })
+  }
 })
