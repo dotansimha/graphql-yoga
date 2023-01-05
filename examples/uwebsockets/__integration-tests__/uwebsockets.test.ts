@@ -1,6 +1,9 @@
 import { createServer, AddressInfo } from 'net'
 import type { us_listen_socket } from 'uWebSockets.js'
 import { fetch } from '@whatwg-node/fetch'
+import { Client, createClient } from 'graphql-ws'
+import ws from 'ws'
+import Crypto from 'crypto'
 
 describe('uWebSockets', () => {
   const nodeMajor = parseInt(process.versions.node.split('.')[0], 10)
@@ -10,6 +13,7 @@ describe('uWebSockets', () => {
   }
   let listenSocket: us_listen_socket
   let port: number
+  let client: Client
   beforeAll(async () => {
     port = await getPortFree()
     await new Promise<void>(async (resolve, reject) => {
@@ -23,12 +27,26 @@ describe('uWebSockets', () => {
         reject('Failed to start the server')
       })
     })
+    client = createClient({
+      url: `ws://localhost:${port}/graphql`,
+      webSocketImpl: ws,
+      /**
+       * Generates a v4 UUID to be used as the ID.
+       * Reference: https://gist.github.com/jed/982883
+       */
+      generateID: () =>
+        // @ts-expect-error
+        ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+          (c ^ (Crypto.randomBytes(1)[0] & (15 >> (c / 4)))).toString(16),
+        ),
+    })
   })
   afterAll(async () => {
     if (listenSocket) {
       const { us_listen_socket_close } = await import('uWebSockets.js')
       us_listen_socket_close(listenSocket)
     }
+    await client.dispose()
   })
   it('should show GraphiQL', async () => {
     const response = await fetch(`http://localhost:${port}/graphql`, {
@@ -57,6 +75,35 @@ describe('uWebSockets', () => {
     expect(body).toMatchObject({
       data: {
         hello: 'Hello world!',
+      },
+    })
+  })
+  it('should handle websockets', async () => {
+    const result = await new Promise((resolve, reject) => {
+      client.subscribe(
+        {
+          query: /* GraphQL */ `
+            subscription {
+              time
+            }
+          `,
+        },
+        {
+          next: (data) => {
+            resolve(data)
+          },
+          error: (err) => {
+            reject(err)
+          },
+          complete: () => {
+            reject('complete')
+          },
+        },
+      )
+    })
+    expect(result).toMatchObject({
+      data: {
+        time: expect.any(String),
       },
     })
   })
