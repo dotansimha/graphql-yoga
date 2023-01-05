@@ -1,0 +1,9 @@
+schema:
+  - ./src/schema.ts:
+      noRequire: true
+documents:
+  - './src-app/**/*.tsx'
+ignoreNoDocuments: true,
+generates:
+  ./src-app/gql/:
+    preset: client

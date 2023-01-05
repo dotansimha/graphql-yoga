@@ -1,5 +1,5 @@
 import { DocumentNode, ExecutionResult, print } from 'graphql'
-import { DateTimeResolver, DateTimeTypeDefinition } from 'graphql-scalars'
+import { DateTimeResolver } from 'graphql-scalars'
 import { createSchema } from 'graphql-yoga'
 
 export type ExecutedOperation = {
@@ -22,7 +22,7 @@ export type Context = {
 
 export const schema = createSchema<Context>({
   typeDefs: /* GraphQL */ `
-    ${DateTimeTypeDefinition}
+    scalar DateTime
 
     type Query {
       executedOperations: [ExecutedOperation!]!

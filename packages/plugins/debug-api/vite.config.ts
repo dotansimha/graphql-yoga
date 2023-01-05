@@ -8,6 +8,7 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       mangle: true,
+      compress: true,
       output: {
         beautify: true,
       },
@@ -28,7 +29,10 @@ export default defineConfig({
             type: 'asset',
             name: 'out.ts',
             source: `export const APP_HTML = \`
-${(rootAsset.source as string).replace(/\\/g, '\\\\')}\`
+${(rootAsset.source as string)
+  .replace(/\\/g, '\\\\')
+  .replace(/`/g, '\\`')
+  .replace(/\$/g, '\\$')}\`
 `,
           }
         }

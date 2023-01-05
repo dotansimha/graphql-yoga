@@ -6,6 +6,14 @@ module.exports = {
   },
   overrides: [
     {
+      files: [__dirname + '/packages/plugins/debug-api/src-app/**/*.tsx'],
+      rules: {
+        'import/extensions': 'off',
+        'unicorn/filename-case': 'off',
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+    {
       files: ['packages/graphql-yoga/src/plugins/**/*.ts'],
       rules: {
         'unicorn/filename-case': 'off',

@@ -16,10 +16,21 @@ export function useDebugApi(config: { endpoint?: string }): Plugin {
 
   const internalHandler = createYoga<Context>({
     graphqlEndpoint: GQL_ENDPOINT,
-    graphiql: false,
+    graphiql: true,
     schema,
     context: { operationsStore },
   })
+
+  const htmlConfig = {
+    graphqlEndpoint: GQL_ENDPOINT,
+  }
+
+  const patchedHtml = APP_HTML.replace(
+    '<head>',
+    `<head><script>globalThis.__yogaDebugApi = ${JSON.stringify(
+      htmlConfig,
+    )};</script>`,
+  )
 
   const reqResMatching = new WeakMap<Request, ExecutedOperation>()
 
@@ -62,7 +73,7 @@ export function useDebugApi(config: { endpoint?: string }): Plugin {
       }
 
       if (url.pathname === appEndpoint) {
-        const response = new Response(APP_HTML, {
+        const response = new Response(patchedHtml, {
           status: 200,
           headers: {
             'Content-Type': 'text/html',
