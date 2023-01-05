@@ -1,6 +1,5 @@
-import { app } from '../src/app'
 import { createServer, AddressInfo } from 'net'
-import { us_listen_socket, us_listen_socket_close } from 'uWebSockets.js'
+import type { us_listen_socket } from 'uWebSockets.js'
 import { fetch } from '@whatwg-node/fetch'
 
 describe('uWebSockets', () => {
@@ -13,7 +12,8 @@ describe('uWebSockets', () => {
   let port: number
   beforeAll(async () => {
     port = await getPortFree()
-    await new Promise<void>((resolve, reject) =>
+    await new Promise<void>(async (resolve, reject) => {
+      const { app } = await import('../src/app')
       app.listen(port, (newListenSocket) => {
         listenSocket = newListenSocket
         if (listenSocket) {
@@ -21,11 +21,12 @@ describe('uWebSockets', () => {
           return
         }
         reject('Failed to start the server')
-      }),
-    )
+      })
+    })
   })
-  afterAll(() => {
+  afterAll(async () => {
     if (listenSocket) {
+      const { us_listen_socket_close } = await import('uWebSockets.js')
       us_listen_socket_close(listenSocket)
     }
   })
