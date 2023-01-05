@@ -28,6 +28,8 @@ export function useSofaWithSwaggerUI(
       config.onRoute(route)
     }
   }
+  let swaggerJsonPattern: URLPattern
+  let swaggerUIPattern: URLPattern
   return {
     onPluginInit({ addPlugin }) {
       addPlugin(useSofa({ ...config, onRoute }))
@@ -44,7 +46,17 @@ export function useSofaWithSwaggerUI(
       })
     },
     onRequest({ url, fetchAPI, endResponse }) {
-      if (url.pathname === swaggerUIEndpoint) {
+      if (swaggerJsonPattern == null) {
+        swaggerJsonPattern = new fetchAPI.URLPattern({
+          pathname: '/swagger.json',
+        })
+      }
+      if (swaggerUIPattern == null) {
+        swaggerUIPattern = new fetchAPI.URLPattern({
+          pathname: swaggerUIEndpoint,
+        })
+      }
+      if (swaggerUIPattern.test(url)) {
         const swaggerUIHTML = getSwaggerUIHTMLForSofa(openApi)
         const response = new fetchAPI.Response(swaggerUIHTML, {
           status: 200,
@@ -54,7 +66,7 @@ export function useSofaWithSwaggerUI(
         })
         endResponse(response)
       }
-      if (url.pathname === '/swagger.json') {
+      if (swaggerJsonPattern.test(url)) {
         const response = new fetchAPI.Response(JSON.stringify(openApi.get()), {
           status: 200,
           headers: {
