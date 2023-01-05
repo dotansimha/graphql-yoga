@@ -19,7 +19,11 @@ describe('csrf-prevention', () => {
 
   const yoga = createYoga({
     schema,
-    plugins: [useCSRFPrevention()],
+    plugins: [
+      useCSRFPrevention({
+        requestHeaders: ['x-graphql-yoga-csrf', 'x-some-other-required'],
+      }),
+    ],
     maskedErrors: false,
   })
 
@@ -30,5 +34,27 @@ describe('csrf-prevention', () => {
 
     expect(res.status).toBe(403)
     expect(res.statusText).toMatchInlineSnapshot(`"Forbidden"`)
+  })
+
+  it('should allow requests with the necessary header', async () => {
+    let res = await yoga.fetch('http://yoga/graphql?query={hello}', {
+      headers: {
+        'x-graphql-yoga-csrf': 'whatevs',
+      },
+    })
+    expect(res.status).toBe(200)
+    await expect(res.text()).resolves.toMatchInlineSnapshot(
+      `"{"data":{"hello":"world"}}"`,
+    )
+
+    res = await yoga.fetch('http://yoga/graphql?query={hello}', {
+      headers: {
+        'x-some-other-required': 'whatevs',
+      },
+    })
+    expect(res.status).toBe(200)
+    await expect(res.text()).resolves.toMatchInlineSnapshot(
+      `"{"data":{"hello":"world"}}"`,
+    )
   })
 })
