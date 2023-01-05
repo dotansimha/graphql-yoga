@@ -779,6 +779,31 @@ importers:
       typescript: 4.9.4
       vite: 4.0.4
 
+  examples/uwebsockets:
+    specifiers:
+      '@types/node': 18.11.18
+      '@types/ws': 8.2.3
+      '@whatwg-node/fetch': 0.6.1
+      graphql: 16.6.0
+      graphql-ws: 5.11.2
+      graphql-yoga: 3.3.1
+      ts-node-dev: 2.0.0
+      typescript: 4.9.4
+      uWebSockets.js: uNetworking/uWebSockets.js#v20.15.0
+      ws: 8.11.0
+    dependencies:
+      '@types/node': 18.11.18
+      graphql: 16.6.0
+      graphql-ws: 5.11.2_graphql@16.6.0
+      graphql-yoga: link:../../packages/graphql-yoga
+      ts-node-dev: 2.0.0_awa2wsr5thmg3i7jqycphctjfq
+      typescript: 4.9.4
+      uWebSockets.js: github.com/uNetworking/uWebSockets.js/77bc1fd5577ae42b56675912eb8481a31f3fefd2
+    devDependencies:
+      '@types/ws': 8.2.3
+      '@whatwg-node/fetch': 0.6.1
+      ws: 8.11.0
+
   packages/client/apollo-link:
     specifiers:
       '@apollo/client': 3.7.3
@@ -9243,6 +9268,12 @@ packages:
     dependencies:
       '@types/node': 18.11.18
       '@types/webidl-conversions': 7.0.0
+    dev: true
+
+  /@types/ws/8.2.3:
+    resolution: {integrity: sha512-ahRJZquUYCdOZf/rCsWg88S0/+cb9wazUBHv6HZEe3XdYaBe2zr/slM8J28X07Hn88Pnm4ezo7N8/ofnOgrPVQ==}
+    dependencies:
+      '@types/node': 18.11.18
     dev: true
 
   /@types/ws/8.5.3:
@@ -25858,7 +25889,6 @@ packages:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
-    dev: true
 
   /ts-node-dev/2.0.0_typescript@4.9.4:
     resolution: {integrity: sha512-ywMrhCfH6M75yftYvrvNarLEY+SUXtUvU8/0Z6llrHQVBx12GiFk5sStF8UdfE/yfzk9IAq7O5EEbTQsxlBI8w==}
@@ -27388,3 +27418,9 @@ packages:
 
   /zwitch/2.0.2:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
+
+  github.com/uNetworking/uWebSockets.js/77bc1fd5577ae42b56675912eb8481a31f3fefd2:
+    resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/77bc1fd5577ae42b56675912eb8481a31f3fefd2}
+    name: uWebSockets.js
+    version: 20.15.0
+    dev: false
