@@ -12,7 +12,7 @@ import { PackageCmd } from '@theguild/components'
 
 ```ts filename="pages/api/graphql.ts"
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export const config = {
