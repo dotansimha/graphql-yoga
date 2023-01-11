@@ -1,6 +1,8 @@
 import Head from 'next/head'
+
+import { signIn, signOut, useSession } from 'next-auth/react'
+
 import styles from '../styles/Home.module.css'
-import { useSession, signIn, signOut } from 'next-auth/react'
 
 const Session = () => {
   const { data: session } = useSession()

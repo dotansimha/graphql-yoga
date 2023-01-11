@@ -76,15 +76,8 @@ module.exports = {
             paths: [
               {
                 name: 'graphql',
-                importNames: [
-                  'execute',
-                  'subscribe',
-                  'graphql',
-                  'executeSync',
-                  'graphqlSync',
-                ],
-                message:
-                  'Please use `normalizedExecutor` from `@graphql-tools/executor` instead.',
+                importNames: ['execute', 'subscribe', 'graphql', 'executeSync', 'graphqlSync'],
+                message: 'Please use `normalizedExecutor` from `@graphql-tools/executor` instead.',
               },
             ],
           },

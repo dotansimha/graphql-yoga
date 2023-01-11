@@ -1,5 +1,5 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import express from 'express'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 export function buildApp(app: ReturnType<typeof express>) {
   const graphQLServer = createYoga({
@@ -27,7 +27,7 @@ export function buildApp(app: ReturnType<typeof express>) {
           countdown: {
             async *subscribe(_, { from }) {
               for (let i = from; i >= 0; i--) {
-                await new Promise((resolve) => setTimeout(resolve, 1000))
+                await new Promise(resolve => setTimeout(resolve, 1000))
                 yield { countdown: i }
               }
             },

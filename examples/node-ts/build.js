@@ -24,7 +24,7 @@ async function main() {
   console.info(`Node TS build done!`)
 }
 
-main().catch((e) => {
+main().catch(e => {
   console.error(e)
   process.exit(1)
 })

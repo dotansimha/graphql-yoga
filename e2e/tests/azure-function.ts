@@ -1,11 +1,12 @@
-import { Stack } from '@pulumi/pulumi/automation'
-import { DeploymentConfiguration } from '../types'
-import { assertGraphiQL, assertQuery, env, execPromise } from '../utils'
-import * as pulumi from '@pulumi/pulumi'
+import { version } from '@pulumi/azure-native/package.json'
 import * as resources from '@pulumi/azure-native/resources'
 import * as storage from '@pulumi/azure-native/storage'
 import * as web from '@pulumi/azure-native/web'
-import { version } from '@pulumi/azure-native/package.json'
+import * as pulumi from '@pulumi/pulumi'
+import { Stack } from '@pulumi/pulumi/automation'
+
+import { DeploymentConfiguration } from '../types'
+import { assertGraphiQL, assertQuery, env, execPromise } from '../utils'
 
 export function getConnectionString(
   resourceGroupName: pulumi.Input<string>,
@@ -131,16 +132,8 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       },
     )
 
-    const storageConnectionString = getConnectionString(
-      resourceGroup.name,
-      storageAccount.name,
-    )
-    const codeBlobUrl = signedBlobReadUrl(
-      codeBlob,
-      codeContainer,
-      storageAccount,
-      resourceGroup,
-    )
+    const storageConnectionString = getConnectionString(resourceGroup.name, storageAccount.name)
+    const codeBlobUrl = signedBlobReadUrl(codeBlob, codeContainer, storageAccount, resourceGroup)
 
     const app = new web.WebApp(
       'fa',

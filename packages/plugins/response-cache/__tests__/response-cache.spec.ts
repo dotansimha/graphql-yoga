@@ -65,7 +65,7 @@ it('cache a query operation per session', async () => {
   const yoga = createYoga({
     plugins: [
       useResponseCache({
-        session: (request) => request.headers.get('x-session-id') ?? null,
+        session: request => request.headers.get('x-session-id') ?? null,
         includeExtensionMetadata: true,
       }),
     ],

@@ -1,8 +1,8 @@
-import { createYoga, createSchema, createPubSub } from 'graphql-yoga'
+import { createServer } from 'http'
 
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
+import { createPubSub, createSchema, createYoga } from 'graphql-yoga'
 import Redis from 'ioredis'
-import { createServer } from 'http'
 
 const publishClient = new Redis()
 const subscribeClient = new Redis()
@@ -36,7 +36,7 @@ const yoga = createYoga<{ pubSub: typeof pubSub }>({
       Subscription: {
         message: {
           subscribe: (_, __, context) => context.pubSub.subscribe('message'),
-          resolve: (message) => message,
+          resolve: message => message,
         },
       },
       Mutation: {

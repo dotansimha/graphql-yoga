@@ -4,11 +4,13 @@ import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 # Error Masking
 
-Yoga uses [the Envelop `useMaskedErrors`](https://envelop.dev/plugins/use-masked-errors) for automatically masking unexpected errors and preventing sensitive information from leaking to clients.
+Yoga uses [the Envelop `useMaskedErrors`](https://envelop.dev/plugins/use-masked-errors) for
+automatically masking unexpected errors and preventing sensitive information from leaking to
+clients.
 
-Such errors could be caused by failing to establish connections to remote services such as databases or HTTP APIs.
-Nobody external needs to know that your database server is not reachable.
-Exposing such information to the outside world can make you vulnerable to targeted attacks.
+Such errors could be caused by failing to establish connections to remote services such as databases
+or HTTP APIs. Nobody external needs to know that your database server is not reachable. Exposing
+such information to the outside world can make you vulnerable to targeted attacks.
 
 ## Getting Started
 
@@ -43,7 +45,8 @@ const server = createServer({
 server.start()
 ```
 
-Executing the following operation results in an execution result that does not include any detail from the error raised by the fetch call.
+Executing the following operation results in an execution result that does not include any detail
+from the error raised by the fetch call.
 
 **GraphQL Operation**
 
@@ -73,13 +76,15 @@ query {
 }
 ```
 
-As you can see Yoga comes with sensible defaults as error masking is enabled without you needing to configure anything.
+As you can see Yoga comes with sensible defaults as error masking is enabled without you needing to
+configure anything.
 
 ## Receive Original Error in Development
 
-When developing locally seeing the original error within your Chrome Dev Tools might be handy for debugging.
-You might be tempted to disable the masked errors via the `maskedErrors` config option, however, **we do not recommend that at all!**.
-Having development and production behavior as close as possible is very important for not having any surprises in production.
+When developing locally seeing the original error within your Chrome Dev Tools might be handy for
+debugging. You might be tempted to disable the masked errors via the `maskedErrors` config option,
+however, **we do not recommend that at all!**. Having development and production behavior as close
+as possible is very important for not having any surprises in production.
 
 Instead, we recommend enabling the Yoga development mode.
 
@@ -161,8 +166,10 @@ This will add a more detailed error with a proper stacktrace to the errors exten
 
 ## Exposing Expected Errors
 
-Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be sent to clients instead of being masked.
-This can be achieved by throwing a `GraphQLYogaError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
+Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be sent
+to clients instead of being masked. This can be achieved by throwing a `GraphQLYogaError` instead of
+a "normal"
+[`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
 
 For example, you might want to throw an error if a resource cannot be found by an ID.
 
@@ -190,7 +197,7 @@ const server = createServer({
     resolvers: {
       Query: {
         async user(_, args) {
-          const user = users.find((user) => user.id === args.byId)
+          const user = users.find(user => user.id === args.byId)
           if (!user) {
             throw new GraphQLYogaError(`User with id '${args.byId}' not found.`)
           }
@@ -238,7 +245,8 @@ query {
 
 ## Error Codes and Other Extensions
 
-Sometimes it is useful to enrich errors with additional information, such as an error code that can be interpreted by the client.
+Sometimes it is useful to enrich errors with additional information, such as an error code that can
+be interpreted by the client.
 
 Error extensions can be passed as the second parameter to the `GraphQLYogaError` constructor.
 
@@ -266,7 +274,7 @@ const server = createServer({
     resolvers: {
       Query: {
         async user(_, args) {
-          const user = users.find((user) => user.id === args.byId)
+          const user = users.find(user => user.id === args.byId)
           if (!user) {
             throw new GraphQLYogaError(
               `User with id '${args.byId}' not found.`,
@@ -319,7 +327,8 @@ query {
 }
 ```
 
-The extensions are not only limited to a `code` property. Any JSON serializable value can be passed as extensions.
+The extensions are not only limited to a `code` property. Any JSON serializable value can be passed
+as extensions.
 
 ```ts
 throw new GraphQLYogaError(
@@ -339,14 +348,15 @@ throw new GraphQLYogaError(
 
 ## Disabling Error Masking
 
-We highly recommend using error masking.
-However, you can still disable it using the `maskedErrors` config option.
+We highly recommend using error masking. However, you can still disable it using the `maskedErrors`
+config option.
 
 ```ts /maskedErrors: false/
 createServer({ maskedErrors: false })
 ```
 
-Executing the following operation will now result in a leaking error message that exposes information about internal API calls.
+Executing the following operation will now result in a leaking error message that exposes
+information about internal API calls.
 
 **GraphQL Operation**
 

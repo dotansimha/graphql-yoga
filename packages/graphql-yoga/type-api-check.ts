@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ClientRequest } from 'node:http'
+
 import { IResolvers } from '@graphql-tools/utils'
 import type { GraphQLSchema } from 'graphql'
 

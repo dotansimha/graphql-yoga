@@ -1,5 +1,5 @@
-import { GraphQLErrorExtensions } from 'graphql'
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLErrorExtensions } from 'graphql'
 
 import { isGraphQLError } from '../error.js'
 import { MaskError } from '../types.js'

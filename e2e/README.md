@@ -4,9 +4,13 @@ This project contains everything related to e2e testing for GraphQL-Yoga.
 
 In order to ensure that GraphQL-Yoga is compatible with all popular runtimes.
 
-To do that, we are using [Pulumi](https://www.pulumi.com/) (infrastructure-as-code) (with TypeScript, and using [Automation API](https://www.pulumi.com/docs/guides/automation-api/)) to provision a real resource in every env, run smoke tests (`GET -> GraphiQL`, `POST -> Execute GraphQL`), and then destroy and remove all resources.
+To do that, we are using [Pulumi](https://www.pulumi.com/) (infrastructure-as-code) (with
+TypeScript, and using [Automation API](https://www.pulumi.com/docs/guides/automation-api/)) to
+provision a real resource in every env, run smoke tests (`GET -> GraphiQL`,
+`POST -> Execute GraphQL`), and then destroy and remove all resources.
 
-On each PR, this workflow runs, and tried to deploy and test an actual environment. This way we can find issues like compatibility issues / runtime issues during code reviews.
+On each PR, this workflow runs, and tried to deploy and test an actual environment. This way we can
+find issues like compatibility issues / runtime issues during code reviews.
 
 ### Tested Enrivonments
 
@@ -21,4 +25,5 @@ On each PR, this workflow runs, and tried to deploy and test an actual environme
 ### Notes
 
 - This check runs on every PR created to GraphQL-Yoga repo.
-- We are using the locally built version of Yoga - so all functions are deployed as built artifact (using `esbuild`).
+- We are using the locally built version of Yoga - so all functions are deployed as built artifact
+  (using `esbuild`).

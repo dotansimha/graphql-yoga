@@ -1,18 +1,16 @@
-import { ASTVisitor, ValidationContext } from 'graphql'
 import {
   createGraphQLError,
   GraphQLDeferDirective,
   GraphQLStreamDirective,
 } from '@graphql-tools/utils'
+import { ASTVisitor, ValidationContext } from 'graphql'
 
 /**
  * Stream directive on list field
  *
  * A GraphQL document is only valid if defer directives are not used on root mutation or subscription types.
  */
-export function DeferStreamDirectiveOnRootFieldRule(
-  context: ValidationContext,
-): ASTVisitor {
+export function DeferStreamDirectiveOnRootFieldRule(context: ValidationContext): ASTVisitor {
   return {
     Directive(node) {
       const mutationType = context.getSchema().getMutationType()

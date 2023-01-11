@@ -39,10 +39,7 @@ describe('Batching', () => {
       body: JSON.stringify([{ query: query1 }, { query: query2 }]),
     })
     const result = await response.json()
-    expect(result).toEqual([
-      { data: { hello: 'hello' } },
-      { data: { bye: 'bye' } },
-    ])
+    expect(result).toEqual([{ data: { hello: 'hello' } }, { data: { bye: 'bye' } }])
   })
   it('should support batching for multipart requests', async () => {
     const query1 = /* GraphQL */ `
@@ -56,20 +53,14 @@ describe('Batching', () => {
       }
     `
     const formData = new yoga.fetchAPI.FormData()
-    formData.append(
-      'operations',
-      JSON.stringify([{ query: query1 }, { query: query2 }]),
-    )
+    formData.append('operations', JSON.stringify([{ query: query1 }, { query: query2 }]))
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       body: formData,
     })
     expect(response.status).toBe(200)
     const result = await response.json()
-    expect(result).toEqual([
-      { data: { hello: 'hello' } },
-      { data: { bye: 'bye' } },
-    ])
+    expect(result).toEqual([{ data: { hello: 'hello' } }, { data: { bye: 'bye' } }])
   })
   it('should throw if the default limit is exceeded', async () => {
     const query1 = /* GraphQL */ `
@@ -169,11 +160,7 @@ describe('Batching', () => {
         accept: 'application/graphql-response+json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify([
-        { query: query1 },
-        { query: query2 },
-        { query: query1 },
-      ]),
+      body: JSON.stringify([{ query: query1 }, { query: query2 }, { query: query1 }]),
     })
 
     expect(response.status).toBe(413)

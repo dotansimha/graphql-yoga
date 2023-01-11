@@ -1,8 +1,9 @@
 import { createServer, Server } from 'node:http'
 import { AddressInfo } from 'node:net'
-import { parse } from 'graphql'
+
 import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
 import { YogaLink } from '@graphql-yoga/apollo-link'
+import { parse } from 'graphql'
 import { createSchema, createYoga } from 'graphql-yoga'
 
 describe.skip('Yoga Apollo Link', () => {
@@ -36,11 +37,11 @@ describe.skip('Yoga Apollo Link', () => {
           time: {
             async *subscribe() {
               while (true) {
-                await new Promise((resolve) => setTimeout(resolve, 1000))
+                await new Promise(resolve => setTimeout(resolve, 1000))
                 yield new Date().toISOString()
               }
             },
-            resolve: (str) => str,
+            resolve: str => str,
           },
         },
       },
@@ -53,7 +54,7 @@ describe.skip('Yoga Apollo Link', () => {
 
   beforeAll(async () => {
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, hostname, resolve))
+    await new Promise<void>(resolve => server.listen(0, hostname, resolve))
     const port = (server.address() as AddressInfo).port
     url = `http://${hostname}:${port}${endpoint}`
     client = new ApolloClient({
@@ -64,7 +65,7 @@ describe.skip('Yoga Apollo Link', () => {
       cache: new InMemoryCache(),
     })
   })
-  afterAll((done) => {
+  afterAll(done => {
     server.close(() => done())
   })
   it('should handle queries correctly', async () => {
@@ -92,7 +93,7 @@ describe.skip('Yoga Apollo Link', () => {
     })
     const collectedValues: string[] = []
     let i = 0
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       const subscription = observable.subscribe((result: FetchResult) => {
         collectedValues.push(result.data?.time)
         i++

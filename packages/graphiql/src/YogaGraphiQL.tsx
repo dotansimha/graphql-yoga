@@ -1,31 +1,23 @@
-import 'json-bigint-patch'
 import React, { useMemo, useState } from 'react'
-import { DocumentNode, Kind, parse } from 'graphql'
+
 import { useExplorerPlugin } from '@graphiql/plugin-explorer'
+import '@graphiql/plugin-explorer/dist/style.css'
 import { Fetcher, FetcherOpts, FetcherParams } from '@graphiql/toolkit'
-import {
-  LoadFromUrlOptions,
-  SubscriptionProtocol,
-  UrlLoader,
-} from '@graphql-tools/url-loader'
-import {
-  GraphiQL,
-  GraphiQLInterface,
-  GraphiQLProps,
-  GraphiQLProvider,
-} from 'graphiql'
+import { LoadFromUrlOptions, SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader'
+import { GraphiQL, GraphiQLInterface, GraphiQLProps, GraphiQLProvider } from 'graphiql'
+import 'graphiql/graphiql.css'
+import { DocumentNode, Kind, parse } from 'graphql'
+import 'json-bigint-patch'
 import { useUrlSearchParams } from 'use-url-search-params'
 
-import { YogaLogo } from './YogaLogo'
-import 'graphiql/graphiql.css'
-import '@graphiql/plugin-explorer/dist/style.css'
 import './styles.css'
+import { YogaLogo } from './YogaLogo'
 
 const getOperationWithFragments = (
   document: DocumentNode,
   operationName?: string,
 ): DocumentNode => {
-  const definitions = document.definitions.filter((definition) => {
+  const definitions = document.definitions.filter(definition => {
     if (
       definition.kind === Kind.OPERATION_DEFINITION &&
       operationName &&
@@ -65,9 +57,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const initialQuery = /* GraphQL */ `#
 # Welcome to ${props.title || 'Yoga GraphiQL'}
 #
-# ${
-    props.title || 'Yoga GraphiQL'
-  } is an in-browser tool for writing, validating, and
+# ${props.title || 'Yoga GraphiQL'} is an in-browser tool for writing, validating, and
 # testing GraphQL queries.
 #
 # Type queries into this side of the screen, and you will see intelligent
@@ -97,10 +87,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 #
 `
 
-  const endpoint = new URL(
-    props.endpoint ?? location.pathname,
-    location.href,
-  ).toString()
+  const endpoint = new URL(props.endpoint ?? location.pathname, location.href).toString()
 
   const type = {
     query: String,
@@ -159,7 +146,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         <GraphiQLInterface
           isHeadersEditorEnabled
           defaultEditorToolsVisibility
-          onEditQuery={(query) =>
+          onEditQuery={query =>
             setParams({
               query,
             })

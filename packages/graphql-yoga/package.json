@@ -1,28 +1,17 @@
 {
   "name": "graphql-yoga",
   "version": "3.3.1",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/graphql-yoga"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "prepack": "bob prepack",
-    "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
-    "check": "tsc --pretty --noEmit",
-    "postinstall": "node node_modules/puppeteer/install.js"
-  },
-  "keywords": [
-    "graphql",
-    "server",
-    "api",
-    "graphql-server"
-  ],
   "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://saihaj.dev/)",
   "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -41,12 +30,20 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit",
+    "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
+    "postinstall": "node node_modules/puppeteer/install.js",
+    "prepack": "bob prepack"
   },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+  "peerDependencies": {
+    "graphql": "^15.2.0 || ^16.0.0"
   },
   "dependencies": {
     "@envelop/core": "3.0.4",
@@ -76,9 +73,12 @@
     "json-bigint-patch": "0.0.8",
     "puppeteer": "19.5.0"
   },
-  "peerDependencies": {
-    "graphql": "^15.2.0 || ^16.0.0"
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
   },
-  "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

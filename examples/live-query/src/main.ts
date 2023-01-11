@@ -1,9 +1,10 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'http'
+
 import { useLiveQuery } from '@envelop/live-query'
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'
 import { astFromDirective } from '@graphql-tools/utils'
+import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const liveQueryStore = new InMemoryLiveQueryStore()
 

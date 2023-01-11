@@ -2,9 +2,10 @@ import { memoize1 } from '@graphql-tools/utils'
 
 import { OpenAPIInstance } from './types.js'
 
-export const getSwaggerUIHTMLForSofa = memoize1(
-  function getSwaggerUIHTMLForSofa(openApi: OpenAPIInstance) {
-    return `
+export const getSwaggerUIHTMLForSofa = memoize1(function getSwaggerUIHTMLForSofa(
+  openApi: OpenAPIInstance,
+) {
+  return `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -31,5 +32,4 @@ export const getSwaggerUIHTMLForSofa = memoize1(
   </body>
   </html>
 `
-  },
-)
+})

@@ -1,7 +1,6 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-
-import { describe, it, expect } from 'bun:test'
 import { Server } from 'bun'
+import { describe, expect, it } from 'bun:test'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 describe('Bun integration', () => {
   const yoga = createYoga({

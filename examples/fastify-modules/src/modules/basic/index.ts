@@ -1,8 +1,10 @@
-import { createModule } from 'graphql-modules'
 import { join } from 'path'
+
 import { loadFilesSync } from '@graphql-tools/load-files'
-import { resolvers } from './resolvers'
+import { createModule } from 'graphql-modules'
+
 import { BasicProvider } from './providers'
+import { resolvers } from './resolvers'
 
 export const basicModule = createModule({
   id: 'basic',

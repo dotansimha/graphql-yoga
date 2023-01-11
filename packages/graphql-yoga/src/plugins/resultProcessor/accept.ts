@@ -6,8 +6,7 @@ export function getMediaTypesForRequestInOrder(request: Request): string[] {
   const mediaTypes: string[] = []
   for (const accept of accepts) {
     const [mediaType, ...params] = accept.split(';')
-    const charset =
-      params?.find((param) => param.includes('charset=')) || 'charset=utf-8' // utf-8 is assumed when not specified;
+    const charset = params?.find(param => param.includes('charset=')) || 'charset=utf-8' // utf-8 is assumed when not specified;
 
     if (charset !== 'charset=utf-8') {
       // only utf-8 is supported
@@ -18,10 +17,7 @@ export function getMediaTypesForRequestInOrder(request: Request): string[] {
   return mediaTypes.reverse()
 }
 
-export function isMatchingMediaType(
-  askedMediaType: string,
-  processorMediaType: string,
-) {
+export function isMatchingMediaType(askedMediaType: string, processorMediaType: string) {
   const [askedPre, askedSuf] = askedMediaType.split('/')
   const [pre, suf] = processorMediaType.split('/')
   if ((pre === '*' || pre === askedPre) && (suf === '*' || suf === askedSuf)) {

@@ -58,9 +58,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     addEventListener(topic, callbackOrOptions) {
       if (callbackOrOptions != null) {
         const callback =
-          'handleEvent' in callbackOrOptions
-            ? callbackOrOptions.handleEvent
-            : callbackOrOptions
+          'handleEvent' in callbackOrOptions ? callbackOrOptions.handleEvent : callbackOrOptions
         addCallback(topic, callback)
       }
     },
@@ -74,9 +72,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     removeEventListener(topic, callbackOrOptions) {
       if (callbackOrOptions != null) {
         const callback =
-          'handleEvent' in callbackOrOptions
-            ? callbackOrOptions.handleEvent
-            : callbackOrOptions
+          'handleEvent' in callbackOrOptions ? callbackOrOptions.handleEvent : callbackOrOptions
         removeCallback(topic, callback)
       }
     },

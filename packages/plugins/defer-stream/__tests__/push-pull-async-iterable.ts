@@ -41,7 +41,7 @@ export const createPushPullAsyncIterable = <T>(): {
 
   return {
     source,
-    push: (item) => {
+    push: item => {
       queue.push(item)
       d.resolve()
       d = createDeferred()

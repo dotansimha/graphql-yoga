@@ -1,5 +1,5 @@
 // src/index.mjs
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `

@@ -1,11 +1,13 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
 
 # GraphiQL
 
-[GraphiQL](https://github.com/graphql/graphiql) is an in-browser IDE for writing, validating, and testing GraphQL queries.
+[GraphiQL](https://github.com/graphql/graphiql) is an in-browser IDE for writing, validating, and
+testing GraphQL queries.
 
-By default, GraphiQL is enabled and served under the `/graphql` route for `GET` requests with a `accept: text/html` header.
-You can configure or completely disable GraphiQL with the `graphiql` option.
+By default, GraphiQL is enabled and served under the `/graphql` route for `GET` requests with a
+`accept: text/html` header. You can configure or completely disable GraphiQL with the `graphiql`
+option.
 
 ## Default Document String
 
@@ -60,8 +62,8 @@ server.listen(4000, () => {
 
 ## Dynamic Options per Request
 
-You can also dynamically set GraphiQL options based on the incoming request.
-This allows rendering GraphiQL conditionally e.g. based on a header presence or value.
+You can also dynamically set GraphiQL options based on the incoming request. This allows rendering
+GraphiQL conditionally e.g. based on a header presence or value.
 
 ```ts filename="Dynamic options based on the incoming request"
 import { createYoga } from 'graphql-yoga'
@@ -82,8 +84,8 @@ server.listen(4000, () => {
 })
 ```
 
-Within the function passed to `graphiql` you also have access to the `serverContext`.
-E.g. on Node.js it contains the `http.Request` and `http.Response` objects.
+Within the function passed to `graphiql` you also have access to the `serverContext`. E.g. on
+Node.js it contains the `http.Request` and `http.Response` objects.
 
 ```ts
 import { createYoga } from 'graphql-yoga'
@@ -108,16 +110,18 @@ server.listen(4000, () => {
 
 ## Offline Usage
 
-By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc).
-If you want to use GraphiQL from a local version, you need to install it manually.
+By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it
+would end up with huge bundle size and exceed the payload limit for some environments for example
+(CF Workers, AWS etc). If you want to use GraphiQL from a local version, you need to install it
+manually.
 
 <PackageCmd packages={['@graphql-yoga/render-graphiql']} />
 
 And you need to pass imported `renderGraphiQL` to `createServer` like below:
 
 ```ts filename="Render GraphiQL offline"
-import { createYoga } from 'graphql-yoga'
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+import { createYoga } from 'graphql-yoga'
 
 const yoga = createYoga({ renderGraphiQL })
 ```

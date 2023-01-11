@@ -55,9 +55,7 @@ export function useReadinessCheck({
           const isError = err instanceof Error
           response = new fetchAPI.Response(isError ? err.message : null, {
             status: 503,
-            headers: isError
-              ? { 'content-type': 'text/plain; charset=utf-8' }
-              : {},
+            headers: isError ? { 'content-type': 'text/plain; charset=utf-8' } : {},
           })
         }
         endResponse(response)

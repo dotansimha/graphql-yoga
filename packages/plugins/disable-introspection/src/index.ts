@@ -7,14 +7,10 @@ type UseDisableIntrospectionArgs = {
 
 const store = new WeakMap<Request, boolean>()
 
-export const useDisableIntrospection = (
-  props?: UseDisableIntrospectionArgs,
-): Plugin => {
+export const useDisableIntrospection = (props?: UseDisableIntrospectionArgs): Plugin => {
   return {
     async onRequest({ request }) {
-      const isDisabled = props?.isDisabled
-        ? await props.isDisabled(request)
-        : true
+      const isDisabled = props?.isDisabled ? await props.isDisabled(request) : true
       store.set(request, isDisabled)
     },
     onValidate({ addValidationRule, context }) {

@@ -1,36 +1,15 @@
 {
   "name": "@graphql-yoga/redis-event-target",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/event-target/redis-event-target"
   },
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "pubsub",
-    "graphql",
-    "event",
-    "subscription"
-  ],
   "author": "Laurin Quast <laurinquast@googlemail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@whatwg-node/events": "0.0.2",
-    "@graphql-yoga/typed-event-target": "^1.0.0"
-  },
-  "peerDependencies": {
-    "ioredis": "^5.0.6"
-  },
-  "devDependencies": {
-    "@types/ioredis-mock": "8.2.1",
-    "ioredis": "5.2.4",
-    "ioredis-mock": "8.2.2"
-  },
-  "type": "module",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "exports": {
@@ -51,12 +30,33 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "keywords": [
+    "pubsub",
+    "graphql",
+    "event",
+    "subscription"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "peerDependencies": {
+    "ioredis": "^5.0.6"
+  },
+  "dependencies": {
+    "@graphql-yoga/typed-event-target": "^1.0.0",
+    "@whatwg-node/events": "0.0.2"
+  },
+  "devDependencies": {
+    "@types/ioredis-mock": "8.2.1",
+    "ioredis": "5.2.4",
+    "ioredis-mock": "8.2.2"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

@@ -58,10 +58,6 @@ export type YogaMaskedErrorOpts = {
   isDev?: boolean
 }
 
-export type MaskError = (
-  error: unknown,
-  message: string,
-  isDev?: boolean,
-) => Error
+export type MaskError = (error: unknown, message: string, isDev?: boolean) => Error
 
 export type MaybeArray<T> = T | T[]

@@ -14,10 +14,7 @@ export function parseURLSearchParams(requestBody: string): GraphQLParams {
   }
 }
 
-export function isContentTypeMatch(
-  request: Request,
-  expectedContentType: string,
-): boolean {
+export function isContentTypeMatch(request: Request, expectedContentType: string): boolean {
   let contentType = request.headers.get('content-type')
 
   // a list of content-types is not valid as per HTTP spec, but some clients dont care

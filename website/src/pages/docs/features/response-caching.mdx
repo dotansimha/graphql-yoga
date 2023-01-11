@@ -1,9 +1,10 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
 
 # Response Caching
 
 Response caching is a technique for reducing server load by caching GraphQL query operation results.
-For incoming GraphQL Query operations with the same variable values, the same response is returned from a cache instead of executed again.
+For incoming GraphQL Query operations with the same variable values, the same response is returned
+from a cache instead of executed again.
 
 ## Quick Start
 
@@ -14,9 +15,10 @@ The response cache is a separate package that needs to be installed.
 The following sample setup show as slow field resolver (`Query.slow`).
 
 ```ts filename="Response cache example" {14-17,22-25}
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const yoga = createYoga({
   schema: createSchema({
@@ -28,7 +30,7 @@ const yoga = createYoga({
     resolvers: {
       Query: {
         slow: async () => {
-          await new Promise((resolve) => setTimeout(resolve, 5000))
+          await new Promise(resolve => setTimeout(resolve, 5000))
           return 'I am slow.'
         }
       }
@@ -48,11 +50,12 @@ server.listen(4000, () => {
 })
 ```
 
-After starting the server we can execute a GraphQL Query operation, that selects the `Query.slow` field.
+After starting the server we can execute a GraphQL Query operation, that selects the `Query.slow`
+field.
 
 ```sh filename="Execute slow GraphQL Query Operation with cUrl"
 curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
--d '{"query":"{slow}"}' -w '\nTotal time : %{time_total}'
+  -d '{"query":"{slow}"}' -w '\nTotal time : %{time_total}'
 ```
 
 The output will look similar to the following:
@@ -71,24 +74,28 @@ Total time:0.007571%
 
 ## Session based caching
 
-If your GraphQL API returns specific data depending on the viewer's session, you can use the `session` option to cache the response per session.
-Usually, the session is determined by an HTTP header, e.g. an user id within the encoded access token.
+If your GraphQL API returns specific data depending on the viewer's session, you can use the
+`session` option to cache the response per session. Usually, the session is determined by an HTTP
+header, e.g. an user id within the encoded access token.
 
-The `session` function receives a `request` parameter that is a [`Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request).
+The `session` function receives a `request` parameter that is a
+[`Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request).
 
 ```ts filename="Response Cache configuration based on  header"
 useResponseCache({
   // cache based on the authentication header
-  session: (request) => request.headers.get('authentication')
+  session: request => request.headers.get('authentication')
 })
 ```
 
 ## Time to Live (TTL)
 
-It is possible to give cached operations a time to live.
-Either globally, based on [schema coordinates](https://github.com/graphql/graphql-wg/blob/main/rfcs/SchemaCoordinates.md) or object types.
+It is possible to give cached operations a time to live. Either globally, based on
+[schema coordinates](https://github.com/graphql/graphql-wg/blob/main/rfcs/SchemaCoordinates.md) or
+object types.
 
-If a query operation result contains multiple objects of the same or different types, the lowest TTL is picked.
+If a query operation result contains multiple objects of the same or different types, the lowest TTL
+is picked.
 
 ```ts filename="Response Cache configuration with TTL"
 useResponseCache({
@@ -108,7 +115,8 @@ useResponseCache({
 
 ## Invalidations via Mutation
 
-When executing a mutation operation the cached query results that contain type entities within the Mutation result will be automatically be invalidated.
+When executing a mutation operation the cached query results that contain type entities within the
+Mutation result will be automatically be invalidated.
 
 ```graphql filename="GraphQL mutation operation"
 mutation UpdateUser {
@@ -132,13 +140,14 @@ mutation UpdateUser {
 }
 ```
 
-For the given GraphQL operation and execution result all cached query results that contain the type `User` with the id `1` will be invalidated.
+For the given GraphQL operation and execution result all cached query results that contain the type
+`User` with the id `1` will be invalidated.
 
 This behavior can be disabled by setting the `invalidateViaMutation` option to `false`.
 
 ```ts filename="Disabling mutation invalidation"
 useResponseCache({
-  session: (request) => null,
+  session: request => null,
   invalidateViaMutation: false
 })
 ```
@@ -147,13 +156,11 @@ useResponseCache({
 
 You can invalidate a type or specific instances of a type using the cache invalidation API.
 
-In order to use the API, you need to manually instantiate the cache an pass it to the `useResponseCache` plugin.
+In order to use the API, you need to manually instantiate the cache an pass it to the
+`useResponseCache` plugin.
 
 ```ts filename="Manual cache construction" {3,6}
-import {
-  useResponseCache,
-  createInMemoryCache
-} from '@graphql-yoga/plugin-response-cache'
+import { createInMemoryCache, useResponseCache } from '@graphql-yoga/plugin-response-cache'
 
 const cache = createInMemoryCache()
 
@@ -190,7 +197,8 @@ cache.invalidate([
 
 By default, the response cache stores all the cached query results in memory.
 
-If you want a cache that is shared between multiple server instances you can use the Redis cache implementation, which is available as a separate package.
+If you want a cache that is shared between multiple server instances you can use the Redis cache
+implementation, which is available as a separate package.
 
 <Callout>The Redis cache currently only works in Node.js environments.</Callout>
 

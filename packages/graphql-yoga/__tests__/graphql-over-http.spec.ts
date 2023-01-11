@@ -17,9 +17,7 @@ describe('GraphQL over HTTP', () => {
             resolvers: {
               Query: {
                 hi: () => {
-                  throw new Error(
-                    'Database password bubatzbieber69 is incorrect.',
-                  )
+                  throw new Error('Database password bubatzbieber69 is incorrect.')
                 },
                 foo: () => 'hi',
               },
@@ -59,9 +57,7 @@ describe('GraphQL over HTTP', () => {
             resolvers: {
               Query: {
                 hi: () => {
-                  throw new Error(
-                    'Database password bubatzbieber69 is incorrect.',
-                  )
+                  throw new Error('Database password bubatzbieber69 is incorrect.')
                 },
               },
             },

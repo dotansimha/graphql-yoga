@@ -7,8 +7,7 @@ describe('Defer / Stream', () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept:
-          'application/graphql-response+json, application/json, multipart/mixed',
+        Accept: 'application/graphql-response+json, application/json, multipart/mixed',
       },
       body: JSON.stringify({
         query: /* GraphQL */ `
@@ -34,8 +33,7 @@ describe('Defer / Stream', () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept:
-          'application/graphql-response+json, application/json, multipart/mixed',
+        Accept: 'application/graphql-response+json, application/json, multipart/mixed',
       },
       body: JSON.stringify({
         query: /* GraphQL */ `

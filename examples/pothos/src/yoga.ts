@@ -1,10 +1,10 @@
-import { createYoga } from 'graphql-yoga'
 import SchemaBuilder from '@pothos/core'
+import { createYoga } from 'graphql-yoga'
 
 const builder = new SchemaBuilder({})
 
 builder.queryType({
-  fields: (t) => ({
+  fields: t => ({
     hello: t.string({
       args: {
         name: t.arg.string({ required: true, defaultValue: 'world' }),
@@ -15,7 +15,7 @@ builder.queryType({
 })
 
 builder.subscriptionType({
-  fields: (t) => ({
+  fields: t => ({
     greetings: t.string({
       async *subscribe() {
         yield 'Hi'

@@ -11,13 +11,13 @@ builder.scalarType('File', {
 })
 
 builder.queryType({
-  fields: (t) => ({
+  fields: t => ({
     greetings: t.string({ resolve: () => 'Hello World' }),
   }),
 })
 
 builder.mutationType({
-  fields: (t) => ({
+  fields: t => ({
     readTextFile: t.string({
       args: {
         file: t.arg({

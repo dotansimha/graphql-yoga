@@ -5,20 +5,15 @@ describe('pothos example integration', () => {
     const response = await yoga.fetch('http://yoga/graphql?query={hello}')
 
     expect(response.status).toBe(200)
-    expect(await response.text()).toMatchInlineSnapshot(
-      `"{"data":{"hello":"world"}}"`,
-    )
+    expect(await response.text()).toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`)
   })
 
   it('should subscribe', async () => {
-    const response = await yoga.fetch(
-      'http://yoga/graphql?query=subscription{greetings}',
-      {
-        headers: {
-          accept: 'text/event-stream',
-        },
+    const response = await yoga.fetch('http://yoga/graphql?query=subscription{greetings}', {
+      headers: {
+        accept: 'text/event-stream',
       },
-    )
+    })
 
     expect(response.status).toBe(200)
     expect(await response.text()).toMatchInlineSnapshot(`

@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import request from 'supertest'
+
 import { buildApp } from '../src/app.js'
 
 describe('fastify-modules example integration', () => {

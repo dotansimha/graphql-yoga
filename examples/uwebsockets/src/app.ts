@@ -1,8 +1,9 @@
-import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
-import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 import { Readable } from 'node:stream'
+
+import { execute, ExecutionArgs, subscribe } from 'graphql'
 import { makeBehavior } from 'graphql-ws/lib/use/uWebSockets'
-import { ExecutionArgs, execute, subscribe } from 'graphql'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
+import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
 
 interface ServerContext {
   req: HttpRequest
@@ -108,12 +109,10 @@ type EnvelopedExecutionArgs = ExecutionArgs & {
 }
 
 const wsHandler = makeBehavior({
-  execute: (args) => (args as EnvelopedExecutionArgs).rootValue.execute(args),
-  subscribe: (args) =>
-    (args as EnvelopedExecutionArgs).rootValue.subscribe(args),
+  execute: args => (args as EnvelopedExecutionArgs).rootValue.execute(args),
+  subscribe: args => (args as EnvelopedExecutionArgs).rootValue.subscribe(args),
   onSubscribe: async (ctx, msg) => {
-    const { schema, execute, subscribe, contextFactory, parse, validate } =
-      yoga.getEnveloped(ctx)
+    const { schema, execute, subscribe, contextFactory, parse, validate } = yoga.getEnveloped(ctx)
 
     const args: EnvelopedExecutionArgs = {
       schema,

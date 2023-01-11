@@ -11,7 +11,8 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6)]:
+- Updated dependencies
+  [[`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6)]:
   - @graphql-yoga/node@2.13.10
 
 ## 1.13.9
@@ -32,7 +33,9 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b), [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10)]:
+- Updated dependencies
+  [[`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b),
+  [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10)]:
   - @graphql-yoga/node@2.13.7
 
 ## 1.13.6

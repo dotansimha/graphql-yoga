@@ -4,26 +4,34 @@
 
 ### Major Changes
 
-- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761) [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8) Thanks [@ardatan](https://github.com/ardatan)! - - Drop `TypedEvent` in favor of [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
+- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761)
+  [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)
+  Thanks [@ardatan](https://github.com/ardatan)! - - Drop `TypedEvent` in favor of
+  [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
   - Use `@whatwg-node/events` as a ponyfill instead of `@whatwg-node/fetch`
 
 ### Patch Changes
 
-- Updated dependencies [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
+- Updated dependencies
+  [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
   - @graphql-yoga/typed-event-target@1.0.0
 
 ## 3.0.0-next.0
 
 ### Major Changes
 
-- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761) [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8) Thanks [@ardatan](https://github.com/ardatan)! - **BREAKING**:
+- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761)
+  [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)
+  Thanks [@ardatan](https://github.com/ardatan)! - **BREAKING**:
 
-  - Drop `TypedEvent` in favor of [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
+  - Drop `TypedEvent` in favor of
+    [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
   - Use `@whatwg-node/events` as a ponyfill instead of `@whatwg-node/fetch`
 
 ### Patch Changes
 
-- Updated dependencies [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
+- Updated dependencies
+  [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
   - @graphql-yoga/typed-event-target@1.0.0-next.0
 
 ## 2.2.3
@@ -38,7 +46,8 @@
 
 ### Patch Changes
 
-- 3363de2: Use `import type { Foo } from '@pkg'` instead of `import { type Foo } from '@pkg'` as many tools don't yet support this syntax.
+- 3363de2: Use `import type { Foo } from '@pkg'` instead of `import { type Foo } from '@pkg'` as
+  many tools don't yet support this syntax.
 
 ## 2.2.1
 
@@ -50,7 +59,8 @@
 
 ### Minor Changes
 
-- d024757: Use `@graphql-yoga/typed-event-target` as a dependency for the EventTarget implementation.
+- d024757: Use `@graphql-yoga/typed-event-target` as a dependency for the EventTarget
+  implementation.
 
 ### Patch Changes
 
@@ -61,7 +71,8 @@
 
 ### Minor Changes
 
-- 7de07cd: Support TypeScript ECMA script resolution. More information on https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js
+- 7de07cd: Support TypeScript ECMA script resolution. More information on
+  https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js
 
 ## 2.0.0
 
@@ -76,7 +87,8 @@
 
 ### Patch Changes
 
-- 8d03bee: fix publishing values when using the id argument for granular resource based subscriptions
+- 8d03bee: fix publishing values when using the id argument for granular resource based
+  subscriptions
 - de1693e: trigger release
 - f856b58: correctly terminate AsyncIterable returned from map/filter when the source stream ends
 
@@ -84,7 +96,8 @@
 
 ### Patch Changes
 
-- 8d03bee: fix publishing values when using the id argument for granular resource based subscriptions
+- 8d03bee: fix publishing values when using the id argument for granular resource based
+  subscriptions
 
 ## 0.0.1-beta.0
 

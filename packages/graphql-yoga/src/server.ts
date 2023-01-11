@@ -13,6 +13,7 @@ import { normalizedExecutor } from '@graphql-tools/executor'
 import { createFetch } from '@whatwg-node/fetch'
 import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
 import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
+
 import { handleError } from './error.js'
 import { createLogger, LogLevel, YogaLogger } from './logger.js'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
@@ -24,10 +25,7 @@ import {
   isPOSTGraphQLStringRequest,
   parsePOSTGraphQLStringRequest,
 } from './plugins/requestParser/POSTGraphQLString.js'
-import {
-  isPOSTJsonRequest,
-  parsePOSTJsonRequest,
-} from './plugins/requestParser/POSTJson.js'
+import { isPOSTJsonRequest, parsePOSTJsonRequest } from './plugins/requestParser/POSTJson.js'
 import {
   isPOSTMultipartRequest,
   parsePOSTMultipartRequest,
@@ -49,20 +47,13 @@ import {
   ResultProcessorInput,
 } from './plugins/types.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
-import {
-  GraphiQLOptions,
-  GraphiQLOptionsOrFactory,
-  useGraphiQL,
-} from './plugins/useGraphiQL.js'
+import { GraphiQLOptions, GraphiQLOptionsOrFactory, useGraphiQL } from './plugins/useGraphiQL.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
 import { useRequestParser } from './plugins/useRequestParser.js'
 import { useResultProcessors } from './plugins/useResultProcessor.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
-import {
-  processRequest as processGraphQLParams,
-  processResult,
-} from './process-request.js'
+import { processRequest as processGraphQLParams, processResult } from './process-request.js'
 import {
   FetchAPI,
   GraphQLParams,
@@ -188,9 +179,7 @@ export class YogaServer<
   /**
    * Instance of envelop
    */
-  public readonly getEnveloped: GetEnvelopedFn<
-    TUserContext & TServerContext & YogaInitialContext
-  >
+  public readonly getEnveloped: GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
   public logger: YogaLogger
   public readonly graphqlEndpoint: string
   public fetchAPI: FetchAPI
@@ -223,8 +212,7 @@ export class YogaServer<
         : logger
 
     const maskErrorFn: MaskError =
-      (typeof options?.maskedErrors === 'object' &&
-        options.maskedErrors.maskError) ||
+      (typeof options?.maskedErrors === 'object' && options.maskedErrors.maskError) ||
       yogaDefaultFormatError
 
     const maskedErrorSet = new WeakSet()
@@ -234,18 +222,12 @@ export class YogaServer<
         ? null
         : {
             errorMessage: 'Unexpected error.',
-            ...(typeof options?.maskedErrors === 'object'
-              ? options.maskedErrors
-              : {}),
+            ...(typeof options?.maskedErrors === 'object' ? options.maskedErrors : {}),
             maskError: (error, message) => {
               if (maskedErrorSet.has(error as Error)) {
                 return error as Error
               }
-              const newError = maskErrorFn(
-                error,
-                message,
-                this.maskedErrorsOpts?.isDev,
-              )
+              const newError = maskErrorFn(error, message, this.maskedErrorsOpts?.isDev)
 
               if (newError !== error) {
                 this.logger.error(error)
@@ -257,8 +239,7 @@ export class YogaServer<
             },
           }
 
-    const maskedErrors =
-      this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
+    const maskedErrors = this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
 
     let batchingLimit = 0
     if (options?.batching) {
@@ -285,20 +266,13 @@ export class YogaServer<
 
       // Performance things
       options?.parserCache !== false &&
-        useParserCache(
-          typeof options?.parserCache === 'object'
-            ? options.parserCache
-            : undefined,
-        ),
+        useParserCache(typeof options?.parserCache === 'object' ? options.parserCache : undefined),
       options?.validationCache !== false &&
         useValidationCache({
-          cache:
-            typeof options?.validationCache === 'object'
-              ? options.validationCache
-              : undefined,
+          cache: typeof options?.validationCache === 'object' ? options.validationCache : undefined,
         }),
       options?.context != null &&
-        useExtendContext((initialContext) => {
+        useExtendContext(initialContext => {
           if (options?.context) {
             if (typeof options.context === 'function') {
               return options.context(initialContext)
@@ -380,9 +354,7 @@ export class YogaServer<
 
     this.getEnveloped = envelop({
       plugins: this.plugins,
-    }) as unknown as GetEnvelopedFn<
-      TUserContext & TServerContext & YogaInitialContext
-    >
+    }) as unknown as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>
 
     this.plugins = this.getEnveloped._plugins as Plugin<
       TUserContext & TServerContext & YogaInitialContext,
@@ -541,7 +513,7 @@ export class YogaServer<
 
       result = (await (Array.isArray(requestParserResult)
         ? Promise.all(
-            requestParserResult.map((params) =>
+            requestParserResult.map(params =>
               this.getResultForParams(
                 {
                   params,

@@ -1,5 +1,5 @@
-import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
 import { useGenericAuth } from '@envelop/generic-auth'
+import { createSchema, createYoga, YogaInitialContext } from 'graphql-yoga'
 
 type User = {
   id: string
@@ -60,13 +60,13 @@ export const yoga = createYoga<unknown, { currentUser: User }>({
       },
       Subscription: {
         requiresAuth: {
-          resolve: (value) => value,
+          resolve: value => value,
           async *subscribe(_, __, context) {
             yield `hi ${context.currentUser?.email}`
           },
         },
         public: {
-          resolve: (value) => value,
+          resolve: value => value,
           async *subscribe() {
             yield `hi`
           },

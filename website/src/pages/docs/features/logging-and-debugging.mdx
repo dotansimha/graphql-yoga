@@ -4,7 +4,8 @@ import { Callout } from '@theguild/components'
 
 ## Logging
 
-Yoga uses 4 log levels `debug`, `info`, `warn` and `error`. By default, Yoga will only log `info`, `warn` and `error` messages.
+Yoga uses 4 log levels `debug`, `info`, `warn` and `error`. By default, Yoga will only log `info`,
+`warn` and `error` messages.
 
 ### Log Level Overview
 
@@ -36,14 +37,16 @@ Yoga uses 4 log levels `debug`, `info`, `warn` and `error`. By default, Yoga wil
 ### Enabling Debug Logging
 
 <Callout>
-  Instead, on JavaScript environments that support environment variables via
-  `process.env` (e.g. Node.js), you can also conditionally enable `debug`
-  logging by setting the `DEBUG` environment variable to `1`.
+  Instead, on JavaScript environments that support environment variables via `process.env` (e.g.
+  Node.js), you can also conditionally enable `debug` logging by setting the `DEBUG` environment
+  variable to `1`.
 </Callout>
 
 ```ts filename="Custom log level" {7}
-import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
+
+import { createYoga } from 'graphql-yoga'
+
 import { schema } from './my-schema.js'
 
 const yoga = createYoga({
@@ -57,13 +60,15 @@ const yoga = createYoga({
 You can customize the log lovel by passing on of the 4 levels to the `logging` option:
 
 <Callout>
-  We recommend not changing the default log level and only recommend changing it
-  if you know what you are doing.
+  We recommend not changing the default log level and only recommend changing it if you know what
+  you are doing.
 </Callout>
 
 ```ts filename="Custom log level" {7}
-import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
+
+import { createYoga } from 'graphql-yoga'
+
 import { schema } from './my-schema.js'
 
 const yoga = createYoga({
@@ -79,10 +84,12 @@ Specifying the log level of `warn` will only log `warn` and `error` messages bei
 You can of course provide your own logger for piping to your favorite logging service/utility:
 
 ```ts
-import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { schema } from './my-schema.js'
+
+import { createYoga } from 'graphql-yoga'
+
 import { logger } from './my-logger.js'
+import { schema } from './my-schema.js'
 
 const yoga = createYoga({
   schema,
@@ -109,13 +116,17 @@ server.listen(4000, () => {
 })
 ```
 
-Further hook into the logging system by leveraging [envelop](https://www.envelop.dev/plugins/use-logger)'s [`useLogger`](https://www.envelop.dev/plugins/use-logger) plugin:
+Further hook into the logging system by leveraging
+[envelop](https://www.envelop.dev/plugins/use-logger)'s
+[`useLogger`](https://www.envelop.dev/plugins/use-logger) plugin:
 
 ```ts
-import { createYoga, useLogger } from 'graphql-yoga'
 import { createServer } from 'node:http'
-import { schema } from './my-schema'
+
+import { createYoga, useLogger } from 'graphql-yoga'
+
 import { logger } from './my-logger'
+import { schema } from './my-schema'
 
 const yoga = createYoga({
   schema,

@@ -1,18 +1,19 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
+
 import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 <LatestVersionNotice />
 
 # Integration with AWS Lambda
 
-AWS Lambda is a serverless computing platform that makes it easy to build applications that run on the AWS cloud. GraphQL Yoga is platform-agnostic so they can fit together easily.
-To reduce the boilerplate we prefer to use [Serverless Express from Vendia](https://github.com/vendia/serverless-express).
+AWS Lambda is a serverless computing platform that makes it easy to build applications that run on
+the AWS cloud. GraphQL Yoga is platform-agnostic so they can fit together easily. To reduce the
+boilerplate we prefer to use
+[Serverless Express from Vendia](https://github.com/vendia/serverless-express).
 
 ## Installation
 
-<PackageCmd
-  packages={['@vendia/serverless-express @graphql-yoga/node graphql']}
-/>
+<PackageCmd packages={['@vendia/serverless-express @graphql-yoga/node graphql']} />
 
 ## Example
 

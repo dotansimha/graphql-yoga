@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -21,8 +21,7 @@ const httpTrigger: AzureFunction = async function (
       `,
       resolvers: {
         Query: {
-          greetings: () =>
-            'This is the `greetings` field of the root `Query` type',
+          greetings: () => 'This is the `greetings` field of the root `Query` type',
         },
       },
     }),

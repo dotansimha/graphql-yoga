@@ -39,4 +39,6 @@ jobs:
 
       - name: Start and Report Yoga Benchmark
         working-directory: ./benchmark/hello-world
-        run: k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} run k6.js
+        run:
+          k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e
+          GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} run k6.js

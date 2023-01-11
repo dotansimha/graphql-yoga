@@ -1,10 +1,11 @@
+import * as aws from '@pulumi/aws'
+import { version } from '@pulumi/aws/package.json'
+import * as awsx from '@pulumi/awsx'
+import * as pulumi from '@pulumi/pulumi'
 import { Stack } from '@pulumi/pulumi/automation'
+
 import type { DeploymentConfiguration } from '../types'
 import { assertGraphiQL, assertQuery, env, execPromise } from '../utils'
-import * as pulumi from '@pulumi/pulumi'
-import * as aws from '@pulumi/aws'
-import * as awsx from '@pulumi/awsx'
-import { version } from '@pulumi/aws/package.json'
 
 export const awsLambdaDeployment: DeploymentConfiguration<{
   functionUrl: string
@@ -51,11 +52,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
         Statement: [
           {
             Effect: 'Allow',
-            Action: [
-              'logs:CreateLogGroup',
-              'logs:CreateLogStream',
-              'logs:PutLogEvents',
-            ],
+            Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
             Resource: 'arn:aws:logs:*:*:*',
           },
         ],
@@ -69,9 +66,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
         runtime: 'nodejs14.x',
         handler: 'index.handler',
         code: new pulumi.asset.AssetArchive({
-          'index.js': new pulumi.asset.FileAsset(
-            '../examples/aws-lambda/dist/index.js',
-          ),
+          'index.js': new pulumi.asset.FileAsset('../examples/aws-lambda/dist/index.js'),
         }),
       },
       { dependsOn: lambdaRolePolicy },

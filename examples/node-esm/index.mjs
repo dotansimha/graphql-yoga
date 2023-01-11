@@ -1,5 +1,6 @@
-import { yoga } from './yoga.mjs'
 import { createServer } from 'http'
+
+import { yoga } from './yoga.mjs'
 
 const server = createServer(yoga)
 server.listen(4000, () => {

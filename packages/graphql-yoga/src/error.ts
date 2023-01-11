@@ -1,5 +1,5 @@
-import { GraphQLError } from 'graphql'
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLError } from 'graphql'
 
 import type { YogaLogger } from './logger.js'
 import type { ResultProcessorInput } from './plugins/types.js'
@@ -129,16 +129,10 @@ export function getResponseInitByRespectingErrors(
         if (isApplicationJson && error.extensions.http.spec) {
           continue
         }
-        if (
-          error.extensions.http.status &&
-          (!status || error.extensions.http.status > status)
-        ) {
+        if (error.extensions.http.status && (!status || error.extensions.http.status > status)) {
           status = error.extensions.http.status
         }
-      } else if (
-        !isOriginalGraphQLError(error) ||
-        error.extensions?.unexpected
-      ) {
+      } else if (!isOriginalGraphQLError(error) || error.extensions?.unexpected) {
         unexpectedErrorExists = true
       }
     }

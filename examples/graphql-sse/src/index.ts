@@ -5,7 +5,7 @@ async function main() {
   await app.start(4000)
 }
 
-main().catch((e) => {
+main().catch(e => {
   console.error(e)
   process.exit(1)
 })

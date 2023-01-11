@@ -1,8 +1,10 @@
-import { XMLParser } from 'fast-xml-parser'
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
 import * as fs from 'fs'
+import { dirname } from 'path'
 import * as path from 'path'
+import { fileURLToPath } from 'url'
+
+import { XMLParser } from 'fast-xml-parser'
+
 import config from '../next.config.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -15,7 +17,7 @@ async function main() {
 
   const d = parser.parse(fs.readFileSync(sitemapPath, 'utf-8'))
 
-  const routes = d.urlset.url.map((url) =>
+  const routes = d.urlset.url.map(url =>
     url.loc.replace(process.env.SITE_URL || `https://graphql-yoga.com`, ``),
   )
 
@@ -34,7 +36,7 @@ async function main() {
     console.error(
       `The following routes do not point to a route:\n\n` +
         redirectsPointingToNonExistingStuff.map(
-          (redirect) => `- "${redirect.source}" -> "${redirect.destination}"`,
+          redirect => `- "${redirect.source}" -> "${redirect.destination}"`,
         ) +
         `\n`,
     )

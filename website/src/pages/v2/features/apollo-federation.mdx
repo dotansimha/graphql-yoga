@@ -1,25 +1,26 @@
 import { Callout, PackageCmd } from '@theguild/components'
+
 import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 <LatestVersionNotice />
 
 # Apollo Federation
 
-[Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies microservice architecture through GraphQL APIs.
+[Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies
+microservice architecture through GraphQL APIs.
 
-Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-federation) plugin, we can use GraphQL Yoga to build our gateway server.
+Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-federation) plugin,
+we can use GraphQL Yoga to build our gateway server.
 
 <Callout>
   As documented in the [Apollo Federation
-  docs](https://www.apollographql.com/docs/federation/gateway/#setup),
-  `@apollo/gateway` package doesn't support GraphQL v16 so you have to install
-  `graphql@15`.
+  docs](https://www.apollographql.com/docs/federation/gateway/#setup), `@apollo/gateway` package
+  doesn't support GraphQL v16 so you have to install `graphql@15`.
 </Callout>
 
 <Callout>
-  Please note that Apollo Federation implementation doesn't support GraphQL
-  Subscriptions. If you need to use Subscriptions with a Federated Gateway you
-  can use [Schema
+  Please note that Apollo Federation implementation doesn't support GraphQL Subscriptions. If you
+  need to use Subscriptions with a Federated Gateway you can use [Schema
   Stitching](https://graphql-tools.com/docs/schema-stitching/stitch-federation).
 </Callout>
 
@@ -28,17 +29,15 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 ### Installation for Gateway
 
 <PackageCmd
-  packages={[
-    '@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15'
-  ]}
+  packages={['@graphql-yoga/node @apollo/gateway @envelop/apollo-federation graphql@15']}
 />
 
 ### Example Gateway
 
 ```ts
-import { createServer } from '@graphql-yoga/node'
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { useApolloFederation } from '@envelop/apollo-federation'
+import { createServer } from '@graphql-yoga/node'
 
 /**
  * Needed since federation remote data source fetcher
@@ -128,4 +127,6 @@ server.start().then(() => {
 
 ## Working Example
 
-Check our [working example](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/apollo-federation) to try it out.
+Check our
+[working example](https://github.com/dotansimha/graphql-yoga/tree/v2/examples/apollo-federation) to
+try it out.

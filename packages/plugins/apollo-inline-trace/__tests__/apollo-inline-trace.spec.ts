@@ -88,9 +88,7 @@ describe('Inline Trace', () => {
     // its ok to be "equal" since executions can happen in the same tick
     expect(
       addSecondsAndNanos(trace.startTime!.seconds!, trace.startTime!.nanos!),
-    ).toBeLessThanOrEqual(
-      addSecondsAndNanos(trace.endTime!.seconds!, trace.endTime!.nanos!),
-    )
+    ).toBeLessThanOrEqual(addSecondsAndNanos(trace.endTime!.seconds!, trace.endTime!.nanos!))
 
     expect(typeof trace.fieldExecutionWeight).toBe('number')
 
@@ -411,8 +409,7 @@ describe('Inline Trace', () => {
       schema,
       plugins: [
         useApolloInlineTrace({
-          rewriteError: () =>
-            createGraphQLError('bim', { extensions: { str: 'ing' } }),
+          rewriteError: () => createGraphQLError('bim', { extensions: { str: 'ing' } }),
         }),
       ],
     })

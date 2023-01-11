@@ -1,10 +1,5 @@
-import {
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString,
-} from 'graphql'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { GraphQLList, GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql'
 import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 
 import { createPushPullAsyncIterable } from './push-pull-async-iterable.js'
@@ -40,16 +35,15 @@ const schema = new GraphQLSchema({
       },
       goodbye: {
         type: GraphQLString,
-        resolve: () =>
-          new Promise((resolve) => setTimeout(() => resolve('goodbye'), 1000)),
+        resolve: () => new Promise(resolve => setTimeout(() => resolve('goodbye'), 1000)),
       },
       stream: {
         type: new GraphQLList(GraphQLString),
         async *resolve() {
           yield 'A'
-          await new Promise((resolve) => setTimeout(resolve, 5))
+          await new Promise(resolve => setTimeout(resolve, 5))
           yield 'B'
-          await new Promise((resolve) => setTimeout(resolve, 5))
+          await new Promise(resolve => setTimeout(resolve, 5))
           yield 'C'
         },
       },
@@ -72,9 +66,7 @@ describe('Defer/Stream', () => {
 
     const body = await response.json()
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toMatchInlineSnapshot(
-      `"Unknown directive "@defer"."`,
-    )
+    expect(body.errors[0].message).toMatchInlineSnapshot(`"Unknown directive "@defer"."`)
   })
 
   it('should error on stream directive usage when plugin is not used', async () => {
@@ -91,9 +83,7 @@ describe('Defer/Stream', () => {
 
     const body = await response.json()
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toMatchInlineSnapshot(
-      `"Unknown directive "@stream"."`,
-    )
+    expect(body.errors[0].message).toMatchInlineSnapshot(`"Unknown directive "@stream"."`)
   })
 
   it('should execute on defer directive', async () => {
@@ -110,9 +100,7 @@ describe('Defer/Stream', () => {
       body: JSON.stringify({ query: '{ ... @defer { goodbye } }' }),
     })
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe(
-      'multipart/mixed; boundary="-"',
-    )
+    expect(response.headers.get('content-type')).toBe('multipart/mixed; boundary="-"')
 
     const finalText = await response.text()
 
@@ -148,9 +136,7 @@ describe('Defer/Stream', () => {
     })
 
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe(
-      'multipart/mixed; boundary="-"',
-    )
+    expect(response.headers.get('content-type')).toBe('multipart/mixed; boundary="-"')
 
     const finalText = await response.text()
 
@@ -215,24 +201,18 @@ describe('Defer/Stream', () => {
     for await (const chunk of response.body!) {
       const parts = toStr(chunk)
         .split('\r\n')
-        .filter((p) => p.startsWith('{'))
+        .filter(p => p.startsWith('{'))
       for (const part of parts) {
         if (counter === 0) {
           expect(part).toBe(`{"data":{"hi":[]},"hasNext":true}`)
         } else if (counter === 1) {
-          expect(part).toBe(
-            `{"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}`,
-          )
+          expect(part).toBe(`{"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}`)
           push('B')
         } else if (counter === 2) {
-          expect(part).toBe(
-            `{"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}`,
-          )
+          expect(part).toBe(`{"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}`)
           push('C')
         } else if (counter === 3) {
-          expect(part).toBe(
-            `{"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}`,
-          )
+          expect(part).toBe(`{"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}`)
           // when the source is returned this stream/loop should be exited.
           terminate()
           push('D')
@@ -262,9 +242,7 @@ describe('Defer/Stream', () => {
     })
 
     expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe(
-      'multipart/mixed; boundary="-"',
-    )
+    expect(response.headers.get('content-type')).toBe('multipart/mixed; boundary="-"')
 
     const source = multipartStream(response.body!)
     let counter = 0
@@ -350,9 +328,7 @@ describe('Defer/Stream', () => {
         body: JSON.stringify({ query: '{ hi @stream }' }),
       })
       expect(response.status).toEqual(200)
-      expect(response.headers.get('content-type')).toEqual(
-        'multipart/mixed; boundary="-"',
-      )
+      expect(response.headers.get('content-type')).toEqual('multipart/mixed; boundary="-"')
     })
 
     it('accept: application/json', async () => {
@@ -419,9 +395,7 @@ describe('Defer/Stream', () => {
         body: JSON.stringify({ query: '{ hi @stream }' }),
       })
       expect(response.status).toEqual(200)
-      expect(response.headers.get('content-type')).toEqual(
-        'multipart/mixed; boundary="-"',
-      )
+      expect(response.headers.get('content-type')).toEqual('multipart/mixed; boundary="-"')
     })
 
     it('accept: */*', async () => {
@@ -454,9 +428,7 @@ describe('Defer/Stream', () => {
         body: JSON.stringify({ query: '{ hi @stream }' }),
       })
       expect(response.status).toEqual(200)
-      expect(response.headers.get('content-type')).toEqual(
-        'multipart/mixed; boundary="-"',
-      )
+      expect(response.headers.get('content-type')).toEqual('multipart/mixed; boundary="-"')
     })
   })
 })

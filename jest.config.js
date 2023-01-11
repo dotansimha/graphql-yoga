@@ -15,9 +15,7 @@ let testTimeout = undefined
 
 if (process.env.INTEGRATION_TEST === 'true') {
   testTimeout = 10000
-  testMatch.push(
-    '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
-  )
+  testMatch.push('<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)')
   if (parseInt(process.versions.node.split('.')[0]) <= 14) {
     testMatch.push('!**/examples/sveltekit/**', '!**/examples/fastify*/**')
   }

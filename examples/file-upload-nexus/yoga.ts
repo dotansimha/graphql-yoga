@@ -1,12 +1,5 @@
-import {
-  makeSchema,
-  scalarType,
-  mutationField,
-  queryField,
-  arg,
-  nonNull,
-} from 'nexus'
 import { createYoga } from 'graphql-yoga'
+import { arg, makeSchema, mutationField, nonNull, queryField, scalarType } from 'nexus'
 
 const FileScalar = scalarType({
   name: 'File',

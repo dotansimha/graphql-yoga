@@ -4,7 +4,7 @@ import Redis from 'ioredis-mock'
 import { createRedisEventTarget } from '../src'
 
 describe('createRedisEventTarget', () => {
-  it('can listen to a simple publish', (done) => {
+  it('can listen to a simple publish', done => {
     const eventTarget = createRedisEventTarget({
       publishClient: new Redis({}),
       subscribeClient: new Redis({}),
@@ -26,7 +26,7 @@ describe('createRedisEventTarget', () => {
     eventTarget.dispatchEvent(event)
   })
 
-  it('does not listen for events for which no lister is set up', (done) => {
+  it('does not listen for events for which no lister is set up', done => {
     const eventTarget = createRedisEventTarget({
       publishClient: new Redis({}),
       subscribeClient: new Redis({}),
@@ -50,7 +50,7 @@ describe('createRedisEventTarget', () => {
     })
     eventTarget.dispatchEvent(event)
   })
-  it('distributes the event to all event listeners', (done) => {
+  it('distributes the event to all event listeners', done => {
     const eventTarget = createRedisEventTarget({
       publishClient: new Redis({}),
       subscribeClient: new Redis({}),

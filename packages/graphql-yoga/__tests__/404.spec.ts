@@ -18,9 +18,7 @@ describe('404', () => {
     })
     const url = `http://localhost:4000/notgraphql`
     const response = await yoga.fetch(
-      url.replace('mypath', 'yourpath') +
-        '?query=' +
-        encodeURIComponent('{ __typename }'),
+      url.replace('mypath', 'yourpath') + '?query=' + encodeURIComponent('{ __typename }'),
       { method: 'GET' },
     )
 
@@ -32,10 +30,10 @@ describe('404', () => {
       logging: false,
     })
     const url = `http://localhost:4000/notgraphql`
-    const response = await yoga.fetch(
-      url + '?query=' + encodeURIComponent('{ __typename }'),
-      { method: 'GET', headers: { Accept: 'text/html' } },
-    )
+    const response = await yoga.fetch(url + '?query=' + encodeURIComponent('{ __typename }'), {
+      method: 'GET',
+      headers: { Accept: 'text/html' },
+    })
 
     expect(response.status).toEqual(200)
     const body = await response.text()
@@ -48,8 +46,7 @@ describe('404', () => {
       landingPage: false,
     })
     const response = await yoga.fetch(
-      `http://yoga/notgraphql/yourpath?query=` +
-        encodeURIComponent('{ __typename }'),
+      `http://yoga/notgraphql/yourpath?query=` + encodeURIComponent('{ __typename }'),
       { method: 'GET', headers: { Accept: 'text/html' } },
     )
 

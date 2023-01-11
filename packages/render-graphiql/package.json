@@ -1,29 +1,17 @@
 {
   "name": "@graphql-yoga/render-graphiql",
   "version": "3.3.1",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/render-graphiql"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "build": "node scripts/yoga-bundle-string.mjs",
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "graphql",
-    "server",
-    "api",
-    "graphql-server"
-  ],
   "author": "Laurin Quast <laurinquast@googlemail.com>",
   "license": "MIT",
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -56,15 +44,27 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "scripts": {
+    "build": "node scripts/yoga-bundle-string.mjs",
+    "check": "tsc --pretty --noEmit"
+  },
+  "peerDependencies": {
+    "graphql-yoga": "^3.3.1"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "peerDependencies": {
-    "graphql-yoga": "^3.3.1"
+  "buildOptions": {
+    "input": "./src/index.ts"
   },
-  "type": "module"
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

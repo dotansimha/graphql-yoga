@@ -1,8 +1,12 @@
-import { PackageCmd, Tabs, Tab, Callout } from '@theguild/components'
+import { Callout, PackageCmd, Tab, Tabs } from '@theguild/components'
 
 # Quick start
 
-GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga) GraphQL server powered by [Envelop](https://envelop.dev) and [GraphQL Tools](https://graphql-tools.com) that runs anywhere; focused on easy setup, performance and great developer experience.
+GraphQL Yoga is a batteries-included cross-platform
+[GraphQL over HTTP spec-compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga)
+GraphQL server powered by [Envelop](https://envelop.dev) and
+[GraphQL Tools](https://graphql-tools.com) that runs anywhere; focused on easy setup, performance
+and great developer experience.
 
 ## Installation
 
@@ -10,7 +14,8 @@ GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-comp
 
 ## Schema
 
-You will need to provide a schema to Yoga, there are many ways to assemble a GraphQL schema, here's just a few:
+You will need to provide a schema to Yoga, there are many ways to assemble a GraphQL schema, here's
+just a few:
 
 <Tabs items={['graphql-yoga', '@graphql-tools/schema', 'Pothos', 'GraphQL Nexus', 'gqtx', 'graphql-js']}>
   <Tab>
@@ -61,7 +66,8 @@ export const schema = makeExecutableSchema({
 
   <Tab>
 
-[Pothos](https://pothos-graphql.dev) is a plugin based GraphQL schema builder for TypeScript. Install it and create a schema.
+[Pothos](https://pothos-graphql.dev) is a plugin based GraphQL schema builder for TypeScript.
+Install it and create a schema.
 
 <PackageCmd packages={['@pothos/core']} />
 
@@ -71,7 +77,7 @@ import SchemaBuilder from '@pothos/core'
 const builder = new SchemaBuilder({})
 
 builder.queryType({
-  fields: (t) => ({
+  fields: t => ({
     hello: t.string({
       resolve: () => 'world'
     })
@@ -107,7 +113,7 @@ Code-first type-safe GraphQL schema without codegen or metaprogramming using [gq
 <PackageCmd packages={['gqtx']} />
 
 ```js filename="schema.js"
-import { createTypesFactory, buildGraphQLSchema } from 'gqtx'
+import { buildGraphQLSchema, createTypesFactory } from 'gqtx'
 
 const t = createTypesFactory()
 
@@ -130,7 +136,7 @@ export const schema = buildGraphQLSchema({ query: Query })
 [graphql-js](https://github.com/graphql/graphql-js) is a reference implementation of GraphQL for JavaScript. You should already have it installed, just create schema.
 
 ```js filename="schema.js"
-import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql'
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -154,7 +160,9 @@ After you have created a GraphQL schema, simply pass it in to Yoga and liftoff! 
 
 ```js
 import { createServer } from 'node:http'
+
 import { createYoga } from 'graphql-yoga'
+
 import { schema } from './schema'
 
 // Create a Yoga instance with a GraphQL schema.

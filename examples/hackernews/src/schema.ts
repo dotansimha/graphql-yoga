@@ -1,8 +1,9 @@
-import { createGraphQLError } from 'graphql-yoga'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import type { Link } from '@prisma/client'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { GraphQLError } from 'graphql'
+import { createGraphQLError } from 'graphql-yoga'
+
 import type { GraphQLContext } from './context'
 
 const typeDefinitions = /* GraphQL */ `
@@ -37,11 +38,7 @@ const parseIntSafe = (value: string): number | null => {
   return null
 }
 
-const applyTakeConstraints = (params: {
-  min: number
-  max: number
-  value: number
-}) => {
+const applyTakeConstraints = (params: { min: number; max: number; value: number }) => {
   if (params.value < params.min || params.value > params.max) {
     throw createGraphQLError(
       `'take' argument value '${params.value}' is outside the valid range of '${params.min}' to '${params.max}'.`,
@@ -79,11 +76,7 @@ const resolvers = {
         take,
       })
     },
-    comment: async (
-      parent: unknown,
-      args: { id: string },
-      context: GraphQLContext,
-    ) => {
+    comment: async (parent: unknown, args: { id: string }, context: GraphQLContext) => {
       return context.prisma.comment.findUnique({
         where: { id: parseInt(args.id) },
       })
@@ -123,9 +116,7 @@ const resolvers = {
       const linkId = parseIntSafe(args.linkId)
       if (linkId === null) {
         return Promise.reject(
-          createGraphQLError(
-            `Cannot post common on non-existing link with id '${args.linkId}'.`,
-          ),
+          createGraphQLError(`Cannot post common on non-existing link with id '${args.linkId}'.`),
         )
       }
 
@@ -137,10 +128,7 @@ const resolvers = {
           },
         })
         .catch((err: unknown) => {
-          if (
-            err instanceof PrismaClientKnownRequestError &&
-            err.code === 'P2003'
-          ) {
+          if (err instanceof PrismaClientKnownRequestError && err.code === 'P2003') {
             return Promise.reject(
               createGraphQLError(
                 `Cannot post common on non-existing link with id '${args.linkId}'.`,

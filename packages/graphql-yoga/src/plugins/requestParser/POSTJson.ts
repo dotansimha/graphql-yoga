@@ -1,5 +1,5 @@
-import { GraphQLErrorExtensions } from 'graphql'
 import { createGraphQLError } from '@graphql-tools/utils'
+import { GraphQLErrorExtensions } from 'graphql'
 
 import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
@@ -12,9 +12,7 @@ export function isPOSTJsonRequest(request: Request) {
   )
 }
 
-export async function parsePOSTJsonRequest(
-  request: Request,
-): Promise<GraphQLParams> {
+export async function parsePOSTJsonRequest(request: Request): Promise<GraphQLParams> {
   let requestBody: GraphQLParams
   try {
     requestBody = await request.json()
@@ -37,16 +35,13 @@ export async function parsePOSTJsonRequest(
   }
 
   if (requestBody == null) {
-    throw createGraphQLError(
-      `POST body is expected to be object but received ${requestBody}`,
-      {
-        extensions: {
-          http: {
-            status: 400,
-          },
+    throw createGraphQLError(`POST body is expected to be object but received ${requestBody}`, {
+      extensions: {
+        http: {
+          status: 400,
         },
       },
-    )
+    })
   }
 
   const requestBodyTypeof = typeof requestBody

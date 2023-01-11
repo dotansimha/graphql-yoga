@@ -1,5 +1,6 @@
 import { createServer, get, IncomingMessage } from 'node:http'
 import { AddressInfo } from 'node:net'
+
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 import { AbortController, fetch } from '@whatwg-node/fetch'
 import { createSchema, createYoga } from 'graphql-yoga'
@@ -29,7 +30,7 @@ it('correctly deals with the source upon aborted requests', async () => {
   const server = createServer(yoga)
 
   try {
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       server.listen(() => {
         resolve()
       })
@@ -55,24 +56,18 @@ it('correctly deals with the source upon aborted requests', async () => {
     for await (const chunk of response.body!) {
       const parts = toStr(chunk)
         .split('\r\n')
-        .filter((p) => p.startsWith('{'))
+        .filter(p => p.startsWith('{'))
       for (const part of parts) {
         if (counter === 0) {
           expect(part).toBe(`{"data":{"hi":[]},"hasNext":true}`)
         } else if (counter === 1) {
-          expect(part).toBe(
-            `{"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}`,
-          )
+          expect(part).toBe(`{"incremental":[{"items":["A"],"path":["hi",0]}],"hasNext":true}`)
           push('B')
         } else if (counter === 2) {
-          expect(part).toBe(
-            `{"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}`,
-          )
+          expect(part).toBe(`{"incremental":[{"items":["B"],"path":["hi",1]}],"hasNext":true}`)
           push('C')
         } else if (counter === 3) {
-          expect(part).toBe(
-            `{"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}`,
-          )
+          expect(part).toBe(`{"incremental":[{"items":["C"],"path":["hi",2]}],"hasNext":true}`)
           // when the source is returned this stream/loop should be exited.
           terminate()
           push('D')
@@ -86,7 +81,7 @@ it('correctly deals with the source upon aborted requests', async () => {
       }
     }
   } finally {
-    await new Promise<void>((res) => {
+    await new Promise<void>(res => {
       server.close(() => {
         res()
       })
@@ -139,7 +134,7 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
 
   const server = createServer(yoga)
   try {
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       server.listen(() => {
         resolve()
       })
@@ -150,7 +145,7 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
       throw new Error('Missing port...')
     }
 
-    const response = await new Promise<IncomingMessage>((resolve) => {
+    const response = await new Promise<IncomingMessage>(resolve => {
       const request = get(
         `http://localhost:${port}/graphql?query={hi @stream}`,
         {
@@ -158,7 +153,7 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
             accept: 'multipart/mixed',
           },
         },
-        (res) => resolve(res),
+        res => resolve(res),
       )
       controller.signal.addEventListener(
         'abort',
@@ -186,12 +181,12 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
     }
 
     // Wait a bit - just to make sure the time is cleaned up for sure...
-    await new Promise((res) => setTimeout(res, 50))
+    await new Promise(res => setTimeout(res, 50))
 
     expect(i).toEqual(3)
     expect(sourceGotCleanedUp).toBe(true)
   } finally {
-    await new Promise<void>((res) => {
+    await new Promise<void>(res => {
       server.close(() => {
         res()
       })

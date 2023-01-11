@@ -1,13 +1,15 @@
-import {
-  createYoga,
-  createSchema,
-  YogaInitialContext,
-  createPubSub,
-  Repeater,
-  pipe,
-  map,
-} from 'graphql-yoga'
 import { createServer } from 'http'
+
+import {
+  createPubSub,
+  createSchema,
+  createYoga,
+  map,
+  pipe,
+  Repeater,
+  YogaInitialContext,
+} from 'graphql-yoga'
+
 import { Resolvers } from './generated/graphql'
 
 const typeDefs = /* GraphQL */ `

@@ -1,15 +1,12 @@
-import { ExecutionResult } from 'graphql'
 import { isAsyncIterable } from '@envelop/core'
+import { ExecutionResult } from 'graphql'
 
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 import { jsonStringifyResult } from './stringify.js'
 
-export function processPushResult(
-  result: ResultProcessorInput,
-  fetchAPI: FetchAPI,
-): Response {
+export function processPushResult(result: ResultProcessorInput, fetchAPI: FetchAPI): Response {
   const timeoutInSeconds = 12
 
   const headersInit = {

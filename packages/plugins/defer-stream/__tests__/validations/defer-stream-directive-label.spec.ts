@@ -136,8 +136,7 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
       `).toDeepEqual([
       {
-        message:
-          'Directive "stream"\'s label argument must be a static string.',
+        message: 'Directive "stream"\'s label argument must be a static string.',
         locations: [{ line: 6, column: 39 }],
       },
     ])

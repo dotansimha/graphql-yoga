@@ -1,13 +1,6 @@
-import {
-  createGraphQLError,
-  GraphQLParams,
-  Plugin,
-  PromiseOrValue,
-} from 'graphql-yoga'
+import { createGraphQLError, GraphQLParams, Plugin, PromiseOrValue } from 'graphql-yoga'
 
-export type ExtractPersistedOperationId = (
-  params: GraphQLParams,
-) => null | string
+export type ExtractPersistedOperationId = (params: GraphQLParams) => null | string
 
 export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
   params: GraphQLParams,
@@ -25,9 +18,7 @@ export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
   return null
 }
 
-type AllowArbitraryOperationsHandler = (
-  request: Request,
-) => PromiseOrValue<boolean>
+type AllowArbitraryOperationsHandler = (request: Request) => PromiseOrValue<boolean>
 
 export interface UsePersistedOperationsOptions {
   /**

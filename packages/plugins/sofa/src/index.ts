@@ -1,5 +1,6 @@
 import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga'
-import { OpenAPI, useSofa as createSofaHandler } from 'sofa-api'
+import { useSofa as createSofaHandler, OpenAPI } from 'sofa-api'
+
 import { getSwaggerUIHTMLForSofa } from './swagger-ui.js'
 import { SofaHandler } from './types.js'
 
@@ -17,12 +18,10 @@ export type SofaWithSwaggerUIPluginConfig = SofaPluginConfig &
     swaggerUIEndpoint?: string
   }
 
-export function useSofaWithSwaggerUI(
-  config: SofaWithSwaggerUIPluginConfig,
-): Plugin {
+export function useSofaWithSwaggerUI(config: SofaWithSwaggerUIPluginConfig): Plugin {
   const swaggerUIEndpoint = config.swaggerUIEndpoint || '/swagger'
   let openApi: ReturnType<typeof OpenAPI>
-  const onRoute: SofaHandlerConfig['onRoute'] = (route) => {
+  const onRoute: SofaHandlerConfig['onRoute'] = route => {
     openApi.addRoute(route, { basePath: config.basePath })
     if (config.onRoute) {
       config.onRoute(route)
@@ -88,12 +87,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
 
   const envelopedByContext = new WeakMap<
     YogaInitialContext,
-    ReturnType<
-      YogaServerInstance<
-        Record<string, unknown>,
-        Record<string, unknown>
-      >['getEnveloped']
-    >
+    ReturnType<YogaServerInstance<Record<string, unknown>, Record<string, unknown>>['getEnveloped']>
   >()
 
   const requestByContext = new WeakMap<YogaInitialContext, Request>()
@@ -113,18 +107,14 @@ export function useSofa(config: SofaPluginConfig): Plugin {
           return contextValue
         },
         execute(args) {
-          const enveloped = envelopedByContext.get(
-            args.contextValue as YogaInitialContext,
-          )
+          const enveloped = envelopedByContext.get(args.contextValue as YogaInitialContext)
           if (!enveloped) {
             throw new TypeError('Illegal invocation.')
           }
           return enveloped.execute(args)
         },
         subscribe(args) {
-          const enveloped = envelopedByContext.get(
-            args.contextValue as YogaInitialContext,
-          )
+          const enveloped = envelopedByContext.get(args.contextValue as YogaInitialContext)
           if (!enveloped) {
             throw new TypeError('Illegal invocation.')
           }
@@ -134,10 +124,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
     },
     async onRequest({ request, serverContext, endResponse }) {
       requestByContext.set(serverContext as YogaInitialContext, request)
-      const response = await sofaHandler.handle(
-        request,
-        serverContext as Record<string, unknown>,
-      )
+      const response = await sofaHandler.handle(request, serverContext as Record<string, unknown>)
       if (response) {
         endResponse(response)
       }

@@ -1,19 +1,19 @@
 {
   "name": "example-nextjs",
-  "private": true,
   "version": "0.13.11",
+  "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
     "bundle": "node scripts/bundle.js",
-    "start": "next start",
+    "check": "tsc --pretty --noEmit",
+    "dev": "next dev",
     "lint": "next lint",
-    "check": "tsc --pretty --noEmit"
+    "start": "next start"
   },
   "dependencies": {
-    "graphql-yoga": "3.3.1",
     "@types/react": "18.0.26",
     "graphql": "^16.1.0",
+    "graphql-yoga": "3.3.1",
     "next": "13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -21,9 +21,9 @@
   },
   "devDependencies": {
     "@types/react": "18.0.26",
+    "esbuild": "0.16.16",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
-    "esbuild": "0.16.16",
     "typescript": "4.9.4"
   }
 }

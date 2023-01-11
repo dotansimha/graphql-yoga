@@ -1,12 +1,10 @@
-import { GraphQLError } from 'graphql'
 import { AggregateError } from '@graphql-tools/utils'
+import { GraphQLError } from 'graphql'
 
 import type { Plugin } from '../types.js'
 
-export function getAggregateErrorFromErrors(
-  errors: readonly GraphQLError[],
-): AggregateError {
-  errors.forEach((error) => {
+export function getAggregateErrorFromErrors(errors: readonly GraphQLError[]): AggregateError {
+  errors.forEach(error => {
     error.extensions.http = {
       spec: true,
       status: 400,

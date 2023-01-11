@@ -1,3 +1,4 @@
+import { createGraphQLError, inspect, Maybe } from '@graphql-tools/utils'
 import {
   ASTVisitor,
   DirectiveNode,
@@ -21,7 +22,6 @@ import {
   ValidationContext,
   ValueNode,
 } from 'graphql'
-import { createGraphQLError, inspect, Maybe } from '@graphql-tools/utils'
 
 /**
  * Returns a number indicating whether a reference string comes before, or after,
@@ -105,17 +105,13 @@ function sortValueNode(valueNode: ValueNode): ValueNode {
   }
 }
 
-function sortFields(
-  fields: ReadonlyArray<ObjectFieldNode>,
-): Array<ObjectFieldNode> {
+function sortFields(fields: ReadonlyArray<ObjectFieldNode>): Array<ObjectFieldNode> {
   return fields
-    .map((fieldNode) => ({
+    .map(fieldNode => ({
       ...fieldNode,
       value: sortValueNode(fieldNode.value),
     }))
-    .sort((fieldA, fieldB) =>
-      naturalCompare(fieldA.name.value, fieldB.name.value),
-    )
+    .sort((fieldA, fieldB) => naturalCompare(fieldA.name.value, fieldB.name.value))
 }
 
 function reasonMessage(reason: ConflictReasonMessage): string {
@@ -123,8 +119,7 @@ function reasonMessage(reason: ConflictReasonMessage): string {
     return reason
       .map(
         ([responseName, subReason]) =>
-          `subfields "${responseName}" conflict because ` +
-          reasonMessage(subReason),
+          `subfields "${responseName}" conflict because ` + reasonMessage(subReason),
       )
       .join(' and ')
   }
@@ -140,9 +135,7 @@ function reasonMessage(reason: ConflictReasonMessage): string {
  *
  * See https://spec.graphql.org/draft/#sec-Field-Selection-Merging
  */
-export function OverlappingFieldsCanBeMergedRule(
-  context: ValidationContext,
-): ASTVisitor {
+export function OverlappingFieldsCanBeMergedRule(context: ValidationContext): ASTVisitor {
   // A memoization for when two fragments are compared "between" each other for
   // conflicts. Two fragments may be compared many times, so memoizing this can
   // dramatically improve the performance of this validator.
@@ -181,11 +174,7 @@ type ConflictReason = [string, ConflictReasonMessage]
 // Reason is a string, or a nested list of conflicts.
 type ConflictReasonMessage = string | Array<ConflictReason>
 // Tuple defining a field node in a context.
-type NodeAndDef = [
-  Maybe<GraphQLNamedType>,
-  FieldNode,
-  Maybe<GraphQLField<unknown, unknown>>,
-]
+type NodeAndDef = [Maybe<GraphQLNamedType>, FieldNode, Maybe<GraphQLField<unknown, unknown>>]
 // Map of array of those.
 type NodeAndDefCollection = Record<string, Array<NodeAndDef>>
 type FragmentNames = ReadonlyArray<string>
@@ -324,12 +313,11 @@ function collectConflictsBetweenFieldsAndFragment(
     return
   }
 
-  const [fieldMap2, referencedFragmentNames] =
-    getReferencedFieldsAndFragmentNames(
-      context,
-      cachedFieldsAndFragmentNames,
-      fragment,
-    )
+  const [fieldMap2, referencedFragmentNames] = getReferencedFieldsAndFragmentNames(
+    context,
+    cachedFieldsAndFragmentNames,
+    fragment,
+  )
 
   // Do not compare a fragment's fieldMap to itself.
   if (fieldMap === fieldMap2) {
@@ -352,20 +340,10 @@ function collectConflictsBetweenFieldsAndFragment(
   // and any fragment names found in the given fragment.
   for (const referencedFragmentName of referencedFragmentNames) {
     // Memoize so two fragments are not compared for conflicts more than once.
-    if (
-      comparedFragmentPairs.has(
-        referencedFragmentName,
-        fragmentName,
-        areMutuallyExclusive,
-      )
-    ) {
+    if (comparedFragmentPairs.has(referencedFragmentName, fragmentName, areMutuallyExclusive)) {
       continue
     }
-    comparedFragmentPairs.add(
-      referencedFragmentName,
-      fragmentName,
-      areMutuallyExclusive,
-    )
+    comparedFragmentPairs.add(referencedFragmentName, fragmentName, areMutuallyExclusive)
 
     collectConflictsBetweenFieldsAndFragment(
       context,
@@ -396,13 +374,7 @@ function collectConflictsBetweenFragments(
   }
 
   // Memoize so two fragments are not compared for conflicts more than once.
-  if (
-    comparedFragmentPairs.has(
-      fragmentName1,
-      fragmentName2,
-      areMutuallyExclusive,
-    )
-  ) {
+  if (comparedFragmentPairs.has(fragmentName1, fragmentName2, areMutuallyExclusive)) {
     return
   }
   comparedFragmentPairs.add(fragmentName1, fragmentName2, areMutuallyExclusive)
@@ -413,18 +385,16 @@ function collectConflictsBetweenFragments(
     return
   }
 
-  const [fieldMap1, referencedFragmentNames1] =
-    getReferencedFieldsAndFragmentNames(
-      context,
-      cachedFieldsAndFragmentNames,
-      fragment1,
-    )
-  const [fieldMap2, referencedFragmentNames2] =
-    getReferencedFieldsAndFragmentNames(
-      context,
-      cachedFieldsAndFragmentNames,
-      fragment2,
-    )
+  const [fieldMap1, referencedFragmentNames1] = getReferencedFieldsAndFragmentNames(
+    context,
+    cachedFieldsAndFragmentNames,
+    fragment1,
+  )
+  const [fieldMap2, referencedFragmentNames2] = getReferencedFieldsAndFragmentNames(
+    context,
+    cachedFieldsAndFragmentNames,
+    fragment2,
+  )
 
   // (F) First, collect all conflicts between these two collections of fields
   // (not including any nested fragments).
@@ -656,20 +626,14 @@ function findConflict(
   // thus may not safely diverge.
   const areMutuallyExclusive =
     parentFieldsAreMutuallyExclusive ||
-    (parentType1 !== parentType2 &&
-      isObjectType(parentType1) &&
-      isObjectType(parentType2))
+    (parentType1 !== parentType2 && isObjectType(parentType1) && isObjectType(parentType2))
 
   if (!areMutuallyExclusive) {
     // Two aliases must refer to the same field.
     const name1 = node1.name.value
     const name2 = node2.name.value
     if (name1 !== name2) {
-      return [
-        [responseName, `"${name1}" and "${name2}" are different fields`],
-        [node1],
-        [node2],
-      ]
+      return [[responseName, `"${name1}" and "${name2}" are different fields`], [node1], [node2]]
     }
 
     // Two field calls must have the same arguments.
@@ -682,11 +646,7 @@ function findConflict(
   const directives1 = /* c8 ignore next */ node1.directives ?? []
   const directives2 = /* c8 ignore next */ node2.directives ?? []
   if (!sameStreams(directives1, directives2)) {
-    return [
-      [responseName, 'they have differing stream directives'],
-      [node1],
-      [node2],
-    ]
+    return [[responseName, 'they have differing stream directives'], [node1], [node2]]
   }
 
   // The return type for each field.
@@ -695,12 +655,7 @@ function findConflict(
 
   if (type1 && type2 && doTypesConflict(type1, type2)) {
     return [
-      [
-        responseName,
-        `they return conflicting types "${inspect(type1)}" and "${inspect(
-          type2,
-        )}"`,
-      ],
+      [responseName, `they return conflicting types "${inspect(type1)}" and "${inspect(type2)}"`],
       [node1],
       [node2],
     ]
@@ -733,7 +688,7 @@ function stringifyArguments(fieldNode: FieldNode | DirectiveNode): string {
 
   const inputObjectWithArgs: ObjectValueNode = {
     kind: Kind.OBJECT,
-    fields: args.map((argNode) => ({
+    fields: args.map(argNode => ({
       kind: Kind.OBJECT_FIELD,
       name: argNode.name,
       value: argNode.value,
@@ -742,10 +697,8 @@ function stringifyArguments(fieldNode: FieldNode | DirectiveNode): string {
   return print(sortValueNode(inputObjectWithArgs))
 }
 
-function getStreamDirective(
-  directives: ReadonlyArray<DirectiveNode>,
-): DirectiveNode | undefined {
-  return directives.find((directive) => directive.name.value === 'stream')
+function getStreamDirective(directives: ReadonlyArray<DirectiveNode>): DirectiveNode | undefined {
+  return directives.find(directive => directive.name.value === 'stream')
 }
 
 function sameStreams(
@@ -769,22 +722,15 @@ function sameStreams(
 // Two types conflict if both types could not apply to a value simultaneously.
 // Composite types are ignored as their individual field types will be compared
 // later recursively. However List and Non-Null types must match.
-function doTypesConflict(
-  type1: GraphQLOutputType,
-  type2: GraphQLOutputType,
-): boolean {
+function doTypesConflict(type1: GraphQLOutputType, type2: GraphQLOutputType): boolean {
   if (isListType(type1)) {
-    return isListType(type2)
-      ? doTypesConflict(type1.ofType, type2.ofType)
-      : true
+    return isListType(type2) ? doTypesConflict(type1.ofType, type2.ofType) : true
   }
   if (isListType(type2)) {
     return true
   }
   if (isNonNullType(type1)) {
-    return isNonNullType(type2)
-      ? doTypesConflict(type1.ofType, type2.ofType)
-      : true
+    return isNonNullType(type2) ? doTypesConflict(type1.ofType, type2.ofType) : true
   }
   if (isNonNullType(type2)) {
     return true
@@ -810,13 +756,7 @@ function getFieldsAndFragmentNames(
   }
   const nodeAndDefs: NodeAndDefCollection = Object.create(null)
   const fragmentNames = new Set<string>()
-  _collectFieldsAndFragmentNames(
-    context,
-    parentType,
-    selectionSet,
-    nodeAndDefs,
-    fragmentNames,
-  )
+  _collectFieldsAndFragmentNames(context, parentType, selectionSet, nodeAndDefs, fragmentNames)
   const result = [nodeAndDefs, [...fragmentNames]] as const
   cachedFieldsAndFragmentNames.set(selectionSet, result)
   return result

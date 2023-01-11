@@ -1,9 +1,4 @@
-import {
-  createYoga,
-  Plugin,
-  createSchema,
-  createGraphQLError,
-} from 'graphql-yoga'
+import { createGraphQLError, createSchema, createYoga, Plugin } from 'graphql-yoga'
 
 // available when handling requests, needs to be provided by the implementor
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -29,8 +24,7 @@ export const yoga = createYoga<ServerContext, UserContext>({
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
       Subscription: {
         greetings: {

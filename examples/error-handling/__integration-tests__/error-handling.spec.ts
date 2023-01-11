@@ -1,7 +1,9 @@
-import { yoga } from '../src/yoga'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
+
 import { fetch } from '@whatwg-node/fetch'
+
+import { yoga } from '../src/yoga'
 
 describe('error-handling example integration', () => {
   let server: Server
@@ -9,18 +11,16 @@ describe('error-handling example integration', () => {
 
   beforeAll(async () => {
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, resolve))
+    await new Promise<void>(resolve => server.listen(0, resolve))
     port = (server.address() as AddressInfo).port
   })
 
   afterAll(async () => {
-    await new Promise((resolve) => server.close(resolve))
+    await new Promise(resolve => server.close(resolve))
   })
 
   it('should get a masked error', async () => {
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{greeting}`,
-    )
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{greeting}`)
     const body = await response.json()
 
     expect(body).toMatchInlineSnapshot(`

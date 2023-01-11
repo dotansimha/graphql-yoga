@@ -101,9 +101,7 @@ describe('requests', () => {
 
   it('sending mutation over GET method is prohibited', async () => {
     const response = await yoga.fetch(
-      `http://yoga/test-graphql?query=${encodeURIComponent(
-        'mutation { __typename }',
-      )}`,
+      `http://yoga/test-graphql?query=${encodeURIComponent('mutation { __typename }')}`,
       {
         method: 'GET',
         headers: {
@@ -211,9 +209,7 @@ describe('requests', () => {
 
     const body = await response.json()
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toEqual(
-      'POST body is expected to be object but received null',
-    )
+    expect(body.errors[0].message).toEqual('POST body is expected to be object but received null')
 
     expect(body.data).toBeUndefined()
   })
@@ -231,9 +227,7 @@ describe('requests', () => {
 
     const body = await response.json()
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toEqual(
-      'POST body is expected to be object but received string',
-    )
+    expect(body.errors[0].message).toEqual('POST body is expected to be object but received string')
 
     expect(body.data).toBeUndefined()
   })
@@ -303,9 +297,7 @@ describe('requests', () => {
     })
 
     expect(response.status).toEqual(204)
-    expect(response.headers.get('access-control-allow-origin')).toEqual(
-      'http://localhost:3000',
-    )
+    expect(response.headers.get('access-control-allow-origin')).toEqual('http://localhost:3000')
     expect(response.headers.get('access-control-allow-methods')).toEqual('POST')
   })
 
@@ -367,9 +359,7 @@ describe('requests', () => {
     expect(response.status).toBe(400)
     const body = await response.json()
     expect(body.data).toBeUndefined()
-    expect(body.errors?.[0].message).toBe(
-      'Unexpected parameter "test" in the request body.',
-    )
+    expect(body.errors?.[0].message).toBe('Unexpected parameter "test" in the request body.')
   })
 
   it('should use supported accept header when multiple are provided', async () => {

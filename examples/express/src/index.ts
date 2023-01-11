@@ -1,4 +1,5 @@
 import express from 'express'
+
 import { buildApp } from './app'
 
 const app = express()

@@ -4,8 +4,9 @@ import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 # GraphQL Context
 
-A context is usually created for each execution of a GraphQL Operation, and it is passed to the resolver functions as a third argument.
-You can learn more about [`Context` in GraphQL Tools docs](https://graphql-tools.com/docs/connectors).
+A context is usually created for each execution of a GraphQL Operation, and it is passed to the
+resolver functions as a third argument. You can learn more about
+[`Context` in GraphQL Tools docs](https://graphql-tools.com/docs/connectors).
 
 It is commonly used for doing dependency injection.
 
@@ -13,9 +14,12 @@ Within GraphQL Yoga, the context object is generated per HTTP request.
 
 ## Default Context
 
-By default, GraphQL Yoga provides the following values in the context object independently of your environment and setup:
+By default, GraphQL Yoga provides the following values in the context object independently of your
+environment and setup:
 
-- `request` - [Fetch API `Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request) that represents the incoming HTTP request in platform-independent way. It can be useful for accessing headers to authenticate a user
+- `request` - [Fetch API `Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request)
+  that represents the incoming HTTP request in platform-independent way. It can be useful for
+  accessing headers to authenticate a user
 - `query` - the `DocumentNode` that was parsed from the GraphQL query string
 - `operationName` - the operation name selected from the incoming query
 - `variables` - the variables that were defined in the query
@@ -50,7 +54,7 @@ server.start()
 curl -X POST http://localhost:4000/graphql \
   -H "content-type: application/json" \
   -H "x-foo: iliketurtles"
-  --data-raw '{"query": "query { logHeader }"}'
+--data-raw '{"query": "query { logHeader }"}'
 ```
 
 ## Extending the Initial Context
@@ -83,7 +87,9 @@ const server = createServer({
 server.start()
 ```
 
-You can also pass a function as the `context` property. The function will be invoked for each incoming GraphQL request with the initial context as an argument and after the invocation it will be merged with the initial context.
+You can also pass a function as the `context` property. The function will be invoked for each
+incoming GraphQL request with the initial context as an argument and after the invocation it will be
+merged with the initial context.
 
 ### Example: Function Returning an Object
 
@@ -143,16 +149,21 @@ server.start()
 
 ## Advanced Context Life-Cycle
 
-For most users, the previous sections are already sufficient.
-If you, however, need to integrate Yoga with a custom framework and/or want to attach runtime/framework-specific Request/Response objects to the context.
-Also, if you are just curious about how Yoga works in depth, this might also be interesting to you!
+For most users, the previous sections are already sufficient. If you, however, need to integrate
+Yoga with a custom framework and/or want to attach runtime/framework-specific Request/Response
+objects to the context. Also, if you are just curious about how Yoga works in depth, this might also
+be interesting to you!
 
 There are 4 steps that GraphQL Yoga follows to generate the final context object:
 
-- [Default Context](#default-context) - this context is constructed for each incoming request and the same on all platforms
-- [Server Context](#server-context) - the content of this context extension depends on the platform (Node.js/Deno/etc.) and the framework (raw Node.js/express/fastify)
-- [User Context](#user-context) - this context is created for each incoming request with access to the default and server context
-- [Envelop Plugin Context](#envelop-plugins) - the context from envelop plugins is processed last, the plugins have access to the default context, server context and user context
+- [Default Context](#default-context) - this context is constructed for each incoming request and
+  the same on all platforms
+- [Server Context](#server-context) - the content of this context extension depends on the platform
+  (Node.js/Deno/etc.) and the framework (raw Node.js/express/fastify)
+- [User Context](#user-context) - this context is created for each incoming request with access to
+  the default and server context
+- [Envelop Plugin Context](#envelop-plugins) - the context from envelop plugins is processed last,
+  the plugins have access to the default context, server context and user context
 
 ### Default Context
 
@@ -160,14 +171,19 @@ See the above section [default context](#default-context).
 
 ### Server Context
 
-When creating the server instance, GraphQL Yoga accepts an additional object from your base server framework or library that will be merged with the default context.
+When creating the server instance, GraphQL Yoga accepts an additional object from your base server
+framework or library that will be merged with the default context.
 
 #### Node.js (standalone, express and Next.js etc.)
 
-If you are using GraphQL Yoga as a standalone server with `.start()` method or exposing it as a middleware as we show in our [express](/docs/integrations/integration-with-express) and [Next.js](/docs/integrations/integration-with-nextjs) recipes.
+If you are using GraphQL Yoga as a standalone server with `.start()` method or exposing it as a
+middleware as we show in our [express](/docs/integrations/integration-with-express) and
+[Next.js](/docs/integrations/integration-with-nextjs) recipes.
 
-- `req` - Node.js [`IncomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage) object
-- `res` - Node.js [`ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse) object
+- `req` - Node.js
+  [`IncomingMessage`](https://nodejs.org/api/http.html#http_class_http_incomingmessage) object
+- `res` - Node.js
+  [`ServerResponse`](https://nodejs.org/api/http.html#http_class_http_serverresponse) object
 
 The `req` and `res` objects are added to the initial context object.
 
@@ -175,19 +191,27 @@ The `req` and `res` objects are added to the initial context object.
 const serverContext = { ...defaultContext, req, res }
 ```
 
-Thus when using `@graphql-yoga/node`, it is possible to access `context.req` and `context.res` within the GraphQL resolvers or the user context factory function.
+Thus when using `@graphql-yoga/node`, it is possible to access `context.req` and `context.res`
+within the GraphQL resolvers or the user context factory function.
 
-However, we recommend avoiding using `context.req` and `context.res` wherever possible and instead favor `context.request`, as it is more future-proof (as Node.js HTTP servers adopt the Fetch Response API).
+However, we recommend avoiding using `context.req` and `context.res` wherever possible and instead
+favor `context.request`, as it is more future-proof (as Node.js HTTP servers adopt the Fetch
+Response API).
 
 #### Advanced Node.js frameworks (Fastify/Koa)
 
-You might notice that the middleware implementation is more complex for server frameworks like [Fastify](/docs/integrations/integration-with-fastify) and [koa](/docs/integrations/integration-with-koa), because of their custom request handling behavior.
-It is not possible to use a basic Node.js [RequestListener](https://nodejs.org/api/http.html#http_class_http_incomingmessage) function.
+You might notice that the middleware implementation is more complex for server frameworks like
+[Fastify](/docs/integrations/integration-with-fastify) and
+[koa](/docs/integrations/integration-with-koa), because of their custom request handling behavior.
+It is not possible to use a basic Node.js
+[RequestListener](https://nodejs.org/api/http.html#http_class_http_incomingmessage) function.
 
-Since they limit the access to the underlying raw `ServerResponse` object, the recipes use the `.handleIncomingMessage` method and pass the server context as the second parameter.
+Since they limit the access to the underlying raw `ServerResponse` object, the recipes use the
+`.handleIncomingMessage` method and pass the server context as the second parameter.
 
-E.g. for **_Fastify_**, a [`Reply`](https://fastify.io/docs/latest/Reply) object is attached to the server context instead of the `Request` object, which is an intermediate framework-specific response format.
-Also, note the generic definition in `createServer` for correctly typing the server context.
+E.g. for **_Fastify_**, a [`Reply`](https://fastify.io/docs/latest/Reply) object is attached to the
+server context instead of the `Request` object, which is an intermediate framework-specific response
+format. Also, note the generic definition in `createServer` for correctly typing the server context.
 
 ```ts
 const graphQLServer = createServer<{
@@ -205,14 +229,19 @@ const response = await graphQLServer.handleIncomingMessage(req, {
 
 #### Fetch API Request compliant environments (Cloudflare Workers/Deno)
 
-If you are using Cloudflare Workers with `@graphql-yoga/common` according to [the integration guide](/docs/integrations/integration-with-cloudflare-workers), the WHATWG [`FetchEvent`](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent) object will be added as the server context object.
-That object is almost identical to what GraphQL Yoga provides you within `YogaInitialContext`.
+If you are using Cloudflare Workers with `@graphql-yoga/common` according to
+[the integration guide](/docs/integrations/integration-with-cloudflare-workers), the WHATWG
+[`FetchEvent`](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent) object will be added as
+the server context object. That object is almost identical to what GraphQL Yoga provides you within
+`YogaInitialContext`.
 
 ### User Context
 
-Besides, the initial context generated based on your setup, GraphQL Yoga also accepts a user context object that will be merged with the initial context (built out of the default context and server context).
-You can pass a factory function to `context` parameter of `createServer` configuration.
-That function will receive the combination of the standard initial context and the server's (if available), then the return value will be merged into that.
+Besides, the initial context generated based on your setup, GraphQL Yoga also accepts a user context
+object that will be merged with the initial context (built out of the default context and server
+context). You can pass a factory function to `context` parameter of `createServer` configuration.
+That function will receive the combination of the standard initial context and the server's (if
+available), then the return value will be merged into that.
 
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -230,9 +259,11 @@ server.start()
 
 In this case, your final context object will have an extra `foo` property.
 
-See the above section [extending the initial context](#extending-the-initial-context) for more details and usage examples.
+See the above section [extending the initial context](#extending-the-initial-context) for more
+details and usage examples.
 
 ## Envelop Plugins
 
-After all of the above, Envelop plugins (if you have some) receive the context object and can modify or extend it.
-See the documentation for [Envelop plugins](/docs/features/envelop-plugins) for more information.
+After all of the above, Envelop plugins (if you have some) receive the context object and can modify
+or extend it. See the documentation for [Envelop plugins](/docs/features/envelop-plugins) for more
+information.

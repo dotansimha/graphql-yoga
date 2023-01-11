@@ -11,14 +11,11 @@ describe('node-ts example integration', () => {
   })
 
   it('should have subscriptions disabled', async () => {
-    const response = await yoga.fetch(
-      'http://yoga/graphql?query=subscription{greetings}',
-      {
-        headers: {
-          Accept: 'text/event-stream',
-        },
+    const response = await yoga.fetch('http://yoga/graphql?query=subscription{greetings}', {
+      headers: {
+        Accept: 'text/event-stream',
       },
-    )
+    })
 
     expect(response.status).toBe(400)
     expect(await response.text()).toMatchInlineSnapshot(`

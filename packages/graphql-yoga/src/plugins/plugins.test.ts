@@ -1,4 +1,5 @@
 import { AfterValidateHook } from '@envelop/core'
+
 import { createGraphQLError } from '../error.js'
 import { createSchema } from '../schema.js'
 import { createYoga } from '../server.js'
@@ -17,9 +18,7 @@ describe('Yoga Plugins', () => {
     const afterValidateHook: AfterValidateHook<Record<string, unknown>> = jest
       .fn()
       .mockImplementation(({ setResult }) => {
-        setResult([
-          createGraphQLError('My Error', { extensions: { my: 'error' } }),
-        ])
+        setResult([createGraphQLError('My Error', { extensions: { my: 'error' } })])
       })
     const testPlugin: Plugin = {
       onValidate() {

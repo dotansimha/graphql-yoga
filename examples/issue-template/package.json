@@ -2,19 +2,19 @@
   "name": "example-issue-template",
   "version": "1.13.11",
   "private": true,
-  "devDependencies": {
-    "@types/node": "18.11.18",
-    "ts-node": "10.9.1",
-    "ts-node-dev": "2.0.0",
-    "typescript": "4.9.4"
+  "scripts": {
+    "check": "tsc",
+    "dev": "ts-node-dev src/main.ts",
+    "start": "ts-node src/main.ts"
   },
   "dependencies": {
     "graphql": "^16.3.0",
     "graphql-yoga": "^3.3.1"
   },
-  "scripts": {
-    "dev": "ts-node-dev src/main.ts",
-    "start": "ts-node src/main.ts",
-    "check": "tsc"
+  "devDependencies": {
+    "@types/node": "18.11.18",
+    "ts-node": "10.9.1",
+    "ts-node-dev": "2.0.0",
+    "typescript": "4.9.4"
   }
 }

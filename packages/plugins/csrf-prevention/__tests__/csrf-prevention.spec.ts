@@ -1,4 +1,5 @@
 import { createSchema, createYoga } from 'graphql-yoga'
+
 import { useCSRFPrevention } from '../src/index.js'
 
 describe('csrf-prevention', () => {
@@ -43,9 +44,7 @@ describe('csrf-prevention', () => {
       },
     })
     expect(res.status).toBe(200)
-    await expect(res.text()).resolves.toMatchInlineSnapshot(
-      `"{"data":{"hello":"world"}}"`,
-    )
+    await expect(res.text()).resolves.toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`)
 
     res = await yoga.fetch('http://yoga/graphql?query={hello}', {
       headers: {
@@ -53,8 +52,6 @@ describe('csrf-prevention', () => {
       },
     })
     expect(res.status).toBe(200)
-    await expect(res.text()).resolves.toMatchInlineSnapshot(
-      `"{"data":{"hello":"world"}}"`,
-    )
+    await expect(res.text()).resolves.toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`)
   })
 })

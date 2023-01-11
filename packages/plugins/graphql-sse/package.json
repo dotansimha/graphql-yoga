@@ -1,20 +1,17 @@
 {
   "name": "@graphql-yoga/plugin-graphql-sse",
   "version": "0.0.0",
+  "type": "module",
   "description": "GraphQL over Server-Sent Events Protocol plugin for GraphQL Yoga.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/plugins/graphql-sse"
   },
-  "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
   "author": "Denis Badurina <badurinadenis@gmail.com>",
   "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -33,16 +30,12 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
   },
   "peerDependencies": {
-    "graphql-yoga": "^3.1.1",
-    "graphql": "^15.2.0 || ^16.0.0"
+    "graphql": "^15.2.0 || ^16.0.0",
+    "graphql-yoga": "^3.1.1"
   },
   "dependencies": {
     "graphql-sse": "^2.0.0"
@@ -50,5 +43,12 @@
   "devDependencies": {
     "graphql-yoga": "^3.1.1",
     "tslib": "^2.4.1"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
   }
 }

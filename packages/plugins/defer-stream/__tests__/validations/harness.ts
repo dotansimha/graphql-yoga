@@ -1,10 +1,4 @@
-import {
-  buildSchema,
-  GraphQLSchema,
-  parse,
-  validate,
-  ValidationRule,
-} from 'graphql'
+import { buildSchema, GraphQLSchema, parse, validate, ValidationRule } from 'graphql'
 import { Maybe } from 'graphql/jsutils/Maybe'
 import { validateSDL } from 'graphql/validation/validate'
 import { SDLValidationRule } from 'graphql/validation/ValidationContext'

@@ -1,9 +1,11 @@
-import { buildApp } from '../src/app.js'
-import WebSocket from 'ws'
-import { createClient } from 'graphql-ws'
 import { createServer } from 'http'
-import { createYoga, createSchema } from 'graphql-yoga'
+
+import { createClient } from 'graphql-ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
+import { createSchema, createYoga } from 'graphql-yoga'
+import WebSocket from 'ws'
+
+import { buildApp } from '../src/app.js'
 
 describe('graphql-ws example integration', () => {
   const app = buildApp()
@@ -105,14 +107,8 @@ describe('graphql-ws example integration', () => {
         execute: (args: any) => args.execute(args),
         subscribe: (args: any) => args.subscribe(args),
         onSubscribe: async (_ctx, msg) => {
-          const {
-            schema,
-            execute,
-            subscribe,
-            contextFactory,
-            parse,
-            validate,
-          } = yoga.getEnveloped() // <- malformed/missing context
+          const { schema, execute, subscribe, contextFactory, parse, validate } =
+            yoga.getEnveloped() // <- malformed/missing context
 
           const args = {
             schema,
@@ -136,7 +132,7 @@ describe('graphql-ws example integration', () => {
     )
 
     await new Promise<void>((resolve, reject) => {
-      server.on('error', (err) => reject(err))
+      server.on('error', err => reject(err))
       server.on('listening', () => resolve())
       server.listen(4001)
     })
@@ -169,7 +165,7 @@ describe('graphql-ws example integration', () => {
 
     await client.dispose()
     await wsServer.dispose()
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       server.close(() => resolve())
     })
   })

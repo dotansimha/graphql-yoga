@@ -1,8 +1,5 @@
 import { specifiedScalarTypes } from 'graphql'
-import {
-  resolvers as scalarsResolvers,
-  typeDefs as scalarsTypeDefs,
-} from 'graphql-scalars'
+import { resolvers as scalarsResolvers, typeDefs as scalarsTypeDefs } from 'graphql-scalars'
 
 import { createSchema, createYoga } from '../src/index.js'
 
@@ -18,10 +15,9 @@ describe('graphql-scalars', () => {
     'Currency',
     'Timestamp',
   ]
-  const allScalars = [
-    ...specifiedScalarTypes,
-    ...Object.values(scalarsResolvers),
-  ].filter((type) => !ignoredScalars.includes(type.name))
+  const allScalars = [...specifiedScalarTypes, ...Object.values(scalarsResolvers)].filter(
+    type => !ignoredScalars.includes(type.name),
+  )
   const yoga = createYoga({
     schema: createSchema({
       typeDefs: [
@@ -29,20 +25,16 @@ describe('graphql-scalars', () => {
         /* GraphQL */ `
         type Query {
           ${allScalars
-            .map(
-              (scalar) =>
-                `get${scalar.name}(input: ${scalar.name}!): ${scalar.name}!`,
-            )
+            .map(scalar => `get${scalar.name}(input: ${scalar.name}!): ${scalar.name}!`)
             .join('\n')}
         }
       `,
       ],
       resolvers: [
         scalarsResolvers,
-        ...allScalars.map((scalar) => ({
+        ...allScalars.map(scalar => ({
           Query: {
-            [`get${scalar.name}`]: (_: never, { input }: { input: unknown }) =>
-              input,
+            [`get${scalar.name}`]: (_: never, { input }: { input: unknown }) => input,
           },
         })),
       ],

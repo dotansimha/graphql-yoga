@@ -1,5 +1,5 @@
-import { createSchema, createYoga } from 'graphql-yoga'
 import { EnvelopArmor } from '@escape.tech/graphql-armor'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const armor = new EnvelopArmor()
 const enhancements = armor.protect()

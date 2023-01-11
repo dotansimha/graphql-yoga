@@ -1,23 +1,12 @@
-import {
-  ASTVisitor,
-  DirectiveNode,
-  isListType,
-  isWrappingType,
-  ValidationContext,
-} from 'graphql'
-import {
-  createGraphQLError,
-  GraphQLStreamDirective,
-} from '@graphql-tools/utils'
+import { createGraphQLError, GraphQLStreamDirective } from '@graphql-tools/utils'
+import { ASTVisitor, DirectiveNode, isListType, isWrappingType, ValidationContext } from 'graphql'
 
 /**
  * Stream directive on list field
  *
  * A GraphQL document is only valid if stream directives are used on list fields.
  */
-export function StreamDirectiveOnListFieldRule(
-  context: ValidationContext,
-): ASTVisitor {
+export function StreamDirectiveOnListFieldRule(context: ValidationContext): ASTVisitor {
   return {
     Directive(node: DirectiveNode) {
       const fieldDef = context.getFieldDef()

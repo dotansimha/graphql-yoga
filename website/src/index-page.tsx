@@ -1,17 +1,14 @@
 import { ReactElement, ReactNode } from 'react'
+
 import { useRouter } from 'next/router'
+
 import { Anchor, Image } from '@theguild/components'
 import clsx from 'clsx'
 import ecosystemImage from 'public/assets/ecosystem.svg'
 import httpImage from 'public/assets/http.svg'
 import subscriptionsImage from 'public/assets/subscriptions.svg'
 import { AiFillAppstore } from 'react-icons/ai'
-import {
-  BsCheckCircle,
-  BsFillPlayFill,
-  BsFillSafeFill,
-  BsFillStopwatchFill,
-} from 'react-icons/bs'
+import { BsCheckCircle, BsFillPlayFill, BsFillSafeFill, BsFillStopwatchFill } from 'react-icons/bs'
 import { FiGithub, FiUpload } from 'react-icons/fi'
 import { GiHealthNormal } from 'react-icons/gi'
 import { GrGraphQl } from 'react-icons/gr'
@@ -50,24 +47,18 @@ export function IndexPage(): ReactElement {
             GraphQL Yoga
           </h1>
           <p className="max-w-screen-sm mx-auto mt-6 text-2xl text-gray-600 text-center dark:text-gray-400">
-            The fully-featured GraphQL Server with focus on easy setup,
-            performance and great developer experience.
+            The fully-featured GraphQL Server with focus on easy setup, performance and great
+            developer experience.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Anchor className={classes.button} href="/v3">
               Documentation
             </Anchor>
-            <Anchor
-              className={clsx(classes.button, 'hidden lg:block')}
-              href="/tutorial/basic"
-            >
+            <Anchor className={clsx(classes.button, 'hidden lg:block')} href="/tutorial/basic">
               Tutorial
             </Anchor>
             <Anchor
-              className={clsx(
-                classes.button,
-                'flex flex-row gap-2 items-center',
-              )}
+              className={clsx(classes.button, 'flex flex-row gap-2 items-center')}
               href="https://github.com/dotansimha/graphql-yoga"
             >
               <FiGithub /> GitHub
@@ -93,15 +84,13 @@ export function IndexPage(): ReactElement {
                     link: '/v3/features/parsing-and-validation-caching',
                     icon: <AiFillAppstore size={36} />,
                     title: 'Parse and validate cache',
-                    description:
-                      'Fast requests by caching intensive operations',
+                    description: 'Fast requests by caching intensive operations',
                   },
                   {
                     link: '/v3/features/error-masking',
                     icon: <MdError size={36} />,
                     title: 'Error masking',
-                    description:
-                      'Never leak sensitive information through errors',
+                    description: 'Never leak sensitive information through errors',
                   },
                   {
                     link: '/v3/features/health-check',
@@ -114,8 +103,7 @@ export function IndexPage(): ReactElement {
                     link: '/v3/features/graphiql',
                     icon: <GrGraphQl size={36} />,
                     title: 'GraphiQL',
-                    description:
-                      'In-browser IDE for writing, validating, and testing operations',
+                    description: 'In-browser IDE for writing, validating, and testing operations',
                   },
                 ]}
               />
@@ -134,17 +122,11 @@ export function IndexPage(): ReactElement {
             <div>
               <p>
                 because GraphQL Yoga is powered by{' '}
-                <Anchor
-                  href="https://the-guild.dev/graphql/envelop"
-                  className={classes.link}
-                >
+                <Anchor href="https://the-guild.dev/graphql/envelop" className={classes.link}>
                   Envelop
                 </Anchor>{' '}
                 you can use{' '}
-                <Anchor
-                  href="/v3/features/envelop-plugins"
-                  className={classes.link}
-                >
+                <Anchor href="/v3/features/envelop-plugins" className={classes.link}>
                   any plugin
                 </Anchor>
               </p>
@@ -162,11 +144,9 @@ export function IndexPage(): ReactElement {
                         The{' '}
                         <button
                           className={classes.link}
-                          onClick={(e) => {
+                          onClick={e => {
                             e.preventDefault()
-                            router.push(
-                              '/v3/comparison#compatibility-with-apollo-federation',
-                            )
+                            router.push('/v3/comparison#compatibility-with-apollo-federation')
                           }}
                         >
                           best supergraph and subgraph
@@ -179,15 +159,13 @@ export function IndexPage(): ReactElement {
                     link: '/v3/features/persisted-operations',
                     icon: <BsFillSafeFill size={36} />,
                     title: 'Persisted operations',
-                    description:
-                      'Prevent execution of arbitrary GraphQL operations',
+                    description: 'Prevent execution of arbitrary GraphQL operations',
                   },
                   {
                     link: '/v3/features/response-caching',
                     icon: <MdCached size={36} />,
                     title: 'Response caching',
-                    description:
-                      'Reducing server load by caching operation results',
+                    description: 'Reducing server load by caching operation results',
                   },
                   {
                     link: 'https://the-guild.dev/graphql/envelop/plugins/use-rate-limiter',
@@ -211,10 +189,7 @@ export function IndexPage(): ReactElement {
             <div>
               <p>
                 following the{' '}
-                <Anchor
-                  href="https://graphql.github.io/graphql-over-http"
-                  className={classes.link}
-                >
+                <Anchor href="https://graphql.github.io/graphql-over-http" className={classes.link}>
                   GraphQL over HTTP specification
                 </Anchor>
               </p>
@@ -245,10 +220,7 @@ export function IndexPage(): ReactElement {
                     description: (
                       <>
                         Built-in GraphQL{' '}
-                        <Anchor
-                          href="/v3/features/subscriptions"
-                          className={classes.link}
-                        >
+                        <Anchor href="/v3/features/subscriptions" className={classes.link}>
                           Subscriptions over Server-Sent Events
                         </Anchor>
                         .
@@ -278,17 +250,11 @@ export function IndexPage(): ReactElement {
         }
       />
 
-      <Feature
-        title="Runs Everywhere"
-        description="supports many environments"
-        gradient={2}
-      >
+      <Feature title="Runs Everywhere" description="supports many environments" gradient={2}>
         <div
           className="flex justify-center max-w-screen-lg p-12 mx-auto rounded-3xl"
           style={{
-            backgroundImage: `linear-gradient(70deg, ${pickGradient(2)[0]}, ${
-              pickGradient(2)[1]
-            })`,
+            backgroundImage: `linear-gradient(70deg, ${pickGradient(2)[0]}, ${pickGradient(2)[1]})`,
           }}
         >
           <div className="flex flex-wrap">
@@ -331,7 +297,7 @@ export function IndexPage(): ReactElement {
                 name: '& more...',
                 href: '/v3/integrations/z-other-environments',
               },
-            ].map((env) => (
+            ].map(env => (
               <div className="p-2 sm:w-1/2 md:w-1/3 w-full" key={env.name}>
                 <Anchor href={env.href}>
                   <div className="bg-amber-100 dark:bg-amber-800 rounded flex p-4 h-full items-center gap-2">
@@ -417,9 +383,7 @@ function Feature({
             >
               {title}
             </h2>
-            <div className="text-lg text-gray-600 dark:text-gray-400 leading-7">
-              {description}
-            </div>
+            <div className="text-lg text-gray-600 dark:text-gray-400 leading-7">{description}</div>
           </div>
           {image && (
             <div
@@ -428,12 +392,7 @@ function Feature({
                 backgroundImage: `linear-gradient(70deg, ${start}, ${end})`,
               }}
             >
-              <Image
-                src={image}
-                className="rounded-xl mx-auto"
-                placeholder="empty"
-                alt={title}
-              />
+              <Image src={image} className="rounded-xl mx-auto" placeholder="empty" alt={title} />
             </div>
           )}
         </div>
@@ -471,10 +430,7 @@ function FeatureHighlights({
             {...(link && ({ href: link } as any))}
           >
             {icon && (
-              <div
-                className="flex-shrink-0"
-                style={textColor ? { color: textColor } : {}}
-              >
+              <div className="flex-shrink-0" style={textColor ? { color: textColor } : {}}>
                 {icon}
               </div>
             )}
@@ -485,12 +441,7 @@ function FeatureHighlights({
               >
                 {title}
               </h3>
-              <p
-                className={clsx(
-                  'text-gray-600 dark:text-gray-400',
-                  !icon && 'text-sm',
-                )}
-              >
+              <p className={clsx('text-gray-600 dark:text-gray-400', !icon && 'text-sm')}>
                 {description}
               </p>
             </div>

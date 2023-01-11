@@ -1,9 +1,8 @@
-import { createSchema, createYoga } from 'graphql-yoga'
-import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+import { createSchema, createYoga } from 'graphql-yoga'
 
-const wait = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time))
+const wait = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -119,7 +118,7 @@ export const yoga = createYoga({
 
     `
       .split('\n')
-      .map((line) => line.replace('      ', ''))
+      .map(line => line.replace('      ', ''))
       .join('\n'),
   },
 })

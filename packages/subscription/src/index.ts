@@ -1,8 +1,4 @@
-export type {
-  PubSub,
-  PubSubEvent,
-  PubSubEventTarget,
-} from './create-pub-sub.js'
+export type { PubSub, PubSubEvent, PubSubEventTarget } from './create-pub-sub.js'
 export { createPubSub } from './create-pub-sub.js'
 export { filter } from './operator/filter.js'
 export { map } from './operator/map.js'

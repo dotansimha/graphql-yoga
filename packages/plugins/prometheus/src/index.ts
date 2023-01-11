@@ -3,10 +3,9 @@ import {
   usePrometheus as useEnvelopPrometheus,
 } from '@envelop/prometheus'
 import { Plugin } from 'graphql-yoga'
-import { Histogram, register as defaultRegistry } from 'prom-client'
+import { register as defaultRegistry, Histogram } from 'prom-client'
 
-export interface PrometheusTracingPluginConfig
-  extends EnvelopPrometheusTracingPluginConfig {
+export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
   http?: boolean | EnvelopPrometheusTracingPluginConfig['execute']
   /**
    * The endpoint to serve metrics exposed by this plugin.
@@ -30,14 +29,7 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const httpHistogram = new Histogram({
     name: 'graphql_yoga_http_duration',
     help: 'Time spent on HTTP connection',
-    labelNames: [
-      'url',
-      'method',
-      'requestHeaders',
-      'statusCode',
-      'statusText',
-      'responseHeaders',
-    ],
+    labelNames: ['url', 'method', 'requestHeaders', 'statusCode', 'statusText', 'responseHeaders'],
     registers: [registry],
   })
 

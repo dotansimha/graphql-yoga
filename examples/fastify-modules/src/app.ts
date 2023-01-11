@@ -1,12 +1,9 @@
-import 'reflect-metadata'
-import { createYoga } from 'graphql-yoga'
-import fastify, {
-  FastifyReply,
-  FastifyRequest,
-  RouteHandlerMethod,
-} from 'fastify'
 import { useGraphQLModules } from '@envelop/graphql-modules'
+import fastify, { FastifyReply, FastifyRequest, RouteHandlerMethod } from 'fastify'
 import { createApplication } from 'graphql-modules'
+import { createYoga } from 'graphql-yoga'
+import 'reflect-metadata'
+
 import { basicModule } from './modules/basic'
 
 export function createGraphQLApp() {

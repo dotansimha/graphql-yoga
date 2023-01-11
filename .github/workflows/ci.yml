@@ -40,7 +40,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.pnpm-store.outputs.PATH }}
-          key: ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key:
+            ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
+            hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
 
@@ -90,7 +92,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.pnpm-store.outputs.PATH }}
-          key: ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key:
+            ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
+            hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
 
@@ -140,7 +144,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.pnpm-store.outputs.PATH }}
-          key: ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key:
+            ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
+            hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
 

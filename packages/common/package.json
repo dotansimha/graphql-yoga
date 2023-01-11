@@ -1,29 +1,17 @@
 {
   "name": "@graphql-yoga/common",
   "version": "3.3.1",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/common"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "graphql",
-    "server",
-    "api",
-    "graphql-server"
-  ],
   "author": "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://saihaj.dev/)",
   "license": "MIT",
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -56,12 +44,18 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit",
+    "generate-graphiql-html": "node scripts/generate-graphiql-html.js"
   },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+  "peerDependencies": {
+    "graphql": "^15.2.0 || ^16.0.0"
   },
   "dependencies": {
     "graphql-yoga": "3.3.1",
@@ -71,9 +65,15 @@
     "@types/node": "18.11.18",
     "html-minifier-terser": "7.1.0"
   },
-  "peerDependencies": {
-    "graphql": "^15.2.0 || ^16.0.0"
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
   },
-  "type": "module",
-  "sideEffects": true
+  "sideEffects": true,
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

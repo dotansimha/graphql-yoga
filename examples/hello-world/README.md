@@ -63,8 +63,10 @@ The server returns the following response:
 This is what the [implementation](./index.js) looks like:
 
 ```js
-import { createServer, createSchema } from 'http'
+import { createSchema, createServer } from 'http'
+
 import { createYoga } from 'graphql-yoga'
+
 // ... or using `require()`
 // const { createServer, createSchema } = require('graphql-yoga')
 

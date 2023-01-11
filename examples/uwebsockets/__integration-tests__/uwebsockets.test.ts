@@ -1,9 +1,10 @@
-import { createServer, AddressInfo } from 'net'
-import type { us_listen_socket } from 'uWebSockets.js'
+import Crypto from 'crypto'
+import { AddressInfo, createServer } from 'net'
+
 import { fetch } from '@whatwg-node/fetch'
 import { Client, createClient } from 'graphql-ws'
+import type { us_listen_socket } from 'uWebSockets.js'
 import ws from 'ws'
-import Crypto from 'crypto'
 
 describe('uWebSockets', () => {
   const nodeMajor = parseInt(process.versions.node.split('.')[0], 10)
@@ -18,7 +19,7 @@ describe('uWebSockets', () => {
     port = await getPortFree()
     await new Promise<void>(async (resolve, reject) => {
       const { app } = await import('../src/app')
-      app.listen(port, (newListenSocket) => {
+      app.listen(port, newListenSocket => {
         listenSocket = newListenSocket
         if (listenSocket) {
           resolve()
@@ -36,7 +37,7 @@ describe('uWebSockets', () => {
        */
       generateID: () =>
         // @ts-expect-error
-        ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+        ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
           (c ^ (Crypto.randomBytes(1)[0] & (15 >> (c / 4)))).toString(16),
         ),
     })
@@ -89,10 +90,10 @@ describe('uWebSockets', () => {
           `,
         },
         {
-          next: (data) => {
+          next: data => {
             resolve(data)
           },
-          error: (err) => {
+          error: err => {
             reject(err)
           },
           complete: () => {
@@ -108,11 +109,11 @@ describe('uWebSockets', () => {
     })
   })
   async function getPortFree() {
-    return new Promise<number>((res) => {
+    return new Promise<number>(res => {
       const srv = createServer()
       srv.listen(0, () => {
         const port = (srv.address() as AddressInfo).port
-        srv.close((err) => res(port))
+        srv.close(err => res(port))
       })
     })
   }

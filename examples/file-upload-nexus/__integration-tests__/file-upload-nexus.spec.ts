@@ -1,9 +1,11 @@
-import { yoga } from '../yoga'
+import * as fs from 'fs'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
-import { fetch, File, FormData } from '@whatwg-node/fetch'
-import * as fs from 'fs'
 import * as path from 'path'
+
+import { fetch, File, FormData } from '@whatwg-node/fetch'
+
+import { yoga } from '../yoga'
 
 describe('file-upload-nexus example integration', () => {
   let server: Server
@@ -11,18 +13,16 @@ describe('file-upload-nexus example integration', () => {
 
   beforeAll(async () => {
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, resolve))
+    await new Promise<void>(resolve => server.listen(0, resolve))
     port = (server.address() as AddressInfo).port
   })
 
   afterAll(async () => {
-    await new Promise((resolve) => server.close(resolve))
+    await new Promise(resolve => server.close(resolve))
   })
 
   it('should execute query', async () => {
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{greetings}`,
-    )
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{greetings}`)
     const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({
@@ -31,15 +31,7 @@ describe('file-upload-nexus example integration', () => {
   })
 
   it('should read file text', async () => {
-    const sourceFilePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'website',
-      'public',
-      'logo.png',
-    )
+    const sourceFilePath = path.join(__dirname, '..', '..', '..', 'website', 'public', 'logo.png')
 
     const formData = new FormData()
     formData.set(
@@ -55,11 +47,9 @@ describe('file-upload-nexus example integration', () => {
     formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
     formData.set(
       '0',
-      new File(
-        [await fs.promises.readFile(sourceFilePath)],
-        path.basename(sourceFilePath),
-        { type: 'image/png' },
-      ),
+      new File([await fs.promises.readFile(sourceFilePath)], path.basename(sourceFilePath), {
+        type: 'image/png',
+      }),
     )
 
     const response = await fetch(`http://localhost:${port}/graphql`, {

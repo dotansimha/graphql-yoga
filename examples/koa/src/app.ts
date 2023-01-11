@@ -1,4 +1,4 @@
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 import Koa from 'koa'
 
 export function buildApp() {
@@ -24,7 +24,7 @@ export function buildApp() {
           countdown: {
             async *subscribe(_, { from }) {
               for (let i = from; i >= 0; i--) {
-                await new Promise((resolve) => setTimeout(resolve, 1000))
+                await new Promise(resolve => setTimeout(resolve, 1000))
                 yield { countdown: i }
               }
             },
@@ -35,7 +35,7 @@ export function buildApp() {
     logging: false,
   })
 
-  app.use(async (ctx) => {
+  app.use(async ctx => {
     const response = await yoga.handleNodeRequest(ctx.req, ctx)
 
     // Set status code

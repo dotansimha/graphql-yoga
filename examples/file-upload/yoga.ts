@@ -1,6 +1,7 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import fs from 'fs'
 import path from 'path'
+
+import { createSchema, createYoga } from 'graphql-yoga'
 
 export const yoga = createYoga({
   schema: createSchema({
@@ -26,10 +27,7 @@ export const yoga = createYoga({
         saveFile: async (_, { file }: { file: File }) => {
           try {
             const fileStream = file.stream()
-            await fs.promises.writeFile(
-              path.join(__dirname, file.name),
-              fileStream,
-            )
+            await fs.promises.writeFile(path.join(__dirname, file.name), fileStream)
           } catch (e) {
             return false
           }

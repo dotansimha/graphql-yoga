@@ -17,16 +17,13 @@ export function useLimitBatching(limit?: number): Plugin {
               })
             }
             if (requestParserResult.length > limit) {
-              throw createGraphQLError(
-                `Batching is limited to ${limit} operations per request.`,
-                {
-                  extensions: {
-                    http: {
-                      status: 413,
-                    },
+              throw createGraphQLError(`Batching is limited to ${limit} operations per request.`, {
+                extensions: {
+                  http: {
+                    status: 413,
                   },
                 },
-              )
+              })
             }
           }
         },

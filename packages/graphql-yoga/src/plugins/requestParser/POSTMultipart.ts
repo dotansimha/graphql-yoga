@@ -5,23 +5,15 @@ import { GraphQLParams } from '../../types.js'
 import { isContentTypeMatch } from './utils.js'
 
 export function isPOSTMultipartRequest(request: Request): boolean {
-  return (
-    request.method === 'POST' &&
-    isContentTypeMatch(request, 'multipart/form-data')
-  )
+  return request.method === 'POST' && isContentTypeMatch(request, 'multipart/form-data')
 }
 
-export async function parsePOSTMultipartRequest(
-  request: Request,
-): Promise<GraphQLParams> {
+export async function parsePOSTMultipartRequest(request: Request): Promise<GraphQLParams> {
   let requestBody: FormData
   try {
     requestBody = await request.formData()
   } catch (e) {
-    if (
-      e instanceof Error &&
-      e.message.startsWith('File size limit exceeded: ')
-    ) {
+    if (e instanceof Error && e.message.startsWith('File size limit exceeded: ')) {
       throw createGraphQLError(e.message, {
         extensions: {
           http: {
@@ -40,9 +32,7 @@ export async function parsePOSTMultipartRequest(
   }
 
   if (typeof operationsStr !== 'string') {
-    throw createGraphQLError(
-      'Multipart form field "operations" must be a string',
-    )
+    throw createGraphQLError('Multipart form field "operations" must be a string')
   }
 
   let operations: GraphQLParams
@@ -50,9 +40,7 @@ export async function parsePOSTMultipartRequest(
   try {
     operations = JSON.parse(operationsStr)
   } catch (err) {
-    throw createGraphQLError(
-      'Multipart form field "operations" must be a valid JSON string',
-    )
+    throw createGraphQLError('Multipart form field "operations" must be a valid JSON string')
   }
 
   const mapStr = requestBody.get('map')
@@ -67,9 +55,7 @@ export async function parsePOSTMultipartRequest(
     try {
       map = JSON.parse(mapStr)
     } catch (err) {
-      throw createGraphQLError(
-        'Multipart form field "map" must be a valid JSON string',
-      )
+      throw createGraphQLError('Multipart form field "map" must be a valid JSON string')
     }
     for (const fileIndex in map) {
       const file = requestBody.get(fileIndex)

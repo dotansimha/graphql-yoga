@@ -1,6 +1,8 @@
-import { yoga } from './yoga'
 import { createServer } from 'http'
-import { titleBold, infoColor } from 'graphql-yoga'
+
+import { infoColor, titleBold } from 'graphql-yoga'
+
+import { yoga } from './yoga'
 
 const server = createServer(yoga)
 

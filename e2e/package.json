@@ -1,21 +1,21 @@
 {
   "name": "@graphql-yoga/e2e-testing",
-  "private": true,
   "version": "0.0.0",
   "license": "MIT",
-  "dependencies": {
-    "@pulumi/pulumi": "3.51.0",
-    "@pulumi/cloudflare": "4.15.0",
-    "@pulumi/azure-native": "1.91.0",
-    "@pulumi/awsx": "0.40.1",
-    "@pulumi/aws": "5.27.0",
-    "@pulumi/docker": "3.6.1",
-    "@types/node": "18.11.18",
-    "typescript": "4.9.4",
-    "ts-node": "10.9.1"
-  },
+  "private": true,
   "scripts": {
-    "start": "ts-node --transpile-only index.ts",
-    "check": "exit 0"
+    "check": "exit 0",
+    "start": "ts-node --transpile-only index.ts"
+  },
+  "dependencies": {
+    "@pulumi/aws": "5.27.0",
+    "@pulumi/awsx": "0.40.1",
+    "@pulumi/azure-native": "1.91.0",
+    "@pulumi/cloudflare": "4.15.0",
+    "@pulumi/docker": "3.6.1",
+    "@pulumi/pulumi": "3.51.0",
+    "@types/node": "18.11.18",
+    "ts-node": "10.9.1",
+    "typescript": "4.9.4"
   }
 }

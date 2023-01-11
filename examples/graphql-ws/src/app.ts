@@ -1,8 +1,9 @@
-import { Socket } from 'net'
 import { createServer } from 'http'
-import { WebSocketServer } from 'ws'
-import { createYoga, createSchema } from 'graphql-yoga'
+import { Socket } from 'net'
+
 import { useServer } from 'graphql-ws/lib/use/ws'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { WebSocketServer } from 'ws'
 
 export function buildApp() {
   const yoga = createYoga({
@@ -53,13 +54,12 @@ export function buildApp() {
       execute: (args: any) => args.execute(args),
       subscribe: (args: any) => args.subscribe(args),
       onSubscribe: async (ctx, msg) => {
-        const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yoga.getEnveloped({
-            ...ctx,
-            req: ctx.extra.request,
-            socket: ctx.extra.socket,
-            params: msg.payload,
-          })
+        const { schema, execute, subscribe, contextFactory, parse, validate } = yoga.getEnveloped({
+          ...ctx,
+          req: ctx.extra.request,
+          socket: ctx.extra.socket,
+          params: msg.payload,
+        })
 
         const args = {
           schema,
@@ -81,7 +81,7 @@ export function buildApp() {
 
   // for termination
   const sockets = new Set<Socket>()
-  server.on('connection', (socket) => {
+  server.on('connection', socket => {
     sockets.add(socket)
     server.once('close', () => sockets.delete(socket))
   })
@@ -89,12 +89,12 @@ export function buildApp() {
   return {
     start: (port: number) =>
       new Promise<void>((resolve, reject) => {
-        server.on('error', (err) => reject(err))
+        server.on('error', err => reject(err))
         server.on('listening', () => resolve())
         server.listen(port)
       }),
     stop: () =>
-      new Promise<void>((resolve) => {
+      new Promise<void>(resolve => {
         for (const socket of sockets) {
           socket.destroy()
           sockets.delete(socket)

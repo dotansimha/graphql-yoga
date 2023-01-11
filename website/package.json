@@ -1,25 +1,16 @@
 {
   "name": "website",
   "version": "0.0.0",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
-    "build": "next build",
-    "postbuild": "next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "algolia-sync": "node scripts/algolia-ci.mjs",
-    "dev": "next",
-    "start": "next start",
     "analyze": "cross-env ANALYZE=true next build",
-    "check": "exit 0"
-  },
-  "devDependencies": {
-    "@theguild/algolia": "1.0.2",
-    "@theguild/tailwind-config": "0.2.1",
-    "@types/node": "18.11.18",
-    "@types/react": "18.0.26",
-    "cross-env": "7.0.3",
-    "fast-xml-parser": "4.0.13",
-    "typescript": "4.9.4"
+    "build": "next build",
+    "check": "exit 0",
+    "dev": "next",
+    "postbuild": "next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
+    "start": "next start"
   },
   "dependencies": {
     "@theguild/components": "4.4.4",
@@ -30,5 +21,14 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "4.7.1"
+  },
+  "devDependencies": {
+    "@theguild/algolia": "1.0.2",
+    "@theguild/tailwind-config": "0.2.1",
+    "@types/node": "18.11.18",
+    "@types/react": "18.0.26",
+    "cross-env": "7.0.3",
+    "fast-xml-parser": "4.0.13",
+    "typescript": "4.9.4"
   }
 }

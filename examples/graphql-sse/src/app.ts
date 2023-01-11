@@ -1,7 +1,8 @@
-import { Socket } from 'net'
 import { createServer } from 'http'
-import { createYoga, createSchema } from 'graphql-yoga'
+import { Socket } from 'net'
+
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 export function buildApp() {
   const yoga = createYoga({
@@ -46,7 +47,7 @@ export function buildApp() {
 
   // for termination
   const sockets = new Set<Socket>()
-  server.on('connection', (socket) => {
+  server.on('connection', socket => {
     sockets.add(socket)
     server.once('close', () => sockets.delete(socket))
   })
@@ -54,12 +55,12 @@ export function buildApp() {
   return {
     start: (port: number) =>
       new Promise<void>((resolve, reject) => {
-        server.on('error', (err) => reject(err))
+        server.on('error', err => reject(err))
         server.on('listening', () => resolve())
         server.listen(port)
       }),
     stop: () =>
-      new Promise<void>((resolve) => {
+      new Promise<void>(resolve => {
         for (const socket of sockets) {
           socket.destroy()
           sockets.delete(socket)

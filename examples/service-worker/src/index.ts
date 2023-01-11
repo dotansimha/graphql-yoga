@@ -1,4 +1,4 @@
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 
 // We can define GraphQL Route dynamically using env vars.
 declare let GRAPHQL_ROUTE: string
@@ -16,20 +16,16 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
       Subscription: {
         time: {
           subscribe: () =>
             new Repeater((push, end) => {
-              const interval = setInterval(
-                () => push(new Date().toISOString()),
-                1000,
-              )
+              const interval = setInterval(() => push(new Date().toISOString()), 1000)
               end.then(() => clearInterval(interval))
             }),
-          resolve: (value) => value,
+          resolve: value => value,
         },
       },
     },

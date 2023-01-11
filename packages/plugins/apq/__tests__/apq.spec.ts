@@ -30,8 +30,7 @@ describe('Automatic Persisted Queries', () => {
         extensions: {
           persistedQuery: {
             version: 1,
-            sha256Hash:
-              'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+            sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
           },
         },
       }),
@@ -54,8 +53,7 @@ describe('Automatic Persisted Queries', () => {
     })
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
     const response = await yoga.fetch('http://yoga/graphql', {
@@ -87,8 +85,7 @@ describe('Automatic Persisted Queries', () => {
 
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
     const query = `{__typename}`
 

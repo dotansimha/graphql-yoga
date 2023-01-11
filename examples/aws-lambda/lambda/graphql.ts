@@ -1,5 +1,5 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const yoga = createYoga<{
   event: APIGatewayEvent
@@ -15,8 +15,7 @@ const yoga = createYoga<{
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
     },
   }),
@@ -29,9 +28,7 @@ export async function handler(
   const response = await yoga.fetch(
     event.path +
       '?' +
-      new URLSearchParams(
-        (event.queryStringParameters as Record<string, string>) || {},
-      ).toString(),
+      new URLSearchParams((event.queryStringParameters as Record<string, string>) || {}).toString(),
     {
       method: event.httpMethod,
       headers: event.headers as HeadersInit,

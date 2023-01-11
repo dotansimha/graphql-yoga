@@ -1,12 +1,13 @@
 import { LocalWorkspace } from '@pulumi/pulumi/automation'
+
 import { awsLambdaDeployment } from './tests/aws-lambda'
 import { azureFunctionDeployment } from './tests/azure-function'
-import { cloudFlareDeployment } from './tests/cf-worker'
 import { cfModulesDeployment } from './tests/cf-modules'
+import { cloudFlareDeployment } from './tests/cf-worker'
 import { dockerDeployment } from './tests/docker'
+import { vercelDeployment } from './tests/vercel'
 import { DeploymentConfiguration } from './types'
 import { env, getCommitId } from './utils'
-import { vercelDeployment } from './tests/vercel'
 
 const AVAILABLE_TEST_PLANS = {
   'cf-worker': cloudFlareDeployment,
@@ -34,9 +35,7 @@ async function main() {
   })
 
   try {
-    console.info(
-      `🚀 Running test plan: ${testPlaneName} with identifier: ${identifier}`,
-    )
+    console.info(`🚀 Running test plan: ${testPlaneName} with identifier: ${identifier}`)
     console.info(`ℹ️ Creating new temporary Pulumi environment...`)
     console.info(`\t✅ Successfully initialized stack...`)
     console.info('\tℹ️ Running prerequisites...')
@@ -91,9 +90,7 @@ async function main() {
     if (!process.env.KEEP) {
       // DOTAN: maybe there is a way to tell Pulumi to start the delete process, but not wait for all resources to be deleted?
       // This section adds ~30-60s on Azure Functions (because it has ~10 "heavy" resources to delete)
-      console.info(
-        'ℹ️ Destroying stack and removing all resources... this may take a while...',
-      )
+      console.info('ℹ️ Destroying stack and removing all resources... this may take a while...')
       await stack.destroy({ onOutput: console.log })
       console.info('✅ Destroy/cleanup done')
     } else {
@@ -102,7 +99,7 @@ async function main() {
   }
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error(err)
   process.exit(1)
 })

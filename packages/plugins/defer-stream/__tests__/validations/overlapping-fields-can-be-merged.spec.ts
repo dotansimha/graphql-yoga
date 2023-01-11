@@ -1,10 +1,7 @@
 import { buildSchema, GraphQLSchema } from 'graphql'
 
 import { OverlappingFieldsCanBeMergedRule } from '../../src/validations/overlapping-fields-can-be-merged.js'
-import {
-  expectValidationErrors,
-  expectValidationErrorsWithSchema,
-} from './harness.js'
+import { expectValidationErrors, expectValidationErrorsWithSchema } from './harness.js'
 
 function expectErrors(queryStr: string) {
   return expectValidationErrors(OverlappingFieldsCanBeMergedRule, queryStr)
@@ -15,11 +12,7 @@ function expectValid(queryStr: string) {
 }
 
 function expectErrorsWithSchema(schema: GraphQLSchema, queryStr: string) {
-  return expectValidationErrorsWithSchema(
-    schema,
-    OverlappingFieldsCanBeMergedRule,
-    queryStr,
-  )
+  return expectValidationErrorsWithSchema(schema, OverlappingFieldsCanBeMergedRule, queryStr)
 }
 
 function expectValidWithSchema(schema: GraphQLSchema, queryStr: string) {

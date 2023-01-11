@@ -2,9 +2,7 @@ import { yoga } from '../src/yoga'
 
 describe('graphql-auth example integration', () => {
   it('should execute valid query', async () => {
-    const response = await yoga.fetch(
-      `http://yoga/graphql?query=query{books{title}}`,
-    )
+    const response = await yoga.fetch(`http://yoga/graphql?query=query{books{title}}`)
     const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toMatchInlineSnapshot(`
@@ -22,9 +20,7 @@ describe('graphql-auth example integration', () => {
   })
 
   it('should get error for field suggestion', async () => {
-    const response = await yoga.fetch(
-      `http://yoga/graphql?query=query{books{titlee}}`,
-    )
+    const response = await yoga.fetch(`http://yoga/graphql?query=query{books{titlee}}`)
     const body = await response.json()
     expect(body.errors).toMatchInlineSnapshot(`
       [

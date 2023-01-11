@@ -31,8 +31,7 @@ describe('Persisted Operations', () => {
         extensions: {
           persistedQuery: {
             version: 1,
-            sha256Hash:
-              'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+            sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
           },
         },
       }),
@@ -58,8 +57,7 @@ describe('Persisted Operations', () => {
 
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
 
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
@@ -95,8 +93,7 @@ describe('Persisted Operations', () => {
     })
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
 
@@ -130,8 +127,7 @@ describe('Persisted Operations', () => {
     })
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
 
@@ -158,16 +154,14 @@ describe('Persisted Operations', () => {
           getPersistedOperation(key: string) {
             return store.get(key) || null
           },
-          allowArbitraryOperations: (request) =>
-            request.headers.get('foo') === 'bar',
+          allowArbitraryOperations: request => request.headers.get('foo') === 'bar',
         }),
       ],
       schema,
     })
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
     store.set(persistedQueryEntry.sha256Hash, '{__typename}')
 
@@ -194,9 +188,7 @@ describe('Persisted Operations', () => {
           getPersistedOperation(key: string) {
             return store.get(key) || null
           },
-          extractPersistedOperationId(
-            params: GraphQLParams & { doc_id?: string },
-          ) {
+          extractPersistedOperationId(params: GraphQLParams & { doc_id?: string }) {
             return params.doc_id ?? null
           },
         }),

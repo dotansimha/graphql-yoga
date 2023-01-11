@@ -1,5 +1,8 @@
 import { createServer, Server } from 'node:http'
 import { AddressInfo } from 'node:net'
+
+import { Push } from '@repeaterjs/repeater'
+import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
 import {
   ExecutionResult,
   GraphQLInt,
@@ -8,8 +11,6 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { Push } from '@repeaterjs/repeater'
-import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
 
 import { createYoga, Plugin, Repeater } from '../src'
 
@@ -51,7 +52,7 @@ describe('incremental delivery', () => {
     const server = createServer(yoga)
 
     try {
-      await new Promise<void>((resolve) => server.listen(0, resolve))
+      await new Promise<void>(resolve => server.listen(0, resolve))
       const port = (server.address() as AddressInfo).port
       const res = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
@@ -74,18 +75,14 @@ describe('incremental delivery', () => {
           break
         }
         const valueAsString = Buffer.from(chunk).toString()
-        if (
-          valueAsString.includes(
-            `Content-Type: application/json; charset=utf-8`,
-          )
-        ) {
+        if (valueAsString.includes(`Content-Type: application/json; charset=utf-8`)) {
           break
         }
       }
-      await new Promise((res) => setTimeout(res, 300))
+      await new Promise(res => setTimeout(res, 300))
       expect(fakeIterator.return).toBeCalled()
     } finally {
-      await new Promise((resolve) => server.close(resolve))
+      await new Promise(resolve => server.close(resolve))
     }
   })
 })
@@ -179,7 +176,7 @@ describe('incremental delivery: node-fetch', () => {
               push = ppush
               stop = sstop
             }),
-          resolve: (counter) => counter,
+          resolve: counter => counter,
         },
       }),
     }),
@@ -201,12 +198,12 @@ describe('incremental delivery: node-fetch', () => {
   let url: string
   beforeEach(async () => {
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, resolve))
+    await new Promise<void>(resolve => server.listen(0, resolve))
     const port = (server.address() as AddressInfo).port
     url = `http://localhost:${port}/graphql`
   })
   afterEach(async () => {
-    await new Promise((resolve) => server.close(resolve))
+    await new Promise(resolve => server.close(resolve))
     stop?.()
     stop = undefined
     push = undefined

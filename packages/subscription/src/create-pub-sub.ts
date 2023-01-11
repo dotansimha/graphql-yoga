@@ -16,18 +16,12 @@ export type PubSubEvent<
     : TPubSubPublishArgsByKey[TKey][1]
 >
 
-export type PubSubEventTarget<
-  TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
-> = TypedEventTarget<
-  PubSubEvent<
-    TPubSubPublishArgsByKey,
-    Extract<keyof TPubSubPublishArgsByKey, string>
+export type PubSubEventTarget<TPubSubPublishArgsByKey extends PubSubPublishArgsByKey> =
+  TypedEventTarget<
+    PubSubEvent<TPubSubPublishArgsByKey, Extract<keyof TPubSubPublishArgsByKey, string>>
   >
->
 
-export type ChannelPubSubConfig<
-  TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
-> = {
+export type ChannelPubSubConfig<TPubSubPublishArgsByKey extends PubSubPublishArgsByKey> = {
   /**
    * The event target. If not specified an (in-memory) EventTarget will be created.
    * For multiple server replica or serverless environments a distributed EventTarget is recommended.
@@ -62,14 +56,11 @@ export type PubSub<TPubSubPublishArgsByKey extends PubSubPublishArgsByKey> = {
 /**
  * Utility for publishing and subscribing to events.
  */
-export const createPubSub = <
-  TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
->(
+export const createPubSub = <TPubSubPublishArgsByKey extends PubSubPublishArgsByKey>(
   config?: ChannelPubSubConfig<TPubSubPublishArgsByKey>,
 ): PubSub<TPubSubPublishArgsByKey> => {
   const target =
-    config?.eventTarget ??
-    (new EventTarget() as PubSubEventTarget<TPubSubPublishArgsByKey>)
+    config?.eventTarget ?? (new EventTarget() as PubSubEventTarget<TPubSubPublishArgsByKey>)
 
   return {
     publish<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
@@ -77,17 +68,11 @@ export const createPubSub = <
       ...args: TPubSubPublishArgsByKey[TKey]
     ) {
       const payload = args[1] ?? args[0]
-      const topic =
-        args[1] === undefined
-          ? routingKey
-          : `${routingKey}:${args[0] as number}`
+      const topic = args[1] === undefined ? routingKey : `${routingKey}:${args[0] as number}`
 
-      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new CustomEvent(
-        topic,
-        {
-          detail: payload,
-        },
-      )
+      const event: PubSubEvent<TPubSubPublishArgsByKey, TKey> = new CustomEvent(topic, {
+        detail: payload,
+      })
       target.dispatchEvent(event)
     },
     subscribe<TKey extends Extract<keyof TPubSubPublishArgsByKey, string>>(
@@ -99,8 +84,7 @@ export const createPubSub = <
         ? TPubSubPublishArgsByKey[TKey][0]
         : TPubSubPublishArgsByKey[TKey][1]
     > {
-      const topic =
-        id === undefined ? routingKey : `${routingKey}:${id as number}`
+      const topic = id === undefined ? routingKey : `${routingKey}:${id as number}`
 
       return new Repeater(function subscriptionRepeater(next, stop) {
         stop.then(function subscriptionRepeaterStopHandler() {
@@ -109,9 +93,7 @@ export const createPubSub = <
 
         target.addEventListener(topic, pubsubEventListener)
 
-        function pubsubEventListener(
-          event: PubSubEvent<TPubSubPublishArgsByKey, TKey>,
-        ) {
+        function pubsubEventListener(event: PubSubEvent<TPubSubPublishArgsByKey, TKey>) {
           next(event.detail)
         }
       })

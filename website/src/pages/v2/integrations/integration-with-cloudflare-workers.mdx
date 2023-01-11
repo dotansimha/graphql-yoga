@@ -1,21 +1,28 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
+
 import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 <LatestVersionNotice />
 
 # Integration with Cloudflare Workers
 
-GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
+GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any
+platform besides Node.js.
 
-[Cloudflare Workers](https://developers.cloudflare.com/workers) provides a serverless execution environment that allows you to create entirely new applications or augment existing ones without configuring or maintaining infrastructure.
+[Cloudflare Workers](https://developers.cloudflare.com/workers) provides a serverless execution
+environment that allows you to create entirely new applications or augment existing ones without
+configuring or maintaining infrastructure.
 
-You will want to use the package `@graphql-yoga/common` which has an agnostic HTTP handler using [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects when building GraphQL powered Cloudflare Workers.
+You will want to use the package `@graphql-yoga/common` which has an agnostic HTTP handler using
+[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)'s
+[`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) and
+[`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) objects when building
+GraphQL powered Cloudflare Workers.
 
 <Callout>
   Watch [Episode #48 of
-  `graphql.wtf`](https://graphql.wtf/episodes/48-graphql-yoga-cloudflare-workers-kv)
-  for a quick introduction to using GraphQL Yoga with Cloudflare Workers, and
-  KV:
+  `graphql.wtf`](https://graphql.wtf/episodes/48-graphql-yoga-cloudflare-workers-kv) for a quick
+  introduction to using GraphQL Yoga with Cloudflare Workers, and KV:
 </Callout>
 
 <iframe
@@ -90,7 +97,8 @@ export default createServer<Env>({
 })
 ```
 
-If you need `ExecutionContext` as well inside your resolvers, you can set the `context` on your GraphQL server similar to what you see here:
+If you need `ExecutionContext` as well inside your resolvers, you can set the `context` on your
+GraphQL server similar to what you see here:
 
 ```ts
 import { createServer } from '@graphql-yoga/common'
@@ -115,7 +123,8 @@ export default {
 
 ## Enabling Subscriptions
 
-To enable Server-Sent Events based subscriptions with Cloudflare Workers, you should add a compatibility flag in your wrangler configuration file like below:
+To enable Server-Sent Events based subscriptions with Cloudflare Workers, you should add a
+compatibility flag in your wrangler configuration file like below:
 
 ```toml
 compatibility_flags = ["streams_enable_constructors"]
@@ -123,4 +132,5 @@ compatibility_flags = ["streams_enable_constructors"]
 
 ## Debug Logging
 
-You should expose `DEBUG` variable in your environment to enable more verbose logging from GraphQL Yoga application.
+You should expose `DEBUG` variable in your environment to enable more verbose logging from GraphQL
+Yoga application.

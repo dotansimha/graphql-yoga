@@ -1,7 +1,9 @@
-import { yoga } from '../src/app'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
+
 import { fetch } from '@whatwg-node/fetch'
+
+import { yoga } from '../src/app'
 
 describe('graphql-auth example integration', () => {
   let server: Server
@@ -9,18 +11,16 @@ describe('graphql-auth example integration', () => {
 
   beforeAll(async () => {
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, resolve))
+    await new Promise<void>(resolve => server.listen(0, resolve))
     port = (server.address() as AddressInfo).port
   })
 
   afterAll(async () => {
-    await new Promise((resolve) => server.close(resolve))
+    await new Promise(resolve => server.close(resolve))
   })
 
   it('should execute public field', async () => {
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{public}`,
-    )
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{public}`)
     const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({
@@ -29,26 +29,19 @@ describe('graphql-auth example integration', () => {
   })
 
   it('should throw error on executing auth required field', async () => {
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{requiresAuth}`,
-    )
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{requiresAuth}`)
     const body = await response.json()
     expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toBe(
-      "Accessing 'Query.requiresAuth' requires authentication.",
-    )
+    expect(body.errors[0].message).toBe("Accessing 'Query.requiresAuth' requires authentication.")
     expect(body.data).toBeNull()
   })
 
   it('should execute on auth required field', async () => {
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{requiresAuth}`,
-      {
-        headers: {
-          'x-authorization': 'aaa',
-        },
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{requiresAuth}`, {
+      headers: {
+        'x-authorization': 'aaa',
       },
-    )
+    })
     const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({
@@ -58,14 +51,11 @@ describe('graphql-auth example integration', () => {
 
   it('should execute on public field with subscription', async () => {
     expect.assertions(1)
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=subscription{public}`,
-      {
-        headers: {
-          Accept: 'text/event-stream',
-        },
+    const response = await fetch(`http://localhost:${port}/graphql?query=subscription{public}`, {
+      headers: {
+        Accept: 'text/event-stream',
       },
-    )
+    })
 
     for await (const chunk of response.body!) {
       const chunkString = Buffer.from(chunk).toString('utf-8')
@@ -91,9 +81,7 @@ describe('graphql-auth example integration', () => {
     for await (const chunk of response.body!) {
       const chunkStr = Buffer.from(chunk).toString('utf-8')
       if (chunkStr.startsWith('data:')) {
-        expect(chunkStr.trim()).toBe(
-          'data: {"data":{"requiresAuth":"hi foo@foo.com"}}',
-        )
+        expect(chunkStr.trim()).toBe('data: {"data":{"requiresAuth":"hi foo@foo.com"}}')
         break
       }
     }

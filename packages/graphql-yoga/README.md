@@ -31,8 +31,9 @@ pnpm add graphql-yoga graphql
 Make a schema, create Yoga and start a Node server:
 
 ```ts
-import { createSchema, createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
+
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const yoga = createYoga({
   schema: createSchema({
@@ -58,10 +59,17 @@ server.listen(4000, () => {
 
 ## Overview
 
-- **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with minimal setup (we also export a platform/env-agnostic handler so you can build your own wrappers easily).
-- **Includes Subscriptions:** Built-in support for GraphQL subscriptions using [**S**erver-**S**ent **E**vents](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
-- **Compatible:** Works with all GraphQL clients ([Apollo](https://www.apollographql.com/docs/react/), [Relay](https://relay.dev/), [Urql](https://formidable.com/open-source/urql/)...) and fits seamless in your GraphQL workflow.
-- **WHATWG Fetch API:** the core package depends on [WHATWG Fetch API](https://fetch.spec.whatwg.org/) so it can run and deploy on any environment (Serverless, Workers, Deno, Node).
+- **Easiest way to run a GraphQL server:** Sensible defaults & includes everything you need with
+  minimal setup (we also export a platform/env-agnostic handler so you can build your own wrappers
+  easily).
+- **Includes Subscriptions:** Built-in support for GraphQL subscriptions using
+  [**S**erver-**S**ent **E**vents](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
+- **Compatible:** Works with all GraphQL clients
+  ([Apollo](https://www.apollographql.com/docs/react/), [Relay](https://relay.dev/),
+  [Urql](https://formidable.com/open-source/urql/)...) and fits seamless in your GraphQL workflow.
+- **WHATWG Fetch API:** the core package depends on
+  [WHATWG Fetch API](https://fetch.spec.whatwg.org/) so it can run and deploy on any environment
+  (Serverless, Workers, Deno, Node).
 - **Easily Extendable:** New GraphQL-Yoga support all [`envelop`](https://www.envelop.dev) plugins.
 
 ## [Features](https://www.the-guild.dev/graphql/yoga-server/v3)
@@ -85,25 +93,33 @@ server.listen(4000, () => {
 
 ## [Documentation](https://www.the-guild.dev/graphql/yoga-server/v3)
 
-Our [documentation website](https://www.the-guild.dev/graphql/yoga-server/v3) will help you get started.
+Our [documentation website](https://www.the-guild.dev/graphql/yoga-server/v3) will help you get
+started.
 
 ## [Examples](https://github.com/dotansimha/graphql-yoga/tree/main/examples)
 
-We've made sure developers can quickly start with GraphQL Yoga by providing a comprehensive set of examples. [See all of them in the `examples/` folder.](https://github.com/dotansimha/graphql-yoga/tree/main/examples)
+We've made sure developers can quickly start with GraphQL Yoga by providing a comprehensive set of
+examples.
+[See all of them in the `examples/` folder.](https://github.com/dotansimha/graphql-yoga/tree/main/examples)
 
 ## [Comparison](https://www.the-guild.dev/graphql/yoga-server/v3/comparison)
 
-Read more about how GraphQL Yoga compares to other servers in the ecosystem [here](https://www.the-guild.dev/graphql/yoga-server/v3/comparison).
+Read more about how GraphQL Yoga compares to other servers in the ecosystem
+[here](https://www.the-guild.dev/graphql/yoga-server/v3/comparison).
 
 ## Contributing
 
-If this is your first time contributing to this project, please do read our [Contributor Workflow Guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md) before you get started off.
+If this is your first time contributing to this project, please do read our
+[Contributor Workflow Guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md)
+before you get started off.
 
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
 ## Code of Conduct
 
-Help us keep Yoga open and inclusive. Please read and follow our [Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/).
+Help us keep Yoga open and inclusive. Please read and follow our
+[Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted
+from [Contributor Covenant](https://www.contributor-covenant.org/).
 
 ## License
 

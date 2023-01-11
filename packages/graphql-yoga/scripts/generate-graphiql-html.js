@@ -1,6 +1,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
 import { minify as minifyT } from 'html-minifier-terser'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -19,10 +20,7 @@ async function minify(str) {
 
 async function minifyGraphiQLHTML() {
   const graphiqlVersion = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, '..', '..', 'graphiql', 'package.json'),
-      'utf-8',
-    ),
+    fs.readFileSync(path.join(__dirname, '..', '..', 'graphiql', 'package.json'), 'utf-8'),
   ).version
 
   const minified = await minify(
@@ -39,10 +37,7 @@ async function minifyGraphiQLHTML() {
 
 async function minifyLandingPageHTML() {
   const minified = await minify(
-    fs.readFileSync(
-      path.join(__dirname, '..', 'src', 'landing-page.html'),
-      'utf-8',
-    ),
+    fs.readFileSync(path.join(__dirname, '..', 'src', 'landing-page.html'), 'utf-8'),
   )
 
   fs.writeFileSync(

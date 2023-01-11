@@ -82,8 +82,7 @@ export function getCORSHeadersByRequestAndOptions(
   }
 
   if (corsOptions.allowedHeaders?.length) {
-    headers['Access-Control-Allow-Headers'] =
-      corsOptions.allowedHeaders.join(', ')
+    headers['Access-Control-Allow-Headers'] = corsOptions.allowedHeaders.join(', ')
   } else {
     const requestHeaders = request.headers.get('access-control-request-headers')
     if (requestHeaders) {
@@ -104,8 +103,7 @@ export function getCORSHeadersByRequestAndOptions(
   }
 
   if (corsOptions.exposedHeaders) {
-    headers['Access-Control-Expose-Headers'] =
-      corsOptions.exposedHeaders.join(', ')
+    headers['Access-Control-Expose-Headers'] = corsOptions.exposedHeaders.join(', ')
   }
 
   if (corsOptions.maxAge) {
@@ -160,11 +158,7 @@ export function useCORS<TServerContext extends Record<string, any>>(
     },
     async onResponse({ request, serverContext, response }) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const headers = await getCORSResponseHeaders<any>(
-        request,
-        corsOptionsFactory,
-        serverContext,
-      )
+      const headers = await getCORSResponseHeaders<any>(request, corsOptionsFactory, serverContext)
       for (const headerName in headers) {
         response.headers.set(headerName, headers[headerName])
       }

@@ -1,5 +1,5 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 export function buildApp(logging = true) {
   const app = fastify({
@@ -44,9 +44,7 @@ export function buildApp(logging = true) {
           countdown: {
             async *subscribe(_, { from, interval }) {
               for (let i = from; i >= 0; i--) {
-                await new Promise((resolve) =>
-                  setTimeout(resolve, interval ?? 1000),
-                )
+                await new Promise(resolve => setTimeout(resolve, interval ?? 1000))
                 yield { countdown: i }
               }
             },
@@ -56,16 +54,14 @@ export function buildApp(logging = true) {
     }),
     // Integrate Fastify Logger to Yoga
     logging: {
-      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-      info: (...args) => args.forEach((arg) => app.log.info(arg)),
-      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
+      debug: (...args) => args.forEach(arg => app.log.debug(arg)),
+      info: (...args) => args.forEach(arg => app.log.info(arg)),
+      warn: (...args) => args.forEach(arg => app.log.warn(arg)),
+      error: (...args) => args.forEach(arg => app.log.error(arg)),
     },
   })
 
-  app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
-    done(null),
-  )
+  app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) => done(null))
 
   app.route({
     url: '/graphql',

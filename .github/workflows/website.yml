@@ -11,7 +11,9 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push'
+    if:
+      github.event.pull_request.head.repo.full_name == github.repository || github.event_name ==
+      'push'
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -28,7 +30,9 @@ jobs:
         name: build and deploy website
         env:
           NEXT_BASE_PATH: ${{ github.ref == 'refs/heads/main' && '/graphql/yoga-server' || '' }}
-          SITE_URL: ${{ github.ref == 'refs/heads/main' && 'https://the-guild.dev/graphql/yoga-server' || '' }}
+          SITE_URL:
+            ${{ github.ref == 'refs/heads/main' && 'https://the-guild.dev/graphql/yoga-server' || ''
+            }}
           NEXT_PUBLIC_ALGOLIA_INDEX_NAME: ${{ secrets.NEXT_PUBLIC_ALGOLIA_INDEX_NAME }}
           NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY }}
           NEXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.NEXT_PUBLIC_ALGOLIA_APP_ID }}

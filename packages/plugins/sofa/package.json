@@ -1,28 +1,17 @@
 {
   "name": "@graphql-yoga/plugin-sofa",
   "version": "1.3.1",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/plugins/sofa"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "graphql",
-    "server",
-    "api",
-    "graphql-server"
-  ],
   "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
   "license": "MIT",
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -41,20 +30,31 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
-  },
-  "dependencies": {
-    "sofa-api": "0.15.2",
-    "@graphql-tools/utils": "9.1.3"
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0",
     "graphql-yoga": "^3.3.1"
   },
-  "type": "module"
+  "dependencies": {
+    "@graphql-tools/utils": "9.1.3",
+    "sofa-api": "0.15.2"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

@@ -1,14 +1,11 @@
-import { getIntrospectionQuery } from 'graphql'
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 import { Request } from '@whatwg-node/fetch'
+import { getIntrospectionQuery } from 'graphql'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 
 const listenerMap = new Map<string, Set<EventListenerOrEventListenerObject>>()
 
 globalThis.self = {
-  addEventListener(
-    eventName: string,
-    listener: EventListenerOrEventListenerObject,
-  ) {
+  addEventListener(eventName: string, listener: EventListenerOrEventListenerObject) {
     let listeners = listenerMap.get(eventName)
     if (!listeners) {
       listeners = new Set()
@@ -16,10 +13,7 @@ globalThis.self = {
     }
     listeners.add(listener)
   },
-  removeEventListener(
-    eventName: string,
-    listener: EventListenerOrEventListenerObject,
-  ) {
+  removeEventListener(eventName: string, listener: EventListenerOrEventListenerObject) {
     const listeners = listenerMap.get(eventName)
     if (listeners) {
       listeners.delete(listener)
@@ -61,7 +55,7 @@ describe('Service worker', () => {
                     return end()
                   }
                   if (i) {
-                    await new Promise((resolve) => setTimeout(resolve, 300))
+                    await new Promise(resolve => setTimeout(resolve, 300))
                     await push(new Date().toISOString())
                     i--
                     return pushTime()
@@ -74,7 +68,7 @@ describe('Service worker', () => {
 
                 return pushTime()
               }),
-            resolve: (value) => value,
+            resolve: value => value,
           },
         },
       },
@@ -92,7 +86,7 @@ describe('Service worker', () => {
   })
 
   it('should render GraphiQL', async () => {
-    const response: Response = await new Promise((respondWith) => {
+    const response: Response = await new Promise(respondWith => {
       trigger('fetch', {
         request: new Request('http://localhost:3000/graphql', {
           method: 'GET',
@@ -109,7 +103,7 @@ describe('Service worker', () => {
   })
 
   it('succeeds introspection query', async () => {
-    const response: Response = await new Promise((respondWith) => {
+    const response: Response = await new Promise(respondWith => {
       trigger('fetch', {
         request: new Request('http://localhost:3000/graphql', {
           method: 'POST',
@@ -140,7 +134,7 @@ describe('Service worker', () => {
 
   it('handles subscriptions', async () => {
     expect.assertions(5)
-    const response: Response = await new Promise((respondWith) => {
+    const response: Response = await new Promise(respondWith => {
       trigger('fetch', {
         request: new Request('http://localhost:3000/graphql', {
           method: 'POST',

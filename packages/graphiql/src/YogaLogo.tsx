@@ -79,80 +79,31 @@ export const YogaLogo = () => (
       </g>
     </g>
     <defs>
-      <linearGradient
-        id="a"
-        x1={16}
-        y1={14}
-        x2={87.213}
-        y2={44.598}
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="a" x1={16} y1={14} x2={87.213} y2={44.598} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7433FF" />
         <stop offset={1} stopColor="#FFA3FD" />
       </linearGradient>
-      <linearGradient
-        id="b"
-        x1={16}
-        y1={14}
-        x2={87.213}
-        y2={44.598}
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="b" x1={16} y1={14} x2={87.213} y2={44.598} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7433FF" />
         <stop offset={1} stopColor="#FFA3FD" />
       </linearGradient>
-      <linearGradient
-        id="c"
-        x1={16}
-        y1={14}
-        x2={87.213}
-        y2={44.598}
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="c" x1={16} y1={14} x2={87.213} y2={44.598} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7433FF" />
         <stop offset={1} stopColor="#FFA3FD" />
       </linearGradient>
-      <linearGradient
-        id="d"
-        x1={16}
-        y1={14}
-        x2={87.213}
-        y2={44.598}
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="d" x1={16} y1={14} x2={87.213} y2={44.598} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7433FF" />
         <stop offset={1} stopColor="#FFA3FD" />
       </linearGradient>
-      <linearGradient
-        id="e"
-        x1={16}
-        y1={14}
-        x2={87.213}
-        y2={44.598}
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="e" x1={16} y1={14} x2={87.213} y2={44.598} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7433FF" />
         <stop offset={1} stopColor="#FFA3FD" />
       </linearGradient>
-      <linearGradient
-        id="f"
-        x1={16}
-        y1={14}
-        x2={87.213}
-        y2={44.598}
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="f" x1={16} y1={14} x2={87.213} y2={44.598} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7433FF" />
         <stop offset={1} stopColor="#FFA3FD" />
       </linearGradient>
-      <linearGradient
-        id="j"
-        x1={30}
-        y1={28}
-        x2={66.165}
-        y2={44.436}
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="j" x1={30} y1={28} x2={66.165} y2={44.436} gradientUnits="userSpaceOnUse">
         <stop stopColor="#7433FF" />
         <stop offset={1} stopColor="#FFA3FD" />
       </linearGradient>
@@ -167,10 +118,7 @@ export const YogaLogo = () => (
       >
         <feFlood floodOpacity={0} result="BackgroundImageFix" />
         <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-        <feGaussianBlur
-          stdDeviation={12}
-          result="effect1_foregroundBlur_1677_11483"
-        />
+        <feGaussianBlur stdDeviation={12} result="effect1_foregroundBlur_1677_11483" />
       </filter>
       <filter
         id="i"
@@ -183,10 +131,7 @@ export const YogaLogo = () => (
       >
         <feFlood floodOpacity={0} result="BackgroundImageFix" />
         <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-        <feGaussianBlur
-          stdDeviation={12}
-          result="effect1_foregroundBlur_1677_11483"
-        />
+        <feGaussianBlur stdDeviation={12} result="effect1_foregroundBlur_1677_11483" />
       </filter>
       <filter
         id="l"
@@ -199,10 +144,7 @@ export const YogaLogo = () => (
       >
         <feFlood floodOpacity={0} result="BackgroundImageFix" />
         <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-        <feGaussianBlur
-          stdDeviation={12}
-          result="effect1_foregroundBlur_1677_11483"
-        />
+        <feGaussianBlur stdDeviation={12} result="effect1_foregroundBlur_1677_11483" />
       </filter>
       <filter
         id="m"
@@ -215,10 +157,7 @@ export const YogaLogo = () => (
       >
         <feFlood floodOpacity={0} result="BackgroundImageFix" />
         <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-        <feGaussianBlur
-          stdDeviation={12}
-          result="effect1_foregroundBlur_1677_11483"
-        />
+        <feGaussianBlur stdDeviation={12} result="effect1_foregroundBlur_1677_11483" />
       </filter>
     </defs>
   </svg>

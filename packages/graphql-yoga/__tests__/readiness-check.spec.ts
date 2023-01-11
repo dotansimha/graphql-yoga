@@ -82,9 +82,7 @@ describe('Readiness Check', () => {
 
     const response = await yoga.fetch('http://yoga/ready')
     expect(response.status).toBe(503)
-    expect(response.headers.get('content-type')).toBe(
-      'text/plain; charset=utf-8',
-    )
+    expect(response.headers.get('content-type')).toBe('text/plain; charset=utf-8')
     expect(await response.text()).toBe(message)
   })
 

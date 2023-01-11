@@ -1,8 +1,5 @@
+import { GraphQLDeferDirective, GraphQLStreamDirective } from '@graphql-tools/utils'
 import { GraphQLDirective, GraphQLSchema, ValidationRule } from 'graphql'
-import {
-  GraphQLDeferDirective,
-  GraphQLStreamDirective,
-} from '@graphql-tools/utils'
 import { Plugin } from 'graphql-yoga'
 
 import { DeferStreamDirectiveLabelRule } from './validations/defer-stream-directive-label.js'
@@ -53,9 +50,7 @@ export function useDeferStream<
     }) => {
       // Just to make TS happy because rules are always defined by useEngine.
       params.rules = params.rules || []
-      params.rules = params.rules.filter(
-        (rule) => rule.name !== 'OverlappingFieldsCanBeMergedRule',
-      )
+      params.rules = params.rules.filter(rule => rule.name !== 'OverlappingFieldsCanBeMergedRule')
       addValidationRule(OverlappingFieldsCanBeMergedRule)
       addValidationRule(DeferStreamDirectiveLabelRule)
       addValidationRule(DeferStreamDirectiveOnRootFieldRule)

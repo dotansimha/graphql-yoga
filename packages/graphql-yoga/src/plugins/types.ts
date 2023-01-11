@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  Plugin as EnvelopPlugin,
   OnExecuteHook,
   OnSubscribeHook,
-  Plugin as EnvelopPlugin,
   PromiseOrValue,
 } from '@envelop/core'
 import { ExecutionResult } from '@graphql-tools/utils'
 
 import { YogaServer } from '../server.js'
-import {
-  FetchAPI,
-  GraphQLParams,
-  MaybeArray,
-  YogaInitialContext,
-} from '../types.js'
+import { FetchAPI, GraphQLParams, MaybeArray, YogaInitialContext } from '../types.js'
 
 export type Plugin<
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -31,9 +26,7 @@ export type Plugin<
    * onSubscribe hook that is invoked before the subscribe function is called.
    * Return a OnSubscribeHookResult for hooking into phase after the subscribe function has been called.
    */
-  onSubscribe?: OnSubscribeHook<
-    YogaInitialContext & PluginContext & TUserContext
-  >
+  onSubscribe?: OnSubscribeHook<YogaInitialContext & PluginContext & TUserContext>
 } & {
   /**
    * Use this hook with your own risk. It is still experimental and may change in the future.
@@ -71,10 +64,9 @@ export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
   payload: OnYogaInitEventPayload<TServerContext>,
 ) => void
 
-export type OnYogaInitEventPayload<TServerContext extends Record<string, any>> =
-  {
-    yoga: YogaServer<TServerContext, any>
-  }
+export type OnYogaInitEventPayload<TServerContext extends Record<string, any>> = {
+  yoga: YogaServer<TServerContext, any>
+}
 
 export type OnRequestHook<TServerContext> = (
   payload: OnRequestEventPayload<TServerContext>,
@@ -116,9 +108,7 @@ export interface OnRequestParseDoneEventPayload {
   setRequestParserResult: (params: GraphQLParams | GraphQLParams[]) => void
 }
 
-export type OnParamsHook = (
-  payload: OnParamsEventPayload,
-) => PromiseOrValue<void>
+export type OnParamsHook = (payload: OnParamsEventPayload) => PromiseOrValue<void>
 
 export interface OnParamsEventPayload {
   params: GraphQLParams
@@ -128,13 +118,9 @@ export interface OnParamsEventPayload {
   fetchAPI: FetchAPI
 }
 
-export type OnResultProcess = (
-  payload: OnResultProcessEventPayload,
-) => PromiseOrValue<void>
+export type OnResultProcess = (payload: OnResultProcessEventPayload) => PromiseOrValue<void>
 
-export type ResultProcessorInput =
-  | MaybeArray<ExecutionResult>
-  | AsyncIterable<ExecutionResult>
+export type ResultProcessorInput = MaybeArray<ExecutionResult> | AsyncIterable<ExecutionResult>
 
 export type ResultProcessor = (
   result: ResultProcessorInput,
@@ -147,10 +133,7 @@ export interface OnResultProcessEventPayload {
   result: ResultProcessorInput
   resultProcessor?: ResultProcessor
   acceptableMediaTypes: string[]
-  setResultProcessor(
-    resultProcessor: ResultProcessor,
-    acceptedMediaType: string,
-  ): void
+  setResultProcessor(resultProcessor: ResultProcessor, acceptedMediaType: string): void
 }
 
 export type OnResponseHook<TServerContext> = (

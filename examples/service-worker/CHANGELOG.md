@@ -4,35 +4,42 @@
 
 ### Patch Changes
 
-- Updated dependencies [[`cb360975`](https://github.com/dotansimha/graphql-yoga/commit/cb36097523b5700fed8260cb654cbce75d37de20)]:
+- Updated dependencies
+  [[`cb360975`](https://github.com/dotansimha/graphql-yoga/commit/cb36097523b5700fed8260cb654cbce75d37de20)]:
   - @graphql-yoga/common@2.12.10
 
 ## 0.12.9
 
 ### Patch Changes
 
-- Updated dependencies [[`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6), [`313e6f30`](https://github.com/dotansimha/graphql-yoga/commit/313e6f3036a1ddeb7e6299925a49bb7f0c2d2eb6)]:
+- Updated dependencies
+  [[`779b55ee`](https://github.com/dotansimha/graphql-yoga/commit/779b55eea843bd282f659e1012f255f62fd888b6),
+  [`313e6f30`](https://github.com/dotansimha/graphql-yoga/commit/313e6f3036a1ddeb7e6299925a49bb7f0c2d2eb6)]:
   - @graphql-yoga/common@2.12.9
 
 ## 0.12.8
 
 ### Patch Changes
 
-- Updated dependencies [[`38c7c13e`](https://github.com/dotansimha/graphql-yoga/commit/38c7c13ec78acc98ebd988354e4d5e5ed9e9f3d7)]:
+- Updated dependencies
+  [[`38c7c13e`](https://github.com/dotansimha/graphql-yoga/commit/38c7c13ec78acc98ebd988354e4d5e5ed9e9f3d7)]:
   - @graphql-yoga/common@2.12.8
 
 ## 0.12.7
 
 ### Patch Changes
 
-- Updated dependencies [[`5193e43`](https://github.com/dotansimha/graphql-yoga/commit/5193e436b7abd0abcfbbb25f9c1a33cbe5cb6446)]:
+- Updated dependencies
+  [[`5193e43`](https://github.com/dotansimha/graphql-yoga/commit/5193e436b7abd0abcfbbb25f9c1a33cbe5cb6446)]:
   - @graphql-yoga/common@2.12.7
 
 ## 0.12.6
 
 ### Patch Changes
 
-- Updated dependencies [[`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b), [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10)]:
+- Updated dependencies
+  [[`e4e8ade`](https://github.com/dotansimha/graphql-yoga/commit/e4e8ade526c2aec7ea28218ca7795e96b867fc6b),
+  [`94b41f3`](https://github.com/dotansimha/graphql-yoga/commit/94b41f30f598afb37db2438c736764e2a539cd10)]:
   - @graphql-yoga/common@2.12.6
 
 ## 0.12.5

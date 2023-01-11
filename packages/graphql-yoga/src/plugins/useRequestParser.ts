@@ -5,9 +5,7 @@ import { Plugin } from './types.js'
 
 interface RequestParserPluginOptions {
   match?(request: Request): boolean
-  parse(
-    request: Request,
-  ): PromiseOrValue<GraphQLParams> | PromiseOrValue<GraphQLParams[]>
+  parse(request: Request): PromiseOrValue<GraphQLParams> | PromiseOrValue<GraphQLParams[]>
 }
 
 const DEFAULT_MATCHER = () => true

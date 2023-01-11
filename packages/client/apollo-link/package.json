@@ -1,28 +1,17 @@
 {
   "name": "@graphql-yoga/apollo-link",
   "version": "1.2.1",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/apollo-link"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "graphql",
-    "server",
-    "graphql-yoga",
-    "apollo"
-  ],
   "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
   "license": "MIT",
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -41,25 +30,36 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "keywords": [
+    "graphql",
+    "server",
+    "graphql-yoga",
+    "apollo"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
   },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+  "peerDependencies": {
+    "@apollo/client": "^3.5.9",
+    "graphql": "^15.2.0 || ^16.0.0"
   },
   "dependencies": {
-    "@graphql-tools/executor-http": "0.0.8",
     "@graphql-tools/executor-apollo-link": "0.0.5",
+    "@graphql-tools/executor-http": "0.0.8",
     "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@apollo/client": "3.7.3",
     "graphql-yoga": "3.3.1"
   },
-  "peerDependencies": {
-    "graphql": "^15.2.0 || ^16.0.0",
-    "@apollo/client": "^3.5.9"
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
   },
-  "type": "module"
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

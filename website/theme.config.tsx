@@ -1,13 +1,13 @@
 /* eslint sort-keys: error */
-import { useTheme, Giscus, defineConfig, YogaLogo } from '@theguild/components'
 import { useRouter } from 'next/router'
+
+import { defineConfig, Giscus, useTheme, YogaLogo } from '@theguild/components'
 
 export default defineConfig({
   chat: {
     link: 'https://discord.gg/94CDTmgmbs',
   },
-  docsRepositoryBase:
-    'https://github.com/dotansimha/graphql-yoga/tree/main/website',
+  docsRepositoryBase: 'https://github.com/dotansimha/graphql-yoga/tree/main/website',
   main({ children }) {
     const { resolvedTheme } = useTheme()
     const { route } = useRouter()

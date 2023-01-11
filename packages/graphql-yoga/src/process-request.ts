@@ -1,11 +1,7 @@
-import { ExecutionArgs, getOperationAST } from 'graphql'
 import { GetEnvelopedFn } from '@envelop/core'
+import { ExecutionArgs, getOperationAST } from 'graphql'
 
-import {
-  OnResultProcess,
-  ResultProcessor,
-  ResultProcessorInput,
-} from './plugins/types.js'
+import { OnResultProcess, ResultProcessor, ResultProcessorInput } from './plugins/types.js'
 import { FetchAPI, GraphQLParams } from './types.js'
 
 export async function processResult({
@@ -83,9 +79,7 @@ export async function processRequest({
 
   // Choose the right executor
   const executeFn =
-    operation?.operation === 'subscription'
-      ? enveloped.subscribe
-      : enveloped.execute
+    operation?.operation === 'subscription' ? enveloped.subscribe : enveloped.execute
 
   // Get the result to be processed
   return executeFn(executionArgs)

@@ -1,5 +1,5 @@
-import { createYoga, createSchema, createGraphQLError } from 'graphql-yoga'
 import { fetch } from '@whatwg-node/fetch'
+import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
 
 const users = [
   {
@@ -33,14 +33,12 @@ export const yoga = createYoga({
       Query: {
         greeting: async () => {
           // This service does not exist
-          const greeting = await fetch('http://localhost:9999/greeting').then(
-            (res) => res.text(),
-          )
+          const greeting = await fetch('http://localhost:9999/greeting').then(res => res.text())
 
           return greeting
         },
         user: async (_, args) => {
-          const user = users.find((user) => user.id === args.byId)
+          const user = users.find(user => user.id === args.byId)
           if (!user) {
             throw createGraphQLError(`User with id '${args.byId}' not found.`, {
               extensions: {

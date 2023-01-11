@@ -1,13 +1,8 @@
-import { GraphQLError, ResponsePath } from 'graphql'
 import { useOnResolve } from '@envelop/on-resolve'
 import { btoa } from '@whatwg-node/fetch'
 import ApolloReportingProtobuf from 'apollo-reporting-protobuf'
-import {
-  createGraphQLError,
-  isAsyncIterable,
-  Plugin,
-  YogaInitialContext,
-} from 'graphql-yoga'
+import { GraphQLError, ResponsePath } from 'graphql'
+import { createGraphQLError, isAsyncIterable, Plugin, YogaInitialContext } from 'graphql-yoga'
 
 interface ApolloInlineTraceContext {
   startHrTime: [number, number]
@@ -67,21 +62,14 @@ export function useApolloInlineTrace(
           const node = newTraceNode(ctx, info.path)
           node.type = info.returnType.toString()
           node.parentType = info.parentType.toString()
-          node.startTime = hrTimeToDurationInNanos(
-            process.hrtime(ctx.startHrTime),
-          )
-          if (
-            typeof info.path.key === 'string' &&
-            info.path.key !== info.fieldName
-          ) {
+          node.startTime = hrTimeToDurationInNanos(process.hrtime(ctx.startHrTime))
+          if (typeof info.path.key === 'string' && info.path.key !== info.fieldName) {
             // field was aliased, send the original field name too
             node.originalFieldName = info.fieldName
           }
 
           return () => {
-            node.endTime = hrTimeToDurationInNanos(
-              process.hrtime(ctx.startHrTime),
-            )
+            node.endTime = hrTimeToDurationInNanos(process.hrtime(ctx.startHrTime))
           }
         }),
       )
@@ -168,14 +156,10 @@ export function useApolloInlineTrace(
         if (ctx.stopped) throw new Error('Trace stopped multiple times')
 
         ctx.stopped = true
-        ctx.trace.durationNs = hrTimeToDurationInNanos(
-          process.hrtime(ctx.startHrTime),
-        )
+        ctx.trace.durationNs = hrTimeToDurationInNanos(process.hrtime(ctx.startHrTime))
         ctx.trace.endTime = nowTimestamp()
 
-        const encodedUint8Array = ApolloReportingProtobuf.Trace.encode(
-          ctx.trace,
-        ).finish()
+        const encodedUint8Array = ApolloReportingProtobuf.Trace.encode(ctx.trace).finish()
         const base64 = btoa(String.fromCharCode(...encodedUint8Array))
 
         singleResult.extensions = {
@@ -284,10 +268,7 @@ function handleErrors(
     // errors can be rewritten through `rewriteError`
     if (rewriteError) {
       // clone error to avoid users mutating the original one
-      const clonedErr = Object.assign(
-        Object.create(Object.getPrototypeOf(err)),
-        err,
-      )
+      const clonedErr = Object.assign(Object.create(Object.getPrototypeOf(err)), err)
       const rewrittenError = rewriteError(clonedErr)
       if (!rewrittenError) {
         // return nullish to skip reporting
@@ -314,9 +295,7 @@ function handleErrors(
       if (specificNode) {
         node = specificNode
       } else {
-        throw new Error(
-          `Could not find node with path ${errToReport.path.join('.')}`,
-        )
+        throw new Error(`Could not find node with path ${errToReport.path.join('.')}`)
       }
     }
 
@@ -324,8 +303,7 @@ function handleErrors(
       new ApolloReportingProtobuf.Trace.Error({
         message: errToReport.message,
         location: (errToReport.locations || []).map(
-          ({ line, column }) =>
-            new ApolloReportingProtobuf.Trace.Location({ line, column }),
+          ({ line, column }) => new ApolloReportingProtobuf.Trace.Location({ line, column }),
         ),
         json: JSON.stringify(errToReport),
       }),

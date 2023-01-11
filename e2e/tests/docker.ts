@@ -1,13 +1,10 @@
-import { DeploymentConfiguration } from '../types'
-import {
-  assertGraphiQL,
-  assertQuery,
-  execPromise,
-  waitForEndpoint,
-} from '../utils'
+import { resolve } from 'path'
+
 import * as docker from '@pulumi/docker'
 import { interpolate } from '@pulumi/pulumi'
-import { resolve } from 'path'
+
+import { DeploymentConfiguration } from '../types'
+import { assertGraphiQL, assertQuery, execPromise, waitForEndpoint } from '../utils'
 
 export const dockerDeployment = (
   image: string,
@@ -43,9 +40,7 @@ export const dockerDeployment = (
     })
 
     // Since the provider picked a random ephemeral port for this container, export the endpoint.
-    const endpoint = container.ports.apply(
-      (ports) => `localhost:${ports![0].external}`,
-    )
+    const endpoint = container.ports.apply(ports => `localhost:${ports![0].external}`)
 
     return {
       endpoint: interpolate`http://${endpoint}/graphql`,

@@ -1,9 +1,6 @@
 import { isAsyncIterable } from '@envelop/core'
 
-import {
-  getMediaTypesForRequestInOrder,
-  isMatchingMediaType,
-} from './resultProcessor/accept.js'
+import { getMediaTypesForRequestInOrder, isMatchingMediaType } from './resultProcessor/accept.js'
 import { processMultipartResult } from './resultProcessor/multipart.js'
 import { processPushResult } from './resultProcessor/push.js'
 import { processRegularResult } from './resultProcessor/regular.js'
@@ -44,16 +41,9 @@ export function useResultProcessors(): Plugin {
         isSubscriptionRequestMap.set(contextValue.request, true)
       }
     },
-    onResultProcess({
-      request,
-      result,
-      acceptableMediaTypes,
-      setResultProcessor,
-    }) {
+    onResultProcess({ request, result, acceptableMediaTypes, setResultProcessor }) {
       const isSubscriptionRequest = isSubscriptionRequestMap.get(request)
-      const processorConfigList = isSubscriptionRequest
-        ? subscriptionList
-        : defaultList
+      const processorConfigList = isSubscriptionRequest ? subscriptionList : defaultList
       const requestMediaTypes = getMediaTypesForRequestInOrder(request)
       const isAsyncIterableResult = isAsyncIterable(result)
       for (const requestMediaType of requestMediaTypes) {
@@ -64,10 +54,7 @@ export function useResultProcessors(): Plugin {
           for (const processorMediaType of resultProcessorConfig.mediaTypes) {
             acceptableMediaTypes.push(processorMediaType)
             if (isMatchingMediaType(processorMediaType, requestMediaType)) {
-              setResultProcessor(
-                resultProcessorConfig.processResult,
-                processorMediaType,
-              )
+              setResultProcessor(resultProcessorConfig.processResult, processorMediaType)
             }
           }
         }

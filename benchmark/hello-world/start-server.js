@@ -11,8 +11,7 @@ const yoga = createYoga({
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
     },
   }),

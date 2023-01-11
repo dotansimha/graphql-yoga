@@ -1,9 +1,4 @@
-import {
-  createSchema,
-  createYoga,
-  GraphQLParams,
-  YogaInitialContext,
-} from '../src/index.js'
+import { createSchema, createYoga, GraphQLParams, YogaInitialContext } from '../src/index.js'
 
 describe('recipe', () => {
   it('id as custom top level POST body query parameter', async () => {

@@ -1,8 +1,5 @@
 import { ExecutorLink } from '@graphql-tools/executor-apollo-link'
-import {
-  buildHTTPExecutor,
-  HTTPExecutorOptions,
-} from '@graphql-tools/executor-http'
+import { buildHTTPExecutor, HTTPExecutorOptions } from '@graphql-tools/executor-http'
 
 export type YogaLinkOptions = HTTPExecutorOptions
 

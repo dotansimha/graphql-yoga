@@ -1,7 +1,7 @@
 import { getOperationAST } from 'graphql'
-import { Plugin, YogaInitialContext } from 'graphql-yoga'
 import { HandlerOptions } from 'graphql-sse'
 import { createHandler, RequestContext } from 'graphql-sse/lib/use/fetch'
+import { Plugin, YogaInitialContext } from 'graphql-yoga'
 
 export interface GraphQLSSEPluginOptions
   extends Omit<
@@ -21,9 +21,7 @@ export interface GraphQLSSEPluginOptions
  *
  * Note that the endpoint defaults to `/graphql/stream`, this is where your [graphql-sse](https://github.com/enisdenjo/graphql-sse) client should connect.
  */
-export function useGraphQLSSE(
-  options: GraphQLSSEPluginOptions = {},
-): Plugin<YogaInitialContext> {
+export function useGraphQLSSE(options: GraphQLSSEPluginOptions = {}): Plugin<YogaInitialContext> {
   const { endpoint = '/graphql/stream', ...handlerOptions } = options
   const ctxForReq = new WeakMap<Request, any>()
   let handler!: (request: Request) => Promise<Response>
@@ -56,9 +54,7 @@ export function useGraphQLSSE(
             const operation = getOperationAST(document, params.operationName)
 
             const executeFn =
-              operation?.operation === 'subscription'
-                ? enveloped.subscribe
-                : enveloped.execute
+              operation?.operation === 'subscription' ? enveloped.subscribe : enveloped.execute
 
             return executeFn(executionArgs)
           },

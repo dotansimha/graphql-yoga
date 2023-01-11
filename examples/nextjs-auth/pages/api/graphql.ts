@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createYoga, createSchema } from 'graphql-yoga'
-
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+import { createSchema, createYoga } from 'graphql-yoga'
 import type { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
 

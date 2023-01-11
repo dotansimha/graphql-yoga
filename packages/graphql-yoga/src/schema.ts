@@ -1,7 +1,4 @@
-import {
-  IExecutableSchemaDefinition,
-  makeExecutableSchema,
-} from '@graphql-tools/schema'
+import { IExecutableSchemaDefinition, makeExecutableSchema } from '@graphql-tools/schema'
 
 import { GraphQLSchemaWithContext, YogaInitialContext } from './types.js'
 

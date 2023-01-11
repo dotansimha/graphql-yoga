@@ -1,4 +1,6 @@
 import * as pulumi from '@pulumi/pulumi'
+
+import { DeploymentConfiguration } from '../types'
 import {
   assertGraphiQL,
   assertQuery,
@@ -7,7 +9,6 @@ import {
   fsPromises,
   waitForEndpoint,
 } from '../utils'
-import { DeploymentConfiguration } from '../types'
 
 type VercelProviderInputs = {
   name: string
@@ -46,9 +47,7 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
   async delete(id: string) {
     const teamId = this.getTeamId()
     const response = await fetch(
-      `${this.baseUrl}/v13/deployments/${id}${
-        teamId ? `?teamId=${teamId}` : ''
-      }`,
+      `${this.baseUrl}/v13/deployments/${id}${teamId ? `?teamId=${teamId}` : ''}`,
       {
         method: 'DELETE',
         headers: {
@@ -66,9 +65,7 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
     }
   }
 
-  async create(
-    inputs: VercelProviderInputs,
-  ): Promise<pulumi.dynamic.CreateResult> {
+  async create(inputs: VercelProviderInputs): Promise<pulumi.dynamic.CreateResult> {
     const teamId = this.getTeamId()
     const response = await fetch(
       `${this.baseUrl}/v13/deployments${teamId ? `?teamId=${teamId}` : ''}`,
@@ -109,11 +106,7 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
 export class VercelDeployment extends pulumi.dynamic.Resource {
   public readonly url: pulumi.Output<string>
 
-  constructor(
-    name: string,
-    props: VercelDeploymentInputs,
-    opts?: pulumi.CustomResourceOptions,
-  ) {
+  constructor(name: string, props: VercelDeploymentInputs, opts?: pulumi.CustomResourceOptions) {
     super(
       new VercelProvider(),
       name,
@@ -141,10 +134,7 @@ export const vercelDeployment: DeploymentConfiguration<{
       files: [
         {
           file: '/api/graphql.js',
-          data: await fsPromises.readFile(
-            '../examples/nextjs/dist/index.js',
-            'utf-8',
-          ),
+          data: await fsPromises.readFile('../examples/nextjs/dist/index.js', 'utf-8'),
         },
       ],
       name: `yoga-e2e-testing`,

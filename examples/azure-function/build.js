@@ -63,7 +63,7 @@ async function main() {
   console.info(`Azure Function build done!`)
 }
 
-main().catch((e) => {
+main().catch(e => {
   console.error(e)
   process.exit(1)
 })

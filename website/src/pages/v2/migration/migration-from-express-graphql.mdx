@@ -1,4 +1,5 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
+
 import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 <LatestVersionNotice />
@@ -46,9 +47,8 @@ console.log('Running a GraphQL API server at http://localhost:4000/graphql')
 ```
 
 <Callout>
-  `schema`, `context` and other parameters can be passed dynamically per HTTP
-  request. `context` parameter of GraphQL Yoga can be a factory function but
-  `schema` cannot. So you should use
-  [@envelop/use-lazy-loaded-schema](https://envelop.dev/plugins/use-lazy-loaded-schema)
-  for the same behavior.
+  `schema`, `context` and other parameters can be passed dynamically per HTTP request. `context`
+  parameter of GraphQL Yoga can be a factory function but `schema` cannot. So you should use
+  [@envelop/use-lazy-loaded-schema](https://envelop.dev/plugins/use-lazy-loaded-schema) for the same
+  behavior.
 </Callout>

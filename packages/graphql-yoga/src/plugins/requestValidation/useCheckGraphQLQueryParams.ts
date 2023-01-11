@@ -3,16 +3,9 @@ import { createGraphQLError } from '@graphql-tools/utils'
 import type { GraphQLParams } from '../../types.js'
 import type { Plugin } from '../types.js'
 
-const expectedParameters = new Set([
-  'query',
-  'variables',
-  'operationName',
-  'extensions',
-])
+const expectedParameters = new Set(['query', 'variables', 'operationName', 'extensions'])
 
-export function assertInvalidParams(
-  params: unknown,
-): asserts params is GraphQLParams {
+export function assertInvalidParams(params: unknown): asserts params is GraphQLParams {
   if (params == null || typeof params !== 'object') {
     throw createGraphQLError('Invalid "params" in the request body', {
       extensions: {
@@ -28,17 +21,14 @@ export function assertInvalidParams(
       continue
     }
     if (!expectedParameters.has(paramKey)) {
-      throw createGraphQLError(
-        `Unexpected parameter "${paramKey}" in the request body.`,
-        {
-          extensions: {
-            http: {
-              spec: true,
-              status: 400,
-            },
+      throw createGraphQLError(`Unexpected parameter "${paramKey}" in the request body.`, {
+        extensions: {
+          http: {
+            spec: true,
+            status: 400,
           },
         },
-      )
+      })
     }
   }
 }
@@ -79,20 +69,17 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
 
   const queryType = extendedTypeof(params.query)
   if (queryType !== 'string') {
-    throw createGraphQLError(
-      `Expected "query" param to be a string, but given ${queryType}.`,
-      {
-        extensions: {
-          http: {
-            spec: true,
-            status: 400,
-            headers: {
-              Allow: 'GET, POST',
-            },
+    throw createGraphQLError(`Expected "query" param to be a string, but given ${queryType}.`, {
+      extensions: {
+        http: {
+          spec: true,
+          status: 400,
+          headers: {
+            Allow: 'GET, POST',
           },
         },
       },
-    )
+    })
   }
 
   const variablesParamType = extendedTypeof(params.variables)

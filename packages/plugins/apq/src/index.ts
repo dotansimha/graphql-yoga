@@ -24,9 +24,7 @@ export interface APQStoreOptions {
   ttl?: number
 }
 
-export function createInMemoryAPQStore(
-  options: APQStoreOptions = {},
-): APQStore {
+export function createInMemoryAPQStore(options: APQStoreOptions = {}): APQStore {
   return lru(options.max ?? 1000, options.ttl ?? 36_000)
 }
 
@@ -74,9 +72,7 @@ export function useAPQ(options: APQOptions = {}): Plugin {
 
   return {
     async onParams({ params, setParams, fetchAPI }) {
-      const persistedQueryData = decodeAPQExtension(
-        params.extensions?.persistedQuery,
-      )
+      const persistedQueryData = decodeAPQExtension(params.extensions?.persistedQuery)
 
       if (persistedQueryData === null) {
         return

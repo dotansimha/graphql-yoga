@@ -1,5 +1,5 @@
-import { createPubSub, createSchema, createYoga } from 'graphql-yoga'
 import { useSofaWithSwaggerUI } from '@graphql-yoga/plugin-sofa'
+import { createPubSub, createSchema, createYoga } from 'graphql-yoga'
 
 const pizzas = [
   { id: 1, dough: 'pan', toppings: ['cheese'] },
@@ -24,13 +24,7 @@ const users = [
     favoritePizza: pizzas[1],
     favoriteBook: books[1],
     favoriteFood: {
-      ingredients: [
-        'green shit',
-        'chicken',
-        'green shit',
-        'yellow shit',
-        'red shit',
-      ],
+      ingredients: ['green shit', 'chicken', 'green shit', 'yellow shit', 'red shit'],
     },
     shelf: books,
   },
@@ -46,7 +40,7 @@ const UsersCollection = {
   get(id: string | number) {
     const uid = typeof id === 'string' ? parseInt(id, 10) : id
 
-    return users.find((u) => u.id === uid)
+    return users.find(u => u.id === uid)
   },
   all() {
     return users
@@ -57,7 +51,7 @@ const BooksCollection = {
   get(id: string | number) {
     const bid = typeof id === 'string' ? parseInt(id, 10) : id
 
-    return books.find((u) => u.id === bid)
+    return books.find(u => u.id === bid)
   },
   all() {
     return books
@@ -210,8 +204,7 @@ const schema = createSchema({
     Post: {
       comments(post: { comments: string[] }, { filter }: { filter: string }) {
         return post.comments.filter(
-          (comment) =>
-            !filter || comment.toLowerCase().includes(filter.toLowerCase()),
+          comment => !filter || comment.toLowerCase().includes(filter.toLowerCase()),
         )
       },
     },

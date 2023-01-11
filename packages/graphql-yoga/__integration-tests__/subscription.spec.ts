@@ -1,7 +1,8 @@
 import { createServer } from 'node:http'
 import { AddressInfo } from 'node:net'
-import { ExecutionResult } from 'graphql'
+
 import { fetch } from '@whatwg-node/fetch'
+import { ExecutionResult } from 'graphql'
 
 import { createSchema, createYoga } from '../src'
 
@@ -49,20 +50,17 @@ describe('subscription', () => {
     })
     const server = createServer(yoga)
     try {
-      await new Promise<void>((resolve) => server.listen(0, resolve))
+      await new Promise<void>(resolve => server.listen(0, resolve))
       const port = (server.address() as AddressInfo).port
 
       // Start and Close a HTTP SSE subscription
       // eslint-disable-next-line no-async-promise-executor
-      await new Promise<void>(async (res) => {
-        const response = await fetch(
-          `http://localhost:${port}/graphql?query=subscription{foo}`,
-          {
-            headers: {
-              Accept: 'text/event-stream',
-            },
+      await new Promise<void>(async res => {
+        const response = await fetch(`http://localhost:${port}/graphql?query=subscription{foo}`, {
+          headers: {
+            Accept: 'text/event-stream',
           },
-        )
+        })
         expect(response.status).toBe(200)
         expect(response.headers.get('content-type')).toBe('text/event-stream')
 
@@ -76,10 +74,10 @@ describe('subscription', () => {
       })
 
       // very small timeout to make sure the subscription is closed
-      await new Promise((res) => setTimeout(res, 30))
+      await new Promise(res => setTimeout(res, 30))
       expect(fakeIterator.return).toHaveBeenCalled()
     } finally {
-      await new Promise((resolve) => server.close(resolve))
+      await new Promise(resolve => server.close(resolve))
     }
   })
 })

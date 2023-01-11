@@ -1,12 +1,11 @@
 import { PromiseOrValue } from '@envelop/core'
+
 import graphiqlHTML from '../graphiql-html.js'
 import { YogaLogger } from '../logger.js'
 import { Plugin } from './types.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
-  return (
-    method === 'GET' && Boolean(headers?.get('accept')?.includes('text/html'))
-  )
+  return method === 'GET' && Boolean(headers?.get('accept')?.includes('text/html'))
 }
 
 export type GraphiQLOptions = {

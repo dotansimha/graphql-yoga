@@ -68,8 +68,7 @@ describe('disable introspection', () => {
       schema,
       plugins: [
         useDisableIntrospection({
-          isDisabled: (request) =>
-            request.headers.get('x-disable-introspection') === '1',
+          isDisabled: request => request.headers.get('x-disable-introspection') === '1',
         }),
       ],
       // uncomment this and the tests will pass

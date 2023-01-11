@@ -42,4 +42,7 @@ app.listen(4000);
 console.log('Running a GraphQL API server at http://localhost:4000/graphql');
 ```
 
-> `schema`, `context` and other parameters can be passed dynamically per HTTP request. `context` parameter of GraphQL Yoga can be a factory function but `schema` cannot. So you should use [@envelop/use-lazy-loaded-schema](https://www.envelop.dev/plugins/use-lazy-loaded-schema) for the same behavior.
+> `schema`, `context` and other parameters can be passed dynamically per HTTP request. `context`
+> parameter of GraphQL Yoga can be a factory function but `schema` cannot. So you should use
+> [@envelop/use-lazy-loaded-schema](https://www.envelop.dev/plugins/use-lazy-loaded-schema) for the
+> same behavior.

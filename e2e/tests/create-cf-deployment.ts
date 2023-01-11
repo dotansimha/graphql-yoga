@@ -1,6 +1,9 @@
-import { Stack } from '@pulumi/pulumi/automation'
-import { DeploymentConfiguration } from '../types'
 import * as cf from '@pulumi/cloudflare'
+import { version } from '@pulumi/cloudflare/package.json'
+import * as pulumi from '@pulumi/pulumi'
+import { Stack } from '@pulumi/pulumi/automation'
+
+import { DeploymentConfiguration } from '../types'
 import {
   assertGraphiQL,
   assertQuery,
@@ -9,8 +12,6 @@ import {
   fsPromises,
   waitForEndpoint,
 } from '../utils'
-import * as pulumi from '@pulumi/pulumi'
-import { version } from '@pulumi/cloudflare/package.json'
 
 export function createCFDeployment(
   projectName: string,
@@ -47,10 +48,7 @@ export function createCFDeployment(
 
       // Deploy CF script as Worker
       const workerScript = new cf.WorkerScript('worker', {
-        content: await fsPromises.readFile(
-          `../examples/${projectName}/dist/index.js`,
-          'utf-8',
-        ),
+        content: await fsPromises.readFile(`../examples/${projectName}/dist/index.js`, 'utf-8'),
         module: isModule,
         plainTextBindings: [
           {

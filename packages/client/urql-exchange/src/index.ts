@@ -1,7 +1,4 @@
-import {
-  buildHTTPExecutor,
-  HTTPExecutorOptions,
-} from '@graphql-tools/executor-http'
+import { buildHTTPExecutor, HTTPExecutorOptions } from '@graphql-tools/executor-http'
 import { executorExchange } from '@graphql-tools/executor-urql-exchange'
 import { Exchange } from '@urql/core'
 

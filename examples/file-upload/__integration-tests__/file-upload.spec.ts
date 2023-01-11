@@ -1,17 +1,19 @@
-import { yoga } from '../yoga'
+import * as crypto from 'crypto'
+import * as fs from 'fs'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
-import { fetch, File, FormData } from '@whatwg-node/fetch'
-import * as fs from 'fs'
-import * as crypto from 'crypto'
 import * as path from 'path'
+
+import { fetch, File, FormData } from '@whatwg-node/fetch'
+
+import { yoga } from '../yoga'
 
 function md5File(path: string) {
   return new Promise((resolve, reject) => {
     const output = crypto.createHash('md5')
     const input = fs.createReadStream(path)
 
-    input.on('error', (err) => {
+    input.on('error', err => {
       reject(err)
     })
 
@@ -29,18 +31,16 @@ describe('graphql-auth example integration', () => {
 
   beforeAll(async () => {
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, resolve))
+    await new Promise<void>(resolve => server.listen(0, resolve))
     port = (server.address() as AddressInfo).port
   })
 
   afterAll(async () => {
-    await new Promise((resolve) => server.close(resolve))
+    await new Promise(resolve => server.close(resolve))
   })
 
   it('should execute query', async () => {
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{hello}`,
-    )
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{hello}`)
     const body = await response.json()
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({
@@ -49,15 +49,7 @@ describe('graphql-auth example integration', () => {
   })
 
   it('should save file', async () => {
-    const sourceFilePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'website',
-      'public',
-      'logo.png',
-    )
+    const sourceFilePath = path.join(__dirname, '..', '..', '..', 'website', 'public', 'logo.png')
     const sourceMd5 = await md5File(sourceFilePath)
 
     const formData = new FormData()
@@ -74,11 +66,9 @@ describe('graphql-auth example integration', () => {
     formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
     formData.set(
       '0',
-      new File(
-        [await fs.promises.readFile(sourceFilePath)],
-        path.basename(sourceFilePath),
-        { type: 'image/png' },
-      ),
+      new File([await fs.promises.readFile(sourceFilePath)], path.basename(sourceFilePath), {
+        type: 'image/png',
+      }),
     )
 
     const response = await fetch(`http://localhost:${port}/graphql`, {
@@ -101,15 +91,7 @@ describe('graphql-auth example integration', () => {
   })
 
   it('should read file text', async () => {
-    const sourceFilePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'website',
-      'public',
-      'logo.png',
-    )
+    const sourceFilePath = path.join(__dirname, '..', '..', '..', 'website', 'public', 'logo.png')
 
     const formData = new FormData()
     formData.set(
@@ -125,11 +107,9 @@ describe('graphql-auth example integration', () => {
     formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
     formData.set(
       '0',
-      new File(
-        [await fs.promises.readFile(sourceFilePath)],
-        path.basename(sourceFilePath),
-        { type: 'image/png' },
-      ),
+      new File([await fs.promises.readFile(sourceFilePath)], path.basename(sourceFilePath), {
+        type: 'image/png',
+      }),
     )
 
     const response = await fetch(`http://localhost:${port}/graphql`, {

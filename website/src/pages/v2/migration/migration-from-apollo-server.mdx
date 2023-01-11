@@ -1,4 +1,5 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
+
 import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 <LatestVersionNotice />
@@ -13,20 +14,24 @@ You can start by installing `graphql-yoga` package.
 
 ### Install Equivalent Envelop Plugins of the Apollo Server
 
-Some features that are included within apollo-server by default must be installed as envelop plugins. Learn more about envelop plugins [here](/docs/features/envelop-plugins).
+Some features that are included within apollo-server by default must be installed as envelop
+plugins. Learn more about envelop plugins [here](/docs/features/envelop-plugins).
 
 - Apollo Federation
-  - If you are using Apollo Federation, install [`@envelop/use-apollo-federation`](https://envelop.dev/plugins/use-apollo-federation)
+  - If you are using Apollo Federation, install
+    [`@envelop/use-apollo-federation`](https://envelop.dev/plugins/use-apollo-federation)
 - Apollo Server Errors
-  - If you are using Apollo Server errors, install [`@envelop/use-apollo-server-errors`](https://envelop.dev/plugins/use-apollo-server-errors)
+  - If you are using Apollo Server errors, install
+    [`@envelop/use-apollo-server-errors`](https://envelop.dev/plugins/use-apollo-server-errors)
 - Apollo Tracing
-  - If you are using Apollo Tracing, install [`@envelop/use-apollo-tracing`](https://envelop.dev/plugins/use-apollo-tracing)
+  - If you are using Apollo Tracing, install
+    [`@envelop/use-apollo-tracing`](https://envelop.dev/plugins/use-apollo-tracing)
 - Response Cache
-  - If you are using Response Cache, you should set up [`@envelop/use-response-cache`](https://envelop.dev/plugins/use-response-cache) for the same functionality
+  - If you are using Response Cache, you should set up
+    [`@envelop/use-response-cache`](https://envelop.dev/plugins/use-response-cache) for the same
+    functionality
 
-<Callout>
-  Check out [more plugins on Envelop Plugin Hub](https://envelop.dev/plugins).
-</Callout>
+<Callout>Check out [more plugins on Envelop Plugin Hub](https://envelop.dev/plugins).</Callout>
 
 ## Example Initial Usage of GraphQL Yoga
 
@@ -57,7 +62,9 @@ You don't need anything special. You can just use GraphQL Yoga as in the example
 
 Check the integration section to choose the server framework you are using with Apollo Server.
 
-For example, if you are using **Express**, you should remove `server.start(){:ts}` from the code above and replace `server.applyMiddleware({ app }){:ts}` with the route as in [Express Integration section](/docs/integrations/integration-with-express):
+For example, if you are using **Express**, you should remove `server.start(){:ts}` from the code
+above and replace `server.applyMiddleware({ app }){:ts}` with the route as in
+[Express Integration section](/docs/integrations/integration-with-express):
 
 ```diff
 - server.applyMiddleware({ app })

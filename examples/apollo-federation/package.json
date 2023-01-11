@@ -2,17 +2,17 @@
   "name": "example-apollo-federation",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "start": "concurrently \"pnpm start:service\" \"pnpm start:gateway\"",
-    "start:service": "cd service && pnpm start",
-    "start:gateway": "cd gateway && pnpm start",
-    "check": "exit 0"
-  },
-  "dependencies": {
-    "concurrently": "^7.0.0"
-  },
   "workspaces": [
     "service",
     "gateway"
-  ]
+  ],
+  "scripts": {
+    "check": "exit 0",
+    "start": "concurrently \"pnpm start:service\" \"pnpm start:gateway\"",
+    "start:gateway": "cd gateway && pnpm start",
+    "start:service": "cd service && pnpm start"
+  },
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
 }

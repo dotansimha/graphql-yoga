@@ -1,11 +1,6 @@
-import {
-  DocumentNode,
-  getOperationAST,
-  GraphQLError,
-  OperationDefinitionNode,
-} from 'graphql'
 import { Maybe } from '@envelop/core'
 import { createGraphQLError } from '@graphql-tools/utils'
+import { DocumentNode, getOperationAST, GraphQLError, OperationDefinitionNode } from 'graphql'
 
 import type { YogaInitialContext } from '../../types.js'
 import type { Plugin } from '../types.js'
@@ -31,19 +26,16 @@ export function assertMutationViaGet(
   }
 
   if (operation.operation === 'mutation' && method === 'GET') {
-    throw createGraphQLError(
-      'Can only perform a mutation operation from a POST request.',
-      {
-        extensions: {
-          http: {
-            status: 405,
-            headers: {
-              Allow: 'POST',
-            },
+    throw createGraphQLError('Can only perform a mutation operation from a POST request.', {
+      extensions: {
+        http: {
+          status: 405,
+          headers: {
+            Allow: 'POST',
           },
         },
       },
-    )
+    })
   }
 }
 

@@ -1,4 +1,5 @@
 import * as path from 'node:path'
+
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
@@ -22,7 +23,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src', 'bundle.tsx'),
       name: 'YogaGraphiQL',
-      fileName: (format) => `yoga-graphiql.${format}.js`,
+      fileName: format => `yoga-graphiql.${format}.js`,
     },
     rollupOptions: {
       output: {

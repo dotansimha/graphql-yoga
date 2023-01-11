@@ -1,11 +1,14 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
+
 import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 <LatestVersionNotice />
 
 # Integration with Next.js
 
-[Next.js](https://nextjs.org) is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as [an API Route](https://nextjs.org/docs/api-routes/api-middlewares).
+[Next.js](https://nextjs.org) is a web framework that allows you to build websites very quickly and
+GraphQL Yoga can be integrated with Next.js easily as
+[an API Route](https://nextjs.org/docs/api-routes/api-middlewares).
 
 ## Installation
 
@@ -15,8 +18,9 @@ import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 ```ts filename="pages/aрi/graphql.ts"
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createServer } from '@graphql-yoga/node'
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+import { createServer } from '@graphql-yoga/node'
 
 export const config = {
   api: {
@@ -38,13 +42,16 @@ export default createServer<{
 
 ## NextAuth.js
 
-[NextAuth.js](https://next-auth.js.org/) is a popular solution for doing authentication within a Next.js application.
+[NextAuth.js](https://next-auth.js.org/) is a popular solution for doing authentication within a
+Next.js application.
 
-You can easily type and add the session to the GraphQL context by adjusting your GraphQL router handler to the following.
+You can easily type and add the session to the GraphQL context by adjusting your GraphQL router
+handler to the following.
 
 ```ts filename="pages/aрi/graphql.ts"
-import { createServer } from '@graphql-yoga/node'
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+import { createServer } from '@graphql-yoga/node'
 import type { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
 

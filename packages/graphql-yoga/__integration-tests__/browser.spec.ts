@@ -1,6 +1,10 @@
-import 'json-bigint-patch'
 import { createServer, Server } from 'node:http'
 import { AddressInfo } from 'node:net'
+
+import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
+import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import {
   GraphQLBoolean,
   GraphQLFloat,
@@ -11,11 +15,8 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query'
-import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
-import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLBigInt } from 'graphql-scalars'
+import 'json-bigint-patch'
 import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer'
 
 import { CORSOptions, createYoga, Repeater } from '../src/index.js'
@@ -29,7 +30,7 @@ const fakeAsyncIterable = {
     return this
   },
   next: () =>
-    sleep(300, (timeout) => timeouts.add(timeout)).then(() => ({
+    sleep(300, timeout => timeouts.add(timeout)).then(() => ({
       value: String.fromCharCode(charCode++),
       done: false,
     })),
@@ -69,10 +70,7 @@ export function createTestSchema() {
         },
         goodbye: {
           type: GraphQLString,
-          resolve: () =>
-            new Promise((resolve) =>
-              setTimeout(() => resolve('goodbye'), 1000),
-            ),
+          resolve: () => new Promise(resolve => setTimeout(() => resolve('goodbye'), 1000)),
         },
         stream: {
           type: new GraphQLList(GraphQLString),
@@ -119,7 +117,7 @@ export function createTestSchema() {
               const interval = setInterval(() => send(), 1000)
               end.then(() => clearInterval(interval))
             }),
-          resolve: (value) => value,
+          resolve: value => value,
         },
         error: {
           type: GraphQLBoolean,
@@ -145,7 +143,7 @@ export function createTestSchema() {
           async *subscribe(_root, args) {
             for (let count = 1; count <= args.to; count++) {
               yield { count }
-              await new Promise((resolve) => setTimeout(resolve, 100))
+              await new Promise(resolve => setTimeout(resolve, 100))
             }
           },
         },
@@ -183,7 +181,7 @@ describe('browser', () => {
   const server = createServer(yogaApp)
 
   beforeAll(async () => {
-    await new Promise<void>((resolve) => server.listen(0, resolve))
+    await new Promise<void>(resolve => server.listen(0, resolve))
     port = (server.address() as AddressInfo).port
     browser = await puppeteer.launch({
       // If you wanna run tests with open browser
@@ -201,21 +199,21 @@ describe('browser', () => {
   })
   afterAll(async () => {
     await browser.close()
-    await new Promise((resolve) => server.close(resolve))
+    await new Promise(resolve => server.close(resolve))
   })
 
   const typeOperationText = async (text: string) => {
     await page.type('.graphiql-query-editor .CodeMirror textarea', text)
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await new Promise((res) => setTimeout(res, 100))
+    await new Promise(res => setTimeout(res, 100))
   }
 
   const typeVariablesText = async (text: string) => {
     await page.type('[aria-label="Variables"] .CodeMirror textarea', text)
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await new Promise((res) => setTimeout(res, 100))
+    await new Promise(res => setTimeout(res, 100))
   }
 
   const waitForResult = async () => {
@@ -235,13 +233,11 @@ describe('browser', () => {
 
   const showGraphiQLSidebar = async () => {
     // Click to show sidebar
-    await page.click(
-      '.graphiql-sidebar [aria-label="Show Documentation Explorer"]',
-    )
+    await page.click('.graphiql-sidebar [aria-label="Show Documentation Explorer"]')
   }
 
   const getElementText = async (element: ElementHandle<Element>) =>
-    element.evaluate((el) => el.textContent?.trim())
+    element.evaluate(el => el.textContent?.trim())
 
   describe('GraphiQL', () => {
     it('should show default title', async () => {
@@ -258,30 +254,24 @@ describe('browser', () => {
       // Click to show sidebar
       await showGraphiQLSidebar()
 
-      const docsElement = await page.waitForSelector(
-        '.graphiql-markdown-description',
-      )
+      const docsElement = await page.waitForSelector('.graphiql-markdown-description')
 
       expect(docsElement).not.toBeNull()
       const docs = await getElementText(docsElement!)
 
-      expect(docs).toBe(
-        'A GraphQL schema provides a root type for each kind of operation.',
-      )
+      expect(docs).toBe('A GraphQL schema provides a root type for each kind of operation.')
     })
 
     it('should show editor tools by default', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`)
 
       // If this button is visible, that mean editor tools is showing
-      const buttonHideEditor = await page.$(
-        'button[aria-label="Hide editor tools"]',
-      )
+      const buttonHideEditor = await page.$('button[aria-label="Hide editor tools"]')
 
       const editorTabs = await page.evaluate(() =>
         Array.from(
           document.querySelectorAll('.graphiql-editor-tools-tabs button'),
-          (e) => e.textContent,
+          e => e.textContent,
         ),
       )
 
@@ -311,9 +301,7 @@ describe('browser', () => {
 
     it('execute mutation operation', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`)
-      await typeOperationText(
-        `mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`,
-      )
+      await typeOperationText(`mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`)
       await typeVariablesText(`{ "number": 3 }`)
       await page.click('.graphiql-execute-button')
       const resultContents = await waitForResult()
@@ -332,25 +320,20 @@ describe('browser', () => {
     })
 
     test('execute @stream operation', async () => {
-      await page.goto(
-        `http://localhost:${port}${endpoint}?query={ stream @stream }`,
-      )
-      const returnPromise$ = new Promise<void>((resolve) => {
+      await page.goto(`http://localhost:${port}${endpoint}?query={ stream @stream }`)
+      const returnPromise$ = new Promise<void>(resolve => {
         resolveOnReturn = resolve
       })
       await page.click('.graphiql-execute-button')
       await sleep(900)
-      const [resultContents1, isShowingStopButton] = await page.evaluate(
-        (stopButtonSelector) => {
-          return [
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            window.g.resultComponent.viewer.getValue(),
-            Boolean(window.document.querySelector(stopButtonSelector)),
-          ]
-        },
-        stopButtonSelector,
-      )
+      const [resultContents1, isShowingStopButton] = await page.evaluate(stopButtonSelector => {
+        return [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.g.resultComponent.viewer.getValue(),
+          Boolean(window.document.querySelector(stopButtonSelector)),
+        ]
+      }, stopButtonSelector)
       expect(isShowingStopButton).toEqual(true)
       expect(JSON.parse(resultContents1)).toEqual({
         data: {
@@ -367,37 +350,31 @@ describe('browser', () => {
       await typeOperationText(`subscription { count(to: 2) }`)
       await page.click('.graphiql-execute-button')
 
-      await new Promise((res) => setTimeout(res, 50))
+      await new Promise(res => setTimeout(res, 50))
 
-      const [resultContents, isShowingStopButton] = await page.evaluate(
-        (stopButtonSelector) => {
-          return [
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            window.g.resultComponent.viewer.getValue(),
-            Boolean(window.document.querySelector(stopButtonSelector)),
-          ]
-        },
-        stopButtonSelector,
-      )
+      const [resultContents, isShowingStopButton] = await page.evaluate(stopButtonSelector => {
+        return [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.g.resultComponent.viewer.getValue(),
+          Boolean(window.document.querySelector(stopButtonSelector)),
+        ]
+      }, stopButtonSelector)
       expect(JSON.parse(resultContents)).toEqual({
         data: {
           count: 1,
         },
       })
       expect(isShowingStopButton).toEqual(true)
-      await new Promise((resolve) => setTimeout(resolve, 300))
-      const [resultContents1, isShowingPlayButton] = await page.evaluate(
-        (playButtonSelector) => {
-          return [
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            window.g.resultComponent.viewer.getValue(),
-            Boolean(window.document.querySelector(playButtonSelector)),
-          ]
-        },
-        playButtonSelector,
-      )
+      await new Promise(resolve => setTimeout(resolve, 300))
+      const [resultContents1, isShowingPlayButton] = await page.evaluate(playButtonSelector => {
+        return [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          window.g.resultComponent.viewer.getValue(),
+          Boolean(window.document.querySelector(playButtonSelector)),
+        ]
+      }, playButtonSelector)
       expect(JSON.parse(resultContents1)).toEqual({
         data: {
           count: 2,
@@ -408,11 +385,7 @@ describe('browser', () => {
 
     test('show the query provided in the search param', async () => {
       const query = '{ alwaysTrue }'
-      await page.goto(
-        `http://localhost:${port}${endpoint}?query=${encodeURIComponent(
-          query,
-        )}`,
-      )
+      await page.goto(`http://localhost:${port}${endpoint}?query=${encodeURIComponent(query)}`)
       await page.click('.graphiql-execute-button')
       const resultContents = await waitForResult()
 
@@ -446,9 +419,9 @@ describe('browser', () => {
       await typeOperationText(`query @live { liveCounter }`)
       await page.click('.graphiql-execute-button')
 
-      await new Promise((res) => setTimeout(res, 50))
+      await new Promise(res => setTimeout(res, 50))
 
-      const [resultContents] = await page.evaluate((stopButtonSelector) => {
+      const [resultContents] = await page.evaluate(stopButtonSelector => {
         return [
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -476,7 +449,7 @@ describe('browser', () => {
 
       await watchDog
 
-      const [resultContents1] = await page.evaluate((playButtonSelector) => {
+      const [resultContents1] = await page.evaluate(playButtonSelector => {
         return [
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -515,13 +488,13 @@ describe('browser', () => {
     )
 
     beforeAll(async () => {
-      await new Promise<void>((resolve) => customServer.listen(0, resolve))
+      await new Promise<void>(resolve => customServer.listen(0, resolve))
       const port = (customServer.address() as AddressInfo).port
       customGraphQLEndpoint = `http://localhost:${port}${endpoint}`
     })
 
     afterAll(async () => {
-      await new Promise((resolve) => customServer.close(resolve))
+      await new Promise(resolve => customServer.close(resolve))
     })
 
     it('should show custom title', async () => {
@@ -536,9 +509,7 @@ describe('browser', () => {
       await page.goto(customGraphQLEndpoint)
 
       await showGraphiQLSidebar()
-      const docsElement = await page.waitForSelector(
-        '.graphiql-markdown-description',
-      )
+      const docsElement = await page.waitForSelector('.graphiql-markdown-description')
 
       expect(docsElement).not.toBeNull()
       const docs = await getElementText(docsElement!)
@@ -553,7 +524,7 @@ describe('browser', () => {
         const tabs = Array.from(
           document.querySelectorAll('.graphiql-editor-tools-tabs button'),
         ) as HTMLButtonElement[]
-        tabs.find((tab) => tab.textContent === 'Headers')!.click()
+        tabs.find(tab => tab.textContent === 'Headers')!.click()
       })
 
       const headerContentEl = await page.waitForSelector(
@@ -583,20 +554,16 @@ describe('browser', () => {
               <script>
                 async function fetchData() {
                   try {
-                    const response = await fetch(
-                      'http://localhost:${port}${endpoint}',
-                      {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          query: '{ alwaysTrue }',
-                        }),
+                    const response = await fetch('http://localhost:${port}${endpoint}', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
                       },
-                    )
-                    document.getElementById('result').innerHTML =
-                      await response.text()
+                      body: JSON.stringify({
+                        query: '{ alwaysTrue }',
+                      }),
+                    })
+                    document.getElementById('result').innerHTML = await response.text()
                   } catch (e) {
                     document.getElementById('result').innerHTML = e.stack
                   }
@@ -607,18 +574,16 @@ describe('browser', () => {
           </html>
         `)
       })
-      await new Promise<void>((resolve) =>
-        anotherServer.listen(0, () => resolve()),
-      )
+      await new Promise<void>(resolve => anotherServer.listen(0, () => resolve()))
       anotherOriginPort = (anotherServer.address() as AddressInfo).port
     })
     afterAll(async () => {
-      await new Promise<void>((resolve) => anotherServer.close(() => resolve()))
+      await new Promise<void>(resolve => anotherServer.close(() => resolve()))
     })
     test('allow other origins by default', async () => {
       await page.goto(`http://localhost:${anotherOriginPort}`)
       const result = await page.evaluate(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        await new Promise(resolve => setTimeout(resolve, 100))
         return document.getElementById('result')?.innerHTML
       })
       expect(result).toEqual(
@@ -635,7 +600,7 @@ describe('browser', () => {
       }
       await page.goto(`http://localhost:${anotherOriginPort}`)
       const result = await page.evaluate(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        await new Promise(resolve => setTimeout(resolve, 100))
         return document.getElementById('result')?.innerHTML
       })
       expect(result).toEqual(
@@ -652,7 +617,7 @@ describe('browser', () => {
       }
       await page.goto(`http://localhost:${anotherOriginPort}`)
       const result = await page.evaluate(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        await new Promise(resolve => setTimeout(resolve, 100))
         return document.getElementById('result')?.innerHTML
       })
       expect(result).toContain('Failed to fetch')
@@ -664,7 +629,7 @@ describe('browser', () => {
       }
       await page.goto(`http://localhost:${anotherOriginPort}`)
       const result = await page.evaluate(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        await new Promise(resolve => setTimeout(resolve, 100))
         return document.getElementById('result')?.innerHTML
       })
       expect(result).toEqual(
@@ -681,7 +646,7 @@ describe('browser', () => {
     test('subscription operation', async () => {
       await page.goto(`http://localhost:${port}/`)
 
-      const result = await page.evaluate((urlStr) => {
+      const result = await page.evaluate(urlStr => {
         const url = new URL(urlStr)
         url.searchParams.set(
           'query',
@@ -694,18 +659,17 @@ describe('browser', () => {
         const source = new EventSource(url.toString())
 
         return new Promise<
-          | { error: string; data?: never }
-          | { error?: never; data: Array<string> }
-        >((res) => {
+          { error: string; data?: never } | { error?: never; data: Array<string> }
+        >(res => {
           const values: Array<string> = []
-          source.onmessage = (event) => {
+          source.onmessage = event => {
             values.push(event.data)
             if (values.length === 2) {
               res({ data: values })
               source.close()
             }
           }
-          source.onerror = (err) => {
+          source.onerror = err => {
             res({ error: String(err) })
           }
         })
@@ -731,5 +695,5 @@ function sleep<T = void>(
     return undefined as T
   },
 ) {
-  return new Promise((resolve) => onTimeout(setTimeout(resolve, ms)))
+  return new Promise(resolve => onTimeout(setTimeout(resolve, ms)))
 }

@@ -225,7 +225,7 @@ describe('schema', () => {
 
   it('schema promise is not resolved until GraphQL execution starts', async () => {
     const schemaPromise: PromiseLike<GraphQLSchema> = {
-      then: jest.fn(async (callback) => {
+      then: jest.fn(async callback => {
         return callback!(
           createSchema({
             typeDefs: /* GraphQL */ `
@@ -259,9 +259,7 @@ describe('schema', () => {
     const responseText = await response.text()
     expect(responseText).toEqual('some response')
     expect(schemaPromise.then).not.toHaveBeenCalled()
-    const responseWithGraphQL = await yoga.fetch(
-      'http://yoga/graphql?query={foo}',
-    )
+    const responseWithGraphQL = await yoga.fetch('http://yoga/graphql?query={foo}')
     expect(schemaPromise.then).toHaveBeenCalled()
     const { data } = await responseWithGraphQL.json()
     expect(data).toEqual({
@@ -301,9 +299,7 @@ describe('schema', () => {
     const responseText = await response.text()
     expect(responseText).toEqual('some response')
     expect(schemaFactory).not.toHaveBeenCalled()
-    const responseWithGraphQL = await yoga.fetch(
-      'http://yoga/graphql?query={foo}',
-    )
+    const responseWithGraphQL = await yoga.fetch('http://yoga/graphql?query={foo}')
     expect(schemaFactory).toHaveBeenCalled()
     const { data } = await responseWithGraphQL.json()
     expect(data).toEqual({

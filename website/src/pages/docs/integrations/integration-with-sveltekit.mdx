@@ -2,9 +2,11 @@ import { PackageCmd } from '@theguild/components'
 
 # Integration with SvelteKit
 
-[SvelteKit is the fastest way to build svelte apps.](https://kit.svelte.dev) It is very simple, and let you build frontend & backend in a single place.
+[SvelteKit is the fastest way to build svelte apps.](https://kit.svelte.dev) It is very simple, and
+let you build frontend & backend in a single place.
 
-You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQL & SvelteKit at the same time. [Envelop ecosystem](https://www.envelop.dev) for example!
+You can add GraphQL Yoga with a few lines of code and get the benefits of GraphQL & SvelteKit at the
+same time. [Envelop ecosystem](https://www.envelop.dev) for example!
 
 ## Installation
 
@@ -19,8 +21,8 @@ In a SvelteKit project:
 Create the file `src/routes/api/graphql.ts`:
 
 ```ts filename="src/routes/api/graphql.ts"
-import { createYoga, createSchema } from 'graphql-yoga'
 import type { RequestEvent } from '@sveltejs/kit'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const yogaApp = createYoga<RequestEvent>({
   schema: createSchema({
@@ -42,7 +44,8 @@ const yogaApp = createYoga<RequestEvent>({
 export { yogaApp as get, yogaApp as post }
 ```
 
-> **Simple example** on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/sveltekit).
+> **Simple example** on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/sveltekit).
 
-> More examples with our **KitQL** library [here](https://github.com/jycouet/kitql). <br />
-> The best of all GraphQL ecosystem for SvelteKit.
+> More examples with our **KitQL** library [here](https://github.com/jycouet/kitql). <br /> The best
+> of all GraphQL ecosystem for SvelteKit.

@@ -1,7 +1,8 @@
 import * as path from 'path'
-import * as cdk from '@aws-cdk/core'
-import * as lambda from '@aws-cdk/aws-lambda'
+
 import * as apiGateway from '@aws-cdk/aws-apigateway'
+import * as lambda from '@aws-cdk/aws-lambda'
+import * as cdk from '@aws-cdk/core'
 
 export class GraphqlLambdaStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {

@@ -27,6 +27,7 @@ Visit and execute the mutation by pressing the Play button.
 http://127.0.0.1:4001/graphql?query=mutation+%7B%0A++sendMessage%28message%3A+%22Yo+we+share+a+redis+instance.%22%29%0A%7D
 ```
 
-See your subscription update appear on `127.0.0.1:4000`, even though you executed the mutation on a different Node.js server instance running on `127.0.0.1:4001`.
+See your subscription update appear on `127.0.0.1:4000`, even though you executed the mutation on a
+different Node.js server instance running on `127.0.0.1:4001`.
 
 The magic of Redis. 🪄✨

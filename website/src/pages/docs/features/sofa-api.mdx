@@ -2,7 +2,8 @@ import { PackageCmd } from '@theguild/components'
 
 # Sofa API
 
-Sofa takes your GraphQL Schema, looks for available queries, mutations and subscriptions and turns all of that into REST API.
+Sofa takes your GraphQL Schema, looks for available queries, mutations and subscriptions and turns
+all of that into REST API.
 
 ## Installation
 
@@ -12,8 +13,9 @@ Sofa takes your GraphQL Schema, looks for available queries, mutations and subsc
 
 ```ts filename="server.ts"
 import { createServer } from 'http'
-import { createSchema, createYoga } from 'graphql-yoga'
+
 import { useSofaWithSwaggerUI } from '@graphql-yoga/plugin-sofa'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const books = [
   { id: 1, title: 'Book A', type: 'AUDIO' },
@@ -38,7 +40,7 @@ const UsersCollection = {
   get(id: string | number) {
     const uid = typeof id === 'string' ? parseInt(id, 10) : id
 
-    return users.find((u) => u.id === uid)
+    return users.find(u => u.id === uid)
   },
   all() {
     return users
@@ -49,7 +51,7 @@ const BooksCollection = {
   get(id: string | number) {
     const bid = typeof id === 'string' ? parseInt(id, 10) : id
 
-    return books.find((u) => u.id === bid)
+    return books.find(u => u.id === bid)
   },
   all() {
     return books

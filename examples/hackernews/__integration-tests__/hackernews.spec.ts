@@ -1,9 +1,11 @@
 import path from 'path'
-import { DbDrop, MigrateDev } from '@prisma/migrate'
+
 import { PrismaClient } from '@prisma/client'
+import { DbDrop, MigrateDev } from '@prisma/migrate'
 import { createYoga, YogaServerInstance } from 'graphql-yoga'
-import { schema } from '../src/schema'
+
 import type { GraphQLContext } from '../src/context'
+import { schema } from '../src/schema'
 
 describe('hackernews example integration', () => {
   let yoga: YogaServerInstance<Record<string, any>, GraphQLContext>
@@ -37,9 +39,7 @@ describe('hackernews example integration', () => {
   })
 
   it('should get posts from feed', async () => {
-    const response = await yoga.fetch(
-      'http://yoga/graphql?query={feed{url,description}}',
-    )
+    const response = await yoga.fetch('http://yoga/graphql?query={feed{url,description}}')
 
     const body = await response.json()
     expect(body).toMatchInlineSnapshot(`

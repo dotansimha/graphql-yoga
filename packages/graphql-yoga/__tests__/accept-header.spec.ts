@@ -22,9 +22,7 @@ describe('accept header', () => {
 
     expect(response.headers.get('content-type')).toEqual('text/event-stream')
     const valueStr = await response.text()
-    expect(valueStr).toContain(
-      `data: ${JSON.stringify({ data: { ping: null } })}`,
-    )
+    expect(valueStr).toContain(`data: ${JSON.stringify({ data: { ping: null } })}`)
   })
 
   it('instruct server to return an event-stream with POST body', async () => {
@@ -48,9 +46,7 @@ describe('accept header', () => {
     })
     expect(response.headers.get('content-type')).toEqual('text/event-stream')
     const valueStr = await response.text()
-    expect(valueStr).toContain(
-      `data: ${JSON.stringify({ data: { ping: null } })}`,
-    )
+    expect(valueStr).toContain(`data: ${JSON.stringify({ data: { ping: null } })}`)
   })
 
   it('instruct server to return a multipart result with GET parameters', async () => {
@@ -72,9 +68,7 @@ describe('accept header', () => {
         accept: 'multipart/mixed',
       },
     })
-    expect(response.headers.get('content-type')).toEqual(
-      'multipart/mixed; boundary="-"',
-    )
+    expect(response.headers.get('content-type')).toEqual('multipart/mixed; boundary="-"')
     const expectedStrs = [
       `Content-Type: application/json; charset=utf-8`,
       `Content-Length: 24`,
@@ -113,9 +107,7 @@ describe('accept header', () => {
       },
       body: JSON.stringify({ query: '{ping}' }),
     })
-    expect(response.headers.get('content-type')).toEqual(
-      'multipart/mixed; boundary="-"',
-    )
+    expect(response.headers.get('content-type')).toEqual('multipart/mixed; boundary="-"')
     const expectedStrs = new Set([
       `Content-Type: application/json; charset=utf-8`,
       `Content-Length: 24`,
@@ -155,21 +147,18 @@ describe('accept header', () => {
                   push(2)
                   end()
                 }),
-              resolve: (t) => t,
+              resolve: t => t,
             },
           },
         },
       }),
     })
 
-    const response = await yoga.fetch(
-      `http://yoga/graphql?query=subscription{counter}`,
-      {
-        headers: {
-          accept: 'application/json',
-        },
+    const response = await yoga.fetch(`http://yoga/graphql?query=subscription{counter}`, {
+      headers: {
+        accept: 'application/json',
       },
-    )
+    })
     expect(response.status).toEqual(406)
   })
 
@@ -251,8 +240,7 @@ describe('accept header', () => {
 
     const response = await yoga.fetch(`http://yoga/graphql?query=query{ping}`, {
       headers: {
-        accept:
-          'application/graphql-response+json; charset=utf-8, application/json; charset=utf-8',
+        accept: 'application/graphql-response+json; charset=utf-8, application/json; charset=utf-8',
       },
     })
 

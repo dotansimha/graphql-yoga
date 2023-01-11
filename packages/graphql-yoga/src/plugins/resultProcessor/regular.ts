@@ -15,8 +15,7 @@ export function processRegularResult(
       status: 406,
       statusText: 'Not Acceptable',
       headers: {
-        accept:
-          'application/json; charset=utf-8, application/graphql-response+json; charset=utf-8',
+        accept: 'application/json; charset=utf-8, application/graphql-response+json; charset=utf-8',
       },
     })
   }

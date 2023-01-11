@@ -26,9 +26,7 @@ export function useCSRFPrevention(
   const { requestHeaders = ['x-graphql-yoga-csrf'] } = options
   return {
     async onRequestParse({ request }) {
-      if (
-        !requestHeaders.some((headerName) => request.headers.has(headerName))
-      ) {
+      if (!requestHeaders.some(headerName => request.headers.has(headerName))) {
         throw createGraphQLError('Required CSRF header(s) not present', {
           extensions: {
             http: {

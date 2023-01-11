@@ -44,10 +44,7 @@ describe('CORS', () => {
           'Content-Type': 'application/json',
         },
       })
-      const headers = getCORSHeadersByRequestAndOptions(
-        request,
-        corsOptionsWithNoOrigins,
-      )
+      const headers = getCORSHeadersByRequestAndOptions(request, corsOptionsWithNoOrigins)
       expect(headers['Access-Control-Allow-Origin']).toBe('*')
     })
     it('should return the origin if it is sent with header', () => {
@@ -59,10 +56,7 @@ describe('CORS', () => {
           origin,
         },
       })
-      const headers = getCORSHeadersByRequestAndOptions(
-        request,
-        corsOptionsWithNoOrigins,
-      )
+      const headers = getCORSHeadersByRequestAndOptions(request, corsOptionsWithNoOrigins)
       expect(headers['Access-Control-Allow-Origin']).toBe(origin)
     })
   })
@@ -78,13 +72,8 @@ describe('CORS', () => {
           origin: 'http://localhost:4001',
         },
       })
-      const headers = getCORSHeadersByRequestAndOptions(
-        request,
-        corsOptionsWithSingleOrigin,
-      )
-      expect(headers['Access-Control-Allow-Origin']).toBe(
-        'http://localhost:4000',
-      )
+      const headers = getCORSHeadersByRequestAndOptions(request, corsOptionsWithSingleOrigin)
+      expect(headers['Access-Control-Allow-Origin']).toBe('http://localhost:4000')
     })
   })
   describe('Multiple allowed origins', () => {
@@ -99,13 +88,8 @@ describe('CORS', () => {
           origin: 'http://localhost:4001',
         },
       })
-      const headers = getCORSHeadersByRequestAndOptions(
-        request,
-        corsOptionsWithMultipleOrigins,
-      )
-      expect(headers['Access-Control-Allow-Origin']).toBe(
-        'http://localhost:4001',
-      )
+      const headers = getCORSHeadersByRequestAndOptions(request, corsOptionsWithMultipleOrigins)
+      expect(headers['Access-Control-Allow-Origin']).toBe('http://localhost:4001')
     })
     it('should return null if the sent origin does not match', () => {
       const request = new Request('http://localhost:4002/graphql', {
@@ -115,10 +99,7 @@ describe('CORS', () => {
           origin: 'http://localhost:4002',
         },
       })
-      const headers = getCORSHeadersByRequestAndOptions(
-        request,
-        corsOptionsWithMultipleOrigins,
-      )
+      const headers = getCORSHeadersByRequestAndOptions(request, corsOptionsWithMultipleOrigins)
       expect(headers['Access-Control-Allow-Origin']).toBe('null')
     })
   })
@@ -132,10 +113,7 @@ describe('CORS', () => {
           origin: 'http://localhost:4001',
         },
       })
-      const headers = getCORSHeadersByRequestAndOptions(
-        request,
-        corsOptionsWithDisabledCORS,
-      )
+      const headers = getCORSHeadersByRequestAndOptions(request, corsOptionsWithDisabledCORS)
       expect(headers['Access-Control-Allow-Origin']).toBeUndefined()
     })
   })

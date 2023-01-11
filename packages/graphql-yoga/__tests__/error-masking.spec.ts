@@ -18,9 +18,7 @@ describe('error masking', () => {
             throw createGraphQLError('This error never gets masked.')
           },
           hi: () => {
-            throw new Error(
-              'This error will get mask if you enable maskedError.',
-            )
+            throw new Error('This error will get mask if you enable maskedError.')
           },
         },
       },
@@ -385,9 +383,7 @@ describe('error masking', () => {
 
     const body = await response.json()
     expect(body.errors[0].message).toEqual('Unexpected error.')
-    expect(body.errors[0].extensions.originalError.message).toEqual(
-      'I am the original error.',
-    )
+    expect(body.errors[0].extensions.originalError.message).toEqual('I am the original error.')
     expect(body.errors[0].extensions.originalError.stack).toContain(
       'Error: I am the original error.',
     )
@@ -464,8 +460,7 @@ describe('error masking', () => {
     expect(await response.json()).toMatchObject({
       errors: [
         {
-          message:
-            '{ errorStr: "Error: I like turtles", message: "My message", isDev: true }',
+          message: '{ errorStr: "Error: I like turtles", message: "My message", isDev: true }',
         },
       ],
     })

@@ -1,13 +1,8 @@
 /* eslint-disable no-console */
-import { GraphQLError } from 'graphql'
 import { jest } from '@jest/globals'
+import { GraphQLError } from 'graphql'
 
-import {
-  createGraphQLError,
-  createLogger,
-  createSchema,
-  createYoga,
-} from '../src'
+import { createGraphQLError, createLogger, createSchema, createYoga } from '../src'
 
 describe('logging', () => {
   it('custom logger', async () => {
@@ -23,9 +18,7 @@ describe('logging', () => {
 
     await yogaApp.fetch('http://yoga/graphql?query={greetings}')
 
-    expect(logger.debug).toHaveBeenCalledWith(
-      `Parsing request to extract GraphQL parameters`,
-    )
+    expect(logger.debug).toHaveBeenCalledWith(`Parsing request to extract GraphQL parameters`)
   })
   describe('default logger', () => {
     it(`doesn't print debug messages if DEBUG env var isn't set`, () => {
@@ -72,9 +65,7 @@ describe('logging', () => {
         }),
       })
 
-      const mock = jest
-        .spyOn(logger, 'error')
-        .mockImplementation(() => undefined)
+      const mock = jest.spyOn(logger, 'error').mockImplementation(() => undefined)
 
       const response = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',

@@ -1,21 +1,25 @@
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout, PackageCmd } from '@theguild/components'
 
 # Defer and Stream
 
-Stream and defer are directives that allow you to improve latency for clients by sending data the most important data as soon as it's ready.
+Stream and defer are directives that allow you to improve latency for clients by sending data the
+most important data as soon as it's ready.
 
-As applications grow, the GraphQL operation documents can get bigger..
-The server will only send the response back once all the data requested in the query is ready.
-However, not all requested data is of equal importance, and the client may not need all of the data at once.
-To remedy this, GraphQL specification working group is working on [introducing new `@defer` and `@stream` directives](https://github.com/graphql/graphql-wg/blob/main/rfcs/DeferStream.md)
-which allows applications to request a subset of data which is critical and get the rest of the data in subsequent responses from the server.
-This [proposal](https://github.com/graphql/graphql-spec/pull/742) is in [Stage 2](https://github.com/graphql/graphql-spec/blob/main/CONTRIBUTING.md#stage-2-draft),
-meaning GraphQL libraries can start implementing this as experimental feature to provide feedback to the working group.
+As applications grow, the GraphQL operation documents can get bigger.. The server will only send the
+response back once all the data requested in the query is ready. However, not all requested data is
+of equal importance, and the client may not need all of the data at once. To remedy this, GraphQL
+specification working group is working on
+[introducing new `@defer` and `@stream` directives](https://github.com/graphql/graphql-wg/blob/main/rfcs/DeferStream.md)
+which allows applications to request a subset of data which is critical and get the rest of the data
+in subsequent responses from the server. This
+[proposal](https://github.com/graphql/graphql-spec/pull/742) is in
+[Stage 2](https://github.com/graphql/graphql-spec/blob/main/CONTRIBUTING.md#stage-2-draft), meaning
+GraphQL libraries can start implementing this as experimental feature to provide feedback to the
+working group.
 
 <Callout>
-  Stream and Defer are **experimental** features and not yet stable. The
-  implementation can and will change. Furthermore, there is no yet a stable
-  specification for the incremental delivery protocol.
+  Stream and Defer are **experimental** features and not yet stable. The implementation can and will
+  change. Furthermore, there is no yet a stable specification for the incremental delivery protocol.
 </Callout>
 
 ## Installation
@@ -29,9 +33,10 @@ Enabling support for the `@defer` and `@stream` directive requires installing a 
 The following schema shows a schema whose field resolvers are slow
 
 ```ts filename="Slow Schema" {29,33, 37}
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -49,8 +54,7 @@ const typeDefs = /* GraphQL */ `
   }
 `
 
-const wait = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time))
+const wait = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 
 const resolvers = {
   Query: {
@@ -90,7 +94,8 @@ Create this file and start the GraphQL server.
 
 ### Using Defer
 
-The `@defer` directive allows you to post-pone the delivery of one or more (slow) fields grouped in an inlined or spread fragment.
+The `@defer` directive allows you to post-pone the delivery of one or more (slow) fields grouped in
+an inlined or spread fragment.
 
 Visit http://localhost:4000/graphql and paste the following operation into the left panel.
 
@@ -117,7 +122,8 @@ curl -g -X POST \
 
 ### Using Stream
 
-The `@stream` directive allows you to stream the individual items of a field of the list type as the items are available.
+The `@stream` directive allows you to stream the individual items of a field of the list type as the
+items are available.
 
 Visit http://localhost:4000/graphql and paste the following operation into the left panel.
 
@@ -141,15 +147,17 @@ curl -g -X POST \
 
 ## Writing safe stream resolvers
 
-[`AsyncGenerators`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator) as declared via the `async *` keywords are prone to memory leaks and leaking timers.
-In the previous examples they are used for simplicity.
+[`AsyncGenerators`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator)
+as declared via the `async *` keywords are prone to memory leaks and leaking timers. In the previous
+examples they are used for simplicity.
 
 For real-world usage we recommend using `Repeater` as a safe alternative.
 
 ```ts {1}
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
 import { createServer } from 'node:http'
+
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 
 const yoga = createYoga({
   schema: createSchema({
@@ -197,8 +205,10 @@ server.listen(4000, () => {
 })
 ```
 
-If you execute the following GraphQL operation via GraphiQL and click the stop button before the last value has been sent to the client, no further values will be published as the underlying source (Repeater) has been stopped and disposed.
-In contrast, just using a `AsyncGenerator` would continue to run timers even after the client has stopped listening.
+If you execute the following GraphQL operation via GraphiQL and click the stop button before the
+last value has been sent to the client, no further values will be published as the underlying source
+(Repeater) has been stopped and disposed. In contrast, just using a `AsyncGenerator` would continue
+to run timers even after the client has stopped listening.
 
 ```graphql filename="GraphQL Operation using @stream" {2}
 query StreamAlphabet {

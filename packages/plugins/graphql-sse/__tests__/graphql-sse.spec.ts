@@ -1,5 +1,6 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createClient } from 'graphql-sse'
+import { createSchema, createYoga } from 'graphql-yoga'
+
 import { useGraphQLSSE } from '../src/index.js'
 
 describe('graphql-sse', () => {
@@ -57,7 +58,7 @@ describe('graphql-sse', () => {
             `,
           },
           {
-            next: (msg) => msgs.push(msg),
+            next: msg => msgs.push(msg),
             error: reject,
             complete: () => resolve(msgs),
           },
@@ -118,7 +119,7 @@ describe('graphql-sse', () => {
             `,
           },
           {
-            next: (msg) => msgs.push(msg),
+            next: msg => msgs.push(msg),
             error: reject,
             complete: () => resolve(msgs),
           },
@@ -179,7 +180,7 @@ describe('graphql-sse', () => {
             `,
           },
           {
-            next: (msg) => msgs.push(msg),
+            next: msg => msgs.push(msg),
             error: reject,
             complete: () => resolve(msgs),
           },

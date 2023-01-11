@@ -1,15 +1,12 @@
-import { ExecutionResult } from 'graphql'
 import { isAsyncIterable } from '@envelop/core'
+import { ExecutionResult } from 'graphql'
 
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 import { jsonStringifyResult } from './stringify.js'
 
-export function processMultipartResult(
-  result: ResultProcessorInput,
-  fetchAPI: FetchAPI,
-): Response {
+export function processMultipartResult(result: ResultProcessorInput, fetchAPI: FetchAPI): Response {
   const headersInit = {
     Connection: 'keep-alive',
     'Content-Type': 'multipart/mixed; boundary="-"',
@@ -45,17 +42,13 @@ export function processMultipartResult(
       if (value != null) {
         controller.enqueue(textEncoder.encode('\r\n'))
 
-        controller.enqueue(
-          textEncoder.encode('Content-Type: application/json; charset=utf-8'),
-        )
+        controller.enqueue(textEncoder.encode('Content-Type: application/json; charset=utf-8'))
         controller.enqueue(textEncoder.encode('\r\n'))
 
         const chunk = jsonStringifyResult(value)
         const encodedChunk = textEncoder.encode(chunk)
 
-        controller.enqueue(
-          textEncoder.encode('Content-Length: ' + encodedChunk.byteLength),
-        )
+        controller.enqueue(textEncoder.encode('Content-Length: ' + encodedChunk.byteLength))
         controller.enqueue(textEncoder.encode('\r\n'))
 
         controller.enqueue(textEncoder.encode('\r\n'))

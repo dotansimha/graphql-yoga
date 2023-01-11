@@ -10,16 +10,22 @@ You can start with installing `graphql-yoga` package.
 
 ### Install equivalent **Envelop** plugins of the Apollo Server
 
-Some features that are included within apollo-server by default must be installed as envelop plugins ([Learn more about envelop plugins here](/docs/features/envelop-plugins)).
+Some features that are included within apollo-server by default must be installed as envelop plugins
+([Learn more about envelop plugins here](/docs/features/envelop-plugins)).
 
 - Apollo Federation
-  - If you are using Apollo Federation, [install `@envelop/use-apollo-federation`](https://www.envelop.dev/plugins/use-apollo-federation)
+  - If you are using Apollo Federation,
+    [install `@envelop/use-apollo-federation`](https://www.envelop.dev/plugins/use-apollo-federation)
 - Apollo Server Errors
-  - If you are using Apollo Server errors, [install `@envelop/use-apollo-server-errors`](https://www.envelop.dev/plugins/use-apollo-server-errors)
+  - If you are using Apollo Server errors,
+    [install `@envelop/use-apollo-server-errors`](https://www.envelop.dev/plugins/use-apollo-server-errors)
 - Apollo Tracing
-  - If you are using Apollo Tracing, [install `@envelop/use-apollo-tracing`](https://www.envelop.dev/plugins/use-apollo-tracing)
+  - If you are using Apollo Tracing,
+    [install `@envelop/use-apollo-tracing`](https://www.envelop.dev/plugins/use-apollo-tracing)
 - Response Cache
-  - If you are using Response Cache, [you should set up `@graphql-yoga/plugin-response-cache`](/docs/features/response-caching) for the same functionality
+  - If you are using Response Cache,
+    [you should set up `@graphql-yoga/plugin-response-cache`](/docs/features/response-caching) for
+    the same functionality
 
 [Check out more plugins on Envelop Plugin Hub](https://www.envelop.dev/plugins)
 
@@ -56,7 +62,10 @@ You don't need anything special. You can just use GraphQL Yoga as in the example
 
 Check the integration section to choose the server framework you are using with Apollo Server.
 
-For example, if you are using **Express**, you should remove the standalone HTTP server part(`createServer(yoga)` & `server.listen(4000)`) from the code above and replace `server.applyMiddleware({ app })` with the route as in [Express Integration section](/docs/integrations/integration-with-express)
+For example, if you are using **Express**, you should remove the standalone HTTP server
+part(`createServer(yoga)` & `server.listen(4000)`) from the code above and replace
+`server.applyMiddleware({ app })` with the route as in
+[Express Integration section](/docs/integrations/integration-with-express)
 
 ```diff
 - server.applyMiddleware({ app })
@@ -65,17 +74,21 @@ For example, if you are using **Express**, you should remove the standalone HTTP
 
 ## Batched Queries/Requests
 
-Batched queries is a practice first supported and made popular by the Apollo ecosystem.
-The idea of batched query operations is to reduce the number of network requests by grouping them together.
-This is achieved by slightly delaying the HTTP request in order to gather all the query operations that are executed shortly after each other.
+Batched queries is a practice first supported and made popular by the Apollo ecosystem. The idea of
+batched query operations is to reduce the number of network requests by grouping them together. This
+is achieved by slightly delaying the HTTP request in order to gather all the query operations that
+are executed shortly after each other.
 
 GraphQL Yoga does not support batched queries for the following reasons:
 
 **_All batched queries are as slow as the longest running individual query._**
 
-Because the GraphQL server does not start sending a response to the client until all the queries are completed, a slow query will prevent a faster query result to be already processed/shown to the end user.
+Because the GraphQL server does not start sending a response to the client until all the queries are
+completed, a slow query will prevent a faster query result to be already processed/shown to the end
+user.
 
-**_Batched queries can ba achieved by composing multiple GraphQL fragments/operation into a single one._**
+**_Batched queries can ba achieved by composing multiple GraphQL fragments/operation into a single
+one._**
 
 Instead of having two operations:
 
@@ -112,7 +125,8 @@ query AB($postId: ID!) {
 }
 ```
 
-Furthermore, if you want a partial of the GraphQL operation to arrive at the client as soon as possible, you can use the `@defer` directive.
+Furthermore, if you want a partial of the GraphQL operation to arrive at the client as soon as
+possible, you can use the `@defer` directive.
 
 ```graphql
 query AB($postId: ID!) {
@@ -131,4 +145,5 @@ query AB($postId: ID!) {
 }
 ```
 
-You can learn more on how to get the best out of this in our ["Unleash the power of Fragments with GraphQL Codegen" article](https://the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen).
+You can learn more on how to get the best out of this in our
+["Unleash the power of Fragments with GraphQL Codegen" article](https://the-guild.dev/blog/unleash-the-power-of-fragments-with-graphql-codegen).

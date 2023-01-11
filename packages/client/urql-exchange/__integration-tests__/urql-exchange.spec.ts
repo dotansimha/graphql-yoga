@@ -1,5 +1,6 @@
 import { createServer, Server } from 'node:http'
 import { AddressInfo } from 'node:net'
+
 import { yogaExchange } from '@graphql-yoga/urql-exchange'
 import { Client, createClient } from '@urql/core'
 import { createSchema, createYoga } from 'graphql-yoga'
@@ -36,11 +37,11 @@ describe.skip('URQL Yoga Exchange', () => {
           time: {
             async *subscribe() {
               while (true) {
-                await new Promise((resolve) => setTimeout(resolve, 1000))
+                await new Promise(resolve => setTimeout(resolve, 1000))
                 yield new Date().toISOString()
               }
             },
-            resolve: (str) => str,
+            resolve: str => str,
           },
         },
       },
@@ -53,7 +54,7 @@ describe.skip('URQL Yoga Exchange', () => {
 
   beforeAll(async () => {
     server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, hostname, resolve))
+    await new Promise<void>(resolve => server.listen(0, hostname, resolve))
     const port = (server.address() as AddressInfo).port
     url = `http://${hostname}:${port}${endpoint}`
     client = createClient({
@@ -65,7 +66,7 @@ describe.skip('URQL Yoga Exchange', () => {
       ],
     })
   })
-  afterAll((done) => {
+  afterAll(done => {
     server.close(done)
   })
   it('should handle queries correctly', async () => {
@@ -101,7 +102,7 @@ describe.skip('URQL Yoga Exchange', () => {
     let i = 0
     await new Promise<void>((resolve, reject) => {
       const subscription = observable.subscribe({
-        next: (result) => {
+        next: result => {
           collectedValues.push(result.data?.time)
           i++
           if (i > 2) {
@@ -112,7 +113,7 @@ describe.skip('URQL Yoga Exchange', () => {
         complete: () => {
           resolve()
         },
-        error: (error) => {
+        error: error => {
           reject(error)
         },
       })

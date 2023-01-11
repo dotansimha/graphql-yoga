@@ -4,6 +4,7 @@ import { createServer } from 'node:http'
 import { AddressInfo } from 'node:net'
 import * as os from 'node:os'
 import * as path from 'node:path'
+
 import { fetch, File, FormData } from '@whatwg-node/fetch'
 
 import { createSchema, createYoga } from '../src'
@@ -13,7 +14,7 @@ function md5File(path: string) {
     const output = crypto.createHash('md5')
     const input = fs.createReadStream(path)
 
-    input.on('error', (err) => {
+    input.on('error', err => {
       reject(err)
     })
 
@@ -27,15 +28,7 @@ function md5File(path: string) {
 
 describe('file uploads', () => {
   it('uploading and streaming a binary file succeeds', async () => {
-    const sourceFilePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'website',
-      'public',
-      'logo.png',
-    )
+    const sourceFilePath = path.join(__dirname, '..', '..', '..', 'website', 'public', 'logo.png')
     const sourceMd5 = await md5File(sourceFilePath)
     const id = crypto.randomBytes(20).toString('hex')
     const targetFilePath = path.join(os.tmpdir(), `${id}.png`)
@@ -69,7 +62,7 @@ describe('file uploads', () => {
     const server = createServer(yoga)
 
     try {
-      await new Promise<void>((resolve) => server.listen(0, resolve))
+      await new Promise<void>(resolve => server.listen(0, resolve))
       const port = (server.address() as AddressInfo).port
 
       const formData = new FormData()
@@ -86,11 +79,9 @@ describe('file uploads', () => {
       formData.set('map', JSON.stringify({ 0: ['variables.file'] }))
       formData.set(
         '0',
-        new File(
-          [await fs.promises.readFile(sourceFilePath)],
-          path.basename(sourceFilePath),
-          { type: 'image/png' },
-        ),
+        new File([await fs.promises.readFile(sourceFilePath)], path.basename(sourceFilePath), {
+          type: 'image/png',
+        }),
       )
 
       const response = await fetch(`http://localhost:${port}/graphql`, {
@@ -110,7 +101,7 @@ describe('file uploads', () => {
       fs.promises.unlink(targetFilePath)
       expect(targetMd5).toBe(sourceMd5)
     } finally {
-      await new Promise((resolve) => server.close(resolve))
+      await new Promise(resolve => server.close(resolve))
     }
   })
 })

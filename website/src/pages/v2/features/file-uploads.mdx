@@ -4,9 +4,14 @@ import { LatestVersionNotice } from '../../../components/latest-version-notice'
 
 # File Uploads
 
-GraphQL Yoga supports [GraphQL Multipart Request Specification](https://github.com/jaydenseric/graphql-multipart-request-spec) which allows you to upload files via HTTP and consume the binary data inside GraphQL Resolvers.
+GraphQL Yoga supports
+[GraphQL Multipart Request Specification](https://github.com/jaydenseric/graphql-multipart-request-spec)
+which allows you to upload files via HTTP and consume the binary data inside GraphQL Resolvers.
 
-In GraphQL Yoga, you consume uploaded files or blobs as WHATWG standard [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) or [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) objects you might be familiar from the browser's API.
+In GraphQL Yoga, you consume uploaded files or blobs as WHATWG standard
+[`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) or
+[`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) objects you might be familiar from
+the browser's API.
 
 [Check out MDN documentation to learn more about `File` objects](https://developer.mozilla.org/en-US/docs/Web/API/File).
 
@@ -15,12 +20,13 @@ You can use any kind of client to support GraphQL Upload specification.
 
 ## Example
 
-You only need to add a scalar type definition for file uploads in your schema. The name of the scalar doesn't matter.
-Let's use `File` in this example:
+You only need to add a scalar type definition for file uploads in your schema. The name of the
+scalar doesn't matter. Let's use `File` in this example:
 
 ```ts filename="file-upload-example.ts"
 import fs from 'node:fs/promises'
 import path from 'node:path'
+
 import { createServer } from '@graphql-yoga/node'
 
 // Provide your schema
@@ -82,15 +88,8 @@ curl localhost:4000/graphql \
 You need to create a scalar type for file upload in your schema:
 
 ```ts filename="nexus-file-upload-example.ts"
-import {
-  makeSchema,
-  scalarType,
-  mutationField,
-  queryField,
-  arg,
-  nonNull
-} from 'nexus'
 import { createServer } from '@graphql-yoga/node'
+import { arg, makeSchema, mutationField, nonNull, queryField, scalarType } from 'nexus'
 
 const FileScalar = scalarType({
   name: 'File',
@@ -125,7 +124,8 @@ server.start()
 
 ## Disabling Multipart/File Upload Processing
 
-If you want to disable multipart request processing for some reason, you can pass `multipart: false{:ts}` to prevent Yoga from handling multipart requests.
+If you want to disable multipart request processing for some reason, you can pass
+`multipart: false{:ts}` to prevent Yoga from handling multipart requests.
 
 ```ts
 createServer({ multipart: false })
@@ -133,7 +133,8 @@ createServer({ multipart: false })
 
 ## Configuring Multipart Request Processing (only for Node.js)
 
-In Node.js, you can configure the limits of the multipart request processing such as maximum allowed file size, maximum numbers of files, etc.
+In Node.js, you can configure the limits of the multipart request processing such as maximum allowed
+file size, maximum numbers of files, etc.
 
 ```ts
 createServer({
