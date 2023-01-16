@@ -199,7 +199,7 @@ It is not possible to use a basic Node.js [RequestListener](https://nodejs.org/a
 Since they limit the access to the underlying raw `ServerResponse` object, the recipes use the `.handleIncomingMessage` method and pass the server context as the second parameter.
 
 E.g. for **_Fastify_**, a [`Reply`](https://fastify.io/docs/latest/Reply) object is attached to the server context instead of the `Request` object, which is an intermediate framework-specific response format.
-Also, note the generic definition in `createServer` for correctly typing the server context.
+Also, note the generic definition in `createYoga` for correctly typing the server context.
 
 ```ts filename="Typing request for Fastify integration" {2-3}
 const yoga = createYoga<{
@@ -223,7 +223,7 @@ That object is almost identical to what GraphQL Yoga provides you within `YogaIn
 ### User Context
 
 Besides, the initial context generated based on your setup, GraphQL Yoga also accepts a user context object that will be merged with the initial context (built out of the default context and server context).
-You can pass a factory function to `context` parameter of `createServer` configuration.
+You can pass a factory function to `context` parameter of `createYoga` configuration.
 That function will receive the combination of the standard initial context and the server's (if available), then the return value will be merged into that.
 
 ```ts filename="User context factory function" {5-9}
