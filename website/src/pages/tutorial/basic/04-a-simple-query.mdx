@@ -142,9 +142,9 @@ query {
 }
 ```
 
-All four fields specified in the query operations selection set (`feed`, `id`, `url`, and `description`) can also be found inside the schema definition. You also learned that _every_ field inside the schema definition is backed by one resolver function whose responsibility it is to return the data for precisely that field.
+All four fields specified in the query operation's selection set (`feed`, `id`, `url`, and `description`) can also be found inside the schema definition. You also learned that _every_ field inside the schema definition is backed by one resolver function whose responsibility it is to return the data for precisely that field.
 
-Can you imagine what the query resolution process looks like now? Effectively, the GraphQL server has to invoke all resolver functions for the fields that are selected in the operation and then package up the response according to the selection sets shape. The resolution thus merely becomes a process of orchestrating the invocation of the resolver
+Can you imagine what the query resolution process looks like now? Effectively, the GraphQL server has to invoke all resolver functions for the fields that are selected in the operation and then package up the response according to the selection set's shape. The resolution thus merely becomes a process of orchestrating the invocation of the resolver
 functions!
 
 Right now all the resolvers for the `Link` type follow a very simple and trivial pattern:
@@ -162,7 +162,7 @@ First, it's important to note that every GraphQL resolver function receives _fou
 The first argument, commonly called `parent` (or sometimes `root`) is the result of the previous _resolver execution level_. Hang on, what does that mean? 🤔
 
 Well, as you already saw, GraphQL operation selection sets can be _nested_. Each level of nesting (i.e. nested curly braces) corresponds
-to one resolver execution level. The above query operation. Therefore, has two of these execution levels.
+to one resolver execution level. Therefore, the above query operation has two of these execution levels.
 
 On the first level, it invokes the `Query.feed` resolver and returns the entire data stored in `links`. For the second execution level,
 the GraphQL server is smart enough to invoke the resolvers of the `Link` type (because thanks to the schema, it knows that `feed` returns
@@ -177,6 +177,6 @@ a list of `Link` elements) for each element inside the list that was returned on
 
 <Callout>
   The implementation of the `Link` resolvers is trivial, you can omit them and
-  the server will work in the same way as it did before 👌 We just wanted you to
+  the server will work in the same way as it did before 👌. We just wanted you to
   understand what's happening under the hood 🚗.
 </Callout>
