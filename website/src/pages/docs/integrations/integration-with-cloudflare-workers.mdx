@@ -110,7 +110,7 @@ const yoga = createYoga<Env>({
 export default { fetch: yoga.fetch }
 ```
 
-If you need `ExecutionContext` as well inside your resolvers, you can extend the context type like below;
+If you need `ExecutionContext` as well inside your resolvers, you can extend the context type like below, and use `handleRequest` to set a custom context;
 
 ```ts
 import { createYoga } from 'graphql-yoga'
@@ -119,7 +119,7 @@ interface Env {
   MY_NAMESPACE: KVNamespace
 }
 
-const yoga = createYoga<Env & ExecutionContext>({
+const yoga = createYoga<{ env: Env, executionCtx: ExecutionContext }>({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
@@ -134,7 +134,10 @@ const yoga = createYoga<Env & ExecutionContext>({
   })
 })
 
-export default { fetch: yoga.fetch }
+export default {
+  fetch: (req, env, executionCtx) =>
+    yoga.handleRequest(req, { env, executionCtx }),
+} as ExportedHandler<ENV>;
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/cloudflare-modules)
