@@ -1,3 +1,4 @@
+import { ExecutionResult } from 'graphql'
 import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
 
 describe('GraphQLError.extensions.http', () => {
@@ -300,7 +301,7 @@ describe('GraphQLError.extensions.http', () => {
     })
   })
 
-  it('should not manipulate the extensions in response data field', async () => {
+  it('should manipulate only the extensions in response errors', async () => {
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
@@ -321,6 +322,54 @@ describe('GraphQLError.extensions.http', () => {
           },
         },
       }),
+      plugins: [
+        {
+          onResultProcess({ result }) {
+            const extensions = {
+              arr: ['1', 2, null],
+              obj: {
+                hi: 'there',
+                num: 7,
+                ne: {
+                  st: 'ed',
+                  extensions: [
+                    {
+                      ext: 1,
+                    },
+                    {
+                      ext: '2',
+                    },
+                  ],
+                },
+                extensions: null,
+                date: {
+                  extensions: new Date('2000-01-01'),
+                  time: new Date('2000-02-02').getTime(),
+                },
+              },
+            }
+
+            result = result as ExecutionResult
+            result.errors = result.errors?.map((err) =>
+              createGraphQLError(err.message, {
+                nodes: err.nodes,
+                source: err.source,
+                positions: err.positions,
+                path: err.path,
+                originalError: err.originalError,
+                extensions: {
+                  ...err.extensions,
+                  ...extensions,
+                },
+              }),
+            )
+            result.extensions = {
+              ...result.extensions,
+              extensions,
+            }
+          },
+        },
+      ],
     })
 
     const res = await yoga.fetch('http://yoga/graphql', {
@@ -338,6 +387,35 @@ describe('GraphQLError.extensions.http', () => {
           "extensions": {
             "http": "hey",
             "unexpected": "there",
+          },
+        },
+        "extensions": {
+          "extensions": {
+            "arr": [
+              "1",
+              2,
+              null,
+            ],
+            "obj": {
+              "date": {
+                "extensions": "2000-01-01T00:00:00.000Z",
+                "time": 949449600000,
+              },
+              "extensions": null,
+              "hi": "there",
+              "ne": {
+                "extensions": [
+                  {
+                    "ext": 1,
+                  },
+                  {
+                    "ext": "2",
+                  },
+                ],
+                "st": "ed",
+              },
+              "num": 7,
+            },
           },
         },
       }
