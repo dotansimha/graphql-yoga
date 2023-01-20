@@ -1,4 +1,4 @@
-import { ExecutionResult, GraphQLObjectType, GraphQLScalarType } from 'graphql'
+import { ExecutionResult, GraphQLScalarType } from 'graphql'
 import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
 
 describe('GraphQLError.extensions.http', () => {
