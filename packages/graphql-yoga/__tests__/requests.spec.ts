@@ -1,3 +1,4 @@
+import { ExecutionResult } from 'graphql'
 import { createSchema, createYoga } from '../src'
 
 describe('requests', () => {
@@ -425,5 +426,96 @@ describe('requests', () => {
     expect(response.status).toBe(415)
     const body = await response.text()
     expect(body).toBeFalsy()
+  })
+
+  it('should serialise response extensions properly', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            ext: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            ext: () => 'ension',
+          },
+        },
+      }),
+      plugins: [
+        {
+          onResultProcess({ result }) {
+            result = result as ExecutionResult
+            result.extensions = {
+              arr: ['1', 2, null],
+              obj: {
+                hi: 'there',
+                num: 7,
+                ne: {
+                  st: 'ed',
+                  extensions: [
+                    {
+                      ext: 1,
+                    },
+                    {
+                      ext: '2',
+                    },
+                  ],
+                },
+                extensions: null,
+                date: {
+                  extensions: new Date('2000-01-01'),
+                  time: new Date('2000-02-02').getTime(),
+                },
+              },
+            }
+          },
+        },
+      ],
+    })
+
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ ext }' }),
+    })
+
+    expect(res.ok).toBeTruthy()
+    await expect(res.json()).resolves.toMatchInlineSnapshot(`
+      {
+        "data": {
+          "ext": "ension",
+        },
+        "extensions": {
+          "arr": [
+            "1",
+            2,
+            null,
+          ],
+          "obj": {
+            "date": {
+              "extensions": "2000-01-01T00:00:00.000Z",
+              "time": 949449600000,
+            },
+            "extensions": null,
+            "hi": "there",
+            "ne": {
+              "extensions": [
+                {
+                  "ext": 1,
+                },
+                {
+                  "ext": "2",
+                },
+              ],
+              "st": "ed",
+            },
+            "num": 7,
+          },
+        },
+      }
+    `)
   })
 })
