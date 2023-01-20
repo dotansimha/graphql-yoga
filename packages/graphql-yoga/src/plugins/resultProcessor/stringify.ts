@@ -5,7 +5,13 @@ import type { MaybeArray } from '../../types.js'
 // JSON stringifier that adjusts the result extensions while serialising
 export function jsonStringifyResult(result: MaybeArray<ExecutionResult>) {
   return JSON.stringify(result, (key, value) => {
-    if (key === 'extensions' && !Array.isArray(value)) {
+    if (
+      key === 'extensions' &&
+      value != null &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      !(value instanceof Date)
+    ) {
       // omit http extensions
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { http, unexpected, ...extensions } = value

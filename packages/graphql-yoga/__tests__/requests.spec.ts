@@ -462,6 +462,11 @@ describe('requests', () => {
                     },
                   ],
                 },
+                extensions: null,
+                date: {
+                  extensions: new Date('2000-01-01'),
+                  time: new Date('2000-02-02').getTime(),
+                },
               },
             }
           },
@@ -490,6 +495,11 @@ describe('requests', () => {
             null,
           ],
           "obj": {
+            "date": {
+              "extensions": "2000-01-01T00:00:00.000Z",
+              "time": 949449600000,
+            },
+            "extensions": null,
             "hi": "there",
             "ne": {
               "extensions": [
