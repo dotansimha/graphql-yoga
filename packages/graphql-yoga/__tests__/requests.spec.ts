@@ -518,4 +518,58 @@ describe('requests', () => {
       }
     `)
   })
+
+  it('should correctly serialise extensions array in response', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            testExtensions: Parent
+          }
+          type Parent {
+            extensions: [Extension]
+          }
+          type Extension {
+            name: String
+            value: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            testExtensions: () => ({
+              extensions: [{ name: 'foo', value: 'bar' }],
+            }),
+          },
+        },
+      }),
+    })
+
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query TestExtensions {
+            testExtensions {
+              extensions {
+                name
+                value
+              }
+            }
+          }
+        `,
+      }),
+    })
+
+    expect(res.ok).toBeTruthy()
+    expect(await res.json()).toEqual({
+      data: {
+        testExtensions: {
+          extensions: [{ name: 'foo', value: 'bar' }],
+        },
+      },
+    })
+  })
 })
