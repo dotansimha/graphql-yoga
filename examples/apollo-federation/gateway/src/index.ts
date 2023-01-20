@@ -1,16 +1,13 @@
-/* eslint-disable */
-const { createServer } = require('http')
-const { gateway, DataSource } = require('./gateway')
+import { createServer } from 'http'
+import { buildService, gateway } from './gateway'
 
 async function main() {
-  const yoga = gateway({
+  const yoga = await gateway({
     serviceList: [
       { name: 'accounts', url: 'http://localhost:4001/graphql' },
       // ...additional subgraphs...
     ],
-    buildService({ url }) {
-      return new DataSource({ url })
-    },
+    buildService,
   })
 
   // Start the server and explore http://localhost:4000/graphql

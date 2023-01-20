@@ -1,6 +1,5 @@
-/* eslint-disable */
-const { createServer } = require('http')
-const { yoga } = require('./yoga')
+import { createServer } from 'http'
+import { yoga } from './yoga'
 
 const server = createServer(yoga)
 
