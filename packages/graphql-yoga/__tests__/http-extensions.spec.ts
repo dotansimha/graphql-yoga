@@ -299,4 +299,48 @@ describe('GraphQLError.extensions.http', () => {
       ],
     })
   })
+
+  it('should not manipulate the extensions in response data field', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            extensions: BadExt
+          }
+          type BadExt {
+            http: String
+            unexpected: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            extensions: () => ({
+              http: 'hey',
+              unexpected: 'there',
+            }),
+          },
+        },
+      }),
+    })
+
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ extensions { http, unexpected } }' }),
+    })
+
+    expect(res.ok).toBeTruthy()
+    await expect(res.json()).resolves.toMatchInlineSnapshot(`
+      {
+        "data": {
+          "extensions": {
+            "http": "hey",
+            "unexpected": "there",
+          },
+        },
+      }
+    `)
+  })
 })
