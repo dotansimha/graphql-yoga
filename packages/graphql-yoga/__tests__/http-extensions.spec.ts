@@ -1,4 +1,4 @@
-import { ExecutionResult } from 'graphql'
+import { ExecutionResult, GraphQLObjectType, GraphQLScalarType } from 'graphql'
 import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
 
 describe('GraphQLError.extensions.http', () => {
@@ -302,22 +302,51 @@ describe('GraphQLError.extensions.http', () => {
   })
 
   it('should manipulate only the extensions in response errors', async () => {
+    const extensions = {
+      arr: ['1', 2, null],
+      obj: {
+        hi: 'there',
+        num: 7,
+        ne: {
+          st: 'ed',
+          extensions: [
+            {
+              ext: 1,
+            },
+            {
+              ext: '2',
+            },
+          ],
+        },
+        extensions: null,
+        date: {
+          extensions: new Date('2000-01-01'),
+          time: new Date('2000-02-02').getTime(),
+        },
+      },
+    }
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
+          scalar JSON
           type Query {
             extensions: BadExt
           }
           type BadExt {
             http: String
             unexpected: String
+            extensions: JSON
           }
         `,
         resolvers: {
+          JSON: new GraphQLScalarType({
+            name: 'JSON',
+          }),
           Query: {
             extensions: () => ({
               http: 'hey',
               unexpected: 'there',
+              extensions,
             }),
           },
         },
@@ -325,30 +354,6 @@ describe('GraphQLError.extensions.http', () => {
       plugins: [
         {
           onResultProcess({ result }) {
-            const extensions = {
-              arr: ['1', 2, null],
-              obj: {
-                hi: 'there',
-                num: 7,
-                ne: {
-                  st: 'ed',
-                  extensions: [
-                    {
-                      ext: 1,
-                    },
-                    {
-                      ext: '2',
-                    },
-                  ],
-                },
-                extensions: null,
-                date: {
-                  extensions: new Date('2000-01-01'),
-                  time: new Date('2000-02-02').getTime(),
-                },
-              },
-            }
-
             result = result as ExecutionResult
             result.errors = result.errors?.map((err) =>
               createGraphQLError(err.message, {
@@ -377,7 +382,9 @@ describe('GraphQLError.extensions.http', () => {
       headers: {
         'content-type': 'application/json',
       },
-      body: JSON.stringify({ query: '{ extensions { http, unexpected } }' }),
+      body: JSON.stringify({
+        query: '{ extensions { http, unexpected, extensions } }',
+      }),
     })
 
     expect(res.ok).toBeTruthy()
@@ -385,6 +392,33 @@ describe('GraphQLError.extensions.http', () => {
       {
         "data": {
           "extensions": {
+            "extensions": {
+              "arr": [
+                "1",
+                2,
+                null,
+              ],
+              "obj": {
+                "date": {
+                  "extensions": "2000-01-01T00:00:00.000Z",
+                  "time": 949449600000,
+                },
+                "extensions": null,
+                "hi": "there",
+                "ne": {
+                  "extensions": [
+                    {
+                      "ext": 1,
+                    },
+                    {
+                      "ext": "2",
+                    },
+                  ],
+                  "st": "ed",
+                },
+                "num": 7,
+              },
+            },
             "http": "hey",
             "unexpected": "there",
           },
