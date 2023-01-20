@@ -34,5 +34,4 @@ const resolvers = {
 
 export const yoga = createYoga({
   schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
-  maskedErrors: false,
 })
