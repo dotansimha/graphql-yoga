@@ -57,7 +57,7 @@ importers:
       ts-jest: ^29.0.0
       typescript: 4.9.4
       weak-napi: 2.0.2
-      wrangler: 2.8.0
+      wrangler: 2.8.1
     devDependencies:
       '@babel/core': 7.20.12
       '@babel/plugin-proposal-class-properties': 7.18.6_@babel+core@7.20.12
@@ -93,7 +93,7 @@ importers:
       ts-jest: 29.0.3_o44r3fsgidznck3q7y4idxscay
       typescript: 4.9.4
       weak-napi: 2.0.2
-      wrangler: 2.8.0
+      wrangler: 2.8.1
 
   benchmark/hello-world:
     specifiers:
@@ -105,7 +105,7 @@ importers:
 
   e2e:
     specifiers:
-      '@pulumi/aws': 5.27.0
+      '@pulumi/aws': 5.28.0
       '@pulumi/awsx': 0.40.1
       '@pulumi/azure-native': 1.92.0
       '@pulumi/cloudflare': 4.15.0
@@ -115,8 +115,8 @@ importers:
       ts-node: 10.9.1
       typescript: 4.9.4
     dependencies:
-      '@pulumi/aws': 5.27.0
-      '@pulumi/awsx': 0.40.1_7wrkspdgq5vfzryrogvz72njdi
+      '@pulumi/aws': 5.28.0
+      '@pulumi/awsx': 0.40.1_zb2wgbkyr72cxpk4hrgfke4o44
       '@pulumi/azure-native': 1.92.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
@@ -226,7 +226,7 @@ importers:
       ts-loader: 9.4.2
       typescript: 4.9.4
       webpack: 5.75.0
-      wrangler: 2.8.0
+      wrangler: 2.8.1
     dependencies:
       '@cloudflare/workers-types': 4.20221111.1
       graphql: 16.6.0
@@ -235,7 +235,7 @@ importers:
       ts-loader: 9.4.2_3fkjkrd3audxnith3e7fo4fnxi
       typescript: 4.9.4
       webpack: 5.75.0
-      wrangler: 2.8.0
+      wrangler: 2.8.1
 
   examples/cloudflare-modules:
     specifiers:
@@ -243,14 +243,14 @@ importers:
       graphql: 16.6.0
       graphql-yoga: 3.3.1
       typescript: 4.9.4
-      wrangler: 2.8.0
+      wrangler: 2.8.1
     dependencies:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@cloudflare/workers-types': 4.20221111.1
       typescript: 4.9.4
-      wrangler: 2.8.0
+      wrangler: 2.8.1
 
   examples/defer-stream:
     specifiers:
@@ -689,13 +689,13 @@ importers:
       graphql: 16.6.0
       graphql-yoga: 3.3.1
       typescript: 4.9.4
-      wrangler: 2.8.0
+      wrangler: 2.8.1
     dependencies:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       typescript: 4.9.4
-      wrangler: 2.8.0
+      wrangler: 2.8.1
 
   examples/sofa:
     specifiers:
@@ -747,7 +747,7 @@ importers:
       jest: ^29.0.0
       prettier: 2.8.3
       prettier-plugin-svelte: 2.9.0
-      puppeteer: 19.5.2
+      puppeteer: 19.6.0
       svelte: 3.55.1
       svelte-check: 3.0.2
       svelte-preprocess: 5.0.1
@@ -771,7 +771,7 @@ importers:
       jest: 29.2.0
       prettier: 2.8.3
       prettier-plugin-svelte: 2.9.0_kdmmghgdi3ngrsq6otxkjilbry
-      puppeteer: 19.5.2
+      puppeteer: 19.6.0
       svelte: 3.55.1
       svelte-check: 3.0.2_svelte@3.55.1
       svelte-preprocess: 5.0.1_atrrhq7vg4ekua4nnyrpuardle
@@ -925,14 +925,14 @@ importers:
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.11.18
       '@whatwg-node/fetch': 0.6.2
-      '@whatwg-node/server': 0.5.7
+      '@whatwg-node/server': 0.5.8
       dset: ^3.1.1
       graphql: 16.6.0
       graphql-http: ^1.7.2
       graphql-scalars: 1.20.1
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
-      puppeteer: 19.5.2
+      puppeteer: 19.6.0
       tslib: ^2.3.1
     dependencies:
       '@envelop/core': 3.0.4
@@ -943,7 +943,7 @@ importers:
       '@graphql-tools/utils': 9.0.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
       '@whatwg-node/fetch': 0.6.2
-      '@whatwg-node/server': 0.5.7_@types+node@18.11.18
+      '@whatwg-node/server': 0.5.8_@types+node@18.11.18
       dset: 3.1.2
       tslib: 2.4.0
     devDependencies:
@@ -959,7 +959,7 @@ importers:
       graphql-scalars: 1.20.1_graphql@16.6.0
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
-      puppeteer: 19.5.2
+      puppeteer: 19.6.0
     publishDirectory: dist
 
   packages/node:
@@ -8105,8 +8105,8 @@ packages:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: false
 
-  /@pulumi/aws/5.27.0:
-    resolution: {integrity: sha512-KKvt1myF5Za3+c89vNxCrnRaqMxulaoniT0NHVqWwIeHsJf/wVZuT5u9/ARfaSFb5/6s/0fRZs8hdk0DRsBw3A==}
+  /@pulumi/aws/5.28.0:
+    resolution: {integrity: sha512-FdOAmuXJA4kfmM17SwoT9LmIduIEtrtdP1oGhOA5Z5/4JeWHaJtaNBObWYnh3OvkUxDkIY8AsyVLpoTrhPKiKw==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.52.1
@@ -8119,13 +8119,13 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx/0.40.1_7wrkspdgq5vfzryrogvz72njdi:
+  /@pulumi/awsx/0.40.1_zb2wgbkyr72cxpk4hrgfke4o44:
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
       '@pulumi/pulumi': ^3.0.0
     dependencies:
-      '@pulumi/aws': 5.27.0
+      '@pulumi/aws': 5.28.0
       '@pulumi/docker': 3.6.1
       '@pulumi/pulumi': 3.52.1
       '@types/aws-lambda': 8.10.93
@@ -10163,8 +10163,8 @@ packages:
       - encoding
     dev: false
 
-  /@whatwg-node/server/0.5.7_@types+node@18.11.18:
-    resolution: {integrity: sha512-OX1Oj+NA8D9zpB+IPKZ2s6zVQPUVKTcD+UVcCFQ3b9Wek/fM0RZFSm9sdnUoejt9MC9Y2vIjhbXa46VmSoWz2Q==}
+  /@whatwg-node/server/0.5.8_@types+node@18.11.18:
+    resolution: {integrity: sha512-29f2Ijk663Hr6hF5GU5a8ELGQVbNMMDBWF1lTdpIKGyLrLJTKixarp6COEyEN5H9tGzIRUQar9Z76A+Jb9DyzQ==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -13733,8 +13733,8 @@ packages:
     resolution: {integrity: sha512-Oksbel8g2rv5ivcCyImF1RXEU2FcS1OtCwVs4tJCCeVws/Dp9EE15fUbEsNr/xLD3ZxsQURBCDf56Lk1CgwCpg==}
     dev: true
 
-  /devtools-protocol/0.0.1068969:
-    resolution: {integrity: sha512-ATFTrPbY1dKYhPPvpjtwWKSK2mIwGmRwX54UASn9THEuIZCe2n9k3vVuMmt6jWeL+e5QaaguEv/pMyR+JQB7VQ==}
+  /devtools-protocol/0.0.1082910:
+    resolution: {integrity: sha512-RqoZ2GmqaNxyx+99L/RemY5CkwG9D0WEfOKxekwCRXOGrDCep62ngezEJUVMq6rISYQ+085fJnWDQqGHlxVNww==}
     dev: true
 
   /dezalgo/1.0.3:
@@ -23200,13 +23200,13 @@ packages:
       escape-goat: 4.0.0
     dev: true
 
-  /puppeteer-core/19.5.2:
-    resolution: {integrity: sha512-Rqk+3kqM+Z2deooTYqcYt8lRtGffJdifWa9td9nbJSjhANWsFouk8kLBNUKycewCCFHM8TZUKS0x28OllavW2A==}
+  /puppeteer-core/19.6.0:
+    resolution: {integrity: sha512-GvqWdHr9eY/MFR5pXf9o0apnrTmG0hhS7/TtCPfeAvCbaUS1bsLMZWxNGvI/QbviRu4xxi6HrR7VW4x/4esq1Q==}
     engines: {node: '>=14.1.0'}
     dependencies:
       cross-fetch: 3.1.5
       debug: 4.3.4
-      devtools-protocol: 0.0.1068969
+      devtools-protocol: 0.0.1082910
       extract-zip: 2.0.1
       https-proxy-agent: 5.0.1
       proxy-from-env: 1.1.0
@@ -23221,8 +23221,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /puppeteer/19.5.2:
-    resolution: {integrity: sha512-xlqRyrhXhVH114l79Y0XqYXUVG+Yfw4sKlvN55t8Y9DxtA5fzI1uqF8SVXbWK5DUMbD6Jo4lpixTZCTTZGD05g==}
+  /puppeteer/19.6.0:
+    resolution: {integrity: sha512-KpRjn/bosTWe8xOQ/F5J1UmQ4inR77ADddn8G6MqMPp/y9Tl+7EycXgrjO0/3i/OQfHi5bsvkTKXRkm0ieo/ew==}
     engines: {node: '>=14.1.0'}
     requiresBuild: true
     dependencies:
@@ -23230,7 +23230,7 @@ packages:
       https-proxy-agent: 5.0.1
       progress: 2.0.3
       proxy-from-env: 1.1.0
-      puppeteer-core: 19.5.2
+      puppeteer-core: 19.6.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -24782,6 +24782,7 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
     dev: true
 
   /space-separated-tokens/2.0.1:
@@ -27177,8 +27178,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /wrangler/2.8.0:
-    resolution: {integrity: sha512-CAhjoeTnVFB65HPmOSquXbQ37lc2X77iOirX4tRMuRNKQng2NztHOfo++6BZdlV29E4IPD9boTRXck3R+O8mrg==}
+  /wrangler/2.8.1:
+    resolution: {integrity: sha512-O4wUr6/FUpk9KVstOUVYbiiZcWc1jKo7q0FfdwEjnMB3oN7Ofs6cIiX++Lzj1ldFSCOw2/aW3UYgixch6B2WCA==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
