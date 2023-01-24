@@ -749,7 +749,7 @@ importers:
       prettier-plugin-svelte: 2.9.0
       puppeteer: 19.6.0
       svelte: 3.55.1
-      svelte-check: 3.0.2
+      svelte-check: 3.0.3
       svelte-preprocess: 5.0.1
       tslib: 2.4.1
       typescript: 4.9.4
@@ -773,7 +773,7 @@ importers:
       prettier-plugin-svelte: 2.9.0_kdmmghgdi3ngrsq6otxkjilbry
       puppeteer: 19.6.0
       svelte: 3.55.1
-      svelte-check: 3.0.2_svelte@3.55.1
+      svelte-check: 3.0.3_svelte@3.55.1
       svelte-preprocess: 5.0.1_atrrhq7vg4ekua4nnyrpuardle
       tslib: 2.4.1
       typescript: 4.9.4
@@ -806,17 +806,17 @@ importers:
 
   packages/client/apollo-link:
     specifiers:
-      '@apollo/client': 3.7.4
+      '@apollo/client': 3.7.5
       '@graphql-tools/executor-apollo-link': 0.0.6
       '@graphql-tools/executor-http': 0.1.1
       graphql-yoga: 3.3.1
       tslib: ^2.3.1
     dependencies:
-      '@graphql-tools/executor-apollo-link': 0.0.6_@apollo+client@3.7.4
+      '@graphql-tools/executor-apollo-link': 0.0.6_@apollo+client@3.7.5
       '@graphql-tools/executor-http': 0.1.1
       tslib: 2.4.0
     devDependencies:
-      '@apollo/client': 3.7.4
+      '@apollo/client': 3.7.5
       graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
@@ -1296,8 +1296,8 @@ packages:
       graphql: 16.6.0
     dev: false
 
-  /@apollo/client/3.7.4:
-    resolution: {integrity: sha512-bgiCKRmLSBImX4JRrw8NjqGo0AQE/mowCdHX1PJp2r5zIXrJx0UeaAYmx1qJY69Oz/KR7SKlLt4xK+bOP1jx7A==}
+  /@apollo/client/3.7.5:
+    resolution: {integrity: sha512-HEAhX2n2Y8Y2BwRr0UdteT94OTM7pn64K5/rTk/oLIdg/h7R2d83LdsCGDxSH5sBiqDqlv9vou4xdyTxxRWj/g==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
@@ -5125,13 +5125,13 @@ packages:
       value-or-promise: 1.0.11
     dev: true
 
-  /@graphql-tools/executor-apollo-link/0.0.6_@apollo+client@3.7.4:
+  /@graphql-tools/executor-apollo-link/0.0.6_@apollo+client@3.7.5:
     resolution: {integrity: sha512-8UxV3iYNuDetWj7da+o8Ki1t6/9l1x1qfg8K1Qf8HctaYJQmrDKuOWsqCmoniRji+NGOwy49pM0+lyZG93oDOw==}
     peerDependencies:
       '@apollo/client': ^3.5.9
       graphql: ^15.2.0 || ^16.0.0
     dependencies:
-      '@apollo/client': 3.7.4
+      '@apollo/client': 3.7.5
       '@graphql-tools/utils': 9.1.4
       tslib: 2.4.1
     dev: false
@@ -25340,8 +25340,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check/3.0.2_svelte@3.55.1:
-    resolution: {integrity: sha512-DkhKhV0Jt0gh7q9DBB26+J2Vfb9y4/4JWxnbkXBZha7542LOhwvj3edJFjyJ+xjdaXyInZ+YRRYc3V6wytP2ew==}
+  /svelte-check/3.0.3_svelte@3.55.1:
+    resolution: {integrity: sha512-ByBFXo3bfHRGIsYEasHkdMhLkNleVfszX/Ns1oip58tPJlKdo5Ssr8kgVIuo5oq00hss8AIcdesuy0Xt0BcTvg==}
     hasBin: true
     peerDependencies:
       svelte: ^3.55.0
