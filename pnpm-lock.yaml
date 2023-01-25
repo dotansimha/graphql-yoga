@@ -110,17 +110,17 @@ importers:
       '@pulumi/azure-native': 1.92.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.52.1
+      '@pulumi/pulumi': 3.53.0
       '@types/node': 18.11.18
       ts-node: 10.9.1
       typescript: 4.9.4
     dependencies:
       '@pulumi/aws': 5.28.0
-      '@pulumi/awsx': 0.40.1_zb2wgbkyr72cxpk4hrgfke4o44
+      '@pulumi/awsx': 0.40.1_xi2daabwtsq2lst63yxn26pzq4
       '@pulumi/azure-native': 1.92.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.52.1
+      '@pulumi/pulumi': 3.53.0
       '@types/node': 18.11.18
       ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
       typescript: 4.9.4
@@ -155,7 +155,7 @@ importers:
 
   examples/aws-lambda:
     specifiers:
-      '@aws-cdk/assert': 2.61.1
+      '@aws-cdk/assert': 2.62.0
       '@aws-cdk/aws-apigateway': 1.189.0
       '@aws-cdk/aws-lambda': 1.189.0
       '@aws-cdk/core': 1.189.0
@@ -173,7 +173,7 @@ importers:
       '@aws-cdk/core': 1.189.0
       source-map-support: 0.5.21
     devDependencies:
-      '@aws-cdk/assert': 2.61.1_aws-cdk-lib@2.61.1
+      '@aws-cdk/assert': 2.62.0_aws-cdk-lib@2.61.1
       '@types/aws-lambda': 8.10.109
       '@types/node': 18.11.18
       aws-cdk: 2.61.1
@@ -239,7 +239,7 @@ importers:
 
   examples/cloudflare-modules:
     specifiers:
-      '@cloudflare/workers-types': 4.20221111.1
+      '@cloudflare/workers-types': 4.20230115.0
       graphql: 16.6.0
       graphql-yoga: 3.3.1
       typescript: 4.9.4
@@ -248,7 +248,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@cloudflare/workers-types': 4.20221111.1
+      '@cloudflare/workers-types': 4.20230115.0
       typescript: 4.9.4
       wrangler: 2.8.1
 
@@ -668,7 +668,7 @@ importers:
       cross-env: 7.0.3
       graphql: 16.6.0
       graphql-yoga: 3.3.1
-      ioredis: 5.2.5
+      ioredis: 5.3.0
       ts-node: 10.9.1
       ts-node-dev: 2.0.0
       typescript: 4.9.4
@@ -676,7 +676,7 @@ importers:
       '@graphql-yoga/redis-event-target': link:../../packages/event-target/redis-event-target
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
-      ioredis: 5.2.5
+      ioredis: 5.3.0
     devDependencies:
       '@types/node': 18.11.18
       cross-env: 7.0.3
@@ -857,15 +857,15 @@ importers:
       '@graphql-yoga/typed-event-target': ^1.0.0
       '@types/ioredis-mock': 8.2.1
       '@whatwg-node/events': 0.0.2
-      ioredis: 5.2.5
+      ioredis: 5.3.0
       ioredis-mock: 8.2.2
     dependencies:
       '@graphql-yoga/typed-event-target': link:../typed-event-target
       '@whatwg-node/events': 0.0.2
     devDependencies:
       '@types/ioredis-mock': 8.2.1
-      ioredis: 5.2.5
-      ioredis-mock: 8.2.2_ioredis@5.2.5
+      ioredis: 5.3.0
+      ioredis-mock: 8.2.2_ioredis@5.3.0
     publishDirectory: dist
 
   packages/event-target/typed-event-target:
@@ -1103,7 +1103,7 @@ importers:
       '@types/react': 18.0.27
       clsx: 1.2.1
       cross-env: 7.0.3
-      fast-xml-parser: 4.0.14
+      fast-xml-parser: 4.0.15
       graphql: 16.6.0
       next: 13.1.5
       next-sitemap: 3.1.47
@@ -1126,7 +1126,7 @@ importers:
       '@types/node': 18.11.18
       '@types/react': 18.0.27
       cross-env: 7.0.3
-      fast-xml-parser: 4.0.14
+      fast-xml-parser: 4.0.15
       typescript: 4.9.4
 
 packages:
@@ -1606,15 +1606,15 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@aws-cdk/assert/2.61.1_aws-cdk-lib@2.61.1:
-    resolution: {integrity: sha512-6lfRXAUarvy2hywcYb5cgR+ycjhaXSeSJJgTkPAVFgwassQtsPGh0ItFX6T1tuLeUY+yJyi1ema6B4vB5ZQo2g==}
+  /@aws-cdk/assert/2.62.0_aws-cdk-lib@2.61.1:
+    resolution: {integrity: sha512-23cg7cbLatu7K5dBKhqoK1MZMUgFbcbEtQodR1d2LYifq7C9aAYCO+JWMWTL5HElWtXFTwLCuOaN7DlnNH6oGQ==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
-      aws-cdk-lib: ^2.61.1
+      aws-cdk-lib: ^2.62.0
       constructs: ^10.0.0
       jest: '>=26.6.3'
     dependencies:
-      '@aws-cdk/cloudformation-diff': 2.61.1
+      '@aws-cdk/cloudformation-diff': 2.62.0
       aws-cdk-lib: 2.61.1
     dev: true
 
@@ -2087,8 +2087,8 @@ packages:
       constructs: 3.4.127
     dev: false
 
-  /@aws-cdk/cfnspec/2.61.1:
-    resolution: {integrity: sha512-JGFxJgMcJRSr5zqPlVemZ9T08Q3oq0izdVzU+kDeL2okLXHveNM79+OSPsPg3RVtL49lbR5vvpofk4GDDKvfcg==}
+  /@aws-cdk/cfnspec/2.62.0:
+    resolution: {integrity: sha512-sBLJESEPW9hZv5YSmOoDrOm4VMFRiOcbQf3zyR4NHNcIsvyhuCXo9N3OkucePohlRUNDh84mkDPH442AB9ofGw==}
     dependencies:
       fs-extra: 9.1.0
       md5: 2.3.0
@@ -2105,11 +2105,11 @@ packages:
       - jsonschema
       - semver
 
-  /@aws-cdk/cloudformation-diff/2.61.1:
-    resolution: {integrity: sha512-50fdsjMtIpjhrmo0M2J10FIYgnc65hRkHFUdiAH9oC+1iXspFo0RynRI8DJPt//OH7d7w7Mb4nIrEx65PAxb4A==}
+  /@aws-cdk/cloudformation-diff/2.62.0:
+    resolution: {integrity: sha512-ZYAco9dr5DAEDuQBhKMm9sGZrKMYpcofR2fkjtaoWmn7XJpHkos5OH7Qgg3wVsR1FNxujpRnPNOn7XglEzaj+Q==}
     engines: {node: '>= 14.15.0'}
     dependencies:
-      '@aws-cdk/cfnspec': 2.61.1
+      '@aws-cdk/cfnspec': 2.62.0
       '@types/node': 14.18.36
       chalk: 4.1.2
       diff: 5.1.0
@@ -4015,6 +4015,11 @@ packages:
 
   /@cloudflare/workers-types/4.20221111.1:
     resolution: {integrity: sha512-BNV2wN8V6Zduvo7UzxcdjBbLQ906D2KhS804PDufLgx/sanGJCHVJMOIaLvS/b61JKtot1U7P/l1fjrjZ7/E3A==}
+    dev: false
+
+  /@cloudflare/workers-types/4.20230115.0:
+    resolution: {integrity: sha512-GPJEiO8AFN+jUpA+DHJ1qdVmk4s/hq8JYKjOV/+U7avGquQbVnj905+Kg6uAEfrq16muwmRKl+XJGqsvlBlDNg==}
+    dev: true
 
   /@colors/colors/1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -8109,7 +8114,7 @@ packages:
     resolution: {integrity: sha512-FdOAmuXJA4kfmM17SwoT9LmIduIEtrtdP1oGhOA5Z5/4JeWHaJtaNBObWYnh3OvkUxDkIY8AsyVLpoTrhPKiKw==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.52.1
+      '@pulumi/pulumi': 3.53.0
       aws-sdk: 2.1235.0
       builtin-modules: 3.0.0
       mime: 2.6.0
@@ -8119,7 +8124,7 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx/0.40.1_zb2wgbkyr72cxpk4hrgfke4o44:
+  /@pulumi/awsx/0.40.1_xi2daabwtsq2lst63yxn26pzq4:
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
@@ -8127,7 +8132,7 @@ packages:
     dependencies:
       '@pulumi/aws': 5.28.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.52.1
+      '@pulumi/pulumi': 3.53.0
       '@types/aws-lambda': 8.10.93
       mime: 2.6.0
     transitivePeerDependencies:
@@ -8138,7 +8143,7 @@ packages:
     resolution: {integrity: sha512-SVckZIKzVxhsendDtHtmwQGEmJDO6a46cmiOKlGidNhBFBKVpPpmNbjC6MiBVQIMPgn5WZtpviet70DyuTInEQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.52.1
+      '@pulumi/pulumi': 3.53.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -8147,7 +8152,7 @@ packages:
     resolution: {integrity: sha512-nbtZHG6VgmRsl22rkRNvu/cm8o3HL9oFMShYXCAOC8nDbdydP/rjJMmY4n8PStiEFuWkhZR6TxzepMqn/Oaa7g==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.52.1
+      '@pulumi/pulumi': 3.53.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -8156,14 +8161,14 @@ packages:
     resolution: {integrity: sha512-BZME50QkT556v+LvmTXPT8ssB2xxNkp9+msB5xYFEnUnWcdGAx5yUysQw70RJCb+U0GbkJSbxtlgMJgOQf/now==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.52.1
+      '@pulumi/pulumi': 3.53.0
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/pulumi/3.52.1:
-    resolution: {integrity: sha512-sHBe23wJRAMvA+g/nYrKY5w4ZQ98W9/JydTnRB5lIqEr53kQfm3gA+O4bKwVei2QdLu5d0A9apbamfFvkSom1Q==}
+  /@pulumi/pulumi/3.53.0:
+    resolution: {integrity: sha512-NlKI69AtGgf+afRgZhKjgJCiQgy5TWNL8FL73zcgkW6P9ZU26idM9z2YzpqPp9bScr55l2A20V+dFRFbMk13Pw==}
     engines: {node: '>=8.13.0 || >=10.10.0'}
     dependencies:
       '@grpc/grpc-js': 1.3.8
@@ -9188,7 +9193,7 @@ packages:
   /@types/ioredis-mock/8.2.1:
     resolution: {integrity: sha512-VZsxDuzie7RGiPn/eMQ6ODZd6Q2gb0fTkD2gyPKVkojRw4D1hPisQ87aD+cCHqGylKeU4x01VwQ4QA82Fx4fRg==}
     dependencies:
-      ioredis: 5.2.5
+      ioredis: 5.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -15816,8 +15821,8 @@ packages:
     resolution: {integrity: sha512-WvJe06IfNYlr+6cO3uQkdKdy3Cb1LlCJSF8zRs2eT8yuhdbSlR9nIt+TgQ92RUxiRrQm+/S7RARnMfCs5iuAjw==}
     dev: true
 
-  /fast-xml-parser/4.0.14:
-    resolution: {integrity: sha512-uKe7uxZ9DgNOmHfUmBdhkTBZcMMVxvQ3vELTxUpmotAqRxkpMayEiiQ4AQWTGAVyfzT4Dv79jaszLECWCYbd4w==}
+  /fast-xml-parser/4.0.15:
+    resolution: {integrity: sha512-bF4/E33/K/EZDHV23IJpSK2SU7rZTaSkDH5G85nXX8SKlQ9qBpWQhyPpm2nlTBewDJgtpd6+1x4TNpKmocmthQ==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -17609,7 +17614,7 @@ packages:
       fengari-interop: 0.1.3_fengari@0.1.4
     dev: true
 
-  /ioredis-mock/8.2.2_ioredis@5.2.5:
+  /ioredis-mock/8.2.2_ioredis@5.3.0:
     resolution: {integrity: sha512-XyJfcF6pqcLHwAYtldkzaLtjRxPw7d8U0FUfjgQ5U/d0vVhFxiXbqsILR4FEOp+ygzyZgBA8xye+uPKu74IH1A==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -17619,11 +17624,11 @@ packages:
       '@ioredis/commands': 1.2.0
       fengari: 0.1.4
       fengari-interop: 0.1.3_fengari@0.1.4
-      ioredis: 5.2.5
+      ioredis: 5.3.0
     dev: true
 
-  /ioredis/5.2.5:
-    resolution: {integrity: sha512-7HKo/ClM2DGLRXdFq8ruS3Uuadensz4A76wPOU0adqlOqd1qkhoLPDaBhmVhUhNGpB+J65/bhLmNB8DDY99HJQ==}
+  /ioredis/5.3.0:
+    resolution: {integrity: sha512-Id9jKHhsILuIZpHc61QkagfVdUj2Rag5GzG1TGEvRNeM7dtTOjICgjC+tvqYxi//PuX2wjQ+Xjva2ONBuf92Pw==}
     engines: {node: '>=12.22.0'}
     dependencies:
       '@ioredis/commands': 1.2.0
