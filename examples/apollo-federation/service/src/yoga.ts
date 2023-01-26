@@ -1,11 +1,13 @@
-/* eslint-disable */
-const { parse } = require('graphql')
-const { buildSubgraphSchema } = require('@apollo/subgraph')
-const { createYoga } = require('graphql-yoga')
+import { parse } from 'graphql'
+import { buildSubgraphSchema } from '@apollo/subgraph'
+import { createYoga } from 'graphql-yoga'
 
 const typeDefs = parse(/* GraphQL */ `
+  scalar File
+
   type Query {
     me: User
+    readTextFile(file: File!): String
   }
 
   type User @key(fields: "id") {
@@ -18,6 +20,9 @@ const resolvers = {
   Query: {
     me() {
       return { id: '1', username: '@ava' }
+    },
+    readTextFile(_, { file }) {
+      return file.text()
     },
   },
   User: {
