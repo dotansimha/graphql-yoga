@@ -209,3 +209,16 @@ jobs:
 
       - name: Prettier
         run: pnpm prettier:check
+
+  apollo-federation-compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: apollographql/federation-subgraph-compatibility@v1
+        with:
+          compose: examples/apollo-federation-compatibility/docker-compose.yaml
+          schema: examples/apollo-federation-compatibility/schema.graphql
+          port: 4001
+          # debug: true
+          token: GH_TOKEN
+          failOnWarning: false
+          failOnRequired: false
