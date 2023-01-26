@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs'
 
 import { Product, ProductResearch, Resolvers, User } from './resolvers-types'
 
-const typeDefs = readFileSync('./products.graphql', 'utf8')
+const typeDefs = readFileSync('./schema.graphql', 'utf8')
 
 const productResearch: ProductResearch[] = [
   {
