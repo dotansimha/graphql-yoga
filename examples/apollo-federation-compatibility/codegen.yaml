@@ -1,0 +1,8 @@
+schema: schema.graphql
+generates:
+  ./src/resolvers-types.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      federation: true
