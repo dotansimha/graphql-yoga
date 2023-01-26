@@ -24,6 +24,45 @@ import { schema } from './schema';
  })
 ```
 
+## `createSchema` for executable schemas
+
+With Yoga v2 you could pass the `typeDefs` and `resolvers` directly to the server options and have [@graphql-tools/schema generate the executable schema](https://the-guild.dev/graphql/tools/docs/generate-schema) during setup.
+
+However, Yoga v3 accepts only a ready GraphQL schema and instead offers a seperate [helper function `createSchema`](/docs#schema) to supplement this process.
+
+```diff
+- import { createServer } from '@graphql-yoga/node'
++ import { createYoga, createSchema } from 'graphql-yoga'
+
+- createServer({
+-   typeDefs: /* GraphQL */ `
+-     type Query {
+-       hello: String
+-     }
+-   `,
+-   resolvers: {
+-     Query: {
+-       hello: () => 'world'
+-     }
+-   }
+- })
+
++ createYoga({
++   schema: createSchema({
++     typeDefs: /* GraphQL */ `
++       type Query {
++         hello: String
++       }
++     `,
++     resolvers: {
++       Query: {
++         hello: () => 'world'
++       }
++     }
++   })
++ })
+```
+
 ## `handleIncomingMessage` renamed to `handleNodeRequest`
 
 For some frameworks, we need to use this low-level function such as Fastify and Koa. So you can basically rename the method to `handleNodeRequest`.
