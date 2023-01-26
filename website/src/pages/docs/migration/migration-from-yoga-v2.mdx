@@ -28,7 +28,7 @@ import { schema } from './schema';
 
 With Yoga v1 you could pass the `typeDefs` and `resolvers` directly to the server options and have [@graphql-tools/schema generate the executable schema](https://the-guild.dev/graphql/tools/docs/generate-schema) during setup.
 
-However, Yoga v2 accepts only a ready GraphQL schema and offers a seperate helper function `createSchema` to supplement this process.
+However, Yoga v2 accepts only a ready GraphQL schema and instead offers a seperate [helper function `createSchema`](/docs#schema) to supplement this process.
 
 ```diff
 - import { createServer } from '@graphql-yoga/node'
