@@ -1,5 +1,15 @@
 # @graphql-yoga/subscription
 
+## 3.1.0
+
+### Minor Changes
+
+- [#2291](https://github.com/dotansimha/graphql-yoga/pull/2291) [`fe4a2aca`](https://github.com/dotansimha/graphql-yoga/commit/fe4a2aca4eece85d234be9ce3f82dcae274148a8) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Support returning a `Promise` from the `filter` utility function.
+
+  ```ts
+  const applyFilter = filter((value) => Promise.resolve(value > 3))
+  ```
+
 ## 3.0.0
 
 ### Major Changes
