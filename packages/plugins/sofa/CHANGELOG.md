@@ -1,5 +1,27 @@
 # @graphql-yoga/plugin-sofa
 
+## 1.4.0
+
+### Patch Changes
+
+- [#2276](https://github.com/dotansimha/graphql-yoga/pull/2276) [`8cd8b5a5`](https://github.com/dotansimha/graphql-yoga/commit/8cd8b5a5ab1dd28e2a2ddd7424c98c0493c535ad) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`sofa-api@0.15.2` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.2) (from `0.15.1`, in `dependencies`)
+
+- [#2316](https://github.com/dotansimha/graphql-yoga/pull/2316) [`6ee252db`](https://github.com/dotansimha/graphql-yoga/commit/6ee252dbed6f38840284bbe47c72c453ac8e648b) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`sofa-api@0.15.4` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.4) (from `0.15.2`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/utils@9.1.4` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.1.4) (from `9.1.3`, in `dependencies`)
+
+- [#2319](https://github.com/dotansimha/graphql-yoga/pull/2319) [`be50a38b`](https://github.com/dotansimha/graphql-yoga/commit/be50a38bdec59c5b8b984121f52136f745a70d6f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`sofa-api@0.15.5` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.5) (from `0.15.4`, in `dependencies`)
+
+- [#2287](https://github.com/dotansimha/graphql-yoga/pull/2287) [`e5018f5e`](https://github.com/dotansimha/graphql-yoga/commit/e5018f5ec97ec72bb42925f8ce4cf02fefb66330) Thanks [@ardatan](https://github.com/ardatan)! - Use URLPattern instead of `===` for matching routes
+
+- Updated dependencies [[`76c1ecb9`](https://github.com/dotansimha/graphql-yoga/commit/76c1ecb985887ee45f0f934216b7a629e3c2db6d), [`8cd8b5a5`](https://github.com/dotansimha/graphql-yoga/commit/8cd8b5a5ab1dd28e2a2ddd7424c98c0493c535ad), [`6e8bddba`](https://github.com/dotansimha/graphql-yoga/commit/6e8bddba7eb21b596cea0a2d4c313bb84a5c3aa1), [`6ee252db`](https://github.com/dotansimha/graphql-yoga/commit/6ee252dbed6f38840284bbe47c72c453ac8e648b), [`8f139e15`](https://github.com/dotansimha/graphql-yoga/commit/8f139e155b5cd59ca97912cccdc45b8b7d2909e6), [`9beef914`](https://github.com/dotansimha/graphql-yoga/commit/9beef91485e076f19928e73fdc65aa2979f88eef), [`c46d75e8`](https://github.com/dotansimha/graphql-yoga/commit/c46d75e82456d7aecd8e562cf85bd314d19d2a97), [`f9ab8a70`](https://github.com/dotansimha/graphql-yoga/commit/f9ab8a70a5498ea8bb924a01b9873f439bd1a0c8)]:
+  - graphql-yoga@3.4.0
+
 ## 1.3.1
 
 ### Patch Changes
