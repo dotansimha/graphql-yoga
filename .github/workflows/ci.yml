@@ -209,3 +209,24 @@ jobs:
 
       - name: Prettier
         run: pnpm prettier:check
+
+  apollo-federation-compatibility:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/apollo-federation-compatibility
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run Tests
+        run: >
+          npx @apollo/federation-subgraph-compatibility
+          docker
+          --compose docker-compose.yaml
+          --schema products.graphql
+          --failOnRequired
+          --failOnWarning
+          --format markdown
+          --debug
+      - name: Report
+        run: cat results.md > $GITHUB_STEP_SUMMARY
