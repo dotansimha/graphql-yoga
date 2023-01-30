@@ -507,7 +507,8 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it easy to send new events to the client from within your mutation resolvers.
 
 ```ts filename="server.ts"
-import { createServer, createPubSub, createSchema } from 'graphql-yoga'
+import { createYoga, createPubSub, createSchema } from 'graphql-yoga'
+import {createServer} from 'node:http'
 
 const pubSub = createPubSub()
 
@@ -793,7 +794,7 @@ let globalCounter = 0
 const pubSub = createPubSub()
 
 const yoga = createYoga({
-  schema: createServer({
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -853,7 +854,7 @@ server.listen(4000, () => {
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 
 ```ts
-import { createYoga, createSchema, createPubSub, Repeater } from 'graphql-yoga'
+import {createYoga, createSchema, createPubSub, Repeater, pipe, map} from 'graphql-yoga'
 import { createServer } from 'node:http'
 
 type User = {
