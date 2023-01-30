@@ -223,7 +223,7 @@ jobs:
           npx @apollo/federation-subgraph-compatibility
           docker
           --compose docker-compose.yaml
-          --schema schema.graphql
+          --schema products.graphql
           --failOnRequired
           --failOnWarning
           --format markdown
