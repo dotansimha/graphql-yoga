@@ -10,7 +10,7 @@ import {
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { normalizedExecutor } from '@graphql-tools/executor'
-import { createFetch } from '@whatwg-node/fetch'
+import * as defaultFetchAPI from '@whatwg-node/fetch'
 import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
 import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
 import { handleError } from './error.js'
@@ -207,10 +207,17 @@ export class YogaServer<
 
   constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
     this.id = options?.id ?? 'yoga'
-    const defaultFetchAPI = createFetch({
-      useNodeFetch: true,
-    })
-    this.fetchAPI = Object.assign(defaultFetchAPI, options?.fetchAPI ?? {})
+
+    this.fetchAPI = {
+      ...defaultFetchAPI,
+    }
+    if (options?.fetchAPI) {
+      for (const key in options.fetchAPI) {
+        if (options.fetchAPI[key]) {
+          this.fetchAPI[key] = options.fetchAPI[key]
+        }
+      }
+    }
 
     const logger = options?.logging != null ? options.logging : true
     this.logger =
@@ -281,7 +288,7 @@ export class YogaServer<
         specifiedRules,
       }),
       // Use the schema provided by the user
-      Boolean(options?.schema) && useSchema(options!.schema),
+      !!options?.schema && useSchema(options!.schema),
 
       // Performance things
       options?.parserCache !== false &&
