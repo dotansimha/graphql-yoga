@@ -207,7 +207,10 @@ export class YogaServer<
 
   constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
     this.id = options?.id ?? 'yoga'
-    this.fetchAPI = Object.assign(defaultFetchAPI, options?.fetchAPI ?? {})
+    this.fetchAPI = Object.assign(
+      defaultFetchAPI,
+      options?.fetchAPI ?? {},
+    ) as FetchAPI
 
     const logger = options?.logging != null ? options.logging : true
     this.logger =
@@ -278,7 +281,7 @@ export class YogaServer<
         specifiedRules,
       }),
       // Use the schema provided by the user
-      Boolean(options?.schema) && useSchema(options!.schema),
+      !!options?.schema && useSchema(options!.schema),
 
       // Performance things
       options?.parserCache !== false &&
