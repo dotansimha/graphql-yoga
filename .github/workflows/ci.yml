@@ -219,6 +219,6 @@ jobs:
           schema: examples/apollo-federation-compatibility/schema.graphql
           port: 4001
           # debug: true
-          token: GH_TOKEN
+          token: ${{ secrets.GITHUB_TOKEN }}
           failOnWarning: false
           failOnRequired: false
