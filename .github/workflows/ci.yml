@@ -212,12 +212,21 @@ jobs:
 
   apollo-federation-compatibility:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/apollo-federation-compatibility
     steps:
-      - uses: apollographql/federation-subgraph-compatibility@v1
-        with:
-          compose: examples/apollo-federation-compatibility/docker-compose.yaml
-          schema: examples/apollo-federation-compatibility/products.graphql
-          token: ${{ secrets.GITHUB_TOKEN }}
-          failOnWarning: true
-          failOnRequired: true
-          debug: true
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run Tests
+        run: >
+          npx @apollo/federation-subgraph-compatibility
+          docker
+          --compose docker-compose.yaml
+          --schema products.graphql
+          --failOnRequired
+          --failOnWarning
+          --format markdown
+          --debug
+      - name: Report
+        run: cat results.md > $GITHUB_STEP_SUMMARY
