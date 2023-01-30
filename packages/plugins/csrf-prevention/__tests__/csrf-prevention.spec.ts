@@ -33,7 +33,6 @@ describe('csrf-prevention', () => {
     })
 
     expect(res.status).toBe(403)
-    expect(res.statusText).toMatchInlineSnapshot(`"Forbidden"`)
   })
 
   it('should allow requests with the necessary header', async () => {

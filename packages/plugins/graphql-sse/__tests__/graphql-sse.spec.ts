@@ -235,25 +235,14 @@ describe('graphql-sse', () => {
       method: 'OPTIONS',
     })
 
-    expect(res.headers).toMatchInlineSnapshot(`
-      Headers {
-        Symbol(map): {
-          "Access-Control-Allow-Credentials": [
-            "true",
-          ],
-          "Access-Control-Allow-Headers": [
-            "x-some-header",
-          ],
-          "Access-Control-Allow-Methods": [
-            "GET, POST, DELETE, PUT",
-          ],
-          "Access-Control-Allow-Origin": [
-            "http://yoga",
-          ],
-          "Content-Length": [
-            "0",
-          ],
-        },
+    const headersObj = Object.fromEntries(res.headers.entries())
+    expect(headersObj).toMatchInlineSnapshot(`
+      {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-headers": "x-some-header",
+        "access-control-allow-methods": "GET, POST, DELETE, PUT",
+        "access-control-allow-origin": "http://yoga",
+        "content-length": "0",
       }
     `)
   })
