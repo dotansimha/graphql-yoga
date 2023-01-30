@@ -217,8 +217,7 @@ jobs:
         with:
           compose: examples/apollo-federation-compatibility/docker-compose.yaml
           schema: examples/apollo-federation-compatibility/schema.graphql
-          port: 4001
-          # debug: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          failOnWarning: false
-          failOnRequired: false
+          failOnWarning: true
+          failOnRequired: true
+          debug: true
