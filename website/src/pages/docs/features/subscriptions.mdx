@@ -508,7 +508,7 @@ GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it
 
 ```ts filename="server.ts"
 import { createYoga, createPubSub, createSchema } from 'graphql-yoga'
-import {createServer} from 'node:http'
+import { createServer } from 'node:http'
 
 const pubSub = createPubSub()
 
@@ -854,7 +854,14 @@ server.listen(4000, () => {
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 
 ```ts
-import {createYoga, createSchema, createPubSub, Repeater, pipe, map} from 'graphql-yoga'
+import {
+  createYoga,
+  createSchema,
+  createPubSub,
+  Repeater,
+  pipe,
+  map
+} from 'graphql-yoga'
 import { createServer } from 'node:http'
 
 type User = {
