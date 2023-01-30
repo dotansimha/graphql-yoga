@@ -227,5 +227,6 @@ jobs:
           --failOnRequired
           --failOnWarning
           --format markdown
+          --debug
       - name: Report
         run: cat results.md > $GITHUB_STEP_SUMMARY
