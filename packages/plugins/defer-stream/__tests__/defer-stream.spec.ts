@@ -3,10 +3,12 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  parse,
 } from 'graphql'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 
+import { buildHTTPExecutor } from '@graphql-tools/executor-http'
 import { createPushPullAsyncIterable } from './push-pull-async-iterable.js'
 
 function multipartStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
@@ -127,7 +129,6 @@ describe('Defer/Stream', () => {
       Content-Length: 74
 
       {"incremental":[{"data":{"goodbye":"goodbye"},"path":[]}],"hasNext":false}
-      ---
       -----
       "
     `)
@@ -170,7 +171,6 @@ describe('Defer/Stream', () => {
       Content-Length: 17
 
       {"hasNext":false}
-      ---
       -----
       "
     `)
@@ -457,6 +457,92 @@ describe('Defer/Stream', () => {
       expect(response.headers.get('content-type')).toEqual(
         'multipart/mixed; boundary="-"',
       )
+    })
+  })
+
+  describe('@graphql-tools/buildHTTPExecutor', () => {
+    it('execute stream operation', async () => {
+      const yoga = createYoga({ schema, plugins: [useDeferStream()] })
+      const executor = buildHTTPExecutor({
+        fetch: yoga.fetch,
+      })
+
+      const result = await executor({
+        document: parse(/* GraphQL */ `
+          query {
+            stream @stream(initialCount: 2)
+          }
+        `),
+      })
+
+      if (Symbol.asyncIterator in result) {
+        let counter = 0
+        for await (const item of result) {
+          if (counter === 0) {
+            expect(item).toEqual({
+              data: { stream: ['A', 'B'] },
+            })
+            counter++
+          } else if (counter >= 1) {
+            expect(item).toEqual({
+              data: { stream: ['A', 'B', 'C'] },
+            })
+            counter++
+          } else {
+            throw new Error('LOL, this should not happen.')
+          }
+        }
+      } else {
+        throw new Error('Expected AsyncIterator')
+      }
+    })
+    it('execute defer operation', async () => {
+      const yoga = createYoga({ schema, plugins: [useDeferStream()] })
+      const executor = buildHTTPExecutor({
+        endpoint: 'http://yoga/graphql',
+        fetch: yoga.fetch,
+      })
+
+      const result = await executor({
+        document: parse(/* GraphQL */ `
+          query {
+            hello
+            ... on Query @defer {
+              goodbye
+            }
+          }
+        `),
+      })
+
+      if (Symbol.asyncIterator in result) {
+        let counter = 0
+        for await (const item of result) {
+          if (counter === 0) {
+            expect(item).toMatchInlineSnapshot(`
+              {
+                "data": {
+                  "hello": "hello",
+                },
+              }
+            `)
+            counter++
+          } else if (counter === 1) {
+            expect(item).toMatchInlineSnapshot(`
+              {
+                "data": {
+                  "goodbye": "goodbye",
+                  "hello": "hello",
+                },
+              }
+            `)
+            counter++
+          } else {
+            throw new Error('LOL, this should not happen.')
+          }
+        }
+      } else {
+        throw new Error('Expected AsyncIterator')
+      }
     })
   })
 })
