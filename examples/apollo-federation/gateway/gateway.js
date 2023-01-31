@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { createYoga, defaultFormatError } = require('graphql-yoga')
+const { createYoga, maskError } = require('graphql-yoga')
 const { ApolloGateway, RemoteGraphQLDataSource } = require('@apollo/gateway')
 const { useApolloFederation } = require('@envelop/apollo-federation')
 
@@ -19,10 +19,10 @@ module.exports.gateway = async function gateway(config) {
     maskedErrors: {
       maskError(error, message, isDev) {
         // Note: it seems like the "useApolloFederation" plugin should do this by default?
-        if (error.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
+        if (error?.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
           return error
         }
-        return defaultFormatError(error, message, isDev)
+        return maskError(error, message, isDev)
       },
     },
   })

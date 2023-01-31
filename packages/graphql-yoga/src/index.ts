@@ -10,7 +10,7 @@ export * from './schema.js'
 export * from './server.js'
 export * from './subscription.js'
 export * from './types.js'
-export { yogaDefaultFormatError as defaultFormatError } from './utils/yoga-default-format-error.js'
+export { maskError } from './utils/mask-error.js'
 export type {
   // Handy type utils
   Maybe,

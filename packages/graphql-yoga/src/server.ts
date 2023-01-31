@@ -70,7 +70,7 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js'
-import { yogaDefaultFormatError } from './utils/yoga-default-format-error.js'
+import { maskError } from './utils/mask-error.js'
 
 /**
  * Configuration options for the server
@@ -219,7 +219,7 @@ export class YogaServer<
       }
     }
 
-    const logger = options?.logging != null ? options.logging : true
+    const logger = options?.logging == null ? true : options.logging
     this.logger =
       typeof logger === 'boolean'
         ? logger === true
@@ -232,7 +232,7 @@ export class YogaServer<
     const maskErrorFn: MaskError =
       (typeof options?.maskedErrors === 'object' &&
         options.maskedErrors.maskError) ||
-      yogaDefaultFormatError
+      maskError
 
     const maskedErrorSet = new WeakSet()
 
@@ -265,7 +265,7 @@ export class YogaServer<
           }
 
     const maskedErrors =
-      this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
+      this.maskedErrorsOpts == null ? null : this.maskedErrorsOpts
 
     let batchingLimit = 0
     if (options?.batching) {

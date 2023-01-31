@@ -381,3 +381,28 @@ query {
   "data": null
 }
 ```
+
+## Customize error masking
+
+For advanced use-cases e.g. when using GraphQL Yoga as a Gateway, you might to automatically expose errors that are resolved from the subgraphs as you asume these already take care of hiding sensitive information.
+In this case, you can customize the error masking behavior by providing a custom `maskError` function.
+
+Use the default `maskError` function as a fallback for all other errors.
+
+```ts filename="Custom Mask Error Usage"
+import { maskError, createYoga } from 'graphql-yoga'
+import { schema } from './schema.js'
+
+const yoga = createYoga({
+  schema,
+  maskedErrors: {
+    maskError(error, message, isDev) {
+      if (error?.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
+        return error
+      }
+
+      return maskError(error, message, isDev)
+    }
+  }
+})
+```
