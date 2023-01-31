@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:19
 WORKDIR /web
 COPY package.json products.graphql tsconfig.json codegen.yaml ./
 RUN npm install
