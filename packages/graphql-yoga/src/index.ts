@@ -10,6 +10,7 @@ export * from './schema.js'
 export * from './server.js'
 export * from './subscription.js'
 export * from './types.js'
+export { maskError } from './utils/mask-error.js'
 export type {
   // Handy type utils
   Maybe,

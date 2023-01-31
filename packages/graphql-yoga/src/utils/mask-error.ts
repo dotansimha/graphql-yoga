@@ -4,7 +4,7 @@ import { createGraphQLError } from '@graphql-tools/utils'
 import { isGraphQLError } from '../error.js'
 import { MaskError } from '../types.js'
 
-export const yogaDefaultFormatError: MaskError = (
+export const maskError: MaskError = (
   error: unknown,
   message: string,
   isDev = globalThis.process?.env?.NODE_ENV === 'development',
