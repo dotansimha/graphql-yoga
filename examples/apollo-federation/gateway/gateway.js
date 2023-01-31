@@ -1,9 +1,9 @@
 /* eslint-disable */
-const { createYoga } = require('graphql-yoga')
+const { createYoga, maskError } = require('graphql-yoga')
 const { ApolloGateway, RemoteGraphQLDataSource } = require('@apollo/gateway')
 const { useApolloFederation } = require('@envelop/apollo-federation')
 
-export async function gateway(config) {
+module.exports.gateway = async function gateway(config) {
   // Initialize the gateway
   const gateway = new ApolloGateway(config)
 
@@ -16,6 +16,15 @@ export async function gateway(config) {
         gateway,
       }),
     ],
+    maskedErrors: {
+      maskError(error, message, isDev) {
+        // Note: it seems like the "useApolloFederation" plugin should do this by default?
+        if (error?.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
+          return error
+        }
+        return maskError(error, message, isDev)
+      },
+    },
   })
 
   return yoga
@@ -27,7 +36,7 @@ export async function gateway(config) {
  * By default Yoga uses `application/graphql-response+json` content type as per the GraphQL over HTTP spec
  * https://github.com/apollographql/federation/issues/2161
  */
-export class DataSource extends RemoteGraphQLDataSource {
+module.exports.DataSource = class DataSource extends RemoteGraphQLDataSource {
   willSendRequest({ request }) {
     request.http.headers.set('accept', 'application/json')
   }

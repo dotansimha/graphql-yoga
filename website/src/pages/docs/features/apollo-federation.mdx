@@ -68,6 +68,31 @@ server.listen(4000, () => {
 })
 ```
 
+### Handling Subgraph Errors
+
+By default, GraphQL Yoga masks any unexpected GraphQL Errors. This is done to prevent leaking internal errors to the client.
+If you know that your subgraph is safe and you want to expose the errors to the client, you can customize the error masking bahviour.
+
+[Learn more about error masking](/docs/features/error-masking)
+
+```ts filename="Expose subgraph errors to the client"
+import { maskError, createYoga } from 'graphql-yoga'
+import { schema } from './schema.js'
+
+const yoga = createYoga({
+  schema,
+  maskedErrors: {
+    maskError(error, message, isDev) {
+      if (error?.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
+        return error
+      }
+
+      return maskError(error, message, isDev)
+    }
+  }
+})
+```
+
 ## Federation Service
 
 You don't need any extra plugins for Yoga for Federation Service.

@@ -51,4 +51,27 @@ describe('apollo-federation example integration', () => {
       },
     })
   })
+
+  it('pass through errors', async () => {
+    const response = await fetch(
+      `http://localhost:${gatewayPort}/graphql?query=query{throw}`,
+    )
+    const body = await response.json()
+    expect(body).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "throw": null,
+        },
+        "errors": [
+          {
+            "extensions": {
+              "code": "DOWNSTREAM_SERVICE_ERROR",
+              "serviceName": "accounts",
+            },
+            "message": "This should throw.",
+          },
+        ],
+      }
+    `)
+  })
 })
