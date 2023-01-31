@@ -1,5 +1,5 @@
 /* eslint sort-keys: error */
-import { useTheme, Giscus, defineConfig, YogaLogo } from '@theguild/components'
+import { useTheme, Giscus, defineConfig } from '@theguild/components'
 import { useRouter } from 'next/router'
 
 export default defineConfig({
