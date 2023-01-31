@@ -113,9 +113,8 @@ const yoga = createYoga({
       },
     },
   }),
-  logging: true,
+  logging: false,
   multipart: false,
-  maskedErrors: true,
 })
 
 const server = createServer(yoga)
