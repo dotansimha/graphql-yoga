@@ -1,5 +1,27 @@
 # graphql-yoga
 
+## 3.5.0
+
+### Minor Changes
+
+- [#2364](https://github.com/dotansimha/graphql-yoga/pull/2364) [`03597a5a`](https://github.com/dotansimha/graphql-yoga/commit/03597a5accfab9aa10380188e1fd0b7c0727a59c) Thanks [@n1ru4l](https://github.com/n1ru4l)! - export the yoga default format error function.
+
+  ```ts
+  import { maskError, createYoga } from 'graphql-yoga'
+
+  const yoga = createYoga({
+    maskedErrors: {
+      maskError(error, message, isDev) {
+        if (error?.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
+          return error
+        }
+
+        return maskError(error, message, isDev)
+      }
+    }
+  })
+  ```
+
 ## 3.4.1
 
 ### Patch Changes
