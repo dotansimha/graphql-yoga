@@ -1,5 +1,18 @@
 # @graphql-yoga/plugin-apq
 
+## 1.4.1
+
+### Patch Changes
+
+- [#2254](https://github.com/dotansimha/graphql-yoga/pull/2254) [`00843174`](https://github.com/dotansimha/graphql-yoga/commit/008431747787dd6c6b26f4cb44c7c6f3053f162e) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.6.5` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.5) (from `^0.6.1`, in `dependencies`)
+
+- [#2254](https://github.com/dotansimha/graphql-yoga/pull/2254) [`00843174`](https://github.com/dotansimha/graphql-yoga/commit/008431747787dd6c6b26f4cb44c7c6f3053f162e) Thanks [@ardatan](https://github.com/ardatan)! - Use the new fetch implementation
+
+- Updated dependencies [[`00843174`](https://github.com/dotansimha/graphql-yoga/commit/008431747787dd6c6b26f4cb44c7c6f3053f162e), [`00843174`](https://github.com/dotansimha/graphql-yoga/commit/008431747787dd6c6b26f4cb44c7c6f3053f162e)]:
+  - graphql-yoga@3.4.1
+
 ## 1.4.0
 
 ### Patch Changes
