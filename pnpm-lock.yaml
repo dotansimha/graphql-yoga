@@ -767,7 +767,7 @@ importers:
       jest: ^29.0.0
       prettier: 2.8.3
       prettier-plugin-svelte: 2.9.0
-      puppeteer: 19.6.2
+      puppeteer: 19.6.0
       svelte: 3.55.1
       svelte-check: 3.0.3
       svelte-preprocess: 5.0.1
@@ -791,7 +791,7 @@ importers:
       jest: 29.2.0
       prettier: 2.8.3
       prettier-plugin-svelte: 2.9.0_kdmmghgdi3ngrsq6otxkjilbry
-      puppeteer: 19.6.2
+      puppeteer: 19.6.0
       svelte: 3.55.1
       svelte-check: 3.0.3_svelte@3.55.1
       svelte-preprocess: 5.0.1_4x7phaipmicbaooxtnresslofa
@@ -952,7 +952,7 @@ importers:
       graphql-scalars: 1.20.1
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
-      puppeteer: 19.6.2
+      puppeteer: 19.6.0
       tslib: ^2.3.1
     dependencies:
       '@envelop/core': 3.0.4
@@ -979,7 +979,7 @@ importers:
       graphql-scalars: 1.20.1_graphql@16.6.0
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
-      puppeteer: 19.6.2
+      puppeteer: 19.6.0
     publishDirectory: dist
 
   packages/node:
@@ -3770,7 +3770,6 @@ packages:
 
   /@balena/dockerignore/1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
-    dev: false
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -11120,6 +11119,15 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.49
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.38
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -11895,6 +11903,11 @@ packages:
       no-case: 3.0.4
       tslib: 2.5.0
       upper-case-first: 2.0.2
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/2.0.1:
@@ -19200,7 +19213,6 @@ packages:
 
   /jsonschema/1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
-    dev: false
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -23423,8 +23435,8 @@ packages:
       escape-goat: 4.0.0
     dev: true
 
-  /puppeteer-core/19.6.2:
-    resolution: {integrity: sha512-il7uK658MNC1FlxPABvcnv1RdpDa9CaBFHzvtEsl+9Y4tbAJKZurkegpcvWeIWcRYGiuBIVo+t+ZSh3G82CCjw==}
+  /puppeteer-core/19.6.0:
+    resolution: {integrity: sha512-GvqWdHr9eY/MFR5pXf9o0apnrTmG0hhS7/TtCPfeAvCbaUS1bsLMZWxNGvI/QbviRu4xxi6HrR7VW4x/4esq1Q==}
     engines: {node: '>=14.1.0'}
     dependencies:
       cross-fetch: 3.1.5
@@ -23444,8 +23456,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /puppeteer/19.6.2:
-    resolution: {integrity: sha512-Y5OAXXwXLfJYbl0dEFg8JKIhvCGxn+UYaBW9yra9ErmIhkVroDnYusM6oYxJCt/YIfC2pQWhvhxoZyf/E5fV6w==}
+  /puppeteer/19.6.0:
+    resolution: {integrity: sha512-KpRjn/bosTWe8xOQ/F5J1UmQ4inR77ADddn8G6MqMPp/y9Tl+7EycXgrjO0/3i/OQfHi5bsvkTKXRkm0ieo/ew==}
     engines: {node: '>=14.1.0'}
     requiresBuild: true
     dependencies:
@@ -23453,7 +23465,7 @@ packages:
       https-proxy-agent: 5.0.1
       progress: 2.0.3
       proxy-from-env: 1.1.0
-      puppeteer-core: 19.6.2
+      puppeteer-core: 19.6.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
