@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.5.1
+
+### Patch Changes
+
+- [#2137](https://github.com/dotansimha/graphql-yoga/pull/2137) [`3a8446df`](https://github.com/dotansimha/graphql-yoga/commit/3a8446dfb50c6d234e030cd1e4260c5de9daefc4) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Close multipart responses correctly
+
 ## 3.5.0
 
 ### Minor Changes
