@@ -70,7 +70,18 @@ curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
 
 ## Extracting client operations
 
-You can use [GraphQL Code Generator](https://www.graphql-code-generator.com/) with the [`graphql-codegen-persisted-query-ids`](https://github.com/valu-digital/graphql-codegen-persisted-query-ids) plugin for extracting a map of persisted query ids and their corresponding GraphQL documents from your application/client-code in a JSON file.
+The recommended way of extracting the persisted operations from your client is to use [GraphQL Code Generator](https://www.graphql-code-generator.com/).
+
+<Callout type="info">
+  You can learn more about persisted operations with [the `client` preset on the
+  GraphQL Code Generator
+  documentation](https://the-guild.dev/graphql/yoga-server/docs/features/persisted-operations).
+
+There is also [a full code example using GraphQL Yoga available on GitHub](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/persisted-documents).
+
+</Callout>
+
+For people not using the client-preset the is also the standalone [`graphql-codegen-persisted-query-ids`](https://github.com/valu-digital/graphql-codegen-persisted-query-ids) plugin for extracting a map of persisted query ids and their corresponding GraphQL documents from your application/client-code in a JSON file.
 
 ```json filename="Example map extracted by GraphQL Code Generator"
 {
