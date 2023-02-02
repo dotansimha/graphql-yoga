@@ -7,7 +7,7 @@ GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for
 You can use the `fetch` method on your yoga instance for calling the yoga instance as if you were doing an HTTP request.
 
 <Callout>
-  Callign the `yoga.fetch` method does not send an actual HTTP request. It
+  Calling the `yoga.fetch` method does not send an actual HTTP request. It
   basically simulates the HTTP request which is 100% conform with how
   Request/Response work.
 </Callout>
@@ -169,6 +169,37 @@ for await (const value of result) {
 }
 ```
 
+### TypeScript safe Test Suits with GraphQL Code Generator
+
+The GraphQL Code Generator allows you to generate TypeScript types for your GraphQL operations (queries, mutations and subscriptions), leading to a better developer experience when writing tests.
+
+You can simply pass the documents from GraphQL Code Generator to the `executor` for a fully typed experience.
+
+```ts filename="TypeScript safe usage of executor"
+import { buildHTTPExecutor } from '@graphql-tools/executor-http'
+import { yoga } from './yoga'
+import { graphql } from './gql'
+
+const HelloWorldQuery = graphql(/* GraphQL */ `
+  query HelloWorld {
+    hello
+  }
+`)
+
+const executor = buildHTTPExecutor({
+  fetch: yoga.fetch
+})
+
+const result = await executor({
+  document: HelloWorldQuery
+})
+
+// this is now a type-safe when being accessed
+// result.data?.hello
+```
+
+[Learn more on the GraphQL Code Generator API Testing Guide](https://the-guild.dev/graphql/codegen/docs/guides/api-testing)
+
 ## Advanced
 
 Instead of using the convinient `@graphql-tools/executor-http` package you can also process the request body from scratch.
@@ -309,9 +340,3 @@ for await (const executionResult of eventStream(response.body!)) {
   }
 }
 ```
-
-## TypeScript safe Test Suits with GraphQL Code Generator
-
-The GraphQL Code Generator allows you to generate TypeScript types for your GraphQL operations (queries, mutations and subscriptions), leading to a better developer experience when writing tests.
-
-[Learn more on the GraphQL Code Generator API Testing Guide](https://the-guild.dev/graphql/codegen/docs/guides/api-testing)
