@@ -1,4 +1,5 @@
 /* eslint-disable */
+require('./patch-url')
 const { createServer } = require('http')
 const { createYoga, createSchema } = require('graphql-yoga')
 

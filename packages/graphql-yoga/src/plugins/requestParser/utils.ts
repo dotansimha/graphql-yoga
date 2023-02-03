@@ -1,7 +1,8 @@
 import { GraphQLParams } from '../../types.js'
 
-export function parseURLSearchParams(requestBody: string): GraphQLParams {
-  const searchParams = new URLSearchParams(requestBody)
+export function handleURLSearchParams(
+  searchParams: URLSearchParams,
+): GraphQLParams {
   const operationName = searchParams.get('operationName') || undefined
   const query = searchParams.get('query') || undefined
   const variablesStr = searchParams.get('variables') || undefined
@@ -12,6 +13,11 @@ export function parseURLSearchParams(requestBody: string): GraphQLParams {
     variables: variablesStr ? JSON.parse(variablesStr) : undefined,
     extensions: extensionsStr ? JSON.parse(extensionsStr) : undefined,
   }
+}
+
+export function parseURLSearchParams(requestBody: string): GraphQLParams {
+  const searchParams = new URLSearchParams(requestBody)
+  return handleURLSearchParams(searchParams)
 }
 
 export function isContentTypeMatch(
@@ -25,6 +31,6 @@ export function isContentTypeMatch(
 
   return (
     contentType === expectedContentType ||
-    Boolean(contentType?.startsWith(`${expectedContentType};`))
+    !!contentType?.startsWith(`${expectedContentType};`)
   )
 }

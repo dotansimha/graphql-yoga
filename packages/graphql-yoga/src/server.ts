@@ -8,11 +8,19 @@ import {
   useMaskedErrors,
 } from '@envelop/core'
 import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
-import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
+import { ValidationCache } from '@envelop/validation-cache'
 import { normalizedExecutor } from '@graphql-tools/executor'
 import * as defaultFetchAPI from '@whatwg-node/fetch'
 import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
-import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
+import {
+  DocumentNode,
+  ExecutionResult,
+  GraphQLError,
+  GraphQLSchema,
+  parse,
+  specifiedRules,
+  validate,
+} from 'graphql'
 import { handleError } from './error.js'
 import { createLogger, LogLevel, YogaLogger } from './logger.js'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
@@ -54,7 +62,7 @@ import {
   GraphiQLOptionsOrFactory,
   useGraphiQL,
 } from './plugins/useGraphiQL.js'
-import { useHealthCheck } from './plugins/useHealthCheck.js'
+// import { useHealthCheck } from './plugins/useHealthCheck.js'
 import { useRequestParser } from './plugins/useRequestParser.js'
 import { useResultProcessors } from './plugins/useResultProcessor.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
@@ -70,6 +78,7 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js'
+import { createLRUCache } from './utils/create-lru-cache.js'
 import { maskError } from './utils/mask-error.js'
 
 /**
@@ -276,9 +285,13 @@ export class YogaServer<
       }
     }
 
+    const validationCacheBySchema = new WeakMap<
+      GraphQLSchema,
+      WeakMap<DocumentNode, Readonly<GraphQLError[]>>
+    >()
+
     this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
     const graphqlEndpoint = this.graphqlEndpoint
-
     this.plugins = [
       useEngine({
         parse,
@@ -295,15 +308,31 @@ export class YogaServer<
         useParserCache(
           typeof options?.parserCache === 'object'
             ? options.parserCache
-            : undefined,
+            : {
+                errorCache: createLRUCache(),
+                documentCache: createLRUCache(),
+              },
         ),
-      options?.validationCache !== false &&
-        useValidationCache({
-          cache:
-            typeof options?.validationCache === 'object'
-              ? options.validationCache
-              : undefined,
-        }),
+      {
+        onValidate({ params, setResult }) {
+          let validationCache = validationCacheBySchema.get(params.schema)
+          if (!validationCache) {
+            validationCache = new WeakMap()
+            validationCacheBySchema.set(params.schema, validationCache)
+          }
+          const cachedErrors = validationCache.get(params.documentAST)
+          if (!cachedErrors) {
+            return ({ result }) => {
+              validationCache!.set(
+                params.documentAST,
+                result as Readonly<GraphQLError[]>,
+              )
+            }
+          }
+          setResult(cachedErrors)
+          return
+        },
+      },
       options?.context != null &&
         useExtendContext((initialContext) => {
           if (options?.context) {
@@ -315,11 +344,12 @@ export class YogaServer<
           return {}
         }),
       // Middlewares before processing the incoming HTTP request
-      useHealthCheck({
+      /* useHealthCheck({
         id: this.id,
         logger: this.logger,
         endpoint: options?.healthCheckEndpoint,
       }),
+      */
       options?.cors !== false && useCORS(options?.cors),
       options?.graphiql !== false &&
         useGraphiQL({
@@ -490,10 +520,16 @@ export class YogaServer<
     }
   }
 
+  private urlParseCache = createLRUCache()
+
   async getResponse(request: Request, serverContext: TServerContext) {
     let result: ResultProcessorInput
     try {
-      const url = new URL(request.url, 'http://localhost')
+      let url = this.urlParseCache.get(request.url)
+      if (!url) {
+        url = new URL(request.url, 'http://localhost')
+        this.urlParseCache.set(request.url, url)
+      }
       for (const onRequestHook of this.onRequestHooks) {
         let response: Response | undefined
         await onRequestHook({
@@ -515,6 +551,7 @@ export class YogaServer<
       for (const onRequestParse of this.onRequestParseHooks) {
         const onRequestParseResult = await onRequestParse({
           request,
+          url,
           requestParser,
           serverContext,
           setRequestParser(parser: RequestParser) {
@@ -535,7 +572,7 @@ export class YogaServer<
         })
       }
 
-      let requestParserResult = await requestParser(request)
+      let requestParserResult = await requestParser(request, url)
 
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({

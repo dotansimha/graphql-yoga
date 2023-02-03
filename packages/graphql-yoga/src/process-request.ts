@@ -65,7 +65,11 @@ export async function processRequest({
   const document = enveloped.parse(params.query!)
 
   // Validate parsed Document Node
-  enveloped.validate(enveloped.schema, document)
+  const errors = enveloped.validate(enveloped.schema, document)
+
+  if (errors.length > 0) {
+    return { errors }
+  }
 
   // Build the context for the execution
   const contextValue = await enveloped.contextFactory()

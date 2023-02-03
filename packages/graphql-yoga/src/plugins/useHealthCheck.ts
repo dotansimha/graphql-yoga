@@ -14,11 +14,9 @@ export function useHealthCheck({
 }: HealthCheckPluginOptions = {}): Plugin {
   let urlPattern: URLPattern
   return {
-    onRequest({ request, endResponse, fetchAPI }) {
-      if (!urlPattern) {
-        urlPattern = new fetchAPI.URLPattern({ pathname: endpoint })
-      }
-      if (urlPattern.test(request.url)) {
+    onRequest({ endResponse, fetchAPI, url }) {
+      urlPattern ||= new fetchAPI.URLPattern({ pathname: endpoint });
+      if (url.pathname === endpoint || urlPattern.test(url)) {
         logger.debug('Responding Health Check')
         const response = new fetchAPI.Response(null, {
           status: 200,
