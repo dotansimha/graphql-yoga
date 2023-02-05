@@ -104,8 +104,8 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
   return {
     async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
       urlPattern ||= new fetchAPI.URLPattern({
-          pathname: config.graphqlEndpoint,
-        });
+        pathname: config.graphqlEndpoint,
+      })
       if (
         shouldRenderGraphiQL(request) &&
         (url.pathname === config.graphqlEndpoint || urlPattern.test(url))

@@ -37,7 +37,7 @@ export function useReadinessCheck({
   let urlPattern: URLPattern
   return {
     async onRequest({ request, endResponse, fetchAPI, url }) {
-      urlPattern ||= new fetchAPI.URLPattern({ pathname: endpoint });
+      urlPattern ||= new fetchAPI.URLPattern({ pathname: endpoint })
       if (url.pathname === endpoint || urlPattern.test(url)) {
         let response: Response
         try {

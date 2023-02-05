@@ -3,8 +3,8 @@ const urlCache = new Map()
 globalThis.URL = function URL(url, base) {
   let cached = urlCache.get(url)
   if (!cached) {
-      cached = new PatchedURL(url, base)
-        urlCache.set(url, cached)
+    cached = new PatchedURL(url, base)
+    urlCache.set(url, cached)
   }
   return cached
 }
@@ -12,7 +12,7 @@ class PatchedURL {
   constructor(url, base) {
     const cached = urlCache.get(url)
     if (cached) {
-        return cached
+      return cached
     }
     if (!url.includes('://')) {
       url = base + url

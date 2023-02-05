@@ -15,7 +15,7 @@ export function useHealthCheck({
   let urlPattern: URLPattern
   return {
     onRequest({ endResponse, fetchAPI, url }) {
-      urlPattern ||= new fetchAPI.URLPattern({ pathname: endpoint });
+      urlPattern ||= new fetchAPI.URLPattern({ pathname: endpoint })
       if (url.pathname === endpoint || urlPattern.test(url)) {
         logger.debug('Responding Health Check')
         const response = new fetchAPI.Response(null, {
