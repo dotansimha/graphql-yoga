@@ -1088,9 +1088,9 @@ importers:
 
   packages/plugins/response-cache:
     specifiers:
-      '@envelop/response-cache': 4.0.4
+      '@envelop/response-cache': 4.0.5
     dependencies:
-      '@envelop/response-cache': 4.0.4
+      '@envelop/response-cache': 4.0.5
     publishDirectory: dist
 
   packages/plugins/sofa:
@@ -4211,16 +4211,19 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /@envelop/response-cache/4.0.4:
-    resolution: {integrity: sha512-m8fVw4Yif0Y8TlANDZlA4sXfrEubxV9hHRxJpVqYrqX0YcJZfHS1usF7Z7I2X8LW0x5tyZ9jlbnuf4a26JmHFQ==}
+  /@envelop/response-cache/4.0.5:
+    resolution: {integrity: sha512-zwLQc792xvzATSW66khSVNGzsNjuj1B6iL0Sxym2ooH72p88DrNi4v3Nii7ecDNgp6z+/0LPBE/Pml6/VchWaw==}
     peerDependencies:
       '@envelop/core': ^3.0.4
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       '@graphql-tools/utils': 8.13.1
+      '@whatwg-node/fetch': 0.6.7
       fast-json-stable-stringify: 2.1.0
       lru-cache: 6.0.0
       tslib: 2.5.0
+    transitivePeerDependencies:
+      - '@types/node'
     dev: false
 
   /@envelop/types/3.0.1:
