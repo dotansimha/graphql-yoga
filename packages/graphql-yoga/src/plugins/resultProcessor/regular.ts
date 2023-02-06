@@ -31,11 +31,7 @@ export function processRegularResult(
     acceptedHeader === 'application/json',
   )
 
-  const textEncoder = new fetchAPI.TextEncoder()
   const responseBody = jsonStringifyResult(executionResult)
-  const decodedString = textEncoder.encode(responseBody)
 
-  headersInit['Content-Length'] = decodedString.byteLength.toString()
-
-  return new fetchAPI.Response(decodedString, responseInit)
+  return new fetchAPI.Response(responseBody, responseInit)
 }
