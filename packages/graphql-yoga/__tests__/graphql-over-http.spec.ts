@@ -25,6 +25,7 @@ describe('GraphQL over HTTP', () => {
               },
             },
           }),
+          logging: false,
         })
 
         const result = await yoga.fetch('http://yoga/graphql', {
@@ -66,6 +67,7 @@ describe('GraphQL over HTTP', () => {
               },
             },
           }),
+          logging: false,
         })
 
         const result = await yoga.fetch('http://yoga/graphql', {

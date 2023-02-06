@@ -5,7 +5,9 @@ import { createSchema, createYoga, YogaInitialContext } from '../src/index.js'
 
 describe('schema', () => {
   it('missing schema causes a error', async () => {
-    const yoga = createYoga({})
+    const yoga = createYoga({
+      logging: false,
+    })
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',

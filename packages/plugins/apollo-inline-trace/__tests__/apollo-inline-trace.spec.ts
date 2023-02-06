@@ -415,6 +415,7 @@ describe('Inline Trace', () => {
             createGraphQLError('bim', { extensions: { str: 'ing' } }),
         }),
       ],
+      logging: false,
     })
 
     const response = await yoga.fetch('http://yoga/graphql', {
