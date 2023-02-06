@@ -11,7 +11,7 @@ import {
 import { Push } from '@repeaterjs/repeater'
 import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
 
-import { createYoga, Plugin, Repeater } from '../src'
+import { createSchema, createYoga, Plugin, Repeater } from '../src'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
@@ -44,6 +44,13 @@ describe('incremental delivery', () => {
     }
 
     const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            counter: Int!
+          }
+        `,
+      }),
       logging: false,
       plugins: [plugin],
     })
@@ -73,7 +80,7 @@ describe('incremental delivery', () => {
         if (chunk === undefined) {
           break
         }
-        const valueAsString = Buffer.from(chunk).toString()
+        const valueAsString = Buffer.from(chunk).toString('utf-8')
         if (
           valueAsString.includes(
             `Content-Type: application/json; charset=utf-8`,

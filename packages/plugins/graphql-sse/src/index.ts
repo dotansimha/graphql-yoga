@@ -5,6 +5,7 @@ import { createHandler, RequestContext } from 'graphql-sse/lib/use/fetch'
 
 export interface GraphQLSSEPluginOptions
   extends Omit<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     HandlerOptions<Request, RequestContext, any>,
     'validate' | 'execute' | 'subscribe' | 'schema' | 'onSubscribe'
   > {
@@ -25,6 +26,7 @@ export function useGraphQLSSE(
   options: GraphQLSSEPluginOptions = {},
 ): Plugin<YogaInitialContext> {
   const { endpoint = '/graphql/stream', ...handlerOptions } = options
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ctxForReq = new WeakMap<Request, any>()
   let handler!: (request: Request) => Promise<Response>
   return {
@@ -41,7 +43,11 @@ export function useGraphQLSSE(
 
             const document = enveloped.parse(params.query)
 
-            enveloped.validate(enveloped.schema, document)
+            const errors = enveloped.validate(enveloped.schema, document)
+
+            if (errors.length > 0) {
+              return { errors }
+            }
 
             const contextValue = await enveloped.contextFactory()
 

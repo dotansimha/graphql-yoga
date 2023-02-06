@@ -7,8 +7,8 @@ import {
   useExtendContext,
   useMaskedErrors,
 } from '@envelop/core'
-import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
-import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
+import { ParserCacheOptions } from '@envelop/parser-cache'
+import { ValidationCache } from '@envelop/validation-cache'
 import { normalizedExecutor } from '@graphql-tools/executor'
 import * as defaultFetchAPI from '@whatwg-node/fetch'
 import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
@@ -55,6 +55,10 @@ import {
   useGraphiQL,
 } from './plugins/useGraphiQL.js'
 import { useHealthCheck } from './plugins/useHealthCheck.js'
+import {
+  ParserAndValidationCacheOptions,
+  useParserAndValidationCache,
+} from './plugins/useParserAndValidationCache.js'
 import { useRequestParser } from './plugins/useRequestParser.js'
 import { useResultProcessors } from './plugins/useResultProcessor.js'
 import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
@@ -289,22 +293,8 @@ export class YogaServer<
         specifiedRules,
       }),
       // Use the schema provided by the user
-      !!options?.schema && useSchema(options!.schema),
+      !!options?.schema && useSchema(options.schema),
 
-      // Performance things
-      options?.parserCache !== false &&
-        useParserCache(
-          typeof options?.parserCache === 'object'
-            ? options.parserCache
-            : undefined,
-        ),
-      options?.validationCache !== false &&
-        useValidationCache({
-          cache:
-            typeof options?.validationCache === 'object'
-              ? options.validationCache
-              : undefined,
-        }),
       options?.context != null &&
         useExtendContext((initialContext) => {
           if (options?.context) {
@@ -358,6 +348,24 @@ export class YogaServer<
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
+          // Performance things
+          if (options?.parserCache !== false) {
+            const parserAndValidationCacheOptions: ParserAndValidationCacheOptions =
+              {}
+            if (typeof options?.parserCache === 'object') {
+              parserAndValidationCacheOptions.documentCache =
+                options.parserCache.documentCache
+              parserAndValidationCacheOptions.errorCache =
+                options.parserCache.errorCache
+              if (options.validationCache === false) {
+                parserAndValidationCacheOptions.validationCache = false
+              }
+            }
+            addPlugin(
+              // @ts-expect-error Add plugins has context but this hook doesn't care
+              useParserAndValidationCache(parserAndValidationCacheOptions),
+            )
+          }
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(useLimitBatching(batchingLimit))
           // @ts-expect-error Add plugins has context but this hook doesn't care
