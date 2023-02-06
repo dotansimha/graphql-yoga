@@ -4,9 +4,7 @@ import { YogaLogger } from '../logger.js'
 import { Plugin } from './types.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
-  return (
-    method === 'GET' && Boolean(headers?.get('accept')?.includes('text/html'))
-  )
+  return method === 'GET' && !!headers?.get('accept')?.includes('text/html')
 }
 
 export type GraphiQLOptions = {
@@ -105,12 +103,13 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
   let urlPattern: URLPattern
   return {
     async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
-      if (!urlPattern) {
-        urlPattern = new fetchAPI.URLPattern({
-          pathname: config.graphqlEndpoint,
-        })
-      }
-      if (shouldRenderGraphiQL(request) && urlPattern.test(url)) {
+      urlPattern ||= new fetchAPI.URLPattern({
+        pathname: config.graphqlEndpoint,
+      })
+      if (
+        shouldRenderGraphiQL(request) &&
+        (url.pathname === config.graphqlEndpoint || urlPattern.test(url))
+      ) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = await graphiqlOptionsFactory(
           request,

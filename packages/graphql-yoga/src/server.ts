@@ -70,6 +70,7 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js'
+import { createLRUCache } from './utils/create-lru-cache.js'
 import { maskError } from './utils/mask-error.js'
 
 /**
@@ -295,14 +296,17 @@ export class YogaServer<
         useParserCache(
           typeof options?.parserCache === 'object'
             ? options.parserCache
-            : undefined,
+            : {
+                errorCache: createLRUCache(),
+                documentCache: createLRUCache(),
+              },
         ),
       options?.validationCache !== false &&
         useValidationCache({
           cache:
             typeof options?.validationCache === 'object'
               ? options.validationCache
-              : undefined,
+              : createLRUCache(),
         }),
       options?.context != null &&
         useExtendContext((initialContext) => {
@@ -490,10 +494,16 @@ export class YogaServer<
     }
   }
 
+  private urlParseCache = createLRUCache()
+
   async getResponse(request: Request, serverContext: TServerContext) {
     let result: ResultProcessorInput
     try {
-      const url = new URL(request.url, 'http://localhost')
+      let url = this.urlParseCache.get(request.url)
+      if (!url) {
+        url = new URL(request.url, 'http://localhost')
+        this.urlParseCache.set(request.url, url)
+      }
       for (const onRequestHook of this.onRequestHooks) {
         let response: Response | undefined
         await onRequestHook({
@@ -515,6 +525,7 @@ export class YogaServer<
       for (const onRequestParse of this.onRequestParseHooks) {
         const onRequestParseResult = await onRequestParse({
           request,
+          url,
           requestParser,
           serverContext,
           setRequestParser(parser: RequestParser) {
@@ -535,7 +546,7 @@ export class YogaServer<
         })
       }
 
-      let requestParserResult = await requestParser(request)
+      let requestParserResult = await requestParser(request, url)
 
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({

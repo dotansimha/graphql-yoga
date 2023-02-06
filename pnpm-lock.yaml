@@ -963,6 +963,7 @@ importers:
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
       puppeteer: 19.6.0
+      tiny-lru: ^10.0.1
       tslib: ^2.3.1
     dependencies:
       '@envelop/core': 3.0.4
@@ -975,6 +976,7 @@ importers:
       '@whatwg-node/fetch': 0.6.9_@types+node@18.11.19
       '@whatwg-node/server': 0.6.4_@types+node@18.11.19
       dset: 3.1.2
+      tiny-lru: 10.0.1
       tslib: 2.4.0
     devDependencies:
       '@envelop/disable-introspection': 4.0.4_a6sekiasy2tqr6d5gj7n2wtjli
@@ -25701,6 +25703,11 @@ packages:
 
   /tiny-lru/10.0.0:
     resolution: {integrity: sha512-WAJgx3780wGkPlfXM8ezc9XnX+hodoL0n37f/c+X7/y75pqTkAOTZnxRLiTElkQyhlZ4Qn5FPSgKzachfPD2FA==}
+    engines: {node: '>=6'}
+    dev: false
+
+  /tiny-lru/10.0.1:
+    resolution: {integrity: sha512-Vst+6kEsWvb17Zpz14sRJV/f8bUWKhqm6Dc+v08iShmIJ/WxqWytHzCTd6m88pS33rE2zpX34TRmOpAJPloNCA==}
     engines: {node: '>=6'}
     dev: false
 
