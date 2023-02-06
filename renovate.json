@@ -14,13 +14,19 @@
       "matchPackagePrefixes": "@envelop"
     },
     {
+      "groupName": "whatwg-node",
+      "matchPackagePrefixes": "@whatwg-node"
+    },
+    {
       "excludePackagePatterns": [
         "@changesets/*",
         "typescript",
         "typedoc*",
         "^@theguild/",
         "@graphql-inspector/core",
-        "next"
+        "next",
+        "@envelop/*",
+        "@whatwg-node/*"
       ],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
