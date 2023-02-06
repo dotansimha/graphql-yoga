@@ -70,7 +70,7 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js'
-import { createLRUCache } from './utils/create-lru-cache.js'
+import LRU from 'lru-cache'
 import { maskError } from './utils/mask-error.js'
 
 /**
@@ -296,17 +296,14 @@ export class YogaServer<
         useParserCache(
           typeof options?.parserCache === 'object'
             ? options.parserCache
-            : {
-                errorCache: createLRUCache(),
-                documentCache: createLRUCache(),
-              },
+            : undefined,
         ),
       options?.validationCache !== false &&
         useValidationCache({
           cache:
             typeof options?.validationCache === 'object'
               ? options.validationCache
-              : createLRUCache(),
+              : undefined,
         }),
       options?.context != null &&
         useExtendContext((initialContext) => {
@@ -494,7 +491,9 @@ export class YogaServer<
     }
   }
 
-  private urlParseCache = createLRUCache()
+  private urlParseCache = new LRU<string, URL>({
+    max: 1024,
+  })
 
   async getResponse(request: Request, serverContext: TServerContext) {
     let result: ResultProcessorInput
