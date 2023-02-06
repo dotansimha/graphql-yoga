@@ -1088,9 +1088,9 @@ importers:
 
   packages/plugins/response-cache:
     specifiers:
-      '@envelop/response-cache': 4.0.4
+      '@envelop/response-cache': 4.0.5
     dependencies:
-      '@envelop/response-cache': 4.0.4
+      '@envelop/response-cache': 4.0.5
     publishDirectory: dist
 
   packages/plugins/sofa:
@@ -3774,7 +3774,6 @@ packages:
 
   /@balena/dockerignore/1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
-    dev: false
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -4212,16 +4211,19 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /@envelop/response-cache/4.0.4:
-    resolution: {integrity: sha512-m8fVw4Yif0Y8TlANDZlA4sXfrEubxV9hHRxJpVqYrqX0YcJZfHS1usF7Z7I2X8LW0x5tyZ9jlbnuf4a26JmHFQ==}
+  /@envelop/response-cache/4.0.5:
+    resolution: {integrity: sha512-zwLQc792xvzATSW66khSVNGzsNjuj1B6iL0Sxym2ooH72p88DrNi4v3Nii7ecDNgp6z+/0LPBE/Pml6/VchWaw==}
     peerDependencies:
       '@envelop/core': ^3.0.4
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       '@graphql-tools/utils': 8.13.1
+      '@whatwg-node/fetch': 0.6.7
       fast-json-stable-stringify: 2.1.0
       lru-cache: 6.0.0
       tslib: 2.5.0
+    transitivePeerDependencies:
+      - '@types/node'
     dev: false
 
   /@envelop/types/3.0.1:
@@ -10970,6 +10972,15 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.52
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.42
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -11745,6 +11756,11 @@ packages:
       no-case: 3.0.4
       tslib: 2.5.0
       upper-case-first: 2.0.2
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/2.0.1:
@@ -18834,7 +18850,6 @@ packages:
 
   /jsonschema/1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
-    dev: false
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
