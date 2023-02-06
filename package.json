@@ -2,7 +2,6 @@
   "name": "graphql-yoga-monorepo",
   "private": true,
   "scripts": {
-    "align-workspaces": "node scripts/align-workspaces.js",
     "prebuild": "rimraf packages/*/dist",
     "check": "pnpm -r --filter=!example-deno run check",
     "build": "pnpm --filter=@graphql-yoga/graphiql run build && pnpm --filter=@graphql-yoga/render-graphiql run build && pnpm --filter=graphql-yoga run generate-graphiql-html && bob build",
@@ -48,18 +47,6 @@
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-yoga/issues"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/plugins/*",
-    "packages/client/*",
-    "packages/event-target/*",
-    "examples/**/*",
-    "!packages/**/dist",
-    "!examples/**/dist",
-    "benchmark/*",
-    "website",
-    "e2e"
-  ],
   "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
   "devDependencies": {
     "@babel/core": "7.20.12",
@@ -79,7 +66,7 @@
     "babel-jest": "^29.0.0",
     "babel-plugin-parameter-decorator": "1.0.16",
     "babel-plugin-transform-typescript-metadata": "0.3.2",
-    "bob-the-bundler": "4.1.1",
+    "bob-the-bundler": "5.0.1",
     "cross-env": "7.0.3",
     "eslint": "^8.21.0",
     "graphql": "^16.5.0",
