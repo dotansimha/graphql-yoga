@@ -36,8 +36,10 @@ export function useReadinessCheck({
 }: ReadinessCheckPluginOptions): Plugin {
   let urlPattern: URLPattern
   return {
+    onYogaInit({ yoga }) {
+      urlPattern = new yoga.fetchAPI.URLPattern({ pathname: endpoint })
+    },
     async onRequest({ request, endResponse, fetchAPI, url }) {
-      urlPattern ||= new fetchAPI.URLPattern({ pathname: endpoint })
       if (url.pathname === endpoint || urlPattern.test(url)) {
         let response: Response
         try {

@@ -102,10 +102,12 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
   const renderer = config?.render ?? renderGraphiQL
   let urlPattern: URLPattern
   return {
-    async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
-      urlPattern ||= new fetchAPI.URLPattern({
+    onYogaInit({ yoga }) {
+      urlPattern = new yoga.fetchAPI.URLPattern({
         pathname: config.graphqlEndpoint,
       })
+    },
+    async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
       if (
         shouldRenderGraphiQL(request) &&
         (url.pathname === config.graphqlEndpoint || urlPattern.test(url))
