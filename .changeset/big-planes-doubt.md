@@ -3,4 +3,4 @@
 'graphql-yoga': patch
 ---
 
-Use a better approach for parser and validation caching
+Decrease request latency by improving the validation and parser cache algorithm.
