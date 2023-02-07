@@ -233,7 +233,6 @@ describe('Persisted Operations', () => {
           getPersistedOperation(key: string) {
             return store.get(key) || null
           },
-          operationType: PersistedOperationType.AST,
         }),
       ],
       schema,
@@ -286,7 +285,6 @@ describe('Persisted Operations', () => {
           getPersistedOperation(key: string) {
             return store.get(key) || null
           },
-          operationType: PersistedOperationType.AST,
         }),
       ],
       schema,
@@ -318,7 +316,7 @@ describe('Persisted Operations', () => {
     expect(parseFn).not.toHaveBeenCalled()
   })
 
-  it('should skip validation by default', async () => {
+  it('should skip validation with `skipDocumentValidation: true`', async () => {
     const store = new Map<string, string>()
     const validateFn = jest.fn()
     const yoga = createYoga({
@@ -336,6 +334,7 @@ describe('Persisted Operations', () => {
           getPersistedOperation(key: string) {
             return store.get(key) || null
           },
+          skipDocumentValidation: true,
         }),
       ],
       schema,
@@ -359,49 +358,5 @@ describe('Persisted Operations', () => {
     })
 
     expect(validateFn).not.toHaveBeenCalled()
-  })
-
-  it('should not skip validation when skipValidation is false', async () => {
-    const store = new Map<string, string>()
-    const validateFn = jest.fn()
-    const yoga = createYoga({
-      plugins: [
-        usePersistedOperations({
-          getPersistedOperation(key: string) {
-            return store.get(key) || null
-          },
-          skipValidation: false,
-        }),
-        {
-          onValidate({
-            setValidationFn,
-          }: {
-            setValidationFn(validationFn: typeof validate): void
-          }) {
-            setValidationFn(validateFn)
-          },
-        },
-      ],
-      schema,
-    })
-    const persistedOperationKey = 'my-persisted-operation'
-    store.set(persistedOperationKey, '{__typename}')
-
-    await yoga.fetch('http://yoga/graphql', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        extensions: {
-          persistedQuery: {
-            version: 1,
-            sha256Hash: persistedOperationKey,
-          },
-        },
-      }),
-    })
-
-    expect(validateFn).toHaveBeenCalled()
   })
 })

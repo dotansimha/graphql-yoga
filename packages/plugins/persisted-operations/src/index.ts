@@ -30,12 +30,13 @@ type AllowArbitraryOperationsHandler = (
   request: Request,
 ) => PromiseOrValue<boolean>
 
-export enum PersistedOperationType {
-  SDL = 'SDL',
-  AST = 'AST',
-}
-
 export type UsePersistedOperationsOptions = {
+  /**
+   * A function that fetches the persisted operation
+   */
+  getPersistedOperation(
+    key: string,
+  ): PromiseOrValue<DocumentNode | string | null>
   /**
    * Whether to allow execution of arbitrary GraphQL operations aside from persisted operations.
    */
@@ -48,33 +49,8 @@ export type UsePersistedOperationsOptions = {
   /**
    * Whether to skip validation of the persisted operation
    */
-  skipValidation?: boolean
-} & (
-  | {
-      /**
-       * A function that fetches the persisted operation as AST
-       */
-      getPersistedOperation(key: string): PromiseOrValue<DocumentNode | null>
-
-      operationType: PersistedOperationType.AST
-    }
-  | {
-      /**
-       * A function that fetches the persisted operation as SDL
-       */
-      getPersistedOperation(key: string): PromiseOrValue<string | null>
-
-      /**
-       * The type of the persisted operation
-       *
-       * AST: The persisted operation is an AST
-       * SDL: The persisted operation is an SDL
-       *
-       * @default PersistedOperationType.SDL
-       */
-      operationType?: PersistedOperationType.SDL
-    }
-)
+  skipDocumentValidation?: boolean
+}
 
 export function usePersistedOperations<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,8 +59,7 @@ export function usePersistedOperations<
   allowArbitraryOperations = false,
   extractPersistedOperationId = defaultExtractPersistedOperationId,
   getPersistedOperation,
-  operationType,
-  skipValidation = true,
+  skipDocumentValidation = false,
 }: UsePersistedOperationsOptions): Plugin<TPluginContext> {
   const operationASTByRequest = new WeakMap<Request, DocumentNode>()
   const persistedOperationRequest = new WeakSet<Request>()
@@ -112,28 +87,30 @@ export function usePersistedOperations<
         throw createGraphQLError('PersistedQueryNotFound')
       }
 
-      let queryInParams: string
-      if (operationType === PersistedOperationType.AST) {
-        queryInParams = '{ __typename }'
-        operationASTByRequest.set(request, persistedQuery as DocumentNode)
+      if (typeof persistedQuery === 'object') {
+        setParams({
+          query: `__PERSISTED_OPERATION_${persistedOperationKey}__`,
+          variables: params.variables,
+          extensions: params.extensions,
+        })
+        operationASTByRequest.set(request, persistedQuery)
       } else {
-        queryInParams = persistedQuery as string
+        setParams({
+          query: persistedQuery,
+          variables: params.variables,
+          extensions: params.extensions,
+        })
       }
       persistedOperationRequest.add(request)
-      setParams({
-        query: queryInParams,
-        variables: params.variables,
-        extensions: params.extensions,
-      })
     },
     onValidate({ setResult, context: { request } }) {
-      if (skipValidation && persistedOperationRequest.has(request)) {
+      if (skipDocumentValidation && persistedOperationRequest.has(request)) {
         setResult([]) // skip validation
       }
     },
     onParse({ setParsedDocument, context: { request } }) {
-      if (operationType === PersistedOperationType.AST) {
-        const ast = operationASTByRequest.get(request)
+      const ast = operationASTByRequest.get(request)
+      if (ast) {
         setParsedDocument(ast)
       }
     },

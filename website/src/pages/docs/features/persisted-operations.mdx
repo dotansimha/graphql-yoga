@@ -157,19 +157,18 @@ const persistedOperations = {
 const plugin = usePersistedOperations({
   getPersistedOperation(key: string) {
     return persistedOperations[key]
-  },
-  operationType: PersistedOperationType.AST
+  }
 })
 ```
 
-## Validation of persisted operations
+## Skipping validation of persisted operations
 
-By default, the persisted operations plugin skips the validation for persisted operations as it is assumed that the persisted operations are already validated. However, you can still enable validation for persisted operations by setting the `skipValidation` option to `false`.
+If you validate your persisted operations while building your store, we recommend to skip the validation on the server. So this will reduce the work done by the server and the latency of the requests.
 
 ```ts filename="Validate persisted operations"
 const plugin = usePersistedOperations({
   //...
-  skipValidation: false
+  skipValidation: true
 })
 ```
 
