@@ -943,7 +943,6 @@ importers:
       '@envelop/core': 3.0.4
       '@envelop/disable-introspection': 4.0.4
       '@envelop/live-query': 5.0.4
-      '@envelop/parser-cache': ^5.0.4
       '@envelop/validation-cache': ^5.0.5
       '@graphql-tools/executor': ^0.0.14
       '@graphql-tools/schema': ^9.0.0
@@ -967,7 +966,6 @@ importers:
       tslib: ^2.3.1
     dependencies:
       '@envelop/core': 3.0.4
-      '@envelop/parser-cache': 5.0.4_a6sekiasy2tqr6d5gj7n2wtjli
       '@envelop/validation-cache': 5.0.5_a6sekiasy2tqr6d5gj7n2wtjli
       '@graphql-tools/executor': 0.0.14_graphql@16.6.0
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
@@ -4187,18 +4185,6 @@ packages:
     peerDependencies:
       '@envelop/core': ^3.0.4
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dev: false
-
-  /@envelop/parser-cache/5.0.4_a6sekiasy2tqr6d5gj7n2wtjli:
-    resolution: {integrity: sha512-+kp6nzCVLYI2WQExQcE3FSy6n9ZGB5GYi+ntyjYdxaXU41U1f8RVwiLdyh0Ewn5D/s/zaLin09xkFKITVSAKDw==}
-    peerDependencies:
-      '@envelop/core': ^3.0.4
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@envelop/core': 3.0.4
-      graphql: 16.6.0
-      lru-cache: 6.0.0
-      tslib: 2.5.0
     dev: false
 
   /@envelop/prometheus/7.0.4_prom-client@14.1.1:

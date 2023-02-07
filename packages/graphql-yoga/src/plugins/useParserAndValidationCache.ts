@@ -1,6 +1,6 @@
 import { memoize2of4 } from '@graphql-tools/utils'
 import type { DocumentNode, parse, validate } from 'graphql'
-import LRU from 'lru-cache'
+import { createLRUCache } from '../utils/create-lru-cache.js'
 import type { Plugin } from './types.js'
 
 interface Cache<T> {
@@ -11,11 +11,7 @@ interface Cache<T> {
 export interface ParserAndValidationCacheOptions {
   documentCache?: Cache<DocumentNode>
   errorCache?: Cache<unknown>
-  validationCache?: boolean
-}
-
-function createLRUCache<T>(): Cache<T> {
-  return new LRU<string, T>({ max: 1024 })
+  validationCache?: boolean | Cache<typeof validate>
 }
 
 export function useParserAndValidationCache({
@@ -24,7 +20,10 @@ export function useParserAndValidationCache({
   validationCache = true,
 }: // eslint-disable-next-line @typescript-eslint/ban-types
 ParserAndValidationCacheOptions): Plugin<{}> {
-  const memoizedValidateByRules = createLRUCache<typeof validate>()
+  const memoizedValidateByRules =
+    typeof validationCache === 'boolean'
+      ? createLRUCache<typeof validate>()
+      : validationCache
   return {
     onParse({
       parseFn,
@@ -59,7 +58,7 @@ ParserAndValidationCacheOptions): Plugin<{}> {
       validateFn: typeof validate
       setValidationFn: (fn: typeof validate) => void
     }) {
-      if (validationCache) {
+      if (validationCache !== false) {
         setValidationFn(function memoizedValidateFn(schema, document, rules) {
           const rulesKey = rules?.map((rule) => rule.name).join(',') || ''
           let memoizedValidateFnForRules = memoizedValidateByRules.get(rulesKey)

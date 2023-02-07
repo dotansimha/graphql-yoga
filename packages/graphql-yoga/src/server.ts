@@ -7,8 +7,7 @@ import {
   useExtendContext,
   useMaskedErrors,
 } from '@envelop/core'
-import { ParserCacheOptions } from '@envelop/parser-cache'
-import { ValidationCache } from '@envelop/validation-cache'
+import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { normalizedExecutor } from '@graphql-tools/executor'
 import * as defaultFetchAPI from '@whatwg-node/fetch'
 import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
@@ -74,7 +73,7 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js'
-import LRU from 'lru-cache'
+import { createLRUCache } from './utils/create-lru-cache.js'
 import { maskError } from './utils/mask-error.js'
 
 /**
@@ -148,7 +147,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
     Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
   >
 
-  parserCache?: boolean | ParserCacheOptions
+  parserCache?: boolean | ParserAndValidationCacheOptions
   validationCache?: boolean | ValidationCache
   fetchAPI?: Partial<FetchAPI>
   /**
@@ -352,15 +351,28 @@ export class YogaServer<
           if (options?.parserCache !== false) {
             const parserAndValidationCacheOptions: ParserAndValidationCacheOptions =
               {}
+
             if (typeof options?.parserCache === 'object') {
               parserAndValidationCacheOptions.documentCache =
                 options.parserCache.documentCache
               parserAndValidationCacheOptions.errorCache =
                 options.parserCache.errorCache
-              if (options.validationCache === false) {
-                parserAndValidationCacheOptions.validationCache = false
-              }
             }
+
+            if (options?.validationCache === false) {
+              parserAndValidationCacheOptions.validationCache = false
+            } else if (typeof options?.validationCache === 'object') {
+              // TODO: Remove this in the next major version
+              // Backward compatibility for the old API
+              parserAndValidationCacheOptions.validationCache = false
+              addPlugin(
+                // @ts-expect-error Add plugins has context but this hook doesn't care
+                useValidationCache({
+                  cache: options.validationCache,
+                }),
+              )
+            }
+
             addPlugin(
               // @ts-expect-error Add plugins has context but this hook doesn't care
               useParserAndValidationCache(parserAndValidationCacheOptions),
@@ -499,9 +511,7 @@ export class YogaServer<
     }
   }
 
-  private urlParseCache = new LRU<string, URL>({
-    max: 1024,
-  })
+  private urlParseCache = createLRUCache<URL>()
 
   async getResponse(request: Request, serverContext: TServerContext) {
     let result: ResultProcessorInput
