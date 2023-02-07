@@ -1,4 +1,8 @@
-import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+import {
+  PersistedOperationType,
+  usePersistedOperations,
+} from '@graphql-yoga/plugin-persisted-operations'
+import { DocumentNode, parse, validate } from 'graphql'
 import { createSchema, createYoga, GraphQLParams } from 'graphql-yoga'
 
 const schema = createSchema({
@@ -219,5 +223,137 @@ describe('Persisted Operations', () => {
 
     expect(body.errors).toBeUndefined()
     expect(body.data.__typename).toBe('Query')
+  })
+
+  it('should allow ASTs to be persisted', async () => {
+    const store = new Map<string, DocumentNode>()
+    const yoga = createYoga({
+      plugins: [
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
+          operationType: PersistedOperationType.AST,
+        }),
+      ],
+      schema,
+    })
+    const persistedOperationKey = 'my-persisted-operation'
+    store.set(
+      persistedOperationKey,
+      parse(
+        /* GraphQL */ `
+          {
+            __typename
+          }
+        `,
+      ),
+    )
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: persistedOperationKey,
+          },
+        },
+      }),
+    })
+
+    const body = await response.json()
+
+    expect(body.errors).toBeUndefined()
+    expect(body.data.__typename).toBe('Query')
+  })
+
+  it('should skip validation by default', async () => {
+    const store = new Map<string, string>()
+    const validateFn = jest.fn()
+    const yoga = createYoga({
+      plugins: [
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
+        }),
+        {
+          onValidate({
+            setValidationFn,
+          }: {
+            setValidationFn(validationFn: typeof validate): void
+          }) {
+            setValidationFn(validateFn)
+          },
+        },
+      ],
+      schema,
+    })
+    const persistedOperationKey = 'my-persisted-operation'
+    store.set(persistedOperationKey, '{__typename}')
+
+    await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: persistedOperationKey,
+          },
+        },
+      }),
+    })
+
+    expect(validateFn).not.toHaveBeenCalled()
+  })
+
+  it('should not skip validation when skipValidation is false', async () => {
+    const store = new Map<string, string>()
+    const validateFn = jest.fn()
+    const yoga = createYoga({
+      plugins: [
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
+          skipValidation: false,
+        }),
+        {
+          onValidate({
+            setValidationFn,
+          }: {
+            setValidationFn(validationFn: typeof validate): void
+          }) {
+            setValidationFn(validateFn)
+          },
+        },
+      ],
+      schema,
+    })
+    const persistedOperationKey = 'my-persisted-operation'
+    store.set(persistedOperationKey, '{__typename}')
+
+    await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: persistedOperationKey,
+          },
+        },
+      }),
+    })
+
+    expect(validateFn).toHaveBeenCalled()
   })
 })
