@@ -45,17 +45,15 @@ export function useSofaWithSwaggerUI(
         customScalars: config.customScalars,
       })
     },
+    onYogaInit({ yoga }) {
+      swaggerJsonPattern = new yoga.fetchAPI.URLPattern({
+        pathname: '/swagger.json',
+      })
+      swaggerUIPattern = new yoga.fetchAPI.URLPattern({
+        pathname: swaggerUIEndpoint,
+      })
+    },
     onRequest({ url, fetchAPI, endResponse }) {
-      if (swaggerJsonPattern == null) {
-        swaggerJsonPattern = new fetchAPI.URLPattern({
-          pathname: '/swagger.json',
-        })
-      }
-      if (swaggerUIPattern == null) {
-        swaggerUIPattern = new fetchAPI.URLPattern({
-          pathname: swaggerUIEndpoint,
-        })
-      }
       if (swaggerUIPattern.test(url)) {
         const swaggerUIHTML = getSwaggerUIHTMLForSofa(openApi)
         const response = new fetchAPI.Response(swaggerUIHTML, {

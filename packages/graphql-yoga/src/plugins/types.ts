@@ -94,10 +94,12 @@ export type OnRequestParseHook<TServerContext> = (
 
 export type RequestParser = (
   request: Request,
+  url: URL,
 ) => PromiseOrValue<GraphQLParams> | PromiseOrValue<GraphQLParams[]>
 
 export interface OnRequestParseEventPayload<TServerContext> {
   request: Request
+  url: URL
   requestParser: RequestParser | undefined
   serverContext: TServerContext
   setRequestParser: (parser: RequestParser) => void
