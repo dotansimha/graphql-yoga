@@ -954,7 +954,7 @@ importers:
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.13.0
       '@whatwg-node/fetch': ^0.7.0
-      '@whatwg-node/server': ^0.6.4
+      '@whatwg-node/server': ^0.6.5
       dset: ^3.1.1
       graphql: 16.6.0
       graphql-http: ^1.7.2
@@ -972,7 +972,7 @@ importers:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
       '@whatwg-node/fetch': 0.7.0_@types+node@18.13.0
-      '@whatwg-node/server': 0.6.4_@types+node@18.13.0
+      '@whatwg-node/server': 0.6.5_@types+node@18.13.0
       dset: 3.1.2
       lru-cache: 7.14.1
       tslib: 2.4.0
@@ -10494,6 +10494,7 @@ packages:
       web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - '@types/node'
+    dev: true
 
   /@whatwg-node/fetch/0.7.0:
     resolution: {integrity: sha512-0nmiUgHA9lSBcPQS0Eq9DACsdGa2W9gJUnN+Ul1vVhQsL3dnOAIGTs4uTiVC/W7bcfxTMP+TRFxngxS40aO5Nw==}
@@ -10578,6 +10579,7 @@ packages:
       '@whatwg-node/events': 0.0.2
       busboy: 1.6.0
       tslib: 2.5.0
+    dev: true
 
   /@whatwg-node/node-fetch/0.0.6:
     resolution: {integrity: sha512-pFEN2DNk1ZJZjdX9O7FG9qBZ7oIaB8JzOpAUCUditZ25kOSJb0qylq5uR2XUnzngBQCBwT/MHnKq2sXQZp1BUQ==}
@@ -10629,10 +10631,10 @@ packages:
       - '@types/node'
     dev: false
 
-  /@whatwg-node/server/0.6.4_@types+node@18.13.0:
-    resolution: {integrity: sha512-j4dZBPOQUhmEVIJ6xY4hD9RIiipWRxok8Bp+MVUv14YrOgrxZWkKQUd3qnRqO7Rr6K4ZFw6FIIGpxEE1PnlRFw==}
+  /@whatwg-node/server/0.6.5_@types+node@18.13.0:
+    resolution: {integrity: sha512-hZWvMkIK8KRSK1EP//L+Yp1N5grPwao1XYHCs9kFrV68YKEP9gCQ7ZTTvKR42lPsXzCjqJH+iEpPHSYrmZVeMQ==}
     dependencies:
-      '@whatwg-node/fetch': 0.6.9_@types+node@18.13.0
+      '@whatwg-node/fetch': 0.7.0_@types+node@18.13.0
       tslib: 2.5.0
     transitivePeerDependencies:
       - '@types/node'
