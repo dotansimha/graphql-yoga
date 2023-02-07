@@ -241,13 +241,11 @@ describe('Persisted Operations', () => {
     const persistedOperationKey = 'my-persisted-operation'
     store.set(
       persistedOperationKey,
-      parse(
-        /* GraphQL */ `
-          {
-            __typename
-          }
-        `,
-      ),
+      parse(/* GraphQL */ `
+        {
+          __typename
+        }
+      `),
     )
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -270,16 +268,61 @@ describe('Persisted Operations', () => {
     expect(body.data.__typename).toBe('Query')
   })
 
+  it('should skip parse if the operation type is an AST', async () => {
+    const store = new Map<string, DocumentNode>()
+    const parseFn = jest.fn()
+    const yoga = createYoga({
+      plugins: [
+        {
+          onParse({
+            setParseFn,
+          }: {
+            setParseFn: (parseFn: typeof parse) => void
+          }) {
+            setParseFn(parseFn)
+          },
+        },
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
+          operationType: PersistedOperationType.AST,
+        }),
+      ],
+      schema,
+    })
+    const persistedOperationKey = 'my-persisted-operation'
+    store.set(
+      persistedOperationKey,
+      parse(/* GraphQL */ `
+        {
+          __typename
+        }
+      `),
+    )
+    await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: persistedOperationKey,
+          },
+        },
+      }),
+    })
+
+    expect(parseFn).not.toHaveBeenCalled()
+  })
+
   it('should skip validation by default', async () => {
     const store = new Map<string, string>()
     const validateFn = jest.fn()
     const yoga = createYoga({
       plugins: [
-        usePersistedOperations({
-          getPersistedOperation(key: string) {
-            return store.get(key) || null
-          },
-        }),
         {
           onValidate({
             setValidationFn,
@@ -289,6 +332,11 @@ describe('Persisted Operations', () => {
             setValidationFn(validateFn)
           },
         },
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null
+          },
+        }),
       ],
       schema,
     })

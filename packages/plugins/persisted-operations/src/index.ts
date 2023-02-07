@@ -60,7 +60,7 @@ export type UsePersistedOperationsOptions = {
     }
   | {
       /**
-       * A function that fetches the persisted operation as AST
+       * A function that fetches the persisted operation as SDL
        */
       getPersistedOperation(key: string): PromiseOrValue<string | null>
 
