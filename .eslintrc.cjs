@@ -27,8 +27,6 @@ module.exports = {
         'no-console': 'off',
         'import/no-default-export': 'off',
       },
-      tsconfigRootDir: '.',
-      project: './tsconfig.json',
     },
     {
       files: [
