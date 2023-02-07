@@ -149,7 +149,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
 
   parserCache?: boolean | ParserAndValidationCacheOptions
   validationCache?: boolean | ValidationCache
-  fetchAPI?: Record<keyof FetchAPI, any>
+  fetchAPI?: Partial<Record<keyof FetchAPI, any>>
   /**
    * GraphQL Multipart Request spec support
    *
