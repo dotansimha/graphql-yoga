@@ -1,7 +1,4 @@
-import {
-  PersistedOperationType,
-  usePersistedOperations,
-} from '@graphql-yoga/plugin-persisted-operations'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 import { DocumentNode, parse, validate } from 'graphql'
 import { createSchema, createYoga, GraphQLParams } from 'graphql-yoga'
 
