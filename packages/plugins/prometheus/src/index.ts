@@ -1,13 +1,20 @@
 import {
   PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
   usePrometheus as useEnvelopPrometheus,
+  createCounter,
+  createHistogram,
+  createSummary,
+  FillLabelsFnParams,
 } from '@envelop/prometheus'
 import { Plugin } from 'graphql-yoga'
 import { Histogram, register as defaultRegistry } from 'prom-client'
 
+export { createCounter, createHistogram, createSummary, FillLabelsFnParams }
+
 export interface PrometheusTracingPluginConfig
   extends EnvelopPrometheusTracingPluginConfig {
-  http?: boolean | EnvelopPrometheusTracingPluginConfig['execute']
+  http?: boolean | ReturnType<typeof createHistogram>
+  httpRequestHeaders?: boolean
   /**
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
@@ -27,19 +34,38 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics'
   const registry = options.registry || defaultRegistry
 
-  const httpHistogram = new Histogram({
-    name: 'graphql_yoga_http_duration',
-    help: 'Time spent on HTTP connection',
-    labelNames: [
-      'url',
-      'method',
-      'requestHeaders',
-      'statusCode',
-      'statusText',
-      'responseHeaders',
-    ],
-    registers: [registry],
-  })
+  let httpHistogram: ReturnType<typeof createHistogram> | undefined
+
+  if (options.http) {
+    httpHistogram =
+      typeof options.http === 'object'
+        ? options.http
+        : createHistogram({
+            histogram: new Histogram({
+              name: 'graphql_yoga_http_duration',
+              help: 'Time spent on HTTP connection',
+              labelNames: [
+                'url',
+                'method',
+                'requestHeaders',
+                'statusCode',
+                'statusText',
+                'responseHeaders',
+              ],
+              registers: [registry],
+            }),
+            fillLabelsFn(_, { request, response }) {
+              return {
+                url: request.url,
+                method: request.method,
+                requestHeaders: JSON.stringify(headersToObj(request.headers)),
+                statusCode: response.status,
+                statusText: response.statusText,
+                responseHeaders: JSON.stringify(headersToObj(response.headers)),
+              }
+            },
+          })
+  }
 
   const startByRequest = new WeakMap<Request, number>()
 
@@ -59,19 +85,12 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
         endResponse(response)
       }
     },
-    onResponse({ request, response }) {
+    onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request)
       if (start) {
         const duration = Date.now() - start
-        httpHistogram.observe(
-          {
-            url: request.url,
-            method: request.method,
-            requestHeaders: JSON.stringify(headersToObj(request.headers)),
-            statusCode: response.status,
-            statusText: response.statusText,
-            responseHeaders: JSON.stringify(headersToObj(response.headers)),
-          },
+        httpHistogram?.histogram.observe(
+          httpHistogram.fillLabelsFn({}, { ...serverContext, response }),
           duration,
         )
       }
