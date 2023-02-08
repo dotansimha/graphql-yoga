@@ -465,7 +465,8 @@ export class YogaServer<
     try {
       let result: ExecutionResult | undefined
 
-      for (const onParamsHook of this.onParamsHooks) {
+      for (let i = 0; i < this.onParamsHooks.length; i++) {
+        const onParamsHook = this.onParamsHooks[i]
         await onParamsHook({
           params,
           request,
@@ -521,7 +522,8 @@ export class YogaServer<
         url = new URL(request.url, 'http://localhost')
         this.urlParseCache.set(request.url, url)
       }
-      for (const onRequestHook of this.onRequestHooks) {
+      for (let i = 0; i < this.onRequestHooks.length; i++) {
+        const onRequestHook = this.onRequestHooks[i]
         let response: Response | undefined
         await onRequestHook({
           request,
@@ -539,7 +541,8 @@ export class YogaServer<
 
       let requestParser: RequestParser | undefined
       const onRequestParseDoneList: OnRequestParseDoneHook[] = []
-      for (const onRequestParse of this.onRequestParseHooks) {
+      for (let i = 0; i < this.onRequestParseHooks.length; i++) {
+        const onRequestParse = this.onRequestParseHooks[i]
         const onRequestParseResult = await onRequestParse({
           request,
           url,
@@ -565,7 +568,8 @@ export class YogaServer<
 
       let requestParserResult = await requestParser(request, url)
 
-      for (const onRequestParseDone of onRequestParseDoneList) {
+      for (let i = 0; i < onRequestParseDoneList.length; i++) {
+        const onRequestParseDone = onRequestParseDoneList[i]
         await onRequestParseDone({
           requestParserResult,
           setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
@@ -615,7 +619,8 @@ export class YogaServer<
     try {
       const response = await this.getResponse(request, serverContext)
 
-      for (const onResponseHook of this.onResponseHooks) {
+      for (let i = 0; i < this.onResponseHooks.length; i++) {
+        const onResponseHook = this.onResponseHooks[i]
         await onResponseHook({
           request,
           response,
