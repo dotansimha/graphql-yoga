@@ -13,7 +13,7 @@ export function processPushResult(
   let timeoutInSeconds = 12
 
   // for testing the pings, reduce the timeout
-  if (process.env.NODE_ENV === 'test') {
+  if (globalThis.process?.env?.NODE_ENV === 'test') {
     timeoutInSeconds = 1
   }
 
