@@ -37,6 +37,16 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   let httpHistogram: ReturnType<typeof createHistogram> | undefined
 
   if (options.http) {
+    const labelNames = [
+      'url',
+      'method',
+      'statusCode',
+      'statusText',
+      'responseHeaders',
+    ]
+    if (options.httpRequestHeaders) {
+      labelNames.push('requestHeaders')
+    }
     httpHistogram =
       typeof options.http === 'object'
         ? options.http
@@ -44,25 +54,23 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
             histogram: new Histogram({
               name: 'graphql_yoga_http_duration',
               help: 'Time spent on HTTP connection',
-              labelNames: [
-                'url',
-                'method',
-                'requestHeaders',
-                'statusCode',
-                'statusText',
-                'responseHeaders',
-              ],
+              labelNames,
               registers: [registry],
             }),
             fillLabelsFn(_, { request, response }) {
-              return {
+              const labels: Record<string, string> = {
                 url: request.url,
                 method: request.method,
-                requestHeaders: JSON.stringify(headersToObj(request.headers)),
                 statusCode: response.status,
                 statusText: response.statusText,
                 responseHeaders: JSON.stringify(headersToObj(response.headers)),
               }
+              if (options.httpRequestHeaders) {
+                labels.requestHeaders = JSON.stringify(
+                  headersToObj(request.headers),
+                )
+              }
+              return labels
             },
           })
   }
