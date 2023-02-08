@@ -10,7 +10,12 @@ export function processPushResult(
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
-  const timeoutInSeconds = 12
+  let timeoutInSeconds = 12
+
+  // for testing the pings, reduce the timeout
+  if (process.env.NODE_ENV === 'test') {
+    timeoutInSeconds = 1
+  }
 
   const headersInit = {
     'Content-Type': 'text/event-stream',
