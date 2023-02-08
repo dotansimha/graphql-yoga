@@ -29,7 +29,6 @@ function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
 
 describe('Subscription', () => {
   test('eventStream', async () => {
-    // eslint-disable-next-line @typescript-eslint/require-await
     const source = (async function* foo() {
       yield { hi: 'hi' }
       yield { hi: 'hello' }
@@ -85,5 +84,55 @@ describe('Subscription', () => {
         counter++
       }
     }
+  })
+
+  test('should issue pings while connected', async () => {
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            async *subscribe() {
+              await new Promise((resolve) => setTimeout(resolve, 3000))
+              yield { hi: 'hi' }
+            },
+          },
+        },
+      },
+    })
+
+    const yoga = createYoga({ schema })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    })
+
+    await expect(response.text()).resolves.toMatchInlineSnapshot(`
+      ":
+
+      :
+
+      data: {"data":{"hi":"hi"}}
+
+      "
+    `)
   })
 })
