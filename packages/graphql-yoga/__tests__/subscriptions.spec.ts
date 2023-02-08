@@ -125,11 +125,7 @@ describe('Subscription', () => {
       }),
     })
 
-    let body = ''
-    for await (const chunk of response.body!) {
-      body += chunk.toString()
-    }
-    expect(body).toMatchInlineSnapshot(`
+    await expect(response.text()).resolves.toMatchInlineSnapshot(`
       ":
 
       :
