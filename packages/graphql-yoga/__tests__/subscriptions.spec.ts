@@ -100,7 +100,7 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              await new Promise((resolve) => setTimeout(resolve, 3000))
+              await new Promise((resolve) => setTimeout(resolve, 10000))
               yield { hi: 'hi' }
             },
           },
@@ -125,14 +125,21 @@ describe('Subscription', () => {
       }),
     })
 
-    await expect(response.text()).resolves.toMatchInlineSnapshot(`
-      ":
+    const reader = response?.body!.getReader()
 
-      :
+    setTimeout(() => {
+      reader.releaseLock()
+      response.body?.cancel()
+    }, 1500)
 
-      data: {"data":{"hi":"hi"}}
-
-      "
-    `)
+    const results = []
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) {
+        break
+      }
+      results.push(value)
+    }
+    expect(results).toMatchInlineSnapshot()
   })
 })
