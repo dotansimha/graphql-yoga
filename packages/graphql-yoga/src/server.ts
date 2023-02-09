@@ -12,6 +12,7 @@ import { normalizedExecutor } from '@graphql-tools/executor'
 import * as defaultFetchAPI from '@whatwg-node/fetch'
 import { createServerAdapter, ServerAdapter } from '@whatwg-node/server'
 import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
+import URL from 'fast-url-parser'
 import { handleError } from './error.js'
 import { createLogger, LogLevel, YogaLogger } from './logger.js'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
@@ -73,7 +74,6 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js'
-import { createLRUCache } from './utils/create-lru-cache.js'
 import { maskError } from './utils/mask-error.js'
 
 /**
@@ -512,16 +512,14 @@ export class YogaServer<
     }
   }
 
-  private urlParseCache = createLRUCache<URL>()
+  private parseUrl(url: string) {
+    return URL.parse(url)
+  }
 
   async getResponse(request: Request, serverContext: TServerContext) {
     let result: ResultProcessorInput
     try {
-      let url = this.urlParseCache.get(request.url)
-      if (!url) {
-        url = new URL(request.url, 'http://localhost')
-        this.urlParseCache.set(request.url, url)
-      }
+      const url = this.parseUrl(request.url)
       for (let i = 0; i < this.onRequestHooks.length; i++) {
         const onRequestHook = this.onRequestHooks[i]
         let response: Response | undefined

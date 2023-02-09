@@ -956,6 +956,7 @@ importers:
       '@whatwg-node/fetch': 0.7.1-alpha-20230208150005-0bd8aaf
       '@whatwg-node/server': 0.6.6-alpha-20230208150005-0bd8aaf
       dset: ^3.1.1
+      fast-url-parser: 1.1.3
       graphql: 16.6.0
       graphql-http: ^1.7.2
       graphql-scalars: 1.20.1
@@ -974,6 +975,7 @@ importers:
       '@whatwg-node/fetch': 0.7.1-alpha-20230208150005-0bd8aaf_@types+node@18.13.0
       '@whatwg-node/server': 0.6.6-alpha-20230208150005-0bd8aaf_@types+node@18.13.0
       dset: 3.1.2
+      fast-url-parser: 1.1.3
       lru-cache: 7.14.1
       tslib: 2.4.0
     devDependencies:
@@ -15883,6 +15885,12 @@ packages:
 
   /fast-uri/2.1.0:
     resolution: {integrity: sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==}
+    dev: false
+
+  /fast-url-parser/1.1.3:
+    resolution: {integrity: sha512-5jOCVXADYNuRkKFzNJ0dCCewsZiYo0dz8QNYljkOpFC6r2U4OBmKtvm/Tsuh4w1YYdDqDb31a8TVhBJ2OJKdqQ==}
+    dependencies:
+      punycode: 1.3.2
     dev: false
 
   /fast-write-atomic/0.2.1:
