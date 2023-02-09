@@ -222,7 +222,7 @@ importers:
 
   examples/bun:
     specifiers:
-      '@whatwg-node/fetch': ^0.7.0
+      '@whatwg-node/fetch': ^0.7.1
       bun-types: ^0.5.0
       graphql: 16.6.0
       graphql-yoga: 3.5.1
@@ -231,7 +231,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@whatwg-node/fetch': 0.7.0
+      '@whatwg-node/fetch': 0.7.1
 
   examples/cloudflare-advanced:
     specifiers:
@@ -289,13 +289,13 @@ importers:
 
   examples/error-handling:
     specifiers:
-      '@whatwg-node/fetch': ^0.7.0
+      '@whatwg-node/fetch': ^0.7.1
       graphql: 16.6.0
       graphql-yoga: 3.5.1
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
-      '@whatwg-node/fetch': 0.7.0
+      '@whatwg-node/fetch': 0.7.1
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -813,7 +813,7 @@ importers:
     specifiers:
       '@types/node': ^18.11.19
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': ^0.7.0
+      '@whatwg-node/fetch': ^0.7.1
       graphql: 16.6.0
       graphql-ws: ^5.11.3
       graphql-yoga: 3.5.1
@@ -831,7 +831,7 @@ importers:
       uWebSockets.js: github.com/uNetworking/uWebSockets.js/77bc1fd5577ae42b56675912eb8481a31f3fefd2
     devDependencies:
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.7.0_@types+node@18.11.19
+      '@whatwg-node/fetch': 0.7.1_@types+node@18.11.19
       ws: 8.12.0
 
   packages/client/apollo-link:
@@ -953,7 +953,7 @@ importers:
       '@n1ru4l/in-memory-live-query-store': 0.10.0
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.13.0
-      '@whatwg-node/fetch': ^0.7.0
+      '@whatwg-node/fetch': ^0.7.1
       '@whatwg-node/server': ^0.6.5
       dset: ^3.1.1
       graphql: 16.6.0
@@ -971,7 +971,7 @@ importers:
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
-      '@whatwg-node/fetch': 0.7.0_@types+node@18.13.0
+      '@whatwg-node/fetch': 0.7.1_@types+node@18.13.0
       '@whatwg-node/server': 0.6.5_@types+node@18.13.0
       dset: 3.1.2
       lru-cache: 7.14.1
@@ -1004,24 +1004,24 @@ importers:
   packages/plugins/apollo-inline-trace:
     specifiers:
       '@envelop/on-resolve': ^2.0.2
-      '@whatwg-node/fetch': ^0.7.0
+      '@whatwg-node/fetch': ^0.7.1
       apollo-reporting-protobuf: ^3.3.2
       graphql-yoga: 3.5.1
     dependencies:
       '@envelop/on-resolve': 2.0.2
       apollo-reporting-protobuf: 3.3.3
     devDependencies:
-      '@whatwg-node/fetch': 0.7.0
+      '@whatwg-node/fetch': 0.7.1
       graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/apq:
     specifiers:
-      '@whatwg-node/fetch': ^0.7.0
+      '@whatwg-node/fetch': ^0.7.1
       graphql-yoga: 3.5.1
       tiny-lru: ^10.0.0
     dependencies:
-      '@whatwg-node/fetch': 0.7.0
+      '@whatwg-node/fetch': 0.7.1
       tiny-lru: 10.0.0
     devDependencies:
       graphql-yoga: link:../../graphql-yoga
@@ -1040,12 +1040,12 @@ importers:
     specifiers:
       '@graphql-tools/executor-http': ^0.1.4
       '@graphql-tools/utils': ^9.0.1
-      '@whatwg-node/fetch': ^0.7.0
+      '@whatwg-node/fetch': ^0.7.1
     dependencies:
       '@graphql-tools/utils': 9.0.1
     devDependencies:
       '@graphql-tools/executor-http': 0.1.4
-      '@whatwg-node/fetch': 0.7.0
+      '@whatwg-node/fetch': 0.7.1
     publishDirectory: dist
 
   packages/plugins/disable-introspection:
@@ -1818,6 +1818,7 @@ packages:
       '@aws-cdk/core': 1.192.0
       '@aws-cdk/custom-resources': 1.192.0_z5r3s5mm2blbu2ua23l5h3gafy
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -2123,6 +2124,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema/1.192.0:
     resolution: {integrity: sha512-1ffcrqK7zH+prcbvn5KZrDYOHRkv/7AjASsy4vJPgyM0BseIW9awjGKqV2+Rzx+5YdsYbLQrMJFzMuqmc9AclA==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - jsonschema
@@ -2148,7 +2152,11 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 1.192.0
       '@aws-cdk/cx-api': 1.192.0
       '@aws-cdk/region-info': 1.192.0
+      '@balena/dockerignore': 1.0.2
       constructs: 3.4.127
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      minimatch: 3.1.2
     dev: false
     bundledDependencies:
       - fs-extra
@@ -2185,6 +2193,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.192.0
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -3757,6 +3766,9 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
     dev: true
+
+  /@balena/dockerignore/1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -5504,7 +5516,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@repeaterjs/repeater': 3.0.4
-      '@whatwg-node/fetch': 0.7.0_@types+node@18.13.0
+      '@whatwg-node/fetch': 0.7.1_@types+node@18.13.0
       dset: 3.1.2
       extract-files: 11.0.0
       graphql: 16.6.0
@@ -5522,7 +5534,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@repeaterjs/repeater': 3.0.4
-      '@whatwg-node/fetch': 0.7.0
+      '@whatwg-node/fetch': 0.7.1
       dset: 3.1.2
       extract-files: 11.0.0
       graphql: 16.6.0
@@ -5952,7 +5964,7 @@ packages:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-tools/wrap': 9.3.5_graphql@16.6.0
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.7.0_@types+node@18.13.0
+      '@whatwg-node/fetch': 0.7.1_@types+node@18.13.0
       graphql: 16.6.0
       isomorphic-ws: 5.0.0_ws@8.12.0
       tslib: 2.5.0
@@ -5978,7 +5990,7 @@ packages:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-tools/wrap': 9.3.5_graphql@16.6.0
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.7.0
+      '@whatwg-node/fetch': 0.7.1
       graphql: 16.6.0
       isomorphic-ws: 5.0.0_ws@8.12.0
       tslib: 2.5.0
@@ -10487,22 +10499,22 @@ packages:
       - '@types/node'
     dev: true
 
-  /@whatwg-node/fetch/0.7.0:
-    resolution: {integrity: sha512-0nmiUgHA9lSBcPQS0Eq9DACsdGa2W9gJUnN+Ul1vVhQsL3dnOAIGTs4uTiVC/W7bcfxTMP+TRFxngxS40aO5Nw==}
+  /@whatwg-node/fetch/0.7.1:
+    resolution: {integrity: sha512-rU/oS5pQLP0GOtTegi3sgzCkid5kbogXX16IaO0DYudhHJxbylKO7+xr7mbjM68XXYr7wkJ2BCmO1DHeg/XBuw==}
     dependencies:
       '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.0.6
+      '@whatwg-node/node-fetch': 0.1.0
       busboy: 1.6.0
       urlpattern-polyfill: 6.0.2
       web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - '@types/node'
 
-  /@whatwg-node/fetch/0.7.0_@types+node@18.11.19:
-    resolution: {integrity: sha512-0nmiUgHA9lSBcPQS0Eq9DACsdGa2W9gJUnN+Ul1vVhQsL3dnOAIGTs4uTiVC/W7bcfxTMP+TRFxngxS40aO5Nw==}
+  /@whatwg-node/fetch/0.7.1_@types+node@18.11.19:
+    resolution: {integrity: sha512-rU/oS5pQLP0GOtTegi3sgzCkid5kbogXX16IaO0DYudhHJxbylKO7+xr7mbjM68XXYr7wkJ2BCmO1DHeg/XBuw==}
     dependencies:
       '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.0.6_@types+node@18.11.19
+      '@whatwg-node/node-fetch': 0.1.0_@types+node@18.11.19
       busboy: 1.6.0
       urlpattern-polyfill: 6.0.2
       web-streams-polyfill: 3.2.1
@@ -10510,11 +10522,11 @@ packages:
       - '@types/node'
     dev: true
 
-  /@whatwg-node/fetch/0.7.0_@types+node@18.13.0:
-    resolution: {integrity: sha512-0nmiUgHA9lSBcPQS0Eq9DACsdGa2W9gJUnN+Ul1vVhQsL3dnOAIGTs4uTiVC/W7bcfxTMP+TRFxngxS40aO5Nw==}
+  /@whatwg-node/fetch/0.7.1_@types+node@18.13.0:
+    resolution: {integrity: sha512-rU/oS5pQLP0GOtTegi3sgzCkid5kbogXX16IaO0DYudhHJxbylKO7+xr7mbjM68XXYr7wkJ2BCmO1DHeg/XBuw==}
     dependencies:
       '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.0.6_@types+node@18.13.0
+      '@whatwg-node/node-fetch': 0.1.0_@types+node@18.13.0
       busboy: 1.6.0
       urlpattern-polyfill: 6.0.2
       web-streams-polyfill: 3.2.1
@@ -10571,8 +10583,8 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@whatwg-node/node-fetch/0.0.6:
-    resolution: {integrity: sha512-pFEN2DNk1ZJZjdX9O7FG9qBZ7oIaB8JzOpAUCUditZ25kOSJb0qylq5uR2XUnzngBQCBwT/MHnKq2sXQZp1BUQ==}
+  /@whatwg-node/node-fetch/0.1.0:
+    resolution: {integrity: sha512-SSEGg+uVCeGSROAFSuBHhh7KufoOVcs+ftcCQaCHawXdkWVX7+fHramK23H3tXXlKdxuYIHO0oDiIVbq9BE34Q==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -10580,8 +10592,8 @@ packages:
       busboy: 1.6.0
       tslib: 2.5.0
 
-  /@whatwg-node/node-fetch/0.0.6_@types+node@18.11.19:
-    resolution: {integrity: sha512-pFEN2DNk1ZJZjdX9O7FG9qBZ7oIaB8JzOpAUCUditZ25kOSJb0qylq5uR2XUnzngBQCBwT/MHnKq2sXQZp1BUQ==}
+  /@whatwg-node/node-fetch/0.1.0_@types+node@18.11.19:
+    resolution: {integrity: sha512-SSEGg+uVCeGSROAFSuBHhh7KufoOVcs+ftcCQaCHawXdkWVX7+fHramK23H3tXXlKdxuYIHO0oDiIVbq9BE34Q==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -10591,8 +10603,8 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@whatwg-node/node-fetch/0.0.6_@types+node@18.13.0:
-    resolution: {integrity: sha512-pFEN2DNk1ZJZjdX9O7FG9qBZ7oIaB8JzOpAUCUditZ25kOSJb0qylq5uR2XUnzngBQCBwT/MHnKq2sXQZp1BUQ==}
+  /@whatwg-node/node-fetch/0.1.0_@types+node@18.13.0:
+    resolution: {integrity: sha512-SSEGg+uVCeGSROAFSuBHhh7KufoOVcs+ftcCQaCHawXdkWVX7+fHramK23H3tXXlKdxuYIHO0oDiIVbq9BE34Q==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -10623,7 +10635,7 @@ packages:
   /@whatwg-node/server/0.6.5_@types+node@18.13.0:
     resolution: {integrity: sha512-hZWvMkIK8KRSK1EP//L+Yp1N5grPwao1XYHCs9kFrV68YKEP9gCQ7ZTTvKR42lPsXzCjqJH+iEpPHSYrmZVeMQ==}
     dependencies:
-      '@whatwg-node/fetch': 0.7.0_@types+node@18.13.0
+      '@whatwg-node/fetch': 0.7.1_@types+node@18.13.0
       tslib: 2.5.0
     transitivePeerDependencies:
       - '@types/node'
@@ -11345,7 +11357,6 @@ packages:
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-    dev: true
 
   /atob/2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
@@ -11402,6 +11413,15 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.52
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.42
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -12170,6 +12190,11 @@ packages:
       no-case: 3.0.4
       tslib: 2.5.0
       upper-case-first: 2.0.2
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/2.0.1:
@@ -16321,7 +16346,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-jetpack/5.1.0:
     resolution: {integrity: sha512-Xn4fDhLydXkuzepZVsr02jakLlmoARPy+YWIclo4kh0GyNGUHnTqeH/w/qIsVn50dFxtp8otPL2t/HcPJBbxUA==}
@@ -19056,11 +19080,13 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonify/0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
     dev: true
+
+  /jsonschema/1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -26769,7 +26795,6 @@ packages:
   /universalify/2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /unixify/1.0.0:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}

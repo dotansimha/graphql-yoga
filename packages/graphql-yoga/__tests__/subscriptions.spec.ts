@@ -100,7 +100,7 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              await new Promise((resolve) => setTimeout(resolve, 10000))
+              await new Promise((resolve) => setTimeout(resolve, 10_000))
               yield { hi: 'hi' }
             },
           },
@@ -125,21 +125,30 @@ describe('Subscription', () => {
       }),
     })
 
-    const reader = response?.body!.getReader()
+    const iterator = response.body![Symbol.asyncIterator]()
 
     setTimeout(() => {
-      reader.releaseLock()
-      response.body?.cancel()
+      iterator.return?.()
     }, 1500)
 
     const results = []
+    // eslint-disable-next-line no-constant-condition
     while (true) {
-      const { done, value } = await reader.read()
+      const { done, value } = await iterator.next()
       if (done) {
         break
       }
-      results.push(value)
+      results.push(Buffer.from(value).toString('utf-8'))
     }
-    expect(results).toMatchInlineSnapshot()
+    expect(results).toMatchInlineSnapshot(`
+      [
+        ":
+
+      ",
+        ":
+
+      ",
+      ]
+    `)
   })
 })
