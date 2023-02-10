@@ -222,7 +222,7 @@ importers:
 
   examples/bun:
     specifiers:
-      '@whatwg-node/fetch': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.0
       bun-types: ^0.5.0
       graphql: 16.6.0
       graphql-yoga: 3.5.1
@@ -231,7 +231,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@whatwg-node/fetch': 0.7.1
+      '@whatwg-node/fetch': 0.8.0
 
   examples/cloudflare-advanced:
     specifiers:
@@ -289,13 +289,13 @@ importers:
 
   examples/error-handling:
     specifiers:
-      '@whatwg-node/fetch': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.0
       graphql: 16.6.0
       graphql-yoga: 3.5.1
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
-      '@whatwg-node/fetch': 0.7.1
+      '@whatwg-node/fetch': 0.8.0
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -813,7 +813,7 @@ importers:
     specifiers:
       '@types/node': ^18.11.19
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.0
       graphql: 16.6.0
       graphql-ws: ^5.11.3
       graphql-yoga: 3.5.1
@@ -831,7 +831,7 @@ importers:
       uWebSockets.js: github.com/uNetworking/uWebSockets.js/77bc1fd5577ae42b56675912eb8481a31f3fefd2
     devDependencies:
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.7.1_@types+node@18.11.19
+      '@whatwg-node/fetch': 0.8.0_@types+node@18.11.19
       ws: 8.12.0
 
   packages/client/apollo-link:
@@ -953,7 +953,7 @@ importers:
       '@n1ru4l/in-memory-live-query-store': 0.10.0
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.13.0
-      '@whatwg-node/fetch': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.0
       '@whatwg-node/server': ^0.6.5
       dset: ^3.1.1
       graphql: 16.6.0
@@ -971,7 +971,7 @@ importers:
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
-      '@whatwg-node/fetch': 0.7.1_@types+node@18.13.0
+      '@whatwg-node/fetch': 0.8.0_@types+node@18.13.0
       '@whatwg-node/server': 0.6.5_@types+node@18.13.0
       dset: 3.1.2
       lru-cache: 7.14.1
@@ -1004,24 +1004,24 @@ importers:
   packages/plugins/apollo-inline-trace:
     specifiers:
       '@envelop/on-resolve': ^2.0.2
-      '@whatwg-node/fetch': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.0
       apollo-reporting-protobuf: ^3.3.2
       graphql-yoga: 3.5.1
     dependencies:
       '@envelop/on-resolve': 2.0.2
       apollo-reporting-protobuf: 3.3.3
     devDependencies:
-      '@whatwg-node/fetch': 0.7.1
+      '@whatwg-node/fetch': 0.8.0
       graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/apq:
     specifiers:
-      '@whatwg-node/fetch': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.0
       graphql-yoga: 3.5.1
       tiny-lru: ^10.0.0
     dependencies:
-      '@whatwg-node/fetch': 0.7.1
+      '@whatwg-node/fetch': 0.8.0
       tiny-lru: 10.0.0
     devDependencies:
       graphql-yoga: link:../../graphql-yoga
@@ -1040,12 +1040,12 @@ importers:
     specifiers:
       '@graphql-tools/executor-http': ^0.1.4
       '@graphql-tools/utils': ^9.0.1
-      '@whatwg-node/fetch': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.0
     dependencies:
       '@graphql-tools/utils': 9.0.1
     devDependencies:
       '@graphql-tools/executor-http': 0.1.4
-      '@whatwg-node/fetch': 0.7.1
+      '@whatwg-node/fetch': 0.8.0
     publishDirectory: dist
 
   packages/plugins/disable-introspection:
@@ -10510,18 +10510,6 @@ packages:
     transitivePeerDependencies:
       - '@types/node'
 
-  /@whatwg-node/fetch/0.7.1_@types+node@18.11.19:
-    resolution: {integrity: sha512-rU/oS5pQLP0GOtTegi3sgzCkid5kbogXX16IaO0DYudhHJxbylKO7+xr7mbjM68XXYr7wkJ2BCmO1DHeg/XBuw==}
-    dependencies:
-      '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.1.0_@types+node@18.11.19
-      busboy: 1.6.0
-      urlpattern-polyfill: 6.0.2
-      web-streams-polyfill: 3.2.1
-    transitivePeerDependencies:
-      - '@types/node'
-    dev: true
-
   /@whatwg-node/fetch/0.7.1_@types+node@18.13.0:
     resolution: {integrity: sha512-rU/oS5pQLP0GOtTegi3sgzCkid5kbogXX16IaO0DYudhHJxbylKO7+xr7mbjM68XXYr7wkJ2BCmO1DHeg/XBuw==}
     dependencies:
@@ -10532,6 +10520,41 @@ packages:
       web-streams-polyfill: 3.2.1
     transitivePeerDependencies:
       - '@types/node'
+
+  /@whatwg-node/fetch/0.8.0:
+    resolution: {integrity: sha512-G9l3O2mAL7soTRP4BMz+MLr1SrkZ99LeCr2ZSq8rZ/y9y9QfnE9GB7GGXiC1fqcgFpHODead7UwcUiSrbmlySA==}
+    dependencies:
+      '@peculiar/webcrypto': 1.4.0
+      '@whatwg-node/node-fetch': 0.2.0
+      busboy: 1.6.0
+      urlpattern-polyfill: 6.0.2
+      web-streams-polyfill: 3.2.1
+    transitivePeerDependencies:
+      - '@types/node'
+
+  /@whatwg-node/fetch/0.8.0_@types+node@18.11.19:
+    resolution: {integrity: sha512-G9l3O2mAL7soTRP4BMz+MLr1SrkZ99LeCr2ZSq8rZ/y9y9QfnE9GB7GGXiC1fqcgFpHODead7UwcUiSrbmlySA==}
+    dependencies:
+      '@peculiar/webcrypto': 1.4.0
+      '@whatwg-node/node-fetch': 0.2.0_@types+node@18.11.19
+      busboy: 1.6.0
+      urlpattern-polyfill: 6.0.2
+      web-streams-polyfill: 3.2.1
+    transitivePeerDependencies:
+      - '@types/node'
+    dev: true
+
+  /@whatwg-node/fetch/0.8.0_@types+node@18.13.0:
+    resolution: {integrity: sha512-G9l3O2mAL7soTRP4BMz+MLr1SrkZ99LeCr2ZSq8rZ/y9y9QfnE9GB7GGXiC1fqcgFpHODead7UwcUiSrbmlySA==}
+    dependencies:
+      '@peculiar/webcrypto': 1.4.0
+      '@whatwg-node/node-fetch': 0.2.0_@types+node@18.13.0
+      busboy: 1.6.0
+      urlpattern-polyfill: 6.0.2
+      web-streams-polyfill: 3.2.1
+    transitivePeerDependencies:
+      - '@types/node'
+    dev: false
 
   /@whatwg-node/node-fetch/0.0.1:
     resolution: {integrity: sha512-dMbh604yf2jl37IzvYGA6z3heQg3dMzlqoNsiNToe46SVmKusfJXGf4KYIuiJTzh9mEEu/uVF//QakUfsLJpwA==}
@@ -10592,17 +10615,6 @@ packages:
       busboy: 1.6.0
       tslib: 2.5.0
 
-  /@whatwg-node/node-fetch/0.1.0_@types+node@18.11.19:
-    resolution: {integrity: sha512-SSEGg+uVCeGSROAFSuBHhh7KufoOVcs+ftcCQaCHawXdkWVX7+fHramK23H3tXXlKdxuYIHO0oDiIVbq9BE34Q==}
-    peerDependencies:
-      '@types/node': ^18.0.6
-    dependencies:
-      '@types/node': 18.11.19
-      '@whatwg-node/events': 0.0.2
-      busboy: 1.6.0
-      tslib: 2.5.0
-    dev: true
-
   /@whatwg-node/node-fetch/0.1.0_@types+node@18.13.0:
     resolution: {integrity: sha512-SSEGg+uVCeGSROAFSuBHhh7KufoOVcs+ftcCQaCHawXdkWVX7+fHramK23H3tXXlKdxuYIHO0oDiIVbq9BE34Q==}
     peerDependencies:
@@ -10612,6 +10624,43 @@ packages:
       '@whatwg-node/events': 0.0.2
       busboy: 1.6.0
       tslib: 2.5.0
+
+  /@whatwg-node/node-fetch/0.2.0:
+    resolution: {integrity: sha512-HaCo3q3FJM4uf/45hbX4q5s6IZ2V9d+ZhcPKFWbmIjDppWRJ7EJRegyAJ7Mir+YcrD/neC4cowrAB3/XgZDbPw==}
+    peerDependencies:
+      '@types/node': ^18.0.6
+    dependencies:
+      '@whatwg-node/events': 0.0.2
+      busboy: 1.6.0
+      fast-querystring: 1.1.1
+      fast-url-parser: 1.1.3
+      tslib: 2.5.0
+
+  /@whatwg-node/node-fetch/0.2.0_@types+node@18.11.19:
+    resolution: {integrity: sha512-HaCo3q3FJM4uf/45hbX4q5s6IZ2V9d+ZhcPKFWbmIjDppWRJ7EJRegyAJ7Mir+YcrD/neC4cowrAB3/XgZDbPw==}
+    peerDependencies:
+      '@types/node': ^18.0.6
+    dependencies:
+      '@types/node': 18.11.19
+      '@whatwg-node/events': 0.0.2
+      busboy: 1.6.0
+      fast-querystring: 1.1.1
+      fast-url-parser: 1.1.3
+      tslib: 2.5.0
+    dev: true
+
+  /@whatwg-node/node-fetch/0.2.0_@types+node@18.13.0:
+    resolution: {integrity: sha512-HaCo3q3FJM4uf/45hbX4q5s6IZ2V9d+ZhcPKFWbmIjDppWRJ7EJRegyAJ7Mir+YcrD/neC4cowrAB3/XgZDbPw==}
+    peerDependencies:
+      '@types/node': ^18.0.6
+    dependencies:
+      '@types/node': 18.13.0
+      '@whatwg-node/events': 0.0.2
+      busboy: 1.6.0
+      fast-querystring: 1.1.1
+      fast-url-parser: 1.1.3
+      tslib: 2.5.0
+    dev: false
 
   /@whatwg-node/router/0.2.3:
     resolution: {integrity: sha512-xRkX5f6/KusmGrUh/9mfGhoOt+pI+TZIstpSnBvCUiDEb0ElJHrkKN0iQGq/QlWpK00S47p8/f3jJQemM3o1+A==}
@@ -15759,7 +15808,6 @@ packages:
 
   /fast-decode-uri-component/1.0.1:
     resolution: {integrity: sha512-WKgKWg5eUxvRZGwW8FvfbaH7AXSh2cL+3j5fMGzUMCxWBJ3dV3a7Wz8y2f/uQ0e3B6WmodD3oS54jTQ9HVTIIg==}
-    dev: false
 
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -15822,11 +15870,10 @@ packages:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
     dev: true
 
-  /fast-querystring/1.0.0:
-    resolution: {integrity: sha512-3LQi62IhQoDlmt4ULCYmh17vRO2EtS7hTSsG4WwoKWgV7GLMKBOecEh+aiavASnLx8I2y89OD33AGLo0ccRhzA==}
+  /fast-querystring/1.1.1:
+    resolution: {integrity: sha512-qR2r+e3HvhEFmpdHMv//U8FnFlnYjaC6QKDuaXALDkw2kvHO8WDjxH+f/rHGR4Me4pnk8p9JAkRNTjYHAKRn2Q==}
     dependencies:
       fast-decode-uri-component: 1.0.1
-    dev: false
 
   /fast-redact/3.1.2:
     resolution: {integrity: sha512-+0em+Iya9fKGfEQGcd62Yv6onjBmmhV1uh86XVfOU8VwAe6kaFdQCWI9s0/Nnugx5Vd9tdbZ7e6gE2tR9dzXdw==}
@@ -15839,6 +15886,11 @@ packages:
   /fast-uri/2.1.0:
     resolution: {integrity: sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==}
     dev: false
+
+  /fast-url-parser/1.1.3:
+    resolution: {integrity: sha512-5jOCVXADYNuRkKFzNJ0dCCewsZiYo0dz8QNYljkOpFC6r2U4OBmKtvm/Tsuh4w1YYdDqDb31a8TVhBJ2OJKdqQ==}
+    dependencies:
+      punycode: 1.3.2
 
   /fast-write-atomic/0.2.1:
     resolution: {integrity: sha512-WvJe06IfNYlr+6cO3uQkdKdy3Cb1LlCJSF8zRs2eT8yuhdbSlR9nIt+TgQ92RUxiRrQm+/S7RARnMfCs5iuAjw==}
@@ -16096,7 +16148,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-querystring: 1.0.0
+      fast-querystring: 1.1.1
       safe-regex2: 2.0.0
     dev: false
 
@@ -23382,7 +23434,6 @@ packages:
 
   /punycode/1.3.2:
     resolution: {integrity: sha512-RofWgt/7fL5wP1Y7fxE7/EmTLzQVnB0ycyibJ0OOHIlJqTNzglYFxVwETOcIoJqJmpDXJ9xImDv+Fq34F/d4Dw==}
-    dev: false
 
   /punycode/2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
