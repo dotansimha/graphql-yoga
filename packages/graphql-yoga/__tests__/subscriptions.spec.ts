@@ -28,6 +28,9 @@ function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
 }
 
 describe('Subscription', () => {
+  afterAll((done) => {
+    setTimeout(done, 4000)
+  })
   test('eventStream', async () => {
     const source = (async function* foo() {
       yield { hi: 'hi' }
@@ -100,7 +103,7 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              await new Promise((resolve) => setTimeout(resolve, 10_000))
+              await new Promise((resolve) => setTimeout(resolve, 5000))
               yield { hi: 'hi' }
             },
           },
@@ -127,17 +130,19 @@ describe('Subscription', () => {
 
     const iterator = response.body![Symbol.asyncIterator]()
 
+    let shouldBreak = false
+
     setTimeout(() => {
-      iterator.return?.()
-    }, 1500)
+      shouldBreak = true
+    }, 2000)
 
     const results = []
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const { done, value } = await iterator.next()
-      if (done) {
+      if (shouldBreak) {
         break
       }
+      const { value } = await iterator.next()
       results.push(Buffer.from(value).toString('utf-8'))
     }
     expect(results).toMatchInlineSnapshot(`
