@@ -518,7 +518,7 @@ export class YogaServer<
     try {
       let url = this.urlParseCache.get(request.url)
       if (!url) {
-        url = new URL(request.url, 'http://localhost')
+        url = new this.fetchAPI.URL(request.url, 'http://localhost')
         this.urlParseCache.set(request.url, url)
       }
       for (const onRequestHook of this.onRequestHooks) {

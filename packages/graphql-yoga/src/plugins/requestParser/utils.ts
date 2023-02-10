@@ -1,4 +1,5 @@
 import { GraphQLParams } from '../../types.js'
+import { URLSearchParams } from '@whatwg-node/fetch'
 
 export function handleURLSearchParams(
   searchParams: URLSearchParams,
