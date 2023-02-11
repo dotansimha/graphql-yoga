@@ -6,6 +6,7 @@ import {
   createSummary,
   FillLabelsFnParams,
 } from '@envelop/prometheus'
+import { getOperationAST } from 'graphql'
 import { Plugin } from 'graphql-yoga'
 import { Histogram, register as defaultRegistry } from 'prom-client'
 
@@ -15,6 +16,7 @@ export interface PrometheusTracingPluginConfig
   extends EnvelopPrometheusTracingPluginConfig {
   http?: boolean | ReturnType<typeof createHistogram>
   httpRequestHeaders?: boolean
+  httpResponseHeaders?: boolean
   /**
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
@@ -42,10 +44,14 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
       'method',
       'statusCode',
       'statusText',
-      'responseHeaders',
+      'operationName',
+      'operationType',
     ]
     if (options.httpRequestHeaders) {
       labelNames.push('requestHeaders')
+    }
+    if (options.httpResponseHeaders) {
+      labelNames.push('responseHeaders')
     }
     httpHistogram =
       typeof options.http === 'object'
@@ -57,17 +63,25 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
               labelNames,
               registers: [registry],
             }),
-            fillLabelsFn(_, { request, response }) {
+            fillLabelsFn(params, { request, response }) {
               const labels: Record<string, string> = {
+                operationName: params.operationName || 'Anonymous',
                 url: request.url,
                 method: request.method,
                 statusCode: response.status,
                 statusText: response.statusText,
-                responseHeaders: JSON.stringify(headersToObj(response.headers)),
+              }
+              if (params?.operationType) {
+                labels.operationType = params.operationType
               }
               if (options.httpRequestHeaders) {
                 labels.requestHeaders = JSON.stringify(
                   headersToObj(request.headers),
+                )
+              }
+              if (options.httpResponseHeaders) {
+                labels.responseHeaders = JSON.stringify(
+                  headersToObj(response.headers),
                 )
               }
               return labels
@@ -76,6 +90,7 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   }
 
   const startByRequest = new WeakMap<Request, number>()
+  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>()
 
   return {
     onPluginInit({ addPlugin }) {
@@ -93,12 +108,27 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
         endResponse(response)
       }
     },
+    onExecute({ args }) {
+      const operationAST = getOperationAST(args.document, args.operationName)
+      const operationType = operationAST?.operation
+      const operationName = operationAST?.name?.value
+      paramsByRequest.set(args.contextValue.request, {
+        document: args.document,
+        operationName,
+        operationType,
+      })
+    },
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request)
       if (start) {
         const duration = Date.now() - start
+        const params = paramsByRequest.get(request)
         httpHistogram?.histogram.observe(
-          httpHistogram.fillLabelsFn({}, { ...serverContext, response }),
+          httpHistogram.fillLabelsFn(params || {}, {
+            ...serverContext,
+            request,
+            response,
+          }),
           duration,
         )
       }
