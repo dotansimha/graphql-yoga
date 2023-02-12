@@ -10,23 +10,11 @@ export interface HealthCheckPluginOptions {
 export function useHealthCheck({
   id = Date.now().toString(),
   logger = console,
-  endpoint: optsEndpoint,
+  endpoint = '/health',
 }: HealthCheckPluginOptions = {}): Plugin {
-  // No need to create a URLPattern if we have a static endpoint
-  // Later we can remove URLPattern here completely and stop accepting a pattern
-  let urlPattern: URLPattern | undefined
-  let endpoint: string
   return {
-    onYogaInit({ yoga }) {
-      if (optsEndpoint) {
-        endpoint = optsEndpoint
-        urlPattern = new yoga.fetchAPI.URLPattern({ pathname: optsEndpoint })
-      } else {
-        endpoint = '/health'
-      }
-    },
-    onRequest({ endResponse, fetchAPI, url }) {
-      if (url.pathname === endpoint || urlPattern?.test(url)) {
+    onRequest({ endResponse, fetchAPI, request, url }) {
+      if (request.url.endsWith(endpoint) || url.pathname === endpoint) {
         logger.debug('Responding Health Check')
         const response = new fetchAPI.Response(null, {
           status: 200,

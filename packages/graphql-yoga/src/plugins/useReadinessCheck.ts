@@ -40,7 +40,11 @@ export function useReadinessCheck({
       urlPattern = new yoga.fetchAPI.URLPattern({ pathname: endpoint })
     },
     async onRequest({ request, endResponse, fetchAPI, url }) {
-      if (url.pathname === endpoint || urlPattern.test(url)) {
+      if (
+        request.url.endsWith(endpoint) ||
+        url.pathname === endpoint ||
+        urlPattern.test(url)
+      ) {
         let response: Response
         try {
           const readyOrResponse = await check({ request, fetchAPI })

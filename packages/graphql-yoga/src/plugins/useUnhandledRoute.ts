@@ -1,4 +1,5 @@
 import landingPageBody from '../landing-page-html.js'
+import { FetchAPI } from '../types.js'
 import type { Plugin } from './types.js'
 
 export function useUnhandledRoute(args: {
@@ -6,14 +7,18 @@ export function useUnhandledRoute(args: {
   showLandingPage: boolean
 }): Plugin {
   let urlPattern: URLPattern
+  function getUrlPattern({ URLPattern }: FetchAPI) {
+    urlPattern ||= new URLPattern({
+      pathname: args.graphqlEndpoint,
+    })
+    return urlPattern
+  }
   return {
-    onYogaInit({ yoga }) {
-      urlPattern = new yoga.fetchAPI.URLPattern({
-        pathname: args.graphqlEndpoint,
-      })
-    },
     onRequest({ request, fetchAPI, endResponse, url }) {
-      if (url.pathname !== args.graphqlEndpoint && !urlPattern.test(url)) {
+      if (
+        url.pathname !== args.graphqlEndpoint &&
+        !getUrlPattern(fetchAPI).test(url)
+      ) {
         if (
           args.showLandingPage === true &&
           request.method === 'GET' &&
