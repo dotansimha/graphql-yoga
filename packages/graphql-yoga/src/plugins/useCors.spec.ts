@@ -7,7 +7,6 @@ import { CORSOptions, getCORSHeadersByRequestAndOptions } from './useCORS.js'
 describe('CORS', () => {
   describe('OPTIONS call', () => {
     it('should respond with correct status & headers', async () => {
-      // eslint-disable-next-line @typescript-eslint/require-await
       const schemaFactory = async () => {
         return createSchema({
           typeDefs: /* GraphQL */ `
@@ -48,7 +47,7 @@ describe('CORS', () => {
         request,
         corsOptionsWithNoOrigins,
       )
-      expect(headers['Access-Control-Allow-Origin']).toBe('*')
+      expect(headers?.['Access-Control-Allow-Origin']).toBe('*')
     })
     it('should return the origin if it is sent with header', () => {
       const origin = 'http://localhost:4000'
@@ -63,7 +62,7 @@ describe('CORS', () => {
         request,
         corsOptionsWithNoOrigins,
       )
-      expect(headers['Access-Control-Allow-Origin']).toBe(origin)
+      expect(headers?.['Access-Control-Allow-Origin']).toBe(origin)
     })
   })
   describe('Single allowed origin', () => {
@@ -82,7 +81,7 @@ describe('CORS', () => {
         request,
         corsOptionsWithSingleOrigin,
       )
-      expect(headers['Access-Control-Allow-Origin']).toBe(
+      expect(headers?.['Access-Control-Allow-Origin']).toBe(
         'http://localhost:4000',
       )
     })
@@ -103,7 +102,7 @@ describe('CORS', () => {
         request,
         corsOptionsWithMultipleOrigins,
       )
-      expect(headers['Access-Control-Allow-Origin']).toBe(
+      expect(headers?.['Access-Control-Allow-Origin']).toBe(
         'http://localhost:4001',
       )
     })
@@ -119,7 +118,7 @@ describe('CORS', () => {
         request,
         corsOptionsWithMultipleOrigins,
       )
-      expect(headers['Access-Control-Allow-Origin']).toBe('null')
+      expect(headers?.['Access-Control-Allow-Origin']).toBe('null')
     })
   })
   describe('Disabled CORS', () => {
@@ -136,7 +135,7 @@ describe('CORS', () => {
         request,
         corsOptionsWithDisabledCORS,
       )
-      expect(headers['Access-Control-Allow-Origin']).toBeUndefined()
+      expect(headers?.['Access-Control-Allow-Origin']).toBeUndefined()
     })
   })
 })
