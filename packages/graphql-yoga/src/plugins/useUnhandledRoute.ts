@@ -16,6 +16,7 @@ export function useUnhandledRoute(args: {
   return {
     onRequest({ request, fetchAPI, endResponse, url }) {
       if (
+        !request.url.endsWith(args.graphqlEndpoint) &&
         url.pathname !== args.graphqlEndpoint &&
         !getUrlPattern(fetchAPI).test(url)
       ) {
