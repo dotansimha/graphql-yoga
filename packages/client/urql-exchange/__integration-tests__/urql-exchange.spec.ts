@@ -4,6 +4,7 @@ import { yogaExchange } from '@graphql-yoga/urql-exchange'
 import { Client, createClient } from '@urql/core'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { pipe, toObservable } from 'wonka'
+import { ExecutionResult } from 'graphql'
 
 describe.skip('URQL Yoga Exchange', () => {
   const endpoint = '/graphql'
@@ -97,11 +98,11 @@ describe.skip('URQL Yoga Exchange', () => {
       toObservable,
     )
 
-    const collectedValues: string[] = []
+    const collectedValues: (string | undefined)[] = []
     let i = 0
     await new Promise<void>((resolve, reject) => {
       const subscription = observable.subscribe({
-        next: (result) => {
+        next: (result: ExecutionResult<{ time: string }>) => {
           collectedValues.push(result.data?.time)
           i++
           if (i > 2) {
@@ -112,7 +113,7 @@ describe.skip('URQL Yoga Exchange', () => {
         complete: () => {
           resolve()
         },
-        error: (error) => {
+        error: (error: Error) => {
           reject(error)
         },
       })
@@ -121,7 +122,8 @@ describe.skip('URQL Yoga Exchange', () => {
     expect(i).toBe(3)
     const now = new Date()
     for (const value of collectedValues) {
-      expect(new Date(value).getFullYear()).toBe(now.getFullYear())
+      expect(value).toBeTruthy()
+      expect(new Date(value!).getFullYear()).toBe(now.getFullYear())
     }
   })
   it('should handle file uploads correctly', async () => {
