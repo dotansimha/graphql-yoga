@@ -99,7 +99,7 @@ importers:
     specifiers:
       '@pulumi/aws': 5.29.1
       '@pulumi/awsx': 0.40.1
-      '@pulumi/azure-native': 1.94.0
+      '@pulumi/azure-native': 1.95.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
       '@pulumi/pulumi': 3.54.0
@@ -109,7 +109,7 @@ importers:
     dependencies:
       '@pulumi/aws': 5.29.1
       '@pulumi/awsx': 0.40.1_opujqoaowdw6ev7nq55ogttnya
-      '@pulumi/azure-native': 1.94.0
+      '@pulumi/azure-native': 1.95.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
       '@pulumi/pulumi': 3.54.0
@@ -482,12 +482,12 @@ importers:
       graphql-yoga: 3.6.0
       ts-node: 10.9.1
       typescript: 4.9.5
-      ws: 8.12.0
+      ws: 8.12.1
     dependencies:
       graphql: 16.6.0
       graphql-ws: 5.11.3_graphql@16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
-      ws: 8.12.0
+      ws: 8.12.1
     devDependencies:
       ts-node: 10.9.1_typescript@4.9.5
       typescript: 4.9.5
@@ -820,7 +820,7 @@ importers:
       ts-node-dev: ^2.0.0
       typescript: ^4.9.5
       uWebSockets.js: uNetworking/uWebSockets.js#v20.15.0
-      ws: 8.12.0
+      ws: 8.12.1
     dependencies:
       '@types/node': 18.11.19
       graphql: 16.6.0
@@ -832,7 +832,7 @@ importers:
     devDependencies:
       '@types/ws': 8.5.4
       '@whatwg-node/fetch': 0.8.1_@types+node@18.11.19
-      ws: 8.12.0
+      ws: 8.12.1
 
   packages/client/apollo-link:
     specifiers:
@@ -5966,10 +5966,10 @@ packages:
       '@types/ws': 8.5.4
       '@whatwg-node/fetch': 0.8.1_@types+node@18.13.0
       graphql: 16.6.0
-      isomorphic-ws: 5.0.0_ws@8.12.0
+      isomorphic-ws: 5.0.0_ws@8.12.1
       tslib: 2.5.0
       value-or-promise: 1.0.12
-      ws: 8.12.0
+      ws: 8.12.1
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -5992,10 +5992,10 @@ packages:
       '@types/ws': 8.5.4
       '@whatwg-node/fetch': 0.8.1
       graphql: 16.6.0
-      isomorphic-ws: 5.0.0_ws@8.12.0
+      isomorphic-ws: 5.0.0_ws@8.12.1
       tslib: 2.5.0
       value-or-promise: 1.0.12
-      ws: 8.12.0
+      ws: 8.12.1
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -6831,7 +6831,7 @@ packages:
       kleur: 4.1.5
       selfsigned: 2.1.1
       undici: 5.9.1
-      ws: 8.12.0
+      ws: 8.12.1
       youch: 2.2.2
     transitivePeerDependencies:
       - bufferutil
@@ -6924,7 +6924,7 @@ packages:
       '@miniflare/core': 2.11.0
       '@miniflare/shared': 2.11.0
       undici: 5.9.1
-      ws: 8.12.0
+      ws: 8.12.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -8499,8 +8499,8 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/azure-native/1.94.0:
-    resolution: {integrity: sha512-qzBdSSSwDjFiW0anGs1Uc60atV+7A95kFAz6KDm7oBvnpxocapO3wtGH2JiqnwEdRm2+/tj4gL5iiVt5HwCfSA==}
+  /@pulumi/azure-native/1.95.0:
+    resolution: {integrity: sha512-64DviFdnoNlscSzoMErHPQkQMtyLcwOsBD70w4dxUWHVWu/HjXcEKkmTsgIltcxdNq0e5nxv0A8G+snlSUdjRg==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.54.0
@@ -18276,6 +18276,13 @@ packages:
     dependencies:
       ws: 8.12.0
 
+  /isomorphic-ws/5.0.0_ws@8.12.1:
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '*'
+    dependencies:
+      ws: 8.12.1
+
   /istanbul-lib-coverage/3.2.0:
     resolution: {integrity: sha512-eOeJ5BHCmHYvQK7xt9GkdHuzuCGS1Y6g9Gvnx3Ym33fz/HpLRYxiS0wHNr+m/MBC8B647Xt608vCDEvhl9c6Mw==}
     engines: {node: '>=8'}
@@ -27551,6 +27558,18 @@ packages:
 
   /ws/8.12.0:
     resolution: {integrity: sha512-kU62emKIdKVeEIOIKVegvqpXMSTAMLJozpHZaJNDYqBjzlSYXQGviYwN1osDLJ9av68qHd4a2oSjd7yD4pacig==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
+  /ws/8.12.1:
+    resolution: {integrity: sha512-1qo+M9Ba+xNhPB+YTWUlK6M17brTut5EXbcBaMRN5pH5dFrXz7lzz1ChFSUq3bOUl8yEvSenhHmYUNJxFzdJew==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
