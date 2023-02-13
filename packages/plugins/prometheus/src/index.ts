@@ -1,13 +1,22 @@
 import {
   PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
   usePrometheus as useEnvelopPrometheus,
+  createCounter,
+  createHistogram,
+  createSummary,
+  FillLabelsFnParams,
 } from '@envelop/prometheus'
+import { getOperationAST } from 'graphql'
 import { Plugin } from 'graphql-yoga'
 import { Histogram, register as defaultRegistry } from 'prom-client'
 
+export { createCounter, createHistogram, createSummary, FillLabelsFnParams }
+
 export interface PrometheusTracingPluginConfig
   extends EnvelopPrometheusTracingPluginConfig {
-  http?: boolean | EnvelopPrometheusTracingPluginConfig['execute']
+  http?: boolean | ReturnType<typeof createHistogram>
+  httpRequestHeaders?: boolean
+  httpResponseHeaders?: boolean
   /**
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
@@ -27,21 +36,61 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics'
   const registry = options.registry || defaultRegistry
 
-  const httpHistogram = new Histogram({
-    name: 'graphql_yoga_http_duration',
-    help: 'Time spent on HTTP connection',
-    labelNames: [
+  let httpHistogram: ReturnType<typeof createHistogram> | undefined
+
+  if (options.http) {
+    const labelNames = [
       'url',
       'method',
-      'requestHeaders',
       'statusCode',
       'statusText',
-      'responseHeaders',
-    ],
-    registers: [registry],
-  })
+      'operationName',
+      'operationType',
+    ]
+    if (options.httpRequestHeaders) {
+      labelNames.push('requestHeaders')
+    }
+    if (options.httpResponseHeaders) {
+      labelNames.push('responseHeaders')
+    }
+    httpHistogram =
+      typeof options.http === 'object'
+        ? options.http
+        : createHistogram({
+            histogram: new Histogram({
+              name: 'graphql_yoga_http_duration',
+              help: 'Time spent on HTTP connection',
+              labelNames,
+              registers: [registry],
+            }),
+            fillLabelsFn(params, { request, response }) {
+              const labels: Record<string, string> = {
+                operationName: params.operationName || 'Anonymous',
+                url: request.url,
+                method: request.method,
+                statusCode: response.status,
+                statusText: response.statusText,
+              }
+              if (params?.operationType) {
+                labels.operationType = params.operationType
+              }
+              if (options.httpRequestHeaders) {
+                labels.requestHeaders = JSON.stringify(
+                  headersToObj(request.headers),
+                )
+              }
+              if (options.httpResponseHeaders) {
+                labels.responseHeaders = JSON.stringify(
+                  headersToObj(response.headers),
+                )
+              }
+              return labels
+            },
+          })
+  }
 
   const startByRequest = new WeakMap<Request, number>()
+  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>()
 
   return {
     onPluginInit({ addPlugin }) {
@@ -59,19 +108,27 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
         endResponse(response)
       }
     },
-    onResponse({ request, response }) {
+    onExecute({ args }) {
+      const operationAST = getOperationAST(args.document, args.operationName)
+      const operationType = operationAST?.operation
+      const operationName = operationAST?.name?.value
+      paramsByRequest.set(args.contextValue.request, {
+        document: args.document,
+        operationName,
+        operationType,
+      })
+    },
+    onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request)
       if (start) {
         const duration = Date.now() - start
-        httpHistogram.observe(
-          {
-            url: request.url,
-            method: request.method,
-            requestHeaders: JSON.stringify(headersToObj(request.headers)),
-            statusCode: response.status,
-            statusText: response.statusText,
-            responseHeaders: JSON.stringify(headersToObj(response.headers)),
-          },
+        const params = paramsByRequest.get(request)
+        httpHistogram?.histogram.observe(
+          httpHistogram.fillLabelsFn(params || {}, {
+            ...serverContext,
+            request,
+            response,
+          }),
           duration,
         )
       }
