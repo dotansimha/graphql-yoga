@@ -102,17 +102,17 @@ importers:
       '@pulumi/azure-native': 1.95.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.54.0
+      '@pulumi/pulumi': 3.55.0
       '@types/node': 18.13.0
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
       '@pulumi/aws': 5.29.1
-      '@pulumi/awsx': 0.40.1_opujqoaowdw6ev7nq55ogttnya
+      '@pulumi/awsx': 0.40.1_dwrco2wsinnqr7gykekj54bxmi
       '@pulumi/azure-native': 1.95.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.54.0
+      '@pulumi/pulumi': 3.55.0
       '@types/node': 18.13.0
       ts-node: 10.9.1_4bewfcp2iebiwuold25d6rgcsy
       typescript: 4.9.5
@@ -254,7 +254,7 @@ importers:
 
   examples/cloudflare-modules:
     specifiers:
-      '@cloudflare/workers-types': 4.20230115.0
+      '@cloudflare/workers-types': 4.20230214.0
       graphql: 16.6.0
       graphql-yoga: 3.6.0
       typescript: 4.9.5
@@ -263,7 +263,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@cloudflare/workers-types': 4.20230115.0
+      '@cloudflare/workers-types': 4.20230214.0
       typescript: 4.9.5
       wrangler: 2.9.1
 
@@ -4034,8 +4034,8 @@ packages:
     resolution: {integrity: sha512-BNV2wN8V6Zduvo7UzxcdjBbLQ906D2KhS804PDufLgx/sanGJCHVJMOIaLvS/b61JKtot1U7P/l1fjrjZ7/E3A==}
     dev: false
 
-  /@cloudflare/workers-types/4.20230115.0:
-    resolution: {integrity: sha512-GPJEiO8AFN+jUpA+DHJ1qdVmk4s/hq8JYKjOV/+U7avGquQbVnj905+Kg6uAEfrq16muwmRKl+XJGqsvlBlDNg==}
+  /@cloudflare/workers-types/4.20230214.0:
+    resolution: {integrity: sha512-PfpzIKjMA1P0HLtzZVKp/V4/rAiSkgIVwGKbQleTmj7y5O62NbWP9gAxzOeQ4LpUc8UL17KRF2rXTgNKP2HNFw==}
     dev: true
 
   /@colors/colors/1.5.0:
@@ -8474,7 +8474,7 @@ packages:
     resolution: {integrity: sha512-IHMSCrdkssoqN1u3SUMOCUOJos0BjVpJ8tkbby6yqASe5p3LCRpkQXwVPoSPRpS7TEoCvJpLw0f8ue+MEcCRdQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.54.0
+      '@pulumi/pulumi': 3.55.0
       aws-sdk: 2.1235.0
       builtin-modules: 3.0.0
       mime: 2.6.0
@@ -8484,7 +8484,7 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx/0.40.1_opujqoaowdw6ev7nq55ogttnya:
+  /@pulumi/awsx/0.40.1_dwrco2wsinnqr7gykekj54bxmi:
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
@@ -8492,7 +8492,7 @@ packages:
     dependencies:
       '@pulumi/aws': 5.29.1
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.54.0
+      '@pulumi/pulumi': 3.55.0
       '@types/aws-lambda': 8.10.93
       mime: 2.6.0
     transitivePeerDependencies:
@@ -8503,7 +8503,7 @@ packages:
     resolution: {integrity: sha512-64DviFdnoNlscSzoMErHPQkQMtyLcwOsBD70w4dxUWHVWu/HjXcEKkmTsgIltcxdNq0e5nxv0A8G+snlSUdjRg==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.54.0
+      '@pulumi/pulumi': 3.55.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -8512,7 +8512,7 @@ packages:
     resolution: {integrity: sha512-nbtZHG6VgmRsl22rkRNvu/cm8o3HL9oFMShYXCAOC8nDbdydP/rjJMmY4n8PStiEFuWkhZR6TxzepMqn/Oaa7g==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.54.0
+      '@pulumi/pulumi': 3.55.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -8521,14 +8521,14 @@ packages:
     resolution: {integrity: sha512-BZME50QkT556v+LvmTXPT8ssB2xxNkp9+msB5xYFEnUnWcdGAx5yUysQw70RJCb+U0GbkJSbxtlgMJgOQf/now==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.54.0
+      '@pulumi/pulumi': 3.55.0
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/pulumi/3.54.0:
-    resolution: {integrity: sha512-7c56BCsepB9gIN1jOpBHCQyx/aSyURmuW6fV9y6aw1IspgJqBylvLCfE+5tA0i6UedaAvf8xV4R58ckgbFM5Vg==}
+  /@pulumi/pulumi/3.55.0:
+    resolution: {integrity: sha512-d2WXfc8XTxeMWjOmrspSQlvlTq9VhxDidhb7CyINeiKhTHpm7imS0BiNFPrJe7wBkqJ4qlVA1itFwF3AvltU1Q==}
     engines: {node: '>=8.13.0 || >=10.10.0'}
     dependencies:
       '@grpc/grpc-js': 1.3.8
