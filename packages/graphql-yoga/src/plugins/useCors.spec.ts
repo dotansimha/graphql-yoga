@@ -36,7 +36,7 @@ describe('CORS', () => {
   })
   describe('No origins specified', () => {
     const corsOptionsWithNoOrigins = {}
-    it('should return the wildcard if no origin is sent with header', () => {
+    it('should not return any CORS header if no origin is sent with header', () => {
       const request = new Request('http://localhost:4000/graphql', {
         method: 'POST',
         headers: {
@@ -47,7 +47,7 @@ describe('CORS', () => {
         request,
         corsOptionsWithNoOrigins,
       )
-      expect(headers?.['Access-Control-Allow-Origin']).toBe('*')
+      expect(headers?.['Access-Control-Allow-Origin']).toBeUndefined()
     })
     it('should return the origin if it is sent with header', () => {
       const origin = 'http://localhost:4000'

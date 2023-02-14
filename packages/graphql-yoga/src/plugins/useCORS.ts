@@ -52,11 +52,14 @@ export function getCORSHeadersByRequestAndOptions(
     // If there is only one origin defined in the array, consider it as a single one
     if (corsOptions.origin.length === 1) {
       headers['Access-Control-Allow-Origin'] = corsOptions.origin[0]
-    } else {
+    } else if (corsOptions.origin.includes(currentOrigin)) {
       // If origin is available in the headers, use it
       headers['Access-Control-Allow-Origin'] = currentOrigin
       // Vary by origin because there are multiple origins
       headers['Vary'] = 'Origin'
+    } else {
+      // There is no origin found in the headers, so we should return null
+      headers['Access-Control-Allow-Origin'] = 'null'
     }
   }
 
