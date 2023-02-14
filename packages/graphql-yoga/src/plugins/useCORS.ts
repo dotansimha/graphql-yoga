@@ -29,12 +29,12 @@ export type CORSOptionsFactory<TServerContext> = (
 export function getCORSHeadersByRequestAndOptions(
   request: Request,
   corsOptions: CORSOptions,
-): Record<string, string> {
-  const headers: Record<string, string> = {}
-
-  if (corsOptions === false) {
-    return headers
+): Record<string, string> | null {
+  const currentOrigin = request.headers.get('origin')
+  if (corsOptions === false || currentOrigin == null) {
+    return null
   }
+  const headers: Record<string, string> = {}
 
   // If defined origins have '*' or undefined by any means, we should allow all origins
   if (
@@ -42,15 +42,9 @@ export function getCORSHeadersByRequestAndOptions(
     corsOptions.origin.length === 0 ||
     corsOptions.origin.includes('*')
   ) {
-    const currentOrigin = request.headers.get('origin')
-    // If origin is available in the headers, use it
-    if (currentOrigin != null) {
-      headers['Access-Control-Allow-Origin'] = currentOrigin
-      // Vary by origin because there are multiple origins
-      headers['Vary'] = 'Origin'
-    } else {
-      headers['Access-Control-Allow-Origin'] = '*'
-    }
+    headers['Access-Control-Allow-Origin'] = currentOrigin
+    // Vary by origin because there are multiple origins
+    headers['Vary'] = 'Origin'
   } else if (typeof corsOptions.origin === 'string') {
     // If there is one specific origin is specified, use it directly
     headers['Access-Control-Allow-Origin'] = corsOptions.origin
@@ -58,17 +52,14 @@ export function getCORSHeadersByRequestAndOptions(
     // If there is only one origin defined in the array, consider it as a single one
     if (corsOptions.origin.length === 1) {
       headers['Access-Control-Allow-Origin'] = corsOptions.origin[0]
+    } else if (corsOptions.origin.includes(currentOrigin)) {
+      // If origin is available in the headers, use it
+      headers['Access-Control-Allow-Origin'] = currentOrigin
+      // Vary by origin because there are multiple origins
+      headers['Vary'] = 'Origin'
     } else {
-      const currentOrigin = request.headers.get('origin')
-      if (currentOrigin != null && corsOptions.origin.includes(currentOrigin)) {
-        // If origin is available in the headers, use it
-        headers['Access-Control-Allow-Origin'] = currentOrigin
-        // Vary by origin because there are multiple origins
-        headers['Vary'] = 'Origin'
-      } else {
-        // There is no origin found in the headers, so we should return null
-        headers['Access-Control-Allow-Origin'] = 'null'
-      }
+      // There is no origin found in the headers, so we should return null
+      headers['Access-Control-Allow-Origin'] = 'null'
     }
   }
 
@@ -165,8 +156,10 @@ export function useCORS<TServerContext extends Record<string, any>>(
         corsOptionsFactory,
         serverContext,
       )
-      for (const headerName in headers) {
-        response.headers.set(headerName, headers[headerName])
+      if (headers != null) {
+        for (const headerName in headers) {
+          response.headers.set(headerName, headers[headerName])
+        }
       }
     },
   }

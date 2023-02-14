@@ -127,7 +127,7 @@ describe('Prometheus', () => {
     expect(metrics).toContain('statusCode="200"')
     expect(metrics).toContain('statusText="OK"')
     expect(metrics).toContain(
-      `responseHeaders="{\\"content-type\\":\\"application/json; charset=utf-8\\",\\"content-length\\\":\\"33\\",\\"access-control-allow-origin\\":\\"*\\"}"}`,
+      `responseHeaders="{\\"content-type\\":\\"application/json; charset=utf-8\\",\\"content-length\\\":\\"33\\"}"}`,
     )
   })
   it('endpoint should work', async () => {

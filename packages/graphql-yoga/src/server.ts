@@ -73,7 +73,6 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js'
-import { createLRUCache } from './utils/create-lru-cache.js'
 import { maskError } from './utils/mask-error.js'
 
 /**
@@ -511,16 +510,15 @@ export class YogaServer<
     }
   }
 
-  private urlParseCache = createLRUCache<URL>()
-
   async getResponse(request: Request, serverContext: TServerContext) {
     let result: ResultProcessorInput
     try {
-      let url = this.urlParseCache.get(request.url)
-      if (!url) {
-        url = new this.fetchAPI.URL(request.url, 'http://localhost')
-        this.urlParseCache.set(request.url, url)
-      }
+      let url = new Proxy({} as URL, {
+        get: (_target, prop, _receiver) => {
+          url = new this.fetchAPI.URL(request.url, 'http://localhost')
+          return Reflect.get(url, prop, url)
+        },
+      }) as URL
       for (const onRequestHook of this.onRequestHooks) {
         let response: Response | undefined
         await onRequestHook({
@@ -563,7 +561,7 @@ export class YogaServer<
         })
       }
 
-      let requestParserResult = await requestParser(request, url)
+      let requestParserResult = await requestParser(request)
 
       for (const onRequestParseDone of onRequestParseDoneList) {
         await onRequestParseDone({

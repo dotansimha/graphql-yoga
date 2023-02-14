@@ -1,6 +1,7 @@
 import { PromiseOrValue } from '@envelop/core'
 import graphiqlHTML from '../graphiql-html.js'
 import { YogaLogger } from '../logger.js'
+import { FetchAPI } from '../types.js'
 import { Plugin } from './types.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
@@ -101,16 +102,19 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
 
   const renderer = config?.render ?? renderGraphiQL
   let urlPattern: URLPattern
+  const getUrlPattern = ({ URLPattern }: FetchAPI) => {
+    urlPattern ||= new URLPattern({
+      pathname: config.graphqlEndpoint,
+    })
+    return urlPattern
+  }
   return {
-    onYogaInit({ yoga }) {
-      urlPattern = new yoga.fetchAPI.URLPattern({
-        pathname: config.graphqlEndpoint,
-      })
-    },
     async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
       if (
         shouldRenderGraphiQL(request) &&
-        (url.pathname === config.graphqlEndpoint || urlPattern.test(url))
+        (request.url.endsWith(config.graphqlEndpoint) ||
+          url.pathname === config.graphqlEndpoint ||
+          getUrlPattern(fetchAPI).test(url))
       ) {
         logger.debug(`Rendering GraphiQL`)
         const graphiqlOptions = await graphiqlOptionsFactory(
