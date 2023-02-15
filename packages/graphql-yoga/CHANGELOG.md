@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.6.1
+
+### Patch Changes
+
+- [`3c8c8434`](https://github.com/dotansimha/graphql-yoga/commit/3c8c843409fa1c06873d8599ebd7b02f6819dad4) Thanks [@ardatan](https://github.com/ardatan)! - Replace LRU caching with lazy URL construction, avoid unnecessary `parse` and `validate` invocation and CORS
+
 ## 3.6.0
 
 ### Minor Changes
