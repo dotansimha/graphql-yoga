@@ -238,8 +238,8 @@ curl -H 'Content-Type: application/json' \
 
 Then the server will respond a data something the following with the `ETag` and `Last-Modified` headers:
 
-`ETag` is the key that is used to identify the cached response.
-`Last-Modified` is used to determine if the cached response is still valid.
+- `ETag` is the key that is used to identify the cached response.
+- `Last-Modified` is used to determine if the cached response is still valid.
 
 ```bash filename="Response with ETag and Last-Modified headers"
 > GET /graphql?query={me{id,name}} HTTP/1.1
