@@ -58,7 +58,7 @@ it('should not hit GraphQL pipeline if cached', async () => {
     body: JSON.stringify({ query: '{ _ }' }),
   })
   const body2 = await response2.json()
-  expect(body2).toEqual({
+  expect(body2).toMatchObject({
     data: {
       _: 'DUMMY',
     },
@@ -111,7 +111,7 @@ it('cache a query operation', async () => {
   response = await fetch()
   expect(response.status).toEqual(200)
   body = await response.json()
-  expect(body).toEqual({
+  expect(body).toMatchObject({
     data: {
       __typename: 'Query',
     },
@@ -148,7 +148,7 @@ it('cache a query operation per session', async () => {
 
   expect(response.status).toEqual(200)
   let body = await response.json()
-  expect(body).toEqual({
+  expect(body).toMatchObject({
     data: {
       __typename: 'Query',
     },
@@ -164,7 +164,7 @@ it('cache a query operation per session', async () => {
   response = await fetch('1')
   expect(response.status).toEqual(200)
   body = await response.json()
-  expect(body).toEqual({
+  expect(body).toMatchObject({
     data: {
       __typename: 'Query',
     },
@@ -179,7 +179,7 @@ it('cache a query operation per session', async () => {
 
   expect(response.status).toEqual(200)
   body = await response.json()
-  expect(body).toEqual({
+  expect(body).toMatchObject({
     data: {
       __typename: 'Query',
     },

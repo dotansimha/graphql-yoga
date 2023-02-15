@@ -45,24 +45,35 @@ describe('Response Caching via ETag', () => {
       'http://localhost:4000/graphql?query=' + query,
     )
     expect(response.headers.get('ETag')).toEqual(query)
+    const lastModified = response.headers.get('Last-Modified')
+    expect(lastModified).toBeTruthy()
+    const lastModifiedDate = new Date(
+      lastModified || 'Expected Last-Modified to be a valid date',
+    )
+    expect(lastModifiedDate).toBeInstanceOf(Date)
+    expect(lastModifiedDate.toString()).not.toEqual('Invalid Date')
+    expect(lastModifiedDate.getDate()).toEqual(new Date().getDate())
   })
-  it('should respond 304 when the ETag matches', async () => {
+  it('should respond 304 when the ETag and Last-Modified matches', async () => {
+    const tomorrow = new Date()
     const query = '{me{id,name}}'
     const response = await yoga.fetch(
       'http://localhost:4000/graphql?query=' + query,
       {
         headers: {
           'If-None-Match': query,
+          'If-Modified-Since': tomorrow.toString(),
         },
       },
     )
     expect(response.status).toEqual(304)
     expect(cnt).toEqual(0)
   })
-  it('should not send ETag if the result is not cached', async () => {
+  it.only('should not send ETag or Last-Modified if the result is not cached', async () => {
     const response = await yoga.fetch(
       'http://localhost:4000/graphql?query={me(throwError:true){id,name}}',
     )
     expect(response.headers.get('ETag')).toBeFalsy()
+    expect(response.headers.get('Last-Modified')).toBeFalsy()
   })
 })

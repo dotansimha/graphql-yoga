@@ -6,7 +6,14 @@ import {
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache'
-import { Maybe, Plugin, PromiseOrValue, YogaInitialContext } from 'graphql-yoga'
+import { ExecutionResult } from 'graphql'
+import {
+  Maybe,
+  Plugin,
+  PromiseOrValue,
+  YogaInitialContext,
+  YogaLogger,
+} from 'graphql-yoga'
 
 export type UseResponseCacheParameter = Omit<
   UseEnvelopResponseCacheParameter,
@@ -50,8 +57,12 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey
   const cache = options.cache ?? createInMemoryCache()
   const enabled = options.enabled ?? (() => true)
-  const cachedByRequest = new WeakMap<Request, boolean>()
+  const cachedLastModifiedByRequest = new WeakMap<Request, string>()
+  let logger: YogaLogger
   return {
+    onYogaInit({ yoga }) {
+      logger = yoga.logger
+    },
     onPluginInit({ addPlugin }) {
       addPlugin(
         useEnvelopResponseCache({
@@ -60,6 +71,20 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           getDocumentString: getDocumentStringForEnvelop,
           session: sessionFactoryForEnvelop,
           buildResponseCacheKey: cacheKeyFactoryForEnvelop,
+          shouldCacheResult({ result }) {
+            const shouldCached = options.shouldCacheResult
+              ? options.shouldCacheResult({ result })
+              : !result.errors?.length
+            if (shouldCached) {
+              result.extensions ||= {}
+              result.extensions.responseCache ||= {}
+              result.extensions.responseCache!['lastModified'] =
+                new Date().toString()
+            } else {
+              logger.warn('[useResponseCache] Failed to cache due to errors')
+            }
+            return shouldCached
+          },
           includeExtensionMetadata: true,
         }),
       )
@@ -70,13 +95,22 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         if (operationId) {
           const cachedResponse = await cache.get(operationId)
           if (cachedResponse) {
-            const okResponse = new fetchAPI.Response(null, {
-              status: 304,
-              headers: {
-                ETag: operationId,
-              },
-            })
-            endResponse(okResponse)
+            const lastModifiedFromClient =
+              request.headers.get('If-Modified-Since')
+            const lastModifiedFromCache =
+              cachedResponse.extensions?.responseCache?.['lastModified']
+            if (
+              new Date(lastModifiedFromClient!).getTime() >=
+              new Date(lastModifiedFromCache).getTime()
+            ) {
+              const okResponse = new fetchAPI.Response(null, {
+                status: 304,
+                headers: {
+                  ETag: operationId,
+                },
+              })
+              endResponse(okResponse)
+            }
           }
         }
       }
@@ -92,35 +126,34 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         operationIdByRequest.set(request, operationId)
         const cachedResponse = await cache.get(operationId)
         if (cachedResponse) {
-          if (options.includeExtensionMetadata) {
-            setResult({
-              ...cachedResponse,
-              extensions: {
-                responseCache: {
-                  hit: true,
-                },
-              },
-            })
-          } else {
-            setResult(cachedResponse)
-          }
+          cachedResponse.extensions ||= {}
+          cachedResponse.extensions.responseCache ||= {}
+          ;(cachedResponse.extensions.responseCache as { hit: boolean }).hit =
+            true
+          setResult(cachedResponse)
           return
         }
       }
     },
     onResultProcess({ request, result }) {
-      if ('extensions' in result && result.extensions?.responseCache != null) {
-        cachedByRequest.set(request, true)
+      const executionResult = result as ExecutionResult
+      if (executionResult.extensions?.responseCache != null) {
+        cachedLastModifiedByRequest.set(
+          request,
+          executionResult.extensions.responseCache['lastModified'],
+        )
         if (!options.includeExtensionMetadata) {
-          result.extensions.responseCache = undefined
+          executionResult.extensions.responseCache = undefined
         }
       }
     },
     onResponse({ response, request }) {
-      if (cachedByRequest.get(request)) {
+      const lastModified = cachedLastModifiedByRequest.get(request)
+      if (lastModified) {
         const operationId = operationIdByRequest.get(request)
         if (operationId) {
           response.headers.set('ETag', operationId)
+          response.headers.set('Last-Modified', lastModified)
         }
       }
     },
