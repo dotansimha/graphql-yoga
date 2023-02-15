@@ -1,5 +1,12 @@
 # @graphql-yoga/plugin-apollo-inline-trace
 
+## 1.6.2
+
+### Patch Changes
+
+- [#2436](https://github.com/dotansimha/graphql-yoga/pull/2436) [`53e7679a`](https://github.com/dotansimha/graphql-yoga/commit/53e7679a097dcb5b5f581a204176cd753bb536b3) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Added dependency [`tslib@^2.5.0` ↗︎](https://www.npmjs.com/package/tslib/v/2.5.0) (to `dependencies`)
+
 ## 1.6.1
 
 ### Patch Changes
