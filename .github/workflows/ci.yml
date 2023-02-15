@@ -235,4 +235,5 @@ jobs:
         env:
           APOLLO_ELV2_LICENSE: accept
       - name: Report
+        working-directory: examples/apollo-federation-compatibility
         run: cat results.md > $GITHUB_STEP_SUMMARY
