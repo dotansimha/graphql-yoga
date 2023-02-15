@@ -4,14 +4,14 @@ import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
-        type Query {
-            me: User
-        }
-        type User {
-            id: ID!
-            name: String!
-        }
-    `,
+    type Query {
+      me: User
+    }
+    type User {
+      id: ID!
+      name: String!
+    }
+  `,
   resolvers: {
     Query: {
       me: () => {
@@ -30,6 +30,7 @@ const yoga = createYoga({
   plugins: [
     useResponseCache({
       session: () => null,
+      includeExtensionMetadata: true,
     }),
   ],
 })
