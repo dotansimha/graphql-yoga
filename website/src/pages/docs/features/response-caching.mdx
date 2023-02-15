@@ -226,3 +226,46 @@ If the client sends an `If-None-Match` header with the same value as the `ETag` 
 Most of the browsers and some HTTP clients support this behavior, so you can use it to improve the performance of your frontend application.
 
 [Learn more about `ETag` and `If-None-Match` headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
+
+### Example with `curl`
+
+First we send a request to the GraphQL server, and we can see that the response contains the headers
+
+```bash filename="Get \`ETag\` and \`Last-Modified\` headers"
+curl -X GET -H 'Content-Type: application/json' "http://localhost:4000/graphql?query={me{id name}}" -v
+
+````
+
+Then the server will respond a data something the following with the `ETag` and `Last-Modified` headers:
+
+`ETag` is the key that is used to identify the cached response.
+`Last-Modified` is used to determine if the cached response is still valid.
+
+```bash filename="Response with \`ETag\` and \`Last-Modified\` headers"
+> GET /graphql?query={me{id,name}} HTTP/1.1
+> Host: localhost:4000
+> User-Agent: curl/7.68.0
+> Accept: application/json
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< access-control-allow-origin: *
+< content-length: 130
+< content-type: application/json; charset=utf-8
+< etag: 2c0ebfe7b2b0273029f2fa23a99d213b56f4838756b3ef7b323c04de1e836be3
+< last-modified: Wed Feb 15 2023 15:23:55 GMT+0300 (GMT+03:00)
+< Date: Wed, 15 Feb 2023 12:23:55 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+<
+
+{"data":{"me":{"id":"1","name":"Bob"}}}
+````
+
+In the next calls, we can use the `ETag` header as the `If-None-Match` header together with `Last-Modified` header as `If-Modified-Since` to check if the cached response is still valid.
+
+```bash filename="Use the headers to check if the cached response is still valid"
+curl -H "Accept: application/json" -H "If-None-Match: 2c0ebfe7b2b0273029f2fa23a99d213b56f4838756b3ef7b323c04de1e836be3" -H "If-Modified-Since: Wed Feb 15 2023 15:23:55 GMT" "http://localhost:4000/graphql?query=\{me\{id,name\}\}"
+```
+
+Then the server will return `304: Not Modified` status code with no content.

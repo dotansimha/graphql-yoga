@@ -55,19 +55,22 @@ describe('Response Caching via ETag', () => {
     expect(lastModifiedDate.getDate()).toEqual(new Date().getDate())
   })
   it('should respond 304 when the ETag and Last-Modified matches', async () => {
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
     const query = '{me{id,name}}'
-    const response = await yoga.fetch(
+    const response1 = await yoga.fetch(
+      'http://localhost:4000/graphql?query=' + query,
+    )
+    const lastModified = response1.headers.get('Last-Modified')
+    console.log(lastModified)
+    const response2 = await yoga.fetch(
       'http://localhost:4000/graphql?query=' + query,
       {
         headers: {
           'If-None-Match': query,
-          'If-Modified-Since': tomorrow.toString(),
+          'If-Modified-Since': lastModified,
         },
       },
     )
-    expect(response.status).toEqual(304)
+    expect(response2.status).toEqual(304)
     expect(resolverCalledCount).toEqual(0)
   })
   it('should not send ETag or Last-Modified if the result is not cached', async () => {
