@@ -3,7 +3,7 @@ import { createYoga, createSchema } from 'graphql-yoga'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 
 const schema = createSchema({
-  typeDefs: `
+  typeDefs: /* GraphQL */ `
         type Query {
             me: User
         }
