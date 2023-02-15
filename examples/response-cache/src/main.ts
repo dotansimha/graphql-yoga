@@ -30,7 +30,6 @@ const yoga = createYoga({
   plugins: [
     useResponseCache({
       session: () => null,
-      includeExtensionMetadata: true,
     }),
   ],
 })
