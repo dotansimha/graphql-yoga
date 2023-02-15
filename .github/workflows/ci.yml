@@ -212,21 +212,28 @@ jobs:
 
   apollo-federation-compatibility:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: examples/apollo-federation-compatibility
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
+        with:
+          nodeVersion: 18
+          packageManager: pnpm
+      - name: Build Packages
+        run: pnpm build
+      - name: Create Bundle
+        working-directory: examples/apollo-federation-compatibility
+        run: pnpm build
+      - name: Install Rover
+        run: curl -sSL https://rover.apollo.dev/nix/v0.11.1 | sh
+      - name: Add Rover to PATH
+        run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Run Tests
-        run: >
-          npx @apollo/federation-subgraph-compatibility
-          docker
-          --compose docker-compose.yaml
-          --schema products.graphql
-          --failOnRequired
-          --failOnWarning
-          --format markdown
-          --debug
+        working-directory: examples/apollo-federation-compatibility
+        run: pnpm test
+        env:
+          APOLLO_ELV2_LICENSE: accept
       - name: Report
+        working-directory: examples/apollo-federation-compatibility
         run: cat results.md > $GITHUB_STEP_SUMMARY
