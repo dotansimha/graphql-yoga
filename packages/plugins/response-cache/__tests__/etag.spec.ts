@@ -3,9 +3,9 @@ import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 import { GraphQLError } from 'graphql'
 
 describe('Response Caching via ETag', () => {
-  let cnt = 0
+  let resolverCalledCount = 0
   afterEach(() => {
-    cnt = 0
+    resolverCalledCount = 0
   })
   const yoga = createYoga({
     schema: createSchema({
@@ -22,7 +22,7 @@ describe('Response Caching via ETag', () => {
         Query: {
           me: (_, { throwError }) => {
             if (throwError) throw new GraphQLError('Error')
-            cnt++
+            resolverCalledCount++
             return {
               id: '1',
               name: 'Bob',
@@ -31,11 +31,11 @@ describe('Response Caching via ETag', () => {
         },
       },
     }),
+    logging: false,
     plugins: [
       useResponseCache({
         session: () => null,
         buildResponseCacheKey: async ({ documentString }) => documentString,
-        includeExtensionMetadata: true,
       }),
     ],
   })
@@ -56,6 +56,7 @@ describe('Response Caching via ETag', () => {
   })
   it('should respond 304 when the ETag and Last-Modified matches', async () => {
     const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
     const query = '{me{id,name}}'
     const response = await yoga.fetch(
       'http://localhost:4000/graphql?query=' + query,
@@ -67,13 +68,30 @@ describe('Response Caching via ETag', () => {
       },
     )
     expect(response.status).toEqual(304)
-    expect(cnt).toEqual(0)
+    expect(resolverCalledCount).toEqual(0)
   })
-  it.only('should not send ETag or Last-Modified if the result is not cached', async () => {
+  it('should not send ETag or Last-Modified if the result is not cached', async () => {
     const response = await yoga.fetch(
       'http://localhost:4000/graphql?query={me(throwError:true){id,name}}',
     )
     expect(response.headers.get('ETag')).toBeFalsy()
     expect(response.headers.get('Last-Modified')).toBeFalsy()
+  })
+  it('should not response 304 if ETag matches but Last-Modified does not', async () => {
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const query = '{me{id,name}}'
+    const response = await yoga.fetch(
+      'http://localhost:4000/graphql?query=' + query,
+      {
+        headers: {
+          'If-None-Match': query,
+          'If-Modified-Since': yesterday.toString(),
+        },
+      },
+    )
+    expect(response.status).toEqual(200)
+    // It should still hit the cache
+    expect(resolverCalledCount).toEqual(0)
   })
 })

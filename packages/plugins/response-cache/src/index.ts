@@ -77,15 +77,13 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
               : !result.errors?.length
             if (shouldCached) {
               result.extensions ||= {}
-              result.extensions.responseCache ||= {}
-              result.extensions.responseCache!['lastModified'] =
+              result.extensions.responseCacheLastModified =
                 new Date().toString()
             } else {
               logger.warn('[useResponseCache] Failed to cache due to errors')
             }
             return shouldCached
           },
-          includeExtensionMetadata: true,
         }),
       )
     },
@@ -97,8 +95,8 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           if (cachedResponse) {
             const lastModifiedFromClient =
               request.headers.get('If-Modified-Since')
-            const lastModifiedFromCache =
-              cachedResponse.extensions?.responseCache?.['lastModified']
+            const lastModifiedFromCache = cachedResponse.extensions
+              ?.responseCacheLastModified as string
             if (
               new Date(lastModifiedFromClient!).getTime() >=
               new Date(lastModifiedFromCache).getTime()
@@ -126,25 +124,30 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         operationIdByRequest.set(request, operationId)
         const cachedResponse = await cache.get(operationId)
         if (cachedResponse) {
-          cachedResponse.extensions ||= {}
-          cachedResponse.extensions.responseCache ||= {}
-          ;(cachedResponse.extensions.responseCache as { hit: boolean }).hit =
-            true
-          setResult(cachedResponse)
+          if (options.includeExtensionMetadata) {
+            setResult({
+              ...cachedResponse,
+              extensions: {
+                ...cachedResponse.extensions,
+                responseCache: {
+                  hit: true,
+                },
+              },
+            })
+          } else {
+            setResult(cachedResponse)
+          }
           return
         }
       }
     },
     onResultProcess({ request, result }) {
       const executionResult = result as ExecutionResult
-      if (executionResult.extensions?.responseCache != null) {
+      if (executionResult.extensions?.responseCacheLastModified != null) {
         cachedLastModifiedByRequest.set(
           request,
-          executionResult.extensions.responseCache['lastModified'],
+          executionResult.extensions.responseCacheLastModified as string,
         )
-        if (!options.includeExtensionMetadata) {
-          executionResult.extensions.responseCache = undefined
-        }
       }
     },
     onResponse({ response, request }) {
