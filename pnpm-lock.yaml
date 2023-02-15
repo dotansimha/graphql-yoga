@@ -129,14 +129,14 @@ importers:
       '@graphql-codegen/cli': ^3.0.0
       '@graphql-codegen/typescript': ^3.0.0
       '@graphql-codegen/typescript-resolvers': ^3.0.0
-      '@graphql-yoga/plugin-apollo-inline-trace': ^1.6.1
+      '@graphql-yoga/plugin-apollo-inline-trace': ^1.6.2-alpha-20230215055359-e7a7535e
       '@types/node': 18.13.0
       graphql: 16.6.0
       graphql-tag: ^2.12.6
       graphql-yoga: ^3.6.1
     dependencies:
       '@apollo/subgraph': 2.1.4_graphql@16.6.0
-      '@graphql-yoga/plugin-apollo-inline-trace': link:../../packages/plugins/apollo-inline-trace
+      '@graphql-yoga/plugin-apollo-inline-trace': 1.6.2-alpha-20230215055359-e7a7535e_vwipxxvebevid2hhbqo7iif6dq
       graphql: 16.6.0
       graphql-tag: 2.12.6_graphql@16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
@@ -269,15 +269,15 @@ importers:
 
   examples/defer-stream:
     specifiers:
-      '@graphql-yoga/plugin-defer-stream': 1.6.1
-      '@graphql-yoga/render-graphiql': 3.6.1
+      '@graphql-yoga/plugin-defer-stream': 1.6.0
+      '@graphql-yoga/render-graphiql': 3.6.0
       graphql: 16.6.0
       graphql-yoga: 3.6.1
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
-      '@graphql-yoga/plugin-defer-stream': link:../../packages/plugins/defer-stream
-      '@graphql-yoga/render-graphiql': link:../../packages/render-graphiql
+      '@graphql-yoga/plugin-defer-stream': 1.6.0_vwipxxvebevid2hhbqo7iif6dq
+      '@graphql-yoga/render-graphiql': 3.6.0_uvw6f22hteubhjsjhbqzi2u4cm
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -462,13 +462,13 @@ importers:
 
   examples/graphql-sse:
     specifiers:
-      '@graphql-yoga/plugin-graphql-sse': 1.2.1
+      '@graphql-yoga/plugin-graphql-sse': 1.2.0
       graphql: 16.6.0
       graphql-yoga: 3.6.1
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
-      '@graphql-yoga/plugin-graphql-sse': link:../../packages/plugins/graphql-sse
+      '@graphql-yoga/plugin-graphql-sse': 1.2.0_vwipxxvebevid2hhbqo7iif6dq
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -729,13 +729,13 @@ importers:
 
   examples/sofa:
     specifiers:
-      '@graphql-yoga/plugin-sofa': 1.6.1
+      '@graphql-yoga/plugin-sofa': 1.6.0
       graphql: 16.6.0
       graphql-yoga: 3.6.1
       ts-node-dev: 2.0.0
       typescript: 4.9.5
     dependencies:
-      '@graphql-yoga/plugin-sofa': link:../../packages/plugins/sofa
+      '@graphql-yoga/plugin-sofa': 1.6.0_vwipxxvebevid2hhbqo7iif6dq
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
       ts-node-dev: 2.0.0_typescript@4.9.5
@@ -763,7 +763,7 @@ importers:
   examples/sveltekit:
     specifiers:
       '@envelop/graphql-jit': 5.0.4
-      '@graphql-yoga/render-graphiql': 3.6.1
+      '@graphql-yoga/render-graphiql': 3.6.0
       '@sveltejs/adapter-auto': 2.0.0
       '@sveltejs/kit': 1.0.0-next.520
       '@types/jest': ^29.0.0
@@ -786,7 +786,7 @@ importers:
       vite: 4.1.1
     dependencies:
       '@envelop/graphql-jit': 5.0.4_graphql@16.6.0
-      '@graphql-yoga/render-graphiql': link:../../packages/render-graphiql
+      '@graphql-yoga/render-graphiql': 3.6.0_uvw6f22hteubhjsjhbqzi2u4cm
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -947,7 +947,7 @@ importers:
       '@graphql-tools/executor': ^0.0.14
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.2.1
-      '@graphql-yoga/render-graphiql': 3.6.1
+      '@graphql-yoga/render-graphiql': 3.6.0
       '@graphql-yoga/subscription': ^3.1.0
       '@jest/globals': ^29.2.1
       '@n1ru4l/in-memory-live-query-store': 0.10.0
@@ -979,7 +979,7 @@ importers:
     devDependencies:
       '@envelop/disable-introspection': 4.0.4_a6sekiasy2tqr6d5gj7n2wtjli
       '@envelop/live-query': 5.0.4_a6sekiasy2tqr6d5gj7n2wtjli
-      '@graphql-yoga/render-graphiql': link:../render-graphiql
+      '@graphql-yoga/render-graphiql': 3.6.0
       '@jest/globals': 29.2.1
       '@n1ru4l/in-memory-live-query-store': 0.10.0_graphql@16.6.0
       '@repeaterjs/repeater': 3.0.4
@@ -4182,6 +4182,15 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dev: false
 
+  /@envelop/on-resolve/2.0.4_graphql@16.6.0:
+    resolution: {integrity: sha512-1Yi+AkB8K0VmS6qh6jyTWdJbcRofTCtEY0esdF/y2Q1rVe+1z6CxBHj+f2dRhJVixSxmjemBZR9iqfEpg9oRIQ==}
+    peerDependencies:
+      '@envelop/core': ^3.0.4
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      graphql: 16.6.0
+    dev: false
+
   /@envelop/prometheus/7.0.4_prom-client@14.1.1:
     resolution: {integrity: sha512-gtyOGs6X7uGXUg5IJ+nIi4prW2bMHSmzEzlkKmqvhFHFsMigzHcy+IEb+1PuY/Eml3VqRkccmMj/WXjatpHYHg==}
     peerDependencies:
@@ -6188,6 +6197,72 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.6.0
+
+  /@graphql-yoga/plugin-apollo-inline-trace/1.6.2-alpha-20230215055359-e7a7535e_vwipxxvebevid2hhbqo7iif6dq:
+    resolution: {integrity: sha512-CkE4LVSJXSeIQeOXFuGv6hBjI0Z3lzw373eRH4/j4v9Q5pd1/DcWrm5cnMqUym4S3kR9H+k9grcGuNTE8gstag==}
+    peerDependencies:
+      '@graphql-tools/utils': ^9.0.1
+      '@whatwg-node/fetch': ^0.8.1
+      graphql: ^15.2.0 || ^16.0.0
+      graphql-yoga: ^3.6.0
+    dependencies:
+      '@envelop/on-resolve': 2.0.4_graphql@16.6.0
+      apollo-reporting-protobuf: 3.3.3
+      graphql: 16.6.0
+      graphql-yoga: link:packages/graphql-yoga
+    transitivePeerDependencies:
+      - '@envelop/core'
+    dev: false
+
+  /@graphql-yoga/plugin-defer-stream/1.6.0_vwipxxvebevid2hhbqo7iif6dq:
+    resolution: {integrity: sha512-xgnyvFuuzpa6sV4OLNfGGeq/3aTrFHt4WDxGRDTaxiPjp8n26NCB1I5FM83OBonuOKKi4QJFYDeQ7aWMT2UYOA==}
+    peerDependencies:
+      graphql: ^15.2.0 || ^16.0.0
+      graphql-yoga: ^3.6.0
+    dependencies:
+      '@graphql-tools/utils': 9.2.1_graphql@16.6.0
+      graphql: 16.6.0
+      graphql-yoga: link:packages/graphql-yoga
+    dev: false
+
+  /@graphql-yoga/plugin-graphql-sse/1.2.0_vwipxxvebevid2hhbqo7iif6dq:
+    resolution: {integrity: sha512-yMTHWTvPda6K5IAxvDjC5jsnpzTxJ8p+MSuCDRgSBGj538cuTufRtiBA8wZNuhIM2kQMkVR/GZF5wxAB8om6EA==}
+    peerDependencies:
+      graphql: ^15.2.0 || ^16.0.0
+      graphql-yoga: ^3.6.0
+    dependencies:
+      graphql: 16.6.0
+      graphql-sse: 2.0.0_graphql@16.6.0
+      graphql-yoga: link:packages/graphql-yoga
+    dev: false
+
+  /@graphql-yoga/plugin-sofa/1.6.0_vwipxxvebevid2hhbqo7iif6dq:
+    resolution: {integrity: sha512-kPB4fX5nahTvlpgFpR0q9oH6J1n79EoQDdVJIjL3/tFWrxsGg1pcnsl/IGv1TFC316laRJtMmjhmD959L9A+4A==}
+    peerDependencies:
+      graphql: ^15.2.0 || ^16.0.0
+      graphql-yoga: ^3.6.0
+    dependencies:
+      '@graphql-tools/utils': 9.2.1_graphql@16.6.0
+      graphql: 16.6.0
+      graphql-yoga: link:packages/graphql-yoga
+      sofa-api: 0.16.3_graphql@16.6.0
+    transitivePeerDependencies:
+      - '@types/node'
+    dev: false
+
+  /@graphql-yoga/render-graphiql/3.6.0:
+    resolution: {integrity: sha512-sJHMX5kjS1vZ2zkVaW4RRBg9klV1iWqDo8SoEU3gPyofo1Uwz17HTubFmvVIWz9+hPjK7IsaNYgo9KSLPySFbA==}
+    peerDependencies:
+      graphql-yoga: ^3.6.0
+    dev: true
+
+  /@graphql-yoga/render-graphiql/3.6.0_uvw6f22hteubhjsjhbqzi2u4cm:
+    resolution: {integrity: sha512-sJHMX5kjS1vZ2zkVaW4RRBg9klV1iWqDo8SoEU3gPyofo1Uwz17HTubFmvVIWz9+hPjK7IsaNYgo9KSLPySFbA==}
+    peerDependencies:
+      graphql-yoga: ^3.6.0
+    dependencies:
+      graphql-yoga: link:packages/graphql-yoga
+    dev: false
 
   /@grpc/grpc-js/1.3.8:
     resolution: {integrity: sha512-4qJqqn+CU/nBydz9ePJP+oa8dz0U42Ut/GejlbyaQ1xTkynCc+ndNHHnISlNeHawDsv4MOAyP3mV/EnDNUw2zA==}
@@ -17012,6 +17087,15 @@ packages:
       graphql: '>=0.11 <=16'
     dev: false
 
+  /graphql-sse/2.0.0_graphql@16.6.0:
+    resolution: {integrity: sha512-TTdFwxGM9RY68s22XWyhc+SyQn3PLbELDD2So0K6Cc6EIlBAyPuNV8VlPfNKa/la7gEf2SwHY7JoJplOmOY4LA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      graphql: '>=0.11 <=16'
+    dependencies:
+      graphql: 16.6.0
+    dev: false
+
   /graphql-tag/2.12.6:
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
     engines: {node: '>=10'}
@@ -24887,6 +24971,24 @@ packages:
       '@whatwg-node/fetch': 0.6.9
       '@whatwg-node/router': 0.2.3
       ansi-colors: 4.1.3
+      openapi-types: 12.1.0
+      param-case: 3.0.4
+      title-case: 3.0.3
+      tslib: 2.5.0
+    transitivePeerDependencies:
+      - '@types/node'
+    dev: false
+
+  /sofa-api/0.16.3_graphql@16.6.0:
+    resolution: {integrity: sha512-AH4a+CesdV18/YZYDsSgXsqvJRI9wZ0gFdQPNN6fSgSoamIGBaDnP8kv8rjvVy6ccZov+pzfJhApog64P58vKA==}
+    peerDependencies:
+      graphql: ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-tools/utils': 9.2.1_graphql@16.6.0
+      '@whatwg-node/fetch': 0.6.9
+      '@whatwg-node/router': 0.2.3
+      ansi-colors: 4.1.3
+      graphql: 16.6.0
       openapi-types: 12.1.0
       param-case: 3.0.4
       title-case: 3.0.3
