@@ -106,10 +106,10 @@ export function run() {
 
   check(res, {
     no_errors: (resp) => !('errors' in resp.json()),
-    expected_result: resp => {
-      const data = resp.json().data;
+    expected_result: (resp) => {
+      const data = resp.json().data
 
-      return data && data.authors[0].id;
+      return data && data.authors[0].id
     },
   })
 }
