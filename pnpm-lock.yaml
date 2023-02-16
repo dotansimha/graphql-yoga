@@ -1064,6 +1064,7 @@ importers:
       graphql: 16.6.0
       graphql-http: ^1.7.2
       graphql-scalars: 1.20.4
+      graphql-sse: 2.0.0
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
       lru-cache: ^8.0.0
@@ -1093,6 +1094,7 @@ importers:
       graphql: 16.6.0
       graphql-http: 1.7.2_graphql@16.6.0
       graphql-scalars: 1.20.4_graphql@16.6.0
+      graphql-sse: 2.0.0_graphql@16.6.0
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
       puppeteer: 19.6.0
@@ -18060,6 +18062,15 @@ packages:
     peerDependencies:
       graphql: '>=0.11 <=16'
     dev: false
+
+  /graphql-sse/2.0.0_graphql@16.6.0:
+    resolution: {integrity: sha512-TTdFwxGM9RY68s22XWyhc+SyQn3PLbELDD2So0K6Cc6EIlBAyPuNV8VlPfNKa/la7gEf2SwHY7JoJplOmOY4LA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      graphql: '>=0.11 <=16'
+    dependencies:
+      graphql: 16.6.0
+    dev: true
 
   /graphql-tag/2.12.6:
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}

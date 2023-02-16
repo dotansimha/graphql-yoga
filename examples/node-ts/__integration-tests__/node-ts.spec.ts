@@ -24,6 +24,8 @@ describe('node-ts example integration', () => {
     expect(await response.text()).toMatchInlineSnapshot(`
       "data: {"errors":[{"message":"Subscriptions have been disabled"}]}
 
+      event: complete
+
       "
     `)
   })
