@@ -10,7 +10,7 @@ export const options = {
 }
 
 const DURATION = 30
-const VUS = 10
+const VUS = 1
 
 function getOptionsForScenario(scenario, index) {
   const noErrors = `no_errors{mode:${scenario}}`
@@ -38,7 +38,7 @@ const scenarioNames = [
   'graphql',
   'graphql-jit',
   'graphql-response-cache',
-  'graphql-apq',
+  'graphql-no-parse-validate-cache',
 ]
 
 scenarioNames.forEach((name, index) => {
@@ -88,14 +88,28 @@ export function handleSummary(data) {
 
 export function run() {
   const res = http.post(`http://localhost:4000/${__ENV.MODE}`, {
-    query: '{ greetings }',
+    query: /* GraphQL */ `
+      query authors {
+        authors {
+          id
+          name
+          company
+          books {
+            id
+            name
+            numPages
+          }
+        }
+      }
+    `,
   })
 
   check(res, {
     no_errors: (resp) => !('errors' in resp.json()),
-    expected_result: (resp) =>
-      resp.json().data &&
-      resp.json().data.greetings ===
-        'This is the `greetings` field of the root `Query` type',
+    expected_result: resp => {
+      const data = resp.json().data;
+
+      return data && data.authors[0].id;
+    },
   })
 }

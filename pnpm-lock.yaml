@@ -87,19 +87,19 @@ importers:
       weak-napi: 2.0.2
       wrangler: 2.10.0
 
-  benchmark/hello-world:
+  benchmark:
     specifiers:
       '@envelop/graphql-jit': 5.0.4
-      '@graphql-yoga/plugin-apq': 1.6.1
+      '@faker-js/faker': 7.6.0
       '@graphql-yoga/plugin-response-cache': 1.6.1
       graphql: 16.6.0
       graphql-yoga: 3.6.1
     dependencies:
       '@envelop/graphql-jit': 5.0.4_graphql@16.6.0
-      '@graphql-yoga/plugin-apq': link:../../packages/plugins/apq
-      '@graphql-yoga/plugin-response-cache': link:../../packages/plugins/response-cache
+      '@faker-js/faker': 7.6.0
+      '@graphql-yoga/plugin-response-cache': link:../packages/plugins/response-cache
       graphql: 16.6.0
-      graphql-yoga: link:../../packages/graphql-yoga
+      graphql-yoga: link:../packages/graphql-yoga
 
   e2e:
     specifiers:
@@ -5135,6 +5135,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@faker-js/faker/7.6.0:
+    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    dev: false
 
   /@fastify/ajv-compiler/3.3.1:
     resolution: {integrity: sha512-IRnids8lblQ8e1i8h4JLyfJmebXE+ohcj8x8X/+Ew6ZB4H0Ui05z5YL6q5FOcl0zItVpu4adRzeyVNNUwmduIg==}

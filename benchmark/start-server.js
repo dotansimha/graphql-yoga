@@ -1,19 +1,57 @@
 /* eslint-disable */
 import { createServer } from 'http'
 import { createYoga, createSchema } from 'graphql-yoga'
-import { useAPQ } from '@graphql-yoga/plugin-apq'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 import { useGraphQlJit } from '@envelop/graphql-jit'
+import { faker } from '@faker-js/faker'
+
+function generateData() {
+  const authors = []
+  for (let i = 0; i < 20; i++) {
+    const books = []
+
+    for (let k = 0; k < 3; k++) {
+      books.push({
+        id: faker.datatype.uuid(),
+        name: faker.internet.domainName(),
+        numPages: faker.datatype.number(),
+      })
+    }
+
+    authors.push({
+      id: faker.datatype.uuid(),
+      name: faker.name.fullName(),
+      company: faker.company.bs(),
+      books,
+    })
+  }
+
+  return authors
+}
+
+const data = generateData()
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
+    type Author {
+      id: ID!
+      name: String!
+      company: String!
+      books: [Book!]!
+    }
+    type Book {
+      id: ID!
+      name: String!
+      numPages: Int!
+    }
     type Query {
-      greetings: String
+      authors: [Author!]!
     }
   `,
   resolvers: {
+    Author: {},
     Query: {
-      greetings: () => 'This is the `greetings` field of the root `Query` type',
+      authors: () => data,
     },
   },
 })
@@ -43,12 +81,13 @@ const yogaMap = {
     ],
     graphqlEndpoint: '/graphql-response-cache',
   }),
-  '/graphql-apq': createYoga({
+  '/graphql-no-parse-validate-cache': createYoga({
     schema,
     logging: false,
     multipart: false,
-    plugins: [useAPQ()],
-    graphqlEndpoint: '/graphql-apq',
+    validationCache: false,
+    parseCache: false,
+    graphqlEndpoint: '/graphql-no-parse-validate-cache',
   }),
 }
 

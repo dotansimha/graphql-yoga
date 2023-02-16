@@ -24,7 +24,7 @@ jobs:
         run: pnpm build
 
       - name: Start Yoga Server
-        working-directory: ./benchmark/hello-world
+        working-directory: ./benchmark
         run: pnpm start & sleep 5s
         env:
           NODE_NO_WARNINGS: true
@@ -38,5 +38,5 @@ jobs:
           sudo apt-get install k6=0.37.0
 
       - name: Start and Report Yoga Benchmark
-        working-directory: ./benchmark/hello-world
+        working-directory: ./benchmark
         run: k6 -e GITHUB_PR=${{ github.event.number }} -e GITHUB_SHA=${{ github.sha }} -e GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}} run k6.js
