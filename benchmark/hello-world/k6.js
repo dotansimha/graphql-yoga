@@ -5,14 +5,47 @@ import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js'
 import { githubComment } from 'https://raw.githubusercontent.com/dotansimha/k6-github-pr-comment/master/lib.js'
 
 export const options = {
-  vus: 1,
-  duration: '30s',
-  thresholds: {
-    no_errors: ['rate>0.99'],
-    expected_result: ['rate>0.99'],
-    http_req_duration: ['avg<=1'],
-  },
+  scenarios: {},
+  thresholds: {},
 }
+
+const DURATION = 30
+const VUS = 10
+
+function getOptionsForScenario(scenario, index) {
+  const noErrors = `no_errors{mode:${scenario}}`
+  const expectedResult = `expected_result{mode:${scenario}}`
+  const httpReqDuration = `http_req_duration{mode:${scenario}}`
+  return {
+    scenario: {
+      executor: 'constant-vus',
+      exec: 'run',
+      startTime: DURATION * index + 's',
+      vus: VUS,
+      duration: DURATION + 's',
+      env: { MODE: scenario },
+      tags: { mode: scenario },
+    },
+    thresholds: {
+      [noErrors]: ['rate>0.99'],
+      [expectedResult]: ['rate>0.99'],
+      [httpReqDuration]: ['avg<=1'],
+    },
+  }
+}
+
+const scenarioNames = [
+  'graphql',
+  'graphql-jit',
+  'graphql-response-cache',
+  'graphql-apq',
+]
+
+scenarioNames.forEach((name, index) => {
+  const { scenario, thresholds } = getOptionsForScenario(name, index)
+  options.scenarios[name] = scenario
+  Object.assign(options.thresholds, thresholds)
+})
 
 export function handleSummary(data) {
   if (__ENV.GITHUB_TOKEN) {
@@ -53,8 +86,8 @@ export function handleSummary(data) {
   }
 }
 
-export default function () {
-  const res = http.post(`http://localhost:4000/graphql`, {
+export function run() {
+  const res = http.post(`http://localhost:4000/${__ENV.MODE}`, {
     query: '{ greetings }',
   })
 

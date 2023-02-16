@@ -1,5 +1,6 @@
 {
   "name": "hello-world-benchmark",
+  "type": "module",
   "version": "1.6.1",
   "private": true,
   "scripts": {
@@ -8,6 +9,9 @@
     "check": "exit 0"
   },
   "dependencies": {
+    "@envelop/graphql-jit": "5.0.4",
+    "@graphql-yoga/plugin-apq": "1.6.1",
+    "@graphql-yoga/plugin-response-cache": "1.6.1",
     "graphql-yoga": "3.6.1",
     "graphql": "16.6.0"
   }

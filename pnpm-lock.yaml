@@ -89,9 +89,15 @@ importers:
 
   benchmark/hello-world:
     specifiers:
+      '@envelop/graphql-jit': 5.0.4
+      '@graphql-yoga/plugin-apq': 1.6.1
+      '@graphql-yoga/plugin-response-cache': 1.6.1
       graphql: 16.6.0
       graphql-yoga: 3.6.1
     dependencies:
+      '@envelop/graphql-jit': 5.0.4_graphql@16.6.0
+      '@graphql-yoga/plugin-apq': link:../../packages/plugins/apq
+      '@graphql-yoga/plugin-response-cache': link:../../packages/plugins/response-cache
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
 
