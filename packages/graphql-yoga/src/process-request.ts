@@ -32,6 +32,9 @@ export async function processResult({
       request,
       acceptableMediaTypes,
       result,
+      setResult(newResult) {
+        result = newResult
+      },
       resultProcessor,
       setResultProcessor(newResultProcessor, newAcceptedMimeType) {
         resultProcessor = newResultProcessor
