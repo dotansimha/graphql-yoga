@@ -1,16 +1,16 @@
-import { createServer } from 'http'
-import { WebSocketServer } from 'ws'
-import { createYoga, createSchema } from 'graphql-yoga'
-import { useServer } from 'graphql-ws/lib/use/ws'
-import { parse } from 'url'
-import next from 'next'
+const { createServer } = require('http')
+const { WebSocketServer } = require('ws')
+const { createYoga, createSchema } = require('graphql-yoga')
+const { useServer } = require('graphql-ws/lib/use/ws')
+const { parse } = require('url')
+const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
 const port = 3000
 
 // prepare nextjs
-const app = next({ dev, hostname, port })
+const app = next.default({ dev, hostname, port })
 
 // match the route next would use if yoga was in `pages/api/graphql.ts`
 const graphqlEndpoint = '/api/graphql'
