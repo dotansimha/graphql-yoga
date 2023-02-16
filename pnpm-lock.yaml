@@ -657,6 +657,37 @@ importers:
       eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
       typescript: 4.9.5
 
+  examples/nextjs-ws:
+    specifiers:
+      '@types/node': 18.13.0
+      '@types/react': 18.0.28
+      '@types/ws': 8.5.4
+      eslint: 8.34.0
+      eslint-config-next: 13.1.6
+      graphql: 16.6.0
+      graphql-ws: ^5.11.3
+      graphql-yoga: 3.6.1
+      next: 13.1.6
+      react: 18.2.0
+      react-dom: 18.2.0
+      typescript: 4.9.5
+      ws: 8.12.1
+    dependencies:
+      '@types/react': 18.0.28
+      graphql: 16.6.0
+      graphql-ws: 5.11.3_graphql@16.6.0
+      graphql-yoga: link:../../packages/graphql-yoga
+      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      ws: 8.12.1
+    devDependencies:
+      '@types/node': 18.13.0
+      '@types/ws': 8.5.4
+      eslint: 8.34.0
+      eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
+      typescript: 4.9.5
+
   examples/node-esm:
     specifiers:
       graphql: 16.6.0
@@ -1905,6 +1936,7 @@ packages:
       '@aws-cdk/core': 1.193.0
       '@aws-cdk/custom-resources': 1.193.0_d6yfrm3yqfdpbhizzyhjhta7fy
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -2210,6 +2242,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema/1.193.0:
     resolution: {integrity: sha512-2Bjnd6nei/ixWHM4CtjWBgMSe8O/9Y78M6zxTT+3aNt1qDlrzIn4ZAs+t0te7oJQgX7ESVvs290HpIQXXom9Ag==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - jsonschema
@@ -2234,7 +2269,11 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 1.193.0
       '@aws-cdk/cx-api': 1.193.0
       '@aws-cdk/region-info': 1.193.0
+      '@balena/dockerignore': 1.0.2
       constructs: 3.4.127
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      minimatch: 3.1.2
     dev: false
     bundledDependencies:
       - fs-extra
@@ -2271,6 +2310,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.193.0
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -3843,6 +3883,9 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
     dev: true
+
+  /@balena/dockerignore/1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -11572,7 +11615,6 @@ packages:
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-    dev: true
 
   /atob/2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
@@ -11629,6 +11671,15 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.69
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.58
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -12463,6 +12514,11 @@ packages:
       no-case: 3.0.4
       tslib: 2.5.0
       upper-case-first: 2.0.2
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/2.0.1:
@@ -16735,7 +16791,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-jetpack/5.1.0:
     resolution: {integrity: sha512-Xn4fDhLydXkuzepZVsr02jakLlmoARPy+YWIclo4kh0GyNGUHnTqeH/w/qIsVn50dFxtp8otPL2t/HcPJBbxUA==}
@@ -19501,11 +19556,13 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonify/0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
     dev: true
+
+  /jsonschema/1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -27470,7 +27527,6 @@ packages:
   /universalify/2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /unixify/1.0.0:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}
