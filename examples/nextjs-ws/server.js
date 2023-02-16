@@ -28,6 +28,7 @@ const yoga = createYoga({
       }
       type Subscription {
         clock: String!
+        ping: String!
       }
     `,
     resolvers: {
@@ -43,15 +44,21 @@ const yoga = createYoga({
             }
           },
         },
+        ping: {
+          async *subscribe() {
+            yield { ping: 'pong' }
+          },
+        },
       },
     },
   }),
 })
 
-;(async () => {
-  await app.prepare()
-  const handle = app.getRequestHandler()
-
+/**
+ * @param {number} port
+ * @param {import('next/dist/server/next').RequestHandler} [handle]
+ */
+async function start(port, handle) {
   // create http server
   const server = createServer(async (req, res) => {
     try {
@@ -62,6 +69,11 @@ const yoga = createYoga({
       if (url.pathname.startsWith(graphqlEndpoint)) {
         await yoga(req, res)
       } else {
+        if (!handle) {
+          throw new Error(
+            `Cannot handle ${url} since handler is not implemented`,
+          )
+        }
         await handle(req, res, url)
       }
     } catch (err) {
@@ -120,9 +132,23 @@ const yoga = createYoga({
     server.listen(port, (err) => (err ? reject(err) : resolve())),
   )
 
-  console.log(`
-> App started!
-  HTTP server running on http://${hostname}:${port}
-  GraphQL WebSocket server running on ws://${hostname}:${port}${graphqlEndpoint}
-`)
-})()
+  return () =>
+    new Promise((resolve, reject) =>
+      server.close((err) => (err ? reject(err) : resolve())),
+    )
+}
+
+// dont start the next.js app when testing the server
+if (process.env.NODE_ENV !== 'test') {
+  ;(async () => {
+    await app.prepare()
+    await start(port, app.getRequestHandler())
+    console.log(`
+  > App started!
+    HTTP server running on http://${hostname}:${port}
+    GraphQL WebSocket server running on ws://${hostname}:${port}${graphqlEndpoint}
+  `)
+  })()
+}
+
+module.exports = { start }
