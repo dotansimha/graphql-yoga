@@ -60,7 +60,7 @@ describe('Response Caching via ETag', () => {
       'http://localhost:4000/graphql?query=' + query,
     )
     const lastModified = response1.headers.get('Last-Modified')
-    console.log(lastModified)
+
     const response2 = await yoga.fetch(
       'http://localhost:4000/graphql?query=' + query,
       {

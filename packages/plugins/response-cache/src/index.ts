@@ -95,11 +95,14 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           if (cachedResponse) {
             const lastModifiedFromClient =
               request.headers.get('If-Modified-Since')
-            const lastModifiedFromCache = cachedResponse.extensions
-              ?.responseCacheLastModified as string
+            const lastModifiedFromCache =
+              cachedResponse.extensions?.responseCacheLastModified
+
             if (
-              new Date(lastModifiedFromClient!).getTime() >=
-              new Date(lastModifiedFromCache).getTime()
+              lastModifiedFromClient != null &&
+              typeof lastModifiedFromCache === 'string' &&
+              new Date(lastModifiedFromClient).getTime() >=
+                new Date(lastModifiedFromCache).getTime()
             ) {
               const okResponse = new fetchAPI.Response(null, {
                 status: 304,
