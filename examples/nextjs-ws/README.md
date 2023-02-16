@@ -1,6 +1,8 @@
-## Getting Started
+# Next.js WebSockets
 
-Run the development server with:
+## Get Started
+
+Run the custom server with:
 
 ```sh
 npm start
@@ -10,15 +12,11 @@ yarn start
 pnpm start
 ```
 
-Navigate to [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Navigate to [http://localhost:3000](http://localhost:3000) to see the Next.js app running. You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit files.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+WebSockets cannot be used with [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction), we therefore have to create a [custom Next.js server](https://nextjs.org/docs/advanced-features/custom-server) that will serve the GraphQL API, WebSockets and the rest of Next.js content.
 
-The custom server implementation can be found in [`server.mjs`](server.mjs).
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+This custom server implementation can be found in [`server.mjs`](server.mjs).
 
 ## Learn More
 
@@ -32,4 +30,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## No deployment on Vercel
 
-Since this NextJS project uses a [custom server](https://nextjs.org/docs/advanced-features/custom-server), it cannot be deployed to Vercel.
+Since this Next.js project uses a [custom server](https://nextjs.org/docs/advanced-features/custom-server), it cannot be deployed to Vercel.
