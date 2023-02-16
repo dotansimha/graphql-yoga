@@ -8,10 +8,13 @@ const port = 3000
 
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname, port })
-const handle = app.getRequestHandler()
 
-app.prepare().then(() => {
-  createServer(async (req, res) => {
+;(async () => {
+  await app.prepare()
+
+  const handle = app.getRequestHandler()
+
+  const server = createServer(async (req, res) => {
     try {
       await handle(
         req,
@@ -24,8 +27,11 @@ app.prepare().then(() => {
       console.error(`Error while handling ${req.url}`, err)
       res.writeHead(500).end()
     }
-  }).listen(port, (err) => {
-    if (err) throw err
-    console.log(`> Ready on http://${hostname}:${port}`)
   })
-})
+
+  await new Promise((resolve, reject) =>
+    server.listen(port, (err) => (err ? reject(err) : resolve())),
+  )
+
+  console.log(`> Ready on http://${hostname}:${port}`)
+})()
