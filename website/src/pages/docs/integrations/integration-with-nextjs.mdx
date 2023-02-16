@@ -119,8 +119,8 @@ const yoga = createYoga({
       // This tells it to parse the query portion of the URL.
       const url = parse(req.url, true)
 
-      if (url.pathname === graphqlEndpoint) {
-        await yoga(req, res, url)
+      if (url.pathname.startsWith(graphqlEndpoint)) {
+        await yoga(req, res)
       } else {
         await handle(req, res, url)
       }
