@@ -65,3 +65,9 @@ export type MaskError = (
 ) => Error
 
 export type MaybeArray<T> = T | T[]
+
+export interface GraphQLHTTPExtensions {
+  spec?: boolean
+  status?: number
+  headers?: Record<string, string>
+}

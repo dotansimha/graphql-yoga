@@ -6,6 +6,7 @@ import {
   PromiseOrValue,
 } from '@envelop/core'
 import { ExecutionResult } from '@graphql-tools/utils'
+import { GraphQLHTTPErrorExtensions } from 'graphql'
 
 import { YogaServer } from '../server.js'
 import {
@@ -135,7 +136,7 @@ export type OnResultProcess = (
 
 export type ResultProcessorInput =
   | MaybeArray<ExecutionResult>
-  | AsyncIterable<ExecutionResult>
+  | AsyncIterable<ExecutionResult<any, { http?: GraphQLHTTPErrorExtensions }>>
 
 export type ResultProcessor = (
   result: ResultProcessorInput,
