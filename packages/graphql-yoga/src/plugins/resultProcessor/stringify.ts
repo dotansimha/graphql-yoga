@@ -19,13 +19,14 @@ function omitInternalsFromResultErrors(
   result: ExecutionResult,
 ): ExecutionResult {
   if (result.errors?.length || result.extensions?.http) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TS should check for unused vars instead
-    const { http, ...extensions } = result.extensions || {}
-    return {
-      ...result,
-      extensions,
-      errors: result.errors?.map(omitInternalsFromError),
+    const newResult = { ...result } as ExecutionResult
+    newResult.errors &&= newResult.errors.map(omitInternalsFromError)
+    if (newResult.extensions) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TS should check for unused vars instead
+      const { http, ...extensions } = result.extensions
+      newResult.extensions = extensions
     }
+    return newResult
   }
   return result
 }
