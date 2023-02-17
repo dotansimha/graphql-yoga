@@ -48,6 +48,7 @@ import {
   ResultProcessorInput,
 } from './plugins/types.js'
 import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
+import { useFavicon } from './plugins/useFavicon.js'
 import {
   GraphiQLOptions,
   GraphiQLOptionsOrFactory,
@@ -317,6 +318,7 @@ export class YogaServer<
           render: options?.renderGraphiQL,
           logger: this.logger,
         }),
+      useFavicon(),
       // Middlewares before the GraphQL execution
       useRequestParser({
         match: isGETRequest,
