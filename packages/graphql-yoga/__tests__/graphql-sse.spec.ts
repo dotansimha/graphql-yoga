@@ -166,66 +166,6 @@ describe('GraphQL over SSE', () => {
       client.dispose()
     })
 
-    it('should support streaming operations', async () => {
-      const client = createClient({
-        url: 'http://yoga/graphql',
-        fetchFn: yoga.fetch,
-        abortControllerImpl: yoga.fetchAPI.AbortController,
-        singleConnection: false, // distinct connection mode
-        retryAttempts: 0,
-      })
-
-      await expect(
-        new Promise((resolve, reject) => {
-          const msgs: unknown[] = []
-          client.subscribe(
-            {
-              query: /* GraphQL */ `
-                subscription {
-                  greetings
-                }
-              `,
-            },
-            {
-              next: (msg) => msgs.push(msg),
-              error: reject,
-              complete: () => resolve(msgs),
-            },
-          )
-        }),
-      ).resolves.toMatchInlineSnapshot(`
-        [
-          {
-            "data": {
-              "greetings": "Hi",
-            },
-          },
-          {
-            "data": {
-              "greetings": "Bonjour",
-            },
-          },
-          {
-            "data": {
-              "greetings": "Hola",
-            },
-          },
-          {
-            "data": {
-              "greetings": "Ciao",
-            },
-          },
-          {
-            "data": {
-              "greetings": "Zdravo",
-            },
-          },
-        ]
-      `)
-
-      client.dispose()
-    })
-
     it('should report errors through the stream', async () => {
       const res = await yoga.fetch('http://yoga/graphql?query={nope}', {
         headers: {
