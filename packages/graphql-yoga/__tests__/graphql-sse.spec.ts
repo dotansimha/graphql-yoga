@@ -243,4 +243,6 @@ describe('GraphQL over SSE', () => {
       `)
     })
   })
+
+  it.todo('Single connections mode')
 })
