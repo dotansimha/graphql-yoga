@@ -6,7 +6,7 @@ import {
 } from './resultProcessor/accept.js'
 import { processMultipartResult } from './resultProcessor/multipart.js'
 import { processPushResult } from './resultProcessor/push.js'
-import { processGraphQLSSEResult } from './resultProcessor/graphql-sse'
+import { processGraphQLSSEResult } from './resultProcessor/graphql-sse.js'
 import { processRegularResult } from './resultProcessor/regular.js'
 import { Plugin, ResultProcessor } from './types.js'
 
