@@ -10,6 +10,7 @@ import { ExecutionResult } from '@graphql-tools/utils'
 import { YogaServer } from '../server.js'
 import {
   FetchAPI,
+  GraphQLHTTPExtensions,
   GraphQLParams,
   MaybeArray,
   YogaInitialContext,
@@ -135,7 +136,7 @@ export type OnResultProcess = (
 
 export type ResultProcessorInput =
   | MaybeArray<ExecutionResult>
-  | AsyncIterable<ExecutionResult>
+  | AsyncIterable<ExecutionResult<any, { http?: GraphQLHTTPExtensions }>>
 
 export type ResultProcessor = (
   result: ResultProcessorInput,
