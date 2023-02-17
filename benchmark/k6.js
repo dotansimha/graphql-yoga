@@ -1,7 +1,10 @@
 /* eslint-disable */
+// @ts-check
 import { check } from 'k6'
 import http from 'k6/http'
+// @ts-expect-error - TS doesn't know this import
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js'
+// @ts-expect-error - TS doesn't know this import
 import { githubComment } from 'https://raw.githubusercontent.com/dotansimha/k6-github-pr-comment/master/lib.js'
 
 export const options = {
@@ -105,11 +108,32 @@ export function run() {
   })
 
   check(res, {
-    no_errors: (resp) => !('errors' in resp.json()),
+    no_errors: (resp) => {
+      const json = resp.json()
+      return (
+        !!json &&
+        typeof json === 'object' &&
+        !Array.isArray(json) &&
+        !!json.errors
+      )
+    },
     expected_result: (resp) => {
-      const data = resp.json().data
-
-      return data && data.authors[0].id
+      const json = resp.json()
+      return (
+        !!json &&
+        typeof json === 'object' &&
+        !Array.isArray(json) &&
+        !!json.data &&
+        typeof json.data === 'object' &&
+        !Array.isArray(json.data) &&
+        !!json.data.authors &&
+        Array.isArray(json.data.authors) &&
+        json.data.authors.length > 0 &&
+        !!json.data.authors[0] &&
+        typeof json.data.authors[0] === 'object' &&
+        !Array.isArray(json.data.authors[0]) &&
+        !!json.data.authors[0]?.id
+      )
     },
   })
 }
