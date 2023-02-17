@@ -1,5 +1,11 @@
-import { ExecutionResult, GraphQLScalarType } from 'graphql'
-import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
+import { ExecutionResult } from '@envelop/core'
+import { GraphQLScalarType } from 'graphql'
+import {
+  createGraphQLError,
+  createSchema,
+  createYoga,
+  Plugin,
+} from '../src/index.js'
 
 describe('GraphQLError.extensions.http', () => {
   it('sets correct status code and headers for thrown GraphQLError in a resolver', async () => {
@@ -454,5 +460,128 @@ describe('GraphQLError.extensions.http', () => {
         },
       }
     `)
+  })
+})
+
+describe('Result Extensions', () => {
+  let result: ExecutionResult
+  const plugin: Plugin = {
+    onExecute({ setExecuteFn }) {
+      setExecuteFn(() => result as unknown)
+    },
+  }
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hello: String
+        }
+      `,
+    }),
+    plugins: [plugin],
+  })
+  it('respects status code', async () => {
+    result = {
+      data: { hello: 'world' },
+      extensions: { http: { status: 201 } },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.status).toBe(201)
+  })
+  it('respects headers', async () => {
+    result = {
+      data: { hello: 'world' },
+      extensions: { http: { headers: { 'x-foo': 'bar' } } },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.headers.get('x-foo')).toBe('bar')
+  })
+  it('respects both error extensions and result extensions', async () => {
+    result = {
+      data: { hello: 'world' },
+      errors: [
+        createGraphQLError('test', {
+          extensions: {
+            http: {
+              status: 321,
+              headers: {
+                'x-bar': 'baz',
+              },
+            },
+          },
+        }),
+      ],
+      extensions: {
+        http: {
+          headers: {
+            'x-foo': 'bar',
+          },
+        },
+      },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.headers.get('x-foo')).toBe('bar')
+    expect(res.headers.get('x-bar')).toBe('baz')
+    expect(res.status).toBe(321)
+  })
+  it('respects the highest status code', async () => {
+    result = {
+      data: { hello: 'world' },
+      errors: [
+        createGraphQLError('test1', {
+          extensions: {
+            http: {
+              status: 300,
+            },
+          },
+        }),
+        createGraphQLError('test2', {
+          extensions: {
+            http: {
+              status: 400,
+            },
+          },
+        }),
+      ],
+      extensions: {
+        http: {
+          status: 401,
+        },
+      },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.status).toBe(401)
   })
 })

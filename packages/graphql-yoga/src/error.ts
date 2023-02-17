@@ -147,7 +147,7 @@ export function getResponseInitByRespectingErrors(
       }
     }
   } else {
-    status = 200
+    status ||= 200
   }
 
   if (!status) {
