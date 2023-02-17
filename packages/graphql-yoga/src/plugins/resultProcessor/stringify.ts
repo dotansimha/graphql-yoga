@@ -24,7 +24,9 @@ function omitInternalsFromResultErrors(
     if (newResult.extensions) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TS should check for unused vars instead
       const { http, ...extensions } = result.extensions
-      newResult.extensions = extensions
+      newResult.extensions = Object.keys(extensions).length
+        ? extensions
+        : undefined
     }
     return newResult
   }
