@@ -69,7 +69,7 @@ export function useResultProcessors(opts: { graphqlSse: boolean }): Plugin {
                 opts.graphqlSse &&
                   resultProcessorConfig.processResult === processPushResult
                   ? processGraphQLSSEResult
-                  : processPushResult,
+                  : resultProcessorConfig.processResult,
                 processorMediaType,
               )
             }
