@@ -28,9 +28,6 @@ function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
 }
 
 describe('Subscription', () => {
-  afterAll((done) => {
-    setTimeout(done, 4000)
-  })
   test('eventStream', async () => {
     const source = (async function* foo() {
       yield { hi: 'hi' }
@@ -90,6 +87,8 @@ describe('Subscription', () => {
   })
 
   test('should issue pings while connected', async () => {
+    const d = createDeferred()
+
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
         type Subscription {
@@ -103,7 +102,7 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              await new Promise((resolve) => setTimeout(resolve, 5000))
+              await d.promise
               yield { hi: 'hi' }
             },
           },
@@ -130,30 +129,49 @@ describe('Subscription', () => {
 
     const iterator = response.body![Symbol.asyncIterator]()
 
-    let shouldBreak = false
-
-    setTimeout(() => {
-      shouldBreak = true
-    }, 2000)
-
     const results = []
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      if (shouldBreak) {
+    let value: Uint8Array
+
+    while (({ value } = await iterator.next())) {
+      if (value === undefined) {
         break
       }
-      const { value } = await iterator.next()
       results.push(Buffer.from(value).toString('utf-8'))
+      if (results.length === 3) {
+        d.resolve()
+      }
     }
+
     expect(results).toMatchInlineSnapshot(`
-      [
-        ":
+        [
+          ":
 
-      ",
-        ":
+        ",
+          ":
 
-      ",
-      ]
-    `)
+        ",
+          ":
+
+        ",
+          "data: {"data":{"hi":"hi"}}
+
+        ",
+        ]
+      `)
   })
 })
+
+type Deferred<T = void> = {
+  resolve: (value: T) => void
+  reject: (value: unknown) => void
+  promise: Promise<T>
+}
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve
+    d.reject = reject
+  })
+  return d
+}

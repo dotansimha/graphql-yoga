@@ -10,11 +10,11 @@ export function processPushResult(
   result: ResultProcessorInput,
   fetchAPI: FetchAPI,
 ): Response {
-  let timeoutInSeconds = 12
+  let pingIntervalMs = 12_000
 
   // for testing the pings, reduce the timeout
   if (globalThis.process?.env?.NODE_ENV === 'test') {
-    timeoutInSeconds = 1
+    pingIntervalMs = 5
   }
 
   const headersInit = {
@@ -38,8 +38,9 @@ export function processPushResult(
           clearInterval(pingInterval)
           return
         }
+
         controller.enqueue(textEncoder.encode(':\n\n'))
-      }, timeoutInSeconds * 1000) as unknown as number
+      }, pingIntervalMs) as unknown as number
 
       if (isAsyncIterable(result)) {
         iterator = result[Symbol.asyncIterator]()
@@ -58,6 +59,7 @@ export function processPushResult(
     },
     async pull(controller) {
       const { done, value } = await iterator.next()
+
       if (value != null) {
         const chunk = jsonStringifyResult(value)
         controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
