@@ -132,7 +132,7 @@ export function run() {
         !!json.data.authors[0] &&
         typeof json.data.authors[0] === 'object' &&
         !Array.isArray(json.data.authors[0]) &&
-        !!json.data.authors[0]?.id
+        !!json.data.authors[0].id
       )
     },
   })
