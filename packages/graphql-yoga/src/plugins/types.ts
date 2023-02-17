@@ -146,6 +146,7 @@ export type ResultProcessor = (
 export interface OnResultProcessEventPayload {
   request: Request
   result: ResultProcessorInput
+  setResult(result: ResultProcessorInput): void
   resultProcessor?: ResultProcessor
   acceptableMediaTypes: string[]
   setResultProcessor(
