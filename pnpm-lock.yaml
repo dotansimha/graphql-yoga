@@ -527,9 +527,11 @@ importers:
 
   examples/hello-world:
     specifiers:
+      '@graphql-yoga/render-graphiql': 3.6.1
       graphql: 16.6.0
       graphql-yoga: 3.6.1
     dependencies:
+      '@graphql-yoga/render-graphiql': link:../../packages/render-graphiql
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
 
