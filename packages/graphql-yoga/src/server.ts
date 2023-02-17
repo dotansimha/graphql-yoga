@@ -175,7 +175,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * Currently GraphQL Yoga supports exclusively the ["distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode).
    *
-   * @note Starting from next major release of Yoga, this option will be dropped an GraphQL over SSE spec will be the only option.
+   * @note Starting from next major release of Yoga, this option will be dropped and GraphQL over SSE spec will be used exclusively.
    */
   graphqlSse?: boolean
 }
