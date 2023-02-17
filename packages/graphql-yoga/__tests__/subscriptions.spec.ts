@@ -28,9 +28,6 @@ function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
 }
 
 describe('Subscription', () => {
-  afterAll((done) => {
-    setTimeout(done, 4000)
-  })
   test('eventStream', async () => {
     const source = (async function* foo() {
       yield { hi: 'hi' }
@@ -90,6 +87,8 @@ describe('Subscription', () => {
   })
 
   test('should issue pings while connected', async () => {
+    const d = createDeferred()
+
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
         type Subscription {
@@ -103,7 +102,7 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              await new Promise((resolve) => setTimeout(resolve, 5000))
+              await d.promise
               yield { hi: 'hi' }
             },
           },
@@ -130,23 +129,112 @@ describe('Subscription', () => {
 
     const iterator = response.body![Symbol.asyncIterator]()
 
-    let shouldBreak = false
-
-    setTimeout(() => {
-      shouldBreak = true
-    }, 2000)
-
     const results = []
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      if (shouldBreak) {
+    let value: Uint8Array
+
+    while (({ value } = await iterator.next())) {
+      if (value === undefined) {
         break
       }
-      const { value } = await iterator.next()
       results.push(Buffer.from(value).toString('utf-8'))
+      if (results.length === 3) {
+        d.resolve()
+      }
     }
+
+    expect(results).toMatchInlineSnapshot(`
+        [
+          ":
+
+        ",
+          ":
+
+        ",
+          ":
+
+        ",
+          "data: {"data":{"hi":"hi"}}
+
+        ",
+        ]
+      `)
+  })
+
+  test('should issue pings event if event source never publishes anything', async () => {
+    const d = createDeferred()
+    const source: AsyncIterableIterator<unknown> = {
+      next: () => d.promise.then(() => ({ done: true, value: undefined })),
+      return: () => {
+        d.resolve()
+        return Promise.resolve({ done: true, value: undefined })
+      },
+      throw: () => {
+        throw new Error('Method not implemented. (throw)')
+      },
+      [Symbol.asyncIterator]() {
+        return this
+      },
+    }
+
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            subscribe: () => source,
+          },
+        },
+      },
+    })
+
+    const yoga = createYoga({ schema })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    })
+
+    const iterator = response.body![Symbol.asyncIterator]()
+
+    const results = []
+    let value: Uint8Array
+
+    while (({ value } = await iterator.next())) {
+      if (value === undefined) {
+        break
+      }
+      results.push(Buffer.from(value).toString('utf-8'))
+      if (results.length === 4) {
+        await iterator.return!()
+      }
+    }
+
+    await d.promise
     expect(results).toMatchInlineSnapshot(`
       [
+        ":
+
+      ",
+        ":
+
+      ",
         ":
 
       ",
@@ -157,3 +245,18 @@ describe('Subscription', () => {
     `)
   })
 })
+
+type Deferred<T = void> = {
+  resolve: (value: T) => void
+  reject: (value: unknown) => void
+  promise: Promise<T>
+}
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve
+    d.reject = reject
+  })
+  return d
+}
