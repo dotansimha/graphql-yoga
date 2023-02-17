@@ -16,7 +16,7 @@ export function processGraphQLSSEResult(
 
   // for testing the pings, reduce the timeout significantly
   if (globalThis.process?.env?.NODE_ENV === 'test') {
-    pingerMs = 5
+    pingerMs = 10
   }
 
   const headersInit = {
