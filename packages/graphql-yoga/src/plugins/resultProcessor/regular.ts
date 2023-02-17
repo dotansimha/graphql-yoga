@@ -3,7 +3,7 @@ import { isAsyncIterable } from '@graphql-tools/utils'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
-import { jsonStringifyResult } from './stringify.js'
+import { jsonStringifyResultWithoutInternals } from './stringify.js'
 
 export function processRegularResult(
   executionResult: ResultProcessorInput,
@@ -31,7 +31,7 @@ export function processRegularResult(
     acceptedHeader === 'application/json',
   )
 
-  const responseBody = jsonStringifyResult(executionResult)
+  const responseBody = jsonStringifyResultWithoutInternals(executionResult)
 
   return new fetchAPI.Response(responseBody, responseInit)
 }

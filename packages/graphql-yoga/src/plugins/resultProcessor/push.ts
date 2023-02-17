@@ -4,7 +4,7 @@ import { isAsyncIterable } from '@envelop/core'
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
-import { jsonStringifyResult } from './stringify.js'
+import { jsonStringifyResultWithoutInternals } from './stringify.js'
 
 export function processPushResult(
   result: ResultProcessorInput,
@@ -61,7 +61,7 @@ export function processPushResult(
       const { done, value } = await iterator.next()
 
       if (value != null) {
-        const chunk = jsonStringifyResult(value)
+        const chunk = jsonStringifyResultWithoutInternals(value)
         controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
       }
       if (done) {
