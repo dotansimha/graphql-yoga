@@ -353,7 +353,12 @@ describe('incremental delivery: node-fetch', () => {
     })
     for await (const chunk of response.body!) {
       const chunkString = Buffer.from(chunk).toString('utf-8')
-      if (chunkString.includes('data:')) {
+
+      const parts = chunkString
+        .split('\n')
+        .filter((line) => line.trim() !== '' && line.trim() !== ':')
+
+      for (const chunkString of parts) {
         const result = JSON.parse(chunkString.replace('data:', ''))
         if (counter === 0) {
           expect(result.data.counter).toBe(0)

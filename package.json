@@ -7,7 +7,7 @@
     "build": "pnpm --filter=@graphql-yoga/graphiql run build && pnpm --filter=@graphql-yoga/render-graphiql run build && pnpm --filter=graphql-yoga run generate-graphiql-html && bob build",
     "test": "jest --detectOpenHandles",
     "test:integration": "cross-env INTEGRATION_TEST=true jest --forceExit",
-    "test:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks --logHeapUsage; cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks --logHeapUsage",
+    "test:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks --logHeapUsage && cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks --logHeapUsage",
     "release": "pnpm build && changeset publish",
     "start:docs": "pnpm --filter=website dev",
     "postinstall": "husky install",
@@ -82,7 +82,7 @@
     "ts-jest": "^29.0.0",
     "typescript": "4.9.5",
     "weak-napi": "2.0.2",
-    "wrangler": "2.9.1"
+    "wrangler": "2.10.0"
   },
   "pnpm": {
     "patchedDependencies": {

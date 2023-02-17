@@ -233,6 +233,9 @@ describe('graphql-sse', () => {
 
     const res = await yoga.fetch('http://yoga/graphql/stream', {
       method: 'OPTIONS',
+      headers: {
+        origin: 'http://yoga',
+      },
     })
 
     const headersObj = {}

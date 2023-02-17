@@ -3,18 +3,13 @@ import { createGraphQLError } from '@graphql-tools/utils'
 
 import type { YogaLogger } from './logger.js'
 import type { ResultProcessorInput } from './plugins/types.js'
-import type { YogaMaskedErrorOpts } from './types.js'
+import type { GraphQLHTTPExtensions, YogaMaskedErrorOpts } from './types.js'
 
 export { createGraphQLError }
 
 declare module 'graphql' {
-  interface GraphQLHTTPErrorExtensions {
-    spec?: boolean
-    status?: number
-    headers?: Record<string, string>
-  }
   interface GraphQLErrorExtensions {
-    http?: GraphQLHTTPErrorExtensions
+    http?: GraphQLHTTPExtensions
     unexpected?: boolean
   }
 }
@@ -120,6 +115,15 @@ export function getResponseInitByRespectingErrors(
   let status: number | undefined
   let unexpectedErrorExists = false
 
+  if ('extensions' in result && result.extensions?.http) {
+    if (result.extensions.http.headers) {
+      Object.assign(headers, result.extensions.http.headers)
+    }
+    if (result.extensions.http.status) {
+      status = result.extensions.http.status
+    }
+  }
+
   if ('errors' in result && result.errors?.length) {
     for (const error of result.errors) {
       if (error.extensions?.http) {
@@ -143,7 +147,7 @@ export function getResponseInitByRespectingErrors(
       }
     }
   } else {
-    status = 200
+    status ||= 200
   }
 
   if (!status) {

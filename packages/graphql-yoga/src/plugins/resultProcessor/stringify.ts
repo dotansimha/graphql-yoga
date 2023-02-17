@@ -5,7 +5,9 @@ import { isGraphQLError, createGraphQLError } from '../../error.js'
 import type { MaybeArray } from '../../types.js'
 
 // JSON stringifier that adjusts the result error extensions while serialising
-export function jsonStringifyResult(result: MaybeArray<ExecutionResult>) {
+export function jsonStringifyResultWithoutInternals(
+  result: MaybeArray<ExecutionResult>,
+) {
   return JSON.stringify(
     Array.isArray(result)
       ? result.map(omitInternalsFromResultErrors)
@@ -16,10 +18,19 @@ export function jsonStringifyResult(result: MaybeArray<ExecutionResult>) {
 function omitInternalsFromResultErrors(
   result: ExecutionResult,
 ): ExecutionResult {
-  return {
-    ...result,
-    errors: result.errors?.map(omitInternalsFromError),
+  if (result.errors?.length || result.extensions?.http) {
+    const newResult = { ...result } as ExecutionResult
+    newResult.errors &&= newResult.errors.map(omitInternalsFromError)
+    if (newResult.extensions) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TS should check for unused vars instead
+      const { http, ...extensions } = result.extensions
+      newResult.extensions = Object.keys(extensions).length
+        ? extensions
+        : undefined
+    }
+    return newResult
   }
+  return result
 }
 
 function omitInternalsFromError<E extends GraphQLError | Error | undefined>(
