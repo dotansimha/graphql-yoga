@@ -43,15 +43,15 @@ const schema = new GraphQLSchema({
       goodbye: {
         type: GraphQLString,
         resolve: () =>
-          new Promise((resolve) => setTimeout(() => resolve('goodbye'), 1000)),
+          new Promise((resolve) => process.nextTick(() => resolve('goodbye'))),
       },
       stream: {
         type: new GraphQLList(GraphQLString),
         async *resolve() {
           yield 'A'
-          await new Promise((resolve) => setTimeout(resolve, 5))
+          await new Promise((resolve) => process.nextTick(resolve))
           yield 'B'
-          await new Promise((resolve) => setTimeout(resolve, 5))
+          await new Promise((resolve) => process.nextTick(resolve))
           yield 'C'
         },
       },
