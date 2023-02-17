@@ -159,6 +159,91 @@ describe('Subscription', () => {
         ]
       `)
   })
+
+  test('should issue pings event if event source never publishes anything', async () => {
+    const d = createDeferred()
+    const source: AsyncIterableIterator<unknown> = {
+      next: () => d.promise.then(() => ({ done: true, value: undefined })),
+      return: () => {
+        d.resolve()
+        return Promise.resolve({ done: true, value: undefined })
+      },
+      throw: () => {
+        throw new Error('Method not implemented. (throw)')
+      },
+      [Symbol.asyncIterator]() {
+        return this
+      },
+    }
+
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            subscribe: () => source,
+          },
+        },
+      },
+    })
+
+    const yoga = createYoga({ schema })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    })
+
+    const iterator = response.body![Symbol.asyncIterator]()
+
+    const results = []
+    let value: Uint8Array
+
+    while (({ value } = await iterator.next())) {
+      if (value === undefined) {
+        break
+      }
+      results.push(Buffer.from(value).toString('utf-8'))
+      if (results.length === 4) {
+        await iterator.return!()
+      }
+    }
+
+    await d.promise
+    expect(results).toMatchInlineSnapshot(`
+      [
+        ":
+
+      ",
+        ":
+
+      ",
+        ":
+
+      ",
+        ":
+
+      ",
+      ]
+    `)
+  })
 })
 
 type Deferred<T = void> = {
