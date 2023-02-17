@@ -27,6 +27,7 @@ export async function processResult({
   const acceptableMediaTypes: string[] = []
   let acceptedMediaType = '*/*'
 
+  let earlyResponse: Response | undefined
   for (const onResultProcessHook of onResultProcessHooks) {
     await onResultProcessHook({
       request,
@@ -40,7 +41,14 @@ export async function processResult({
         resultProcessor = newResultProcessor
         acceptedMediaType = newAcceptedMimeType
       },
+      fetchAPI,
+      endResponse(response) {
+        earlyResponse = response
+      },
     })
+    if (earlyResponse) {
+      return earlyResponse
+    }
   }
 
   // If no result processor found for this result, return an error

@@ -146,6 +146,8 @@ export interface OnResultProcessEventPayload {
     resultProcessor: ResultProcessor,
     acceptedMediaType: string,
   ): void
+  fetchAPI: FetchAPI
+  endResponse(response: Response): void
 }
 
 export type OnResponseHook<TServerContext> = (
