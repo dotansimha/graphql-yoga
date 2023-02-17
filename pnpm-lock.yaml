@@ -97,7 +97,7 @@ importers:
 
   e2e:
     specifiers:
-      '@pulumi/aws': 5.29.1
+      '@pulumi/aws': 5.30.0
       '@pulumi/awsx': 0.40.1
       '@pulumi/azure-native': 1.95.0
       '@pulumi/cloudflare': 4.15.0
@@ -107,8 +107,8 @@ importers:
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
-      '@pulumi/aws': 5.29.1
-      '@pulumi/awsx': 0.40.1_dwrco2wsinnqr7gykekj54bxmi
+      '@pulumi/aws': 5.30.0
+      '@pulumi/awsx': 0.40.1_cff2saklviyidavohgmhjxntze
       '@pulumi/azure-native': 1.95.0
       '@pulumi/cloudflare': 4.15.0
       '@pulumi/docker': 3.6.1
@@ -125,7 +125,7 @@ importers:
 
   examples/apollo-federation-compatibility:
     specifiers:
-      '@apollo/federation-subgraph-compatibility': 1.1.0
+      '@apollo/federation-subgraph-compatibility': 1.1.1
       '@apollo/subgraph': 2.3.2
       '@graphql-codegen/cli': 3.0.0
       '@graphql-codegen/typescript': 3.0.0
@@ -143,7 +143,7 @@ importers:
       graphql-tag: 2.12.6_graphql@16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@apollo/federation-subgraph-compatibility': 1.1.0_wyaqim46cuthwo3oxpq6pvkvb4
+      '@apollo/federation-subgraph-compatibility': 1.1.1_wyaqim46cuthwo3oxpq6pvkvb4
       '@graphql-codegen/cli': 3.0.0_d3dx4krdt4fsynqrp5lqxelwe4
       '@graphql-codegen/typescript': 3.0.0_graphql@16.6.0
       '@graphql-codegen/typescript-resolvers': 3.0.0_graphql@16.6.0
@@ -1414,8 +1414,8 @@ packages:
       js-levenshtein: 1.1.6
     dev: false
 
-  /@apollo/federation-subgraph-compatibility-tests/1.1.0_wyaqim46cuthwo3oxpq6pvkvb4:
-    resolution: {integrity: sha512-cmO8QKbl60fs5i/tnOUWStIl58tVBw60r2MnVrJ5/ME5xJUywcGrZJL+O7H5r/A5OCT7UGMd+e6Q5SGC7rz9EA==}
+  /@apollo/federation-subgraph-compatibility-tests/1.1.1_wyaqim46cuthwo3oxpq6pvkvb4:
+    resolution: {integrity: sha512-jwUC7RmST9gM0w3t/x2YyGMw8zBC6lL2iO/jL+ZoMWrvXvx50qBgwn+r5dj1VUec9piiIzq46NLV95WAEgFVkw==}
     dependencies:
       '@apollo/rover': 0.11.1_debug@4.3.4
       debug: 4.3.4
@@ -1440,11 +1440,11 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@apollo/federation-subgraph-compatibility/1.1.0_wyaqim46cuthwo3oxpq6pvkvb4:
-    resolution: {integrity: sha512-VzapmAYtxjDAUatOtAWmD3VMC+x4bVw7o8pSkoheT2chH5cG7EzLbWxKYyxhw1mXCce4l4PxNFESA52AHVk5Mg==}
+  /@apollo/federation-subgraph-compatibility/1.1.1_wyaqim46cuthwo3oxpq6pvkvb4:
+    resolution: {integrity: sha512-aS/sqg82ip27dzj4nja34z6t3MDqkS7P4t6lrk+60L2KgRqAN9z66gNLfzxo3e5++7g2jbCCLPgIhMxYe4jilA==}
     hasBin: true
     dependencies:
-      '@apollo/federation-subgraph-compatibility-tests': 1.1.0_wyaqim46cuthwo3oxpq6pvkvb4
+      '@apollo/federation-subgraph-compatibility-tests': 1.1.1_wyaqim46cuthwo3oxpq6pvkvb4
       commander: 10.0.0
       debug: 4.3.4
     transitivePeerDependencies:
@@ -8687,8 +8687,8 @@ packages:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: false
 
-  /@pulumi/aws/5.29.1:
-    resolution: {integrity: sha512-IHMSCrdkssoqN1u3SUMOCUOJos0BjVpJ8tkbby6yqASe5p3LCRpkQXwVPoSPRpS7TEoCvJpLw0f8ue+MEcCRdQ==}
+  /@pulumi/aws/5.30.0:
+    resolution: {integrity: sha512-75MsXKJgQZZa34ugt3hAC6uXmh6CLJSUEH3d6lOT92+L8eIfwoqNd9QLuiiRMPZ5/X+vLPNfVk7hdjqtj3Pd0Q==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.55.0
@@ -8701,13 +8701,13 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx/0.40.1_dwrco2wsinnqr7gykekj54bxmi:
+  /@pulumi/awsx/0.40.1_cff2saklviyidavohgmhjxntze:
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
       '@pulumi/pulumi': ^3.0.0
     dependencies:
-      '@pulumi/aws': 5.29.1
+      '@pulumi/aws': 5.30.0
       '@pulumi/docker': 3.6.1
       '@pulumi/pulumi': 3.55.0
       '@types/aws-lambda': 8.10.93
