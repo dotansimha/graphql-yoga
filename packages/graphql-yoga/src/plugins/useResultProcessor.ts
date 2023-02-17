@@ -6,6 +6,7 @@ import {
 } from './resultProcessor/accept.js'
 import { processMultipartResult } from './resultProcessor/multipart.js'
 import { processPushResult } from './resultProcessor/push.js'
+import { processGraphQLSSEResult } from './resultProcessor/graphql-sse'
 import { processRegularResult } from './resultProcessor/regular.js'
 import { Plugin, ResultProcessor } from './types.js'
 
@@ -36,7 +37,7 @@ const regular: ResultProcessorConfig = {
 const defaultList = [textEventStream, multipart, regular]
 const subscriptionList = [multipart, textEventStream, regular]
 
-export function useResultProcessors(): Plugin {
+export function useResultProcessors(opts: { graphqlSse: boolean }): Plugin {
   const isSubscriptionRequestMap = new WeakMap<Request, boolean>()
   return {
     onSubscribe({ args: { contextValue } }) {
@@ -65,7 +66,10 @@ export function useResultProcessors(): Plugin {
             acceptableMediaTypes.push(processorMediaType)
             if (isMatchingMediaType(processorMediaType, requestMediaType)) {
               setResultProcessor(
-                resultProcessorConfig.processResult,
+                opts.graphqlSse &&
+                  resultProcessorConfig.processResult === processPushResult
+                  ? processGraphQLSSEResult
+                  : processPushResult,
                 processorMediaType,
               )
             }
