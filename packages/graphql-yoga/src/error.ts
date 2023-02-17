@@ -110,7 +110,7 @@ export function handleError(
 export function getResponseInitByRespectingErrors(
   result: ResultProcessorInput,
   headers: Record<string, string> = {},
-  isApplicationJson = false,
+  always200 = false,
 ) {
   let status: number | undefined
   let unexpectedErrorExists = false
@@ -130,7 +130,7 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
-        if (isApplicationJson && error.extensions.http.spec) {
+        if (always200 && error.extensions.http.spec) {
           continue
         }
         if (

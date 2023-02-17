@@ -26,9 +26,13 @@ export function processGraphQLSSEResult(
     'Content-Encoding': 'none',
   }
 
-  // TODO: as per the GraphQL over SSE spec, operation errors must be reported
-  //       through the stream and the response head should always be 200: OK
-  const responseInit = getResponseInitByRespectingErrors(result, headersInit)
+  const responseInit = getResponseInitByRespectingErrors(
+    result,
+    headersInit,
+    // as per the GraphQL over SSE spec, operation errors must be reported
+    // through the stream and the response head should always be 200: OK
+    true,
+  )
 
   let iterator: AsyncIterator<MaybeArray<ExecutionResult>>
   let pinger: ReturnType<typeof setInterval>
