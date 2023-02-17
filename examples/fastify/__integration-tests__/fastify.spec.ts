@@ -138,7 +138,7 @@ describe('fastify example integration', () => {
         `,
       })
     expect(response.statusCode).toEqual(200)
-    expect(response.text).toMatchInlineSnapshot(`
+    expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
       "data: {"data":{"countdown":10}}
 
       data: {"data":{"countdown":9}}
@@ -179,7 +179,7 @@ describe('fastify example integration', () => {
         `,
       })
     expect(response.statusCode).toEqual(200)
-    expect(response.text).toMatchInlineSnapshot(`
+    expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
       "data: {"data":{"countdown":10}}
 
       data: {"data":{"countdown":9}}

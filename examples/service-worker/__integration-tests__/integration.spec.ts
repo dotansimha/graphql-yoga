@@ -164,7 +164,11 @@ describe('Service worker', () => {
     expect(response.headers.get('content-type')).toBe('text/event-stream')
     let counter = 0
     for await (const chunk of response.body as any) {
-      expect(Buffer.from(chunk).toString('utf-8')).toMatch(/data: {/)
+      const data = Buffer.from(chunk).toString('utf-8')
+      if (data === ':\n\n') {
+        continue
+      }
+      expect(data).toMatch(/data: {/)
       counter++
       if (counter === 3) {
         break
