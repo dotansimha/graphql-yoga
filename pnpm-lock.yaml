@@ -752,7 +752,7 @@ importers:
   examples/response-cache:
     specifiers:
       '@graphql-yoga/plugin-response-cache': 1.6.1
-      '@types/node': 18.11.11
+      '@types/node': 18.13.0
       cross-env: 7.0.3
       graphql: 16.6.0
       graphql-yoga: 3.1.2
@@ -762,12 +762,12 @@ importers:
     dependencies:
       '@graphql-yoga/plugin-response-cache': link:../../packages/plugins/response-cache
       graphql: 16.6.0
-      graphql-yoga: 3.1.2_ptdruxkxcncivdewdw3wypznca
+      graphql-yoga: 3.1.2_d3dx4krdt4fsynqrp5lqxelwe4
     devDependencies:
-      '@types/node': 18.11.11
+      '@types/node': 18.13.0
       cross-env: 7.0.3
-      ts-node: 10.9.1_bspv7bpieoza2i5ctiw2ofswem
-      ts-node-dev: 2.0.0_bspv7bpieoza2i5ctiw2ofswem
+      ts-node: 10.9.1_j7ujjvgaenksbuonlzvryephbi
+      ts-node-dev: 2.0.0_j7ujjvgaenksbuonlzvryephbi
       typescript: 4.9.4
 
   examples/service-worker:
@@ -839,7 +839,7 @@ importers:
       svelte-preprocess: 5.0.1
       tslib: 2.5.0
       typescript: 4.9.5
-      vite: 4.1.1
+      vite: 4.1.2
     dependencies:
       '@envelop/graphql-jit': 5.0.4_graphql@16.6.0
       '@graphql-yoga/render-graphiql': link:../../packages/render-graphiql
@@ -847,7 +847,7 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@sveltejs/adapter-auto': 2.0.0_7hlaraql3l3j4acwhexjo5qhge
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.55.1+vite@4.1.1
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.55.1+vite@4.1.2
       '@types/jest': 29.2.0
       '@typescript-eslint/eslint-plugin': 5.52.0_6cfvjsbua5ptj65675bqcn6oza
       '@typescript-eslint/parser': 5.52.0_7kw3g6rralp5ps6mg3uyzz6azm
@@ -863,7 +863,7 @@ importers:
       svelte-preprocess: 5.0.1_4x7phaipmicbaooxtnresslofa
       tslib: 2.5.0
       typescript: 4.9.5
-      vite: 4.1.1
+      vite: 4.1.2
 
   examples/uwebsockets:
     specifiers:
@@ -977,7 +977,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       use-url-search-params: 2.5.1
-      vite: 4.1.1
+      vite: 4.1.2
     dependencies:
       '@graphiql/plugin-explorer': 0.1.6_4hkbjrep5ureiqkcwz4kv7433y
       '@graphiql/toolkit': 0.8.0_graphql@16.6.0
@@ -991,8 +991,8 @@ importers:
     devDependencies:
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
-      '@vitejs/plugin-react': 3.1.0_vite@4.1.1
-      vite: 4.1.1
+      '@vitejs/plugin-react': 3.1.0_vite@4.1.2
+      vite: 4.1.2
 
   packages/graphql-yoga:
     specifiers:
@@ -9358,11 +9358,11 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.55.1+vite@4.1.1
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.55.1+vite@4.1.2
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.520_svelte@3.55.1+vite@4.1.1:
+  /@sveltejs/kit/1.0.0-next.520_svelte@3.55.1+vite@4.1.2:
     resolution: {integrity: sha512-flroQQEwIHx6IEkskHGQ90Ri+gFCnAs4ZFRsG7QuTbuBu7XSeJNQs3J73pmBQoKp0pWnbwZ3YZMtwBJWF/I7qA==}
     engines: {node: '>=16.14'}
     hasBin: true
@@ -9371,7 +9371,7 @@ packages:
       svelte: ^3.44.0
       vite: ^3.1.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.55.1+vite@4.1.1
+      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.55.1+vite@4.1.2
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.0.1
@@ -9384,13 +9384,13 @@ packages:
       svelte: 3.55.1
       tiny-glob: 0.2.9
       undici: 5.11.0
-      vite: 4.1.1
+      vite: 4.1.2
     transitivePeerDependencies:
       - diff-match-patch
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.55.1+vite@4.1.1:
+  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.55.1+vite@4.1.2:
     resolution: {integrity: sha512-+SDrAnT7TDi8sdj4OfD2SC4s9DNrpNVBrue8fT2PmKks9Ddu0JIfSeX91wXZb/1xHz4EkGb+rli8GTRI0yGOjg==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
@@ -9408,7 +9408,7 @@ packages:
       magic-string: 0.26.7
       svelte: 3.55.1
       svelte-hmr: 0.15.0_svelte@3.55.1
-      vite: 4.1.1
+      vite: 4.1.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9940,9 +9940,6 @@ packages:
   /@types/node/17.0.45:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: true
-
-  /@types/node/18.11.11:
-    resolution: {integrity: sha512-KJ021B1nlQUBLopzZmPBVuGU9un7WJd/W4ya7Ih02B4Uwky5Nja0yGYav2EfYIk0RR2Q9oVhf60S2XR1BCWJ2g==}
 
   /@types/node/18.11.19:
     resolution: {integrity: sha512-YUgMWAQBWLObABqrvx8qKO1enAvBUdjZOAWQ5grBAkp5LQv45jBvYKZ3oFS9iKRCQyFjqw6iuEa1vmFqtxYLZw==}
@@ -10597,7 +10594,7 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-react/3.1.0_vite@4.1.1:
+  /@vitejs/plugin-react/3.1.0_vite@4.1.2:
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -10608,7 +10605,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.12
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.1.1
+      vite: 4.1.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -10940,12 +10937,12 @@ packages:
       - '@types/node'
     dev: false
 
-  /@whatwg-node/server/0.4.17_@types+node@18.11.11:
+  /@whatwg-node/server/0.4.17_@types+node@18.13.0:
     resolution: {integrity: sha512-kq1AHyi87VWfiDqiSTAOY+py83HMJg42+fI8JAe1wjmMkJ8v/E5mKq5NpLNRM9Cnf7NHsQR0AwQgvX/RFuptaA==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
-      '@types/node': 18.11.11
+      '@types/node': 18.13.0
       '@whatwg-node/fetch': 0.5.3
       tslib: 2.5.0
     transitivePeerDependencies:
@@ -17609,7 +17606,7 @@ packages:
     dependencies:
       graphql: 16.6.0
 
-  /graphql-yoga/3.1.2_ptdruxkxcncivdewdw3wypznca:
+  /graphql-yoga/3.1.2_d3dx4krdt4fsynqrp5lqxelwe4:
     resolution: {integrity: sha512-kn5VIH8f461xlMy4WZBBqS03e5Mre200juoHCMJoJhoAN/1Mu8MiLuGY2SBcEE/ROkF57QC63o2JjYTJ37L6zA==}
     peerDependencies:
       graphql: ^15.2.0 || ^16.0.0
@@ -17622,7 +17619,7 @@ packages:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-yoga/subscription': 3.1.0
       '@whatwg-node/fetch': 0.5.3
-      '@whatwg-node/server': 0.4.17_@types+node@18.11.11
+      '@whatwg-node/server': 0.4.17_@types+node@18.13.0
       dset: 3.1.2
       graphql: 16.6.0
       tslib: 2.5.0
@@ -27007,7 +27004,7 @@ packages:
       - '@types/node'
     dev: true
 
-  /ts-node-dev/2.0.0_bspv7bpieoza2i5ctiw2ofswem:
+  /ts-node-dev/2.0.0_j7ujjvgaenksbuonlzvryephbi:
     resolution: {integrity: sha512-ywMrhCfH6M75yftYvrvNarLEY+SUXtUvU8/0Z6llrHQVBx12GiFk5sStF8UdfE/yfzk9IAq7O5EEbTQsxlBI8w==}
     engines: {node: '>=0.8.0'}
     hasBin: true
@@ -27026,7 +27023,7 @@ packages:
       rimraf: 2.7.1
       source-map-support: 0.5.21
       tree-kill: 1.2.2
-      ts-node: 10.9.1_bspv7bpieoza2i5ctiw2ofswem
+      ts-node: 10.9.1_j7ujjvgaenksbuonlzvryephbi
       tsconfig: 7.0.0
       typescript: 4.9.4
     transitivePeerDependencies:
@@ -27178,7 +27175,7 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /ts-node/10.9.1_bspv7bpieoza2i5ctiw2ofswem:
+  /ts-node/10.9.1_j7ujjvgaenksbuonlzvryephbi:
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -27197,7 +27194,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
-      '@types/node': 18.11.11
+      '@types/node': 18.13.0
       acorn: 8.8.0
       acorn-walk: 8.2.0
       arg: 4.1.3
@@ -28011,8 +28008,8 @@ packages:
       unist-util-stringify-position: 3.0.2
       vfile-message: 3.1.2
 
-  /vite/4.1.1:
-    resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==}
+  /vite/4.1.2:
+    resolution: {integrity: sha512-MWDb9Rfy3DI8omDQySbMK93nQqStwbsQWejXRY2EBzEWKmLAXWb1mkI9Yw2IJrc+oCvPCI1Os5xSSIBYY6DEAw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
