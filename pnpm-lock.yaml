@@ -89,14 +89,14 @@ importers:
 
   benchmark:
     specifiers:
-      '@envelop/graphql-jit': 5.0.4
+      '@envelop/graphql-jit': 5.0.5
       '@faker-js/faker': 7.6.0
       '@graphql-yoga/plugin-response-cache': 1.6.1
       graphql: 16.6.0
       graphql-yoga: 3.6.1
       start-server-and-test: 1.15.4
     dependencies:
-      '@envelop/graphql-jit': 5.0.4_graphql@16.6.0
+      '@envelop/graphql-jit': 5.0.5_graphql@16.6.0
       '@faker-js/faker': 7.6.0
       '@graphql-yoga/plugin-response-cache': link:../packages/plugins/response-cache
       graphql: 16.6.0
@@ -4262,18 +4262,6 @@ packages:
     dependencies:
       '@envelop/extended-validation': 2.0.5_graphql@16.6.0
       graphql: 16.6.0
-      tslib: 2.5.0
-    dev: false
-
-  /@envelop/graphql-jit/5.0.4_graphql@16.6.0:
-    resolution: {integrity: sha512-gharYCai8YzebaHm+kL9dIr3VytUOLGFEdoB9DhZnEnRumnB9WzFB431WPqKtbuegaF9Hhz926O1qsrBggFz/A==}
-    peerDependencies:
-      '@envelop/core': ^3.0.4
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      graphql: 16.6.0
-      graphql-jit: 0.7.4_graphql@16.6.0
-      lru-cache: 6.0.0
       tslib: 2.5.0
     dev: false
 
@@ -17603,21 +17591,6 @@ packages:
     dependencies:
       graphql: 16.6.0
     dev: true
-
-  /graphql-jit/0.7.4_graphql@16.6.0:
-    resolution: {integrity: sha512-kWyHmsQtKMD6xcKDgf4dgPLyIZhviqA6IWGdnA0ElL9wgrIOTxf3eI4c0/U3tnoAU3t09zliVCfDkfIptzYjIA==}
-    peerDependencies:
-      graphql: '>=15'
-    dependencies:
-      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
-      fast-json-stringify: 1.21.0
-      generate-function: 2.3.1
-      graphql: 16.6.0
-      json-schema: 0.4.0
-      lodash.memoize: 4.1.2
-      lodash.merge: 4.6.2
-      lodash.mergewith: 4.6.2
-    dev: false
 
   /graphql-jit/0.8.0_graphql@16.6.0:
     resolution: {integrity: sha512-mxdV9ohO6jKt1o9erb+7RpmnDKQFQCcJlYVfGa3j4+ieP0ITDsAlm194+pfvdv5F4zgrgZfSe5xx5Rf98epJmg==}
