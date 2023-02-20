@@ -1,6 +1,9 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "dist"
   },
-  "files": ["start-server.ts"]
+  "include": ["./start-server.ts"],
+  "exclude": []
 }
