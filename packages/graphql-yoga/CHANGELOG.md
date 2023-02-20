@@ -1,5 +1,19 @@
 # graphql-yoga
 
+## 3.7.0
+
+### Minor Changes
+
+- [#2459](https://github.com/dotansimha/graphql-yoga/pull/2459) [`9e743db5`](https://github.com/dotansimha/graphql-yoga/commit/9e743db5f43a8e6e5944667ddec349005dbb2cd9) Thanks [@ardatan](https://github.com/ardatan)! - Respect `http` in the extensions just like error extensions
+
+### Patch Changes
+
+- [#2470](https://github.com/dotansimha/graphql-yoga/pull/2470) [`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@envelop/validation-cache@^5.1.2` ↗︎](https://www.npmjs.com/package/@envelop/validation-cache/v/5.1.2) (from `^5.0.5`, in `dependencies`)
+
+- [#2470](https://github.com/dotansimha/graphql-yoga/pull/2470) [`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620) Thanks [@n1ru4l](https://github.com/n1ru4l)! - bump range of `@envelop/validation-cache` for fixing javascript runtime compatibility (usage of node-only global `require`).
+
 ## 3.6.1
 
 ### Patch Changes

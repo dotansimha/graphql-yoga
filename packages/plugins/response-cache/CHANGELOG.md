@@ -1,5 +1,24 @@
 # @graphql-yoga/plugin-response-cache
 
+## 1.7.0
+
+### Minor Changes
+
+- [#2252](https://github.com/dotansimha/graphql-yoga/pull/2252) [`4e824b3d`](https://github.com/dotansimha/graphql-yoga/commit/4e824b3d6224604ef5b06f1eb6bdf55e8a70fc23) Thanks [@ardatan](https://github.com/ardatan)! - Support `ETag` and `If-None-Match` headers for HTTP Caching to improve the performance on the client side, also reduce the load on the server.
+
+  [Learn how it works](https://the-guild.dev/graphql/yoga-server/docs/features/response-caching)
+
+### Patch Changes
+
+- [#2452](https://github.com/dotansimha/graphql-yoga/pull/2452) [`64f769ec`](https://github.com/dotansimha/graphql-yoga/commit/64f769ec41f41a0c625bc7d4c749435f573e690c) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@envelop/response-cache@^4.0.6` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/4.0.6) (from `4.0.5`, in `dependencies`)
+
+- [#2459](https://github.com/dotansimha/graphql-yoga/pull/2459) [`9e743db5`](https://github.com/dotansimha/graphql-yoga/commit/9e743db5f43a8e6e5944667ddec349005dbb2cd9) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency [`@envelop/response-cache@^4.0.6` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/4.0.6) (from `4.0.5`, in `dependencies`)
+- Updated dependencies [[`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620), [`9e743db5`](https://github.com/dotansimha/graphql-yoga/commit/9e743db5f43a8e6e5944667ddec349005dbb2cd9), [`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620)]:
+  - graphql-yoga@3.7.0
+
 ## 1.6.1
 
 ### Patch Changes
