@@ -1010,7 +1010,7 @@ importers:
       '@envelop/core': 3.0.4
       '@envelop/disable-introspection': 4.0.5
       '@envelop/live-query': 5.0.5
-      '@envelop/validation-cache': ^5.0.5
+      '@envelop/validation-cache': ^5.1.1
       '@graphql-tools/executor': ^0.0.14
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.2.1
@@ -1033,7 +1033,7 @@ importers:
       tslib: ^2.3.1
     dependencies:
       '@envelop/core': 3.0.4
-      '@envelop/validation-cache': 5.0.5_a6sekiasy2tqr6d5gj7n2wtjli
+      '@envelop/validation-cache': 5.1.1_a6sekiasy2tqr6d5gj7n2wtjli
       '@graphql-tools/executor': 0.0.14_graphql@16.6.0
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
@@ -4383,6 +4383,20 @@ packages:
     dependencies:
       '@envelop/core': 3.0.4
       graphql: 16.6.0
+      lru-cache: 6.0.0
+      tslib: 2.5.0
+    dev: false
+
+  /@envelop/validation-cache/5.1.1_a6sekiasy2tqr6d5gj7n2wtjli:
+    resolution: {integrity: sha512-gn0bdCOqmk0kJU/sj9SACNg5b11zKvV+33KaUZa/DO6h95YjxsChmsPT3YWolmn12kmRkzhxiq/kuWuopLm0aw==}
+    peerDependencies:
+      '@envelop/core': ^3.0.5
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@envelop/core': 3.0.4
+      fast-json-stable-stringify: 2.1.0
+      graphql: 16.6.0
+      js-sha1: 0.6.0
       lru-cache: 6.0.0
       tslib: 2.5.0
     dev: false
@@ -19630,6 +19644,10 @@ packages:
   /js-sdsl/4.1.5:
     resolution: {integrity: sha512-08bOAKweV2NUC1wqTtf3qZlnpOX/R2DU9ikpjOHs0H+ibQv3zpncVQg6um4uYtRtrwIX8M4Nh3ytK4HGlYAq7Q==}
     dev: true
+
+  /js-sha1/0.6.0:
+    resolution: {integrity: sha512-01gwBFreYydzmU9BmZxpVk6svJJHrVxEN3IOiGl6VO93bVKYETJ0sIth6DASI6mIFdt7NmfX9UiByRzsYHGU9w==}
+    dev: false
 
   /js-string-escape/1.0.1:
     resolution: {integrity: sha512-Smw4xcfIQ5LVjAOuJCvN/zIodzA/BBSsluuoSykP+lUvScIi4U6RJLfwHet5cxFnCswUjISV8oAXaqaJDY3chg==}
