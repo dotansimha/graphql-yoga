@@ -1,3 +1,4 @@
+import { DocumentNode } from 'graphql'
 import {
   createGraphQLError,
   GraphQLParams,
@@ -29,11 +30,13 @@ type AllowArbitraryOperationsHandler = (
   request: Request,
 ) => PromiseOrValue<boolean>
 
-export interface UsePersistedOperationsOptions {
+export type UsePersistedOperationsOptions = {
   /**
    * A function that fetches the persisted operation
    */
-  getPersistedOperation(key: string): PromiseOrValue<string | null>
+  getPersistedOperation(
+    key: string,
+  ): PromiseOrValue<DocumentNode | string | null>
   /**
    * Whether to allow execution of arbitrary GraphQL operations aside from persisted operations.
    */
@@ -42,16 +45,24 @@ export interface UsePersistedOperationsOptions {
    * The path to the persisted operation id
    */
   extractPersistedOperationId?: ExtractPersistedOperationId
+
+  /**
+   * Whether to skip validation of the persisted operation
+   */
+  skipDocumentValidation?: boolean
 }
 
 export function usePersistedOperations<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TPluginContext extends Record<string, any>,
 >({
-  getPersistedOperation,
   allowArbitraryOperations = false,
   extractPersistedOperationId = defaultExtractPersistedOperationId,
+  getPersistedOperation,
+  skipDocumentValidation = false,
 }: UsePersistedOperationsOptions): Plugin<TPluginContext> {
+  const operationASTByRequest = new WeakMap<Request, DocumentNode>()
+  const persistedOperationRequest = new WeakSet<Request>()
   return {
     async onParams({ request, params, setParams }) {
       if (params.query) {
@@ -75,11 +86,33 @@ export function usePersistedOperations<
       if (persistedQuery == null) {
         throw createGraphQLError('PersistedQueryNotFound')
       }
-      setParams({
-        query: persistedQuery,
-        variables: params.variables,
-        extensions: params.extensions,
-      })
+
+      if (typeof persistedQuery === 'object') {
+        setParams({
+          query: `__PERSISTED_OPERATION_${persistedOperationKey}__`,
+          variables: params.variables,
+          extensions: params.extensions,
+        })
+        operationASTByRequest.set(request, persistedQuery)
+      } else {
+        setParams({
+          query: persistedQuery,
+          variables: params.variables,
+          extensions: params.extensions,
+        })
+      }
+      persistedOperationRequest.add(request)
+    },
+    onValidate({ setResult, context: { request } }) {
+      if (skipDocumentValidation && persistedOperationRequest.has(request)) {
+        setResult([]) // skip validation
+      }
+    },
+    onParse({ setParsedDocument, context: { request } }) {
+      const ast = operationASTByRequest.get(request)
+      if (ast) {
+        setParsedDocument(ast)
+      }
     },
   }
 }

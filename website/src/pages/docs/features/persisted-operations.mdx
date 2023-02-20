@@ -135,6 +135,45 @@ Check the corresponding documentation for more information.
 - [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
 - [urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
 
+## Using parsed GraphQL documents as AST
+
+You can reduce the amount of work the server has to do by using the parsed GraphQL documents as AST.
+
+```ts filename="Use parsed GraphQL documents as AST"
+import {
+  usePersistedOperations,
+  PersistedOperationType
+} from '@graphql-yoga/plugin-persisted-operations'
+import { parse } from 'graphql'
+
+const persistedOperations = {
+  'my-key': parse(/* GraphQL */ `
+    query {
+      __typename
+    }
+  `)
+}
+
+const plugin = usePersistedOperations({
+  getPersistedOperation(key: string) {
+    return persistedOperations[key]
+  }
+})
+```
+
+## Skipping validation of persisted operations
+
+If you validate your persisted operations while building your store, we recommend to skip the validation on the server. So this will reduce the work done by the server and the latency of the requests.
+
+```ts filename="Validate persisted operations"
+const plugin = usePersistedOperations({
+  //...
+  skipValidation: true
+})
+```
+
+> Using AST and skipping validations will reduce the amount of work the server has to do, so the requests will have less latency.
+
 ## Allowing arbitrary GraphQL operations
 
 Sometimes it is handy to allow non-persisted operations aside from the persisted ones.
