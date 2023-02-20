@@ -13,21 +13,19 @@ const faviconFile = path.resolve(
 
 const outFile = path.resolve(directoryName, '..', 'src', 'graphiql.ts')
 
-const [
-  jsContents,
-  cssContents,
-  faviconContents,
-] = await Promise.all([
+const [jsContents, cssContents, faviconContents] = await Promise.all([
   fs.promises.readFile(jsFile, 'utf-8'),
   fs.promises.readFile(cssFile, 'utf-8'),
   fs.promises.readFile(faviconFile, 'base64'),
-]);
+])
 
 await fs.promises.writeFile(
   outFile,
   [
     `export const js: string = ${JSON.stringify(jsContents)}`,
     `export const css: string = ${JSON.stringify(cssContents)}`,
-    `export const favicon: string = ${JSON.stringify(`data:image/x-icon;base64,${faviconContents}`)}`,
+    `export const favicon: string = ${JSON.stringify(
+      `data:image/x-icon;base64,${faviconContents}`,
+    )}`,
   ].join('\n'),
-);
+)
