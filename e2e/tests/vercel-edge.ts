@@ -137,7 +137,7 @@ export const vercelEdgeDeployment: DeploymentConfiguration<{
     })
   },
   program: async () => {
-    const deployment = new VercelDeployment('vercel-function', {
+    const deployment = new VercelDeployment('vercel-edge', {
       files: [
         {
           file: '/api/graphql.js',
