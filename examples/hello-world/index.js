@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { createServer } = require('node:http')
 const { createYoga, createSchema } = require('graphql-yoga')
+const { renderGraphiQL } = require('@graphql-yoga/render-graphiql')
 
 const yoga = createYoga({
   schema: createSchema({
@@ -24,6 +25,7 @@ const yoga = createYoga({
       }
     `,
   },
+  renderGraphiQL,
 })
 
 const server = createServer(yoga)

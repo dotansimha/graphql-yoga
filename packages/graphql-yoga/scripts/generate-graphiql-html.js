@@ -45,7 +45,7 @@ async function minifyLandingPageHTML() {
     ),
   )
 
-  fs.writeFileSync(
+  await fs.promises.writeFile(
     path.join(__dirname, '../src/landing-page-html.ts'),
     `export default ${JSON.stringify(minified)}`,
   )
