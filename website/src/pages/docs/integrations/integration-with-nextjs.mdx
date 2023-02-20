@@ -2,7 +2,7 @@
 description: Next.js is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as an API Route.
 ---
 
-import { PackageCmd } from '@theguild/components'
+import { PackageCmd, Callout } from '@theguild/components'
 
 # Integration with Next.js
 
@@ -10,7 +10,7 @@ import { PackageCmd } from '@theguild/components'
 
 ## Installation
 
-<PackageCmd packages={['graphql', 'graphql-yoga']} />
+<PackageCmd packages={['graphql graphql-yoga']} />
 
 ## Example
 
@@ -50,6 +50,43 @@ export default createYoga<{
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/nextjs)
+
+## Edge Function
+
+<Callout>
+  Edge functions is a feature of the Vercel platform and not available when
+  using Next.js as a standalone server. Learn more about edge functions on the
+  [Vercel documentation](https://nextjs.org/docs/api-routes/edge-functions).
+</Callout>
+
+For edge functions you need to adjust the `config` object to include the `runtime` property with the value `"edge"` and export `yoga.handleRequest` instead of `yoga`.
+
+```ts filename="pages/api/graphql.ts" {2-5,24}
+import { createYoga, createSchema } from 'graphql-yoga'
+
+export const config = {
+  runtime: 'edge'
+}
+
+const yoga = createYoga({
+  graphqlEndpoint: '/api/graphql',
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        greetings: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type'
+      }
+    }
+  })
+})
+
+export default yoga.handleRequest
+```
 
 ## WebSockets for subscriptions
 

@@ -15,6 +15,7 @@ On each PR, this workflow runs, and tried to deploy and test an actual environme
 - [x] [AWS Lambda](./tests/aws-lambda.ts)
 - [x] [Docker container](./tests/docker.ts)
 - [x] [Vercel Function](./tests/vercel.ts)
+- [x] [Vercel Edge Function](./tests/vercel-edge.ts)
 - [ ] K8s Pod
 - [ ] Docker
 
