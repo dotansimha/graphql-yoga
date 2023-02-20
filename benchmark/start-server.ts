@@ -1,14 +1,27 @@
 /* eslint-disable */
 import { createServer } from 'http'
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createYoga, createSchema, YogaServerInstance } from 'graphql-yoga'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 import { useGraphQlJit } from '@envelop/graphql-jit'
 import { faker } from '@faker-js/faker'
 
+type Book = {
+  id: string
+  name: string
+  numPages: number
+}
+
+type Author = {
+  id: string
+  name: string
+  company: string
+  books: Array<Book>
+}
+
 function generateData() {
-  const authors = []
+  const authors: Array<Author> = []
   for (let i = 0; i < 20; i++) {
-    const books = []
+    const books: Array<Book> = []
 
     for (let k = 0; k < 3; k++) {
       books.push({
@@ -56,7 +69,7 @@ const schema = createSchema({
   },
 })
 
-const yogaMap = {
+const yogaMap: Record<string, YogaServerInstance<{}, {}>> = {
   '/graphql': createYoga({
     schema,
     logging: false,
@@ -86,13 +99,13 @@ const yogaMap = {
     logging: false,
     multipart: false,
     validationCache: false,
-    parseCache: false,
+    parserCache: false,
     graphqlEndpoint: '/graphql-no-parse-validate-cache',
   }),
 }
 
 const server = createServer((req, res) => {
-  const yoga = yogaMap[req.url]
+  const yoga = yogaMap[req.url!]
   if (yoga) {
     yoga(req, res)
   } else {
