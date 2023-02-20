@@ -2,7 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "dist"
+    "outDir": "dist",
+    "target": "ES2019",
+    "moduleResolution": "node16"
   },
   "include": ["./start-server.ts"],
   "exclude": []

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { createServer } from 'http'
+import { createServer, type IncomingMessage, ServerResponse } from 'http'
 import { createYoga, createSchema, YogaServerInstance } from 'graphql-yoga'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 import { useGraphQlJit } from '@envelop/graphql-jit'
@@ -102,6 +102,10 @@ const yogaMap: Record<string, YogaServerInstance<{}, {}>> = {
     parserCache: false,
     graphqlEndpoint: '/graphql-no-parse-validate-cache',
   }),
+  '/ping': (_req: IncomingMessage, res: ServerResponse<IncomingMessage>) => {
+    res.writeHead(200)
+    res.end()
+  },
 }
 
 const server = createServer((req, res) => {
@@ -114,4 +118,6 @@ const server = createServer((req, res) => {
   }
 })
 
-server.listen(4000, '127.0.0.1')
+server.listen(4000, () => {
+  console.log('ready')
+})
