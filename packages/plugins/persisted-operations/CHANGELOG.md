@@ -1,5 +1,18 @@
 # @graphql-yoga/plugin-persisted-operations
 
+## 1.7.0
+
+### Minor Changes
+
+- [#2404](https://github.com/dotansimha/graphql-yoga/pull/2404) [`5a9dbf57`](https://github.com/dotansimha/graphql-yoga/commit/5a9dbf5787b89c50dd2d91a350bc0c855320a086) Thanks [@ardatan](https://github.com/ardatan)! - Allow operations persisted as an AST, add `skipDocumentValidation` flag to disable validation for persisted operations.
+
+### Patch Changes
+
+- [#2404](https://github.com/dotansimha/graphql-yoga/pull/2404) [`5a9dbf57`](https://github.com/dotansimha/graphql-yoga/commit/5a9dbf5787b89c50dd2d91a350bc0c855320a086) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Added dependency [`graphql@^15.2.0 || ^16.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/15.2.0) (to `peerDependencies`)
+- Updated dependencies [[`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620), [`9e743db5`](https://github.com/dotansimha/graphql-yoga/commit/9e743db5f43a8e6e5944667ddec349005dbb2cd9), [`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620)]:
+  - graphql-yoga@3.7.0
+
 ## 1.6.1
 
 ### Patch Changes

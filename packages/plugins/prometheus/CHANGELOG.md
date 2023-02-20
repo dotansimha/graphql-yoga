@@ -1,5 +1,18 @@
 # @graphql-yoga/plugin-prometheus
 
+## 1.7.0
+
+### Patch Changes
+
+- [#2452](https://github.com/dotansimha/graphql-yoga/pull/2452) [`64f769ec`](https://github.com/dotansimha/graphql-yoga/commit/64f769ec41f41a0c625bc7d4c749435f573e690c) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@envelop/prometheus@7.0.5` ↗︎](https://www.npmjs.com/package/@envelop/prometheus/v/7.0.5) (from `7.0.4`, in `dependencies`)
+
+- [#2460](https://github.com/dotansimha/graphql-yoga/pull/2460) [`aff16d01`](https://github.com/dotansimha/graphql-yoga/commit/aff16d016f24b6bd07ac0cefd472cf422ee2f543) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@envelop/prometheus@7.0.5` ↗︎](https://www.npmjs.com/package/@envelop/prometheus/v/7.0.5) (from `7.0.4`, in `dependencies`)
+- Updated dependencies [[`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620), [`9e743db5`](https://github.com/dotansimha/graphql-yoga/commit/9e743db5f43a8e6e5944667ddec349005dbb2cd9), [`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620)]:
+  - graphql-yoga@3.7.0
+
 ## 1.6.1
 
 ### Patch Changes
