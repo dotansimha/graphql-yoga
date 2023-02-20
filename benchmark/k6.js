@@ -107,17 +107,19 @@ export function run() {
     `,
   })
 
+  const noErrors = `no_errors{mode:${__ENV.MODE}}`
+  const expectedResult = `expected_result{mode:${__ENV.MODE}}`
   check(res, {
-    no_errors: (resp) => {
+    [noErrors]: (resp) => {
       const json = resp.json()
       return (
         !!json &&
         typeof json === 'object' &&
         !Array.isArray(json) &&
-        !!json.errors
+        !json.errors
       )
     },
-    expected_result: (resp) => {
+    [expectedResult]: (resp) => {
       const json = resp.json()
       return (
         !!json &&
