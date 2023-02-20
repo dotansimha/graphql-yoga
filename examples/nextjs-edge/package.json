@@ -1,0 +1,29 @@
+{
+  "name": "example-nextjs-edge",
+  "private": true,
+  "version": "0.13.11",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "bundle": "node scripts/bundle.js",
+    "start": "next start",
+    "lint": "next lint",
+    "check": "tsc --pretty --noEmit"
+  },
+  "dependencies": {
+    "graphql-yoga": "3.6.1",
+    "@types/react": "18.0.28",
+    "graphql": "^16.1.0",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tslib": "2.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.28",
+    "eslint": "8.34.0",
+    "eslint-config-next": "13.1.6",
+    "esbuild": "0.17.9",
+    "typescript": "4.9.5"
+  }
+}
