@@ -15,16 +15,8 @@ type VercelProviderInputs = {
     file: string
     data: string
   }[]
-  projectSettings: {
-    framework: string
-  }
-  functions: Record<
-    string,
-    {
-      memory: number
-      maxDuration: number
-    }
-  >
+  projectSettings: {}
+  version: 2
 }
 
 type VercelDeploymentInputs = {
@@ -81,7 +73,6 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
         body: JSON.stringify({
           name: inputs.name,
           files: inputs.files,
-          functions: inputs.functions,
           projectSettings: inputs.projectSettings,
         }),
       },
@@ -137,26 +128,44 @@ export const vercelEdgeDeployment: DeploymentConfiguration<{
     })
   },
   program: async () => {
+    const nextJSVersion = JSON.parse(
+      (
+        await fsPromises.readFile('../examples/nextjs-edge/package.json')
+      ).toString('utf-8'),
+    )['dependencies']['next']
+
+    if (nextJSVersion == null || Number.isNaN(parseInt(nextJSVersion[0], 10))) {
+      throw new Error(`Failed to parse Next.js version from package.json.`)
+    }
+
     const deployment = new VercelDeployment('vercel-edge', {
+      version: 2,
       files: [
         {
-          file: '/api/graphql.js',
+          file: '.vercel/output/functions/api/graphql.func/index.js',
           data: await fsPromises.readFile(
             '../examples/nextjs-edge/dist/index.js',
             'utf-8',
           ),
         },
+        {
+          file: '.vercel/output/functions/api/graphql.func/.vc-config.json',
+          data: JSON.stringify({
+            runtime: 'edge',
+            name: 'api/graphql',
+            deploymentTarget: 'v8-worker',
+            entrypoint: 'index.js',
+            envVarsInUse: [],
+            assets: [],
+            framework: {
+              slug: 'nextjs',
+              version: nextJSVersion,
+            },
+          }),
+        },
       ],
       name: `yoga-e2e-testing`,
-      functions: {
-        'api/graphql.js': {
-          memory: 256,
-          maxDuration: 5,
-        },
-      },
-      projectSettings: {
-        framework: null,
-      },
+      projectSettings: {},
     })
 
     return {
