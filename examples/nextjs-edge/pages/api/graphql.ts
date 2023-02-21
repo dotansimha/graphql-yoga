@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { createYoga, createSchema } from 'graphql-yoga'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextRequest, NextFetchEvent } from 'next/server'
 
 // Docs: https://vercel.com/docs/concepts/functions/edge-functions
 
@@ -8,10 +8,7 @@ export const config = {
   runtime: 'edge',
 }
 
-export default createYoga<{
-  req: NextApiRequest
-  res: NextApiResponse
-}>({
+const yoga = createYoga({
   graphqlEndpoint: '/api/graphql',
   schema: createSchema({
     typeDefs: /* GraphQL */ `
@@ -27,3 +24,5 @@ export default createYoga<{
     },
   }),
 })
+
+export default yoga.handleRequest
