@@ -136,7 +136,7 @@ importers:
     specifiers:
       '@apollo/federation-subgraph-compatibility': 1.1.1
       '@apollo/subgraph': 2.3.2
-      '@graphql-codegen/cli': 3.2.0
+      '@graphql-codegen/cli': 3.2.1
       '@graphql-codegen/typescript': 3.0.1
       '@graphql-codegen/typescript-resolvers': 3.1.0
       '@graphql-yoga/plugin-apollo-inline-trace': 1.7.0
@@ -153,7 +153,7 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@apollo/federation-subgraph-compatibility': 1.1.1_yfqdm2mq2pj4brmq2is5zjqtle
-      '@graphql-codegen/cli': 3.2.0_3747hjkprpk6cot33bkmfwepnm
+      '@graphql-codegen/cli': 3.2.1_3747hjkprpk6cot33bkmfwepnm
       '@graphql-codegen/typescript': 3.0.1_graphql@16.6.0
       '@graphql-codegen/typescript-resolvers': 3.1.0_graphql@16.6.0
       '@types/node': 18.14.1
@@ -1011,7 +1011,7 @@ importers:
       '@envelop/disable-introspection': 4.0.6
       '@envelop/live-query': 5.0.6
       '@envelop/validation-cache': ^5.1.2
-      '@graphql-tools/executor': ^0.0.14
+      '@graphql-tools/executor': ^0.0.15
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.2.1
       '@graphql-yoga/render-graphiql': 3.7.0
@@ -1034,7 +1034,7 @@ importers:
     dependencies:
       '@envelop/core': 3.0.4
       '@envelop/validation-cache': 5.1.2_a6sekiasy2tqr6d5gj7n2wtjli
-      '@graphql-tools/executor': 0.0.14_graphql@16.6.0
+      '@graphql-tools/executor': 0.0.15_graphql@16.6.0
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-yoga/subscription': link:../subscription
@@ -5449,8 +5449,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-codegen/cli/3.2.0_3747hjkprpk6cot33bkmfwepnm:
-    resolution: {integrity: sha512-o+oTOIMlBF4PE+JDo3m37W/xQNYUIASFOc5K9DHkWh4zW/qVHVkGyyu2fEgI8PbscODALyNYWG/ArGXoIAy2/A==}
+  /@graphql-codegen/cli/3.2.1_3747hjkprpk6cot33bkmfwepnm:
+    resolution: {integrity: sha512-AeXzOvhSgAyMC0TzIoc6/HIc2Fy2rCZJcs5pt1LDypn1k4gpGRzqZ5JOjYx+XIna2hLfB9NbAkcO5dcdHwFdJA==}
     hasBin: true
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -5484,6 +5484,7 @@ packages:
       json-to-pretty-yaml: 1.2.2
       listr2: 4.0.5
       log-symbols: 4.1.0
+      micromatch: 4.0.5
       shell-quote: 1.7.4
       string-env-interpolation: 1.0.1
       ts-log: 2.2.5
@@ -5994,6 +5995,19 @@ packages:
       graphql: 16.6.0
       tslib: 2.5.0
       value-or-promise: 1.0.12
+
+  /@graphql-tools/executor/0.0.15_graphql@16.6.0:
+    resolution: {integrity: sha512-6U7QLZT8cEUxAMXDP4xXVplLi6RBwx7ih7TevlBto66A/qFp3PDb6o/VFo07yBKozr8PGMZ4jMfEWBGxmbGdxA==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/utils': 9.2.1_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.1.2_graphql@16.6.0
+      '@repeaterjs/repeater': 3.0.4
+      graphql: 16.6.0
+      tslib: 2.5.0
+      value-or-promise: 1.0.12
+    dev: false
 
   /@graphql-tools/git-loader/7.2.17_graphql@16.6.0:
     resolution: {integrity: sha512-VbJQEgjy3oH0IQvkCJFKsIatep9Qv8mToBf0QSMXvS9fZkLM5wwTM4KPtw0Loim/1BAAnomBpHy6I4kiwqYU4A==}
@@ -6568,6 +6582,13 @@ packages:
     resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      graphql: 16.6.0
+
+  /@graphql-typed-document-node/core/3.1.2_graphql@16.6.0:
+    resolution: {integrity: sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.6.0
 
@@ -17749,7 +17770,7 @@ packages:
     peerDependencies:
       graphql: 14 - 16
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.1.2_graphql@16.6.0
       cross-fetch: 3.1.5
       extract-files: 9.0.0
       form-data: 3.0.1
