@@ -1,7 +1,6 @@
 export { createGraphQLError } from './error.js'
 export * from './logger.js'
 export type { Plugin } from './plugins/types.js'
-export type { CORSOptions } from './plugins/useCORS.js'
 export type { GraphiQLOptions } from './plugins/useGraphiQL.js'
 export { renderGraphiQL, shouldRenderGraphiQL } from './plugins/useGraphiQL.js'
 export { useReadinessCheck } from './plugins/useReadinessCheck.js'

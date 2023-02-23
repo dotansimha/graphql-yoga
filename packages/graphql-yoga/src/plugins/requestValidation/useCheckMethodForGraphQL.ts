@@ -10,7 +10,7 @@ export function isValidMethodForGraphQL(
 
 export function useCheckMethodForGraphQL(): Plugin {
   return {
-    onRequest({ request }) {
+    onRequestParse({ request }) {
       if (!isValidMethodForGraphQL(request.method)) {
         throw createGraphQLError(
           'GraphQL only supports GET and POST requests.',
