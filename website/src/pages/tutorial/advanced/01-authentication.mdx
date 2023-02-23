@@ -336,7 +336,7 @@ Now, modify your `createContext` function in `src/context.ts` function to call t
 
 ```ts filename="src/context.ts"
 import { PrismaClient, User } from '@prisma/client'
-import { YogaInitialContext } from '@graphql-yoga/node'
+import { YogaInitialContext } from 'graphql-yoga'
 import { authenticateUser } from './auth'
 
 const prisma = new PrismaClient()
