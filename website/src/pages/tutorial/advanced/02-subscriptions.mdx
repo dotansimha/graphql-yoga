@@ -163,7 +163,7 @@ const resolvers = {
       context: GraphQLContext
     ) {
       if (context.currentUser === null) {
-        throw new GraphQLYogaError('Unauthenticated!')
+        throw new GraphQLError('Unauthenticated!')
       }
 
       const newLink = await context.prisma.link.create({
