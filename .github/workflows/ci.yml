@@ -213,6 +213,8 @@ jobs:
   apollo-federation-compatibility:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
       - name: Install Node
         uses: actions/setup-node@v3
         with:
