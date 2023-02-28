@@ -213,27 +213,12 @@ jobs:
   apollo-federation-compatibility:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+      - uses: apollographql/federation-subgraph-compatibility@v1
         with:
-          nodeVersion: 18
-          packageManager: pnpm
-      - name: Build Packages
-        run: pnpm build
-      - name: Create Bundle
-        working-directory: examples/apollo-federation-compatibility
-        run: pnpm build
-      - name: Install Rover
-        run: curl -sSL https://rover.apollo.dev/nix/v0.11.1 | sh
-      - name: Add Rover to PATH
-        run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
-      - name: Run Tests
-        working-directory: examples/apollo-federation-compatibility
-        run: pnpm test
-        env:
-          APOLLO_ELV2_LICENSE: accept
-      - name: Report
-        working-directory: examples/apollo-federation-compatibility
-        run: cat results.md > $GITHUB_STEP_SUMMARY
+          workingDirectory: examples/apollo-federation-compatibility
+          compose: docker-compose.yaml
+          schema: schema.graphql
+          token: ${{ secrets.GITHUB_TOKEN }}
+          failOnWarning: true
+          failOnRequired: true
+          debug: true
