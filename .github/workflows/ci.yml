@@ -249,6 +249,7 @@ jobs:
           workingDirectory: examples/apollo-federation-compatibility
           compose: docker-compose.yaml
           schema: schema.graphql
+          path: /graphql
           token: ${{ secrets.GITHUB_TOKEN }}
           failOnWarning: true
           failOnRequired: true
