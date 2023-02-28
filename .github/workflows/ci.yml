@@ -213,6 +213,8 @@ jobs:
   apollo-federation-compatibility:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
       - uses: apollographql/federation-subgraph-compatibility@v1
         with:
           workingDirectory: examples/apollo-federation-compatibility
