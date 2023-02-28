@@ -239,6 +239,10 @@ jobs:
         run: pnpm build
       - name: Build Apollo Federation Example
         run: pnpm --filter=example-apollo-federation-compatibility build
+      - name: Install Rover
+        run: curl -sSL https://rover.apollo.dev/nix/v0.11.1 | sh
+      - name: Add Rover to PATH
+        run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Apollo Federation Subgraph Compatibility
         uses: apollographql/federation-subgraph-compatibility@v1
         with:
