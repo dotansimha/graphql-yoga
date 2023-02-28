@@ -5,7 +5,13 @@ import { createServer } from 'http'
 import { gql } from 'graphql-tag'
 import { readFileSync } from 'node:fs'
 
-import { Product, ProductResearch, Resolvers, User } from './resolvers-types'
+import {
+  Inventory,
+  Product,
+  ProductResearch,
+  Resolvers,
+  User,
+} from './resolvers-types'
 
 const typeDefs = readFileSync('./schema.graphql', 'utf8')
 
@@ -50,6 +56,11 @@ const user: User = {
   name: 'Jane Smith',
   totalProductsCreated: 1337,
   yearsOfEmployment: 10,
+}
+
+const inventory: Inventory = {
+  id: 'apollo-oss',
+  deprecatedProducts: [deprecatedProduct],
 }
 
 const resolvers: Resolvers = {
@@ -147,6 +158,36 @@ const resolvers: Resolvers = {
     },
     name() {
       return 'Jane Smith'
+    },
+    // @ts-ignore
+    __resolveReference(userRef) {
+      const ref = userRef as User
+      if (ref.email) {
+        const user = {
+          email: ref.email,
+          name: 'Jane Smith',
+          totalProductsCreated: 1337,
+        }
+        if (ref.totalProductsCreated) {
+          user.totalProductsCreated = ref.totalProductsCreated
+        }
+        if (ref.yearsOfEmployment) {
+          // @ts-ignore
+          user.yearsOfEmployment = ref.yearsOfEmployment
+        }
+        return user
+      } else {
+        return null
+      }
+    },
+  },
+  Inventory: {
+    __resolveReference: (reference) => {
+      if (inventory.id === reference.id) {
+        return inventory
+      } else {
+        return null
+      }
     },
   },
 }
