@@ -29,6 +29,12 @@ export type DeprecatedProduct = {
   sku: Scalars['String'];
 };
 
+export type Inventory = {
+  __typename?: 'Inventory';
+  deprecatedProducts: Array<DeprecatedProduct>;
+  id: Scalars['ID'];
+};
+
 export type Product = {
   __typename?: 'Product';
   createdBy?: Maybe<User>;
@@ -170,6 +176,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
   DeprecatedProduct: ResolverTypeWrapper<DeprecatedProduct>;
+  Inventory: ResolverTypeWrapper<Inventory>;
   Product: ResolverTypeWrapper<Product>;
   ProductDimension: ResolverTypeWrapper<ProductDimension>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
@@ -187,6 +194,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   String: Scalars['String'];
   DeprecatedProduct: DeprecatedProduct;
+  Inventory: Inventory;
   Product: Product;
   ProductDimension: ProductDimension;
   Float: Scalars['Float'];
@@ -197,6 +205,10 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'];
   Boolean: Scalars['Boolean'];
 };
+
+export type CustomDirectiveArgs = { };
+
+export type CustomDirectiveResolver<Result, Parent, ContextType = any, Args = CustomDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type CaseStudyResolvers<ContextType = any, ParentType extends ResolversParentTypes['CaseStudy'] = ResolversParentTypes['CaseStudy']> = {
   caseNumber?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -210,6 +222,13 @@ export type DeprecatedProductResolvers<ContextType = any, ParentType extends Res
   package?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reason?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   sku?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InventoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Inventory'] = ResolversParentTypes['Inventory']> = {
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Inventory']>, { __typename: 'Inventory' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  deprecatedProducts?: Resolver<Array<ResolversTypes['DeprecatedProduct']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -263,6 +282,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = {
   CaseStudy?: CaseStudyResolvers<ContextType>;
   DeprecatedProduct?: DeprecatedProductResolvers<ContextType>;
+  Inventory?: InventoryResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProductDimension?: ProductDimensionResolvers<ContextType>;
   ProductResearch?: ProductResearchResolvers<ContextType>;
@@ -271,3 +291,6 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
 };
 
+export type DirectiveResolvers<ContextType = any> = {
+  custom?: CustomDirectiveResolver<any, any, ContextType>;
+};
