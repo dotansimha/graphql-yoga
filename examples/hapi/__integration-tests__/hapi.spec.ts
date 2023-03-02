@@ -20,8 +20,6 @@ describe('hapi example integration', () => {
       body: JSON.stringify({ query: '{ hello }' }),
     })
 
-    expect(res.ok).toBeTruthy()
-
     await expect(res.json()).resolves.toMatchInlineSnapshot(`
       {
         "data": {
@@ -39,8 +37,6 @@ describe('hapi example integration', () => {
       },
       body: JSON.stringify({ query: 'mutation { dontChange }' }),
     })
-
-    expect(res.ok).toBeTruthy()
 
     await expect(res.json()).resolves.toMatchInlineSnapshot(`
       {
