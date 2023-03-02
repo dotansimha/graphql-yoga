@@ -13,6 +13,9 @@ export async function startApp(port: number) {
         type Mutation {
           dontChange: String!
         }
+        type Subscription {
+          greetings: String!
+        }
       `,
       resolvers: {
         Query: {
@@ -23,6 +26,15 @@ export async function startApp(port: number) {
         Mutation: {
           dontChange() {
             return 'didntChange'
+          },
+        },
+        Subscription: {
+          greetings: {
+            async *subscribe() {
+              for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
+                yield { greetings: hi }
+              }
+            },
           },
         },
       },

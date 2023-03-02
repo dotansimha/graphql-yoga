@@ -47,5 +47,28 @@ describe('hapi example integration', () => {
     `)
   })
 
-  it.todo('should subscribe and stream')
+  it('should subscribe and stream', async () => {
+    const res = await fetch(`http://localhost:${port}/graphql`, {
+      method: 'POST',
+      headers: {
+        accept: 'text/event-stream',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: 'subscription { greetings }' }),
+    })
+
+    await expect(res.text()).resolves.toMatchInlineSnapshot(`
+      "data: {"data":{"greetings":"Hi"}}
+
+      data: {"data":{"greetings":"Bonjour"}}
+
+      data: {"data":{"greetings":"Hola"}}
+
+      data: {"data":{"greetings":"Ciao"}}
+
+      data: {"data":{"greetings":"Zdravo"}}
+
+      "
+    `)
+  })
 })
