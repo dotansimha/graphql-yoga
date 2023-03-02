@@ -1,11 +1,18 @@
-import { ParseIntPipe, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, ResolveField, Resolver, Subscription } from '@nestjs/graphql';
-import { createPubSub } from '../../../utils/pubsub';
-import { CatsGuard } from './cats.guard';
-import { CatsService } from './cats.service';
-import { Cat } from './interfaces/cat.interface';
+import { ParseIntPipe, UseGuards } from '@nestjs/common'
+import {
+  Args,
+  Mutation,
+  Query,
+  ResolveField,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql'
+import { createPubSub } from '../../../utils/pubsub'
+import { CatsGuard } from './cats.guard'
+import { CatsService } from './cats.service'
+import { Cat } from './interfaces/cat.interface'
 
-const catCreated = createPubSub<{ catCreated: Cat }>();
+const catCreated = createPubSub<{ catCreated: Cat }>()
 
 @Resolver('Cat')
 export class CatsResolvers {
@@ -14,17 +21,17 @@ export class CatsResolvers {
   @Query()
   @UseGuards(CatsGuard)
   getCats() {
-    return this.catsService.findAll();
+    return this.catsService.findAll()
   }
 
   @ResolveField('color')
   getColor() {
-    return 'black';
+    return 'black'
   }
 
   @ResolveField()
   weight() {
-    return 5;
+    return 5
   }
 
   @Query('cat')
@@ -32,25 +39,25 @@ export class CatsResolvers {
     @Args('id', ParseIntPipe)
     id: number,
   ): Cat | undefined {
-    return this.catsService.findOneById(id);
+    return this.catsService.findOneById(id)
   }
 
   @Mutation('createCat')
   create(@Args() args: Cat): Cat {
-    const createdCat = this.catsService.create(args);
-    catCreated.pub({ catCreated: createdCat });
-    return createdCat;
+    const createdCat = this.catsService.create(args)
+    catCreated.pub({ catCreated: createdCat })
+    return createdCat
   }
 
   @Subscription('catCreated')
   catCreated() {
-    return catCreated.sub();
+    return catCreated.sub()
   }
 
   @Subscription('greetings')
   async *greetings() {
     for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
-      yield { greetings: hi };
+      yield { greetings: hi }
     }
   }
 }
