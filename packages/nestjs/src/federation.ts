@@ -1,43 +1,60 @@
-import type { ApolloGateway, GatewayConfig } from '@apollo/gateway';
-import { useApolloFederation as useApolloFederationPlugin } from '@envelop/apollo-federation';
-import { Injectable, Type } from '@nestjs/common';
-import { loadPackage } from '@nestjs/common/utils/load-package.util';
-import { GraphQLFederationFactory } from '@nestjs/graphql';
-import { AbstractYogaDriver, YogaDriver, YogaDriverConfig, YogaDriverPlatform } from './index';
+import type { ApolloGateway, GatewayConfig } from '@apollo/gateway'
+import { useApolloFederation as useApolloFederationPlugin } from '@envelop/apollo-federation'
+import { Injectable, Type } from '@nestjs/common'
+import { loadPackage } from '@nestjs/common/utils/load-package.util'
+import { GraphQLFederationFactory } from '@nestjs/graphql'
+import {
+  AbstractYogaDriver,
+  YogaDriver,
+  YogaDriverConfig,
+  YogaDriverPlatform,
+} from './index.js'
 
-export type YogaFederationDriverConfig<Platform extends YogaDriverPlatform = 'express'> =
-  YogaDriverConfig<Platform>;
+export type YogaFederationDriverConfig<
+  Platform extends YogaDriverPlatform = 'express',
+> = YogaDriverConfig<Platform>
 
 @Injectable()
 export class YogaFederationDriver<
   Platform extends YogaDriverPlatform = 'express',
 > extends AbstractYogaDriver<Platform> {
-  constructor(private readonly graphqlFederationFactory: GraphQLFederationFactory) {
-    super();
+  constructor(
+    private readonly graphqlFederationFactory: GraphQLFederationFactory,
+  ) {
+    super()
   }
 
   public async start(options: YogaFederationDriverConfig<Platform>) {
-    const opts = await this.graphqlFederationFactory.mergeWithSchema(options);
+    const opts = await this.graphqlFederationFactory.mergeWithSchema(options)
 
     if (options.definitions?.path) {
-      const { printSubgraphSchema } = loadPackage('@apollo/subgraph', 'ApolloFederation', () =>
-        require('@apollo/subgraph'),
-      );
-      await this.graphQlFactory.generateDefinitions(printSubgraphSchema(opts.schema), options);
+      const { printSubgraphSchema } = loadPackage(
+        '@apollo/subgraph',
+        'ApolloFederation',
+        () => require('@apollo/subgraph'),
+      )
+      await this.graphQlFactory.generateDefinitions(
+        printSubgraphSchema(opts.schema),
+        options,
+      )
     }
 
-    await super.start(opts);
+    await super.start(opts)
 
     if (options.subscriptions) {
       // See more: https://github.com/apollographql/apollo-server/issues/2776
-      throw new Error('No support for subscriptions when using Apollo Federation');
+      throw new Error(
+        'No support for subscriptions when using Apollo Federation',
+      )
     }
   }
 }
 
-export interface YogaGatewayDriverConfig<Platform extends YogaDriverPlatform = 'express'> {
-  driver?: Type<YogaDriver<Platform>>;
-  gateway?: GatewayConfig;
+export interface YogaGatewayDriverConfig<
+  Platform extends YogaDriverPlatform = 'express',
+> {
+  driver?: Type<YogaDriver<Platform>>
+  gateway?: GatewayConfig
   server?: Omit<
     YogaDriverConfig<Platform>,
     | 'endpoint'
@@ -53,7 +70,7 @@ export interface YogaGatewayDriverConfig<Platform extends YogaDriverPlatform = '
     | 'buildSchemaOptions'
     | 'fieldResolverEnhancers'
     | 'driver'
-  >;
+  >
 }
 
 @Injectable()
@@ -61,19 +78,21 @@ export class YogaGatewayDriver<
   Platform extends YogaDriverPlatform = 'express',
 > extends AbstractYogaDriver<Platform> {
   public async start(options: YogaGatewayDriverConfig<Platform>) {
-    const { ApolloGateway } = loadPackage('@apollo/gateway', 'YogaGatewayDriver', () =>
-      require('@apollo/gateway'),
-    );
+    const { ApolloGateway } = loadPackage(
+      '@apollo/gateway',
+      'YogaGatewayDriver',
+      () => require('@apollo/gateway'),
+    )
     const { useApolloFederation } = loadPackage(
       '@envelop/apollo-federation',
       'YogaGatewayDriver',
       () => require('@envelop/apollo-federation'),
-    ) as { useApolloFederation: typeof useApolloFederationPlugin };
+    ) as { useApolloFederation: typeof useApolloFederationPlugin }
 
-    const { server: serverOpts = {}, gateway: gatewayOpts = {} } = options;
-    const gateway: ApolloGateway = new ApolloGateway(gatewayOpts);
+    const { server: serverOpts = {}, gateway: gatewayOpts = {} } = options
+    const gateway: ApolloGateway = new ApolloGateway(gatewayOpts)
 
-    await gateway.load();
+    await gateway.load()
 
     await super.start({
       ...serverOpts,
@@ -83,7 +102,7 @@ export class YogaGatewayDriver<
           gateway,
         }),
       ],
-    });
+    })
   }
 
   public async mergeDefaultOptions(
@@ -92,6 +111,6 @@ export class YogaGatewayDriver<
     return {
       ...options,
       server: await super.mergeDefaultOptions(options?.server ?? {}),
-    };
+    }
   }
 }
