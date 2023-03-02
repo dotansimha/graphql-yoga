@@ -8,7 +8,7 @@ import {
   YogaDriver,
   YogaDriverConfig,
   YogaDriverPlatform,
-} from './index.js'
+} from './driver.js'
 
 export type YogaFederationDriverConfig<
   Platform extends YogaDriverPlatform = 'express',
