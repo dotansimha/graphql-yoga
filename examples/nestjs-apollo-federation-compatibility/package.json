@@ -1,0 +1,28 @@
+{
+  "name": "examples-nestjs-apollo-federation-compatibility",
+  "version": "1.0.0",
+  "description": "Apollo Federation implemented with GraphQL Yoga running as a Nest.js driver.",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "prebuild": "rimraf dist",
+    "start": "nest start"
+  },
+  "dependencies": {
+    "@apollo/subgraph": "^2.3.2",
+    "@envelop/apollo-federation": "^3.0.6",
+    "@envelop/core": "^3.0.6",
+    "@graphql-yoga/nestjs": "0.3.1",
+    "@nestjs/common": "^9.3.9",
+    "@nestjs/core": "^9.3.9",
+    "@nestjs/graphql": "^10.2.0",
+    "graphql": "^16.6.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^9.2.0",
+    "rimraf": "^4.1.2",
+    "typescript": "^4.9.5"
+  }
+}
