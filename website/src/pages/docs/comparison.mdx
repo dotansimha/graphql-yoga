@@ -6,6 +6,13 @@ import { Callout } from '@theguild/components'
 
 This comparison highlights the main differences when using Yoga instead of Apollo Server.
 
+### Better runtime performance
+
+GraphQL Yoga has significantly less latency and much higher requests rate than Apollo Server in all [popular benchmarks](https://github.com/graphql-crystal/benchmarks).
+including when using Apollo Federation - see benchmarks [here](https://github.com/ardatan/benchmarks/tree/federation#apollo-federation-server-benchmarks)
+<img width="742" alt="image" src="https://user-images.githubusercontent.com/1297448/222475526-7fa4b418-e83e-4201-956d-8e82ecf5c909.png">
+
+
 ### No Framework-specific Packages
 
 One of the goals of `graphql-yoga` is to have as few `graphql-yoga` packages as possible.
@@ -91,9 +98,6 @@ GraphQL Yoga only has a fraction of the dependencies of Apollo Server, and in ge
 
 GraphQL Yogas APIs are designed for code-splitting and thus have no side effects, where Apollo server specifies that is has side effects and thus, cannot be code splitted.
 
-### Better runtime performance
-
-GraphQL Yoga has significantly less latency and much higher requests rate than Apollo Server in all [popular benchmarks](https://github.com/graphql-crystal/benchmarks).
 
 ### GraphiQL
 
