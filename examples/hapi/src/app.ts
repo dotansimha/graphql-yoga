@@ -4,7 +4,7 @@ import { Readable } from 'node:stream'
 import { createYoga, createSchema } from 'graphql-yoga'
 
 export async function startApp(port: number) {
-  const yoga = createYoga({
+  const yoga = createYoga<{ req: Hapi.Request; h: Hapi.ResponseToolkit }>({
     schema: createSchema({
       typeDefs: /* GraphQL */ `
         type Query {
@@ -44,6 +44,7 @@ export async function startApp(port: number) {
       const { status, headers, body } = await yoga.handleNodeRequest(
         // will be an incoming message because the payload output option is stream
         req.payload as http.IncomingMessage,
+        { req, h },
       )
 
       const res = h.response().code(status)
@@ -51,7 +52,10 @@ export async function startApp(port: number) {
         res.header(key, val)
       }
 
-      return Readable.from(body, { objectMode: false })
+      return Readable.from(body, {
+        // hapi needs the stream not to be in object mode
+        objectMode: false,
+      })
     },
   })
 
