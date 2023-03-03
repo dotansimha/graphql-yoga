@@ -51,7 +51,7 @@ export const createLogger = (
   logLevel: LogLevel | 'silent' = globalThis.process?.env['DEBUG'] === '1'
     ? 'debug'
     : 'info',
-) => {
+): YogaLogger => {
   const score = logLevelScores[logLevel]
   return {
     debug: score > logLevelScores.debug ? noop : debugLog,
