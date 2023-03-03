@@ -180,4 +180,92 @@ describe('validation cache', () => {
 
     expect(validateFn).toHaveBeenCalledTimes(2)
   })
+
+  it('should miss cache if the query variables change', async () => {
+    const validateFn = jest.fn(validate)
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hi(person: String): String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            hi: (_, args) => `Hi ${args.person}!`,
+          },
+        },
+      }),
+      plugins: [
+        {
+          onValidate({ setValidationFn }) {
+            setValidationFn(validateFn)
+          },
+        } as Plugin,
+      ],
+    })
+
+    const query = (person: string | null) =>
+      yoga.fetch('/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          operationName: 'Welcomer',
+          query: 'query Welcomer($person: String!) { hi(person: $person) }',
+          variables: { person },
+        }),
+      })
+
+    // first invalid request, will be cached
+    let res = await query(null)
+    await expect(res.json()).resolves.toMatchInlineSnapshot(`
+      {
+        "errors": [
+          {
+            "locations": [
+              {
+                "column": 16,
+                "line": 1,
+              },
+            ],
+            "message": "Variable "$person" of non-null type "String!" must not be null.",
+          },
+        ],
+      }
+    `)
+
+    // second invalid request, cache hit
+    res = await query(null)
+    await expect(res.json()).resolves.toMatchInlineSnapshot(`
+      {
+        "errors": [
+          {
+            "locations": [
+              {
+                "column": 16,
+                "line": 1,
+              },
+            ],
+            "message": "Variable "$person" of non-null type "String!" must not be null.",
+          },
+        ],
+      }
+    `)
+    expect(validateFn).toBeCalledTimes(1)
+
+    // third request, valid, cache miss
+    res = await query('John')
+    await expect(res.json()).resolves.toMatchInlineSnapshot(`
+      {
+        "data": {
+          "hi": "Hi John!",
+        },
+      }
+    `)
+
+    // validation function doesnt validate args
+    expect(validateFn).toBeCalledTimes(1)
+  })
 })

@@ -192,3 +192,84 @@ it('cache a query operation per session', async () => {
     },
   })
 })
+
+it('should miss cache if query variables change', async () => {
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hi(person: String!): String!
+        }
+      `,
+      resolvers: {
+        Query: {
+          hi: (_, args) => `Hi ${args.person}!`,
+        },
+      },
+    }),
+    plugins: [
+      useResponseCache({
+        session: () => 'testing',
+      }),
+    ],
+  })
+
+  const query = (person: string | null) =>
+    yoga.fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        operationName: 'Welcomer',
+        query: 'query Welcomer($person: String!) { hi(person: $person) }',
+        variables: { person },
+      }),
+    })
+
+  // first invalid request, will be cached
+  let res = await query(null)
+  await expect(res.json()).resolves.toMatchInlineSnapshot(`
+    {
+      "errors": [
+        {
+          "locations": [
+            {
+              "column": 16,
+              "line": 1,
+            },
+          ],
+          "message": "Variable "$person" of non-null type "String!" must not be null.",
+        },
+      ],
+    }
+  `)
+
+  // second invalid request, cache hit
+  res = await query(null)
+  await expect(res.json()).resolves.toMatchInlineSnapshot(`
+    {
+      "errors": [
+        {
+          "locations": [
+            {
+              "column": 16,
+              "line": 1,
+            },
+          ],
+          "message": "Variable "$person" of non-null type "String!" must not be null.",
+        },
+      ],
+    }
+  `)
+
+  // third request, valid, cache miss
+  res = await query('John')
+  await expect(res.json()).resolves.toMatchInlineSnapshot(`
+    {
+      "data": {
+        "hi": "Hi John!",
+      },
+    }
+  `)
+})
