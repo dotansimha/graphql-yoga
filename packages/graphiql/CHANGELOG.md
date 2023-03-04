@@ -1,5 +1,12 @@
 # @graphql-yoga/graphiql
 
+## 3.0.8
+
+### Patch Changes
+
+- [#2522](https://github.com/dotansimha/graphql-yoga/pull/2522) [`96eabed8`](https://github.com/dotansimha/graphql-yoga/commit/96eabed880306aac6bf1f4a7512760a74287fb7b) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@graphiql/toolkit@0.8.2` ↗︎](https://www.npmjs.com/package/@graphiql/toolkit/v/0.8.2) (from `0.8.0`, in `dependencies`)
+
 ## 3.0.7
 
 ### Patch Changes
