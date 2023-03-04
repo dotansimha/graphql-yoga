@@ -1,6 +1,6 @@
 import { PromiseOrValue } from '@envelop/core'
 import graphiqlHTML from '../graphiql-html.js'
-import { YogaLogger } from '../logger.js'
+import { YogaLogger } from '@graphql-yoga/logger'
 import { FetchAPI } from '../types.js'
 import { Plugin } from './types.js'
 

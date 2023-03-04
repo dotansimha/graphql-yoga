@@ -1014,6 +1014,7 @@ importers:
       '@graphql-tools/executor': ^0.0.15
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.2.1
+      '@graphql-yoga/logger': 0.0.0
       '@graphql-yoga/render-graphiql': 3.7.0
       '@graphql-yoga/subscription': ^3.1.0
       '@jest/globals': ^29.2.1
@@ -1037,6 +1038,7 @@ importers:
       '@graphql-tools/executor': 0.0.15_graphql@16.6.0
       '@graphql-tools/schema': 9.0.4_graphql@16.6.0
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
+      '@graphql-yoga/logger': link:../logger
       '@graphql-yoga/subscription': link:../subscription
       '@whatwg-node/fetch': 0.8.1_@types+node@18.14.2
       '@whatwg-node/server': 0.7.1_@types+node@18.14.2
@@ -1057,6 +1059,13 @@ importers:
       html-minifier-terser: 7.1.0
       json-bigint-patch: 0.0.8
       puppeteer: 19.6.0
+    publishDirectory: dist
+
+  packages/logger:
+    specifiers:
+      tslib: ^2.3.1
+    dependencies:
+      tslib: 2.5.0
     publishDirectory: dist
 
   packages/node:

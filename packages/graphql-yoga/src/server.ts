@@ -20,7 +20,7 @@ import {
 } from '@whatwg-node/server'
 import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
 import { handleError } from './error.js'
-import { createLogger, LogLevel, YogaLogger } from './logger.js'
+import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
 import {
   isPOSTFormUrlEncodedRequest,
