@@ -235,7 +235,7 @@ importers:
 
   examples/bun:
     specifiers:
-      '@whatwg-node/fetch': ^0.8.1
+      '@whatwg-node/fetch': ^0.8.2
       bun-types: ^0.5.0
       graphql: 16.6.0
       graphql-yoga: 3.7.1
@@ -244,7 +244,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
 
   examples/cloudflare-advanced:
     specifiers:
@@ -302,13 +302,13 @@ importers:
 
   examples/error-handling:
     specifiers:
-      '@whatwg-node/fetch': ^0.8.1
+      '@whatwg-node/fetch': ^0.8.2
       graphql: 16.6.0
       graphql-yoga: 3.7.1
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
@@ -537,7 +537,7 @@ importers:
   examples/hapi:
     specifiers:
       '@hapi/hapi': 21.3.0
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
       graphql: 16.6.0
       graphql-yoga: 3.7.1
       ts-node: 10.9.1
@@ -547,7 +547,7 @@ importers:
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
       ts-node: 10.9.1_typescript@4.9.5
       typescript: 4.9.5
 
@@ -897,7 +897,7 @@ importers:
     specifiers:
       '@types/node': ^18.11.19
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': ^0.8.1
+      '@whatwg-node/fetch': ^0.8.2
       graphql: 16.6.0
       graphql-ws: ^5.11.3
       graphql-yoga: 3.7.1
@@ -915,7 +915,7 @@ importers:
       uWebSockets.js: github.com/uNetworking/uWebSockets.js/77bc1fd5577ae42b56675912eb8481a31f3fefd2
     devDependencies:
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.8.1_@types+node@18.11.19
+      '@whatwg-node/fetch': 0.8.2_@types+node@18.11.19
       ws: 8.12.1
 
   packages/client/apollo-link:
@@ -1031,15 +1031,15 @@ importers:
       '@graphql-tools/executor': ^0.0.15
       '@graphql-tools/schema': ^9.0.0
       '@graphql-tools/utils': ^9.2.1
-      '@graphql-yoga/logger': 0.0.1
+      '@graphql-yoga/logger': ^0.0.1
       '@graphql-yoga/render-graphiql': 3.7.1
       '@graphql-yoga/subscription': ^3.1.0
       '@jest/globals': ^29.2.1
       '@n1ru4l/in-memory-live-query-store': 0.10.0
       '@repeaterjs/repeater': ^3.0.4
       '@types/node': 18.14.6
-      '@whatwg-node/fetch': ^0.8.1
-      '@whatwg-node/server': ^0.7.1
+      '@whatwg-node/fetch': ^0.8.2
+      '@whatwg-node/server': ^0.7.3
       dset: ^3.1.1
       graphql: 16.6.0
       graphql-http: ^1.7.2
@@ -1057,8 +1057,8 @@ importers:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-yoga/logger': link:../logger
       '@graphql-yoga/subscription': link:../subscription
-      '@whatwg-node/fetch': 0.8.1_@types+node@18.14.6
-      '@whatwg-node/server': 0.7.1_@types+node@18.14.6
+      '@whatwg-node/fetch': 0.8.2_@types+node@18.14.6
+      '@whatwg-node/server': 0.7.3_@types+node@18.14.6
       dset: 3.1.2
       lru-cache: 7.14.1
       tslib: 2.4.0
@@ -1097,7 +1097,7 @@ importers:
   packages/plugins/apollo-inline-trace:
     specifiers:
       '@envelop/on-resolve': ^2.0.2
-      '@whatwg-node/fetch': ^0.8.1
+      '@whatwg-node/fetch': ^0.8.2
       apollo-reporting-protobuf: ^3.3.2
       graphql-yoga: 3.7.1
       tslib: ^2.5.0
@@ -1106,17 +1106,17 @@ importers:
       apollo-reporting-protobuf: 3.3.3
       tslib: 2.5.0
     devDependencies:
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
       graphql-yoga: link:../../graphql-yoga
     publishDirectory: dist
 
   packages/plugins/apq:
     specifiers:
-      '@whatwg-node/fetch': ^0.8.1
+      '@whatwg-node/fetch': ^0.8.2
       graphql-yoga: 3.7.1
       tiny-lru: ^10.0.0
     dependencies:
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
       tiny-lru: 10.0.0
     devDependencies:
       graphql-yoga: link:../../graphql-yoga
@@ -1135,12 +1135,12 @@ importers:
     specifiers:
       '@graphql-tools/executor-http': ^0.1.4
       '@graphql-tools/utils': ^9.0.1
-      '@whatwg-node/fetch': ^0.8.1
+      '@whatwg-node/fetch': ^0.8.2
     dependencies:
       '@graphql-tools/utils': 9.0.1
     devDependencies:
       '@graphql-tools/executor-http': 0.1.4
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
     publishDirectory: dist
 
   packages/plugins/disable-introspection:
@@ -5910,7 +5910,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@repeaterjs/repeater': 3.0.4
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
       dset: 3.1.2
       extract-files: 11.0.0
       graphql: 16.6.0
@@ -5927,7 +5927,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@repeaterjs/repeater': 3.0.4
-      '@whatwg-node/fetch': 0.8.1_@types+node@18.14.6
+      '@whatwg-node/fetch': 0.8.2_@types+node@18.14.6
       dset: 3.1.2
       extract-files: 11.0.0
       graphql: 16.6.0
@@ -6371,7 +6371,7 @@ packages:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-tools/wrap': 9.3.6_graphql@16.6.0
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.8.1
+      '@whatwg-node/fetch': 0.8.2
       graphql: 16.6.0
       isomorphic-ws: 5.0.0_ws@8.12.1
       tslib: 2.5.0
@@ -6396,7 +6396,7 @@ packages:
       '@graphql-tools/utils': 9.2.1_graphql@16.6.0
       '@graphql-tools/wrap': 9.3.6_graphql@16.6.0
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.8.1_@types+node@18.14.6
+      '@whatwg-node/fetch': 0.8.2_@types+node@18.14.6
       graphql: 16.6.0
       isomorphic-ws: 5.0.0_ws@8.12.1
       tslib: 2.5.0
@@ -11296,22 +11296,11 @@ packages:
       - '@types/node'
     dev: true
 
-  /@whatwg-node/fetch/0.8.1:
+  /@whatwg-node/fetch/0.8.1_@types+node@18.14.6:
     resolution: {integrity: sha512-Fkd1qQHK2tAWxKlC85h9L86Lgbq3BzxMnHSnTsnzNZMMzn6Xi+HlN8/LJ90LxorhSqD54td+Q864LgwUaYDj1Q==}
     dependencies:
       '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.3.0
-      busboy: 1.6.0
-      urlpattern-polyfill: 6.0.2
-      web-streams-polyfill: 3.2.1
-    transitivePeerDependencies:
-      - '@types/node'
-
-  /@whatwg-node/fetch/0.8.1_@types+node@18.11.19:
-    resolution: {integrity: sha512-Fkd1qQHK2tAWxKlC85h9L86Lgbq3BzxMnHSnTsnzNZMMzn6Xi+HlN8/LJ90LxorhSqD54td+Q864LgwUaYDj1Q==}
-    dependencies:
-      '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.3.0_@types+node@18.11.19
+      '@whatwg-node/node-fetch': 0.3.1_@types+node@18.14.6
       busboy: 1.6.0
       urlpattern-polyfill: 6.0.2
       web-streams-polyfill: 3.2.1
@@ -11319,11 +11308,34 @@ packages:
       - '@types/node'
     dev: true
 
-  /@whatwg-node/fetch/0.8.1_@types+node@18.14.6:
-    resolution: {integrity: sha512-Fkd1qQHK2tAWxKlC85h9L86Lgbq3BzxMnHSnTsnzNZMMzn6Xi+HlN8/LJ90LxorhSqD54td+Q864LgwUaYDj1Q==}
+  /@whatwg-node/fetch/0.8.2:
+    resolution: {integrity: sha512-6u1xGzFZvskJpQXhWreR9s1/4nsuY4iFRsTb4BC3NiDHmzgj/Hu1Ovt4iHs5KAjLzbnsjaQOI5f5bQPucqvPsQ==}
     dependencies:
       '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.3.0_@types+node@18.14.6
+      '@whatwg-node/node-fetch': 0.3.1
+      busboy: 1.6.0
+      urlpattern-polyfill: 6.0.2
+      web-streams-polyfill: 3.2.1
+    transitivePeerDependencies:
+      - '@types/node'
+
+  /@whatwg-node/fetch/0.8.2_@types+node@18.11.19:
+    resolution: {integrity: sha512-6u1xGzFZvskJpQXhWreR9s1/4nsuY4iFRsTb4BC3NiDHmzgj/Hu1Ovt4iHs5KAjLzbnsjaQOI5f5bQPucqvPsQ==}
+    dependencies:
+      '@peculiar/webcrypto': 1.4.0
+      '@whatwg-node/node-fetch': 0.3.1_@types+node@18.11.19
+      busboy: 1.6.0
+      urlpattern-polyfill: 6.0.2
+      web-streams-polyfill: 3.2.1
+    transitivePeerDependencies:
+      - '@types/node'
+    dev: true
+
+  /@whatwg-node/fetch/0.8.2_@types+node@18.14.6:
+    resolution: {integrity: sha512-6u1xGzFZvskJpQXhWreR9s1/4nsuY4iFRsTb4BC3NiDHmzgj/Hu1Ovt4iHs5KAjLzbnsjaQOI5f5bQPucqvPsQ==}
+    dependencies:
+      '@peculiar/webcrypto': 1.4.0
+      '@whatwg-node/node-fetch': 0.3.1_@types+node@18.14.6
       busboy: 1.6.0
       urlpattern-polyfill: 6.0.2
       web-streams-polyfill: 3.2.1
@@ -11380,8 +11392,8 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@whatwg-node/node-fetch/0.3.0:
-    resolution: {integrity: sha512-mPM8WnuHiI/3kFxDeE0SQQXAElbz4onqmm64fEGCwYEcBes2UsvIDI8HwQIqaXCH42A9ajJUPv4WsYoN/9oG6w==}
+  /@whatwg-node/node-fetch/0.3.1:
+    resolution: {integrity: sha512-/U4onp5eBkRHfFe/VL+ppyupqj7z6iBtjcuPSosQNH2/y+LxRn5lyFb7Vqhb5DokjrDMjssLcqiVYnx+UABFsw==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -11391,8 +11403,8 @@ packages:
       fast-url-parser: 1.1.3
       tslib: 2.5.0
 
-  /@whatwg-node/node-fetch/0.3.0_@types+node@18.11.19:
-    resolution: {integrity: sha512-mPM8WnuHiI/3kFxDeE0SQQXAElbz4onqmm64fEGCwYEcBes2UsvIDI8HwQIqaXCH42A9ajJUPv4WsYoN/9oG6w==}
+  /@whatwg-node/node-fetch/0.3.1_@types+node@18.11.19:
+    resolution: {integrity: sha512-/U4onp5eBkRHfFe/VL+ppyupqj7z6iBtjcuPSosQNH2/y+LxRn5lyFb7Vqhb5DokjrDMjssLcqiVYnx+UABFsw==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -11404,8 +11416,8 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@whatwg-node/node-fetch/0.3.0_@types+node@18.14.6:
-    resolution: {integrity: sha512-mPM8WnuHiI/3kFxDeE0SQQXAElbz4onqmm64fEGCwYEcBes2UsvIDI8HwQIqaXCH42A9ajJUPv4WsYoN/9oG6w==}
+  /@whatwg-node/node-fetch/0.3.1_@types+node@18.14.6:
+    resolution: {integrity: sha512-/U4onp5eBkRHfFe/VL+ppyupqj7z6iBtjcuPSosQNH2/y+LxRn5lyFb7Vqhb5DokjrDMjssLcqiVYnx+UABFsw==}
     peerDependencies:
       '@types/node': ^18.0.6
     dependencies:
@@ -11435,10 +11447,10 @@ packages:
       - '@types/node'
     dev: false
 
-  /@whatwg-node/server/0.7.1_@types+node@18.14.6:
-    resolution: {integrity: sha512-kXZeJ+8vLD8Snewq0N1TB2cWPu6z91ymrRRLDx0KHmbsSrsPIdrXxoHBAvFBxTQz3u2O4IYsyhHetAnBBrrWgA==}
+  /@whatwg-node/server/0.7.3_@types+node@18.14.6:
+    resolution: {integrity: sha512-ToaxdIXka8WHre92b1n9Wne/jXPOgg5w17Hx/UqFtL+HM2+0M+AAEz31kY9bjHGaKBfWE8YZwVVIYvGMgb3ARA==}
     dependencies:
-      '@whatwg-node/fetch': 0.8.1_@types+node@18.14.6
+      '@whatwg-node/fetch': 0.8.2_@types+node@18.14.6
       tslib: 2.5.0
     transitivePeerDependencies:
       - '@types/node'
