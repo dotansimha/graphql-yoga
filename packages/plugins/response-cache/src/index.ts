@@ -19,7 +19,7 @@ import {
 
 export type UseResponseCacheParameter = Omit<
   UseEnvelopResponseCacheParameter,
-  'getDocumentString' | 'session' | 'cache'
+  'getDocumentString' | 'session' | 'cache' | 'enabled'
 > & {
   cache?: Cache
   session: (request: Request) => PromiseOrValue<Maybe<string>>
@@ -86,6 +86,9 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       addPlugin(
         useEnvelopResponseCache({
           ...options,
+          enabled({ request }) {
+            return enabled(request)
+          },
           cache,
           getDocumentString: getDocumentStringForEnvelop,
           session: sessionFactoryForEnvelop,
@@ -140,14 +143,14 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       }
     },
     async onParams({ params, request, setResult }) {
+      const operationId = await buildResponseCacheKey({
+        documentString: params.query || '',
+        variableValues: params.variables,
+        operationName: params.operationName,
+        sessionId: await options.session(request),
+      })
+      operationIdByRequest.set(request, operationId)
       if (enabled(request)) {
-        const operationId = await buildResponseCacheKey({
-          documentString: params.query || '',
-          variableValues: params.variables,
-          operationName: params.operationName,
-          sessionId: await options.session(request),
-        })
-        operationIdByRequest.set(request, operationId)
         const cachedResponse = await cache.get(operationId)
         if (cachedResponse) {
           if (options.includeExtensionMetadata) {

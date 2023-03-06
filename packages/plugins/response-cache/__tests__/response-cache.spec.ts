@@ -273,3 +273,58 @@ it('should miss cache if query variables change', async () => {
     }
   `)
 })
+
+it('should skip response caching with `enabled` option', async () => {
+  const hiResolver = jest.fn(() => 'Hi!')
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Query: {
+          hi: hiResolver,
+        },
+      },
+    }),
+    plugins: [
+      useResponseCache({
+        enabled: () => false,
+        session: () => null,
+      }),
+    ],
+  })
+
+  const resOptions: RequestInit = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: /* GraphQL */ `
+        query {
+          hi
+        }
+      `,
+    }),
+  }
+
+  const res1 = await yoga.fetch('/graphql', resOptions)
+
+  const body1 = await res1.json()
+  expect(body1).toMatchObject({
+    data: {
+      hi: 'Hi!',
+    },
+  })
+
+  const res2 = await yoga.fetch('/graphql', resOptions)
+  const body2 = await res2.json()
+  expect(body2).toMatchObject({
+    data: {
+      hi: 'Hi!',
+    },
+  })
+})
