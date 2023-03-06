@@ -1,5 +1,13 @@
 # graphql-yoga
 
+## 3.7.2
+
+### Patch Changes
+
+- [#2528](https://github.com/dotansimha/graphql-yoga/pull/2528) [`7ad50529`](https://github.com/dotansimha/graphql-yoga/commit/7ad505294ecccf21a0449b739c359396bc97121f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@graphql-yoga/logger@^0.0.1` ↗︎](https://www.npmjs.com/package/@graphql-yoga/logger/v/0.0.1) (from `0.0.1`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@^0.7.3` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.7.3) (from `^0.7.1`, in `dependencies`)
+
 ## 3.7.1
 
 ### Patch Changes

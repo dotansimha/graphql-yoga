@@ -1,5 +1,12 @@
 # @graphql-yoga/plugin-csrf-prevention
 
+## 1.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`7ad50529`](https://github.com/dotansimha/graphql-yoga/commit/7ad505294ecccf21a0449b739c359396bc97121f)]:
+  - graphql-yoga@3.7.2
+
 ## 1.3.1
 
 ### Patch Changes
