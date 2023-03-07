@@ -1,9 +1,6 @@
 import { createSchema, createYoga } from 'graphql-yoga'
-import type { IncomingMessage, ServerResponse } from 'node:http'
 
-const graphqlEndpoint = '/graphql'
-
-const yoga = createYoga({
+export const graphql = createYoga({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
@@ -17,10 +14,5 @@ const yoga = createYoga({
       },
     },
   }),
-  graphqlEndpoint,
+  graphqlEndpoint: '*',
 })
-
-export function graphql(req: IncomingMessage, res: ServerResponse) {
-  req.url = graphqlEndpoint + req.url
-  return yoga(req, res)
-}
