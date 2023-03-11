@@ -110,7 +110,7 @@ importers:
       '@pulumi/awsx': 0.40.1
       '@pulumi/azure-native': 1.96.0
       '@pulumi/cloudflare': 4.16.0
-      '@pulumi/docker': 3.6.1
+      '@pulumi/docker': 4.0.0
       '@pulumi/pulumi': 3.57.1
       '@types/node': 18.15.0
       ts-node: 10.9.1
@@ -120,7 +120,7 @@ importers:
       '@pulumi/awsx': 0.40.1_qm556r5clvrslwt46x2o2uoufy
       '@pulumi/azure-native': 1.96.0
       '@pulumi/cloudflare': 4.16.0
-      '@pulumi/docker': 3.6.1
+      '@pulumi/docker': 4.0.0
       '@pulumi/pulumi': 3.57.1
       '@types/node': 18.15.0
       ts-node: 10.9.1_lwgqdwokjtwlohdqtbb6s252kq
@@ -9469,6 +9469,16 @@ packages:
 
   /@pulumi/docker/3.6.1:
     resolution: {integrity: sha512-BZME50QkT556v+LvmTXPT8ssB2xxNkp9+msB5xYFEnUnWcdGAx5yUysQw70RJCb+U0GbkJSbxtlgMJgOQf/now==}
+    requiresBuild: true
+    dependencies:
+      '@pulumi/pulumi': 3.57.1
+      semver: 5.7.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@pulumi/docker/4.0.0:
+    resolution: {integrity: sha512-QMESnu4NlweFJolMzvWxUp3EOMeBFWGzRy+HcRxYG9IJeI3zYl6AEl3FGrfBJbOvpp8nu1rdpnJTnmriXo5rRg==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.57.1
