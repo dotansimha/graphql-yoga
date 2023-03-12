@@ -287,6 +287,25 @@ importers:
       typescript: 5.0.2
       wrangler: 2.13.0
 
+  examples/cookies:
+    specifiers:
+      '@types/node': 18.15.0
+      '@whatwg-node/server-plugin-cookies': 0.0.1
+      graphql: 16.6.0
+      graphql-yoga: 3.7.2
+      ts-node: 10.9.1
+      ts-node-dev: 2.0.0
+      typescript: 4.9.5
+    dependencies:
+      '@whatwg-node/server-plugin-cookies': 0.0.1
+      graphql: 16.6.0
+      graphql-yoga: 3.7.2_graphql@16.6.0
+    devDependencies:
+      '@types/node': 18.15.0
+      ts-node: 10.9.1_lwgqdwokjtwlohdqtbb6s252kq
+      ts-node-dev: 2.0.0_lwgqdwokjtwlohdqtbb6s252kq
+      typescript: 4.9.5
+
   examples/defer-stream:
     specifiers:
       '@graphql-yoga/plugin-defer-stream': 1.7.3
@@ -2046,16 +2065,16 @@ packages:
       aws-cdk-lib: 2.70.0
     dev: true
 
-  /@aws-cdk/asset-awscli-v1/2.2.99:
-    resolution: {integrity: sha512-r4W/w49xFmZHxF63rcdDWt1JoWbeOoS0pGgVit75GC1mrDvW6+UcOB42m/UMR2U92j+l4JGJut4PqIeSMeKJcQ==}
+  /@aws-cdk/asset-awscli-v1/2.2.102:
+    resolution: {integrity: sha512-BkgsrU92ooQYfl5MdOrJkjD4MUHb+L6K1zyPfGQ/MWh9K5HS7Mzmz4SH90g+60JWEDwZ5m1KL9md5tyANyIFhw==}
     dev: true
 
   /@aws-cdk/asset-kubectl-v20/2.1.1:
     resolution: {integrity: sha512-U1ntiX8XiMRRRH5J1IdC+1t5CE89015cwyt5U63Cpk0GnMlN5+h9WsWMlKlPXZR4rdq/m806JRlBMRpBUB2Dhw==}
     dev: true
 
-  /@aws-cdk/asset-node-proxy-agent-v5/2.0.79:
-    resolution: {integrity: sha512-vqVD0HaUp5LTpIxfVEYyV5ajIVZ4Z5drib6ZUFSRRftdiJT/UKmSJUnpkIE2jQ8UYYoBtHaLt4Odvgelr7rz1w==}
+  /@aws-cdk/asset-node-proxy-agent-v5/2.0.82:
+    resolution: {integrity: sha512-mcyIVXWHp5CUKb/C9OHykzQ0FBsW5n91zGhrZXdxDz2GK8Hrk6EFW/+DgYOWjoAGJDjaKriw4XYI7zq9UAxEWA==}
     dev: true
 
   /@aws-cdk/assets/1.198.0_jugb2ebmyeyytiwvu4dhw6i3mi:
@@ -3625,16 +3644,6 @@ packages:
 
   /@babel/plugin-syntax-top-level-await/7.14.5_@babel+core@7.21.3:
     resolution: {integrity: sha512-hx++upLv5U1rgYfwe1xBQUhRmU41NEvpUvrp8jkrSCdvGSnM5/qdRMtylJ6PG5OFkBaHkbTAKTnd3/YyESRHFw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.21.3
-      '@babel/helper-plugin-utils': 7.20.2
-    dev: true
-
-  /@babel/plugin-syntax-typescript/7.18.6_@babel+core@7.21.3:
-    resolution: {integrity: sha512-mAWAuq4rvOepWCBid55JuRNvpTNf2UGVgoz4JV0fXEKolsVZDzsa4NqCef758WZJj/GDu0gVGItjKFiClTAmZA==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -5295,7 +5304,7 @@ packages:
     dependencies:
       ajv: 6.12.6
       debug: 4.3.4
-      espree: 9.5.0
+      espree: 9.4.0
       globals: 13.19.0
       ignore: 5.2.4
       import-fresh: 3.3.0
@@ -6755,6 +6764,28 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.6.0
+
+  /@graphql-yoga/logger/0.0.1:
+    resolution: {integrity: sha512-6npFz7eZz33mXgSm1waBLMjUNG0D5hTc/p5Hcs1mojkT3KsLpCOFokzTEKboNsBhKevYcaVa/xeA7WBj4UYMLg==}
+    dependencies:
+      tslib: 2.5.0
+    dev: false
+
+  /@graphql-yoga/subscription/3.1.0:
+    resolution: {integrity: sha512-Vc9lh8KzIHyS3n4jBlCbz7zCjcbtQnOBpsymcRvHhFr2cuH+knmRn0EmzimMQ58jQ8kxoRXXC3KJS3RIxSdPIg==}
+    dependencies:
+      '@graphql-yoga/typed-event-target': 1.0.0
+      '@repeaterjs/repeater': 3.0.4
+      '@whatwg-node/events': 0.0.2
+      tslib: 2.5.0
+    dev: false
+
+  /@graphql-yoga/typed-event-target/1.0.0:
+    resolution: {integrity: sha512-Mqni6AEvl3VbpMtKw+TIjc9qS9a8hKhiAjFtqX488yq5oJtj9TkNlFTIacAVS3vnPiswNsmDiQqvwUOcJgi1DA==}
+    dependencies:
+      '@repeaterjs/repeater': 3.0.4
+      tslib: 2.5.0
+    dev: false
 
   /@grpc/grpc-js/1.3.8:
     resolution: {integrity: sha512-4qJqqn+CU/nBydz9ePJP+oa8dz0U42Ut/GejlbyaQ1xTkynCc+ndNHHnISlNeHawDsv4MOAyP3mV/EnDNUw2zA==}
@@ -10564,6 +10595,10 @@ packages:
     resolution: {integrity: sha512-YUgMWAQBWLObABqrvx8qKO1enAvBUdjZOAWQ5grBAkp5LQv45jBvYKZ3oFS9iKRCQyFjqw6iuEa1vmFqtxYLZw==}
     dev: false
 
+  /@types/node/18.15.0:
+    resolution: {integrity: sha512-z6nr0TTEOBGkzLGmbypWOGnpSpSIBorEhC4L+4HeQ2iezKCi4f77kyslRwvHeNitymGQ+oFyIWGP96l/DPSV9w==}
+    dev: true
+
   /@types/node/18.15.7:
     resolution: {integrity: sha512-LFmUbFunqmBn26wJZgZPYZPrDR1RwGOu2v79Mgcka1ndO6V0/cwjivPTc4yoK6n9kmw4/ls1r8cLrvh2iMibFA==}
 
@@ -11499,6 +11534,15 @@ packages:
       - '@types/node'
     dev: false
 
+  /@whatwg-node/server-plugin-cookies/0.0.1:
+    resolution: {integrity: sha512-c2q8bqm0vQ6v6N7FrwV8qSykWrgdiLwQAAid/KKPG8bKUt3PdC0Ug+b0Refa0UhmYDYNaFG0kJOiBSn5cn3lkw==}
+    peerDependencies:
+      '@whatwg-node/server': ^0.7.1
+    dependencies:
+      '@whatwg-node/events': 0.0.2
+      tslib: 2.5.0
+    dev: false
+
   /@whatwg-node/server/0.6.2:
     resolution: {integrity: sha512-hkM/WtEdT6yQ+KYuXMWwjhmQHXl9oCVGgEciwRdARWmwCRTMWdDLlj/XwsMVHvh7+qDs3rXpXW3+ifUAQT87lQ==}
     dependencies:
@@ -11686,6 +11730,15 @@ packages:
       fast-json-stable-stringify: 2.1.0
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
+
+  /ajv/8.11.0:
+    resolution: {integrity: sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==}
+    dependencies:
+      fast-deep-equal: 3.1.3
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
+      uri-js: 4.4.1
+    dev: true
 
   /ajv/8.12.0:
     resolution: {integrity: sha512-sRu1kpcO9yLtYxBKvqfTeh9KzZEwO3STyX1HT+4CaDzC6HpTGYhIhPIzj9XuKU7KYDwnaeh5hcOwjy1QuJzBPA==}
@@ -12319,9 +12372,9 @@ packages:
     peerDependencies:
       constructs: ^10.0.0
     dependencies:
-      '@aws-cdk/asset-awscli-v1': 2.2.99
+      '@aws-cdk/asset-awscli-v1': 2.2.102
       '@aws-cdk/asset-kubectl-v20': 2.1.1
-      '@aws-cdk/asset-node-proxy-agent-v5': 2.0.79
+      '@aws-cdk/asset-node-proxy-agent-v5': 2.0.82
       '@balena/dockerignore': 1.0.2
       case: 1.6.3
       fs-extra: 9.1.0
@@ -13542,7 +13595,7 @@ packages:
   /cloudevents/6.0.3:
     resolution: {integrity: sha512-ADEHAv2KShH/cDIy2GP+npFz3R6Fu/UCsUO/j4kYA9VqN4yhGdF+Zg6wmjeq6qlUvlaKdrVBwgZuH/w57IsyGQ==}
     dependencies:
-      ajv: 8.12.0
+      ajv: 8.11.0
       ajv-formats: 2.1.1
       util: 0.12.5
       uuid: 8.3.2
@@ -15848,7 +15901,7 @@ packages:
       acorn-jsx: 5.3.2_acorn@8.8.0
       cosmiconfig: 7.0.1
       eslint: 8.25.0
-      espree: 9.5.0
+      espree: 9.4.0
       estree-util-visit: 1.2.0
       remark-mdx: 2.1.5
       remark-parse: 10.0.1
@@ -18128,6 +18181,26 @@ packages:
     dependencies:
       graphql: 16.6.0
 
+  /graphql-yoga/3.7.2_graphql@16.6.0:
+    resolution: {integrity: sha512-T7Uxrf2Mc8RTqcSrVz69Fwek4VHwLEhxjgkiX6VVtO76ngWBCp6kNQGmcw06LGQz4PRkhMg9dbM3XAGxfCB73A==}
+    peerDependencies:
+      graphql: ^15.2.0 || ^16.0.0
+    dependencies:
+      '@envelop/core': 3.0.4
+      '@envelop/validation-cache': 5.1.2_a6sekiasy2tqr6d5gj7n2wtjli
+      '@graphql-tools/executor': 0.0.15_graphql@16.6.0
+      '@graphql-tools/schema': 9.0.17_graphql@16.6.0
+      '@graphql-tools/utils': 9.2.1_graphql@16.6.0
+      '@graphql-yoga/logger': 0.0.1
+      '@graphql-yoga/subscription': 3.1.0
+      '@whatwg-node/fetch': 0.8.4
+      '@whatwg-node/server': 0.7.3
+      dset: 3.1.2
+      graphql: 16.6.0
+      lru-cache: 7.14.1
+      tslib: 2.5.0
+    dev: false
+
   /graphql/16.6.0:
     resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
@@ -19859,7 +19932,7 @@ packages:
       '@babel/core': 7.21.3
       '@babel/generator': 7.21.0
       '@babel/plugin-syntax-jsx': 7.18.6_@babel+core@7.21.3
-      '@babel/plugin-syntax-typescript': 7.18.6_@babel+core@7.21.3
+      '@babel/plugin-syntax-typescript': 7.20.0_@babel+core@7.21.3
       '@babel/traverse': 7.21.0
       '@babel/types': 7.21.0
       '@jest/expect-utils': 29.4.2
@@ -21932,6 +22005,7 @@ packages:
 
   /minimist/1.2.7:
     resolution: {integrity: sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==}
+    dev: true
 
   /minimist/1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
@@ -27543,7 +27617,7 @@ packages:
     dependencies:
       chokidar: 3.5.3
       dynamic-dedupe: 0.3.0
-      minimist: 1.2.7
+      minimist: 1.2.8
       mkdirp: 1.0.4
       resolve: 1.22.1
       rimraf: 2.7.1
@@ -27552,6 +27626,34 @@ packages:
       ts-node: 10.9.1_gkjsv6qbk4dkl5zwoikfngqpvy
       tsconfig: 7.0.0
       typescript: 5.0.2
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+    dev: true
+
+  /ts-node-dev/2.0.0_lwgqdwokjtwlohdqtbb6s252kq:
+    resolution: {integrity: sha512-ywMrhCfH6M75yftYvrvNarLEY+SUXtUvU8/0Z6llrHQVBx12GiFk5sStF8UdfE/yfzk9IAq7O5EEbTQsxlBI8w==}
+    engines: {node: '>=0.8.0'}
+    hasBin: true
+    peerDependencies:
+      node-notifier: '*'
+      typescript: '*'
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      chokidar: 3.5.3
+      dynamic-dedupe: 0.3.0
+      minimist: 1.2.8
+      mkdirp: 1.0.4
+      resolve: 1.22.1
+      rimraf: 2.7.1
+      source-map-support: 0.5.21
+      tree-kill: 1.2.2
+      ts-node: 10.9.1_lwgqdwokjtwlohdqtbb6s252kq
+      tsconfig: 7.0.0
+      typescript: 4.9.5
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -27571,7 +27673,7 @@ packages:
     dependencies:
       chokidar: 3.5.3
       dynamic-dedupe: 0.3.0
-      minimist: 1.2.7
+      minimist: 1.2.8
       mkdirp: 1.0.4
       resolve: 1.22.1
       rimraf: 2.7.1
@@ -27599,7 +27701,7 @@ packages:
     dependencies:
       chokidar: 3.5.3
       dynamic-dedupe: 0.3.0
-      minimist: 1.2.7
+      minimist: 1.2.8
       mkdirp: 1.0.4
       resolve: 1.22.1
       rimraf: 2.7.1
@@ -27700,6 +27802,37 @@ packages:
       typescript: 5.0.2
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+
+  /ts-node/10.9.1_lwgqdwokjtwlohdqtbb6s252kq:
+    resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': '>=1.2.50'
+      '@swc/wasm': '>=1.2.50'
+      '@types/node': '*'
+      typescript: '>=2.7'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      '@swc/wasm':
+        optional: true
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.9
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.3
+      '@types/node': 18.15.0
+      acorn: 8.8.0
+      acorn-walk: 8.2.0
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 4.9.5
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    dev: true
 
   /ts-node/10.9.1_qqdszkrtcshgbphghj7vnvrrby:
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
