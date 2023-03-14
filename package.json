@@ -16,7 +16,7 @@
     "prettier:check": "prettier --ignore-path .prettierignore --check .",
     "build-website": "pnpm build && cd website && pnpm build",
     "changeset": "changeset",
-    "postchangeset": "pnpm install"
+    "postchangeset": "pnpm install --no-frozen-lockfile"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
