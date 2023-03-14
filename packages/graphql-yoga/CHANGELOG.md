@@ -1,5 +1,12 @@
 # graphql-yoga
 
+## 3.7.3
+
+### Patch Changes
+
+- [#2559](https://github.com/dotansimha/graphql-yoga/pull/2559) [`46e75917`](https://github.com/dotansimha/graphql-yoga/commit/46e75917f784abcb4ea9968bf3d73660df157b21) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`lru-cache@^8.0.0` ↗︎](https://www.npmjs.com/package/lru-cache/v/8.0.0) (from `^7.14.1`, in `dependencies`)
+
 ## 3.7.2
 
 ### Patch Changes
