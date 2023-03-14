@@ -15,7 +15,8 @@
     "prettier": "prettier --ignore-path .prettierignore --write --list-different .",
     "prettier:check": "prettier --ignore-path .prettierignore --check .",
     "build-website": "pnpm build && cd website && pnpm build",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "postchangeset": "pnpm install"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [

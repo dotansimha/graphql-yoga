@@ -7,6 +7,7 @@ on:
 jobs:
   stable:
     uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
+    if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     with:
       releaseScript: release
       nodeVersion: 18
