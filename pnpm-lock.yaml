@@ -111,36 +111,36 @@ importers:
       '@pulumi/azure-native': 1.97.0
       '@pulumi/cloudflare': 4.16.0
       '@pulumi/docker': 4.0.0
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
       '@types/node': 18.15.3
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
       '@pulumi/aws': 5.31.0
-      '@pulumi/awsx': 0.40.1_qm556r5clvrslwt46x2o2uoufy
+      '@pulumi/awsx': 0.40.1_gcpftme6rfau7pvhbde7stjmii
       '@pulumi/azure-native': 1.97.0
       '@pulumi/cloudflare': 4.16.0
       '@pulumi/docker': 4.0.0
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
       '@types/node': 18.15.3
       ts-node: 10.9.1_cbfmry4sbbh4vatmdrsmatfg5a
       typescript: 4.9.5
 
   examples/apollo-federation:
     specifiers:
-      '@apollo/gateway': 2.3.4
+      '@apollo/gateway': 2.3.5
       '@whatwg-node/fetch': ^0.8.2
       concurrently: ^7.0.0
     dependencies:
       concurrently: 7.4.0
     devDependencies:
-      '@apollo/gateway': 2.3.4
+      '@apollo/gateway': 2.3.5
       '@whatwg-node/fetch': 0.8.2
 
   examples/apollo-federation-compatibility:
     specifiers:
       '@apollo/federation-subgraph-compatibility': 1.2.1
-      '@apollo/subgraph': 2.3.4
+      '@apollo/subgraph': 2.3.5
       '@graphql-codegen/cli': 3.2.2
       '@graphql-codegen/typescript': 3.0.2
       '@graphql-codegen/typescript-resolvers': 3.1.1
@@ -151,7 +151,7 @@ importers:
       graphql-tag: 2.12.6
       graphql-yoga: 3.7.3
     dependencies:
-      '@apollo/subgraph': 2.3.4_graphql@16.6.0
+      '@apollo/subgraph': 2.3.5_graphql@16.6.0
       '@graphql-yoga/plugin-apollo-inline-trace': link:../../packages/plugins/apollo-inline-trace
       graphql: 16.6.0
       graphql-tag: 2.12.6_graphql@16.6.0
@@ -166,23 +166,23 @@ importers:
 
   examples/apollo-federation/gateway:
     specifiers:
-      '@apollo/gateway': 2.3.4
+      '@apollo/gateway': 2.3.5
       '@envelop/apollo-federation': 3.0.6
       graphql: 16.6.0
       graphql-yoga: 3.7.3
     dependencies:
-      '@apollo/gateway': 2.3.4_graphql@16.6.0
-      '@envelop/apollo-federation': 3.0.6_65lqyb7ge4jvxjguwxobtlehem
+      '@apollo/gateway': 2.3.5_graphql@16.6.0
+      '@envelop/apollo-federation': 3.0.6_gkccj6v4tl6fvyjjq2uvef6pwm
       graphql: 16.6.0
       graphql-yoga: link:../../../packages/graphql-yoga
 
   examples/apollo-federation/service:
     specifiers:
-      '@apollo/subgraph': 2.3.4
+      '@apollo/subgraph': 2.3.5
       graphql: 16.6.0
       graphql-yoga: 3.7.3
     dependencies:
-      '@apollo/subgraph': 2.3.4_graphql@16.6.0
+      '@apollo/subgraph': 2.3.5_graphql@16.6.0
       graphql: 16.6.0
       graphql-yoga: link:../../../packages/graphql-yoga
 
@@ -192,7 +192,7 @@ importers:
       '@aws-cdk/aws-apigateway': 1.197.0
       '@aws-cdk/aws-lambda': 1.197.0
       '@aws-cdk/core': 1.197.0
-      '@types/aws-lambda': 8.10.112
+      '@types/aws-lambda': 8.10.113
       '@types/node': 18.15.3
       aws-cdk: 2.69.0
       aws-cdk-lib: 2.69.0
@@ -207,7 +207,7 @@ importers:
       source-map-support: 0.5.21
     devDependencies:
       '@aws-cdk/assert': 2.68.0_aws-cdk-lib@2.69.0
-      '@types/aws-lambda': 8.10.112
+      '@types/aws-lambda': 8.10.113
       '@types/node': 18.15.3
       aws-cdk: 2.69.0
       aws-cdk-lib: 2.69.0
@@ -258,16 +258,16 @@ importers:
       graphql-yoga: 3.7.3
       ts-loader: 9.4.2
       typescript: 4.9.5
-      webpack: 5.76.1
+      webpack: 5.76.2
       wrangler: 2.12.3
     dependencies:
       '@cloudflare/workers-types': 4.20221111.1
       graphql: 16.6.0
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
-      ts-loader: 9.4.2_cbz6r35m2it77sxuzifyafc6zi
+      ts-loader: 9.4.2_a37q6j7dwawz22saey2vgkpwqm
       typescript: 4.9.5
-      webpack: 5.76.1
+      webpack: 5.76.2
       wrangler: 2.12.3
 
   examples/cloudflare-modules:
@@ -882,7 +882,7 @@ importers:
       prettier: 2.8.4
       prettier-plugin-svelte: 2.9.0
       puppeteer: 19.6.0
-      svelte: 3.56.0
+      svelte: 3.57.0
       svelte-check: 3.1.4
       svelte-preprocess: 5.0.2
       tslib: 2.5.0
@@ -895,20 +895,20 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@sveltejs/adapter-auto': 2.0.0_7hlaraql3l3j4acwhexjo5qhge
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.56.0+vite@4.1.4
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.57.0+vite@4.1.4
       '@types/jest': 29.2.0
       '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
       '@typescript-eslint/parser': 5.55.0_vgl77cfdswitgr47lm5swmv43m
       eslint: 8.36.0
       eslint-config-prettier: 8.7.0_eslint@8.36.0
-      eslint-plugin-svelte3: 4.0.0_pdvxdpbnzjwxjm7tkjwumh3vqi
+      eslint-plugin-svelte3: 4.0.0_wzem237sbvnwe7n34ytc5phasy
       jest: 29.2.0
       prettier: 2.8.4
-      prettier-plugin-svelte: 2.9.0_gan2xfhhcbz3kbkivttwsjndea
+      prettier-plugin-svelte: 2.9.0_k23gl6auqwrxgr3e6o2bajswou
       puppeteer: 19.6.0
-      svelte: 3.56.0
-      svelte-check: 3.1.4_svelte@3.56.0
-      svelte-preprocess: 5.0.2_rx3ssngbibhj4vpczagsdyy47u
+      svelte: 3.57.0
+      svelte-check: 3.1.4_svelte@3.57.0
+      svelte-preprocess: 5.0.2_wkdgp32a7s6524odeddpfzb52q
       tslib: 2.5.0
       typescript: 4.9.5
       vite: 4.1.4
@@ -1574,29 +1574,29 @@ packages:
       tslib: 2.5.0
       zen-observable-ts: 1.2.5
 
-  /@apollo/composition/2.3.4:
-    resolution: {integrity: sha512-anee8tTrBrQY2uZySBdff8WWLtexoMC60NlgNt5/0JDitTetuDr5JhvP5JgHairoNsmcBM4I6FFQYxd/pJD7dg==}
+  /@apollo/composition/2.3.5:
+    resolution: {integrity: sha512-Mx6CvZ/G3ZfTy653uzt2PtmtVpW/Z7690cIt3damcDQcdQ9vuDbzBRFBoPACPbaxbiiaCeeniCW1TtSES65pZw==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/federation-internals': 2.3.4
-      '@apollo/query-graphs': 2.3.4
+      '@apollo/federation-internals': 2.3.5
+      '@apollo/query-graphs': 2.3.5
     dev: true
 
-  /@apollo/composition/2.3.4_graphql@16.6.0:
-    resolution: {integrity: sha512-anee8tTrBrQY2uZySBdff8WWLtexoMC60NlgNt5/0JDitTetuDr5JhvP5JgHairoNsmcBM4I6FFQYxd/pJD7dg==}
+  /@apollo/composition/2.3.5_graphql@16.6.0:
+    resolution: {integrity: sha512-Mx6CvZ/G3ZfTy653uzt2PtmtVpW/Z7690cIt3damcDQcdQ9vuDbzBRFBoPACPbaxbiiaCeeniCW1TtSES65pZw==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/federation-internals': 2.3.4_graphql@16.6.0
-      '@apollo/query-graphs': 2.3.4_graphql@16.6.0
+      '@apollo/federation-internals': 2.3.5_graphql@16.6.0
+      '@apollo/query-graphs': 2.3.5_graphql@16.6.0
       graphql: 16.6.0
     dev: false
 
-  /@apollo/federation-internals/2.3.4:
-    resolution: {integrity: sha512-xeBv6ASrOfYuOk/mbpWBThq1oIK95tjPVYgTNt2Axg0HB77o4uqhUVE+saNPvlVdqmfm4E6GafDf1BvvhoAOcA==}
+  /@apollo/federation-internals/2.3.5:
+    resolution: {integrity: sha512-CcHbcaHmuBtPx9okqJDxIEyNHVeG6eaNYkVwU5hEEz+h60kJDtPNasm1bCeGjArDpv/sLyaqGG2xYjkE52L6yA==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
@@ -1605,8 +1605,8 @@ packages:
       js-levenshtein: 1.1.6
     dev: true
 
-  /@apollo/federation-internals/2.3.4_graphql@16.6.0:
-    resolution: {integrity: sha512-xeBv6ASrOfYuOk/mbpWBThq1oIK95tjPVYgTNt2Axg0HB77o4uqhUVE+saNPvlVdqmfm4E6GafDf1BvvhoAOcA==}
+  /@apollo/federation-internals/2.3.5_graphql@16.6.0:
+    resolution: {integrity: sha512-CcHbcaHmuBtPx9okqJDxIEyNHVeG6eaNYkVwU5hEEz+h60kJDtPNasm1bCeGjArDpv/sLyaqGG2xYjkE52L6yA==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
@@ -1664,15 +1664,15 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@apollo/gateway/2.3.4:
-    resolution: {integrity: sha512-UBB91SZuR5t7b3zFoyb3yiyJeGQ+7YLaJGRoYLWrQsAXchmwEn9AXY+emjDqm0tMNlOT0RRWOQEhB62zodRNDg==}
+  /@apollo/gateway/2.3.5:
+    resolution: {integrity: sha512-VA6U4edsQdD16/+WZ1JlffpnMwVcWcK/6TxYcQMiWtbt2XZjahbqJ4hWH73d1UW8o7Qsj4Q0aD+6QHEMpRYeKg==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/composition': 2.3.4
-      '@apollo/federation-internals': 2.3.4
-      '@apollo/query-planner': 2.3.4
+      '@apollo/composition': 2.3.5
+      '@apollo/federation-internals': 2.3.5
+      '@apollo/query-planner': 2.3.5
       '@apollo/server-gateway-interface': 1.1.0
       '@apollo/usage-reporting-protobuf': 4.0.0
       '@apollo/utils.createhash': 2.0.0
@@ -1694,15 +1694,15 @@ packages:
       - supports-color
     dev: true
 
-  /@apollo/gateway/2.3.4_graphql@16.6.0:
-    resolution: {integrity: sha512-UBB91SZuR5t7b3zFoyb3yiyJeGQ+7YLaJGRoYLWrQsAXchmwEn9AXY+emjDqm0tMNlOT0RRWOQEhB62zodRNDg==}
+  /@apollo/gateway/2.3.5_graphql@16.6.0:
+    resolution: {integrity: sha512-VA6U4edsQdD16/+WZ1JlffpnMwVcWcK/6TxYcQMiWtbt2XZjahbqJ4hWH73d1UW8o7Qsj4Q0aD+6QHEMpRYeKg==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/composition': 2.3.4_graphql@16.6.0
-      '@apollo/federation-internals': 2.3.4_graphql@16.6.0
-      '@apollo/query-planner': 2.3.4_graphql@16.6.0
+      '@apollo/composition': 2.3.5_graphql@16.6.0
+      '@apollo/federation-internals': 2.3.5_graphql@16.6.0
+      '@apollo/query-planner': 2.3.5_graphql@16.6.0
       '@apollo/server-gateway-interface': 1.1.0_graphql@16.6.0
       '@apollo/usage-reporting-protobuf': 4.0.0
       '@apollo/utils.createhash': 2.0.0
@@ -1744,52 +1744,52 @@ packages:
       '@types/node': 10.17.60
       long: 4.0.0
 
-  /@apollo/query-graphs/2.3.4:
-    resolution: {integrity: sha512-0i7u0wibidSp/EAGU9sHKG8NwY0lqKXQ+O+H4S5rLHAmE1bJlxsaRuZ004eRzTBIUdxR0PoMGqyEukwUrbPAmA==}
+  /@apollo/query-graphs/2.3.5:
+    resolution: {integrity: sha512-zW4qe8YzAuU86cgSqPV+EQCEQLMiQPVIwMbSg7pEhmlMnvKww0TRsaxuwOcdu/bJqSNR6Vzlh6lznDLRxB/S7g==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/federation-internals': 2.3.4
+      '@apollo/federation-internals': 2.3.5
       deep-equal: 2.0.5
       ts-graphviz: 1.5.5
       uuid: 9.0.0
     dev: true
 
-  /@apollo/query-graphs/2.3.4_graphql@16.6.0:
-    resolution: {integrity: sha512-0i7u0wibidSp/EAGU9sHKG8NwY0lqKXQ+O+H4S5rLHAmE1bJlxsaRuZ004eRzTBIUdxR0PoMGqyEukwUrbPAmA==}
+  /@apollo/query-graphs/2.3.5_graphql@16.6.0:
+    resolution: {integrity: sha512-zW4qe8YzAuU86cgSqPV+EQCEQLMiQPVIwMbSg7pEhmlMnvKww0TRsaxuwOcdu/bJqSNR6Vzlh6lznDLRxB/S7g==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/federation-internals': 2.3.4_graphql@16.6.0
+      '@apollo/federation-internals': 2.3.5_graphql@16.6.0
       deep-equal: 2.0.5
       graphql: 16.6.0
       ts-graphviz: 1.5.5
       uuid: 9.0.0
     dev: false
 
-  /@apollo/query-planner/2.3.4:
-    resolution: {integrity: sha512-4YzXT3w0W2mGOH5xwd0ILYx2Hey/h87P6I4Bb3CM9BbLjPokxcmiIOuNx+R2fI/RyeX60x4EbnVxWFW56IWYoA==}
+  /@apollo/query-planner/2.3.5:
+    resolution: {integrity: sha512-/x5JENRawdKo8Tdjq9S5bPyeB8bLfvzJYUbxtJcpKuXba6N+RlVw96+vpnAUY2vtvQZXljPDfJ/LJtoRLwAv1A==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/federation-internals': 2.3.4
-      '@apollo/query-graphs': 2.3.4
+      '@apollo/federation-internals': 2.3.5
+      '@apollo/query-graphs': 2.3.5
       chalk: 4.1.2
       deep-equal: 2.0.5
       pretty-format: 29.4.2
     dev: true
 
-  /@apollo/query-planner/2.3.4_graphql@16.6.0:
-    resolution: {integrity: sha512-4YzXT3w0W2mGOH5xwd0ILYx2Hey/h87P6I4Bb3CM9BbLjPokxcmiIOuNx+R2fI/RyeX60x4EbnVxWFW56IWYoA==}
+  /@apollo/query-planner/2.3.5_graphql@16.6.0:
+    resolution: {integrity: sha512-/x5JENRawdKo8Tdjq9S5bPyeB8bLfvzJYUbxtJcpKuXba6N+RlVw96+vpnAUY2vtvQZXljPDfJ/LJtoRLwAv1A==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
-      '@apollo/federation-internals': 2.3.4_graphql@16.6.0
-      '@apollo/query-graphs': 2.3.4_graphql@16.6.0
+      '@apollo/federation-internals': 2.3.5_graphql@16.6.0
+      '@apollo/query-graphs': 2.3.5_graphql@16.6.0
       chalk: 4.1.2
       deep-equal: 2.0.5
       graphql: 16.6.0
@@ -1833,14 +1833,14 @@ packages:
       graphql: 16.6.0
     dev: false
 
-  /@apollo/subgraph/2.3.4_graphql@16.6.0:
-    resolution: {integrity: sha512-/V3NPLjCM+saxxj0n0HxogXeEnE3MKaJiYSl5nV1C0SE2tk7U8n6cOUGa9ZLY2rnLzzIOHQrF/GGvm8fUMFzcw==}
+  /@apollo/subgraph/2.3.5_graphql@16.6.0:
+    resolution: {integrity: sha512-F3vzdnwng0iyfS3lFVSGuaN8SeKbR8k4THFJHhdoGjKuK/x+WJc4ThktyUV1OhVY8X3odCTe+rih+VZHL/qJTw==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       graphql: ^16.5.0
     dependencies:
       '@apollo/cache-control-types': 1.0.2_graphql@16.6.0
-      '@apollo/federation-internals': 2.3.4_graphql@16.6.0
+      '@apollo/federation-internals': 2.3.5_graphql@16.6.0
       graphql: 16.6.0
     dev: false
 
@@ -2192,6 +2192,7 @@ packages:
       '@aws-cdk/core': 1.197.0
       '@aws-cdk/custom-resources': 1.197.0_iceuwtbtytiwpw7z6m4vollhay
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -2497,6 +2498,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema/1.197.0:
     resolution: {integrity: sha512-JImHB84lRxMHlt9onIMZhOMUXvpf2WOEo3wZ/gcTNUOigJwW66rRTUfxHd/I3CiR8Ktx+Tj2RtNpwHnjmYWmGg==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - jsonschema
@@ -2521,7 +2525,11 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 1.197.0
       '@aws-cdk/cx-api': 1.197.0
       '@aws-cdk/region-info': 1.197.0
+      '@balena/dockerignore': 1.0.2
       constructs: 3.4.127
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      minimatch: 3.1.2
     dev: false
     bundledDependencies:
       - fs-extra
@@ -2558,6 +2566,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.197.0
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -4262,6 +4271,9 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
+  /@balena/dockerignore/1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
+
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
@@ -4553,14 +4565,14 @@ packages:
       kuler: 2.0.0
     dev: true
 
-  /@envelop/apollo-federation/3.0.6_65lqyb7ge4jvxjguwxobtlehem:
+  /@envelop/apollo-federation/3.0.6_gkccj6v4tl6fvyjjq2uvef6pwm:
     resolution: {integrity: sha512-F2lB58aTVJ7Lwp1OHSd/AGICYSxVuEIelTB5AkwpvMokSEJvOY4HoPLc2+IJ145b35w/glbKrT5F9t3dYofXFw==}
     peerDependencies:
       '@apollo/gateway': ^0.41.0 || ^0.42.0 || ^0.43.0
       '@envelop/core': ^3.0.6
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@apollo/gateway': 2.3.4_graphql@16.6.0
+      '@apollo/gateway': 2.3.5_graphql@16.6.0
       apollo-server-caching: 3.3.0
       apollo-server-types: 3.6.3_graphql@16.6.0
       graphql: 16.6.0
@@ -9553,7 +9565,7 @@ packages:
     resolution: {integrity: sha512-Qud/faQByDYuCvM4k+ljKN3ssGnS1mrtyIN0enCExRVbdEbxGrifgeFFjfPam+NmYNxaQkwRUonOOHm7dfpAlA==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
       aws-sdk: 2.1235.0
       builtin-modules: 3.0.0
       mime: 2.6.0
@@ -9563,7 +9575,7 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx/0.40.1_qm556r5clvrslwt46x2o2uoufy:
+  /@pulumi/awsx/0.40.1_gcpftme6rfau7pvhbde7stjmii:
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
@@ -9571,7 +9583,7 @@ packages:
     dependencies:
       '@pulumi/aws': 5.31.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
       '@types/aws-lambda': 8.10.93
       mime: 2.6.0
     transitivePeerDependencies:
@@ -9582,7 +9594,7 @@ packages:
     resolution: {integrity: sha512-h/B8KSqSHv8Ab4BWaPLPwqTBPI8jWXTb54pR41lO+MlTyvqTWNyy+D0HY4w/3b3S8vdsZlJSwp0G6cyTJ1rgeA==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -9591,7 +9603,7 @@ packages:
     resolution: {integrity: sha512-cwdB70bLeKL/VNIqqOD5fpHQcocVmpHuiHH589eR+QUfbLa4f+M8yA/TTCcxx2AFFctTqO5wgVuC+faL8xZmWQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -9600,7 +9612,7 @@ packages:
     resolution: {integrity: sha512-BZME50QkT556v+LvmTXPT8ssB2xxNkp9+msB5xYFEnUnWcdGAx5yUysQw70RJCb+U0GbkJSbxtlgMJgOQf/now==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
@@ -9610,14 +9622,14 @@ packages:
     resolution: {integrity: sha512-QMESnu4NlweFJolMzvWxUp3EOMeBFWGzRy+HcRxYG9IJeI3zYl6AEl3FGrfBJbOvpp8nu1rdpnJTnmriXo5rRg==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.57.1
+      '@pulumi/pulumi': 3.58.0
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/pulumi/3.57.1:
-    resolution: {integrity: sha512-KlM1OXhWFR17vaU+vV/vwIuRK7evVapj658bMaq/Mk1GdJQP/4BHeLj4FAECqMOj5wcYBOH1e6Qyst2u+q7Lzg==}
+  /@pulumi/pulumi/3.58.0:
+    resolution: {integrity: sha512-qlj3oCTKyngej53YoB/caAFzQbx+GuaJdLcfK72l0IwQp3SoMBHyArZishZK4xKNeQpl6kODBXuie9+xMcD5iA==}
     engines: {node: '>=8.13.0 || >=10.10.0'}
     dependencies:
       '@grpc/grpc-js': 1.3.8
@@ -10154,11 +10166,11 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.56.0+vite@4.1.4
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.57.0+vite@4.1.4
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.520_svelte@3.56.0+vite@4.1.4:
+  /@sveltejs/kit/1.0.0-next.520_svelte@3.57.0+vite@4.1.4:
     resolution: {integrity: sha512-flroQQEwIHx6IEkskHGQ90Ri+gFCnAs4ZFRsG7QuTbuBu7XSeJNQs3J73pmBQoKp0pWnbwZ3YZMtwBJWF/I7qA==}
     engines: {node: '>=16.14'}
     hasBin: true
@@ -10167,7 +10179,7 @@ packages:
       svelte: ^3.44.0
       vite: ^3.1.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.56.0+vite@4.1.4
+      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.57.0+vite@4.1.4
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.0.1
@@ -10177,7 +10189,7 @@ packages:
       sade: 1.8.1
       set-cookie-parser: 2.5.1
       sirv: 2.0.2
-      svelte: 3.56.0
+      svelte: 3.57.0
       tiny-glob: 0.2.9
       undici: 5.11.0
       vite: 4.1.4
@@ -10186,7 +10198,7 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.56.0+vite@4.1.4:
+  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.57.0+vite@4.1.4:
     resolution: {integrity: sha512-+SDrAnT7TDi8sdj4OfD2SC4s9DNrpNVBrue8fT2PmKks9Ddu0JIfSeX91wXZb/1xHz4EkGb+rli8GTRI0yGOjg==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
@@ -10202,8 +10214,8 @@ packages:
       deepmerge: 4.2.2
       kleur: 4.1.5
       magic-string: 0.26.7
-      svelte: 3.56.0
-      svelte-hmr: 0.15.0_svelte@3.56.0
+      svelte: 3.57.0
+      svelte-hmr: 0.15.0_svelte@3.57.0
       vite: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -10365,8 +10377,8 @@ packages:
     dependencies:
       '@types/estree': 1.0.0
 
-  /@types/aws-lambda/8.10.112:
-    resolution: {integrity: sha512-1auQeFhclqU93Tb5kzk/0KaMIqkehwQpYz9a1H8AFZl7quihPh0mJTqNrxJIzIFM6R7rmUNDIU5hdBB9iDES6A==}
+  /@types/aws-lambda/8.10.113:
+    resolution: {integrity: sha512-JHxKRi7Nz2Bjqp0CKllm9Fl5GZwRfMF+lilSfl12ATyvBx0cRM09ztBVgebeJ8wrjJggHxxjSU2/U+SvSG+K1A==}
     dev: true
 
   /@types/aws-lambda/8.10.93:
@@ -12436,7 +12448,6 @@ packages:
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-    dev: true
 
   /atob/2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
@@ -12491,6 +12502,15 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.99
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.79
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -13332,6 +13352,11 @@ packages:
       no-case: 3.0.4
       tslib: 2.5.0
       upper-case-first: 2.0.2
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/2.0.1:
@@ -16381,14 +16406,14 @@ packages:
       eslint: 8.25.0
     dev: true
 
-  /eslint-plugin-svelte3/4.0.0_pdvxdpbnzjwxjm7tkjwumh3vqi:
+  /eslint-plugin-svelte3/4.0.0_wzem237sbvnwe7n34ytc5phasy:
     resolution: {integrity: sha512-OIx9lgaNzD02+MDFNLw0GEUbuovNcglg+wnd/UY0fbZmlQSz7GlQiQ1f+yX0XvC07XPcDOnFcichqI3xCwp71g==}
     peerDependencies:
       eslint: '>=8.0.0'
       svelte: ^3.2.0
     dependencies:
       eslint: 8.36.0
-      svelte: 3.56.0
+      svelte: 3.57.0
     dev: true
 
   /eslint-plugin-unicorn/45.0.2_eslint@8.25.0:
@@ -17604,7 +17629,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-jetpack/5.1.0:
     resolution: {integrity: sha512-Xn4fDhLydXkuzepZVsr02jakLlmoARPy+YWIclo4kh0GyNGUHnTqeH/w/qIsVn50dFxtp8otPL2t/HcPJBbxUA==}
@@ -20367,7 +20391,6 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonify/0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
@@ -20377,6 +20400,9 @@ packages:
     resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /jsonschema/1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -24625,14 +24651,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /prettier-plugin-svelte/2.9.0_gan2xfhhcbz3kbkivttwsjndea:
+  /prettier-plugin-svelte/2.9.0_k23gl6auqwrxgr3e6o2bajswou:
     resolution: {integrity: sha512-3doBi5NO4IVgaNPtwewvrgPpqAcvNv0NwJNflr76PIGgi9nf1oguQV1Hpdm9TI2ALIQVn/9iIwLpBO5UcD2Jiw==}
     peerDependencies:
       prettier: ^1.16.4 || ^2.0.0
       svelte: ^3.2.0
     dependencies:
       prettier: 2.8.4
-      svelte: 3.56.0
+      svelte: 3.57.0
     dev: true
 
   /prettier/2.7.1:
@@ -26936,7 +26962,7 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check/3.1.4_svelte@3.56.0:
+  /svelte-check/3.1.4_svelte@3.57.0:
     resolution: {integrity: sha512-25Lb46ZS4IK/XpBMe4IBMrtYf23V8alqBX+szXoccb7uM0D2Wqq5rMRzYBONZnFVuU1bQG3R50lyIT5eRewv2g==}
     hasBin: true
     peerDependencies:
@@ -26948,8 +26974,8 @@ packages:
       import-fresh: 3.3.0
       picocolors: 1.0.0
       sade: 1.8.1
-      svelte: 3.56.0
-      svelte-preprocess: 5.0.2_rx3ssngbibhj4vpczagsdyy47u
+      svelte: 3.57.0
+      svelte-preprocess: 5.0.2_wkdgp32a7s6524odeddpfzb52q
       typescript: 4.9.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -26963,16 +26989,16 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-hmr/0.15.0_svelte@3.56.0:
+  /svelte-hmr/0.15.0_svelte@3.57.0:
     resolution: {integrity: sha512-Aw21SsyoohyVn4yiKXWPNCSW2DQNH/76kvUnE9kpt4h9hcg9tfyQc6xshx9hzgMfGF0kVx0EGD8oBMWSnATeOg==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
     peerDependencies:
       svelte: '>=3.19.0'
     dependencies:
-      svelte: 3.56.0
+      svelte: 3.57.0
     dev: true
 
-  /svelte-preprocess/5.0.2_rx3ssngbibhj4vpczagsdyy47u:
+  /svelte-preprocess/5.0.2_wkdgp32a7s6524odeddpfzb52q:
     resolution: {integrity: sha512-iXpIoa43VdF7fPkBdoodztZd4H+3EP/GYA66tbuLVtQnM3sWCpsOtc7HjfA7BDR+6VTpqlEnpDmPoXk0dgUa0g==}
     engines: {node: '>= 14.10.0'}
     requiresBuild: true
@@ -27015,12 +27041,12 @@ packages:
       magic-string: 0.27.0
       sorcery: 0.11.0
       strip-indent: 3.0.0
-      svelte: 3.56.0
+      svelte: 3.57.0
       typescript: 4.9.5
     dev: true
 
-  /svelte/3.56.0:
-    resolution: {integrity: sha512-LvXiJbjdvJKwB/0CQyYpDX0q+hFqCyWmybzC2G6eK1tJJA/RSRCytTfNmjHv+RHlLuA70vWG7nXp6gbeErYvRA==}
+  /svelte/3.57.0:
+    resolution: {integrity: sha512-WMXEvF+RtAaclw0t3bPDTUe19pplMlfyKDsixbHQYgCWi9+O9VN0kXU1OppzrB9gPAvz4NALuoca2LfW2bOjTQ==}
     engines: {node: '>= 8'}
     dev: true
 
@@ -27275,7 +27301,7 @@ packages:
       supports-hyperlinks: 2.3.0
     dev: true
 
-  /terser-webpack-plugin/5.3.6_webpack@5.76.1:
+  /terser-webpack-plugin/5.3.6_webpack@5.76.2:
     resolution: {integrity: sha512-kfLFk+PoLUQIbLmB1+PZDMRSZS99Mp+/MHqDNmMA6tOItzRt+Npe3E+fsMs5mfcM0wCtrrdU387UnV+vnSffXQ==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -27296,7 +27322,7 @@ packages:
       schema-utils: 3.1.1
       serialize-javascript: 6.0.0
       terser: 5.15.1
-      webpack: 5.76.1
+      webpack: 5.76.2
     dev: true
 
   /terser/5.15.1:
@@ -27640,7 +27666,7 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
-  /ts-loader/9.4.2_cbz6r35m2it77sxuzifyafc6zi:
+  /ts-loader/9.4.2_a37q6j7dwawz22saey2vgkpwqm:
     resolution: {integrity: sha512-OmlC4WVmFv5I0PpaxYb+qGeGOdm5giHU7HwDDUjw59emP2UYMHy9fFSDcYgSNoH8sXcj4hGCSEhlDZ9ULeDraA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -27652,7 +27678,7 @@ packages:
       micromatch: 4.0.5
       semver: 7.3.8
       typescript: 4.9.5
-      webpack: 5.76.1
+      webpack: 5.76.2
     dev: true
 
   /ts-log/2.2.5:
@@ -28334,7 +28360,6 @@ packages:
   /universalify/2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /unix-dgram/2.0.6:
     resolution: {integrity: sha512-AURroAsb73BZ6CdAyMrTk/hYKNj3DuYYEuOaB8bYMOHGKupRNScw90Q5C71tWJc3uE7dIeXRyuwN0xLLq3vDTg==}
@@ -28814,8 +28839,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /webpack/5.76.1:
-    resolution: {integrity: sha512-4+YIK4Abzv8172/SGqObnUjaIHjLEuUasz9EwQj/9xmPPkYJy2Mh03Q/lJfSD3YLzbxy5FeTq5Uw0323Oh6SJQ==}
+  /webpack/5.76.2:
+    resolution: {integrity: sha512-Th05ggRm23rVzEOlX8y67NkYCHa9nTNcwHPBhdg+lKG+mtiW7XgggjAeeLnADAe7mLjJ6LUNfgHAuRRh+Z6J7w==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     peerDependencies:
@@ -28845,7 +28870,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.1.1
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.6_webpack@5.76.1
+      terser-webpack-plugin: 5.3.6_webpack@5.76.2
       watchpack: 2.4.0
       webpack-sources: 3.2.3
     transitivePeerDependencies:
