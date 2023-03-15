@@ -1116,14 +1116,14 @@ importers:
 
   packages/plugins/apollo-inline-trace:
     specifiers:
+      '@apollo/usage-reporting-protobuf': ^4.0.0
       '@envelop/on-resolve': ^2.0.2
       '@whatwg-node/fetch': ^0.8.2
-      apollo-reporting-protobuf: ^3.3.2
       graphql-yoga: 3.7.3
       tslib: ^2.5.0
     dependencies:
+      '@apollo/usage-reporting-protobuf': 4.0.0
       '@envelop/on-resolve': 2.0.2
-      apollo-reporting-protobuf: 3.3.3
       tslib: 2.5.0
     devDependencies:
       '@whatwg-node/fetch': 0.8.2
@@ -2192,6 +2192,7 @@ packages:
       '@aws-cdk/core': 1.197.0
       '@aws-cdk/custom-resources': 1.197.0_iceuwtbtytiwpw7z6m4vollhay
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -2497,6 +2498,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema/1.197.0:
     resolution: {integrity: sha512-JImHB84lRxMHlt9onIMZhOMUXvpf2WOEo3wZ/gcTNUOigJwW66rRTUfxHd/I3CiR8Ktx+Tj2RtNpwHnjmYWmGg==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - jsonschema
@@ -2521,7 +2525,11 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 1.197.0
       '@aws-cdk/cx-api': 1.197.0
       '@aws-cdk/region-info': 1.197.0
+      '@balena/dockerignore': 1.0.2
       constructs: 3.4.127
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      minimatch: 3.1.2
     dev: false
     bundledDependencies:
       - fs-extra
@@ -2558,6 +2566,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.197.0
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -4261,6 +4270,9 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
     dev: true
+
+  /@balena/dockerignore/1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -12436,7 +12448,6 @@ packages:
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-    dev: true
 
   /atob/2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
@@ -12491,6 +12502,15 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.99
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.79
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -13332,6 +13352,11 @@ packages:
       no-case: 3.0.4
       tslib: 2.5.0
       upper-case-first: 2.0.2
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /ccount/2.0.1:
@@ -17604,7 +17629,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-jetpack/5.1.0:
     resolution: {integrity: sha512-Xn4fDhLydXkuzepZVsr02jakLlmoARPy+YWIclo4kh0GyNGUHnTqeH/w/qIsVn50dFxtp8otPL2t/HcPJBbxUA==}
@@ -20367,7 +20391,6 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonify/0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
@@ -20377,6 +20400,9 @@ packages:
     resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /jsonschema/1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -28334,7 +28360,6 @@ packages:
   /universalify/2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /unix-dgram/2.0.6:
     resolution: {integrity: sha512-AURroAsb73BZ6CdAyMrTk/hYKNj3DuYYEuOaB8bYMOHGKupRNScw90Q5C71tWJc3uE7dIeXRyuwN0xLLq3vDTg==}
