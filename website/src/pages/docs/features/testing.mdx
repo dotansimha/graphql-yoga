@@ -90,7 +90,7 @@ const result = await executor({
 assertSingleValue(result)
 
 console.assert(
-  executionResult.data?.greetings === 'Hello World!',
+  result.data?.greetings === 'Hello World!',
   `Expected 'Hello World!' but got ${executionResult.data.greetings}`
 )
 ```
@@ -131,7 +131,7 @@ const schema = createSchema({
 
 function assertStreamValue<TValue extends object>(
   value: TValue | AsyncIterable<TValue>
-): asserts value is TValue {
+): asserts value is AsyncIterable<TValue> {
   if (Symbol.asyncIterator in value) {
     return
   }
@@ -142,7 +142,7 @@ const executor = buildHTTPExecutor({
   fetch: yoga.fetch
 })
 
-const result = await executor({
+const result1 = await executor({
   document: parse(/* GraphQL */ `
     subscription {
       counter
@@ -150,27 +150,45 @@ const result = await executor({
   `)
 })
 
-assertStreamValue(result)
+const result2 = await executor({
+  document: parse(/* GraphQL */ `
+    subscription {
+      counter
+    }
+  `)
+})
+
+assertStreamValue(result1)
+assertStreamValue(result2)
 
 let iterationCounter = 0
 
-for await (const value of result) {
+for await (const value of result1) {
   if (iterationCounter === 0) {
     console.assert(
-      executionResult.data?.counter === 1,
-      `Expected 1 but got ${executionResult.data?.counter}`
+      value.data?.counter === 1,
+      `Expected 1 but got ${value.data?.counter}`
     )
     iterationCounter++
   } else if (iterationCounter === 1) {
     console.assert(
-      executionResult.data?.counter === 1,
-      `Expected 2 but got ${executionResult.data?.counter}`
+      value.data?.counter === 1,
+      `Expected 2 but got ${value.data?.counter}`
     )
     break
   } else {
     throw new Error('Expected only two iterations')
   }
 }
+// the server will terminate the iteration after yielding 2 values, for this subscription resolver definition
+
+// on the other hand, for most use cases where we are listening to an indefinitely long stream, we trigger cleanup from the client-side as follows:
+// here we demonstrate listening to one value:
+const result2It = result2[Symbol.asyncIterator]()
+const itResult = await result2It.next()
+console.assert(itResult.value.data?.counter === 1)
+// after listening to the value, we cleanup by calling return(), if present
+await roomUpdatesIterator.return?.()
 ```
 
 ### TypeScript safe Test Suits with GraphQL Code Generator
