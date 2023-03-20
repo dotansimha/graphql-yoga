@@ -68,6 +68,8 @@ describe('hapi example integration', () => {
 
       data: {"data":{"greetings":"Zdravo"}}
 
+      event: complete
+
       "
     `)
   })
