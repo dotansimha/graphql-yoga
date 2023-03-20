@@ -29,7 +29,11 @@ export function getSSEProcessor(opts: SSEProcessorOptions): ResultProcessor {
       'Content-Encoding': 'none',
     }
 
-    const responseInit = getResponseInitByRespectingErrors(result, headersInit)
+    const responseInit = getResponseInitByRespectingErrors(
+      result,
+      headersInit,
+      !opts.legacySSE,
+    )
 
     let iterator: AsyncIterator<MaybeArray<ExecutionResult>>
 
