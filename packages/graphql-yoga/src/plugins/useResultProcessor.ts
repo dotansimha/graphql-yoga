@@ -66,10 +66,10 @@ export function useResultProcessors(opts: { legacySse: boolean }): Plugin {
             acceptableMediaTypes.push(processorMediaType)
             if (isMatchingMediaType(processorMediaType, requestMediaType)) {
               setResultProcessor(
-                opts.legacySse &&
+                !opts.legacySse &&
                   resultProcessorConfig.processResult === processPushResult
-                  ? resultProcessorConfig.processResult
-                  : processGraphQLSSEResult,
+                  ? processGraphQLSSEResult
+                  : resultProcessorConfig.processResult,
                 processorMediaType,
               )
             }
