@@ -29,8 +29,8 @@ describe('GraphQL over SSE', () => {
         waitForPings: {
           // eslint-disable-next-line require-yield
           async *subscribe() {
-            // a ping is issued every 5ms, wait for a few and just return
-            await new Promise((resolve) => setTimeout(resolve, 35))
+            // a ping is issued every 100ms, wait for a few and just return
+            await new Promise((resolve) => setTimeout(resolve, 100 * 3 + 50))
             return
           },
         },
