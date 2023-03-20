@@ -355,7 +355,7 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessors({
-        legacySse: !!options?.legacySse,
+        legacySse: options?.legacySse == null ? true : options.legacySse,
       }),
       useErrorHandling((error, request) => {
         const errors = handleError(error, this.maskedErrorsOpts, this.logger)
