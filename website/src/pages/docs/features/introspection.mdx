@@ -65,7 +65,15 @@ server.listen(4000, () => {
 })
 ```
 
-## Disabling Field Suggestions
+## GraphQL armor
+
+The [`graphql-armor`](https://github.com/Escape-Technologies/graphql-armor) plugin is a security layer that help you protect your GraphQL server from malicious queries.
+It allows you to configure various security features such as character limit or blocking field suggestions.
+For more information about `graphql-armor` features, you can refer to the [documentation](https://escape.tech/graphql-armor/docs/category/plugins).
+
+Here is an example of how to use `graphql-armor` to disable introspection and block field suggestions :
+
+### Disabling Field Suggestions
 
 When executing invalid GraphQL operation the GraphQL engine will try to construct smart suggestions that hint typos in the executed GraphQL document.
 This can be considered a security issue, as it can leak information about the GraphQL schema, even if introspection is disabled.
