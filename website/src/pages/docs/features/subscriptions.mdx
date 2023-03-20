@@ -371,6 +371,30 @@ const network = Network.create(executeQueryOrMutation, executeSubscription)
 
 ## GraphQL over Server-Sent Events Protocol (via `graphql-sse`)
 
+There are two different modes in [GraphQL over Server-Sent Events spec](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md).
+
+### Distinct Connections Mode
+
+GraphQL Yoga supports [GraphQL over Server-Sent Events spec](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) only in "distinct connections mode" with the `legacySse: false` flag.
+
+```ts filename="yoga.ts"
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
+
+const yogaApp = createYoga({
+  // ...
+  legacySse: false
+})
+```
+
+<Callout>
+  When you enable this, simple SSE recipes won't work because it changes the
+  data events format. You should use refer to [`graphql-sse` client
+  recipes](https://github.com/enisdenjo/graphql-sse#recipes).
+</Callout>
+
+### Single Connection Mode
+
 In case you want the subscriptions to be transported following the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md), you simply use the `@graphql-yoga/plugin-graphql-sse` plugin for GraphQL Yoga that exposes an additional endpoint (defaulting to `/graphql/stream`) used for [graphql-sse](https://github.com/enisdenjo/graphql-sse) clients.
 
 The plugin will hijack the request from the `onRequest` hook and will use **all** envelop plugins provided.
