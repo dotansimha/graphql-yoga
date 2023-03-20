@@ -171,13 +171,15 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    */
   batching?: BatchingOptions
   /**
-   * Use the [GraphQL over SSE spec](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md) for streaming results.
+   * Use the legacy Yoga SSE and not the [GraphQL over SSE spec](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md) for streaming results.
    *
-   * Currently GraphQL Yoga supports exclusively the ["distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode).
+   * @note Currently GraphQL Yoga supports exclusively the ["distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode). For using the ["distinct connection mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connections-mode) please [use the `@graphql-yoga/plugin-graphql-sse` plugin](https://the-guild.dev/graphql/yoga-server/docs/features/subscriptions#graphql-over-server-sent-events-protocol-via-graphql-sse).
    *
-   * @note Starting from next major release of Yoga, this option will be dropped and GraphQL over SSE spec will be used exclusively.
+   * @default true
+   *
+   * @deprecated Consider using GraphQL over SSE spec instead by setting this flag to `false`. Starting with the next major release, this flag will default to `false`.
    */
-  graphqlSse?: boolean
+  legacySse?: boolean
 }
 
 export type BatchingOptions =
@@ -353,7 +355,7 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessors({
-        graphqlSse: !!options?.graphqlSse,
+        legacySse: !!options?.legacySse,
       }),
       useErrorHandling((error, request) => {
         const errors = handleError(error, this.maskedErrorsOpts, this.logger)

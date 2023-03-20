@@ -37,7 +37,7 @@ const regular: ResultProcessorConfig = {
 const defaultList = [textEventStream, multipart, regular]
 const subscriptionList = [multipart, textEventStream, regular]
 
-export function useResultProcessors(opts: { graphqlSse: boolean }): Plugin {
+export function useResultProcessors(opts: { legacySse: boolean }): Plugin {
   const isSubscriptionRequestMap = new WeakMap<Request, boolean>()
   return {
     onSubscribe({ args: { contextValue } }) {
@@ -66,10 +66,10 @@ export function useResultProcessors(opts: { graphqlSse: boolean }): Plugin {
             acceptableMediaTypes.push(processorMediaType)
             if (isMatchingMediaType(processorMediaType, requestMediaType)) {
               setResultProcessor(
-                opts.graphqlSse &&
+                opts.legacySse &&
                   resultProcessorConfig.processResult === processPushResult
-                  ? processGraphQLSSEResult
-                  : resultProcessorConfig.processResult,
+                  ? resultProcessorConfig.processResult
+                  : processGraphQLSSEResult,
                 processorMediaType,
               )
             }
