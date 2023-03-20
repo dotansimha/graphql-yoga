@@ -106,7 +106,7 @@ importers:
 
   e2e:
     specifiers:
-      '@pulumi/aws': 5.31.0
+      '@pulumi/aws': 5.32.0
       '@pulumi/awsx': 0.40.1
       '@pulumi/azure-native': 1.97.0
       '@pulumi/cloudflare': 4.16.0
@@ -116,8 +116,8 @@ importers:
       ts-node: 10.9.1
       typescript: 4.9.5
     dependencies:
-      '@pulumi/aws': 5.31.0
-      '@pulumi/awsx': 0.40.1_gcpftme6rfau7pvhbde7stjmii
+      '@pulumi/aws': 5.32.0
+      '@pulumi/awsx': 0.40.1_oka7htqfrwfew3m652flzyn6tm
       '@pulumi/azure-native': 1.97.0
       '@pulumi/cloudflare': 4.16.0
       '@pulumi/docker': 4.0.0
@@ -887,7 +887,7 @@ importers:
       svelte-preprocess: 5.0.3
       tslib: 2.5.0
       typescript: 4.9.5
-      vite: 4.2.0
+      vite: 4.2.1
     dependencies:
       '@envelop/graphql-jit': 5.0.6_graphql@16.6.0
       '@graphql-yoga/render-graphiql': link:../../packages/render-graphiql
@@ -895,7 +895,7 @@ importers:
       graphql-yoga: link:../../packages/graphql-yoga
     devDependencies:
       '@sveltejs/adapter-auto': 2.0.0_7hlaraql3l3j4acwhexjo5qhge
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.57.0+vite@4.2.0
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.57.0+vite@4.2.1
       '@types/jest': 29.2.0
       '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
       '@typescript-eslint/parser': 5.55.0_vgl77cfdswitgr47lm5swmv43m
@@ -911,7 +911,7 @@ importers:
       svelte-preprocess: 5.0.3_wkdgp32a7s6524odeddpfzb52q
       tslib: 2.5.0
       typescript: 4.9.5
-      vite: 4.2.0
+      vite: 4.2.1
 
   examples/uwebsockets:
     specifiers:
@@ -1025,7 +1025,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       use-url-search-params: 2.5.1
-      vite: 4.2.0
+      vite: 4.2.1
     dependencies:
       '@graphiql/plugin-explorer': 0.1.6_4hkbjrep5ureiqkcwz4kv7433y
       '@graphiql/toolkit': 0.8.2_graphql@16.6.0
@@ -1039,8 +1039,8 @@ importers:
     devDependencies:
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.0
-      vite: 4.2.0
+      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      vite: 4.2.1
 
   packages/graphql-yoga:
     specifiers:
@@ -9393,8 +9393,8 @@ packages:
   /@protobufjs/utf8/1.1.0:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
-  /@pulumi/aws/5.31.0:
-    resolution: {integrity: sha512-Qud/faQByDYuCvM4k+ljKN3ssGnS1mrtyIN0enCExRVbdEbxGrifgeFFjfPam+NmYNxaQkwRUonOOHm7dfpAlA==}
+  /@pulumi/aws/5.32.0:
+    resolution: {integrity: sha512-ISoCKw1rWmKNXScVHnMkUBHMm0c+2tmsYJzoTpETy1GwZWPbRUS3ITdNWTgZ6n3eXSl1QdWr6Ih/TrxeDebzLw==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.58.0
@@ -9407,13 +9407,13 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx/0.40.1_gcpftme6rfau7pvhbde7stjmii:
+  /@pulumi/awsx/0.40.1_oka7htqfrwfew3m652flzyn6tm:
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
       '@pulumi/pulumi': ^3.0.0
     dependencies:
-      '@pulumi/aws': 5.31.0
+      '@pulumi/aws': 5.32.0
       '@pulumi/docker': 3.6.1
       '@pulumi/pulumi': 3.58.0
       '@types/aws-lambda': 8.10.93
@@ -9998,11 +9998,11 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.0.0-next.520_svelte@3.57.0+vite@4.2.0
+      '@sveltejs/kit': 1.0.0-next.520_svelte@3.57.0+vite@4.2.1
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.520_svelte@3.57.0+vite@4.2.0:
+  /@sveltejs/kit/1.0.0-next.520_svelte@3.57.0+vite@4.2.1:
     resolution: {integrity: sha512-flroQQEwIHx6IEkskHGQ90Ri+gFCnAs4ZFRsG7QuTbuBu7XSeJNQs3J73pmBQoKp0pWnbwZ3YZMtwBJWF/I7qA==}
     engines: {node: '>=16.14'}
     hasBin: true
@@ -10011,7 +10011,7 @@ packages:
       svelte: ^3.44.0
       vite: ^3.1.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.57.0+vite@4.2.0
+      '@sveltejs/vite-plugin-svelte': 1.0.9_svelte@3.57.0+vite@4.2.1
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.0.1
@@ -10024,13 +10024,13 @@ packages:
       svelte: 3.57.0
       tiny-glob: 0.2.9
       undici: 5.11.0
-      vite: 4.2.0
+      vite: 4.2.1
     transitivePeerDependencies:
       - diff-match-patch
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.57.0+vite@4.2.0:
+  /@sveltejs/vite-plugin-svelte/1.0.9_svelte@3.57.0+vite@4.2.1:
     resolution: {integrity: sha512-+SDrAnT7TDi8sdj4OfD2SC4s9DNrpNVBrue8fT2PmKks9Ddu0JIfSeX91wXZb/1xHz4EkGb+rli8GTRI0yGOjg==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
@@ -10048,7 +10048,7 @@ packages:
       magic-string: 0.26.7
       svelte: 3.57.0
       svelte-hmr: 0.15.0_svelte@3.57.0
-      vite: 4.2.0
+      vite: 4.2.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11144,7 +11144,7 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-react/3.1.0_vite@4.2.0:
+  /@vitejs/plugin-react/3.1.0_vite@4.2.1:
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -11155,7 +11155,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.12
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.2.0
+      vite: 4.2.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -28424,8 +28424,8 @@ packages:
       unist-util-stringify-position: 3.0.2
       vfile-message: 3.1.2
 
-  /vite/4.2.0:
-    resolution: {integrity: sha512-AbDTyzzwuKoRtMIRLGNxhLRuv1FpRgdIw+1y6AQG73Q5+vtecmvzKo/yk8X/vrHDpETRTx01ABijqUHIzBXi0g==}
+  /vite/4.2.1:
+    resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
