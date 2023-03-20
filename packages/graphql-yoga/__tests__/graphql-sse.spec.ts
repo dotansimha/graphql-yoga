@@ -40,7 +40,7 @@ describe('GraphQL over SSE', () => {
 
   const yoga = createYoga({
     schema,
-    graphqlSse: true,
+    legacySse: false,
     maskedErrors: false,
   })
 
