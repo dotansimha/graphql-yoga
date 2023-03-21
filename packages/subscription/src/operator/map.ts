@@ -8,9 +8,7 @@ export const map =
   (source: AsyncIterable<T>): Repeater<O> =>
     new Repeater(async (push, stop) => {
       const iterable = source[Symbol.asyncIterator]()
-      stop.then(() => {
-        iterable.return?.()
-      })
+      stop.then(() => iterable.return?.())
 
       let latest: IteratorResult<T>
       while ((latest = await iterable.next()).done === false) {

@@ -85,20 +85,26 @@ export function useGraphQLSSE(
       if (token) {
         const operationId = operationIdByRequest.get(request)
         // Batching is not supported by GraphQL SSE yet
-        if (operationId && !Array.isArray(result)) {
+        if (operationId) {
           serverContext.waitUntil(
             Promise.resolve().then(async () => {
               if (isAsyncIterable(result)) {
                 const asyncIterator = result[Symbol.asyncIterator]()
+                let breakLoop = false
                 pubsub
                   .subscribe('graphql-sse-unsubscribe', operationId)
                   .next()
                   .finally(() => {
-                    asyncIterator.return?.()
+                    breakLoop = true
+                    return asyncIterator.return?.()
                   })
-                let iteratorValue: IteratorResult<ExecutionResult>
-                while (!(iteratorValue = await asyncIterator.next()).done) {
-                  const chunk = iteratorValue.value
+                const asyncIterable: AsyncIterable<ExecutionResult> = {
+                  [Symbol.asyncIterator]: () => asyncIterator,
+                }
+                for await (const chunk of asyncIterable) {
+                  if (breakLoop) {
+                    break
+                  }
                   const messageJson = {
                     id: operationId,
                     payload: chunk,
