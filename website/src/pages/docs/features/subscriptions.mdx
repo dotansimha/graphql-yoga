@@ -396,9 +396,7 @@ import { createYoga } from 'graphql-yoga'
 
 const yogaApp = createYoga({
   // ...
-  sse: {
-    graphqlSSEDistinctConnections: true
-  }
+  legacySse: false
 })
 ```
 
