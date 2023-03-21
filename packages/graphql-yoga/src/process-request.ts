@@ -8,19 +8,21 @@ import {
 } from './plugins/types.js'
 import { FetchAPI, GraphQLParams } from './types.js'
 
-export async function processResult({
+export async function processResult<TServerContext>({
   request,
   result,
   fetchAPI,
+  serverContext,
   onResultProcessHooks,
 }: {
   request: Request
   result: ResultProcessorInput
   fetchAPI: FetchAPI
+  serverContext: TServerContext
   /**
    * Response Hooks
    */
-  onResultProcessHooks: OnResultProcess[]
+  onResultProcessHooks: OnResultProcess<TServerContext>[]
 }) {
   let resultProcessor: ResultProcessor | undefined
 
@@ -42,6 +44,7 @@ export async function processResult({
         acceptedMediaType = newAcceptedMimeType
       },
       fetchAPI,
+      serverContext,
       endResponse(response) {
         earlyResponse = response
       },

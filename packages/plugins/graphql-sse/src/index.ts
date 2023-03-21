@@ -24,7 +24,7 @@ export function useGraphQLSSE(
   options: GraphQLSSEPluginOptions = {
     pubsub: createPubSub(),
   },
-): Plugin<YogaInitialContext> {
+): Plugin<YogaInitialContext, { waitUntil(p: Promise<unknown>): void }> {
   const { pubsub } = options
   const tokenByRequest = new WeakMap<Request, string>()
   const operationIdByRequest = new WeakMap<Request, string>()
@@ -80,51 +80,54 @@ export function useGraphQLSSE(
         operationIdByRequest.set(request, params.extensions.operationId)
       }
     },
-    onResultProcess({ request, result, fetchAPI, endResponse }) {
+    onResultProcess({ request, result, fetchAPI, serverContext, endResponse }) {
       const token = tokenByRequest.get(request)
       if (token) {
         const operationId = operationIdByRequest.get(request)
         // Batching is not supported by GraphQL SSE yet
         if (operationId && !Array.isArray(result)) {
-          Promise.resolve().then(async () => {
-            if (isAsyncIterable(result)) {
-              const asyncIterator = result[Symbol.asyncIterator]()
-              pubsub
-                .subscribe('graphql-sse-unsubscribe', operationId)
-                .next()
-                .finally(() => {
-                  asyncIterator.return?.()
-                })
-              let iteratorValue: IteratorResult<ExecutionResult>
-              while (!(iteratorValue = await asyncIterator.next()).done) {
-                const chunk = iteratorValue.value
+          serverContext.waitUntil(
+            Promise.resolve().then(async () => {
+              if (isAsyncIterable(result)) {
+                const asyncIterator = result[Symbol.asyncIterator]()
+                pubsub
+                  .subscribe('graphql-sse-unsubscribe', operationId)
+                  .next()
+                  .finally(() => {
+                    asyncIterator.return?.()
+                  })
+                let iteratorValue: IteratorResult<ExecutionResult>
+                while (!(iteratorValue = await asyncIterator.next()).done) {
+                  const chunk = iteratorValue.value
+                  const messageJson = {
+                    id: operationId,
+                    payload: chunk,
+                  }
+                  const messageStr = `event: next\nid: ${operationId}\ndata: ${JSON.stringify(
+                    messageJson,
+                  )}\n\n`
+                  pubsub.publish('graphql-sse-subscribe', token, messageStr)
+                }
+              } else {
                 const messageJson = {
                   id: operationId,
-                  payload: chunk,
+                  payload: result,
                 }
                 const messageStr = `event: next\nid: ${operationId}\ndata: ${JSON.stringify(
                   messageJson,
                 )}\n\n`
                 pubsub.publish('graphql-sse-subscribe', token, messageStr)
               }
-            } else {
-              const messageJson = {
+              const completeMessageJson = {
                 id: operationId,
-                payload: result,
               }
-              const messageStr = `event: next\nid: ${operationId}\ndata: ${JSON.stringify(
-                messageJson,
+              const completeMessageStr = `event: complete\ndata: ${JSON.stringify(
+                completeMessageJson,
               )}\n\n`
-              pubsub.publish('graphql-sse-subscribe', token, messageStr)
-            }
-            const completeMessageJson = {
-              id: operationId,
-            }
-            const completeMessageStr = `event: complete\ndata: ${JSON.stringify(
-              completeMessageJson,
-            )}\n\n`
-            pubsub.publish('graphql-sse-subscribe', token, completeMessageStr)
-          })
+              pubsub.publish('graphql-sse-subscribe', token, completeMessageStr)
+            }),
+          )
+
           endResponse(
             new fetchAPI.Response(null, {
               status: 202,
