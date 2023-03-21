@@ -388,7 +388,7 @@ There are two different modes in [GraphQL over Server-Sent Events Protocol](http
 
 ### Distinct Connection Mode
 
-GraphQL Yoga supports [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) only in distinct connection mode with an `sse.graphqlSSEDistinctConnections` flag.
+GraphQL Yoga supports [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) only in distinct connection mode with an `legacySse = false` flag.
 
 ```ts filename="yoga.ts"
 import { createServer } from 'node:http'
