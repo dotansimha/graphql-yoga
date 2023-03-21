@@ -70,7 +70,7 @@ describe('graphql-auth example integration', () => {
     for await (const chunk of response.body!) {
       const chunkString = Buffer.from(chunk).toString('utf-8')
       if (chunkString.includes('data:')) {
-        expect(chunkString.trim()).toBe('data: {"data":{"public":"hi"}}')
+        expect(chunkString.trim()).toContain('data: {"data":{"public":"hi"}}')
         break
       }
     }
@@ -91,7 +91,7 @@ describe('graphql-auth example integration', () => {
     for await (const chunk of response.body!) {
       const chunkStr = Buffer.from(chunk).toString('utf-8')
       if (chunkStr.startsWith('data:')) {
-        expect(chunkStr.trim()).toBe(
+        expect(chunkStr.trim()).toContain(
           'data: {"data":{"requiresAuth":"hi foo@foo.com"}}',
         )
         break
@@ -112,7 +112,7 @@ describe('graphql-auth example integration', () => {
     for await (const chunk of response.body!) {
       const chunkStr = Buffer.from(chunk).toString('utf-8')
       if (chunkStr.startsWith('data:')) {
-        expect(chunkStr.trim()).toBe(
+        expect(chunkStr.trim()).toContain(
           'data: {"data":null,"errors":[{"message":"Accessing \'Subscription.requiresAuth\' requires authentication.","locations":[{"line":1,"column":14}]}]}',
         )
         break

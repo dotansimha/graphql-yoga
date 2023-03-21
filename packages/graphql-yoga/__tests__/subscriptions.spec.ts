@@ -143,21 +143,24 @@ describe('Subscription', () => {
     }
 
     expect(results).toMatchInlineSnapshot(`
-        [
-          ":
+      [
+        ":
 
-        ",
-          ":
+      ",
+        ":
 
-        ",
-          ":
+      ",
+        ":
 
-        ",
-          "data: {"data":{"hi":"hi"}}
+      ",
+        "data: {"data":{"hi":"hi"}}
 
-        ",
-        ]
-      `)
+      ",
+        "event: complete
+
+      ",
+      ]
+    `)
   })
 
   test('should issue pings event if event source never publishes anything', async () => {

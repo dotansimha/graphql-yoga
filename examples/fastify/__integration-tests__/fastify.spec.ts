@@ -161,6 +161,8 @@ describe('fastify example integration', () => {
 
       data: {"data":{"countdown":0}}
 
+      event: complete
+
       "
     `)
   })
@@ -201,6 +203,8 @@ describe('fastify example integration', () => {
       data: {"data":{"countdown":1}}
 
       data: {"data":{"countdown":0}}
+
+      event: complete
 
       "
     `)

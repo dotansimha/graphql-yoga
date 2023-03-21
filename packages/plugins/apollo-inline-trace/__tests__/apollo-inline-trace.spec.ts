@@ -469,7 +469,7 @@ describe('Inline Trace', () => {
     expect(response.ok).toBe(true)
 
     const result = await response.text()
-    expect(result).toBe('data: {"data":{"hello":"world"}}\n\n')
+    expect(result).toContain('data: {"data":{"hello":"world"}}\n\n')
   })
 })
 
