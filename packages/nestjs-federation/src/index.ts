@@ -1,14 +1,14 @@
-import type { ApolloGateway, GatewayConfig } from '@apollo/gateway'
-import { useApolloFederation as useApolloFederationPlugin } from '@envelop/apollo-federation'
+import { ApolloGateway, GatewayConfig } from '@apollo/gateway'
+import { printSubgraphSchema } from '@apollo/subgraph'
+import { useApolloFederation } from '@envelop/apollo-federation'
 import { Injectable, Type } from '@nestjs/common'
-import { loadPackage } from '@nestjs/common/utils/load-package.util'
 import { GraphQLFederationFactory } from '@nestjs/graphql'
 import {
   AbstractYogaDriver,
   YogaDriver,
   YogaDriverConfig,
   YogaDriverPlatform,
-} from './driver.js'
+} from '@graphql-yoga/nestjs'
 
 export type YogaFederationDriverConfig<
   Platform extends YogaDriverPlatform = 'express',
@@ -28,11 +28,9 @@ export class YogaFederationDriver<
     const opts = await this.graphqlFederationFactory.mergeWithSchema(options)
 
     if (options.definitions?.path) {
-      const { printSubgraphSchema } = loadPackage(
-        '@apollo/subgraph',
-        'ApolloFederation',
-        () => require('@apollo/subgraph'),
-      )
+      if (!opts.schema) {
+        throw new Error('Schema is required when providing definitions path')
+      }
       await this.graphQlFactory.generateDefinitions(
         printSubgraphSchema(opts.schema),
         options,
@@ -78,17 +76,6 @@ export class YogaGatewayDriver<
   Platform extends YogaDriverPlatform = 'express',
 > extends AbstractYogaDriver<Platform> {
   public async start(options: YogaGatewayDriverConfig<Platform>) {
-    const { ApolloGateway } = loadPackage(
-      '@apollo/gateway',
-      'YogaGatewayDriver',
-      () => require('@apollo/gateway'),
-    )
-    const { useApolloFederation } = loadPackage(
-      '@envelop/apollo-federation',
-      'YogaGatewayDriver',
-      () => require('@envelop/apollo-federation'),
-    ) as { useApolloFederation: typeof useApolloFederationPlugin }
-
     const { server: serverOpts = {}, gateway: gatewayOpts = {} } = options
     const gateway: ApolloGateway = new ApolloGateway(gatewayOpts)
 
@@ -98,9 +85,7 @@ export class YogaGatewayDriver<
       ...serverOpts,
       plugins: [
         ...(serverOpts.plugins || []),
-        useApolloFederation({
-          gateway,
-        }),
+        useApolloFederation({ gateway }),
       ],
     })
   }
