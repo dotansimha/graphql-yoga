@@ -15,7 +15,6 @@ import { UsersResolver } from './users.resolver'
     GraphQLModule.forRoot<YogaFederationDriverConfig>({
       driver: YogaFederationDriver,
       typePaths: ['**/*.graphql'],
-      path: '/',
     }),
   ],
   providers: [

@@ -254,3 +254,48 @@ jobs:
           failOnWarning: true
           failOnRequired: true
           debug: true
+
+  nestjs-apollo-federation-compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: Cache pnpm
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-store.outputs.PATH }}
+          key: ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
+      - name: Install Dependencies
+        run: pnpm i
+      - name: Build Packages
+        run: pnpm build
+      # - name: Bundle Apollo Federation Subgraph Example
+      #   run: pnpm --filter=example-apollo-federation-compatibility build
+      - name: Install Rover
+        run: curl -sSL https://rover.apollo.dev/nix/v0.11.1 | sh
+      - name: Add Rover to PATH
+        run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
+      - name: Apollo Federation Subgraph Compatibility
+        uses: apollographql/federation-subgraph-compatibility@v1
+        with:
+          workingDirectory: examples/nestjs-apollo-federation-compatibility
+          compose: docker-compose.yaml
+          schema: schema.graphql
+          path: /graphql
+          token: ${{ secrets.GITHUB_TOKEN }}
+          failOnWarning: true
+          failOnRequired: true
+          debug: true

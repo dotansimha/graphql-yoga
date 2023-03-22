@@ -1,9 +1,6 @@
-FROM node:18
-WORKDIR /web
-COPY package.json schema.graphql tsconfig.json tsconfig.build.json ./
+FROM node:19
+WORKDIR /app
+COPY package.json package-lock.json schema.graphql tsconfig.json ./
+RUN npm i --force
 COPY src ./src
-RUN npm install
 RUN npm run build
-EXPOSE 4001
-USER node
-CMD node dist/main

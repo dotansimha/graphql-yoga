@@ -1,6 +1,8 @@
 services:
   products:
-    # must be relative to the root of the project
-    build: implementations/nestjs
+    build: .
+    environment:
+      - NODE_ENV=production
+    command: ['node', 'dist/main.js']
     ports:
       - 4001:4001
