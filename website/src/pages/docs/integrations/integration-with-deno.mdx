@@ -10,13 +10,20 @@ We will use `graphql-yoga` which has an agnostic HTTP handler using [Fetch API](
 
 ## Example
 
+Create a `import_map.json` file. [Learn more about import maps](https://deno.land/manual/npm_nodejs/import_maps)
+
 Create a `deno-yoga.ts` file:
 
+```json filename="import_map.json" {3}
+{
+  "imports": {
+    "graphql-yoga": "npm:graphql-yoga@^3.7.3"
+  }
+}
+```
+
 ```ts filename="deno-yoga.ts"
-import {
-  createYoga,
-  createSchema
-} from 'https://cdn.skypack.dev/graphql-yoga?dts'
+import { createYoga, createSchema } from 'graphql-yoga'
 import { serve } from 'https://deno.land/std@0.157.0/http/server.ts'
 
 const yoga = createYoga({
@@ -44,7 +51,7 @@ serve(yoga, {
 And run it:
 
 ```bash
-deno run --allow-net index.ts
+deno run --allow-net --import-map ./import_map.json index.ts
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/deno)

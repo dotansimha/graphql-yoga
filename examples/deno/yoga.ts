@@ -1,7 +1,4 @@
-import {
-  createYoga,
-  createSchema,
-} from 'https://cdn.skypack.dev/graphql-yoga?dts'
+import { createYoga, createSchema } from 'graphql-yoga'
 
 export const yoga = createYoga({
   schema: createSchema({
