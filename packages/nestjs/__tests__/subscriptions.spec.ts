@@ -42,6 +42,8 @@ it('should subscribe using sse', async () => {
 
     data: {"data":{"greetings":"Zdravo"}}
 
+    event: complete
+
     "
   `)
 })
