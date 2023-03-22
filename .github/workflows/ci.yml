@@ -275,4 +275,6 @@ jobs:
           APOLLO_ELV2_LICENSE: accept
       - name: Report
         working-directory: examples/nestjs-apollo-federation-compatibility
-        run: cat results.md > $GITHUB_STEP_SUMMARY
+        run: |
+          echo "<h1>NestJS Apollo Federation Subgraph Compatibility Results</h1>" > $GITHUB_STEP_SUMMARY
+          cat results.md >> $GITHUB_STEP_SUMMARY
