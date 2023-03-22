@@ -284,10 +284,6 @@ jobs:
         run: pnpm build
       - name: Bundle Apollo Federation Subgraph Example
         run: pnpm --filter=example-nestjs-apollo-federation-compatibility build
-      - name: Install Rover
-        run: curl -sSL https://rover.apollo.dev/nix/v0.11.1 | sh
-      - name: Add Rover to PATH
-        run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Run Tests
         working-directory: examples/nestjs-apollo-federation-compatibility
         run: pnpm --filter=example-nestjs-apollo-federation-compatibility test

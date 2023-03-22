@@ -637,6 +637,7 @@ importers:
   examples/nestjs-apollo-federation-compatibility:
     specifiers:
       '@apollo/federation-subgraph-compatibility': ^1.2.1
+      '@apollo/rover': ^0.13.0
       '@graphql-yoga/nestjs-federation': 0.0.0
       '@grpc/proto-loader': ^0.7.5
       '@nestjs/cli': ^9.2.0
@@ -663,6 +664,7 @@ importers:
       typescript: ^4.9.5
     devDependencies:
       '@apollo/federation-subgraph-compatibility': 1.2.1_zofgjzmca2gwtey4x4go3tg4j4
+      '@apollo/rover': 0.13.0
       '@graphql-yoga/nestjs-federation': link:../../packages/nestjs-federation
       '@grpc/proto-loader': 0.7.6
       '@nestjs/cli': 9.3.0_esbuild@0.17.12
@@ -2094,6 +2096,20 @@ packages:
     dependencies:
       axios-proxy-builder: 0.1.2
       binary-install: 1.0.6_debug@4.3.4
+      console.table: 0.10.0
+      detect-libc: 2.0.1
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
+  /@apollo/rover/0.13.0:
+    resolution: {integrity: sha512-G2fd8I586ZhmfMu1nzAadi1ajBoG9dofPo219ekQnHNyNYRHGw0RVhCEWrCPfWP1qZDu1rukPdLB84NkNU159A==}
+    engines: {node: '>=14', npm: '>=6'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      axios-proxy-builder: 0.1.2
+      binary-install: 1.0.6
       console.table: 0.10.0
       detect-libc: 2.0.1
     transitivePeerDependencies:
@@ -13455,6 +13471,14 @@ packages:
       - debug
     dev: true
 
+  /axios/0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /axios/0.26.1_debug@4.3.4:
     resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
@@ -13743,6 +13767,17 @@ packages:
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
+
+  /binary-install/1.0.6:
+    resolution: {integrity: sha512-h3K4jaC4jEauK3csXI9GxGBJldkpuJlHCIBv8i+XBNhPuxnlERnD1PWVczQYDqvhJfv0IHUbB3lhDrZUMHvSgw==}
+    engines: {node: '>=10'}
+    dependencies:
+      axios: 0.26.1
+      rimraf: 3.0.2
+      tar: 6.1.11
+    transitivePeerDependencies:
+      - debug
+    dev: true
 
   /binary-install/1.0.6_debug@4.3.4:
     resolution: {integrity: sha512-h3K4jaC4jEauK3csXI9GxGBJldkpuJlHCIBv8i+XBNhPuxnlERnD1PWVczQYDqvhJfv0IHUbB3lhDrZUMHvSgw==}
@@ -18486,6 +18521,16 @@ packages:
     resolution: {integrity: sha512-VjAQdSLsl6AkpZNyrQJfO7BXLo4chnStqb055bumZMbRUPpVuPN3a4ktsnRCmrFZjtMlYLkyXiR5rAs4WOpC4Q==}
     dependencies:
       from2: 2.3.0
+    dev: true
+
+  /follow-redirects/1.15.2:
+    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
     dev: true
 
   /follow-redirects/1.15.2_debug@4.3.4:
