@@ -23,7 +23,7 @@ importers:
       '@babel/preset-env': 7.20.2
       '@babel/preset-typescript': 7.21.0
       '@changesets/changelog-github': 0.4.8
-      '@changesets/cli': 2.26.0
+      '@changesets/cli': 2.26.1
       '@theguild/eslint-config': 0.8.1
       '@types/babel__core': ^7
       '@types/babel__preset-env': ^7
@@ -58,7 +58,7 @@ importers:
       '@babel/preset-env': 7.20.2_@babel+core@7.21.3
       '@babel/preset-typescript': 7.21.0_@babel+core@7.21.3
       '@changesets/changelog-github': 0.4.8
-      '@changesets/cli': 2.26.0
+      '@changesets/cli': 2.26.1
       '@theguild/eslint-config': 0.8.1_mx6jhvnay66odhn2yt7eqo2wou
       '@types/babel__core': 7.1.19
       '@types/babel__preset-env': 7.9.2
@@ -4201,13 +4201,6 @@ packages:
     dependencies:
       regenerator-runtime: 0.13.11
 
-  /@babel/runtime/7.20.6:
-    resolution: {integrity: sha512-Q+8MqP7TiHMWzSfwiJwXCjyf4GYA4Dgw3emg/7xmwsdLJOZUp+nMqcOwOzzYheuM1rhDu8FSj2l0aoMygEuXuA==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.13.11
-    dev: true
-
   /@babel/template/7.20.7:
     resolution: {integrity: sha512-8SegXApWe6VoNw0r9JHpSteLKTpTiLZ4rMlGIm9JQ18KiCtyQiAMEazujAHrUS5flrcqYZa75ukev3P6QmUwUw==}
     engines: {node: '>=6.9.0'}
@@ -4397,11 +4390,11 @@ packages:
       - encoding
     dev: true
 
-  /@changesets/cli/2.26.0:
-    resolution: {integrity: sha512-0cbTiDms+ICTVtEwAFLNW0jBNex9f5+fFv3I771nBvdnV/mOjd1QJ4+f8KtVSOrwD9SJkk9xbDkWFb0oXd8d1Q==}
+  /@changesets/cli/2.26.1:
+    resolution: {integrity: sha512-XnTa+b51vt057fyAudvDKGB0Sh72xutQZNAdXkCqPBKO2zvs2yYZx5hFZj1u9cbtpwM6Sxtcr02/FQJfZOzemQ==}
     hasBin: true
     dependencies:
-      '@babel/runtime': 7.20.6
+      '@babel/runtime': 7.20.13
       '@changesets/apply-release-plan': 6.1.3
       '@changesets/assemble-release-plan': 5.2.1_gxgixp7rzwjkputc2n2g47utqy
       '@changesets/changelog-git': 0.1.14
