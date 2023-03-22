@@ -1,7 +1,7 @@
 import {
   YogaFederationDriver,
   YogaFederationDriverConfig,
-} from '@graphql-yoga/nestjs'
+} from '@graphql-yoga/nestjs-federation'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { DeprecatedProductsResolver } from './deprecated-products.resolver'

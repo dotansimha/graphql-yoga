@@ -9,22 +9,16 @@
     "start": "nest start",
     "test": "fedtest docker --compose ./docker-compose.yaml --schema ./schema.graphql --path /graphql --port 4001 --debug --format markdown"
   },
-  "dependencies": {
-    "@apollo/subgraph": "^2.3.2",
-    "@envelop/apollo-federation": "^3.0.6",
-    "@envelop/core": "^3.0.6",
-    "@graphql-yoga/nestjs": "0.3.1",
-    "@nestjs/common": "^9.3.9",
-    "@nestjs/core": "^9.3.9",
-    "@nestjs/graphql": "^10.2.0",
-    "@nestjs/platform-express": "^9.3.12",
-    "graphql": "^16.6.0",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
-  },
   "devDependencies": {
     "@apollo/federation-subgraph-compatibility": "^1.2.1",
+    "@graphql-yoga/nestjs-federation": "0.0.0",
+    "@nestjs/common": "^9.3.9",
     "@nestjs/cli": "^9.2.0",
+    "@nestjs/core": "^9.3.9",
+    "@nestjs/graphql": "^10.2.0",
+    "graphql": "^16.6.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
     "rimraf": "^4.1.2",
     "typescript": "^4.9.5"
   }
