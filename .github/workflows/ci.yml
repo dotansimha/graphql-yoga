@@ -290,7 +290,7 @@ jobs:
         run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Run Tests
         working-directory: examples/nestjs-apollo-federation-compatibility
-        run: npm i --force && npm test
+        run: pnpm --filter=example-nestjs-apollo-federation-compatibility test
         env:
           APOLLO_ELV2_LICENSE: accept
       - name: Report
