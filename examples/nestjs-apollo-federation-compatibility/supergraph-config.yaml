@@ -1,0 +1,14 @@
+federation_version: =2.3.2
+subgraphs:
+  inventory:
+    routing_url: http://inventory:4003
+    schema:
+      file: /Users/enisdenjo/Develop/src/github.com/dotansimha/graphql-yoga/node_modules/.pnpm/@apollo+federation-subgraph-compatibility-tests@1.2.1_zofgjzmca2gwtey4x4go3tg4j4/node_modules/@apollo/federation-subgraph-compatibility-tests/dist/subgraphs/inventory/inventory.graphql
+  users:
+    routing_url: http://users:4002
+    schema:
+      file: /Users/enisdenjo/Develop/src/github.com/dotansimha/graphql-yoga/node_modules/.pnpm/@apollo+federation-subgraph-compatibility-tests@1.2.1_zofgjzmca2gwtey4x4go3tg4j4/node_modules/@apollo/federation-subgraph-compatibility-tests/dist/subgraphs/users/users.graphql
+  products:
+    routing_url: http://products:4001/graphql
+    schema:
+      file: ./schema.graphql

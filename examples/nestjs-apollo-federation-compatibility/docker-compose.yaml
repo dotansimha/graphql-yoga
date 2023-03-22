@@ -1,8 +1,12 @@
 services:
   products:
-    build: .
+    image: 'node:19'
+    user: 'node'
+    working_dir: /web
     environment:
       - NODE_ENV=production
-    command: ['node', 'dist/main.js']
+    volumes:
+      - ./dist:/web
+    command: 'node index.js'
     ports:
       - 4001:4001
