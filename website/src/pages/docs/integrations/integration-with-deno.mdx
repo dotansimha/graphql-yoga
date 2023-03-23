@@ -38,7 +38,10 @@ const yoga = createYoga({
         hello: () => 'Hello Deno!'
       }
     }
-  })
+  }),
+  fetchAPI: {
+    Response
+  }
 })
 
 serve(yoga, {
