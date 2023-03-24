@@ -3,6 +3,7 @@ const singletons = [
   '@nestjs/core',
   '@nestjs/common',
   '@nestjs/graphql',
+  '@apollo/subgraph',
   '@apollo/federation-subgraph-compatibility',
 ]
 
