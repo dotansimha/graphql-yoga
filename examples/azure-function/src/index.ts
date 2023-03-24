@@ -35,10 +35,7 @@ const httpTrigger: AzureFunction = async function (
     headers: req.headers,
   })
 
-  const headersObj = {}
-  response.headers.forEach((value, key) => {
-    headersObj[key] = value
-  })
+  const headersObj = Object.fromEntries(response.headers.entries())
 
   context.log('GraphQL Yoga response headers:', headersObj)
 

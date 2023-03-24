@@ -45,11 +45,7 @@ export async function handler(
     },
   )
 
-  const responseHeaders: Record<string, string> = {}
-
-  response.headers.forEach((value, name) => {
-    responseHeaders[name] = value
-  })
+  const responseHeaders = Object.fromEntries(response.headers.entries())
 
   return {
     statusCode: response.status,

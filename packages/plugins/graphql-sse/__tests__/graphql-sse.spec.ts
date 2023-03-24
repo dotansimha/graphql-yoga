@@ -238,10 +238,7 @@ describe('graphql-sse', () => {
       },
     })
 
-    const headersObj = {}
-    res.headers.forEach((value, key) => {
-      headersObj[key] = value
-    })
+    const headersObj = Object.fromEntries(res.headers.entries())
     expect(headersObj).toMatchInlineSnapshot(`
       {
         "access-control-allow-credentials": "true",

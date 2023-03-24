@@ -28,11 +28,7 @@ export async function myMiddleware(req: MyRandomRequest, ctx: MyRandomCtx) {
   // response is a WHATWG `Response` object
 
   // Create a headers object for your middleware response
-  const headersObj: Record<string, string> = {}
-
-  response.headers.forEach((value, key) => {
-    headersObj[key] = value
-  })
+  const headersObj = Object.fromEntries(response.headers.entries())
 
   // Let's say your environment needs to return something like the below;
   return {

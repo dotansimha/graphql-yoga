@@ -24,7 +24,7 @@ export function assertInvalidParams(
     })
   }
   for (const paramKey in params) {
-    if (params[paramKey] == null) {
+    if ((params as Record<string, unknown>)[paramKey] == null) {
       continue
     }
     if (!expectedParameters.has(paramKey)) {

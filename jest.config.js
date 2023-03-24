@@ -42,15 +42,6 @@ if (process.env.LEAKS_TEST === 'true') {
 
 testMatch.push('!**/dist/**', '!**/.bob/**')
 
-const bobPath = require
-  .resolve('bob-the-bundler/package.json')
-  .replace('package.json', '')
-const jestResolverPath = join(bobPath, 'jest-resolver.js')
-
-const jestResolverContent = fs.readFileSync(jestResolverPath, 'utf-8')
-
-fs.writeFileSync(join(bobPath, 'jest-resolver.cjs'), jestResolverContent)
-
 module.exports = {
   testEnvironment: 'node',
   rootDir: ROOT_DIR,
@@ -64,5 +55,5 @@ module.exports = {
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
   testTimeout,
-  resolver: 'bob-the-bundler/jest-resolver.cjs',
+  resolver: 'bob-the-bundler/jest-resolver',
 }

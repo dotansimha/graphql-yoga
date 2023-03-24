@@ -24,14 +24,6 @@ export interface PrometheusTracingPluginConfig
   endpoint?: string
 }
 
-function headersToObj(headers: Headers) {
-  const obj: Record<string, string> = {}
-  headers.forEach((value, key) => {
-    obj[key] = value
-  })
-  return obj
-}
-
 export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics'
   const registry = options.registry || defaultRegistry
@@ -76,12 +68,12 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
               }
               if (options.httpRequestHeaders) {
                 labels.requestHeaders = JSON.stringify(
-                  headersToObj(request.headers),
+                  Object.fromEntries(request.headers.entries()),
                 )
               }
               if (options.httpResponseHeaders) {
                 labels.responseHeaders = JSON.stringify(
-                  headersToObj(response.headers),
+                  Object.fromEntries(response.headers.entries()),
                 )
               }
               return labels

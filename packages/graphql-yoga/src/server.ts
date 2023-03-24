@@ -228,8 +228,9 @@ export class YogaServer<
     }
     if (options?.fetchAPI) {
       for (const key in options.fetchAPI) {
-        if (options.fetchAPI[key]) {
-          this.fetchAPI[key] = options.fetchAPI[key]
+        if (options.fetchAPI[key as keyof FetchAPI]) {
+          this.fetchAPI[key as keyof FetchAPI] =
+            options.fetchAPI[key as keyof FetchAPI]
         }
       }
     }

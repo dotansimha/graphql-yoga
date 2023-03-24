@@ -143,8 +143,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const [query, setQuery] = useState(params.query?.toString())
   const explorerPlugin = useExplorerPlugin({
-    query,
+    query: query as string,
     onEdit: setQuery,
+    showAttribution: true,
   })
 
   return (
@@ -171,9 +172,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
                 <YogaLogo />
               </div>
               <span>
-                {props?.title ? (
-                  props.title
-                ) : (
+                {props?.title || (
                   <>
                     Yoga Graph
                     <em>i</em>
