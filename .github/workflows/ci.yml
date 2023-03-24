@@ -285,7 +285,6 @@ jobs:
       - name: Bundle Apollo Federation Subgraph Example
         run: pnpm --filter=example-nestjs-apollo-federation-compatibility build
       - name: Run Tests
-        working-directory: examples/nestjs-apollo-federation-compatibility
         run: pnpm --filter=example-nestjs-apollo-federation-compatibility test
         env:
           APOLLO_ELV2_LICENSE: accept
