@@ -2,7 +2,7 @@
   <br />
 
   <h3>
-    <a href="https://the-guild.dev/graphql/yoga-server">GraphQL Yoga</a> plugin for <a href="https://nestjs.com">NestJS</a>
+    <a href="https://the-guild.dev/graphql/yoga-server">GraphQL Yoga</a> plugin with Apollo Federation for <a href="https://nestjs.com">NestJS</a>
   </h3>
 
   <h6>Fully-featured GraphQL server as a plugin for the progressive Node.js framework.</h6>
@@ -19,20 +19,24 @@ Check out <a href="https://the-guild.dev/graphql/yoga-server/docs/integrations/i
 ### Install
 
 ```shell
-npm i @nestjs/graphql graphql-yoga graphql @graphql-yoga/nestjs
+npm i @nestjs/graphql graphql-yoga graphql @graphql-yoga/nestjs-federation
 ```
 
 ### Create application module
 
 ```typescript
-import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs'
+import {
+  YogaFederationDriver,
+  YogaFederationDriverConfig
+} from '@graphql-yoga/nestjs-federation'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<YogaDriverConfig>({
-      driver: YogaDriver
+    GraphQLModule.forRoot<YogaFederationDriverConfig>({
+      driver: YogaFederationDriver,
+      typePaths: ['**/*.graphql']
     })
   ]
 })
@@ -41,11 +45,7 @@ export class AppModule {}
 
 ### Develop GraphQL
 
-This is just a HTTP transport driver; meaning, everything else should work as [showcased in NestJS documentation](https://docs.nestjs.com/graphql/resolvers).
-
-### Apollo Federation
-
-Separately, we offer a [`@graphql-yoga/nestjs-federation` driver](/packages/nestjs-federation) which allows building Apollo Federation Gateways and Services. Check it out!
+This is just a federation and gateway driver; meaning, everything else should work as [showcased in NestJS federation documentation](https://docs.nestjs.com/graphql/federation).
 
 ## Contributing
 
