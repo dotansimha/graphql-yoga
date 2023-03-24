@@ -25,19 +25,17 @@ export class YogaFederationDriver<
   }
 
   public async start(options: YogaFederationDriverConfig<Platform>) {
-    const opts = await this.graphqlFederationFactory.mergeWithSchema(options)
-
     if (options.definitions?.path) {
-      if (!opts.schema) {
+      if (!options.schema) {
         throw new Error('Schema is required when providing definitions path')
       }
       await this.graphQlFactory.generateDefinitions(
-        printSubgraphSchema(opts.schema),
+        printSubgraphSchema(options.schema),
         options,
       )
     }
 
-    await super.start(opts)
+    await super.start(options)
 
     if (options.subscriptions) {
       // See more: https://github.com/apollographql/apollo-server/issues/2776
