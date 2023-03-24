@@ -163,33 +163,29 @@ export class YogaDriver<
   private subscriptionService?: GqlSubscriptionService
 
   public async start(options: YogaDriverConfig<Platform>) {
-    const opts = await this.graphQlFactory.mergeWithSchema<
-      YogaDriverConfig<Platform>
-    >(options)
-
-    if (opts.definitions?.path) {
-      if (!opts.schema) {
+    if (options.definitions?.path) {
+      if (!options.schema) {
         throw new Error('Schema is required when generating definitions')
       }
       await this.graphQlFactory.generateDefinitions(
-        printSchema(opts.schema),
-        opts,
+        printSchema(options.schema),
+        options,
       )
     }
 
-    await super.start(opts)
+    await super.start(options)
 
-    if (opts.subscriptions) {
-      if (!opts.schema) {
+    if (options.subscriptions) {
+      if (!options.schema) {
         throw new Error('Schema is required when using subscriptions')
       }
 
       const config: SubscriptionConfig =
-        opts.subscriptions === true
+        options.subscriptions === true
           ? {
               'graphql-ws': true,
             }
-          : opts.subscriptions
+          : options.subscriptions
 
       if (config['graphql-ws']) {
         config['graphql-ws'] =
@@ -272,8 +268,8 @@ export class YogaDriver<
 
       this.subscriptionService = new GqlSubscriptionService(
         {
-          schema: opts.schema,
-          path: opts.path,
+          schema: options.schema,
+          path: options.path,
           execute: (...args) => {
             const contextValue =
               args[0].contextValue ||
