@@ -9,6 +9,7 @@ import {
   YogaDriverConfig,
   YogaDriverPlatform,
 } from '@graphql-yoga/nestjs'
+import { GraphQLSchema } from 'graphql'
 
 export type YogaFederationDriverConfig<
   Platform extends YogaDriverPlatform = 'express',
@@ -22,6 +23,12 @@ export class YogaFederationDriver<
     private readonly graphqlFederationFactory: GraphQLFederationFactory,
   ) {
     super()
+  }
+
+  async generateSchema(
+    options: YogaFederationDriverConfig<Platform>,
+  ): Promise<GraphQLSchema> {
+    return await this.graphqlFederationFactory.generateSchema(options)
   }
 
   public async start(options: YogaFederationDriverConfig<Platform>) {
@@ -73,6 +80,12 @@ export interface YogaGatewayDriverConfig<
 export class YogaGatewayDriver<
   Platform extends YogaDriverPlatform = 'express',
 > extends AbstractYogaDriver<Platform> {
+  public async generateSchema(
+    _options: YogaGatewayDriverConfig<Platform>,
+  ): Promise<GraphQLSchema> {
+    return new GraphQLSchema({})
+  }
+
   public async start(options: YogaGatewayDriverConfig<Platform>) {
     const { server: serverOpts = {}, gateway: gatewayOpts = {} } = options
     const gateway: ApolloGateway = new ApolloGateway(gatewayOpts)
