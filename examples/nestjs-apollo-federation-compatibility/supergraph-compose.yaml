@@ -1,0 +1,18 @@
+services:
+  router:
+    image: ghcr.io/apollographql/router:v1.11.0
+    volumes:
+      - /Users/enisdenjo/Develop/src/github.com/dotansimha/graphql-yoga/node_modules/.pnpm/@apollo+federation-subgraph-compatibility-tests@1.2.1_35dl3mosxfjzghpl26tn7o3fly/node_modules/@apollo/federation-subgraph-compatibility-tests/router.yaml:/dist/config/router.yaml
+      - ./supergraph.graphql:/dist/config/supergraph.graphql
+    ports:
+      - 4000:4000
+      - 8088:8088
+    command: -c config/router.yaml -s config/supergraph.graphql
+  inventory:
+    build: /Users/enisdenjo/Develop/src/github.com/dotansimha/graphql-yoga/node_modules/.pnpm/@apollo+federation-subgraph-compatibility-tests@1.2.1_35dl3mosxfjzghpl26tn7o3fly/node_modules/@apollo/federation-subgraph-compatibility-tests/dist/subgraphs/inventory
+    ports:
+      - 4003:4003
+  users:
+    build: /Users/enisdenjo/Develop/src/github.com/dotansimha/graphql-yoga/node_modules/.pnpm/@apollo+federation-subgraph-compatibility-tests@1.2.1_35dl3mosxfjzghpl26tn7o3fly/node_modules/@apollo/federation-subgraph-compatibility-tests/dist/subgraphs/users
+    ports:
+      - 4002:4002

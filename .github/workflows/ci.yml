@@ -282,7 +282,7 @@ jobs:
         run: pnpm i
       - name: Build Packages
         run: pnpm build
-      - name: Bundle Apollo Federation Subgraph Example
+      - name: Bundle NestJS Apollo Federation Subgraph Example
         run: pnpm --filter=example-nestjs-apollo-federation-compatibility build
       - name: Run Tests
         run: pnpm --filter=example-nestjs-apollo-federation-compatibility test

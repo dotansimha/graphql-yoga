@@ -1,0 +1,153 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+  @link(url: "https://specs.apollo.dev/tag/v0.3")
+  @link(url: "https://specs.apollo.dev/inaccessible/v0.2", for: SECURITY)
+  @link(url: "https://myspecs.dev/myCustomDirective/v1.0", import: ["@custom"])
+{
+  query: Query
+}
+
+directive @custom on OBJECT
+
+directive @inaccessible on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+directive @tag(name: String!) repeatable on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION | SCHEMA
+
+type CaseStudy
+  @join__type(graph: PRODUCTS)
+{
+  caseNumber: ID!
+  description: String
+}
+
+type DeliveryEstimates
+  @join__type(graph: INVENTORY)
+{
+  estimatedDelivery: String
+  fastestDelivery: String
+}
+
+type DeprecatedProduct
+  @join__type(graph: PRODUCTS, key: "sku package")
+{
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
+}
+
+interface Inventory
+  @join__type(graph: INVENTORY, key: "id")
+  @join__type(graph: PRODUCTS, key: "id", isInterfaceObject: true)
+{
+  id: ID!
+  products: [Product!]! @join__field(graph: INVENTORY)
+  deprecatedProducts: [DeprecatedProduct!]! @join__field(graph: PRODUCTS)
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  INVENTORY @join__graph(name: "inventory", url: "http://inventory:4003")
+  PRODUCTS @join__graph(name: "products", url: "http://products:4001/graphql")
+  USERS @join__graph(name: "users", url: "http://users:4002")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type OpenSourceInventory implements Inventory
+  @join__implements(graph: INVENTORY, interface: "Inventory")
+  @join__type(graph: INVENTORY, key: "id")
+{
+  id: ID!
+  products: [Product!]!
+  deprecatedProducts: [DeprecatedProduct!]! @join__field
+}
+
+type Product
+  @join__type(graph: INVENTORY, key: "id", extension: true)
+  @join__type(graph: PRODUCTS, key: "id")
+  @join__type(graph: PRODUCTS, key: "sku package")
+  @join__type(graph: PRODUCTS, key: "sku variation { id }")
+  @custom
+{
+  id: ID!
+  dimensions: ProductDimension @join__field(graph: INVENTORY, external: true) @join__field(graph: PRODUCTS)
+  delivery(zip: String): DeliveryEstimates @join__field(graph: INVENTORY, requires: "dimensions { size weight }")
+  sku: String @join__field(graph: PRODUCTS)
+  package: String @join__field(graph: PRODUCTS)
+  variation: ProductVariation @join__field(graph: PRODUCTS)
+  createdBy: User @join__field(graph: PRODUCTS, provides: "totalProductsCreated")
+  notes: String @join__field(graph: PRODUCTS) @tag(name: "internal")
+  research: [ProductResearch!]! @join__field(graph: PRODUCTS)
+}
+
+type ProductDimension
+  @join__type(graph: INVENTORY)
+  @join__type(graph: PRODUCTS)
+{
+  size: String
+  weight: Float
+  unit: String @inaccessible @join__field(graph: PRODUCTS)
+}
+
+type ProductResearch
+  @join__type(graph: PRODUCTS, key: "study { caseNumber }")
+{
+  study: CaseStudy!
+  outcome: String
+}
+
+type ProductVariation
+  @join__type(graph: PRODUCTS)
+{
+  id: ID!
+}
+
+type Query
+  @join__type(graph: INVENTORY)
+  @join__type(graph: PRODUCTS)
+  @join__type(graph: USERS)
+{
+  inventory(id: ID!): Inventory @join__field(graph: INVENTORY)
+  product(id: ID!): Product @join__field(graph: PRODUCTS)
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @join__field(graph: PRODUCTS) @deprecated(reason: "Use product query instead")
+}
+
+type User
+  @join__type(graph: PRODUCTS, key: "email", extension: true)
+  @join__type(graph: USERS, key: "email")
+{
+  averageProductsCreatedPerYear: Int @join__field(graph: PRODUCTS, requires: "totalProductsCreated yearsOfEmployment")
+  email: ID!
+  name: String @join__field(graph: PRODUCTS, override: "users")
+  totalProductsCreated: Int @join__field(graph: PRODUCTS, external: true) @join__field(graph: USERS)
+  yearsOfEmployment: Int! @join__field(graph: PRODUCTS, external: true) @join__field(graph: USERS)
+}
