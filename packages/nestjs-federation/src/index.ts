@@ -9,6 +9,7 @@ import {
   YogaDriverConfig,
   YogaDriverPlatform,
 } from '@graphql-yoga/nestjs'
+import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace'
 import { GraphQLSchema } from 'graphql'
 
 export type YogaFederationDriverConfig<
@@ -42,7 +43,10 @@ export class YogaFederationDriver<
       )
     }
 
-    await super.start(options)
+    await super.start({
+      ...options,
+      plugins: [...(options?.plugins || []), useApolloInlineTrace()],
+    })
 
     if (options.subscriptions) {
       // See more: https://github.com/apollographql/apollo-server/issues/2776
