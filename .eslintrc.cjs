@@ -20,7 +20,7 @@ module.exports = {
       rules: { 'import/no-default-export': 'off' },
     },
     {
-      files: ['examples/**'],
+      files: ['examples/**/*'],
       rules: {
         'import/extensions': 'off',
         'unicorn/filename-case': 'off',
