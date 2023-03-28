@@ -1,0 +1,40 @@
+{
+  "name": "example-nestjs-apollo-federation-compatibility",
+  "version": "1.0.0",
+  "description": "Apollo Federation implemented with GraphQL Yoga running as a Nest.js driver.",
+  "private": true,
+  "scripts": {
+    "build": "nest build && node scripts/bundle.js",
+    "prebuild": "rimraf dist",
+    "start": "nest start",
+    "test": "fedtest docker --compose ./docker-compose.yaml --schema ./schema.graphql --path /graphql --port 4001 --debug --format markdown"
+  },
+  "devDependencies": {
+    "@apollo/federation-subgraph-compatibility": "1.2.1",
+    "@apollo/rover": "^0.13.0",
+    "@graphql-yoga/nestjs-federation": "0.0.0",
+    "@grpc/proto-loader": "^0.7.5",
+    "@nestjs/cli": "^9.3.0",
+    "@nestjs/common": "^9.3.12",
+    "@nestjs/core": "^9.3.12",
+    "@nestjs/graphql": "^11.0.4",
+    "@nestjs/microservices": "^9.3.12",
+    "@nestjs/platform-socket.io": "^9.3.12",
+    "@nestjs/websockets": "^9.3.12",
+    "amqp-connection-manager": "^4.1.11",
+    "amqplib": "^0.10.3",
+    "cache-manager": "^5.2.0",
+    "class-transformer": "0.3.1",
+    "class-validator": "^0.14.0",
+    "esbuild": "0.17.12",
+    "graphql": "^16.6.0",
+    "kafkajs": "^2.2.4",
+    "mqtt": "^4.3.7",
+    "nats": "^2.13.1",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^4.1.2",
+    "rxjs": "^7.8.0",
+    "ts-morph": "^17.0.1",
+    "typescript": "^4.9.5"
+  }
+}
