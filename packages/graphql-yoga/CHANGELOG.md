@@ -1,5 +1,19 @@
 # graphql-yoga
 
+## 3.8.0
+
+### Minor Changes
+
+- [#2445](https://github.com/dotansimha/graphql-yoga/pull/2445) [`09d23a4b`](https://github.com/dotansimha/graphql-yoga/commit/09d23a4b3b22f520c41f3cebbe3b11ffbda39557) Thanks [@ardatan](https://github.com/ardatan)! - GraphQL SSE Distinct Connections mode support with `legacySse = false` flag
+
+### Patch Changes
+
+- [#2602](https://github.com/dotansimha/graphql-yoga/pull/2602) [`99b72696`](https://github.com/dotansimha/graphql-yoga/commit/99b726961b45b9c22d6383e2fe7212d21d324553) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`lru-cache@^7.14.1` ↗︎](https://www.npmjs.com/package/lru-cache/v/7.14.1) (from `^8.0.0`, in `dependencies`)
+
+- [#2602](https://github.com/dotansimha/graphql-yoga/pull/2602) [`99b72696`](https://github.com/dotansimha/graphql-yoga/commit/99b726961b45b9c22d6383e2fe7212d21d324553) Thanks [@n1ru4l](https://github.com/n1ru4l)! - revert `lru-cache` version to `7.x.x`, as `8.x.x` broke Node.js 14 support.
+
 ## 3.7.3
 
 ### Patch Changes
