@@ -1,5 +1,31 @@
 # @graphql-yoga/nestjs
 
+## 1.0.0
+
+### Major Changes
+
+- [#2525](https://github.com/dotansimha/graphql-yoga/pull/2525) [`41f4a545`](https://github.com/dotansimha/graphql-yoga/commit/41f4a545637e3ab16cf8119c4950ea7fe5ab3eb6) Thanks [@enisdenjo](https://github.com/enisdenjo)! - GraphQL Yoga driver for NestJS GraphQL.
+
+  ### BREAKING CHANGES
+
+  - No more `subscriptionWithFilter` in YogaBaseDriver.
+  - `YogaBaseDriver.yogaInstance` has been renamed to `YogaBaseDriver.yoga`
+  - `YogaBaseDriver` has been renamed to `AbstractYogaDriver`
+  - Drop `@envelop/apollo-server-errors`, if you want to use it - supply it to the plugins yourself
+  - `graphql` is now a peer dependency
+  - `graphql-yoga` is now a peer dependency
+  - `installSubscriptionHandlers` driver option has been dropped, please use the `subscriptions`
+    option
+  - Apollo Federation v2 support
+  - Apollo Federation driver has been moved to a separate package `@graphql-yoga/nestjs-federation`
+  - Dropped support for `@nestjs/graphql@v10`, now at least v11 is required (https://github.com/nestjs/graphql/pull/2435)
+  - Minimum Node.js engine is v14
+
+### Patch Changes
+
+- Updated dependencies [[`99b72696`](https://github.com/dotansimha/graphql-yoga/commit/99b726961b45b9c22d6383e2fe7212d21d324553), [`99b72696`](https://github.com/dotansimha/graphql-yoga/commit/99b726961b45b9c22d6383e2fe7212d21d324553), [`09d23a4b`](https://github.com/dotansimha/graphql-yoga/commit/09d23a4b3b22f520c41f3cebbe3b11ffbda39557)]:
+  - graphql-yoga@3.8.0
+
 ## 0.3.1
 
 ### Patch Changes
