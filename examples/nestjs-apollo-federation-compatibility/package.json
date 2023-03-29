@@ -6,12 +6,9 @@
   "scripts": {
     "build": "nest build && node scripts/bundle.js",
     "prebuild": "rimraf dist",
-    "start": "nest start",
-    "test": "fedtest docker --compose ./docker-compose.yaml --schema ./schema.graphql --path /graphql --port 4001 --debug --format markdown"
+    "start": "nest start"
   },
   "devDependencies": {
-    "@apollo/federation-subgraph-compatibility": "1.2.1",
-    "@apollo/rover": "^0.13.0",
     "@graphql-yoga/nestjs-federation": "1.0.0",
     "@grpc/proto-loader": "^0.7.5",
     "@nestjs/cli": "^9.3.0",

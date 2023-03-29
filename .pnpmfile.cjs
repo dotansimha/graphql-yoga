@@ -1,11 +1,5 @@
 // WARNING: please make sure the versions are the same across all workspaces
-const singletons = [
-  '@nestjs/core',
-  '@nestjs/common',
-  '@nestjs/graphql',
-  '@apollo/subgraph',
-  '@apollo/federation-subgraph-compatibility',
-]
+const singletons = ['@nestjs/core', '@nestjs/common', '@nestjs/graphql']
 
 function afterAllResolved(lockfile, context) {
   context.log('Enforcing single version for: ' + singletons.join(', '))

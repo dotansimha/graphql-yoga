@@ -8,8 +8,7 @@
     "prebuild": "graphql-codegen",
     "build": "node scripts/bundle.js",
     "start": "node ./dist/index.js",
-    "check": "tsc --pretty --noEmit",
-    "test": "fedtest docker --compose ./docker-compose.yaml --schema ./schema.graphql --path /graphql --port 4001 --debug --format markdown"
+    "check": "tsc --pretty --noEmit"
   },
   "author": "Charly POLY",
   "license": "ISC",
@@ -21,7 +20,6 @@
     "graphql-yoga": "3.8.0"
   },
   "devDependencies": {
-    "@apollo/federation-subgraph-compatibility": "1.2.1",
     "@graphql-codegen/cli": "3.2.2",
     "@graphql-codegen/typescript": "3.0.2",
     "@graphql-codegen/typescript-resolvers": "3.1.1",
