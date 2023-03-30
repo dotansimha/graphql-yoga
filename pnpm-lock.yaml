@@ -1630,8 +1630,8 @@ importers:
         specifier: ^4.13.0
         version: 4.15.0
       glob:
-        specifier: ^8.1.0
-        version: 8.1.0
+        specifier: ^9.0.0
+        version: 9.3.1
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -2902,6 +2902,7 @@ packages:
       '@aws-cdk/core': 1.198.0
       '@aws-cdk/custom-resources': 1.198.0(@aws-cdk/aws-ec2@1.198.0)(@aws-cdk/aws-iam@1.198.0)(@aws-cdk/aws-lambda@1.198.0)(@aws-cdk/aws-logs@1.198.0)(@aws-cdk/aws-s3@1.198.0)(@aws-cdk/core@1.198.0)(@aws-cdk/cx-api@1.198.0)(constructs@3.4.127)
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -3275,6 +3276,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.198.0
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -23461,7 +23463,7 @@ packages:
       https-proxy-agent: 5.0.1
       is-lambda: 1.0.1
       lru-cache: 7.18.3
-      minipass: 4.0.3
+      minipass: 4.2.5
       minipass-fetch: 3.0.1
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
@@ -24486,10 +24488,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       yallist: 4.0.0
-
-  /minipass@4.0.3:
-    resolution: {integrity: sha512-OW2r4sQ0sI+z5ckEt5c1Tri4xTgZwYDxpE54eqWlQloQRoWtXjqt9udJ5Z4dSv7wK+nfFI7FRXyCpBSft+gpFw==}
-    engines: {node: '>=8'}
 
   /minipass@4.2.5:
     resolution: {integrity: sha512-+yQl7SX3bIT83Lhb4BVorMAHVuqsskxRdlmO9kTpyukp8vsm2Sn/fUOV9xlnG8/a5JsypJzap21lz/y3FBMJ8Q==}
