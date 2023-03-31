@@ -151,8 +151,8 @@ importers:
         specifier: 0.40.1
         version: 0.40.1(@pulumi/aws@5.34.0)(@pulumi/pulumi@3.60.1)
       '@pulumi/azure-native':
-        specifier: 1.98.1
-        version: 1.98.1
+        specifier: 1.99.1
+        version: 1.99.1
       '@pulumi/cloudflare':
         specifier: 4.16.0
         version: 4.16.0
@@ -1369,7 +1369,7 @@ importers:
     dependencies:
       '@graphql-tools/executor-apollo-link':
         specifier: ^0.0.8
-        version: 0.0.8(@apollo/client@3.7.10)
+        version: 0.0.8(@apollo/client@3.7.11)
       '@graphql-tools/executor-http':
         specifier: ^0.1.4
         version: 0.1.4
@@ -1378,8 +1378,8 @@ importers:
         version: 2.4.0
     devDependencies:
       '@apollo/client':
-        specifier: 3.7.10
-        version: 3.7.10
+        specifier: 3.7.11
+        version: 3.7.11
       graphql-yoga:
         specifier: 3.8.0
         version: link:../../graphql-yoga
@@ -2264,8 +2264,8 @@ packages:
     dependencies:
       graphql: 16.6.0
 
-  /@apollo/client@3.7.10:
-    resolution: {integrity: sha512-/k1MfrqPKYiPNdHcOzdxg9cEx96vhAGxAcSorzfBvV29XtFQcYW2cPNQOTjK/fpSMtqVo8UNmu5vwQAWD1gfCg==}
+  /@apollo/client@3.7.11:
+    resolution: {integrity: sha512-uLg2KtxoAyj9ta7abLxXx8cGRM7HypCkXVmxtL7Ko//N5g37aoJ3ca7VYoFCMUFO1BXBulj+yKVl0U3+ILj5AQ==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
@@ -2288,7 +2288,7 @@ packages:
       '@wry/trie': 0.3.2
       graphql-tag: 2.12.6
       hoist-non-react-statics: 3.3.2
-      optimism: 0.16.1
+      optimism: 0.16.2
       prop-types: 15.8.1
       response-iterator: 0.2.6
       symbol-observable: 4.0.0
@@ -2902,6 +2902,7 @@ packages:
       '@aws-cdk/core': 1.198.1
       '@aws-cdk/custom-resources': 1.198.1(@aws-cdk/aws-ec2@1.198.1)(@aws-cdk/aws-iam@1.198.1)(@aws-cdk/aws-lambda@1.198.1)(@aws-cdk/aws-logs@1.198.1)(@aws-cdk/aws-s3@1.198.1)(@aws-cdk/core@1.198.1)(@aws-cdk/cx-api@1.198.1)(constructs@3.4.127)
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -3207,6 +3208,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema@1.198.1:
     resolution: {integrity: sha512-DtX7Zw5v9nFQOgkx2eQXmdVRMy2qrUoL1XLy7GxFesUTzdMIgvE0Pc7LJJ3WQK5eVlBiTmV58qSnyPV6nKN3vA==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - jsonschema
@@ -3231,7 +3235,11 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 1.198.1
       '@aws-cdk/cx-api': 1.198.1
       '@aws-cdk/region-info': 1.198.1
+      '@balena/dockerignore': 1.0.2
       constructs: 3.4.127
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      minimatch: 3.1.2
     dev: false
     bundledDependencies:
       - fs-extra
@@ -3268,6 +3276,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.198.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -4980,6 +4989,9 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
+
+  /@balena/dockerignore@1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -6770,13 +6782,13 @@ packages:
       tslib: 2.5.0
       value-or-promise: 1.0.12
 
-  /@graphql-tools/executor-apollo-link@0.0.8(@apollo/client@3.7.10):
+  /@graphql-tools/executor-apollo-link@0.0.8(@apollo/client@3.7.11):
     resolution: {integrity: sha512-5CN16ocmrywNRSdytywFZvtA8qce80uQPMzLfI7BQH+lWY80wfGoPik0F+iBzL/QxMYtPAOd5ZJLsr8pg/HuIA==}
     peerDependencies:
       '@apollo/client': ^3.5.9
       graphql: ^15.2.0 || ^16.0.0
     dependencies:
-      '@apollo/client': 3.7.10
+      '@apollo/client': 3.7.11
       '@graphql-tools/utils': 9.2.1
       tslib: 2.5.0
     dev: false
@@ -10785,8 +10797,8 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/azure-native@1.98.1:
-    resolution: {integrity: sha512-5e1JNLnzrPP5lCqHuZLg31GlMbnNFW5ac9QEqirvs3BH3i1vk5s/7Bs4naRAP/1QqLMxYZMH++BGSomoowR7mg==}
+  /@pulumi/azure-native@1.99.1:
+    resolution: {integrity: sha512-GH3eDZh4evKgc6/0D4s8EekkWhJCUJTwrLiv+A8uYNMqhEu32GFC+3pgkdvdEvTh8Eddu2815Wk0Usyw20g/uA==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.60.1
@@ -13079,12 +13091,6 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /@wry/context@0.6.1:
-    resolution: {integrity: sha512-LOmVnY1iTU2D8tv4Xf6MVMZZ+juIJ87Kt/plMijjN20NMAXGmH4u8bS1t0uT74cZ5gwpocYueV58YwyI8y+GKw==}
-    engines: {node: '>=8'}
-    dependencies:
-      tslib: 2.5.0
-
   /@wry/context@0.7.0:
     resolution: {integrity: sha512-LcDAiYWRtwAoSOArfk7cuYvFXytxfVrdX7yxoUmK7pPITLk5jYh2F8knCwS7LjgYL8u1eidPlKKV6Ikqq0ODqQ==}
     engines: {node: '>=8'}
@@ -13806,7 +13812,6 @@ packages:
   /at-least-node@1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-    dev: true
 
   /atob@2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
@@ -13860,6 +13865,16 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.102
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.82
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      table: 6.8.1
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -14769,6 +14784,11 @@ packages:
     dependencies:
       ansicolors: 0.3.2
       redeyed: 2.1.1
+    dev: true
+
+  /case@1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /caseless@0.12.0:
@@ -19430,7 +19450,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-jetpack@5.1.0:
     resolution: {integrity: sha512-Xn4fDhLydXkuzepZVsr02jakLlmoARPy+YWIclo4kh0GyNGUHnTqeH/w/qIsVn50dFxtp8otPL2t/HcPJBbxUA==}
@@ -20206,7 +20225,7 @@ packages:
     peerDependencies:
       graphql: '>=15'
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1(graphql@16.6.0)
+      '@graphql-typed-document-node/core': 3.1.2(graphql@16.6.0)
       fast-json-stringify: 1.21.0
       generate-function: 2.3.1
       graphql: 16.6.0
@@ -22541,7 +22560,6 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonify@0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
@@ -22551,6 +22569,9 @@ packages:
     resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /jsonschema@1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -25780,10 +25801,10 @@ packages:
       oidc-token-hash: 5.0.1
     dev: false
 
-  /optimism@0.16.1:
-    resolution: {integrity: sha512-64i+Uw3otrndfq5kaoGNoY7pvOhSsjFEN4bdEFh80MWVk/dbgJfMv7VFDeCT8LxNAlEVhQmdVEbfE7X2nWNIIg==}
+  /optimism@0.16.2:
+    resolution: {integrity: sha512-zWNbgWj+3vLEjZNIh/okkY2EUfX+vB9TJopzIZwT1xxaMqC5hRLLraePod4c5n4He08xuXNH+zhKFFCu390wiQ==}
     dependencies:
-      '@wry/context': 0.6.1
+      '@wry/context': 0.7.0
       '@wry/trie': 0.3.2
 
   /optionator@0.8.3:
@@ -31223,7 +31244,6 @@ packages:
   /universalify@2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /unix-dgram@2.0.6:
     resolution: {integrity: sha512-AURroAsb73BZ6CdAyMrTk/hYKNj3DuYYEuOaB8bYMOHGKupRNScw90Q5C71tWJc3uE7dIeXRyuwN0xLLq3vDTg==}
