@@ -31,7 +31,7 @@ type VercelDeploymentInputs = {
   [K in keyof VercelProviderInputs]: pulumi.Input<VercelProviderInputs[K]>
 }
 
-class VercelProvider implements pulumi.dynamic.ResourceProvider {
+export class VercelProvider implements pulumi.dynamic.ResourceProvider {
   private baseUrl = 'https://api.vercel.com'
   private authToken = env('VERCEL_AUTH_TOKEN')
 
