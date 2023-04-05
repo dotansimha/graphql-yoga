@@ -8,7 +8,7 @@ import {
   waitForEndpoint,
 } from '../utils'
 import { DeploymentConfiguration } from '../types'
-import { VercelDeployment } from '../vercel'
+import { VercelDeployment } from './vercel'
 
 export const vercelEdgeDeployment: DeploymentConfiguration<{
   functionUrl: string
