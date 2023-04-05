@@ -1,3 +1,15 @@
+import * as pulumi from '@pulumi/pulumi'
+import {
+  assertGraphiQL,
+  assertQuery,
+  env,
+  execPromise,
+  fsPromises,
+  waitForEndpoint,
+} from '../utils'
+import { DeploymentConfiguration } from '../types'
+import { VercelDeployment } from '../vercel'
+
 export const vercelEdgeDeployment: DeploymentConfiguration<{
   functionUrl: string
 }> = {

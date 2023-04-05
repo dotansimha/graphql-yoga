@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "outDir": "dist",
     "target": "es2016",
+    "lib": ["esnext"],
     "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
@@ -9,5 +11,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "include": ["./**/*.ts"]
+  "files": ["index.ts"],
+  "exclude": ["**/node_modules", "**/dist"]
 }
