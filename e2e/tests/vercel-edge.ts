@@ -34,6 +34,7 @@ export const vercelEdgeDeployment: DeploymentConfiguration<{
       name: `yoga-e2e-testing`,
       functions: {
         'api/graphql.js': {
+          runtime: 'edge',
           memory: 256,
           maxDuration: 5,
         },
