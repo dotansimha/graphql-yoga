@@ -49,15 +49,7 @@ describe('graphql-auth example integration', () => {
   })
 
   it('should save file', async () => {
-    const sourceFilePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'website',
-      'public',
-      'logo.png',
-    )
+    const sourceFilePath = path.join(__dirname, 'fixtures', 'image.jpg')
     const sourceMd5 = await md5File(sourceFilePath)
 
     const formData = new FormData()
@@ -77,7 +69,7 @@ describe('graphql-auth example integration', () => {
       new File(
         [await fs.promises.readFile(sourceFilePath)],
         path.basename(sourceFilePath),
-        { type: 'image/png' },
+        { type: 'image/jpg' },
       ),
     )
 
@@ -92,7 +84,7 @@ describe('graphql-auth example integration', () => {
       saveFile: true,
     })
 
-    const targetFilePath = path.join(__dirname, '..', 'logo.png')
+    const targetFilePath = path.join(__dirname, '..', 'image.jpg')
     await fs.promises.stat(targetFilePath)
     const targetMd5 = await md5File(targetFilePath)
     expect(targetMd5).toEqual(sourceMd5)
