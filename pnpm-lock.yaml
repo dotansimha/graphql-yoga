@@ -1392,14 +1392,14 @@ importers:
         version: 0.1.4
       '@graphql-tools/executor-urql-exchange':
         specifier: ^0.0.9
-        version: 0.0.9(@urql/core@3.2.2)(wonka@6.3.1)
+        version: 0.0.9(@urql/core@4.0.2)(wonka@6.3.1)
       tslib:
         specifier: ^2.4.0
         version: 2.4.0
     devDependencies:
       '@urql/core':
-        specifier: 3.2.2
-        version: 3.2.2
+        specifier: 4.0.2
+        version: 4.0.2
       graphql-yoga:
         specifier: 3.8.0
         version: link:../../graphql-yoga
@@ -1906,6 +1906,14 @@ importers:
         version: 5.0.3
 
 packages:
+
+  /@0no-co/graphql.web@1.0.0:
+    resolution: {integrity: sha512-JBq2pWyDchE1vVjj/+c4dzZ8stbpew4RrzpZ3vYdn1WJFGHfYg6YIX1fDdMKtSXJJM9FUlsoDOxemr9WMM2p+A==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    peerDependenciesMeta:
+      graphql:
+        optional: true
 
   /@acuminous/bitsyntax@0.1.2:
     resolution: {integrity: sha512-29lUK80d1muEQqiUsSo+3A0yP6CdspgC95EnKBMi22Xlwt79i/En4Vr67+cXhU+cZjbti3TgGGC5wy1stIywVQ==}
@@ -6953,7 +6961,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-tools/executor-urql-exchange@0.0.9(@urql/core@3.2.2)(wonka@6.3.1):
+  /@graphql-tools/executor-urql-exchange@0.0.9(@urql/core@4.0.2)(wonka@6.3.1):
     resolution: {integrity: sha512-NNtFBPZkFjVcCMhcaSDLgBFvjxvgvIXutsgjcNOrhlPngK+gXq92gg+tlrAXLtKUyCzcPyTM2mN1pyq4FepWAw==}
     peerDependencies:
       '@urql/core': ^3.0.0 || ^4.0.0
@@ -6961,7 +6969,7 @@ packages:
       wonka: ^6.0.0
     dependencies:
       '@graphql-tools/utils': 9.2.1
-      '@urql/core': 3.2.2
+      '@urql/core': 4.0.2
       tslib: 2.5.0
       wonka: 6.3.1
     dev: false
@@ -12777,12 +12785,13 @@ packages:
       eslint-visitor-keys: 3.4.0
     dev: true
 
-  /@urql/core@3.2.2:
-    resolution: {integrity: sha512-i046Cz8cZ4xIzGMTyHZrbdgzcFMcKD7+yhCAH5FwWBRjcKrc+RjEOuR9X5AMuBvr8c6IAaE92xAqa4wmlGfWTQ==}
-    peerDependencies:
-      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  /@urql/core@4.0.2:
+    resolution: {integrity: sha512-GrJhMDqFP0URS47h6tMSHN/hmeTB1BNWnlXkWTxZo+b2ZB1+E9rgsuG2VTfaErXtZySGLwyCsDHtT+kZLN2cMA==}
     dependencies:
+      '@0no-co/graphql.web': 1.0.0
       wonka: 6.3.1
+    transitivePeerDependencies:
+      - graphql
 
   /@vercel/ncc@0.36.1:
     resolution: {integrity: sha512-S4cL7Taa9yb5qbv+6wLgiKVZ03Qfkc4jGRuiUQMQ8HGBD5pcNRnHeYM33zBvJE4/zJGjJJ8GScB+WmTsn9mORw==}
@@ -13218,6 +13227,7 @@ packages:
   /acorn@8.8.0:
     resolution: {integrity: sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w==}
     engines: {node: '>=0.4.0'}
+    hasBin: true
 
   /agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -14443,6 +14453,7 @@ packages:
   /browserslist@4.21.4:
     resolution: {integrity: sha512-CBHJJdDmgjl3daYjN5Cp5kbTf1mUhZoS+beLklHIvkOWscs83YAhLlF3Wsh/lciQYAcbBJgTOD44VtG31ZM4Hw==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
+    hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001421
       electron-to-chromium: 1.4.284
@@ -30084,6 +30095,7 @@ packages:
   /terser@5.15.1:
     resolution: {integrity: sha512-K1faMUvpm/FBxjBXud0LWVAGxmvoPbZbfTCYbSgaaYQaIXI3/TdI7a7ZGA73Zrou6Q8Zmz3oeUTsp/dj+ag2Xw==}
     engines: {node: '>=10'}
+    hasBin: true
     dependencies:
       '@jridgewell/source-map': 0.3.2
       acorn: 8.8.0

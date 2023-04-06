@@ -5,7 +5,7 @@ import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
 import { YogaLink } from '@graphql-yoga/apollo-link'
 import { createSchema, createYoga } from 'graphql-yoga'
 
-describe.skip('Yoga Apollo Link', () => {
+describe('Yoga Apollo Link', () => {
   const endpoint = '/graphql'
   const hostname = '127.0.0.1'
   const yoga = createYoga({
@@ -109,7 +109,7 @@ describe.skip('Yoga Apollo Link', () => {
       expect(new Date(value).getFullYear()).toBe(now.getFullYear())
     }
   })
-  it('should handle file uploads correctly', async () => {
+  it.skip('should handle file uploads correctly', async () => {
     const result = await client.mutate({
       mutation: parse(/* GraphQL */ `
         mutation readFile($file: File!) {

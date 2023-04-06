@@ -6,7 +6,7 @@ import { createSchema, createYoga } from 'graphql-yoga'
 import { pipe, toObservable } from 'wonka'
 import { ExecutionResult } from 'graphql'
 
-describe.skip('URQL Yoga Exchange', () => {
+describe('URQL Yoga Exchange', () => {
   const endpoint = '/graphql'
   const hostname = '127.0.0.1'
   const yoga = createYoga({
@@ -126,7 +126,7 @@ describe.skip('URQL Yoga Exchange', () => {
       expect(new Date(value!).getFullYear()).toBe(now.getFullYear())
     }
   })
-  it('should handle file uploads correctly', async () => {
+  it.skip('should handle file uploads correctly', async () => {
     const query = /* GraphQL */ `
       mutation readFile($file: File!) {
         readFile(file: $file)
