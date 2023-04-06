@@ -7,6 +7,7 @@ import { dockerDeployment } from './tests/docker'
 import { DeploymentConfiguration } from './types'
 import { env, getCommitId } from './utils'
 import { vercelDeployment } from './tests/vercel'
+import { vercelEdgeDeployment } from './tests/vercel-edge'
 
 const AVAILABLE_TEST_PLANS = {
   'cf-worker': cloudFlareDeployment,
@@ -14,6 +15,7 @@ const AVAILABLE_TEST_PLANS = {
   'azure-function': azureFunctionDeployment,
   'aws-lambda': awsLambdaDeployment,
   'vercel-function': vercelDeployment,
+  'vercel-edge': vercelEdgeDeployment,
   'docker-node-17': dockerDeployment('node:17.8.0-alpine3.14'),
 }
 

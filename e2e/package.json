@@ -11,11 +11,12 @@
     "@pulumi/aws": "5.34.0",
     "@pulumi/docker": "4.1.2",
     "@types/node": "18.15.11",
+    "execa": "^5.1.0",
     "typescript": "5.0.3",
     "ts-node": "10.9.1"
   },
   "scripts": {
     "start": "ts-node --transpile-only index.ts",
-    "check": "exit 0"
+    "check": "tsc --noEmit --pretty"
   }
 }

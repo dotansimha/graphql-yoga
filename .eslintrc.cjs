@@ -43,12 +43,6 @@ module.exports = {
       },
     },
     {
-      files: ['e2e/**'],
-      rules: {
-        'no-console': 'off',
-      },
-    },
-    {
       files: ['packages/graphiql/**', 'packages/render-graphiql/**'],
       rules: {
         'unicorn/filename-case': 'off',
