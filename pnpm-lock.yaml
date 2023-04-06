@@ -145,11 +145,11 @@ importers:
   e2e:
     dependencies:
       '@pulumi/aws':
-        specifier: 5.34.0
-        version: 5.34.0
+        specifier: 5.35.0
+        version: 5.35.0
       '@pulumi/awsx':
         specifier: 0.40.1
-        version: 0.40.1(@pulumi/aws@5.34.0)(@pulumi/pulumi@3.61.0)
+        version: 0.40.1(@pulumi/aws@5.35.0)(@pulumi/pulumi@3.61.1)
       '@pulumi/azure-native':
         specifier: 1.99.1
         version: 1.99.1
@@ -160,8 +160,8 @@ importers:
         specifier: 4.1.2
         version: 4.1.2
       '@pulumi/pulumi':
-        specifier: 3.61.0
-        version: 3.61.0
+        specifier: 3.61.1
+        version: 3.61.1
       '@types/node':
         specifier: 18.15.11
         version: 18.15.11
@@ -667,8 +667,8 @@ importers:
   examples/graphql-armor:
     dependencies:
       '@escape.tech/graphql-armor':
-        specifier: 1.8.1
-        version: 1.8.1
+        specifier: 1.8.2
+        version: 1.8.2
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -1392,14 +1392,14 @@ importers:
         version: 0.1.4
       '@graphql-tools/executor-urql-exchange':
         specifier: ^0.0.9
-        version: 0.0.9(@urql/core@4.0.2)(wonka@6.3.1)
+        version: 0.0.9(@urql/core@4.0.3)(wonka@6.3.1)
       tslib:
         specifier: ^2.4.0
         version: 2.4.0
     devDependencies:
       '@urql/core':
-        specifier: 4.0.2
-        version: 4.0.2
+        specifier: 4.0.3
+        version: 4.0.3
       graphql-yoga:
         specifier: 3.8.0
         version: link:../../graphql-yoga
@@ -2521,8 +2521,8 @@ packages:
       '@apollo/utils.withrequired': 2.0.0
       '@graphql-tools/schema': 9.0.17(graphql@16.6.0)
       '@josephg/resolvable': 1.0.1
-      '@types/express': 4.17.14
-      '@types/express-serve-static-core': 4.17.31
+      '@types/express': 4.17.17
+      '@types/express-serve-static-core': 4.17.33
       '@types/node-fetch': 2.6.2
       async-retry: 1.3.3
       body-parser: 1.20.1
@@ -4969,7 +4969,6 @@ packages:
 
   /@balena/dockerignore@1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
-    dev: false
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -5877,81 +5876,81 @@ packages:
     dev: true
     optional: true
 
-  /@escape.tech/graphql-armor-block-field-suggestions@1.4.0:
-    resolution: {integrity: sha512-PkGxPCOXWuVA+NlF/aSSFVMravhUm6fP+oVXiq1GOVS5mPVhEKoyHk9j1UeF96/qHzkIsEUsfbLKP3IkygpSLA==}
+  /@escape.tech/graphql-armor-block-field-suggestions@1.4.1:
+    resolution: {integrity: sha512-lHtOHhWCNql5R7UZRXjZVepxaBLJdVMnkDomRzot1tbQYQ7HowGgM91HEQGVXeqxWVrNzjfpQD+f71ChPL/Iiw==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.4
     dev: false
 
-  /@escape.tech/graphql-armor-cost-limit@1.7.2:
-    resolution: {integrity: sha512-73hM4PSt9A5nc7IqCWXImRWlnmEaglnyiFMkY6E4Jx2EYYwTRGHuyaV9st6k2abjWCJsheftvvE/C/YKWZ7p7Q==}
+  /@escape.tech/graphql-armor-cost-limit@1.7.3:
+    resolution: {integrity: sha512-pXYjppNf1R1JxKbpkt22RZtWJesfmENE9kId8ciwebhrPv7XpPHyuZoQ48ifVZKvWJPojaJf6grveaZko9GvmA==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.4
-      '@escape.tech/graphql-armor-types': 0.4.0
+      '@escape.tech/graphql-armor-types': 0.4.1
     dev: false
 
-  /@escape.tech/graphql-armor-max-aliases@1.7.1:
-    resolution: {integrity: sha512-WUmDBceHXDjG08byxBghc27//9/MN1zOnVDH9AXG070kD23Ko8fYToXq+xwos+3jQvWBqTtzFSoRE6r7piZHuQ==}
+  /@escape.tech/graphql-armor-max-aliases@1.7.2:
+    resolution: {integrity: sha512-eegua9E2Q0UvqIMPT31Lo0Xng2AQj662wjWGbAXOGHUOsKzzhe1y1qWwTRP13uvhdMNI+RTfjNJ5Su+5flWrOA==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.4
-      '@escape.tech/graphql-armor-types': 0.4.0
+      '@escape.tech/graphql-armor-types': 0.4.1
     dev: false
 
-  /@escape.tech/graphql-armor-max-depth@1.8.3:
-    resolution: {integrity: sha512-u9aj2A29c6iRUNVqI/BtKkKb/U61RexuMEdKEEnW51OWEeQGHQ73GgGlaQFhnZ0Tn++aG2+z7ljtrTuwyxTOyA==}
+  /@escape.tech/graphql-armor-max-depth@1.8.4:
+    resolution: {integrity: sha512-2RYjMVbguxltbWVcTEQGXPzcFc7Lo2wUdbLSQ4as2QeSmr2IqRbW5fNe/Jy8uiEhOOelia59J8xuua+0lxC3Kg==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.4
-      '@escape.tech/graphql-armor-types': 0.4.0
+      '@escape.tech/graphql-armor-types': 0.4.1
     dev: false
 
-  /@escape.tech/graphql-armor-max-directives@1.6.4:
-    resolution: {integrity: sha512-Fta4qGKtHKbVjVlSIv0qA02dtoSeShlvsco2EvzOvcPhnMAdpc7RlRgwIQE/f+/vEu905AQhWbXHTnd7idWdfA==}
+  /@escape.tech/graphql-armor-max-directives@1.6.5:
+    resolution: {integrity: sha512-ra++yhDJQAO1iWfiF2pTnX6YLEJbngr983w/3XdVWOJ76WMj9wF8r71t3ke31A3gUCi6qnguQCKpLWLZCmlTYg==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.4
-      '@escape.tech/graphql-armor-types': 0.4.0
+      '@escape.tech/graphql-armor-types': 0.4.1
     dev: false
 
-  /@escape.tech/graphql-armor-max-tokens@1.3.1:
-    resolution: {integrity: sha512-RvK9xnG4+1M6XH0TxwKb4cLvKN1EN2Auuh5Qq5IaoPGQzSvMjCfLa7d2v/j3mO3+68Pdsj6Y4MVzow/VBYBfDw==}
+  /@escape.tech/graphql-armor-max-tokens@1.3.2:
+    resolution: {integrity: sha512-HeLxT7Hp6qG1oiYKNgtfMIeAj1QRG1zcb/3Gh6gxLGxp4Gom7RJOa8YiecLA8HI1YzYwaSie4+fyZ7AGQAXtRQ==}
     dependencies:
       graphql: 16.6.0
     optionalDependencies:
       '@envelop/core': 3.0.4
-      '@escape.tech/graphql-armor-types': 0.4.0
+      '@escape.tech/graphql-armor-types': 0.4.1
     dev: false
 
-  /@escape.tech/graphql-armor-types@0.4.0:
-    resolution: {integrity: sha512-E78TUacOz70tFK4mKOTrJE/ar2Z9hiDM0dcxau3GBffozWVGNqLmCt4JJeahlJieldJuXfhaJestRJuVVCWm5g==}
+  /@escape.tech/graphql-armor-types@0.4.1:
+    resolution: {integrity: sha512-72Rvwn8A0z6IYrNPn90948ZrOPD5HVVZNnawHSNTnS2OapBeImg/24l2BUOjQe+PRmu9mQ5INIWaSw8FDUM+0A==}
     requiresBuild: true
     dependencies:
       graphql: 16.6.0
     dev: false
     optional: true
 
-  /@escape.tech/graphql-armor@1.8.1:
-    resolution: {integrity: sha512-8kN4gUnlS7JaIU5o3WBZzHmJUp/5BhB0kXscJjoinbqw7Htkgd5bCFYYZZhG+YkaWPJmtZ5ctqMry7E3eoVPrQ==}
+  /@escape.tech/graphql-armor@1.8.2:
+    resolution: {integrity: sha512-jJ1gvplrgmTURyVAuO02T87vWL4VmjMHmTLfPYhKCBoS3PjmHUiRxtX2veDGGh60DhfQPdO7H7kNZBaM77qIfw==}
     dependencies:
-      '@escape.tech/graphql-armor-block-field-suggestions': 1.4.0
-      '@escape.tech/graphql-armor-cost-limit': 1.7.2
-      '@escape.tech/graphql-armor-max-aliases': 1.7.1
-      '@escape.tech/graphql-armor-max-depth': 1.8.3
-      '@escape.tech/graphql-armor-max-directives': 1.6.4
-      '@escape.tech/graphql-armor-max-tokens': 1.3.1
+      '@escape.tech/graphql-armor-block-field-suggestions': 1.4.1
+      '@escape.tech/graphql-armor-cost-limit': 1.7.3
+      '@escape.tech/graphql-armor-max-aliases': 1.7.2
+      '@escape.tech/graphql-armor-max-depth': 1.8.4
+      '@escape.tech/graphql-armor-max-directives': 1.6.5
+      '@escape.tech/graphql-armor-max-tokens': 1.3.2
       graphql: 16.6.0
     optionalDependencies:
       '@apollo/server': 4.5.0(graphql@16.6.0)
       '@envelop/core': 3.0.4
-      '@escape.tech/graphql-armor-types': 0.4.0
+      '@escape.tech/graphql-armor-types': 0.4.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -6962,7 +6961,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-tools/executor-urql-exchange@0.0.9(@urql/core@4.0.2)(wonka@6.3.1):
+  /@graphql-tools/executor-urql-exchange@0.0.9(@urql/core@4.0.3)(wonka@6.3.1):
     resolution: {integrity: sha512-NNtFBPZkFjVcCMhcaSDLgBFvjxvgvIXutsgjcNOrhlPngK+gXq92gg+tlrAXLtKUyCzcPyTM2mN1pyq4FepWAw==}
     peerDependencies:
       '@urql/core': ^3.0.0 || ^4.0.0
@@ -6970,7 +6969,7 @@ packages:
       wonka: ^6.0.0
     dependencies:
       '@graphql-tools/utils': 9.2.1
-      '@urql/core': 4.0.2
+      '@urql/core': 4.0.3
       tslib: 2.5.0
       wonka: 6.3.1
     dev: false
@@ -10771,11 +10770,11 @@ packages:
   /@protobufjs/utf8@1.1.0:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
-  /@pulumi/aws@5.34.0:
-    resolution: {integrity: sha512-jA6OBUdw4b6Xrx39Ko8tK4E3Tz/Rfb2yQ+jQxUQ4GLt5tWNaxCMVOE2pw7KB0Q1TY2R9rN1TH2pZjhx5tI8WmQ==}
+  /@pulumi/aws@5.35.0:
+    resolution: {integrity: sha512-GplJF6Iy0lR8Ygx6FceV7HhcIJv1rjyRjU1fKeuMKjgTZmiWqbRmgD5DokalYe0aQlr0gs/QZidkQdPQt/OUsQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.61.0
+      '@pulumi/pulumi': 3.61.1
       aws-sdk: 2.1235.0
       builtin-modules: 3.0.0
       mime: 2.6.0
@@ -10785,15 +10784,15 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx@0.40.1(@pulumi/aws@5.34.0)(@pulumi/pulumi@3.61.0):
+  /@pulumi/awsx@0.40.1(@pulumi/aws@5.35.0)(@pulumi/pulumi@3.61.1):
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
       '@pulumi/pulumi': ^3.0.0
     dependencies:
-      '@pulumi/aws': 5.34.0
+      '@pulumi/aws': 5.35.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.61.0
+      '@pulumi/pulumi': 3.61.1
       '@types/aws-lambda': 8.10.93
       mime: 2.6.0
     transitivePeerDependencies:
@@ -10804,7 +10803,7 @@ packages:
     resolution: {integrity: sha512-GH3eDZh4evKgc6/0D4s8EekkWhJCUJTwrLiv+A8uYNMqhEu32GFC+3pgkdvdEvTh8Eddu2815Wk0Usyw20g/uA==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.61.0
+      '@pulumi/pulumi': 3.61.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10813,7 +10812,7 @@ packages:
     resolution: {integrity: sha512-cwdB70bLeKL/VNIqqOD5fpHQcocVmpHuiHH589eR+QUfbLa4f+M8yA/TTCcxx2AFFctTqO5wgVuC+faL8xZmWQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.61.0
+      '@pulumi/pulumi': 3.61.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10822,7 +10821,7 @@ packages:
     resolution: {integrity: sha512-BZME50QkT556v+LvmTXPT8ssB2xxNkp9+msB5xYFEnUnWcdGAx5yUysQw70RJCb+U0GbkJSbxtlgMJgOQf/now==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.61.0
+      '@pulumi/pulumi': 3.61.1
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
@@ -10832,14 +10831,14 @@ packages:
     resolution: {integrity: sha512-BBMboSpud++rpwELDpRZ+5X/4OCog6/S1n54pM9aNvEptXGCf5l7CSUSjEThiMtIfKlsAJs+zPji+9GDeM79gA==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.61.0
+      '@pulumi/pulumi': 3.61.1
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/pulumi@3.61.0:
-    resolution: {integrity: sha512-wJRAtay0in1mvTNet7A0rGFkH8zLkXvCxzE/2xdqtIAAMm17yf2eoxv/IpAVv8+bB0aETlhGjiCdYGgxoNg5IA==}
+  /@pulumi/pulumi@3.61.1:
+    resolution: {integrity: sha512-NUZsmNfJQBEOqrrrgBPuEnCeExDFjwZw8/v03dMcs8BzWuq+2lYjyikM3HU1LNWGDKBQLxEmJUPwO1MNFt4LHQ==}
     engines: {node: '>=8.13.0 || >=10.10.0'}
     dependencies:
       '@grpc/grpc-js': 1.8.11
@@ -12786,8 +12785,8 @@ packages:
       eslint-visitor-keys: 3.4.0
     dev: true
 
-  /@urql/core@4.0.2:
-    resolution: {integrity: sha512-GrJhMDqFP0URS47h6tMSHN/hmeTB1BNWnlXkWTxZo+b2ZB1+E9rgsuG2VTfaErXtZySGLwyCsDHtT+kZLN2cMA==}
+  /@urql/core@4.0.3:
+    resolution: {integrity: sha512-13figZkXYD8QHTCY/MTWnzbK958I6Owx6sOm1+tZo5aR9HEnOKFVI0hJZZkzW/JIdiGnXW//YyTrp4ce+LWtbg==}
     dependencies:
       '@0no-co/graphql.web': 1.0.0
       wonka: 6.3.1
@@ -13892,6 +13891,16 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.102
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.82
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      table: 6.8.1
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -14802,6 +14811,11 @@ packages:
     dependencies:
       ansicolors: 0.3.2
       redeyed: 2.1.1
+    dev: true
+
+  /case@1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /caseless@0.12.0:
@@ -22589,7 +22603,6 @@ packages:
 
   /jsonschema@1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
-    dev: false
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
