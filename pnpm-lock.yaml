@@ -263,7 +263,7 @@ importers:
     devDependencies:
       '@aws-cdk/assert':
         specifier: 2.68.0
-        version: 2.68.0(aws-cdk-lib@2.72.1)
+        version: 2.68.0(aws-cdk-lib@2.73.0)
       '@types/aws-lambda':
         specifier: 8.10.114
         version: 8.10.114
@@ -271,11 +271,11 @@ importers:
         specifier: 18.15.11
         version: 18.15.11
       aws-cdk:
-        specifier: 2.72.1
-        version: 2.72.1
+        specifier: 2.73.0
+        version: 2.73.0
       aws-cdk-lib:
-        specifier: 2.72.1
-        version: 2.72.1
+        specifier: 2.73.0
+        version: 2.73.0
       esbuild:
         specifier: 0.17.15
         version: 0.17.15
@@ -1464,8 +1464,8 @@ importers:
         specifier: 0.8.3
         version: 0.8.3(graphql@16.6.0)
       '@graphql-tools/url-loader':
-        specifier: 7.17.15
-        version: 7.17.15(graphql@16.6.0)
+        specifier: 7.17.16
+        version: 7.17.16(graphql@16.6.0)
       graphiql:
         specifier: 2.0.7
         version: 2.0.7(@types/react@18.0.33)(graphql@16.6.0)(react-dom@18.2.0)(react@18.2.0)
@@ -2704,7 +2704,7 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@aws-cdk/assert@2.68.0(aws-cdk-lib@2.72.1):
+  /@aws-cdk/assert@2.68.0(aws-cdk-lib@2.73.0):
     resolution: {integrity: sha512-bEztvoYdVp17I/ClYRGZa4wlEP/qNNq4Q+Z7EKwRL0cLDmvq4EI1m1N8LhUPAH7B6YXp5d1164gC6Nr0lV8bbA==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
@@ -2713,7 +2713,7 @@ packages:
       jest: '>=26.6.3'
     dependencies:
       '@aws-cdk/cloudformation-diff': 2.68.0
-      aws-cdk-lib: 2.72.1
+      aws-cdk-lib: 2.73.0
     dev: true
 
   /@aws-cdk/asset-awscli-v1@2.2.102:
@@ -4969,6 +4969,7 @@ packages:
 
   /@balena/dockerignore@1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
+    dev: false
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -7377,8 +7378,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-tools/url-loader@7.17.15(@types/node@18.15.11)(graphql@16.6.0):
-    resolution: {integrity: sha512-X+5uabYvB/ShH5hAzQUwFqJ3VG3TIpFORBchji0bH2Nj05Dgtt7nw3c5a7iYapvUqvcehWyv8kc3pFBDTb/3Vg==}
+  /@graphql-tools/url-loader@7.17.16(@types/node@18.15.11)(graphql@16.6.0):
+    resolution: {integrity: sha512-TXlCmredh0cBSv99mzNhEcRvZfsHoy4Y3jv/+Dugs0DWuZsAJGrdgemr53zmx9Hq/AznHqCoq9zjCe25Dz4tDw==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
@@ -7403,8 +7404,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-tools/url-loader@7.17.15(graphql@16.6.0):
-    resolution: {integrity: sha512-X+5uabYvB/ShH5hAzQUwFqJ3VG3TIpFORBchji0bH2Nj05Dgtt7nw3c5a7iYapvUqvcehWyv8kc3pFBDTb/3Vg==}
+  /@graphql-tools/url-loader@7.17.16(graphql@16.6.0):
+    resolution: {integrity: sha512-TXlCmredh0cBSv99mzNhEcRvZfsHoy4Y3jv/+Dugs0DWuZsAJGrdgemr53zmx9Hq/AznHqCoq9zjCe25Dz4tDw==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
@@ -13882,8 +13883,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /aws-cdk-lib@2.72.1:
-    resolution: {integrity: sha512-uZJTXkZFFYoJsfzrvTMVCJH5x64DVw/7PiMHahCOIguipUFMzQI5sb3jmNkO7vgZIX/obQkuUl7C33rB/xfpcQ==}
+  /aws-cdk-lib@2.73.0:
+    resolution: {integrity: sha512-r9CUe3R7EThr9U0Eb7kQCK4Ee34TDeMH+bonvGD9rNRRTYDauvAgNCsx4DZYYksPrXLRzWjzVbuXAHaDDzWt+A==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
@@ -13891,16 +13892,6 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.102
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.82
-      '@balena/dockerignore': 1.0.2
-      case: 1.6.3
-      fs-extra: 9.1.0
-      ignore: 5.2.4
-      jsonschema: 1.4.1
-      minimatch: 3.1.2
-      punycode: 2.3.0
-      semver: 7.3.8
-      table: 6.8.1
-      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -13914,8 +13905,8 @@ packages:
       - table
       - yaml
 
-  /aws-cdk@2.72.1:
-    resolution: {integrity: sha512-Noihlxyurq9ecz/aTx+j3raeedI0hcPaYFKqS1CkFDoOEvLHIuIEB6regoJHWy9GER/yYYgKu68c7xYo3LaZPA==}
+  /aws-cdk@2.73.0:
+    resolution: {integrity: sha512-4ZnY+OS83goCzv+1sCEpNTNiXWjY6KBzic2RNUObzpHjUskRSwUCtaeiv6OyZ55DZoP0tneAmWIBXHfixJ7iQw==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
     optionalDependencies:
@@ -14811,11 +14802,6 @@ packages:
     dependencies:
       ansicolors: 0.3.2
       redeyed: 2.1.1
-    dev: true
-
-  /case@1.6.3:
-    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
-    engines: {node: '>= 0.8.0'}
     dev: true
 
   /caseless@0.12.0:
@@ -20186,7 +20172,7 @@ packages:
       '@graphql-tools/json-file-loader': 7.4.6(graphql@16.6.0)
       '@graphql-tools/load': 7.8.11(graphql@16.6.0)
       '@graphql-tools/merge': 8.4.0(graphql@16.6.0)
-      '@graphql-tools/url-loader': 7.17.15(graphql@16.6.0)
+      '@graphql-tools/url-loader': 7.17.16(graphql@16.6.0)
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       cosmiconfig: 8.0.0
       cosmiconfig-typescript-loader: 4.3.0(cosmiconfig@7.0.1)(ts-node@10.9.1)(typescript@5.0.3)
@@ -20215,7 +20201,7 @@ packages:
       '@graphql-tools/json-file-loader': 7.4.6(graphql@16.6.0)
       '@graphql-tools/load': 7.8.11(graphql@16.6.0)
       '@graphql-tools/merge': 8.4.0(graphql@16.6.0)
-      '@graphql-tools/url-loader': 7.17.15(@types/node@18.15.11)(graphql@16.6.0)
+      '@graphql-tools/url-loader': 7.17.16(@types/node@18.15.11)(graphql@16.6.0)
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       cosmiconfig: 8.0.0
       graphql: 16.6.0
@@ -22603,6 +22589,7 @@ packages:
 
   /jsonschema@1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
+    dev: false
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
