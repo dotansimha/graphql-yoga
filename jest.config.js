@@ -34,6 +34,7 @@ if (process.env.INTEGRATION_TEST === 'true') {
 if (process.env.LEAKS_TEST === 'true') {
   testMatch.push(
     '!**/hackernews.spec.ts',
+    '!**/apollo-link.spec.ts',
     '!**/urql-exchange.spec.ts',
     '!**/apollo-link.spec.ts',
     '!**/uwebsockets.test.ts',
