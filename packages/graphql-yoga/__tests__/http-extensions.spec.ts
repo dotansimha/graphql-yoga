@@ -6,6 +6,7 @@ import {
   createYoga,
   Plugin,
 } from '../src/index.js'
+import { STATUS_CODES } from 'http'
 
 describe('GraphQLError.extensions.http', () => {
   it('sets correct status code and headers for thrown GraphQLError in a resolver', async () => {
@@ -583,5 +584,49 @@ describe('Result Extensions', () => {
       }),
     })
     expect(res.status).toBe(401)
+  })
+  it('should set status text by status code', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            throw(status: Int!): String
+          }
+        `,
+        resolvers: {
+          Query: {
+            throw(_, { status }) {
+              throw createGraphQLError('Test', {
+                extensions: {
+                  http: {
+                    status,
+                  },
+                },
+              })
+            },
+          },
+        },
+      }),
+    })
+    const query = /* GraphQL */ `
+      query StatusTest($status: Int!) {
+        throw(status: $status)
+      }
+    `
+    for (const statusCodeStr in STATUS_CODES) {
+      const status = Number(statusCodeStr)
+      const res = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          query,
+          variables: { status },
+        }),
+      })
+      expect(res.status).toBe(status)
+      expect(res.statusText).toBe(STATUS_CODES[status])
+    }
   })
 })
