@@ -29,33 +29,19 @@ export function processRegularResult(
     'Content-Type': acceptedHeader + '; charset=utf-8',
   }
 
-  const prefer200 =
-    acceptedHeader === 'application/json' &&
-    !Array.isArray(executionResult) &&
-    areGraphQLErrors(executionResult.errors) &&
-    executionResult.errors.some(
-      (err) =>
-        !err.extensions.originalError ||
-        isGraphQLError(err.extensions.originalError),
-    )
-
   const responseInit = getResponseInitByRespectingErrors(
     executionResult,
     headersInit,
     // prefer 200 only if accepting application/json and all errors are exclusively GraphQL errors
-    prefer200,
+    acceptedHeader === 'application/json' &&
+      !Array.isArray(executionResult) &&
+      areGraphQLErrors(executionResult.errors) &&
+      executionResult.errors.some(
+        (err) =>
+          !err.extensions.originalError ||
+          isGraphQLError(err.extensions.originalError),
+      ),
   )
-
-  // console.log(
-  //   JSON.stringify(
-  //     {
-  //       prefer200,
-  //       errors: executionResult.errors,
-  //     },
-  //     null,
-  //     '  ',
-  //   ),
-  // )
 
   const responseBody = jsonStringifyResultWithoutInternals(executionResult)
 
