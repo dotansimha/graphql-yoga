@@ -1732,12 +1732,9 @@ importers:
 
   packages/plugins/apq:
     dependencies:
-      '@whatwg-node/fetch':
-        specifier: ^0.8.4
-        version: 0.8.4
-      tiny-lru:
-        specifier: ^10.0.0
-        version: 10.0.0
+      lru-cache:
+        specifier: ^7.14.1
+        version: 7.18.3
     devDependencies:
       graphql-yoga:
         specifier: 3.8.0
@@ -11995,7 +11992,7 @@ packages:
   /@types/lru-cache@7.10.9:
     resolution: {integrity: sha512-wrwgkdJ0xr8AbzKhVaRI8SXZN9saapPwwLoydBEr4HqMZET1LUTi1gdoaj82XmRJ9atqN7MtB0aja29iiK+7ag==}
     dependencies:
-      lru-cache: 7.14.1
+      lru-cache: 7.18.3
     dev: true
 
   /@types/markdown-it@12.2.3:
@@ -23251,6 +23248,7 @@ packages:
   /lru-cache@7.14.1:
     resolution: {integrity: sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==}
     engines: {node: '>=12'}
+    dev: false
 
   /lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
