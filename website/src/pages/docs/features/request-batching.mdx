@@ -27,7 +27,7 @@ export const yoga = createYoga<ServerContext, UserContext>({
       }
     `
   }),
-  batching: false
+  batching: true
 })
 
 const server = createServer(yoga)
