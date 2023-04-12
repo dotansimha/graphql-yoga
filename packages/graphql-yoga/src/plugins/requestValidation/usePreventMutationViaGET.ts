@@ -23,7 +23,6 @@ export function assertMutationViaGet(
     throw createGraphQLError('Could not determine what operation to execute.', {
       extensions: {
         http: {
-          spec: true,
           status: 400,
         },
       },

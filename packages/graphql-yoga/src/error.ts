@@ -110,7 +110,7 @@ export function handleError(
 export function getResponseInitByRespectingErrors(
   result: ResultProcessorInput,
   headers: Record<string, string> = {},
-  isApplicationJson = false,
+  prefer200 = false,
 ) {
   let status: number | undefined
   let unexpectedErrorExists = false
@@ -130,7 +130,7 @@ export function getResponseInitByRespectingErrors(
         if (error.extensions.http.headers) {
           Object.assign(headers, error.extensions.http.headers)
         }
-        if (isApplicationJson && error.extensions.http.spec) {
+        if (prefer200 && error.extensions.http.spec) {
           continue
         }
         if (
@@ -162,4 +162,12 @@ export function getResponseInitByRespectingErrors(
     status,
     headers,
   }
+}
+export function areGraphQLErrors(obj: unknown): obj is readonly GraphQLError[] {
+  return (
+    Array.isArray(obj) &&
+    obj.length > 0 &&
+    // if one item in the array is a GraphQLError, we're good
+    obj.some(isGraphQLError)
+  )
 }
