@@ -1,5 +1,11 @@
 # graphql-yoga
 
+## 3.9.0
+
+### Minor Changes
+
+- [#2675](https://github.com/dotansimha/graphql-yoga/pull/2675) [`aff69200`](https://github.com/dotansimha/graphql-yoga/commit/aff69200d512c530751c617ee685f9b3f82303f8) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Only well-formatted GraphQL-over-HTTP requests use 200 when accepting application/json
+
 ## 3.8.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @graphql-yoga/plugin-graphql-sse
 
+## 1.5.0
+
+### Patch Changes
+
+- Updated dependencies [[`aff69200`](https://github.com/dotansimha/graphql-yoga/commit/aff69200d512c530751c617ee685f9b3f82303f8)]:
+  - graphql-yoga@3.9.0
+
 ## 1.4.1
 
 ### Patch Changes
