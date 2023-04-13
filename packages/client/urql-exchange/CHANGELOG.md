@@ -1,5 +1,7 @@
 # @graphql-yoga/urql-exchange
 
+## 1.8.0
+
 ## 1.7.1
 
 ### Patch Changes
