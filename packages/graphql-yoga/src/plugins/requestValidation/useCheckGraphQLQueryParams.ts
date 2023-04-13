@@ -33,7 +33,6 @@ export function assertInvalidParams(
         {
           extensions: {
             http: {
-              spec: true,
               status: 400,
             },
           },
@@ -50,7 +49,6 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
-            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',
@@ -84,7 +82,6 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
-            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',
@@ -102,7 +99,6 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
-            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',
@@ -120,7 +116,6 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
       {
         extensions: {
           http: {
-            spec: true,
             status: 400,
             headers: {
               Allow: 'GET, POST',

@@ -163,3 +163,11 @@ export function getResponseInitByRespectingErrors(
     headers,
   }
 }
+export function areGraphQLErrors(obj: unknown): obj is readonly GraphQLError[] {
+  return (
+    Array.isArray(obj) &&
+    obj.length > 0 &&
+    // if one item in the array is a GraphQLError, we're good
+    obj.some(isGraphQLError)
+  )
+}

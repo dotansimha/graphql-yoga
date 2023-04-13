@@ -1,6 +1,10 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
 
-import { getResponseInitByRespectingErrors } from '../../error.js'
+import {
+  areGraphQLErrors,
+  getResponseInitByRespectingErrors,
+  isGraphQLError,
+} from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
 import { jsonStringifyResultWithoutInternals } from './stringify.js'
@@ -28,7 +32,15 @@ export function processRegularResult(
   const responseInit = getResponseInitByRespectingErrors(
     executionResult,
     headersInit,
-    acceptedHeader === 'application/json',
+    // prefer 200 only if accepting application/json and all errors are exclusively GraphQL errors
+    acceptedHeader === 'application/json' &&
+      !Array.isArray(executionResult) &&
+      areGraphQLErrors(executionResult.errors) &&
+      executionResult.errors.some(
+        (err) =>
+          !err.extensions.originalError ||
+          isGraphQLError(err.extensions.originalError),
+      ),
   )
 
   const responseBody = jsonStringifyResultWithoutInternals(executionResult)
