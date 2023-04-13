@@ -1,5 +1,20 @@
 # @graphql-yoga/plugin-apq
 
+## 1.8.1
+
+### Patch Changes
+
+- [#2670](https://github.com/dotansimha/graphql-yoga/pull/2670) [`df49d60d`](https://github.com/dotansimha/graphql-yoga/commit/df49d60da769b1b05d41586227070acb624aee79) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Added dependency [`lru-cache@^7.14.1` ↗︎](https://www.npmjs.com/package/lru-cache/v/7.14.1) (to `dependencies`)
+  - Removed dependency [`@whatwg-node/fetch@^0.8.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.8.4) (from `dependencies`)
+  - Removed dependency [`tiny-lru@^10.0.0` ↗︎](https://www.npmjs.com/package/tiny-lru/v/10.0.0) (from `dependencies`)
+
+- [#2670](https://github.com/dotansimha/graphql-yoga/pull/2670) [`df49d60d`](https://github.com/dotansimha/graphql-yoga/commit/df49d60da769b1b05d41586227070acb624aee79) Thanks [@ardatan](https://github.com/ardatan)! - Remove unused @whatwg-node/fetch dependency and use lru-cache just like core instead of extra tiny-lru dependency
+
+- Updated dependencies [[`ebb65b14`](https://github.com/dotansimha/graphql-yoga/commit/ebb65b14b29bbb4c50c6bb242262444315e99a73), [`528941cb`](https://github.com/dotansimha/graphql-yoga/commit/528941cb4d1670833ee0307de0c715e6b9681d7a)]:
+  - graphql-yoga@3.8.1
+
 ## 1.8.0
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @graphql-yoga/urql-exchange
 
+## 1.7.1
+
+### Patch Changes
+
+- [#2633](https://github.com/dotansimha/graphql-yoga/pull/2633) [`2daed8aa`](https://github.com/dotansimha/graphql-yoga/commit/2daed8aa89fa86e2c1f673c34a6136873cc995db) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@urql/core@^3.0.0 || ^4.0.0` ↗︎](https://www.npmjs.com/package/@urql/core/v/3.0.0) (from `^3.0.0`, in `peerDependencies`)
+
+- [#2652](https://github.com/dotansimha/graphql-yoga/pull/2652) [`ebb65b14`](https://github.com/dotansimha/graphql-yoga/commit/ebb65b14b29bbb4c50c6bb242262444315e99a73) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@graphql-tools/executor-urql-exchange@^0.0.9` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor-urql-exchange/v/0.0.9) (from `^0.0.8`, in `dependencies`)
+
 ## 1.7.0
 
 ## 1.6.3

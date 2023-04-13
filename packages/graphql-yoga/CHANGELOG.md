@@ -1,5 +1,15 @@
 # graphql-yoga
 
+## 3.8.1
+
+### Patch Changes
+
+- [#2652](https://github.com/dotansimha/graphql-yoga/pull/2652) [`ebb65b14`](https://github.com/dotansimha/graphql-yoga/commit/ebb65b14b29bbb4c50c6bb242262444315e99a73) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.16` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.16) (from `^0.0.15`, in `dependencies`)
+
+- [#2676](https://github.com/dotansimha/graphql-yoga/pull/2676) [`528941cb`](https://github.com/dotansimha/graphql-yoga/commit/528941cb4d1670833ee0307de0c715e6b9681d7a) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Prefer `content-type: multipart/mixed` over `content-type: text/event-stream` when the client sends `accept: text/event-stream, multipart/mixed`.
+
 ## 3.8.0
 
 ### Minor Changes
