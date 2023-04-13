@@ -43,6 +43,7 @@ export function useResultProcessors(opts: SSEProcessorOptions): Plugin {
   const sse = getSSEProcessorConfig(opts)
   const defaultList = [sse, multipart, regular]
   const subscriptionList = [multipart, sse, regular]
+
   return {
     onSubscribe({ args: { contextValue } }) {
       if (contextValue.request) {
@@ -61,8 +62,9 @@ export function useResultProcessors(opts: SSEProcessorOptions): Plugin {
         : defaultList
       const requestMediaTypes = getMediaTypesForRequestInOrder(request)
       const isAsyncIterableResult = isAsyncIterable(result)
-      for (const requestMediaType of requestMediaTypes) {
-        for (const resultProcessorConfig of processorConfigList) {
+
+      for (const resultProcessorConfig of processorConfigList) {
+        for (const requestMediaType of requestMediaTypes) {
           if (isAsyncIterableResult && !resultProcessorConfig.asyncIterables) {
             continue
           }
