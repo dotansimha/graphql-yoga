@@ -1,4 +1,4 @@
-import { createSchema, createYoga } from '../src/index.js'
+import { Repeater, createSchema, createYoga } from '../src/index.js'
 import { createClient } from 'graphql-sse'
 
 describe('GraphQL over SSE', () => {
@@ -181,6 +181,46 @@ describe('GraphQL over SSE', () => {
 
         "
       `)
+    })
+
+    it('accept: application/graphql-response+json, application/json,  multipart/mixed, text/event-stream', async () => {
+      const yoga = createYoga({
+        schema: createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              hi: [String]
+            }
+
+            type Subscription {
+              hi: String!
+            }
+          `,
+          resolvers: {
+            Query: {
+              hi: () => 'hi',
+            },
+            Subscription: {
+              hi: {
+                subscribe: () => new Repeater((push) => push({ hi: 'hi' })),
+              },
+            },
+          },
+        }),
+        plugins: [],
+      })
+
+      const response = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept:
+            'application/graphql-response+json, application/json, multipart/mixed, text/event-stream',
+        },
+        body: JSON.stringify({ query: 'subscription { hi }' }),
+      })
+
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('content-type')).toEqual('text/event-stream')
     })
   })
 
