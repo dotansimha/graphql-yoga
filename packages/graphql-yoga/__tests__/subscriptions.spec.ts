@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql'
 import { createSchema, createYoga, Repeater } from '../src/index.js'
 
 function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
@@ -245,6 +246,56 @@ describe('Subscription', () => {
 
       ",
       ]
+    `)
+  })
+
+  test('erroring event stream should be handled', async () => {
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            async *subscribe() {
+              yield { hi: 'hi' }
+              throw new GraphQLError('hi')
+            },
+          },
+        },
+      },
+    })
+
+    const yoga = createYoga({ schema })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    })
+
+    expect(await response.text()).toMatchInlineSnapshot(`
+      "data: {"data":{"hi":"hi"}}
+
+      data: {"errors":[{"message":"hi"}]
+
+      event: complete
+
+      "
     `)
   })
 })
