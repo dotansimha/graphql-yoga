@@ -29,9 +29,6 @@ jobs:
         env:
           NEXT_BASE_PATH: ${{ github.ref == 'refs/heads/main' && '/graphql/yoga-server' || '' }}
           SITE_URL: ${{ github.ref == 'refs/heads/main' && 'https://the-guild.dev/graphql/yoga-server' || '' }}
-          NEXT_PUBLIC_ALGOLIA_INDEX_NAME: ${{ secrets.NEXT_PUBLIC_ALGOLIA_INDEX_NAME }}
-          NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY }}
-          NEXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.NEXT_PUBLIC_ALGOLIA_APP_ID }}
         with:
           cloudflareApiToken: ${{ secrets.WEBSITE_CLOUDFLARE_API_TOKEN }}
           cloudflareAccountId: ${{ secrets.WEBSITE_CLOUDFLARE_ACCOUNT_ID }}
