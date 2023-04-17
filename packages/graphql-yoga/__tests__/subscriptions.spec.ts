@@ -1,4 +1,3 @@
-import { GraphQLError } from 'graphql'
 import { createSchema, createYoga, Repeater } from '../src/index.js'
 
 function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
@@ -264,7 +263,7 @@ describe('Subscription', () => {
           hi: {
             async *subscribe() {
               yield { hi: 'hi' }
-              throw new GraphQLError('hi')
+              throw new Error('hi')
             },
           },
         },
@@ -290,8 +289,6 @@ describe('Subscription', () => {
 
     expect(await response.text()).toMatchInlineSnapshot(`
       "data: {"data":{"hi":"hi"}}
-
-      data: {"errors":[{"message":"hi"}]
 
       event: complete
 
