@@ -270,8 +270,14 @@ describe('Subscription', () => {
       },
     })
 
-    const yoga = createYoga({ schema })
+    const logging = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+    }
 
+    const yoga = createYoga({ schema, logging })
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -286,13 +292,21 @@ describe('Subscription', () => {
         `,
       }),
     })
+    const text = await response.text()
 
-    expect(await response.text()).toMatchInlineSnapshot(`
+    expect(text).toMatchInlineSnapshot(`
       "data: {"data":{"hi":"hi"}}
 
       event: complete
 
       "
+    `)
+
+    expect(logging.error).toBeCalledTimes(1)
+    expect(logging.error.mock.calls[0]).toMatchInlineSnapshot(`
+      [
+        [Error: hi],
+      ]
     `)
   })
 })
