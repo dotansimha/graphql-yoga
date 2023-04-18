@@ -1,5 +1,20 @@
 # graphql-yoga
 
+## 3.9.1
+
+### Patch Changes
+
+- [#2682](https://github.com/dotansimha/graphql-yoga/pull/2682) [`e1a60e21`](https://github.com/dotansimha/graphql-yoga/commit/e1a60e21f10813aa6d0f4673e4eb13979720c2c8) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.17` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.17) (from `^0.0.16`, in `dependencies`)
+
+- [#2686](https://github.com/dotansimha/graphql-yoga/pull/2686) [`c50ea51c`](https://github.com/dotansimha/graphql-yoga/commit/c50ea51c992a6a480799655225727081585f0010) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.18` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.18) (from `^0.0.17`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/schema@^9.0.18` ↗︎](https://www.npmjs.com/package/@graphql-tools/schema/v/9.0.18) (from `^9.0.0`, in `dependencies`)
+
+- [#2686](https://github.com/dotansimha/graphql-yoga/pull/2686) [`c50ea51c`](https://github.com/dotansimha/graphql-yoga/commit/c50ea51c992a6a480799655225727081585f0010) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Prevent errors thrown from subscription source crashing the Node.js process and instead log the error to the console, then terminate the client subscription.
+
 ## 3.9.0
 
 ### Minor Changes
