@@ -2,7 +2,6 @@
 import {
   envelop,
   GetEnvelopedFn,
-  isAsyncIterable,
   PromiseOrValue,
   useEngine,
   useExtendContext,
@@ -79,7 +78,6 @@ import {
   YogaMaskedErrorOpts,
 } from './types.js'
 import { maskError } from './utils/mask-error.js'
-import { Repeater } from '@graphql-yoga/subscription'
 
 /**
  * Configuration options for the server
@@ -435,7 +433,6 @@ export class YogaServer<
           )
         },
       },
-      useSafeSubscribe(this.logger),
     ]
 
     this.getEnveloped = envelop({
@@ -631,42 +628,4 @@ export function createYoga<
     plugins: server['plugins'],
   }) as unknown as YogaServerInstance<TServerContext, TUserContext>
   // TODO: Fix in @whatwg-node/server later
-}
-
-function useSafeSubscribe(logger: YogaLogger): Plugin<any, any> {
-  return {
-    onSubscribe: ({ setSubscribeFn, subscribeFn }) => {
-      setSubscribeFn(async (args) => {
-        const source = await subscribeFn(args)
-
-        if (isAsyncIterable(source)) {
-          return new Repeater(async (push, stop) => {
-            const iterable = source[Symbol.asyncIterator]()
-
-            stop.then(() => {
-              iterable.return?.()
-            })
-            while (true) {
-              try {
-                const { value, done } = await iterable.next()
-
-                if (done) {
-                  stop()
-                  return
-                }
-
-                push(value)
-              } catch (err) {
-                logger.error(err)
-                stop()
-                return
-              }
-            }
-          })
-        }
-
-        return source
-      })
-    },
-  }
 }

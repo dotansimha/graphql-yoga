@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql'
 import { createSchema, createYoga, Repeater } from '../src/index.js'
 
 function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
@@ -248,7 +249,7 @@ describe('Subscription', () => {
     `)
   })
 
-  test('erroring event stream should be handled', async () => {
+  test('erroring event stream should be handled (non GraphQL error)', async () => {
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
         type Subscription {
@@ -297,6 +298,8 @@ describe('Subscription', () => {
     expect(text).toMatchInlineSnapshot(`
       "data: {"data":{"hi":"hi"}}
 
+      data: {"errors":[{"message":"Unexpected error.","locations":[{"line":2,"column":11}]}]}
+
       event: complete
 
       "
@@ -305,9 +308,68 @@ describe('Subscription', () => {
     expect(logging.error).toBeCalledTimes(1)
     expect(logging.error.mock.calls[0]).toMatchInlineSnapshot(`
       [
-        [Error: hi],
+        [GraphQLError: hi],
       ]
     `)
+  })
+
+  test('erroring event stream should be handled (GraphQL error)', async () => {
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            async *subscribe() {
+              yield { hi: 'hi' }
+              throw new GraphQLError('hi')
+            },
+          },
+        },
+      },
+    })
+
+    const logging = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+    }
+
+    const yoga = createYoga({ schema, logging })
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    })
+    const text = await response.text()
+
+    expect(text).toMatchInlineSnapshot(`
+      "data: {"data":{"hi":"hi"}}
+
+      data: {"errors":[{"message":"hi","locations":[{"line":2,"column":11}]}]}
+
+      event: complete
+
+      "
+    `)
+
+    expect(logging.error).toBeCalledTimes(0)
   })
 })
 
