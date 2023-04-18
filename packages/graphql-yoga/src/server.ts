@@ -371,6 +371,7 @@ export class YogaServer<
           onResultProcessHooks: this.onResultProcessHooks,
         })
       }),
+
       ...(options?.plugins ?? []),
       // To make sure those are called at the end
       {
