@@ -1,0 +1,87 @@
+{
+  "name": "@graphql-yoga/nestjs",
+  "version": "1.1.1",
+  "description": "GraphQL Yoga driver for NestJS GraphQL.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/nestjs"
+  },
+  "author": "Denis Badurina <badurinadenis@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typings": "dist/typings/index.d.ts",
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  },
+  "keywords": [
+    "graphql",
+    "server",
+    "nestjs",
+    "nest",
+    "driver",
+    "graphql-yoga"
+  ],
+  "peerDependencies": {
+    "@nestjs/common": "^8.4.7 || ^9.0.0",
+    "@nestjs/core": "^8.4.7 || ^9.0.0",
+    "@nestjs/graphql": "^11.0.0",
+    "graphql-yoga": "^3.9.1",
+    "graphql": "^15.0.0 || ^16.0.0"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^9.3.12",
+    "@nestjs/core": "^9.3.12",
+    "@nestjs/graphql": "^11.0.4",
+    "@nestjs/platform-express": "^9.3.9",
+    "@nestjs/platform-fastify": "^9.3.9",
+    "@nestjs/testing": "^9.3.9",
+    "@swc/core": "^1.3.35",
+    "@types/express": "^4.17.17",
+    "@types/glob": "^8.0.1",
+    "@types/ws": "^8.5.4",
+    "@whatwg-node/fetch": "^0.8.1",
+    "express": "^4.18.2",
+    "fastify": "^4.13.0",
+    "glob": "^10.0.0",
+    "graphql": "^16.6.0",
+    "graphql-http": "file:../../graphql-http-1.18.0-rc.1.tgz",
+    "graphql-ws": "^5.11.3",
+    "graphql-yoga": "^3.9.1",
+    "prettier": "^2.8.3",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
+    "subscriptions-transport-ws": "^0.11.0",
+    "tslib": "^2.5.0",
+    "ws": "^8.12.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "sideEffects": false
+}

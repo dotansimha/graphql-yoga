@@ -1,4 +1,5 @@
-import { Plugin, FetchAPI } from 'graphql-yoga'
+import { FetchAPI } from '../types.js'
+import { Plugin } from './types.js'
 
 export interface ReadinessCheckPluginOptions {
   /**
@@ -33,10 +34,17 @@ export function useReadinessCheck({
   endpoint = '/ready',
   check,
 }: ReadinessCheckPluginOptions): Plugin {
+  let urlPattern: URLPattern
   return {
+    onYogaInit({ yoga }) {
+      urlPattern = new yoga.fetchAPI.URLPattern({ pathname: endpoint })
+    },
     async onRequest({ request, endResponse, fetchAPI, url }) {
-      const { pathname: requestPath } = url
-      if (requestPath === endpoint) {
+      if (
+        request.url.endsWith(endpoint) ||
+        url.pathname === endpoint ||
+        urlPattern.test(url)
+      ) {
         let response: Response
         try {
           const readyOrResponse = await check({ request, fetchAPI })

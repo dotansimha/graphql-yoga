@@ -1,4 +1,12 @@
-import { createSchema, createYoga, createGraphQLError } from 'graphql-yoga'
+import { ExecutionResult } from '@envelop/core'
+import { GraphQLScalarType } from 'graphql'
+import {
+  createGraphQLError,
+  createSchema,
+  createYoga,
+  Plugin,
+} from '../src/index.js'
+import { STATUS_CODES } from 'http'
 
 describe('GraphQLError.extensions.http', () => {
   it('sets correct status code and headers for thrown GraphQLError in a resolver', async () => {
@@ -31,7 +39,9 @@ describe('GraphQLError.extensions.http', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ a }' }),
     })
 
@@ -75,7 +85,9 @@ describe('GraphQLError.extensions.http', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ a b }' }),
     })
 
@@ -184,7 +196,10 @@ describe('GraphQLError.extensions.http', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ a }' }),
     })
     expect(response.status).toBe(418)
@@ -207,14 +222,20 @@ describe('GraphQLError.extensions.http', () => {
 
     let response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/json', // default
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(200)
 
     response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
     expect(response.status).toBe(400)
@@ -233,20 +254,26 @@ describe('GraphQLError.extensions.http', () => {
 
     let response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/json', // default
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ notme }' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(200)
 
     response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ notme }' }), // will throw a GraphQLError with { http: { status: 400 } }
     })
     expect(response.status).toBe(400)
   })
 
-  it('should respond with status 200 when error without http extension is thrown', async () => {
+  it('should not change status code when error without http extension is thrown', async () => {
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
@@ -264,7 +291,10 @@ describe('GraphQLError.extensions.http', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/json', // default
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ __typename }' }),
     })
     expect(response.status).toBe(200)
@@ -276,5 +306,327 @@ describe('GraphQLError.extensions.http', () => {
         },
       ],
     })
+  })
+
+  it('should manipulate only the extensions in response errors', async () => {
+    const extensions = {
+      arr: ['1', 2, null],
+      obj: {
+        hi: 'there',
+        num: 7,
+        ne: {
+          st: 'ed',
+          extensions: [
+            {
+              ext: 1,
+            },
+            {
+              ext: '2',
+            },
+          ],
+        },
+        extensions: null,
+        date: {
+          extensions: new Date('2000-01-01'),
+          time: new Date('2000-02-02').getTime(),
+        },
+      },
+    }
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          scalar JSON
+          type Query {
+            extensions: BadExt
+          }
+          type BadExt {
+            http: String
+            unexpected: String
+            extensions: JSON
+          }
+        `,
+        resolvers: {
+          JSON: new GraphQLScalarType({
+            name: 'JSON',
+          }),
+          Query: {
+            extensions: () => ({
+              http: 'hey',
+              unexpected: 'there',
+              extensions,
+            }),
+          },
+        },
+      }),
+      plugins: [
+        {
+          onResultProcess({ result }) {
+            result = result as ExecutionResult
+            result.errors = result.errors?.map((err) =>
+              createGraphQLError(err.message, {
+                nodes: err.nodes,
+                source: err.source,
+                positions: err.positions,
+                path: err.path,
+                originalError: err.originalError,
+                extensions: {
+                  ...err.extensions,
+                  ...extensions,
+                },
+              }),
+            )
+            result.extensions = {
+              ...result.extensions,
+              extensions,
+            }
+          },
+        },
+      ],
+    })
+
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ extensions { http, unexpected, extensions } }',
+      }),
+    })
+
+    expect(res.ok).toBeTruthy()
+    await expect(res.json()).resolves.toMatchInlineSnapshot(`
+      {
+        "data": {
+          "extensions": {
+            "extensions": {
+              "arr": [
+                "1",
+                2,
+                null,
+              ],
+              "obj": {
+                "date": {
+                  "extensions": "2000-01-01T00:00:00.000Z",
+                  "time": 949449600000,
+                },
+                "extensions": null,
+                "hi": "there",
+                "ne": {
+                  "extensions": [
+                    {
+                      "ext": 1,
+                    },
+                    {
+                      "ext": "2",
+                    },
+                  ],
+                  "st": "ed",
+                },
+                "num": 7,
+              },
+            },
+            "http": "hey",
+            "unexpected": "there",
+          },
+        },
+        "extensions": {
+          "extensions": {
+            "arr": [
+              "1",
+              2,
+              null,
+            ],
+            "obj": {
+              "date": {
+                "extensions": "2000-01-01T00:00:00.000Z",
+                "time": 949449600000,
+              },
+              "extensions": null,
+              "hi": "there",
+              "ne": {
+                "extensions": [
+                  {
+                    "ext": 1,
+                  },
+                  {
+                    "ext": "2",
+                  },
+                ],
+                "st": "ed",
+              },
+              "num": 7,
+            },
+          },
+        },
+      }
+    `)
+  })
+})
+
+describe('Result Extensions', () => {
+  let result: ExecutionResult
+  const plugin: Plugin = {
+    onExecute({ setExecuteFn }) {
+      setExecuteFn(() => result as unknown)
+    },
+  }
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hello: String
+        }
+      `,
+    }),
+    plugins: [plugin],
+  })
+  it('respects status code', async () => {
+    result = {
+      data: { hello: 'world' },
+      extensions: { http: { status: 201 } },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.status).toBe(201)
+  })
+  it('respects headers', async () => {
+    result = {
+      data: { hello: 'world' },
+      extensions: { http: { headers: { 'x-foo': 'bar' } } },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.headers.get('x-foo')).toBe('bar')
+  })
+  it('respects both error extensions and result extensions', async () => {
+    result = {
+      data: { hello: 'world' },
+      errors: [
+        createGraphQLError('test', {
+          extensions: {
+            http: {
+              status: 321,
+              headers: {
+                'x-bar': 'baz',
+              },
+            },
+          },
+        }),
+      ],
+      extensions: {
+        http: {
+          headers: {
+            'x-foo': 'bar',
+          },
+        },
+      },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.headers.get('x-foo')).toBe('bar')
+    expect(res.headers.get('x-bar')).toBe('baz')
+    expect(res.status).toBe(321)
+  })
+  it('respects the highest status code', async () => {
+    result = {
+      data: { hello: 'world' },
+      errors: [
+        createGraphQLError('test1', {
+          extensions: {
+            http: {
+              status: 300,
+            },
+          },
+        }),
+        createGraphQLError('test2', {
+          extensions: {
+            http: {
+              status: 400,
+            },
+          },
+        }),
+      ],
+      extensions: {
+        http: {
+          status: 401,
+        },
+      },
+    }
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    })
+    expect(res.status).toBe(401)
+  })
+  it('should set status text by status code', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            throw(status: Int!): String
+          }
+        `,
+        resolvers: {
+          Query: {
+            throw(_, { status }) {
+              throw createGraphQLError('Test', {
+                extensions: {
+                  http: {
+                    status,
+                  },
+                },
+              })
+            },
+          },
+        },
+      }),
+    })
+    const query = /* GraphQL */ `
+      query StatusTest($status: Int!) {
+        throw(status: $status)
+      }
+    `
+    for (const statusCodeStr in STATUS_CODES) {
+      const status = Number(statusCodeStr)
+      const res = await yoga.fetch('http://yoga/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          query,
+          variables: { status },
+        }),
+      })
+      expect(res.status).toBe(status)
+      expect(res.statusText).toBe(STATUS_CODES[status])
+    }
   })
 })

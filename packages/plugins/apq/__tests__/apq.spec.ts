@@ -1,5 +1,5 @@
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createInMemoryAPQStore, useAPQ } from '@graphql-yoga/plugin-apq'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -23,6 +23,7 @@ describe('Automatic Persisted Queries', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'content-type': 'application/json',
       },
       body: JSON.stringify({
@@ -125,6 +126,7 @@ describe('Automatic Persisted Queries', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'content-type': 'application/json',
       },
       body: JSON.stringify({

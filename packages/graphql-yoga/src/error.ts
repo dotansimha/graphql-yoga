@@ -1,18 +1,15 @@
-import { createGraphQLError } from '@graphql-tools/utils'
 import { GraphQLError } from 'graphql'
-import type { YogaLogger } from './logger.js'
-import type { ResultProcessorInput } from './plugins/types'
-import type { YogaMaskedErrorOpts } from './types'
+import { createGraphQLError } from '@graphql-tools/utils'
+
+import type { YogaLogger } from '@graphql-yoga/logger'
+import type { ResultProcessorInput } from './plugins/types.js'
+import type { GraphQLHTTPExtensions, YogaMaskedErrorOpts } from './types.js'
 
 export { createGraphQLError }
 
 declare module 'graphql' {
-  interface GraphQLHTTPErrorExtensions {
-    status?: number
-    headers?: Record<string, string>
-  }
   interface GraphQLErrorExtensions {
-    http?: GraphQLHTTPErrorExtensions
+    http?: GraphQLHTTPExtensions
     unexpected?: boolean
   }
 }
@@ -58,6 +55,7 @@ export function handleError(
     const maskedError = maskedErrorsOpts.maskError(
       error,
       maskedErrorsOpts.errorMessage,
+      maskedErrorsOpts.isDev,
     )
 
     if (maskedError !== error) {
@@ -112,21 +110,34 @@ export function handleError(
 export function getResponseInitByRespectingErrors(
   result: ResultProcessorInput,
   headers: Record<string, string> = {},
+  isApplicationJson = false,
 ) {
   let status: number | undefined
   let unexpectedErrorExists = false
 
+  if ('extensions' in result && result.extensions?.http) {
+    if (result.extensions.http.headers) {
+      Object.assign(headers, result.extensions.http.headers)
+    }
+    if (result.extensions.http.status) {
+      status = result.extensions.http.status
+    }
+  }
+
   if ('errors' in result && result.errors?.length) {
     for (const error of result.errors) {
       if (error.extensions?.http) {
+        if (error.extensions.http.headers) {
+          Object.assign(headers, error.extensions.http.headers)
+        }
+        if (isApplicationJson && error.extensions.http.spec) {
+          continue
+        }
         if (
           error.extensions.http.status &&
           (!status || error.extensions.http.status > status)
         ) {
           status = error.extensions.http.status
-        }
-        if (error.extensions.http.headers) {
-          Object.assign(headers, error.extensions.http.headers)
         }
       } else if (
         !isOriginalGraphQLError(error) ||
@@ -136,7 +147,7 @@ export function getResponseInitByRespectingErrors(
       }
     }
   } else {
-    status = 200
+    status ||= 200
   }
 
   if (!status) {
@@ -151,4 +162,12 @@ export function getResponseInitByRespectingErrors(
     status,
     headers,
   }
+}
+export function areGraphQLErrors(obj: unknown): obj is readonly GraphQLError[] {
+  return (
+    Array.isArray(obj) &&
+    obj.length > 0 &&
+    // if one item in the array is a GraphQLError, we're good
+    obj.some(isGraphQLError)
+  )
 }

@@ -1,3 +1,7 @@
+---
+description: Yoga is aware of the usefulness of a health check and gives the user maximum possibilities to use the built-in check and create a "readiness" check through a simple plugin.
+---
+
 import { Callout } from '@theguild/components'
 
 # Health Check
@@ -59,7 +63,7 @@ const yoga = createYoga({
       endpoint: '/ready', // default
       check: async () => {
         // if resolves, respond with 200 OK
-        // if throw, respond with 504 Service Unavailable and error message as plaintext in body
+        // if throw, respond with 503 Service Unavailable and error message as plaintext in body
         await checkDbAvailable()
       }
     })
@@ -72,14 +76,14 @@ server.listen(4000, () => {
 })
 ```
 
-Throwing an instance of `Error` in the `check` function will have Yoga respond with `504 Service Unavailable` with the error's message in the body.
+Throwing an instance of `Error` in the `check` function will have Yoga respond with `503 Service Unavailable` with the error's message in the body.
 
 <Callout>
   Please make sure that thrown errors are not leaking sensitive information in
   production environments.
 </Callout>
 
-Alternatively, you can simply return `false` from the `check` function to have Yoga respond with just `504 Service Unavailable` and no body. This way you can make sure nothing sensitive leaks ever.
+Alternatively, you can simply return `false` from the `check` function to have Yoga respond with just `503 Service Unavailable` and no body. This way you can make sure nothing sensitive leaks ever.
 
 ```ts
 import { createYoga, useReadinessCheck } from 'graphql-yoga'
@@ -99,7 +103,7 @@ const yoga = createYoga({
         } catch (err) {
           // log the error on the server for debugging purposes
           console.error(err)
-          // if false, respond with 504 Service Unavailable and no bdy
+          // if false, respond with 503 Service Unavailable and no bdy
           return false
         }
       }

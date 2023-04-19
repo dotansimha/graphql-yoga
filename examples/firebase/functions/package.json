@@ -1,0 +1,26 @@
+{
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "start": "concurrently \"npm run build:watch\" \"firebase emulators:start --only functions\"",
+    "shell": "concurrently \"npm run build:watch\" \"firebase functions:shell\"",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0",
+    "graphql-yoga": "3.9.1",
+    "graphql": "16.6.0"
+  },
+  "devDependencies": {
+    "concurrently": "8.0.1",
+    "firebase-functions-test": "^3.0.0",
+    "firebase-tools": "^11.24.0",
+    "typescript": "^5.0.0"
+  },
+  "private": true,
+  "version": null
+}

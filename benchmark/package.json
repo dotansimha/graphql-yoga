@@ -1,0 +1,24 @@
+{
+  "name": "hello-world-benchmark",
+  "type": "module",
+  "version": "1.9.1",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/start-server.js",
+    "loadtest": "k6 -e GITHUB_PR=$GITHUB_PR -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_TOKEN=$GITHUB_TOKEN run k6.js",
+    "check": "exit 0",
+    "pretest": "npm run build",
+    "test": "start-server-and-test start http://127.0.0.1:4000/ping loadtest"
+  },
+  "dependencies": {
+    "@envelop/graphql-jit": "5.0.6",
+    "@faker-js/faker": "7.6.0",
+    "@graphql-yoga/plugin-response-cache": "1.9.1",
+    "graphql-yoga": "3.9.1",
+    "graphql": "16.6.0"
+  },
+  "devDependencies": {
+    "start-server-and-test": "2.0.0"
+  }
+}

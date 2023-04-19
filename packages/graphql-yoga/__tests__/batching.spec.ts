@@ -85,6 +85,7 @@ describe('Batching', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify([
@@ -129,6 +130,7 @@ describe('Batching', () => {
     const response = await noBatchingYoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify([{ query: query1 }, { query: query2 }]),
@@ -164,6 +166,7 @@ describe('Batching', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify([
@@ -201,6 +204,7 @@ describe('Batching', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify([{ query: query1 }, { query: query2 }]),
@@ -235,6 +239,7 @@ describe('Batching', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify([{ query: query1 }, { query: query2 }]),
@@ -267,6 +272,7 @@ describe('Batching', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify([

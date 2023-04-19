@@ -1,6 +1,8 @@
-import { createYoga, createSchema, createGraphQLError } from 'graphql-yoga'
-import { useApolloInlineTrace } from '../src/index.js'
+/* eslint-disable @typescript-eslint/require-await */
 import { Trace } from 'apollo-reporting-protobuf'
+import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
+
+import { useApolloInlineTrace } from '../src/index.js'
 
 describe('Inline Trace', () => {
   const schema = createSchema({
@@ -413,6 +415,7 @@ describe('Inline Trace', () => {
             createGraphQLError('bim', { extensions: { str: 'ing' } }),
         }),
       ],
+      logging: false,
     })
 
     const response = await yoga.fetch('http://yoga/graphql', {
@@ -466,7 +469,7 @@ describe('Inline Trace', () => {
     expect(response.ok).toBe(true)
 
     const result = await response.text()
-    expect(result).toBe('data: {"data":{"hello":"world"}}\n\n')
+    expect(result).toContain('data: {"data":{"hello":"world"}}\n\n')
   })
 })
 

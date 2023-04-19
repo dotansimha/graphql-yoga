@@ -25,4 +25,19 @@ describe('filter', () => {
 
     expect(result).toEqual([1, 2, 1])
   })
+
+  it('async filter is supported', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+      yield 1
+    }
+
+    const filterFn = (value: number) => Promise.resolve(value < 3)
+    const stream = filter(filterFn)(source())
+    const result = await collectAsyncIterableValues(stream)
+
+    expect(result).toEqual([1, 2, 1])
+  })
 })

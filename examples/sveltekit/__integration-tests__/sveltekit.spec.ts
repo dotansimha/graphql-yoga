@@ -1,8 +1,10 @@
 import { execSync, spawn } from 'child_process';
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser, Page } from 'puppeteer';
+import { promises as fsPromises } from 'fs';
+import { join } from 'path';
 
-let browser: puppeteer.Browser;
-let page: puppeteer.Page;
+let browser: Browser;
+let page: Page;
 let sveltekitProcess: ReturnType<typeof spawn>;
 
 const timings = {
@@ -15,8 +17,47 @@ const timings = {
 };
 let toSkip = false;
 
+const tslibAdd = `
+	export default {
+		__assign: __assign,
+		__rest: __rest,
+		__decorate: __decorate,
+		__param: __param,
+		__metadata: __metadata,
+		__awaiter: __awaiter,
+		__generator: __generator,
+		__exportStar: __exportStar,
+		__values: __values,
+		__read: __read,
+		__spread: __spread,
+		__spreadArrays: __spreadArrays,
+		__spreadArray: __spreadArray,
+		__await: __await,
+		__asyncGenerator: __asyncGenerator,
+		__asyncDelegator: __asyncDelegator,
+		__asyncValues: __asyncValues,
+		__makeTemplateObject: __makeTemplateObject,
+		__importStar: __importStar,
+		__importDefault: __importDefault,
+		__classPrivateFieldGet: __classPrivateFieldGet,
+		__classPrivateFieldSet: __classPrivateFieldSet,
+		__classPrivateFieldIn: __classPrivateFieldIn
+	}
+`
+
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
+		const tslibDirPath = join(__dirname, '../node_modules/tslib');
+		const tslibFilePath = join(tslibDirPath, 'tslib.es6.js');
+		const tslibFile = await fsPromises.readFile(tslibFilePath, 'utf8');
+		if (!tslibFile.includes('export default')) {
+			await fsPromises.writeFile(tslibFilePath, tslibFile + tslibAdd);
+		}
+		const tslibPackageJsonPath = join(tslibDirPath, 'package.json');
+		const tslibPackageJson = await fsPromises.readFile(tslibPackageJsonPath, 'utf8');
+		const tslibPackageJsonParsed = JSON.parse(tslibPackageJson);
+		tslibPackageJsonParsed.type = 'module';
+		await fsPromises.writeFile(tslibPackageJsonPath, JSON.stringify(tslibPackageJsonParsed, null, 2));
 		const nodeVersion = execSync('node -v').toString();
 		if (nodeVersion.includes('v12')) {
 			toSkip = true;

@@ -1,11 +1,13 @@
 import { GraphQLParams } from '../../types.js'
-import { parseURLSearchParams } from './utils.js'
+import { handleURLSearchParams } from './utils.js'
+import { URLSearchParams } from '@whatwg-node/fetch'
 
 export function isGETRequest(request: Request) {
   return request.method === 'GET'
 }
 
 export function parseGETRequest(request: Request): GraphQLParams {
-  const [, searchParamsStr] = request.url.split('?')
-  return parseURLSearchParams(searchParamsStr)
+  const [, queryString = ''] = request.url.split('?')
+  const searchParams = new URLSearchParams(queryString)
+  return handleURLSearchParams(searchParams)
 }

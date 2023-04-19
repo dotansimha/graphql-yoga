@@ -1,13 +1,14 @@
-import { Maybe } from '@envelop/core'
-import { createGraphQLError } from '@graphql-tools/utils'
 import {
-  OperationDefinitionNode,
+  DocumentNode,
   getOperationAST,
   GraphQLError,
-  DocumentNode,
+  OperationDefinitionNode,
 } from 'graphql'
-import type { YogaInitialContext } from '../../types'
-import type { Plugin } from '../types'
+import { Maybe } from '@envelop/core'
+import { createGraphQLError } from '@graphql-tools/utils'
+
+import type { YogaInitialContext } from '../../types.js'
+import type { Plugin } from '../types.js'
 
 export function assertMutationViaGet(
   method: string,
@@ -68,6 +69,7 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
         if (result instanceof Error) {
           if (result instanceof GraphQLError) {
             result.extensions.http = {
+              spec: true,
               status: 400,
             }
           }

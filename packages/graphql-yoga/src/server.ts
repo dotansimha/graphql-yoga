@@ -1,48 +1,35 @@
-import { ExecutionResult, parse, validate, specifiedRules } from 'graphql'
-import { normalizedExecutor } from '@graphql-tools/executor'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  GetEnvelopedFn,
   envelop,
+  GetEnvelopedFn,
+  PromiseOrValue,
   useEngine,
   useExtendContext,
-  PromiseOrValue,
   useMaskedErrors,
 } from '@envelop/core'
 import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
-import { ParserCacheOptions, useParserCache } from '@envelop/parser-cache'
+import { normalizedExecutor } from '@graphql-tools/executor'
+import * as defaultFetchAPI from '@whatwg-node/fetch'
 import {
-  YogaInitialContext,
-  FetchAPI,
-  GraphQLParams,
-  YogaMaskedErrorOpts,
-} from './types.js'
-import {
-  OnParamsHook,
-  OnRequestHook,
-  OnRequestParseDoneHook,
-  OnRequestParseHook,
-  OnResponseHook,
-  OnResultProcess,
-  Plugin,
-  RequestParser,
-  ResultProcessorInput,
-} from './plugins/types.js'
-import { createFetch } from '@whatwg-node/fetch'
-import { ServerAdapter, createServerAdapter } from '@whatwg-node/server'
-import {
-  processRequest as processGraphQLParams,
-  processResult,
-} from './process-request.js'
-import { createLogger, LogLevel, YogaLogger } from './logger.js'
-import { CORSPluginOptions, useCORS } from './plugins/useCORS.js'
-import { useHealthCheck } from './plugins/useHealthCheck.js'
-import {
-  GraphiQLOptions,
-  GraphiQLOptionsOrFactory,
-  useGraphiQL,
-} from './plugins/useGraphiQL.js'
-import { useRequestParser } from './plugins/useRequestParser.js'
+  createServerAdapter,
+  ServerAdapter,
+  ServerAdapterBaseObject,
+  ServerAdapterRequestHandler,
+  useCORS,
+  useErrorHandling,
+} from '@whatwg-node/server'
+import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
+import { handleError } from './error.js'
+import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger'
 import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
+import {
+  isPOSTFormUrlEncodedRequest,
+  parsePOSTFormUrlEncodedRequest,
+} from './plugins/requestParser/POSTFormUrlEncoded.js'
+import {
+  isPOSTGraphQLStringRequest,
+  parsePOSTGraphQLStringRequest,
+} from './plugins/requestParser/POSTGraphQLString.js'
 import {
   isPOSTJsonRequest,
   parsePOSTJsonRequest,
@@ -51,24 +38,46 @@ import {
   isPOSTMultipartRequest,
   parsePOSTMultipartRequest,
 } from './plugins/requestParser/POSTMultipart.js'
-import {
-  isPOSTGraphQLStringRequest,
-  parsePOSTGraphQLStringRequest,
-} from './plugins/requestParser/POSTGraphQLString.js'
-import { useResultProcessors } from './plugins/useResultProcessor.js'
-import {
-  isPOSTFormUrlEncodedRequest,
-  parsePOSTFormUrlEncodedRequest,
-} from './plugins/requestParser/POSTFormUrlEncoded.js'
-import { handleError } from './error.js'
-import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
 import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
+import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
 import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
-import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
-import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
-import { yogaDefaultFormatError } from './utils/yoga-default-format-error.js'
-import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
 import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
+import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
+import {
+  OnParamsHook,
+  OnRequestParseDoneHook,
+  OnRequestParseHook,
+  OnResultProcess,
+  Plugin,
+  RequestParser,
+  ResultProcessorInput,
+} from './plugins/types.js'
+import {
+  GraphiQLOptions,
+  GraphiQLOptionsOrFactory,
+  useGraphiQL,
+} from './plugins/useGraphiQL.js'
+import { useHealthCheck } from './plugins/useHealthCheck.js'
+import {
+  ParserAndValidationCacheOptions,
+  useParserAndValidationCache,
+} from './plugins/useParserAndValidationCache.js'
+import { useRequestParser } from './plugins/useRequestParser.js'
+import { useResultProcessors } from './plugins/useResultProcessor.js'
+import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
+import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
+import {
+  processRequest as processGraphQLParams,
+  processResult,
+} from './process-request.js'
+import {
+  FetchAPI,
+  GraphQLParams,
+  MaskError,
+  YogaInitialContext,
+  YogaMaskedErrorOpts,
+} from './types.js'
+import { maskError } from './utils/mask-error.js'
 
 /**
  * Configuration options for the server
@@ -100,7 +109,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
     | TUserContext
     | undefined
 
-  cors?: CORSPluginOptions<TServerContext> | undefined
+  cors?: Parameters<typeof useCORS>[0] | undefined
 
   /**
    * GraphQL endpoint
@@ -142,9 +151,9 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
     Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
   > | undefined
 
-  parserCache?: boolean | ParserCacheOptions | undefined
+  parserCache?: boolean | ParserAndValidationCacheOptions | undefined
   validationCache?: boolean | ValidationCache | undefined
-  fetchAPI?: FetchAPI | undefined
+  fetchAPI?: Partial<Record<keyof FetchAPI, any>> | undefined
   /**
    * GraphQL Multipart Request spec support
    *
@@ -162,6 +171,15 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * @default false
    */
   batching?: BatchingOptions | undefined
+  /**
+   * Whether to use the legacy Yoga Server-Sent Events and not
+   * the GraphQL over SSE spec's distinct connection mode.
+   *
+   * @default true
+   *
+   * @deprecated Consider using GraphQL over SSE spec instead by setting this to `false`. Starting with the next major release, this flag will default to `false`.
+   */
+  legacySse?: boolean
 }
 
 export type BatchingOptions =
@@ -183,7 +201,8 @@ export type BatchingOptions =
 export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
-> {
+> implements ServerAdapterBaseObject<TServerContext>
+{
   /**
    * Instance of envelop
    */
@@ -198,21 +217,26 @@ export class YogaServer<
   >
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
   private onParamsHooks: OnParamsHook[]
-  private onRequestHooks: OnRequestHook<TServerContext>[]
   private onResultProcessHooks: OnResultProcess[]
-  private onResponseHooks: OnResponseHook<TServerContext>[]
   private maskedErrorsOpts: YogaMaskedErrorOpts | null
   private id: string
 
   constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
     this.id = options?.id ?? 'yoga'
-    this.fetchAPI =
-      options?.fetchAPI ??
-      createFetch({
-        useNodeFetch: true,
-      })
 
-    const logger = options?.logging != null ? options.logging : true
+    this.fetchAPI = {
+      ...defaultFetchAPI,
+    }
+    if (options?.fetchAPI) {
+      for (const key in options.fetchAPI) {
+        if (options.fetchAPI[key as keyof FetchAPI]) {
+          this.fetchAPI[key as keyof FetchAPI] =
+            options.fetchAPI[key as keyof FetchAPI]
+        }
+      }
+    }
+
+    const logger = options?.logging == null ? true : options.logging
     this.logger =
       typeof logger === 'boolean'
         ? logger === true
@@ -222,10 +246,12 @@ export class YogaServer<
         ? createLogger(logger)
         : logger
 
-    const maskErrorFn =
+    const maskErrorFn: MaskError =
       (typeof options?.maskedErrors === 'object' &&
         options.maskedErrors.maskError) ||
-      yogaDefaultFormatError
+      maskError
+
+    const maskedErrorSet = new WeakSet()
 
     this.maskedErrorsOpts =
       options?.maskedErrors === false
@@ -236,25 +262,27 @@ export class YogaServer<
               ? options.maskedErrors
               : {}),
             maskError: (error, message) => {
+              if (maskedErrorSet.has(error as Error)) {
+                return error as Error
+              }
               const newError = maskErrorFn(
-                {
-                  error,
-                  message,
-                  isDev: this.maskedErrorsOpts?.isDev ?? false,
-                },
+                error,
                 message,
+                this.maskedErrorsOpts?.isDev,
               )
 
               if (newError !== error) {
                 this.logger.error(error)
               }
 
+              maskedErrorSet.add(newError)
+
               return newError
             },
           }
 
     const maskedErrors =
-      this.maskedErrorsOpts != null ? this.maskedErrorsOpts : null
+      this.maskedErrorsOpts == null ? null : this.maskedErrorsOpts
 
     let batchingLimit = 0
     if (options?.batching) {
@@ -279,20 +307,6 @@ export class YogaServer<
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
 
-      // Performance things
-      options?.parserCache !== false &&
-        useParserCache(
-          typeof options?.parserCache === 'object'
-            ? options.parserCache
-            : undefined,
-        ),
-      options?.validationCache !== false &&
-        useValidationCache({
-          cache:
-            typeof options?.validationCache === 'object'
-              ? options.validationCache
-              : undefined,
-        }),
       options?.context != null &&
         useExtendContext((initialContext) => {
           if (options?.context) {
@@ -312,13 +326,12 @@ export class YogaServer<
       options?.cors !== false && useCORS(options?.cors),
       options?.graphiql !== false &&
         useGraphiQL({
-          graphqlEndpoint: this.graphqlEndpoint,
+          graphqlEndpoint,
           options: options?.graphiql,
           render: options?.renderGraphiQL,
           logger: this.logger,
         }),
       // Middlewares before the GraphQL execution
-      useCheckMethodForGraphQL(),
       useRequestParser({
         match: isGETRequest,
         parse: parseGETRequest,
@@ -342,11 +355,59 @@ export class YogaServer<
         parse: parsePOSTFormUrlEncodedRequest,
       }),
       // Middlewares after the GraphQL execution
-      useResultProcessors(),
+      useResultProcessors({
+        legacySSE: options?.legacySse !== false,
+      }),
+      useErrorHandling((error, request) => {
+        const errors = handleError(error, this.maskedErrorsOpts, this.logger)
+
+        const result = {
+          errors,
+        }
+
+        return processResult({
+          request,
+          result,
+          fetchAPI: this.fetchAPI,
+          onResultProcessHooks: this.onResultProcessHooks,
+        })
+      }),
+
       ...(options?.plugins ?? []),
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
+          // Performance things
+          if (options?.parserCache !== false) {
+            const parserAndValidationCacheOptions: ParserAndValidationCacheOptions =
+              {}
+
+            if (typeof options?.parserCache === 'object') {
+              parserAndValidationCacheOptions.documentCache =
+                options.parserCache.documentCache
+              parserAndValidationCacheOptions.errorCache =
+                options.parserCache.errorCache
+            }
+
+            if (options?.validationCache === false) {
+              parserAndValidationCacheOptions.validationCache = false
+            } else if (typeof options?.validationCache === 'object') {
+              // TODO: Remove this in the next major version
+              // Backward compatibility for the old API
+              parserAndValidationCacheOptions.validationCache = false
+              addPlugin(
+                // @ts-expect-error Add plugins has context but this hook doesn't care
+                useValidationCache({
+                  cache: options.validationCache,
+                }),
+              )
+            }
+
+            addPlugin(
+              // @ts-expect-error Add plugins has context but this hook doesn't care
+              useParserAndValidationCache(parserAndValidationCacheOptions),
+            )
+          }
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(useLimitBatching(batchingLimit))
           // @ts-expect-error Add plugins has context but this hook doesn't care
@@ -358,6 +419,9 @@ export class YogaServer<
               showLandingPage: options?.landingPage ?? true,
             }),
           )
+          // We check the method after user-land plugins because the plugin might support more methods (like graphql-sse).
+          // @ts-expect-error Add plugins has context but this hook doesn't care
+          addPlugin(useCheckMethodForGraphQL())
           // We make sure that the user doesn't send a mutation with GET
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(usePreventMutationViaGET())
@@ -384,20 +448,15 @@ export class YogaServer<
       TUserContext
     >[]
 
-    this.onRequestHooks = []
     this.onRequestParseHooks = []
     this.onParamsHooks = []
     this.onResultProcessHooks = []
-    this.onResponseHooks = []
     for (const plugin of this.plugins) {
       if (plugin) {
         if (plugin.onYogaInit) {
           plugin.onYogaInit({
             yoga: this,
           })
-        }
-        if (plugin.onRequest) {
-          this.onRequestHooks.push(plugin.onRequest)
         }
         if (plugin.onRequestParse) {
           this.onRequestParseHooks.push(plugin.onRequestParse)
@@ -407,9 +466,6 @@ export class YogaServer<
         }
         if (plugin.onResultProcess) {
           this.onResultProcessHooks.push(plugin.onResultProcess)
-        }
-        if (plugin.onResponse) {
-          this.onResponseHooks.push(plugin.onResponse)
         }
       }
     }
@@ -477,118 +533,80 @@ export class YogaServer<
     }
   }
 
-  async getResponse(request: Request, serverContext: TServerContext) {
-    const url = new URL(request.url, 'http://localhost')
-    for (const onRequestHook of this.onRequestHooks) {
-      let response: Response | undefined
-      await onRequestHook({
-        request,
-        serverContext,
-        fetchAPI: this.fetchAPI,
-        url,
-        endResponse(newResponse) {
-          response = newResponse
-        },
-      })
-      if (response) {
-        return response
-      }
-    }
+  handle: ServerAdapterRequestHandler<TServerContext> = async (
+    request: Request,
+    serverContext: TServerContext,
+  ) => {
+    let url = new Proxy({} as URL, {
+      get: (_target, prop, _receiver) => {
+        url = new this.fetchAPI.URL(request.url, 'http://localhost')
+        return Reflect.get(url, prop, url)
+      },
+    }) as URL
 
     let requestParser: RequestParser | undefined
     const onRequestParseDoneList: OnRequestParseDoneHook[] = []
-    let result: ResultProcessorInput
-
-    try {
-      for (const onRequestParse of this.onRequestParseHooks) {
-        const onRequestParseResult = await onRequestParse({
-          request,
-          requestParser,
-          serverContext,
-          setRequestParser(parser: RequestParser) {
-            requestParser = parser
-          },
-        })
-        if (onRequestParseResult?.onRequestParseDone != null) {
-          onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone)
-        }
-      }
-
-      this.logger.debug(`Parsing request to extract GraphQL parameters`)
-
-      if (!requestParser) {
-        return new this.fetchAPI.Response('Request is not valid', {
-          status: 400,
-          statusText: 'Bad Request',
-        })
-      }
-
-      let requestParserResult = await requestParser(request)
-
-      for (const onRequestParseDone of onRequestParseDoneList) {
-        await onRequestParseDone({
-          requestParserResult,
-          setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
-            requestParserResult = newParams
-          },
-        })
-      }
-
-      result = (await (Array.isArray(requestParserResult)
-        ? Promise.all(
-            requestParserResult.map((params) =>
-              this.getResultForParams(
-                {
-                  params,
-                  request,
-                },
-                serverContext,
-              ),
-            ),
-          )
-        : this.getResultForParams(
-            {
-              params: requestParserResult,
-              request,
-            },
-            serverContext,
-          ))) as ResultProcessorInput
-    } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts, this.logger)
-
-      result = {
-        errors,
+    for (const onRequestParse of this.onRequestParseHooks) {
+      const onRequestParseResult = await onRequestParse({
+        request,
+        url,
+        requestParser,
+        serverContext,
+        setRequestParser(parser: RequestParser) {
+          requestParser = parser
+        },
+      })
+      if (onRequestParseResult?.onRequestParseDone != null) {
+        onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone)
       }
     }
 
-    const response = await processResult({
+    this.logger.debug(`Parsing request to extract GraphQL parameters`)
+
+    if (!requestParser) {
+      return new this.fetchAPI.Response(null, {
+        status: 415,
+        statusText: 'Unsupported Media Type',
+      })
+    }
+
+    let requestParserResult = await requestParser(request)
+
+    for (const onRequestParseDone of onRequestParseDoneList) {
+      await onRequestParseDone({
+        requestParserResult,
+        setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+          requestParserResult = newParams
+        },
+      })
+    }
+
+    const result = (await (Array.isArray(requestParserResult)
+      ? Promise.all(
+          requestParserResult.map((params) =>
+            this.getResultForParams(
+              {
+                params,
+                request,
+              },
+              serverContext,
+            ),
+          ),
+        )
+      : this.getResultForParams(
+          {
+            params: requestParserResult,
+            request,
+          },
+          serverContext,
+        ))) as ResultProcessorInput
+
+    return processResult({
       request,
       result,
       fetchAPI: this.fetchAPI,
       onResultProcessHooks: this.onResultProcessHooks,
     })
-
-    return response
-  }
-
-  handle = async (request: Request, serverContext: TServerContext) => {
-    try {
-      const response = await this.getResponse(request, serverContext)
-
-      for (const onResponseHook of this.onResponseHooks) {
-        await onResponseHook({
-          request,
-          response,
-          serverContext,
-        })
-      }
-      return response
-    } catch (e: unknown) {
-      this.logger.error(e)
-      return new this.fetchAPI.Response('Internal Server Error', {
-        status: 500,
-      })
-    }
   }
 }
 
@@ -601,9 +619,14 @@ export type YogaServerInstance<
 export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
->(
-  options: YogaServerOptions<TServerContext, TUserContext>,
-): YogaServerInstance<TServerContext, TUserContext> {
+>(options: YogaServerOptions<TServerContext, TUserContext>) {
   const server = new YogaServer<TServerContext, TUserContext>(options)
-  return createServerAdapter(server, server.fetchAPI.Request)
+  return createServerAdapter<
+    TServerContext,
+    YogaServer<TServerContext, TUserContext>
+  >(server, {
+    fetchAPI: server.fetchAPI,
+    plugins: server['plugins'],
+  }) as unknown as YogaServerInstance<TServerContext, TUserContext>
+  // TODO: Fix in @whatwg-node/server later
 }

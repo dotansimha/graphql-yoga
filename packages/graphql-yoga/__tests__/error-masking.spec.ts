@@ -1,7 +1,10 @@
-import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
+import { inspect } from '@graphql-tools/utils'
+
+import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
 
 describe('error masking', () => {
   function createTestSchema() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return createSchema<any>({
       typeDefs: /* GraphQL */ `
         type Query {
@@ -155,6 +158,9 @@ describe('error masking', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
+      headers: {
+        accept: 'application/graphql-response+json',
+      },
       body: JSON.stringify({ query: '{ hi hello }' }),
     })
 
@@ -289,6 +295,7 @@ describe('error masking', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'content-type': 'application/json',
       },
       body: JSON.stringify({ query: '{libl_pls' }),
@@ -327,6 +334,7 @@ describe('error masking', () => {
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'content-type': 'application/json',
       },
       body: JSON.stringify({ query: '{libl_pls}' }),
@@ -402,7 +410,10 @@ describe('error masking', () => {
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: '{ __typename }' }),
     })
     expect(response.status).toEqual(500)
@@ -410,6 +421,51 @@ describe('error masking', () => {
       errors: [
         {
           message: 'Unexpected error.',
+        },
+      ],
+    })
+  })
+
+  it('call the custom maskError function with correct parameters', async () => {
+    const yoga = createYoga({
+      logging: false,
+      context: () => {
+        throw new Error('I like turtles')
+      },
+      maskedErrors: {
+        errorMessage: 'My message',
+        maskError: (error, message, isDev) => {
+          return createGraphQLError(
+            inspect({
+              errorStr: String(error),
+              message,
+              isDev,
+            }),
+          )
+        },
+        isDev: true,
+      },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+    })
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ __typename }' }),
+    })
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message:
+            '{ errorStr: "Error: I like turtles", message: "My message", isDev: true }',
         },
       ],
     })

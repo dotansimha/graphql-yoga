@@ -1,6 +1,7 @@
-import { Plugin } from './types.js'
 import { PromiseOrValue } from '@envelop/core'
+
 import { GraphQLParams } from '../types.js'
+import { Plugin } from './types.js'
 
 interface RequestParserPluginOptions {
   match?(request: Request): boolean
@@ -16,9 +17,7 @@ export function useRequestParser(options: RequestParserPluginOptions): Plugin {
   return {
     onRequestParse({ request, setRequestParser }) {
       if (matchFn(request)) {
-        setRequestParser(function useRequestParserFn(request: Request) {
-          return options.parse(request)
-        })
+        setRequestParser(options.parse)
       }
     },
   }

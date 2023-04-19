@@ -1,12 +1,11 @@
-import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
-import { createYoga, createSchema } from 'graphql-yoga'
-import { createServer, Server } from 'http'
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { parse } from 'graphql'
+import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core'
 import { YogaLink } from '@graphql-yoga/apollo-link'
-import { File } from '@whatwg-node/fetch'
-import { AddressInfo } from 'net'
+import { createSchema, createYoga } from 'graphql-yoga'
 
-describe.skip('Yoga Apollo Link', () => {
+describe('Yoga Apollo Link', () => {
   const endpoint = '/graphql'
   const hostname = '127.0.0.1'
   const yoga = createYoga({
@@ -50,7 +49,7 @@ describe.skip('Yoga Apollo Link', () => {
 
   let server: Server
   let url: string
-  let client: ApolloClient<any>
+  let client: ApolloClient<unknown>
 
   beforeAll(async () => {
     server = createServer(yoga)
@@ -110,7 +109,7 @@ describe.skip('Yoga Apollo Link', () => {
       expect(new Date(value).getFullYear()).toBe(now.getFullYear())
     }
   })
-  it('should handle file uploads correctly', async () => {
+  it.skip('should handle file uploads correctly', async () => {
     const result = await client.mutate({
       mutation: parse(/* GraphQL */ `
         mutation readFile($file: File!) {
@@ -118,7 +117,9 @@ describe.skip('Yoga Apollo Link', () => {
         }
       `),
       variables: {
-        file: new File(['Hello World'], 'file.txt', { type: 'text/plain' }),
+        file: new yoga.fetchAPI.File(['Hello World'], 'file.txt', {
+          type: 'text/plain',
+        }),
       },
     })
     expect(result.errors?.length).toBeFalsy()

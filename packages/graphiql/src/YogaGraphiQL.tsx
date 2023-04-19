@@ -1,24 +1,25 @@
+import 'json-bigint-patch'
 import React, { useMemo, useState } from 'react'
+import { DocumentNode, Kind, parse } from 'graphql'
 import { useExplorerPlugin } from '@graphiql/plugin-explorer'
+import { Fetcher, FetcherOpts, FetcherParams } from '@graphiql/toolkit'
+import {
+  LoadFromUrlOptions,
+  SubscriptionProtocol,
+  UrlLoader,
+} from '@graphql-tools/url-loader'
 import {
   GraphiQL,
   GraphiQLInterface,
   GraphiQLProps,
   GraphiQLProvider,
 } from 'graphiql'
-import { Fetcher, FetcherParams, FetcherOpts } from '@graphiql/toolkit'
-import {
-  LoadFromUrlOptions,
-  SubscriptionProtocol,
-  UrlLoader,
-} from '@graphql-tools/url-loader'
 import { useUrlSearchParams } from 'use-url-search-params'
-import { DocumentNode, Kind, parse } from 'graphql'
+
+import { YogaLogo } from './YogaLogo'
 import 'graphiql/graphiql.css'
 import '@graphiql/plugin-explorer/dist/style.css'
 import './styles.css'
-import 'json-bigint-patch'
-import { YogaLogo } from './YogaLogo'
 
 const getOperationWithFragments = (
   document: DocumentNode,
@@ -113,7 +114,6 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       credentials: 'same-origin',
       specifiedByUrl: true,
       directiveIsRepeatable: true,
-      schemaDescription: true,
       ...props,
       headers: props.additionalHeaders || {},
     })
@@ -143,8 +143,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const [query, setQuery] = useState(params.query?.toString())
   const explorerPlugin = useExplorerPlugin({
-    query,
+    query: query as string,
     onEdit: setQuery,
+    showAttribution: true,
   })
 
   return (
@@ -152,6 +153,8 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       <GraphiQLProvider
         plugins={[explorerPlugin]}
         query={query}
+        headers={props.headers}
+        schemaDescription={true}
         fetcher={fetcher}
       >
         <GraphiQLInterface
@@ -169,9 +172,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
                 <YogaLogo />
               </div>
               <span>
-                {props?.title ? (
-                  props.title
-                ) : (
+                {props?.title || (
                   <>
                     Yoga Graph
                     <em>i</em>

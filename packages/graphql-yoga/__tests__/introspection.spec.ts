@@ -1,8 +1,10 @@
-import { useDisableIntrospection } from '@envelop/disable-introspection'
 import { getIntrospectionQuery } from 'graphql'
-import { createSchema, createYoga, createGraphQLError } from 'graphql-yoga'
+import { useDisableIntrospection } from '@envelop/disable-introspection'
+
+import { createGraphQLError, createSchema, createYoga } from '../src/index.js'
 
 function createTestSchema() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return createSchema<any>({
     typeDefs: /* GraphQL */ `
       type Query {
@@ -46,7 +48,10 @@ describe('introspection', () => {
     })
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
       body: JSON.stringify({ query: getIntrospectionQuery() }),
     })
 

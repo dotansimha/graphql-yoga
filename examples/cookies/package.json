@@ -1,0 +1,20 @@
+{
+  "name": "example-cookies",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "ts-node-dev src/index.ts",
+    "check": "tsc --pretty --noEmit"
+  },
+  "dependencies": {
+    "@whatwg-node/server-plugin-cookies": "0.0.1",
+    "graphql-yoga": "3.9.1",
+    "graphql": "16.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.15.11",
+    "ts-node": "10.9.1",
+    "ts-node-dev": "2.0.0",
+    "typescript": "5.0.4"
+  }
+}

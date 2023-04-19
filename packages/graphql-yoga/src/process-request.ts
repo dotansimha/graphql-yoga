@@ -1,11 +1,12 @@
-import { getOperationAST, ExecutionArgs } from 'graphql'
-import { FetchAPI, GraphQLParams } from './types.js'
+import { ExecutionArgs, getOperationAST } from 'graphql'
+import { GetEnvelopedFn } from '@envelop/core'
+
 import {
   OnResultProcess,
   ResultProcessor,
   ResultProcessorInput,
 } from './plugins/types.js'
-import { GetEnvelopedFn } from '@envelop/core'
+import { FetchAPI, GraphQLParams } from './types.js'
 
 export async function processResult({
   request,
@@ -31,6 +32,9 @@ export async function processResult({
       request,
       acceptableMediaTypes,
       result,
+      setResult(newResult) {
+        result = newResult
+      },
       resultProcessor,
       setResultProcessor(newResultProcessor, newAcceptedMimeType) {
         resultProcessor = newResultProcessor
@@ -53,21 +57,25 @@ export async function processResult({
   return resultProcessor(result, fetchAPI, acceptedMediaType)
 }
 
-export async function processRequest<TContext>({
+export async function processRequest({
   params,
   enveloped,
 }: {
   params: GraphQLParams
-  enveloped: ReturnType<GetEnvelopedFn<TContext>>
+  enveloped: ReturnType<GetEnvelopedFn<unknown>>
 }) {
   // Parse GraphQLParams
   const document = enveloped.parse(params.query!)
 
   // Validate parsed Document Node
-  enveloped.validate(enveloped.schema, document)
+  const errors = enveloped.validate(enveloped.schema, document)
+
+  if (errors.length > 0) {
+    return { errors }
+  }
 
   // Build the context for the execution
-  const contextValue = (await enveloped.contextFactory()) as TContext
+  const contextValue = await enveloped.contextFactory()
 
   const executionArgs: ExecutionArgs = {
     schema: enveloped.schema,

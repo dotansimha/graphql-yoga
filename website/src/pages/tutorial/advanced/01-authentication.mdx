@@ -1,3 +1,7 @@
+---
+description: Implement signup and login functionality that allows your users to authenticate against your GraphQL server.
+---
+
 import { PackageCmd, Callout } from '@theguild/components'
 
 # Authentication
@@ -300,14 +304,13 @@ You'll now modify the context building phase of your GraphQL server, by detectin
 
 ```ts filename="src/auth.ts"
 import { PrismaClient, User } from '@prisma/client'
-import { FastifyRequest } from 'fastify'
 import { JwtPayload, verify } from 'jsonwebtoken'
 
 export const APP_SECRET = 'this is my secret'
 
 export async function authenticateUser(
   prisma: PrismaClient,
-  request: FastifyRequest
+  request: Request
 ): Promise<User | null> {
   const header = request.headers.get('authorization')
   if (header !== null) {
@@ -336,7 +339,7 @@ Now, modify your `createContext` function in `src/context.ts` function to call t
 
 ```ts filename="src/context.ts"
 import { PrismaClient, User } from '@prisma/client'
-import { YogaInitialContext } from '@graphql-yoga/node'
+import { YogaInitialContext } from 'graphql-yoga'
 import { authenticateUser } from './auth'
 
 const prisma = new PrismaClient()

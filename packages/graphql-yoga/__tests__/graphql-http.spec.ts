@@ -1,5 +1,6 @@
-import { createSchema, createYoga } from 'graphql-yoga'
 import { serverAudits } from 'graphql-http'
+
+import { createSchema, createYoga } from '../src/index.js'
 
 const yoga = createYoga({
   schema: createSchema({

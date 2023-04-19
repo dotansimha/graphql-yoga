@@ -1,3 +1,7 @@
+---
+description: GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
+---
+
 import { PackageCmd } from '@theguild/components'
 
 # Integration with Cloudflare Workers
@@ -22,9 +26,22 @@ You will want to use the package `graphql-yoga` which has an agnostic HTTP handl
 ## Example with regular `fetch` event listener
 
 ```ts filename="listener.mjs"
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 
-const yoga = createYoga()
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'Hello World!'
+      }
+    }
+  })
+})
 
 self.addEventListener('fetch', yoga)
 ```
@@ -34,9 +51,23 @@ self.addEventListener('fetch', yoga)
 ## Example with Modules Approach
 
 ```ts filename="modules.mjs"
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 
-export default createYoga()
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'Hello World!'
+      }
+    }
+  })
+})
+export default { fetch: yoga.fetch }
 ```
 
 ### Access to environmental values (KV Namespaces etc.)
@@ -44,44 +75,46 @@ export default createYoga()
 You can access your KV namespaces etc through the context.
 
 ```ts
-import { createYoga } from 'graphql-yoga'
+import { createYoga, createSchema } from 'graphql-yoga'
 
 interface Env {
   MY_NAMESPACE: KVNamespace
 }
 
 const yoga = createYoga<Env>({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      todo(id: ID!): String
-      todos: [String]
-    }
-    type Mutation {
-      createTodo(id: ID!, text: String!): String
-      deleteTodo(id: ID!): String
-    }
-  `,
-  resolvers: {
-    Query: {
-      todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
-      todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list()
-    },
-    Mutation: {
-      // MY_NAMESPACE is available as a GraphQL context
-      createTodo(_, { id, text }, context) {
-        return context.MY_NAMESPACE.put(id, text)
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        todo(id: ID!): String
+        todos: [String]
+      }
+      type Mutation {
+        createTodo(id: ID!, text: String!): String
+        deleteTodo(id: ID!): String
+      }
+    `,
+    resolvers: {
+      Query: {
+        todo: (_, { id }, { MY_NAMESPACE }) => MY_NAMESPACE.get(id),
+        todos: (_, __, { MY_NAMESPACE }) => MY_NAMESPACE.list()
       },
-      deleteTodo(_, { id }, context) {
-        return context.MY_NAMESPACE.delete(id)
+      Mutation: {
+        // MY_NAMESPACE is available as a GraphQL context
+        createTodo(_, { id, text }, context) {
+          return context.MY_NAMESPACE.put(id, text)
+        },
+        deleteTodo(_, { id }, context) {
+          return context.MY_NAMESPACE.delete(id)
+        }
       }
     }
-  }
+  })
 })
 
-export default { fetch: yoga.handleRequest }
+export default { fetch: yoga.fetch }
 ```
 
-If you need `ExecutionContext` as well inside your resolvers, you can set the `context` on your GraphQL server similar to what you see here:
+If you need `ExecutionContext` as well inside your resolvers, you can extend the context type like below;
 
 ```ts
 import { createYoga } from 'graphql-yoga'
@@ -90,13 +123,22 @@ interface Env {
   MY_NAMESPACE: KVNamespace
 }
 
-const yoga = createYoga<{ env: Env; ctx: ExecutionContext }>()
+const yoga = createYoga<Env & ExecutionContext>({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'Hello World!'
+      }
+    }
+  })
+})
 
-export default {
-  fetch(request: Request, env: Env, ctx: ExecutionContext) {
-    return yoga.handleRequest(request, { env, ctx })
-  }
-}
+export default { fetch: yoga.fetch }
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/cloudflare-modules)

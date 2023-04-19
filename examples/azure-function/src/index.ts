@@ -29,32 +29,23 @@ const httpTrigger: AzureFunction = async function (
   })
   context.log('HTTP trigger function processed a request.')
 
-  try {
-    const response = await app.fetch(req.url, {
-      method: req.method?.toString(),
-      body: req.rawBody,
-      headers: req.headers,
-    })
-    const responseText = await response.text()
-    context.log('GraphQL Yoga response text:', responseText)
+  const response = await app.fetch(req.url, {
+    method: req.method?.toString(),
+    body: req.rawBody,
+    headers: req.headers,
+  })
 
-    const headersObj = {}
-    response.headers.forEach((value, key) => {
-      headersObj[key] = value
-    })
+  const headersObj = Object.fromEntries(response.headers.entries())
 
-    context.log('GraphQL Yoga response headers:', headersObj)
-    context.res = {
-      status: response.status,
-      body: responseText,
-      headers: headersObj,
-    }
-  } catch (e) {
-    context.log.error('Error:', e)
-    context.res = {
-      status: 500,
-      body: e.message,
-    }
+  context.log('GraphQL Yoga response headers:', headersObj)
+
+  const responseText = await response.text()
+  context.log('GraphQL Yoga response text:', responseText)
+
+  context.res = {
+    status: response.status,
+    body: responseText,
+    headers: headersObj,
   }
 }
 

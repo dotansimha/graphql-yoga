@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Callout } from '@theguild/components'
 import Link from 'next/link'
+import { Callout } from '@theguild/components'
 
 export function LatestVersionNotice() {
   return (

@@ -1,5 +1,5 @@
-import { Repeater } from '@repeaterjs/repeater'
 import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
+import { Repeater } from '@repeaterjs/repeater'
 import { CustomEvent, EventTarget } from '@whatwg-node/events'
 
 type PubSubPublishArgsByKey = {

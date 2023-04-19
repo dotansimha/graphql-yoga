@@ -28,9 +28,7 @@ jobs:
       - name: Algolia push
         run: pnpm --filter website algolia-sync
         env:
-          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
-          ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
           SITE_URL: https://www.graphql-yoga.com/
 
       - name: Format

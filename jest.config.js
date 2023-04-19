@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { resolve } = require('path')
+const { resolve, join } = require('path')
 const { pathsToModuleNameMapper } = require('ts-jest')
+const fs = require('fs')
 const CI = !!process.env.CI
 
 const ROOT_DIR = __dirname
@@ -33,8 +34,10 @@ if (process.env.INTEGRATION_TEST === 'true') {
 if (process.env.LEAKS_TEST === 'true') {
   testMatch.push(
     '!**/hackernews.spec.ts',
+    '!**/apollo-link.spec.ts',
     '!**/urql-exchange.spec.ts',
     '!**/apollo-link.spec.ts',
+    '!**/uwebsockets.test.ts',
   )
 }
 
@@ -53,5 +56,5 @@ module.exports = {
   cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
   testMatch,
   testTimeout,
-  resolver: 'bob-the-bundler/jest-resolver.js',
+  resolver: 'bob-the-bundler/jest-resolver',
 }

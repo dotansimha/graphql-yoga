@@ -1,13 +1,18 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { GraphQLSchema } from 'graphql'
-import { createSchema, createYoga, YogaInitialContext } from 'graphql-yoga'
+
+import { createSchema, createYoga, YogaInitialContext } from '../src/index.js'
 
 describe('schema', () => {
   it('missing schema causes a error', async () => {
-    const yoga = createYoga({})
+    const yoga = createYoga({
+      logging: false,
+    })
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
+        accept: 'application/graphql-response+json',
         'content-type': 'application/json',
       },
       body: JSON.stringify({
@@ -71,6 +76,7 @@ describe('schema', () => {
 
   it('fails if factory function does not return a schema', async () => {
     const schemaFactory = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return null as any
     }
 
@@ -133,7 +139,7 @@ describe('schema', () => {
   })
 
   it('fails if promise does not resolve to a schema', async () => {
-    const schemaPromise = Promise.resolve(null as any)
+    const schemaPromise = Promise.resolve(null as unknown as GraphQLSchema)
     const yoga = createYoga({
       schema: schemaPromise,
       maskedErrors: false,
@@ -196,7 +202,7 @@ describe('schema', () => {
 
   it('fails if factory function returning a promise does not resolve to a schema', async () => {
     const yoga = createYoga({
-      schema: () => Promise.resolve(null as any),
+      schema: () => Promise.resolve(null as unknown as GraphQLSchema),
       maskedErrors: false,
     })
     const query = /* GraphQL */ `

@@ -1,3 +1,7 @@
+---
+description: Yoga automatically masks unexpected errors and prevents leaking sensitive information to clients.
+---
+
 # Error Masking
 
 Yoga automatically masks unexpected errors and prevents leaking sensitive information to clients.
@@ -65,7 +69,7 @@ query {
           "column": 3
         }
       ],
-      "path": ["greetings"]
+      "path": ["greeting"]
     }
   ],
   "data": null
@@ -129,7 +133,7 @@ This will add a more detailed error with a proper stacktrace to the errors exten
 
 ## Exposing expected errors
 
-Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be send to clients instead of being masked.
+Sometimes it is feasible to throw errors within your GraphQL resolvers whose message should be sent to clients instead of being masked.
 This can be achieved by throwing a `GraphQLError` instead of a "normal" [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error).
 
 E.g. you might want to throw an error if a resource cannot be found by an ID.
@@ -319,15 +323,15 @@ throw new GraphQLError(
 
 The `http` `extensions` field, has special handling within GraphQL Yoga.
 It will always be used for determining what status code and additional headers should be sent to a client.
-The field itself will never be included the the response extensions sent to the user.
+The field itself will never be included with the response extensions sent to the user.
 
 The default status code of 200 can be overwritten by specifying the `extensions.http.status` field. In case of multiple errors that try to alter the status code, the highest status code will be used.
 E.g. if the first error has a status code of 404 and the second error has a status code of 400, the status code of the first error will be used.
 
-You can add additional HTTP headers by specifying the `extensions.http.status` field. All the headers specified in that map will be sent to the client. In case multiple errors modify the headers the last error raised during the GraphQL execution phase will overwrite the previous ones.
+You can add additional HTTP headers by specifying the `extensions.http.headers` field. All the headers specified in that map will be sent to the client. In case multiple errors modify the headers the last error raised during the GraphQL execution phase will overwrite the previous ones.
 
-**Note:** Setting the status code and headers is only possible for the initial payload when sending a multipart operation (defer/stream) and only possible when when subscribing to the event source in a subscription operation (the HTTP status of an ongoing request that already sent a status code can not be changed).
-Please use the `extensions.http` with caution.
+**Note:** Setting the status code and headers is only possible for the initial payload when sending a multipart operation (defer/stream) and only possible when subscribing to the event source in a subscription operation (the HTTP status of an ongoing request that already sent a status code cannot be changed).
+Please use `extensions.http` with caution.
 
 ```ts filename="GraphQL Error with http extensions." {6-11}
 throw new GraphQLError(
@@ -356,7 +360,7 @@ However, you can still disable it using the `maskedErrors` config option.
 createYoga({ maskedErrors: false })
 ```
 
-Executing the following operation will now result within a leaking error message that exposes information about internal API calls.
+Executing the following operation will now result in leaking an error message that exposes information about internal API calls.
 
 ```graphql filename="GraphQL Operation"
 query {
@@ -380,4 +384,29 @@ query {
   ],
   "data": null
 }
+```
+
+## Customize error masking
+
+For advanced use-cases e.g. when using GraphQL Yoga as a Gateway, you might to automatically expose errors that are resolved from the subgraphs as you asume these already take care of hiding sensitive information.
+In this case, you can customize the error masking behavior by providing a custom `maskError` function.
+
+Use the default `maskError` function as a fallback for all other errors.
+
+```ts filename="Custom Mask Error Usage"
+import { maskError, createYoga } from 'graphql-yoga'
+import { schema } from './schema.js'
+
+const yoga = createYoga({
+  schema,
+  maskedErrors: {
+    maskError(error, message, isDev) {
+      if (error?.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
+        return error
+      }
+
+      return maskError(error, message, isDev)
+    }
+  }
+})
 ```

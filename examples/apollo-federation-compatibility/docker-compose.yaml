@@ -1,0 +1,12 @@
+services:
+  products:
+    image: 'node:19'
+    user: 'node'
+    working_dir: /web
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./dist:/web
+    command: 'node index.js'
+    ports:
+      - 4001:4001

@@ -1,9 +1,9 @@
-import { gateway, DataSource } from '../gateway/gateway'
+import { gateway } from '../gateway/gateway'
 import { yoga as service1 } from '../service/yoga'
 import { createServer, Server } from 'http'
 import { AddressInfo } from 'net'
 import { fetch } from '@whatwg-node/fetch'
-import type { GatewayConfig } from '@apollo/gateway'
+import { GatewayConfig, IntrospectAndCompose } from '@apollo/gateway'
 
 describe('apollo-federation example integration', () => {
   let gatewayServer: Server
@@ -17,15 +17,11 @@ describe('apollo-federation example integration', () => {
     servicePort = (serviceServer.address() as AddressInfo).port
 
     const gatewayConfig: GatewayConfig = {
-      serviceList: [
-        { name: 'accounts', url: `http://localhost:${servicePort}/graphql` },
-      ],
-      introspectionHeaders: {
-        accept: 'application/json',
-      },
-      buildService({ url }) {
-        return new DataSource({ url })
-      },
+      supergraphSdl: new IntrospectAndCompose({
+        subgraphs: [
+          { name: 'accounts', url: `http://localhost:${servicePort}/graphql` },
+        ],
+      }),
     }
 
     const gatewayService = await gateway(gatewayConfig)
@@ -35,8 +31,8 @@ describe('apollo-federation example integration', () => {
   })
 
   afterAll(async () => {
-    await new Promise((resolve) => gatewayServer.close(resolve))
-    await new Promise((resolve) => serviceServer.close(resolve))
+    await new Promise((resolve) => gatewayServer?.close(resolve))
+    await new Promise((resolve) => serviceServer?.close(resolve))
   })
 
   it('should execute field on subgraph', async () => {
@@ -50,5 +46,31 @@ describe('apollo-federation example integration', () => {
         id: '1',
       },
     })
+  })
+
+  it('pass through errors', async () => {
+    const response = await fetch(
+      `http://localhost:${gatewayPort}/graphql?query=query{throw}`,
+    )
+    const body = await response.json()
+    expect(body).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "throw": null,
+        },
+        "errors": [
+          {
+            "extensions": {
+              "code": "DOWNSTREAM_SERVICE_ERROR",
+              "serviceName": "accounts",
+            },
+            "message": "This should throw.",
+            "path": [
+              "throw",
+            ],
+          },
+        ],
+      }
+    `)
   })
 })

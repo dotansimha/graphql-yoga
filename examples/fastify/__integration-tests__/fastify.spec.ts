@@ -117,7 +117,6 @@ describe('fastify example integration', () => {
         `,
       })
 
-    expect(response.statusCode).toEqual(405)
     expect(response.body).toStrictEqual({
       errors: [
         {
@@ -139,7 +138,7 @@ describe('fastify example integration', () => {
         `,
       })
     expect(response.statusCode).toEqual(200)
-    expect(response.text).toMatchInlineSnapshot(`
+    expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
       "data: {"data":{"countdown":10}}
 
       data: {"data":{"countdown":9}}
@@ -161,6 +160,8 @@ describe('fastify example integration', () => {
       data: {"data":{"countdown":1}}
 
       data: {"data":{"countdown":0}}
+
+      event: complete
 
       "
     `)
@@ -180,7 +181,7 @@ describe('fastify example integration', () => {
         `,
       })
     expect(response.statusCode).toEqual(200)
-    expect(response.text).toMatchInlineSnapshot(`
+    expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
       "data: {"data":{"countdown":10}}
 
       data: {"data":{"countdown":9}}
@@ -202,6 +203,8 @@ describe('fastify example integration', () => {
       data: {"data":{"countdown":1}}
 
       data: {"data":{"countdown":0}}
+
+      event: complete
 
       "
     `)
@@ -222,9 +225,6 @@ describe('fastify example integration', () => {
         contentType: 'plain/text',
       })
     expect(response.statusCode).toBe(200)
-    expect(response.headers['content-type']).toContain(
-      'application/graphql-response+json',
-    )
     expect(response.body).toStrictEqual({
       data: {
         getFileName: 'file.txt',

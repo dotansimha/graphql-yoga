@@ -25,10 +25,10 @@ export const yoga = createYoga({
         },
         saveFile: async (_, { file }: { file: File }) => {
           try {
-            const fileStream = file.stream()
+            const fileArrayBuffer = await file.arrayBuffer()
             await fs.promises.writeFile(
               path.join(__dirname, file.name),
-              fileStream,
+              Buffer.from(fileArrayBuffer),
             )
           } catch (e) {
             return false

@@ -26,18 +26,12 @@ export async function handler(
   event: APIGatewayEvent,
   lambdaContext: Context,
 ): Promise<APIGatewayProxyResult> {
-  const url = new URL(event.path, 'http://localhost')
-  if (event.queryStringParameters != null) {
-    for (const name in event.queryStringParameters) {
-      const value = event.queryStringParameters[name]
-      if (value != null) {
-        url.searchParams.set(name, value)
-      }
-    }
-  }
-
   const response = await yoga.fetch(
-    url,
+    event.path +
+      '?' +
+      new URLSearchParams(
+        (event.queryStringParameters as Record<string, string>) || {},
+      ).toString(),
     {
       method: event.httpMethod,
       headers: event.headers as HeadersInit,
@@ -51,11 +45,7 @@ export async function handler(
     },
   )
 
-  const responseHeaders: Record<string, string> = {}
-
-  response.headers.forEach((value, name) => {
-    responseHeaders[name] = value
-  })
+  const responseHeaders = Object.fromEntries(response.headers.entries())
 
   return {
     statusCode: response.status,

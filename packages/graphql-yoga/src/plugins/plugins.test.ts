@@ -1,8 +1,8 @@
 import { AfterValidateHook } from '@envelop/core'
-import { Plugin } from './types'
-import { createYoga } from '../server'
-import { createSchema } from '../schema'
-import { createGraphQLError } from '../error'
+import { createGraphQLError } from '../error.js'
+import { createSchema } from '../schema.js'
+import { createYoga } from '../server.js'
+import { Plugin } from './types.js'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -14,7 +14,7 @@ const schema = createSchema({
 
 describe('Yoga Plugins', () => {
   it(`should respect Envelop's OnPluginInit's addPlugin`, async () => {
-    const afterValidateHook: AfterValidateHook<any> = jest
+    const afterValidateHook: AfterValidateHook<Record<string, unknown>> = jest
       .fn()
       .mockImplementation(({ setResult }) => {
         setResult([

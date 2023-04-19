@@ -1,8 +1,13 @@
 import { isAsyncIterable } from '@graphql-tools/utils'
-import { getResponseInitByRespectingErrors } from '../../error.js'
+
+import {
+  areGraphQLErrors,
+  getResponseInitByRespectingErrors,
+  isGraphQLError,
+} from '../../error.js'
 import { FetchAPI } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
-import { jsonStringifyResult } from './stringify.js'
+import { jsonStringifyResultWithoutInternals } from './stringify.js'
 
 export function processRegularResult(
   executionResult: ResultProcessorInput,
@@ -27,19 +32,18 @@ export function processRegularResult(
   const responseInit = getResponseInitByRespectingErrors(
     executionResult,
     headersInit,
+    // prefer 200 only if accepting application/json and all errors are exclusively GraphQL errors
+    acceptedHeader === 'application/json' &&
+      !Array.isArray(executionResult) &&
+      areGraphQLErrors(executionResult.errors) &&
+      executionResult.errors.some(
+        (err) =>
+          !err.extensions.originalError ||
+          isGraphQLError(err.extensions.originalError),
+      ),
   )
 
-  if (responseInit.status >= 400 && acceptedHeader === 'application/json') {
-    // regular responses accepting 'application/json' are recommended to always respond with 200
-    // see more: https://graphql.github.io/graphql-over-http/draft/#sel-EANNLDFAADHCAx5H
-    responseInit.status = 200
-  }
+  const responseBody = jsonStringifyResultWithoutInternals(executionResult)
 
-  const textEncoder = new fetchAPI.TextEncoder()
-  const responseBody = jsonStringifyResult(executionResult)
-  const decodedString = textEncoder.encode(responseBody)
-
-  headersInit['Content-Length'] = decodedString.byteLength.toString()
-
-  return new fetchAPI.Response(decodedString, responseInit)
+  return new fetchAPI.Response(responseBody, responseInit)
 }

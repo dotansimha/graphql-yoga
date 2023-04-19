@@ -1,5 +1,4 @@
 import { DeferStreamDirectiveLabelRule } from '../../src/validations/defer-stream-directive-label.js'
-
 import { expectValidationErrors } from './harness.js'
 
 function expectErrors(queryStr: string) {

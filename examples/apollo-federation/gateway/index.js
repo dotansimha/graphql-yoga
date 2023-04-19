@@ -1,16 +1,15 @@
 /* eslint-disable */
 const { createServer } = require('http')
-const { gateway, DataSource } = require('./gateway')
+const { gateway } = require('./gateway')
 
 async function main() {
-  const yoga = gateway({
-    serviceList: [
-      { name: 'accounts', url: 'http://localhost:4001/graphql' },
-      // ...additional subgraphs...
-    ],
-    buildService({ url }) {
-      return new DataSource({ url })
-    },
+  const yoga = await gateway({
+    supergraphSdl: new IntrospectAndCompose({
+      subgraphs: [
+        { name: 'accounts', url: 'http://localhost:4001/graphql' },
+        // ...additional subgraphs...
+      ],
+    }),
   })
 
   // Start the server and explore http://localhost:4000/graphql

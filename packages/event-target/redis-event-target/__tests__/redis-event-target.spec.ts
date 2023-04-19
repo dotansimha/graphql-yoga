@@ -1,6 +1,7 @@
-import Redis from 'ioredis-mock'
-import { createRedisEventTarget } from '../src'
 import { CustomEvent } from '@whatwg-node/events'
+import Redis from 'ioredis-mock'
+
+import { createRedisEventTarget } from '../src'
 
 describe('createRedisEventTarget', () => {
   it('can listen to a simple publish', (done) => {

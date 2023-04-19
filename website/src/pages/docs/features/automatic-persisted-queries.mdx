@@ -1,3 +1,7 @@
+---
+description: Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL documents to the server over and over again.
+---
+
 import { PackageCmd, Callout } from '@theguild/components'
 
 # Automatic Persisted Queries
@@ -72,7 +76,7 @@ Check the corresponding documentation for more information.
 
 ## Custom Store
 
-By default all the documents strings are stored in memory with an LRU cache that holds up to 1000 unique entries ([`tiny-lru`](https://github.com/avoidwork/tiny-lru)).
+By default all the documents strings are stored in memory with an LRU cache that holds up to 1000 unique entries.
 
 A custom store implementation can be provided via the `store` option.
 

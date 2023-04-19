@@ -1,25 +1,15 @@
-export * from './types.js'
-export * from './logger.js'
+export { createGraphQLError } from './error.js'
+export * from '@graphql-yoga/logger'
+export type { Plugin } from './plugins/types.js'
+export type { GraphiQLOptions } from './plugins/useGraphiQL.js'
+export { renderGraphiQL, shouldRenderGraphiQL } from './plugins/useGraphiQL.js'
+export { useReadinessCheck } from './plugins/useReadinessCheck.js'
+export { useSchema } from './plugins/useSchema.js'
+export * from './schema.js'
 export * from './server.js'
-
-export {
-  // useful for anyone creating a new envelop instance
-  envelop,
-  // Default plugins
-  useEnvelop,
-  useLogger,
-  useExtendContext,
-  usePayloadFormatter,
-  // useful helpers
-  isIntrospectionOperationString,
-  makeSubscribe,
-  mapAsyncIterator,
-  makeExecute,
-  handleStreamOrSingleExecutionResult,
-  finalAsyncIterator,
-  errorAsyncIterator,
-  isAsyncIterable,
-} from '@envelop/core'
+export * from './subscription.js'
+export * from './types.js'
+export { maskError } from './utils/mask-error.js'
 export type {
   // Handy type utils
   Maybe,
@@ -27,12 +17,22 @@ export type {
   PromiseOrValue,
   Spread,
 } from '@envelop/core'
-export type { CORSOptions } from './plugins/useCORS.js'
-export type { GraphiQLOptions } from './plugins/useGraphiQL.js'
-export type { Plugin } from './plugins/types.js'
-export { shouldRenderGraphiQL, renderGraphiQL } from './plugins/useGraphiQL.js'
-export { useSchema } from './plugins/useSchema.js'
-export { useReadinessCheck } from './plugins/useReadinessCheck.js'
-export * from './schema.js'
-export * from './subscription.js'
-export { createGraphQLError } from './error.js'
+export {
+  // useful for anyone creating a new envelop instance
+  envelop,
+  errorAsyncIterator,
+  finalAsyncIterator,
+  handleStreamOrSingleExecutionResult,
+  isAsyncIterable,
+  // useful helpers
+  isIntrospectionOperationString,
+  makeExecute,
+  makeSubscribe,
+  mapAsyncIterator,
+  // Default plugins
+  useEnvelop,
+  useErrorHandler,
+  useExtendContext,
+  useLogger,
+  usePayloadFormatter,
+} from '@envelop/core'

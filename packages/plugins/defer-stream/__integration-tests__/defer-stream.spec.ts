@@ -1,9 +1,10 @@
-import { createSchema, createYoga } from 'graphql-yoga'
-import { createServer } from 'node:http'
-import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js'
+import { createServer, get, IncomingMessage } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
-import { fetch, AbortController } from '@whatwg-node/fetch'
-import { get, IncomingMessage } from 'http'
+import { AbortController, fetch } from '@whatwg-node/fetch'
+import { createSchema, createYoga } from 'graphql-yoga'
+
+import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js'
 
 it('correctly deals with the source upon aborted requests', async () => {
   const { source, push, terminate } = createPushPullAsyncIterable<string>()
@@ -34,7 +35,7 @@ it('correctly deals with the source upon aborted requests', async () => {
       })
     })
 
-    const port = (server.address() as any)?.port ?? null
+    const port = (server.address() as AddressInfo)?.port ?? null
     if (port === null) {
       throw new Error('Missing port...')
     }
@@ -96,7 +97,7 @@ it('correctly deals with the source upon aborted requests', async () => {
 it('memory/cleanup leak by source that never publishes a value', async () => {
   let sourceGotCleanedUp = false
   let i = 1
-  let interval: any
+  let interval: NodeJS.Timer
   const controller = new AbortController()
 
   const noop = new Promise<{ done: true; value: undefined }>(() => undefined)
@@ -144,7 +145,7 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
       })
     })
 
-    const port = (server.address() as any)?.port ?? null
+    const port = (server.address() as AddressInfo)?.port ?? null
     if (port === null) {
       throw new Error('Missing port...')
     }
@@ -180,8 +181,8 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
           ---"
         `)
       }
-    } catch (err: any) {
-      expect(err.message).toContain('aborted')
+    } catch (err: unknown) {
+      expect((err as Error).message).toContain('aborted')
     }
 
     // Wait a bit - just to make sure the time is cleaned up for sure...

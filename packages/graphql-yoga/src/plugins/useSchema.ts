@@ -1,7 +1,8 @@
-import { PromiseOrValue } from '@envelop/core'
 import { GraphQLSchema, isSchema } from 'graphql'
-import type { GraphQLSchemaWithContext, YogaInitialContext } from '../types'
-import type { Plugin } from './types'
+import { PromiseOrValue } from '@envelop/core'
+
+import type { GraphQLSchemaWithContext, YogaInitialContext } from '../types.js'
+import type { Plugin } from './types.js'
 
 export type YogaSchemaDefinition<TContext> =
   | PromiseOrValue<GraphQLSchemaWithContext<TContext>>

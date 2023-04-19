@@ -1,8 +1,14 @@
 import { createGraphQLError } from '@graphql-tools/utils'
-import type { GraphQLParams } from '../../types'
-import type { Plugin } from '../types'
 
-const EXPECTED_PARAMS = ['query', 'variables', 'operationName', 'extensions']
+import type { GraphQLParams } from '../../types.js'
+import type { Plugin } from '../types.js'
+
+const expectedParameters = new Set([
+  'query',
+  'variables',
+  'operationName',
+  'extensions',
+])
 
 export function assertInvalidParams(
   params: unknown,
@@ -11,13 +17,17 @@ export function assertInvalidParams(
     throw createGraphQLError('Invalid "params" in the request body', {
       extensions: {
         http: {
+          spec: true,
           status: 400,
         },
       },
     })
   }
   for (const paramKey in params) {
-    if (!EXPECTED_PARAMS.includes(paramKey)) {
+    if ((params as Record<string, unknown>)[paramKey] == null) {
+      continue
+    }
+    if (!expectedParameters.has(paramKey)) {
       throw createGraphQLError(
         `Unexpected parameter "${paramKey}" in the request body.`,
         {
@@ -55,6 +65,7 @@ export function checkGraphQLQueryParams(params: unknown): GraphQLParams {
     throw createGraphQLError('Must provide query string.', {
       extensions: {
         http: {
+          spec: true,
           status: 400,
           headers: {
             Allow: 'GET, POST',

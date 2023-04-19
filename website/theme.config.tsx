@@ -1,8 +1,6 @@
 /* eslint sort-keys: error */
-import { useTheme, Giscus, defineConfig, YogaLogo } from '@theguild/components'
+import { useTheme, Giscus, defineConfig } from '@theguild/components'
 import { useRouter } from 'next/router'
-
-const siteName = 'GraphQL Yoga'
 
 export default defineConfig({
   chat: {
@@ -10,27 +8,6 @@ export default defineConfig({
   },
   docsRepositoryBase:
     'https://github.com/dotansimha/graphql-yoga/tree/main/website',
-  getNextSeoProps() {
-    return {
-      openGraph: {
-        images: [
-          { url: 'https://the-guild.dev/graphql/yoga-server/cover.png' },
-        ],
-      },
-    }
-  },
-  logo: (
-    <>
-      <YogaLogo className="mr-1.5 h-9 w-9" />
-      <div>
-        <h1 className="md:text-md text-sm font-medium">{siteName}</h1>
-        <h2 className="hidden text-xs sm:block">
-          Fully-featured, simple to set up, performant and extendable GraphQL
-          JavaScript server
-        </h2>
-      </div>
-    </>
-  ),
   main({ children }) {
     const { resolvedTheme } = useTheme()
     const { route } = useRouter()
@@ -55,5 +32,5 @@ export default defineConfig({
       </>
     )
   },
-  siteName,
+  siteName: 'YOGA',
 })

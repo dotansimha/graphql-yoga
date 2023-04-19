@@ -1,3 +1,7 @@
+---
+description: Persisted operations is a mechanism for preventing the execution of arbitrary GraphQL operation documents.
+---
+
 import { PackageCmd, Callout } from '@theguild/components'
 
 # Persisted Operations
@@ -13,7 +17,7 @@ change this behavior by overriding the `getPersistedOperationKey` option to supp
 
 Persisted operations requires installing a separate package.
 
-<PackageCmd packages={['@graphql-yoga/persisted-operations']} />
+<PackageCmd packages={['@graphql-yoga/plugin-persisted-operations']} />
 
 ```ts filename="Persisted operation setup"
 import { createYoga, createSchema } from 'graphql-yoga'
@@ -70,7 +74,18 @@ curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
 
 ## Extracting client operations
 
-You can use [GraphQL Code Generator](https://www.graphql-code-generator.com/) with the [`graphql-codegen-persisted-query-ids`](https://github.com/valu-digital/graphql-codegen-persisted-query-ids) plugin for extracting a map of persisted query ids and their corresponding GraphQL documents from your application/client-code in a JSON file.
+The recommended way of extracting the persisted operations from your client is to use [GraphQL Code Generator](https://www.graphql-code-generator.com/).
+
+<Callout type="info">
+  You can learn more about persisted operations with [the `client` preset on the
+  GraphQL Code Generator
+  documentation](https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#persisted-documents).
+
+There is also [a full code example using GraphQL Yoga available on GitHub](https://github.com/dotansimha/graphql-code-generator/tree/master/examples/persisted-documents).
+
+</Callout>
+
+For people not using the client-preset the is also the standalone [`graphql-codegen-persisted-query-ids`](https://github.com/valu-digital/graphql-codegen-persisted-query-ids) plugin for extracting a map of persisted query ids and their corresponding GraphQL documents from your application/client-code in a JSON file.
 
 ```json filename="Example map extracted by GraphQL Code Generator"
 {
@@ -123,6 +138,45 @@ Check the corresponding documentation for more information.
 
 - [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
 - [urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
+
+## Using parsed GraphQL documents as AST
+
+You can reduce the amount of work the server has to do by using the parsed GraphQL documents as AST.
+
+```ts filename="Use parsed GraphQL documents as AST"
+import {
+  usePersistedOperations,
+  PersistedOperationType
+} from '@graphql-yoga/plugin-persisted-operations'
+import { parse } from 'graphql'
+
+const persistedOperations = {
+  'my-key': parse(/* GraphQL */ `
+    query {
+      __typename
+    }
+  `)
+}
+
+const plugin = usePersistedOperations({
+  getPersistedOperation(key: string) {
+    return persistedOperations[key]
+  }
+})
+```
+
+## Skipping validation of persisted operations
+
+If you validate your persisted operations while building your store, we recommend to skip the validation on the server. So this will reduce the work done by the server and the latency of the requests.
+
+```ts filename="Validate persisted operations"
+const plugin = usePersistedOperations({
+  //...
+  skipDocumentValidation: true
+})
+```
+
+> Using AST and skipping validations will reduce the amount of work the server has to do, so the requests will have less latency.
 
 ## Allowing arbitrary GraphQL operations
 

@@ -1,5 +1,334 @@
 # graphql-yoga
 
+## 3.9.1
+
+### Patch Changes
+
+- [#2682](https://github.com/dotansimha/graphql-yoga/pull/2682) [`e1a60e21`](https://github.com/dotansimha/graphql-yoga/commit/e1a60e21f10813aa6d0f4673e4eb13979720c2c8) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.17` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.17) (from `^0.0.16`, in `dependencies`)
+
+- [#2686](https://github.com/dotansimha/graphql-yoga/pull/2686) [`c50ea51c`](https://github.com/dotansimha/graphql-yoga/commit/c50ea51c992a6a480799655225727081585f0010) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.18` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.18) (from `^0.0.17`, in `dependencies`)
+  - Updated dependency [`@graphql-tools/schema@^9.0.18` ↗︎](https://www.npmjs.com/package/@graphql-tools/schema/v/9.0.18) (from `^9.0.0`, in `dependencies`)
+
+- [#2686](https://github.com/dotansimha/graphql-yoga/pull/2686) [`c50ea51c`](https://github.com/dotansimha/graphql-yoga/commit/c50ea51c992a6a480799655225727081585f0010) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Prevent errors thrown from subscription source crashing the Node.js process and instead log the error to the console, then terminate the client subscription.
+
+## 3.9.0
+
+### Minor Changes
+
+- [#2675](https://github.com/dotansimha/graphql-yoga/pull/2675) [`aff69200`](https://github.com/dotansimha/graphql-yoga/commit/aff69200d512c530751c617ee685f9b3f82303f8) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Only well-formatted GraphQL-over-HTTP requests use 200 when accepting application/json
+
+## 3.8.1
+
+### Patch Changes
+
+- [#2652](https://github.com/dotansimha/graphql-yoga/pull/2652) [`ebb65b14`](https://github.com/dotansimha/graphql-yoga/commit/ebb65b14b29bbb4c50c6bb242262444315e99a73) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.16` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.16) (from `^0.0.15`, in `dependencies`)
+
+- [#2676](https://github.com/dotansimha/graphql-yoga/pull/2676) [`528941cb`](https://github.com/dotansimha/graphql-yoga/commit/528941cb4d1670833ee0307de0c715e6b9681d7a) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Prefer `content-type: multipart/mixed` over `content-type: text/event-stream` when the client sends `accept: text/event-stream, multipart/mixed`.
+
+## 3.8.0
+
+### Minor Changes
+
+- [#2445](https://github.com/dotansimha/graphql-yoga/pull/2445) [`09d23a4b`](https://github.com/dotansimha/graphql-yoga/commit/09d23a4b3b22f520c41f3cebbe3b11ffbda39557) Thanks [@ardatan](https://github.com/ardatan)! - GraphQL SSE Distinct Connections mode support with `legacySse = false` flag
+
+### Patch Changes
+
+- [#2602](https://github.com/dotansimha/graphql-yoga/pull/2602) [`99b72696`](https://github.com/dotansimha/graphql-yoga/commit/99b726961b45b9c22d6383e2fe7212d21d324553) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`lru-cache@^7.14.1` ↗︎](https://www.npmjs.com/package/lru-cache/v/7.14.1) (from `^8.0.0`, in `dependencies`)
+
+- [#2602](https://github.com/dotansimha/graphql-yoga/pull/2602) [`99b72696`](https://github.com/dotansimha/graphql-yoga/commit/99b726961b45b9c22d6383e2fe7212d21d324553) Thanks [@n1ru4l](https://github.com/n1ru4l)! - revert `lru-cache` version to `7.x.x`, as `8.x.x` broke Node.js 14 support.
+
+## 3.7.3
+
+### Patch Changes
+
+- [#2559](https://github.com/dotansimha/graphql-yoga/pull/2559) [`46e75917`](https://github.com/dotansimha/graphql-yoga/commit/46e75917f784abcb4ea9968bf3d73660df157b21) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`lru-cache@^8.0.0` ↗︎](https://www.npmjs.com/package/lru-cache/v/8.0.0) (from `^7.14.1`, in `dependencies`)
+
+## 3.7.2
+
+### Patch Changes
+
+- [#2528](https://github.com/dotansimha/graphql-yoga/pull/2528) [`7ad50529`](https://github.com/dotansimha/graphql-yoga/commit/7ad505294ecccf21a0449b739c359396bc97121f) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@graphql-yoga/logger@^0.0.1` ↗︎](https://www.npmjs.com/package/@graphql-yoga/logger/v/0.0.1) (from `0.0.1`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@^0.7.3` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.7.3) (from `^0.7.1`, in `dependencies`)
+
+## 3.7.1
+
+### Patch Changes
+
+- [#2481](https://github.com/dotansimha/graphql-yoga/pull/2481) [`9fdd94b5`](https://github.com/dotansimha/graphql-yoga/commit/9fdd94b5697b55693a2a7bd48a2da4c3ba8ac3f8) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/server@^0.7.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.7.1) (from `^0.6.7`, in `dependencies`)
+
+- [#2496](https://github.com/dotansimha/graphql-yoga/pull/2496) [`47b1c4a4`](https://github.com/dotansimha/graphql-yoga/commit/47b1c4a4fa72043b02307822395c016bd523f949) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.15` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.15) (from `^0.0.14`, in `dependencies`)
+
+- [#2527](https://github.com/dotansimha/graphql-yoga/pull/2527) [`02ac055c`](https://github.com/dotansimha/graphql-yoga/commit/02ac055cad3f7cb0fb08bb003a8a1971e4f48a23) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Added dependency [`@graphql-yoga/logger@0.0.0` ↗︎](https://www.npmjs.com/package/@graphql-yoga/logger/v/0.0.0) (to `dependencies`)
+
+- [#2527](https://github.com/dotansimha/graphql-yoga/pull/2527) [`02ac055c`](https://github.com/dotansimha/graphql-yoga/commit/02ac055cad3f7cb0fb08bb003a8a1971e4f48a23) Thanks [@ardatan](https://github.com/ardatan)! - Release logger seperately
+
+- Updated dependencies [[`02ac055c`](https://github.com/dotansimha/graphql-yoga/commit/02ac055cad3f7cb0fb08bb003a8a1971e4f48a23)]:
+  - @graphql-yoga/logger@0.0.1
+
+## 3.7.0
+
+### Minor Changes
+
+- [#2459](https://github.com/dotansimha/graphql-yoga/pull/2459) [`9e743db5`](https://github.com/dotansimha/graphql-yoga/commit/9e743db5f43a8e6e5944667ddec349005dbb2cd9) Thanks [@ardatan](https://github.com/ardatan)! - Respect `http` in the extensions just like error extensions
+
+### Patch Changes
+
+- [#2470](https://github.com/dotansimha/graphql-yoga/pull/2470) [`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@envelop/validation-cache@^5.1.2` ↗︎](https://www.npmjs.com/package/@envelop/validation-cache/v/5.1.2) (from `^5.0.5`, in `dependencies`)
+
+- [#2470](https://github.com/dotansimha/graphql-yoga/pull/2470) [`23d1b26c`](https://github.com/dotansimha/graphql-yoga/commit/23d1b26cde5d86e21deb74846348e077b4fdf620) Thanks [@n1ru4l](https://github.com/n1ru4l)! - bump range of `@envelop/validation-cache` for fixing javascript runtime compatibility (usage of node-only global `require`).
+
+## 3.6.1
+
+### Patch Changes
+
+- [`3c8c8434`](https://github.com/dotansimha/graphql-yoga/commit/3c8c843409fa1c06873d8599ebd7b02f6819dad4) Thanks [@ardatan](https://github.com/ardatan)! - Replace LRU caching with lazy URL construction, avoid unnecessary `parse` and `validate` invocation and CORS
+
+## 3.6.0
+
+### Minor Changes
+
+- [#2393](https://github.com/dotansimha/graphql-yoga/pull/2393) [`790330be`](https://github.com/dotansimha/graphql-yoga/commit/790330beac3e6f2e85e128f9df9ba0bb1c53d5f5) Thanks [@ardatan](https://github.com/ardatan)! - Decrease request latency by improving the validation and parser cache algorithm.
+
+### Patch Changes
+
+- [#2388](https://github.com/dotansimha/graphql-yoga/pull/2388) [`6bc1410f`](https://github.com/dotansimha/graphql-yoga/commit/6bc1410f0d23dd88dfc708dad8dceecfaa5fab78) Thanks [@ardatan](https://github.com/ardatan)! - Improve URL parsing performance
+
+- [#2375](https://github.com/dotansimha/graphql-yoga/pull/2375) [`ddb2607d`](https://github.com/dotansimha/graphql-yoga/commit/ddb2607d5495245b360e29e38b826609ff93f2ce) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@0.0.13` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.13) (from `0.0.12`, in `dependencies`)
+
+- [#2388](https://github.com/dotansimha/graphql-yoga/pull/2388) [`6bc1410f`](https://github.com/dotansimha/graphql-yoga/commit/6bc1410f0d23dd88dfc708dad8dceecfaa5fab78) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Added dependency [`lru-cache@^7.14.1` ↗︎](https://www.npmjs.com/package/lru-cache/v/7.14.1) (to `dependencies`)
+
+- [#2392](https://github.com/dotansimha/graphql-yoga/pull/2392) [`1caac99b`](https://github.com/dotansimha/graphql-yoga/commit/1caac99b39a09594d54402665a852e2933f0b7da) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@0.6.8` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.8) (from `0.6.5`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.6.3` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.6.3) (from `0.5.11`, in `dependencies`)
+
+- [#2393](https://github.com/dotansimha/graphql-yoga/pull/2393) [`790330be`](https://github.com/dotansimha/graphql-yoga/commit/790330beac3e6f2e85e128f9df9ba0bb1c53d5f5) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/utils@^9.2.1` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.2.1) (from `^9.0.1`, in `dependencies`)
+  - Removed dependency [`@envelop/parser-cache@^5.0.4` ↗︎](https://www.npmjs.com/package/@envelop/parser-cache/v/5.0.4) (from `dependencies`)
+
+- [#2394](https://github.com/dotansimha/graphql-yoga/pull/2394) [`7587d5c5`](https://github.com/dotansimha/graphql-yoga/commit/7587d5c575bffb746d611cbbce36d2ee5cbe4f69) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@^0.0.14` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.14) (from `^0.0.13`, in `dependencies`)
+
+- [#2405](https://github.com/dotansimha/graphql-yoga/pull/2405) [`cc0d3899`](https://github.com/dotansimha/graphql-yoga/commit/cc0d389912538f2dd290976a738f1b09f1d87b8d) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.7.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.7.0) (from `^0.6.9`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@^0.6.5` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.6.5) (from `^0.6.4`, in `dependencies`)
+
+- [#2411](https://github.com/dotansimha/graphql-yoga/pull/2411) [`a747d249`](https://github.com/dotansimha/graphql-yoga/commit/a747d24976de5ed6bd05013ba451bffea05f4e8c) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.8.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.8.1) (from `^0.7.0`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@^0.6.7` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.6.7) (from `^0.6.5`, in `dependencies`)
+
+- [#2417](https://github.com/dotansimha/graphql-yoga/pull/2417) [`2933fc89`](https://github.com/dotansimha/graphql-yoga/commit/2933fc895702a26d13a466035e0d613629f569ec) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@^0.7.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.7.1) (from `^0.7.0`, in `dependencies`)
+
+- [#2421](https://github.com/dotansimha/graphql-yoga/pull/2421) [`543e490b`](https://github.com/dotansimha/graphql-yoga/commit/543e490b12e4b86934133e8c6cd08450247451c1) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/fetch@^0.8.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.8.1) (from `^0.7.1`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@^0.6.7` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.6.7) (from `^0.6.5`, in `dependencies`)
+
+## 3.5.1
+
+### Patch Changes
+
+- [#2137](https://github.com/dotansimha/graphql-yoga/pull/2137) [`3a8446df`](https://github.com/dotansimha/graphql-yoga/commit/3a8446dfb50c6d234e030cd1e4260c5de9daefc4) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Close multipart responses correctly
+
+## 3.5.0
+
+### Minor Changes
+
+- [#2364](https://github.com/dotansimha/graphql-yoga/pull/2364) [`03597a5a`](https://github.com/dotansimha/graphql-yoga/commit/03597a5accfab9aa10380188e1fd0b7c0727a59c) Thanks [@n1ru4l](https://github.com/n1ru4l)! - export the yoga default format error function.
+
+  ```ts
+  import { maskError, createYoga } from 'graphql-yoga'
+
+  const yoga = createYoga({
+    maskedErrors: {
+      maskError(error, message, isDev) {
+        if (error?.extensions?.code === 'DOWNSTREAM_SERVICE_ERROR') {
+          return error
+        }
+
+        return maskError(error, message, isDev)
+      }
+    }
+  })
+  ```
+
+## 3.4.1
+
+### Patch Changes
+
+- [#2254](https://github.com/dotansimha/graphql-yoga/pull/2254) [`00843174`](https://github.com/dotansimha/graphql-yoga/commit/008431747787dd6c6b26f4cb44c7c6f3053f162e) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@0.6.5` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.5) (from `0.6.2`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.5.11` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.11) (from `0.5.8`, in `dependencies`)
+
+- [#2254](https://github.com/dotansimha/graphql-yoga/pull/2254) [`00843174`](https://github.com/dotansimha/graphql-yoga/commit/008431747787dd6c6b26f4cb44c7c6f3053f162e) Thanks [@ardatan](https://github.com/ardatan)! - Use the new fetch implementation
+
+## 3.4.0
+
+### Patch Changes
+
+- [#2331](https://github.com/dotansimha/graphql-yoga/pull/2331) [`76c1ecb9`](https://github.com/dotansimha/graphql-yoga/commit/76c1ecb985887ee45f0f934216b7a629e3c2db6d) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Properly serialise response extension arrays, nullish values and dates
+
+- [#2276](https://github.com/dotansimha/graphql-yoga/pull/2276) [`8cd8b5a5`](https://github.com/dotansimha/graphql-yoga/commit/8cd8b5a5ab1dd28e2a2ddd7424c98c0493c535ad) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/server@0.5.5` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.5) (from `0.5.4`, in `dependencies`)
+
+- [#2313](https://github.com/dotansimha/graphql-yoga/pull/2313) [`6e8bddba`](https://github.com/dotansimha/graphql-yoga/commit/6e8bddba7eb21b596cea0a2d4c313bb84a5c3aa1) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@0.6.2` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.2) (from `0.6.1`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.5.6` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.6) (from `0.5.5`, in `dependencies`)
+
+- [#2316](https://github.com/dotansimha/graphql-yoga/pull/2316) [`6ee252db`](https://github.com/dotansimha/graphql-yoga/commit/6ee252dbed6f38840284bbe47c72c453ac8e648b) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@0.0.12` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.12) (from `0.0.11`, in `dependencies`)
+
+- [#2335](https://github.com/dotansimha/graphql-yoga/pull/2335) [`8f139e15`](https://github.com/dotansimha/graphql-yoga/commit/8f139e155b5cd59ca97912cccdc45b8b7d2909e6) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/server@0.5.7` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.7) (from `0.5.6`, in `dependencies`)
+
+- [#2340](https://github.com/dotansimha/graphql-yoga/pull/2340) [`9beef914`](https://github.com/dotansimha/graphql-yoga/commit/9beef91485e076f19928e73fdc65aa2979f88eef) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/server@0.5.8` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.8) (from `0.5.7`, in `dependencies`)
+
+- [#2240](https://github.com/dotansimha/graphql-yoga/pull/2240) [`c46d75e8`](https://github.com/dotansimha/graphql-yoga/commit/c46d75e82456d7aecd8e562cf85bd314d19d2a97) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Check HTTP request method after user-land plugins
+
+- [#2278](https://github.com/dotansimha/graphql-yoga/pull/2278) [`f9ab8a70`](https://github.com/dotansimha/graphql-yoga/commit/f9ab8a70a5498ea8bb924a01b9873f439bd1a0c8) Thanks [@ardatan](https://github.com/ardatan)! - Use normalized URL instead of string
+
+- Updated dependencies [[`fe4a2aca`](https://github.com/dotansimha/graphql-yoga/commit/fe4a2aca4eece85d234be9ce3f82dcae274148a8)]:
+  - @graphql-yoga/subscription@3.1.0
+
+## 3.3.1
+
+### Patch Changes
+
+- [#2275](https://github.com/dotansimha/graphql-yoga/pull/2275) [`d4dab446`](https://github.com/dotansimha/graphql-yoga/commit/d4dab446046695932a92ea4ccabb537a57bf3d00) Thanks [@ardatan](https://github.com/ardatan)! - Do not pass an explicit endpoint for GraphiQL
+
+## 3.3.0
+
+### Minor Changes
+
+- [#2266](https://github.com/dotansimha/graphql-yoga/pull/2266) [`3e5f688f`](https://github.com/dotansimha/graphql-yoga/commit/3e5f688f2cbe02dd2fb4be69831d268aee52c5b5) Thanks [@ardatan](https://github.com/ardatan)! - Accept URL patterns like `/:path` and `*` in `graphqlEndpoint`
+
+### Patch Changes
+
+- [#2266](https://github.com/dotansimha/graphql-yoga/pull/2266) [`3e5f688f`](https://github.com/dotansimha/graphql-yoga/commit/3e5f688f2cbe02dd2fb4be69831d268aee52c5b5) Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency [`@whatwg-node/fetch@0.6.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.6.1) (from `0.5.4`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.5.3` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.3) (from `0.5.1`, in `dependencies`)
+
+- [#2269](https://github.com/dotansimha/graphql-yoga/pull/2269) [`8b288a23`](https://github.com/dotansimha/graphql-yoga/commit/8b288a23c882ec643406c7e3cf7a19980abdd381) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/server@0.5.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.4) (from `0.5.3`, in `dependencies`)
+
+## 3.2.1
+
+### Patch Changes
+
+- [#2257](https://github.com/dotansimha/graphql-yoga/pull/2257) [`5528d312`](https://github.com/dotansimha/graphql-yoga/commit/5528d312d46281651b330c12f1b9f7a7d64ef3da) Thanks [@ardatan](https://github.com/ardatan)! - Handle errors thrown in onRequest correctly
+
+## 3.2.0
+
+### Minor Changes
+
+- [#2150](https://github.com/dotansimha/graphql-yoga/pull/2150) [`290c7f7f`](https://github.com/dotansimha/graphql-yoga/commit/290c7f7fde5e604b2a8ac90f93b15e143ea09a92) Thanks [@ardatan](https://github.com/ardatan)! - Ping the client every 12 seconds to keep the connection alive
+
+### Patch Changes
+
+- [#2213](https://github.com/dotansimha/graphql-yoga/pull/2213) [`a86aaa0f`](https://github.com/dotansimha/graphql-yoga/commit/a86aaa0f673037e9207ca12e48f54e7e43963a47) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@graphql-tools/executor@0.0.11` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/0.0.11) (from `0.0.9`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/fetch@0.5.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.5.4) (from `0.5.3`, in `dependencies`)
+  - Updated dependency [`@whatwg-node/server@0.5.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.5.1) (from `0.4.17`, in `dependencies`)
+
+- [#2250](https://github.com/dotansimha/graphql-yoga/pull/2250) [`82f58934`](https://github.com/dotansimha/graphql-yoga/commit/82f5893446e3c55519194a1ca1d784120cbe7098) Thanks [@ardatan](https://github.com/ardatan)! - More accurate HTTP status code when unsupported media type is sent as a request body.
+
+  Before it was returning `400: Bad Request` with `Request is not valid` text body in the response but now it returns `415: Unsupported Media Type` with an empty body.
+
+  Also see this unit test;
+  https://github.com/dotansimha/graphql-yoga/pull/2250/files#diff-78bcfa5f6d33aceeabdacd26e353641fea6fd125838ed0e1565762221568c777R380
+
+## 3.1.2
+
+### Patch Changes
+
+- [#2231](https://github.com/dotansimha/graphql-yoga/pull/2231) [`c5b1cc46`](https://github.com/dotansimha/graphql-yoga/commit/c5b1cc46f67c4516fcaeb6247f56da4ca7dd7511) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency [`@envelop/parser-cache@^5.0.4` ↗︎](https://www.npmjs.com/package/@envelop/parser-cache/v/5.0.4) (from `5.0.4`, in `dependencies`)
+  - Updated dependency [`@envelop/validation-cache@^5.0.5` ↗︎](https://www.npmjs.com/package/@envelop/validation-cache/v/5.0.5) (from `5.0.4`, in `dependencies`)
+
+- [#2238](https://github.com/dotansimha/graphql-yoga/pull/2238) [`c152105e`](https://github.com/dotansimha/graphql-yoga/commit/c152105eeed34be2f6380406739a57310729f353) Thanks [@ardatan](https://github.com/ardatan)! - Do not call CORS headers factory twice
+
+- [#2206](https://github.com/dotansimha/graphql-yoga/pull/2206) [`26d780cd`](https://github.com/dotansimha/graphql-yoga/commit/26d780cd683b15d38880387081455311b57da4ec) Thanks [@ardatan](https://github.com/ardatan)! - Correct Mask Error Factory signature
+
+- [#2239](https://github.com/dotansimha/graphql-yoga/pull/2239) [`d2958781`](https://github.com/dotansimha/graphql-yoga/commit/d2958781d4f3959f89056092f6f12a2953f5497b) Thanks [@davidruisinger](https://github.com/davidruisinger)! - Add content-length: 0 header if 204 is returned by OPTIONS request
+
+## 3.1.1
+
+### Patch Changes
+
+- [#2179](https://github.com/dotansimha/graphql-yoga/pull/2179) [`534780c9`](https://github.com/dotansimha/graphql-yoga/commit/534780c99ed61dd761826d44d99a83748630cb61) Thanks [@ardatan](https://github.com/ardatan)! - Add missing .js extension to type imports
+
+## 3.1.0
+
+### Minor Changes
+
+- [#2145](https://github.com/dotansimha/graphql-yoga/pull/2145) [`ea81e1dd`](https://github.com/dotansimha/graphql-yoga/commit/ea81e1dda6c074e384221f19bd8a925693fa3427) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Skip nullish query parameters in assertion.
+
+### Patch Changes
+
+- [#2165](https://github.com/dotansimha/graphql-yoga/pull/2165) [`86fe453c`](https://github.com/dotansimha/graphql-yoga/commit/86fe453c0ae1183af62359df0d61bba421d9f627) Thanks [@ardatan](https://github.com/ardatan)! - Export `useErrorHandler` to revert the unexpected breaking change
+
+- [#2145](https://github.com/dotansimha/graphql-yoga/pull/2145) [`ea81e1dd`](https://github.com/dotansimha/graphql-yoga/commit/ea81e1dda6c074e384221f19bd8a925693fa3427) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Avoid unnecessary iteration within internals
+
+## 3.0.3
+
+### Patch Changes
+
+- [#2156](https://github.com/dotansimha/graphql-yoga/pull/2156) [`491ef5da`](https://github.com/dotansimha/graphql-yoga/commit/491ef5da7c6bcc3038fdb0909fd333a2b5217046) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@envelop/core@3.0.4` ↗︎](https://www.npmjs.com/package/@envelop/core/v/3.0.4) (from `3.0.3`, in `dependencies`)
+  - Updated dependency [`@envelop/parser-cache@5.0.4` ↗︎](https://www.npmjs.com/package/@envelop/parser-cache/v/5.0.4) (from `5.0.3`, in `dependencies`)
+  - Updated dependency [`@envelop/validation-cache@5.0.4` ↗︎](https://www.npmjs.com/package/@envelop/validation-cache/v/5.0.4) (from `5.0.3`, in `dependencies`)
+
+## 3.0.2
+
+### Patch Changes
+
+- [#2154](https://github.com/dotansimha/graphql-yoga/pull/2154) [`0007c58d`](https://github.com/dotansimha/graphql-yoga/commit/0007c58d3ebc13cac694e561409fb2578ca5b882) Thanks [@ardatan](https://github.com/ardatan)! - Only Yoga's errors are now 200 when content-type is application/json
+
+- [#2147](https://github.com/dotansimha/graphql-yoga/pull/2147) [`39a8fe89`](https://github.com/dotansimha/graphql-yoga/commit/39a8fe8977ec3c85d5ce5c643002aa79e6283f79) Thanks [@ardatan](https://github.com/ardatan)! - Bump @whatwg-node/server to fix the conflict issue between webworker & dom TS typing libs
+
+## 3.0.1
+
+### Patch Changes
+
+- [#2125](https://github.com/dotansimha/graphql-yoga/pull/2125) [`d63fe841`](https://github.com/dotansimha/graphql-yoga/commit/d63fe84157662896c372feb013b73c6f290a2d3b) Thanks [@enisdenjo](https://github.com/enisdenjo)! - application/json is the default when accept is missing until watershed
+
 ## 3.0.0
 
 ### Major Changes

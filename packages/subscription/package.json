@@ -1,6 +1,6 @@
 {
   "name": "@graphql-yoga/subscription",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "",
   "repository": {
     "type": "git",
@@ -62,13 +62,14 @@
   "dependencies": {
     "@graphql-yoga/typed-event-target": "^1.0.0",
     "@repeaterjs/repeater": "^3.0.4",
-    "@whatwg-node/events": "0.0.2",
+    "@whatwg-node/events": "^0.0.2",
     "tslib": "^2.3.1"
   },
   "type": "module",
   "sideEffects": true,
   "devDependencies": {
-    "@types/ioredis-mock": "8.2.0",
-    "ioredis-mock": "8.2.2"
+    "@types/ioredis-mock": "8.2.1",
+    "ioredis-mock": "8.7.0",
+    "@graphql-yoga/redis-event-target": "1.0.0"
   }
 }

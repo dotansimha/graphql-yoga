@@ -1,7 +1,7 @@
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { minify as minifyT } from 'html-minifier-terser'
-import * as fs from 'fs'
-import * as path from 'path'
-import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -45,7 +45,7 @@ async function minifyLandingPageHTML() {
     ),
   )
 
-  fs.writeFileSync(
+  await fs.promises.writeFile(
     path.join(__dirname, '../src/landing-page-html.ts'),
     `export default ${JSON.stringify(minified)}`,
   )

@@ -1,4 +1,5 @@
 import { buildSchema } from 'graphql'
+
 import { DeferStreamDirectiveOnRootFieldRule } from '../../src/validations/defer-stream-directive-on-root-field.js'
 import { expectValidationErrorsWithSchema } from './harness.js'
 

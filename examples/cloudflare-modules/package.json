@@ -1,6 +1,6 @@
 {
   "name": "cloudflare",
-  "version": "1.0.0",
+  "version": "1.9.1",
   "private": true,
   "type": "module",
   "module": "./dist/index.mjs",
@@ -10,12 +10,13 @@
     "check": "tsc --pretty --noEmit"
   },
   "dependencies": {
-    "graphql-yoga": "3.0.0",
+    "graphql-yoga": "3.9.1",
     "graphql": "16.6.0"
   },
   "devDependencies": {
-    "typescript": "4.8.4",
-    "wrangler": "2.2.2",
-    "@cloudflare/workers-types": "3.18.0"
+    "@whatwg-node/fetch": "^0.8.4",
+    "typescript": "5.0.4",
+    "wrangler": "2.16.0",
+    "@cloudflare/workers-types": "4.20230404.0"
   }
 }

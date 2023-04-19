@@ -1,6 +1,6 @@
 {
   "name": "@graphql-yoga/urql-exchange",
-  "version": "1.0.0",
+  "version": "1.8.1",
   "description": "",
   "repository": {
     "type": "git",
@@ -49,17 +49,18 @@
     "access": "public"
   },
   "dependencies": {
-    "@graphql-tools/executor-http": "0.0.3",
-    "@graphql-tools/executor-urql-exchange": "0.0.3",
+    "@graphql-tools/executor-http": "^0.1.9",
+    "@graphql-tools/executor-urql-exchange": "^0.0.10",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
-    "@urql/core": "3.0.5",
-    "wonka": "6.1.1"
+    "@urql/core": "4.0.4",
+    "wonka": "6.3.1",
+    "graphql-yoga": "3.9.1"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0",
-    "@urql/core": "^3.0.0",
+    "@urql/core": "^3.0.0 || ^4.0.0",
     "wonka": "^6.0.0"
   },
   "type": "module"

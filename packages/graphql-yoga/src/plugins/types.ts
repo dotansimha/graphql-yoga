@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Plugin as EnvelopPlugin,
-  PromiseOrValue,
   OnExecuteHook,
   OnSubscribeHook,
+  Plugin as EnvelopPlugin,
+  PromiseOrValue,
 } from '@envelop/core'
 import { ExecutionResult } from '@graphql-tools/utils'
+import { ServerAdapterPlugin } from '@whatwg-node/server'
+
 import { YogaServer } from '../server.js'
 import {
   FetchAPI,
+  GraphQLHTTPExtensions,
   GraphQLParams,
   MaybeArray,
   YogaInitialContext,
@@ -21,50 +24,41 @@ export type Plugin<
   TServerContext extends Record<string, any> = {},
   // eslint-disable-next-line @typescript-eslint/ban-types
   TUserContext = {},
-> = EnvelopPlugin<YogaInitialContext & PluginContext> & {
-  /**
-   * onExecute hook that is invoked before the execute function is invoked.
-   */
-  onExecute?: OnExecuteHook<YogaInitialContext & PluginContext & TUserContext>
-  /**
-   * onSubscribe hook that is invoked before the subscribe function is called.
-   * Return a OnSubscribeHookResult for hooking into phase after the subscribe function has been called.
-   */
-  onSubscribe?: OnSubscribeHook<
-    YogaInitialContext & PluginContext & TUserContext
-  >
-} & {
-  /**
-   * Use this hook with your own risk. It is still experimental and may change in the future.
-   * @internal
-   */
-  onYogaInit?: OnYogaInitHook<TServerContext>
-  /**
-   * Use this hook with your own risk. It is still experimental and may change in the future.
-   * @internal
-   */
-  onRequest?: OnRequestHook<TServerContext>
-  /**
-   * Use this hook with your own risk. It is still experimental and may change in the future.
-   * @internal
-   */
-  onRequestParse?: OnRequestParseHook<TServerContext>
-  /**
-   * Use this hook with your own risk. It is still experimental and may change in the future.
-   * @internal
-   */
-  onParams?: OnParamsHook
-  /**
-   * Use this hook with your own risk. It is still experimental and may change in the future.
-   * @internal
-   */
-  onResultProcess?: OnResultProcess
-  /**
-   * Use this hook with your own risk. It is still experimental and may change in the future.
-   * @internal
-   */
-  onResponse?: OnResponseHook<TServerContext>
-}
+> = EnvelopPlugin<YogaInitialContext & PluginContext> &
+  ServerAdapterPlugin<TServerContext> & {
+    /**
+     * onExecute hook that is invoked before the execute function is invoked.
+     */
+    onExecute?: OnExecuteHook<YogaInitialContext & PluginContext & TUserContext>
+    /**
+     * onSubscribe hook that is invoked before the subscribe function is called.
+     * Return a OnSubscribeHookResult for hooking into phase after the subscribe function has been called.
+     */
+    onSubscribe?: OnSubscribeHook<
+      YogaInitialContext & PluginContext & TUserContext
+    >
+  } & {
+    /**
+     * Use this hook with your own risk. It is still experimental and may change in the future.
+     * @internal
+     */
+    onYogaInit?: OnYogaInitHook<TServerContext>
+    /**
+     * Use this hook with your own risk. It is still experimental and may change in the future.
+     * @internal
+     */
+    onRequestParse?: OnRequestParseHook<TServerContext>
+    /**
+     * Use this hook with your own risk. It is still experimental and may change in the future.
+     * @internal
+     */
+    onParams?: OnParamsHook
+    /**
+     * Use this hook with your own risk. It is still experimental and may change in the future.
+     * @internal
+     */
+    onResultProcess?: OnResultProcess
+  }
 
 export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
   payload: OnYogaInitEventPayload<TServerContext>,
@@ -97,6 +91,7 @@ export type RequestParser = (
 
 export interface OnRequestParseEventPayload<TServerContext> {
   request: Request
+  url: URL
   requestParser: RequestParser | undefined
   serverContext: TServerContext
   setRequestParser: (parser: RequestParser) => void
@@ -133,7 +128,7 @@ export type OnResultProcess = (
 
 export type ResultProcessorInput =
   | MaybeArray<ExecutionResult>
-  | AsyncIterable<ExecutionResult>
+  | AsyncIterable<ExecutionResult<any, { http?: GraphQLHTTPExtensions }>>
 
 export type ResultProcessor = (
   result: ResultProcessorInput,
@@ -144,6 +139,7 @@ export type ResultProcessor = (
 export interface OnResultProcessEventPayload {
   request: Request
   result: ResultProcessorInput
+  setResult(result: ResultProcessorInput): void
   resultProcessor?: ResultProcessor
   acceptableMediaTypes: string[]
   setResultProcessor(

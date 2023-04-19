@@ -1,3 +1,7 @@
+---
+description: A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the server to the client that issued the subscription.
+---
+
 import { PackageCmd, Callout, Tabs, Tab } from '@theguild/components'
 
 # Subscriptions
@@ -16,7 +20,7 @@ You don't need any extra packages to use subscriptions.
   event streams must be distributed across all servers.
 </Callout>
 
-## Quick Start with Server Sent Events (SSE)
+## Quick Start with simple Server-Sent Events (SSE)
 
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
@@ -125,6 +129,10 @@ eventsource.onmessage = function (event) {
   const data = JSON.parse(event.data)
   console.log(data) // This will result something like `{ "data": { "countdown": 0 } }`
 }
+
+eventsource.addEventListener('complete', () => {
+  eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
+})
 ```
 
 ### Client Usage with Apollo
@@ -186,10 +194,7 @@ class SSELink extends ApolloLink {
     const url = new URL(this.options.uri)
     url.searchParams.append('query', print(operation.query))
     if (operation.operationName) {
-      url.searchParams.append(
-        'operationName',
-        JSON.stringify(operation.operationName)
-      )
+      url.searchParams.append('operationName', operation.operationName)
     }
     if (operation.variables) {
       url.searchParams.append('variables', JSON.stringify(operation.variables))
@@ -213,6 +218,9 @@ class SSELink extends ApolloLink {
       eventsource.onerror = function (error) {
         sink.error(error)
       }
+      eventsource.addEventListener('complete', () => {
+        eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
+      })
       return () => eventsource.close()
     })
   }
@@ -305,6 +313,9 @@ const client = createClient({
             eventsource.onerror = (error) => {
               sink.error(error)
             }
+            eventsource.addEventListener('complete', () => {
+              eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
+            })
             return {
               unsubscribe: () => eventsource.close()
             }
@@ -320,7 +331,124 @@ const client = createClient({
 
 </Tabs>
 
-## Subscriptions over WebSockets with `graphql-ws`
+### Client usage with Relay
+
+```ts filename="Relay Subscription client."
+import {
+  type RequestParameters,
+  type GraphQLResponse,
+  Observable,
+  Network
+} from 'relay-runtime'
+import type { Variables } from 'react-relay'
+import { executeQueryOrMutation } from './execute-query-or-mutation.js'
+
+const executeSubscription = (
+  request: RequestParameters,
+  variables: Variables
+): Observable<GraphQLResponse> => {
+  if (!request.text) throw new Error('Missing document.')
+  const { text: operation, name } = request
+
+  const url = new URL('http://localhost:4000/graphql')
+  url.searchParams.append('query', operation)
+  if (name) {
+    url.searchParams.append('operationName', name)
+  }
+  if (variables) {
+    url.searchParams.append('variables', JSON.stringify(variables))
+  }
+
+  return Observable.create<GraphQLResponse>((sink) => {
+    const source = new EventSource(url.toString())
+    source.onmessage = function (event) {
+      const data = JSON.parse(event.data)
+      sink.next(data)
+      if (source.readyState === 2) {
+        sink.complete()
+      }
+    }
+    source.onerror = function (ev) {
+      console.error(ev)
+      sink.error(new Error('Unexpected error.'))
+    }
+    eventsource.addEventListener('complete', () => {
+      eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
+    })
+    return () => source.close()
+  })
+}
+
+const network = Network.create(executeQueryOrMutation, executeSubscription)
+```
+
+## GraphQL over Server-Sent Events Protocol (via `graphql-sse`)
+
+There are two different modes in [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md). You can see the differences in the [protocol specification](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md).
+
+### Distinct Connection Mode
+
+GraphQL Yoga supports [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) only in distinct connection mode with an `legacySse = false` flag.
+
+```ts filename="yoga.ts"
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
+
+const yogaApp = createYoga({
+  // ...
+  legacySse: false
+})
+```
+
+<Callout>
+  When you enable this, simple SSE recipes won't work because it changes the
+  data events format. You should use refer to [`graphql-sse` client
+  recipes](https://github.com/enisdenjo/graphql-sse#recipes).
+</Callout>
+
+### Single Connection Mode
+
+In case you want the subscriptions to be transported following the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode) also in the single connection mode, you simply use the `@graphql-yoga/plugin-graphql-sse` plugin for GraphQL Yoga that exposes an additional endpoint (defaulting to `/graphql/stream`) used for [graphql-sse](https://github.com/enisdenjo/graphql-sse) clients.
+
+The plugin will hijack the request from the `onRequest` hook and will use **all** envelop plugins provided.
+
+Also, consider setting the `subscriptionsProtocol` in GraphiQL options to `GRAPHQL_SSE` in order to have it use [graphql-sse](https://github.com/enisdenjo/graphql-sse).
+
+```ts filename="yoga-with-graphql-sse.ts"
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
+import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
+
+const yogaApp = createYoga({
+  graphiql: {
+    // Use graphql-sse in GraphiQL.
+    subscriptionsProtocol: 'GRAPHQL_SSE'
+  },
+  plugins: [
+    // Simply install the graphql-sse plugin and you're off!
+    useGraphQLSSE()
+  ]
+})
+
+// Get NodeJS Server from Yoga
+const httpServer = createServer(yogaApp)
+
+httpServer.listen(4000, () => {
+  console.log('Server is running on port 4000')
+})
+```
+
+<Callout>
+  Check out [our working
+  example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/graphql-sse)
+  for this integration.
+</Callout>
+
+### Client Integration
+
+Please refer to the [`graphql-sse` client recipes](https://github.com/enisdenjo/graphql-sse#recipes).
+
+## GraphQL over WebSocket Protocol (via `graphql-ws`)
 
 Suppose you want to use the [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol with GraphQL Yoga, you can use the [`graphql-ws`](https://github.com/enisdenjo/graphql-ws) library.
 To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
@@ -344,7 +472,7 @@ const httpServer = createServer(yogaApp)
 // Create WebSocket server instance from our Node server
 const wsServer = new WebSocketServer({
   server: httpServer,
-  path: yogaApp.getAddressInfo().endpoint
+  path: yogaApp.graphqlEndpoint
 })
 
 // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
@@ -381,20 +509,22 @@ useServer(
   wsServer
 )
 
-server.listen(4000, () => {
+httpServer.listen(4000, () => {
   console.log('Server is running on port 4000')
 })
 ```
 
 <Callout>
-  Check out [our working example](/examples/graphql-ws) for this integration.
+  Check out [our working
+  example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/graphql-ws)
+  for this integration.
 </Callout>
 
 ### Client Integration
 
 Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/graphql-ws#recipes).
 
-### SSE vs WebSocket
+## SSE vs WebSocket
 
 #### Advantages of SSE over WebSockets
 
@@ -409,7 +539,7 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 
 #### SSE Gotchas
 
-- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x) ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2))
+- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x) ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2)). In this case, consider using the [`graphql-sse` integration](#graphql-over-server-sent-events-protocol-via-graphql-sse) with ["single connection mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode).
 
 ## PubSub
 
@@ -418,7 +548,8 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it easy to send new events to the client from within your mutation resolvers.
 
 ```ts filename="server.ts"
-import { createServer, createPubSub, createSchema } from 'graphql-yoga'
+import { createYoga, createPubSub, createSchema } from 'graphql-yoga'
+import { createServer } from 'node:http'
 
 const pubSub = createPubSub()
 
@@ -704,7 +835,7 @@ let globalCounter = 0
 const pubSub = createPubSub()
 
 const yoga = createYoga({
-  schema: createServer({
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
         hello: String
@@ -764,7 +895,14 @@ server.listen(4000, () => {
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 
 ```ts
-import { createYoga, createSchema, createPubSub, Repeater } from 'graphql-yoga'
+import {
+  createYoga,
+  createSchema,
+  createPubSub,
+  Repeater,
+  pipe,
+  map
+} from 'graphql-yoga'
 import { createServer } from 'node:http'
 
 type User = {

@@ -1,9 +1,10 @@
-import { isAsyncIterable } from '@envelop/core'
 import { ExecutionResult } from 'graphql'
+import { isAsyncIterable } from '@envelop/core'
+
 import { getResponseInitByRespectingErrors } from '../../error.js'
 import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessorInput } from '../types.js'
-import { jsonStringifyResult } from './stringify.js'
+import { jsonStringifyResultWithoutInternals } from './stringify.js'
 
 export function processMultipartResult(
   result: ResultProcessorInput,
@@ -49,7 +50,7 @@ export function processMultipartResult(
         )
         controller.enqueue(textEncoder.encode('\r\n'))
 
-        const chunk = jsonStringifyResult(value)
+        const chunk = jsonStringifyResultWithoutInternals(value)
         const encodedChunk = textEncoder.encode(chunk)
 
         controller.enqueue(
@@ -64,7 +65,7 @@ export function processMultipartResult(
         controller.enqueue(textEncoder.encode('---'))
       }
       if (done) {
-        controller.enqueue(textEncoder.encode('\r\n-----\r\n'))
+        controller.enqueue(textEncoder.encode('--\r\n'))
         controller.close()
       }
     },

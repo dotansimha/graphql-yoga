@@ -1,5 +1,6 @@
 import type { GraphiQLOptions } from 'graphql-yoga'
-import { js, css } from './graphiql.js'
+
+import { css, js, favicon } from './graphiql.js'
 
 export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
   <!DOCTYPE html>
@@ -7,10 +8,7 @@ export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
     <head>
       <meta charset="utf-8" />
       <title>${opts?.title || 'Yoga GraphiQL'}</title>
-      <link
-        rel="icon"
-        href="https://raw.githubusercontent.com/dotansimha/graphql-yoga/main/website/public/favicon.ico"
-      />
+      <link rel="icon" href="${favicon}" />
       <style>
         ${css}
       </style>

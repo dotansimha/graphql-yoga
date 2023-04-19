@@ -1,7 +1,7 @@
-import { OpenAPI, useSofa as createSofaHandler } from 'sofa-api'
 import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga'
-import { SofaHandler } from './types.js'
+import { OpenAPI, useSofa as createSofaHandler } from 'sofa-api'
 import { getSwaggerUIHTMLForSofa } from './swagger-ui.js'
+import { SofaHandler } from './types.js'
 
 export { OpenAPI } from 'sofa-api'
 
@@ -28,6 +28,8 @@ export function useSofaWithSwaggerUI(
       config.onRoute(route)
     }
   }
+  let swaggerJsonPattern: URLPattern
+  let swaggerUIPattern: URLPattern
   return {
     onPluginInit({ addPlugin }) {
       addPlugin(useSofa({ ...config, onRoute }))
@@ -43,8 +45,16 @@ export function useSofaWithSwaggerUI(
         customScalars: config.customScalars,
       })
     },
+    onYogaInit({ yoga }) {
+      swaggerJsonPattern = new yoga.fetchAPI.URLPattern({
+        pathname: '/swagger.json',
+      })
+      swaggerUIPattern = new yoga.fetchAPI.URLPattern({
+        pathname: swaggerUIEndpoint,
+      })
+    },
     onRequest({ url, fetchAPI, endResponse }) {
-      if (url.pathname === swaggerUIEndpoint) {
+      if (swaggerUIPattern.test(url)) {
         const swaggerUIHTML = getSwaggerUIHTMLForSofa(openApi)
         const response = new fetchAPI.Response(swaggerUIHTML, {
           status: 200,
@@ -54,7 +64,7 @@ export function useSofaWithSwaggerUI(
         })
         endResponse(response)
       }
-      if (url.pathname === '/swagger.json') {
+      if (swaggerJsonPattern.test(url)) {
         const response = new fetchAPI.Response(JSON.stringify(openApi.get()), {
           status: 200,
           headers: {
@@ -69,14 +79,22 @@ export function useSofaWithSwaggerUI(
 
 export function useSofa(config: SofaPluginConfig): Plugin {
   let sofaHandler: SofaHandler
-  let getEnveloped: YogaServerInstance<any, any>['getEnveloped']
+  let getEnveloped: YogaServerInstance<
+    Record<string, unknown>,
+    Record<string, unknown>
+  >['getEnveloped']
 
   const envelopedByContext = new WeakMap<
-    any,
-    ReturnType<YogaServerInstance<any, any>['getEnveloped']>
+    YogaInitialContext,
+    ReturnType<
+      YogaServerInstance<
+        Record<string, unknown>,
+        Record<string, unknown>
+      >['getEnveloped']
+    >
   >()
 
-  const requestByContext = new WeakMap<any, Request>()
+  const requestByContext = new WeakMap<YogaInitialContext, Request>()
   return {
     onYogaInit({ yoga }) {
       getEnveloped = yoga.getEnveloped
@@ -89,18 +107,22 @@ export function useSofa(config: SofaPluginConfig): Plugin {
           const enveloped = getEnveloped(serverContext)
           const request = requestByContext.get(serverContext)
           const contextValue = await enveloped.contextFactory({ request })
-          envelopedByContext.set(contextValue, enveloped)
+          envelopedByContext.set(contextValue as YogaInitialContext, enveloped)
           return contextValue
         },
-        execute(args: any) {
-          const enveloped = envelopedByContext.get(args.contextValue)
+        execute(args) {
+          const enveloped = envelopedByContext.get(
+            args.contextValue as YogaInitialContext,
+          )
           if (!enveloped) {
             throw new TypeError('Illegal invocation.')
           }
           return enveloped.execute(args)
         },
-        subscribe(args: any) {
-          const enveloped = envelopedByContext.get(args.contextValue)
+        subscribe(args) {
+          const enveloped = envelopedByContext.get(
+            args.contextValue as YogaInitialContext,
+          )
           if (!enveloped) {
             throw new TypeError('Illegal invocation.')
           }
@@ -109,8 +131,11 @@ export function useSofa(config: SofaPluginConfig): Plugin {
       })
     },
     async onRequest({ request, serverContext, endResponse }) {
-      requestByContext.set(serverContext, request)
-      const response = await sofaHandler.handle(request, serverContext)
+      requestByContext.set(serverContext as YogaInitialContext, request)
+      const response = await sofaHandler.handle(
+        request,
+        serverContext as Record<string, unknown>,
+      )
       if (response) {
         endResponse(response)
       }

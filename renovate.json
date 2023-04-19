@@ -8,10 +8,18 @@
   "major": {
     "automerge": false
   },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
   "packageRules": [
     {
       "groupName": "envelop",
       "matchPackagePrefixes": "@envelop"
+    },
+    {
+      "groupName": "whatwg-node",
+      "matchPackagePrefixes": "@whatwg-node"
     },
     {
       "excludePackagePatterns": [
@@ -20,7 +28,11 @@
         "typedoc*",
         "^@theguild/",
         "@graphql-inspector/core",
-        "next"
+        "next",
+        "@envelop/*",
+        "@whatwg-node/*",
+        "@graphql-yoga/*",
+        "graphql-yoga"
       ],
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
@@ -28,7 +40,7 @@
       "groupSlug": "all-minor-patch"
     }
   ],
-  "ignoreDeps": ["@sveltejs/kit", "graphiql"],
+  "ignoreDeps": ["@sveltejs/kit", "graphiql", "puppeteer", "graphql-yoga"],
   "ignorePaths": [
     "**/__tests__/**",
     "**/test/**",

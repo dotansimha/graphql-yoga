@@ -1,3 +1,5 @@
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import {
   ExecutionResult,
   GraphQLInt,
@@ -6,11 +8,10 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql'
-import { createYoga, Plugin, Repeater } from 'graphql-yoga'
 import { Push } from '@repeaterjs/repeater'
-import { createServer, Server } from 'http'
 import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch'
-import { AddressInfo } from 'net'
+
+import { createSchema, createYoga, Plugin, Repeater } from '../src'
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
@@ -33,7 +34,7 @@ describe('incremental delivery', () => {
     }
     const plugin: Plugin = {
       onExecute(ctx) {
-        ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as any)
+        ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as unknown)
       },
       /* skip validation :) */
       onValidate(ctx) {
@@ -42,6 +43,13 @@ describe('incremental delivery', () => {
     }
 
     const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            counter: Int!
+          }
+        `,
+      }),
       logging: false,
       plugins: [plugin],
     })
@@ -71,7 +79,7 @@ describe('incremental delivery', () => {
         if (chunk === undefined) {
           break
         }
-        const valueAsString = Buffer.from(chunk).toString()
+        const valueAsString = Buffer.from(chunk).toString('utf-8')
         if (
           valueAsString.includes(
             `Content-Type: application/json; charset=utf-8`,
@@ -133,7 +141,7 @@ describe('incremental delivery: node-fetch', () => {
               type: GraphQLFile,
             },
           },
-          resolve: async (_, { file }) => file,
+          resolve: (_, { file }) => file,
         },
         parseFileStream: {
           type: GraphQLString,
@@ -187,7 +195,6 @@ describe('incremental delivery: node-fetch', () => {
     logging: false,
     maskedErrors: false,
     fetchAPI: createFetch({
-      useNodeFetch: true,
       formDataLimits: {
         fileSize: 12,
       },
@@ -318,6 +325,9 @@ describe('incremental delivery: node-fetch', () => {
     formData.set('0', new File([fileContent], fileName, { type: fileType }))
     const response = await fetch(url, {
       method: 'POST',
+      headers: {
+        accept: 'application/graphql-response+json',
+      },
       body: formData,
     })
 
@@ -342,7 +352,12 @@ describe('incremental delivery: node-fetch', () => {
     })
     for await (const chunk of response.body!) {
       const chunkString = Buffer.from(chunk).toString('utf-8')
-      if (chunkString.includes('data:')) {
+
+      const parts = chunkString
+        .split('\n')
+        .filter((line) => line.trim() !== '' && line.trim() !== ':')
+
+      for (const chunkString of parts) {
         const result = JSON.parse(chunkString.replace('data:', ''))
         if (counter === 0) {
           expect(result.data.counter).toBe(0)

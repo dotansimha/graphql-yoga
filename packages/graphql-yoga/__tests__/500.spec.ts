@@ -1,4 +1,3 @@
-import { createGraphQLError } from '@graphql-tools/utils'
 import { createSchema } from '../src/schema'
 import { createYoga } from '../src/server'
 
@@ -25,7 +24,10 @@ describe('Handle non GraphQL Errors as 500 when error masking is disabled', () =
 
       const response = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          accept: 'application/graphql-response+json',
+          'content-type': 'application/json',
+        },
         body: JSON.stringify({ query: '{ __typename }' }),
       })
       expect(await response.json()).toStrictEqual({
