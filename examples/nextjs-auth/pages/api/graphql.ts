@@ -3,7 +3,8 @@ import { createYoga, createSchema } from 'graphql-yoga'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Session } from 'next-auth'
-import { getSession } from 'next-auth/react'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from './auth/[...nextauth]'
 
 export const config = {
   api: {
@@ -21,9 +22,9 @@ export default createYoga<
     session: Session
   }
 >({
-  context: async ({ req }) => {
+  context: async ({ req, res }) => {
     return {
-      session: await getSession({ req }),
+      session: await getServerSession(req, res, authOptions),
     }
   },
   schema: createSchema({
