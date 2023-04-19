@@ -149,7 +149,7 @@ importers:
         version: 5.36.0
       '@pulumi/awsx':
         specifier: 0.40.1
-        version: 0.40.1(@pulumi/aws@5.36.0)(@pulumi/pulumi@3.63.0)
+        version: 0.40.1(@pulumi/aws@5.36.0)(@pulumi/pulumi@3.64.0)
       '@pulumi/azure-native':
         specifier: 1.100.0
         version: 1.100.0
@@ -160,8 +160,8 @@ importers:
         specifier: 4.1.2
         version: 4.1.2
       '@pulumi/pulumi':
-        specifier: 3.63.0
-        version: 3.63.0
+        specifier: 3.64.0
+        version: 3.64.0
       '@types/node':
         specifier: 18.15.11
         version: 18.15.11
@@ -263,7 +263,7 @@ importers:
     devDependencies:
       '@aws-cdk/assert':
         specifier: 2.68.0
-        version: 2.68.0(aws-cdk-lib@2.75.0)
+        version: 2.68.0(aws-cdk-lib@2.75.1)
       '@types/aws-lambda':
         specifier: 8.10.114
         version: 8.10.114
@@ -271,11 +271,11 @@ importers:
         specifier: 18.15.11
         version: 18.15.11
       aws-cdk:
-        specifier: 2.75.0
-        version: 2.75.0
+        specifier: 2.75.1
+        version: 2.75.1
       aws-cdk-lib:
-        specifier: 2.75.0
-        version: 2.75.0
+        specifier: 2.75.1
+        version: 2.75.1
       esbuild:
         specifier: 0.17.17
         version: 0.17.17
@@ -1896,8 +1896,8 @@ importers:
         specifier: 7.0.3
         version: 7.0.3
       fast-xml-parser:
-        specifier: 4.2.1
-        version: 4.2.1
+        specifier: 4.2.2
+        version: 4.2.2
       typescript:
         specifier: 5.0.4
         version: 5.0.4
@@ -2701,7 +2701,7 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@aws-cdk/assert@2.68.0(aws-cdk-lib@2.75.0):
+  /@aws-cdk/assert@2.68.0(aws-cdk-lib@2.75.1):
     resolution: {integrity: sha512-bEztvoYdVp17I/ClYRGZa4wlEP/qNNq4Q+Z7EKwRL0cLDmvq4EI1m1N8LhUPAH7B6YXp5d1164gC6Nr0lV8bbA==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
@@ -2710,7 +2710,7 @@ packages:
       jest: '>=26.6.3'
     dependencies:
       '@aws-cdk/cloudformation-diff': 2.68.0
-      aws-cdk-lib: 2.75.0
+      aws-cdk-lib: 2.75.1
     dev: true
 
   /@aws-cdk/asset-awscli-v1@2.2.102:
@@ -4934,6 +4934,7 @@ packages:
 
   /@balena/dockerignore@1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
+    dev: false
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -10693,7 +10694,7 @@ packages:
     resolution: {integrity: sha512-rn+wNWU41BLotO58U1TWTW3np+i1huezqxP18jwEr72/hNh/GTDppKO9nNNY4tQYeyY9T8ebcssjZaipQAkvdg==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.63.0
+      '@pulumi/pulumi': 3.64.0
       aws-sdk: 2.1235.0
       builtin-modules: 3.0.0
       mime: 2.6.0
@@ -10703,7 +10704,7 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx@0.40.1(@pulumi/aws@5.36.0)(@pulumi/pulumi@3.63.0):
+  /@pulumi/awsx@0.40.1(@pulumi/aws@5.36.0)(@pulumi/pulumi@3.64.0):
     resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
@@ -10711,7 +10712,7 @@ packages:
     dependencies:
       '@pulumi/aws': 5.36.0
       '@pulumi/docker': 3.6.1
-      '@pulumi/pulumi': 3.63.0
+      '@pulumi/pulumi': 3.64.0
       '@types/aws-lambda': 8.10.93
       mime: 2.6.0
     transitivePeerDependencies:
@@ -10722,7 +10723,7 @@ packages:
     resolution: {integrity: sha512-NYUoGNvyOZYVR04IEjnnzf/SFof76f/qe6y7XaFWZW5cSBLhM9IiyFwia8ndN4Ec8cPQMinzR3l7GHUXDMH4kQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.63.0
+      '@pulumi/pulumi': 3.64.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10731,7 +10732,7 @@ packages:
     resolution: {integrity: sha512-cwdB70bLeKL/VNIqqOD5fpHQcocVmpHuiHH589eR+QUfbLa4f+M8yA/TTCcxx2AFFctTqO5wgVuC+faL8xZmWQ==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.63.0
+      '@pulumi/pulumi': 3.64.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10740,7 +10741,7 @@ packages:
     resolution: {integrity: sha512-BZME50QkT556v+LvmTXPT8ssB2xxNkp9+msB5xYFEnUnWcdGAx5yUysQw70RJCb+U0GbkJSbxtlgMJgOQf/now==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.63.0
+      '@pulumi/pulumi': 3.64.0
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
@@ -10750,14 +10751,14 @@ packages:
     resolution: {integrity: sha512-BBMboSpud++rpwELDpRZ+5X/4OCog6/S1n54pM9aNvEptXGCf5l7CSUSjEThiMtIfKlsAJs+zPji+9GDeM79gA==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.63.0
+      '@pulumi/pulumi': 3.64.0
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/pulumi@3.63.0:
-    resolution: {integrity: sha512-nPaNYU5eXhgabkxIdLsVOqN7FN5lRdWmJiGUEbSvlS/enXQUp8aprxbCLXSxQtrtzQDdzyl5zd5Z1lrrAxewAA==}
+  /@pulumi/pulumi@3.64.0:
+    resolution: {integrity: sha512-yKEABPiNqOXAlZcGiBSbYElwDrx82IjDUS07R+K3g05EzEttMN5YKv/NjTZsiSWtOGuGscStJnwEWWCjj4GhGQ==}
     engines: {node: '>=8.13.0 || >=10.10.0'}
     dependencies:
       '@grpc/grpc-js': 1.8.11
@@ -13784,8 +13785,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /aws-cdk-lib@2.75.0:
-    resolution: {integrity: sha512-lFMrRJPt5TDRm4PGllo0aFcSi8nHzs0mZbYUF/lnMc15ORroV8Iv38U1I0CHiZwWO/QtLuxIzEXWA5hSbgpKzw==}
+  /aws-cdk-lib@2.75.1:
+    resolution: {integrity: sha512-rVG9PYqpe7rR1POswmbTJ2aw60zrNPzWwIYbN0VTp6smc4axG2JHlp9ep1nyfR1rdPd+uzl7d3W1765QbHchPw==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
@@ -13793,16 +13794,6 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.102
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.82
-      '@balena/dockerignore': 1.0.2
-      case: 1.6.3
-      fs-extra: 9.1.0
-      ignore: 5.2.4
-      jsonschema: 1.4.1
-      minimatch: 3.1.2
-      punycode: 2.3.0
-      semver: 7.3.8
-      table: 6.8.1
-      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -13816,8 +13807,8 @@ packages:
       - table
       - yaml
 
-  /aws-cdk@2.75.0:
-    resolution: {integrity: sha512-BkyWNpYZz66Ewoi7rBPYZnW+0BAKbWYawhQ1v7KQWmGB0cFlQmvIfoOFklF5EOyAKOltUVRQF6KJf1/AIedkmg==}
+  /aws-cdk@2.75.1:
+    resolution: {integrity: sha512-LB0pvt3FwHEvljBIczNwvVCrknZ8u/s7CFNaCC6AmpFajwy8BZrbcRL8iKxHKwaWvPULY1bzvsqhHAoE34h4Ow==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
     optionalDependencies:
@@ -14695,11 +14686,6 @@ packages:
     dependencies:
       ansicolors: 0.3.2
       redeyed: 2.1.1
-    dev: true
-
-  /case@1.6.3:
-    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
-    engines: {node: '>= 0.8.0'}
     dev: true
 
   /caseless@0.12.0:
@@ -18620,8 +18606,8 @@ packages:
     resolution: {integrity: sha512-WvJe06IfNYlr+6cO3uQkdKdy3Cb1LlCJSF8zRs2eT8yuhdbSlR9nIt+TgQ92RUxiRrQm+/S7RARnMfCs5iuAjw==}
     dev: true
 
-  /fast-xml-parser@4.2.1:
-    resolution: {integrity: sha512-aiRXmcEtCTmqkoC9tfcgIXQN+7u9OONGFjZ4D3dXryNLNj7LSKxyabDppoRVMBrczQNrGr3fsMBKX8/d3AgYEA==}
+  /fast-xml-parser@4.2.2:
+    resolution: {integrity: sha512-DLzIPtQqmvmdq3VUKR7T6omPK/VCRNqgFlGtbESfyhcH2R4I8EzK1/K6E8PkRCK2EabWrUHK32NjYRbEFnnz0Q==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -22447,6 +22433,7 @@ packages:
 
   /jsonschema@1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
+    dev: false
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
