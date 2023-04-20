@@ -1,7 +1,6 @@
-import { createGraphQLYoga } from './index.js'
+import { createGraphQLYoga, spinner } from './index.js'
 
 createGraphQLYoga().catch((e) => {
-  // eslint-disable-next-line no-console
-  console.error(e)
+  spinner.fail(e.message)
   process.exit(1)
 })

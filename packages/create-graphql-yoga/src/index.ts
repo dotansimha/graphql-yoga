@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import { Readable } from 'node:stream'
 import { existsSync, mkdirSync } from 'node:fs'
 
-const spinner = ora()
+export const spinner = ora()
 
 const options = {
   template: {
@@ -23,16 +23,14 @@ async function getVersionByTag(packageName: string, tag: string) {
   const url = getRegistryAPIUrl(packageName, tag)
   const response = await fetch(url)
   if (response.status === 404) {
-    spinner.fail(`Package not found: ${packageName}`)
-    process.exit(1)
+    throw new Error(`Package not found: ${packageName}`)
   }
   if (!response.ok) {
-    spinner.fail(
+    throw new Error(
       `Failed to fetch package ${packageName} with ${
         response.status
       }: ${await response.text()}`,
     )
-    process.exit(1)
   }
   const { version } = await response.json()
   return version
@@ -64,20 +62,17 @@ export async function createGraphQLYoga(fullArgs: string[] = process.argv) {
   const url = getTarballUrl(packageName, version)
   const response = await fetch(url)
   if (response.status === 404) {
-    spinner.fail(`Template not found: ${template}`)
-    process.exit(1)
+    throw new Error(`Template not found: ${template}`)
   }
   if (!response.ok) {
-    spinner.fail(
+    throw new Error(
       `Failed to fetch template ${template} with ${
         response.status
       }: ${await response.text()}`,
     )
-    process.exit(1)
   }
   if (!response.body) {
-    spinner.fail(`Failed to fetch template ${template} with empty body`)
-    process.exit(1)
+    throw new Error(`Failed to fetch template ${template} with empty body`)
   }
   const nodeStream = Readable.from(
     response.body as unknown as AsyncIterable<Uint8Array>,
@@ -88,17 +83,18 @@ export async function createGraphQLYoga(fullArgs: string[] = process.argv) {
     C: targetDir,
   })
   if (existsSync(targetDir)) {
-    spinner.fail(`Target directory ${targetDir} already exists.`)
-    process.exit(1)
+    throw new Error(`Target directory ${targetDir} already exists.`)
   }
   mkdirSync(targetDir, { recursive: true })
-  nodeStream
-    .pipe(extractedTarStream)
-    .once('error', (err) => {
-      spinner.fail(`Failed to extract template ${template} with ${err}`)
-      process.exit(1)
-    })
-    .once('close', () => {
-      spinner.succeed(`Template ${template} created on ${targetDir}.`)
-    })
+  await new Promise<void>((resolve, reject) => {
+    nodeStream
+      .pipe(extractedTarStream)
+      .once('error', (err) => {
+        reject(new Error(`Failed to extract template ${template} with ${err}`))
+      })
+      .once('close', () => {
+        resolve()
+      })
+  })
+  spinner.succeed(`Template ${template} created on ${targetDir}.`)
 }
