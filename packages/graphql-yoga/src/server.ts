@@ -138,7 +138,9 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    */
   graphiql?: GraphiQLOptionsOrFactory<TServerContext> | undefined
 
-  renderGraphiQL?: ((options?: GraphiQLOptions) => PromiseOrValue<BodyInit>) | undefined
+  renderGraphiQL?:
+    | ((options?: GraphiQLOptions) => PromiseOrValue<BodyInit>)
+    | undefined
 
   schema?: YogaSchemaDefinition<TUserContext & TServerContext> | undefined
 
@@ -146,10 +148,12 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * Envelop Plugins
    * @see https://envelop.dev/plugins
    */
-  plugins?: Array<
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
-  > | undefined
+  plugins?:
+    | Array<
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
+      >
+    | undefined
 
   parserCache?: boolean | ParserAndValidationCacheOptions | undefined
   validationCache?: boolean | ValidationCache | undefined
