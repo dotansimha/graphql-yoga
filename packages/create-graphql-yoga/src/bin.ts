@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { createGraphQLYoga, spinner } from './index.js'
 
 createGraphQLYoga().catch((e) => {
