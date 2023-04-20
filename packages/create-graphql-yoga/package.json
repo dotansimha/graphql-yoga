@@ -10,7 +10,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "bin": {
-    "create-graphql-yoga": "dist/esm/bin.js"
+    "create-graphql-yoga": "dist/cjs/bin.js"
   },
   "buildOptions": {
     "bin": {
@@ -58,13 +58,15 @@
   },
   "dependencies": {
     "@whatwg-node/fetch": "^0.8.5",
-    "ora": "^6.3.0",
+    "get-npm-tarball-url": "^2.0.3",
+    "ora": "^5.4.1",
     "tslib": "^2.3.1",
     "tar": "^6.1.13"
   },
   "devDependencies": {
     "@types/tar": "^6.1.4",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "rimraf": "^5.0.0"
   },
   "type": "module",
   "sideEffects": false

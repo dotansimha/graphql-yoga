@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 import { createGraphQLYoga, spinner } from './index.js'
+import { fetch } from '@whatwg-node/fetch'
 
-createGraphQLYoga().catch((e) => {
+createGraphQLYoga({
+  argv: process.argv,
+  input: process.stdin,
+  output: process.stdout,
+  fetchFn: fetch,
+}).catch((e) => {
   spinner.fail(e.message)
   process.exit(1)
 })
