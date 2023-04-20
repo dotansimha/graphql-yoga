@@ -1281,7 +1281,7 @@ importers:
         version: 2.0.0(@sveltejs/kit@1.0.0-next.520)
       '@sveltejs/kit':
         specifier: 1.0.0-next.520
-        version: 1.0.0-next.520(svelte@3.58.0)(vite@4.2.2)
+        version: 1.0.0-next.520(svelte@3.58.0)(vite@4.3.0)
       '@types/jest':
         specifier: ^29.0.0
         version: 29.2.0
@@ -1328,8 +1328,8 @@ importers:
         specifier: 5.0.4
         version: 5.0.4
       vite:
-        specifier: 4.2.2
-        version: 4.2.2
+        specifier: 4.3.0
+        version: 4.3.0
 
   examples/uwebsockets:
     dependencies:
@@ -1493,10 +1493,10 @@ importers:
         version: 18.0.11
       '@vitejs/plugin-react':
         specifier: 3.1.0
-        version: 3.1.0(vite@4.2.2)
+        version: 3.1.0(vite@4.3.0)
       vite:
-        specifier: 4.2.2
-        version: 4.2.2
+        specifier: 4.3.0
+        version: 4.3.0
 
   packages/graphql-yoga:
     dependencies:
@@ -2886,6 +2886,7 @@ packages:
       '@aws-cdk/core': 1.198.1
       '@aws-cdk/custom-resources': 1.198.1(@aws-cdk/aws-ec2@1.198.1)(@aws-cdk/aws-iam@1.198.1)(@aws-cdk/aws-lambda@1.198.1)(@aws-cdk/aws-logs@1.198.1)(@aws-cdk/aws-s3@1.198.1)(@aws-cdk/core@1.198.1)(@aws-cdk/cx-api@1.198.1)(constructs@3.4.127)
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -3259,6 +3260,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.198.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -4932,7 +4934,6 @@ packages:
 
   /@balena/dockerignore@1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
-    dev: false
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -11292,11 +11293,11 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.0.0-next.520(svelte@3.58.0)(vite@4.2.2)
+      '@sveltejs/kit': 1.0.0-next.520(svelte@3.58.0)(vite@4.3.0)
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit@1.0.0-next.520(svelte@3.58.0)(vite@4.2.2):
+  /@sveltejs/kit@1.0.0-next.520(svelte@3.58.0)(vite@4.3.0):
     resolution: {integrity: sha512-flroQQEwIHx6IEkskHGQ90Ri+gFCnAs4ZFRsG7QuTbuBu7XSeJNQs3J73pmBQoKp0pWnbwZ3YZMtwBJWF/I7qA==}
     engines: {node: '>=16.14'}
     hasBin: true
@@ -11305,7 +11306,7 @@ packages:
       svelte: ^3.44.0
       vite: ^3.1.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.9(svelte@3.58.0)(vite@4.2.2)
+      '@sveltejs/vite-plugin-svelte': 1.0.9(svelte@3.58.0)(vite@4.3.0)
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.0.1
@@ -11318,13 +11319,13 @@ packages:
       svelte: 3.58.0
       tiny-glob: 0.2.9
       undici: 5.11.0
-      vite: 4.2.2
+      vite: 4.3.0
     transitivePeerDependencies:
       - diff-match-patch
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte@1.0.9(svelte@3.58.0)(vite@4.2.2):
+  /@sveltejs/vite-plugin-svelte@1.0.9(svelte@3.58.0)(vite@4.3.0):
     resolution: {integrity: sha512-+SDrAnT7TDi8sdj4OfD2SC4s9DNrpNVBrue8fT2PmKks9Ddu0JIfSeX91wXZb/1xHz4EkGb+rli8GTRI0yGOjg==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
@@ -11342,7 +11343,7 @@ packages:
       magic-string: 0.26.7
       svelte: 3.58.0
       svelte-hmr: 0.15.0(svelte@3.58.0)
-      vite: 4.2.2
+      vite: 4.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12725,7 +12726,7 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-react@3.1.0(vite@4.2.2):
+  /@vitejs/plugin-react@3.1.0(vite@4.3.0):
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -12736,7 +12737,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6(@babel/core@7.20.12)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.2.2
+      vite: 4.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -13898,6 +13899,16 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.102
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.82
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      table: 6.8.1
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -14790,6 +14801,11 @@ packages:
     dependencies:
       ansicolors: 0.3.2
       redeyed: 2.1.1
+    dev: true
+
+  /case@1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /caseless@0.12.0:
@@ -22545,7 +22561,6 @@ packages:
 
   /jsonschema@1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
-    dev: false
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -28383,8 +28398,8 @@ packages:
       estree-walker: 0.6.1
     dev: true
 
-  /rollup@3.19.1:
-    resolution: {integrity: sha512-lAbrdN7neYCg/8WaoWn/ckzCtz+jr70GFfYdlf50OF7387HTg+wiuiqJRFYawwSPpqfqDNYqK7smY/ks2iAudg==}
+  /rollup@3.20.6:
+    resolution: {integrity: sha512-2yEB3nQXp/tBQDN0hJScJQheXdvU2wFhh6ld7K/aiZ1vYcak6N/BKjY1QrU6BvO2JWYS8bEs14FRaxXosxy2zw==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -30790,7 +30805,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 3.1.4
       resolve-from: 5.0.0
-      rollup: 3.19.1
+      rollup: 3.20.6
       source-map: 0.8.0-beta.0
       sucrase: 3.28.0
       tree-kill: 1.2.2
@@ -31582,8 +31597,8 @@ packages:
       unist-util-stringify-position: 3.0.2
       vfile-message: 3.1.2
 
-  /vite@4.2.2:
-    resolution: {integrity: sha512-PcNtT5HeDxb3QaSqFYkEum8f5sCVe0R3WK20qxgIvNBZPXU/Obxs/+ubBMeE7nLWeCo2LDzv+8hRYSlcaSehig==}
+  /vite@4.3.0:
+    resolution: {integrity: sha512-JTGFgDh3dVxeGBpuQX04Up+JZmuG6wu9414Ei36vQzaEruY/M4K0AgwtuB2b4HaBgB7R8l+LHxjB0jcgz4d2qQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -31609,8 +31624,7 @@ packages:
     dependencies:
       esbuild: 0.17.17
       postcss: 8.4.21
-      resolve: 1.22.1
-      rollup: 3.19.1
+      rollup: 3.20.6
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
