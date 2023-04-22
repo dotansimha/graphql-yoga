@@ -99,6 +99,13 @@ Read more about how GraphQL Yoga compares to other servers in the ecosystem [her
 
 If this is your first time contributing to this project, please do read our [Contributor Workflow Guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md) before you get started off.
 
+For this project in particular, to get started on `stage/2-failing-test`:
+
+1. Install [Node.js](https://nodejs.org/)
+2. Run in your terminal: `npm i -g pnpm@7 && pnpm install && pnpm build`
+3. Add tests to `packages/graphql-yoga/__tests__` using [Jest](https://jestjs.io/docs/api) APIs
+4. Run the tests with `pnpm test`
+
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
 ## Code of Conduct
