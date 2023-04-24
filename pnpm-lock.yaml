@@ -1562,8 +1562,8 @@ importers:
         specifier: 16.6.0
         version: 16.6.0
       graphql-http:
-        specifier: file:../../graphql-http-1.18.0-rc.1.tgz
-        version: file:graphql-http-1.18.0-rc.1.tgz(graphql@16.6.0)
+        specifier: ^1.18.0
+        version: 1.18.0(graphql@16.6.0)
       graphql-scalars:
         specifier: 1.21.3
         version: 1.21.3(graphql@16.6.0)
@@ -1636,8 +1636,8 @@ importers:
         specifier: 16.6.0
         version: 16.6.0
       graphql-http:
-        specifier: file:../../graphql-http-1.18.0-rc.1.tgz
-        version: file:graphql-http-1.18.0-rc.1.tgz(graphql@16.6.0)
+        specifier: ^1.18.0
+        version: 1.18.0(graphql@16.6.0)
       graphql-ws:
         specifier: ^5.11.3
         version: 5.11.3(graphql@16.6.0)
@@ -20183,6 +20183,15 @@ packages:
       - utf-8-validate
     dev: true
 
+  /graphql-http@1.18.0(graphql@16.6.0):
+    resolution: {integrity: sha512-r2sIo6jCTQi1aj7s+Srg7oU3+r5pUUgxgDD5JDZOmFzrbXVGz+yMhIKhvqW0cV10DcnVIFCOzuFuc1qvnjJ7yQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      graphql: '>=0.11 <=16'
+    dependencies:
+      graphql: 16.6.0
+    dev: true
+
   /graphql-jit@0.8.0(graphql@16.6.0):
     resolution: {integrity: sha512-mxdV9ohO6jKt1o9erb+7RpmnDKQFQCcJlYVfGa3j4+ieP0ITDsAlm194+pfvdv5F4zgrgZfSe5xx5Rf98epJmg==}
     peerDependencies:
@@ -32358,18 +32367,6 @@ packages:
 
   /zwitch@2.0.2:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
-
-  file:graphql-http-1.18.0-rc.1.tgz(graphql@16.6.0):
-    resolution: {integrity: sha512-m5vWZZV+PRM7xnx7eRxCMVZYM1FG8nYFTK68nxuI1EZUEch+o5LnZRYOx7ZBUcCl4+le+FBhg2vlYxAG/2WdUA==, tarball: file:graphql-http-1.18.0-rc.1.tgz}
-    id: file:graphql-http-1.18.0-rc.1.tgz
-    name: graphql-http
-    version: 1.18.0-rc.1
-    engines: {node: '>=12'}
-    peerDependencies:
-      graphql: '>=0.11 <=16'
-    dependencies:
-      graphql: 16.6.0
-    dev: true
 
   github.com/uNetworking/uWebSockets.js/77bc1fd5577ae42b56675912eb8481a31f3fefd2:
     resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/77bc1fd5577ae42b56675912eb8481a31f3fefd2}
