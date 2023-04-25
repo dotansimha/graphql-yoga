@@ -57,6 +57,11 @@ ParserAndValidationCacheOptions): Plugin<{}> {
       setResult,
       // eslint-disable-next-line @typescript-eslint/ban-types
     }): void | AfterValidateHook<{}> {
+      /** No schema no cache */
+      if (schema == null) {
+        return
+      }
+
       if (validationCache !== false) {
         const rulesKey =
           rules?.map((rule: ValidationRule) => rule.name).join(',') || ''

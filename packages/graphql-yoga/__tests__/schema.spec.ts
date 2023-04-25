@@ -7,6 +7,10 @@ describe('schema', () => {
   it('missing schema causes a error', async () => {
     const yoga = createYoga({
       logging: false,
+      maskedErrors: {
+        /** We use dev mode in order to verify that our error message is originating from within graphql-js and not our code. */
+        isDev: true,
+      },
     })
 
     const response = await yoga.fetch('http://yoga/graphql', {
@@ -25,6 +29,12 @@ describe('schema', () => {
       errors: [
         {
           message: 'Unexpected error.',
+          extensions: {
+            /** This error is raised by Graphql.js */
+            originalError: {
+              message: 'Expected null to be a GraphQL schema.',
+            },
+          },
         },
       ],
     })
