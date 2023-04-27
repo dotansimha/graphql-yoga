@@ -64,6 +64,16 @@ export type CustomPersistedQueryErrors = {
    * Error to be thrown when the persisted operation is not found
    */
   notFound?: CustomErrorFactory
+
+  /**
+   * Error to be thrown when rejecting non-persisted operations
+   */
+  persistedQueryOnly?: CustomErrorFactory
+
+  /**
+   * Error to be thrown when the extraction of the persisted operation id failed
+   */
+  keyNotFound?: CustomErrorFactory
 }
 
 export function usePersistedOperations<
@@ -86,7 +96,9 @@ export function usePersistedOperations<
             ? allowArbitraryOperations
             : await allowArbitraryOperations(request)) === false
         ) {
-          throw createGraphQLError('PersistedQueryOnly')
+          throw createPersistedOperationError(
+            customErrors?.persistedQueryOnly ?? 'PersistedQueryOnly',
+          )
         }
         return
       }
@@ -94,12 +106,14 @@ export function usePersistedOperations<
       const persistedOperationKey = extractPersistedOperationId(params)
 
       if (persistedOperationKey == null) {
-        throw createGraphQLError('PersistedQueryNotFound')
+        throw createPersistedOperationError(
+          customErrors?.keyNotFound ?? 'PersistedQueryNotFound',
+        )
       }
 
       const persistedQuery = await getPersistedOperation(persistedOperationKey)
       if (persistedQuery == null) {
-        throw createGraphQLError(
+        throw createPersistedOperationError(
           customErrors?.notFound ?? 'PersistedQueryNotFound',
         )
       }
@@ -132,4 +146,8 @@ export function usePersistedOperations<
       }
     },
   }
+}
+
+function createPersistedOperationError(message: string) {
+  return createGraphQLError(message)
 }
