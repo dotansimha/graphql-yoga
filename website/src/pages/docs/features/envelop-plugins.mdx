@@ -15,11 +15,14 @@ You can both use Yoga or Envelop plugins with GraphQL Yoga.
   When there is both a Envelop and Yoga specific plugin available, you should
   always opt-in for the Yoga variant as this one allows certain optimizations
   compared to just an Envelop plugin. As envelop plugins have only control over
-  the GraphQL execution for example a plugin such as the [response-cache](TODO:
-  response cache plugin link), can never act on the HTTP level. However, the
-  yoga response-cache plugin utilizes the HTTP level hooks, and thus can
-  completly skip all of the expensive GraphQL execution steps for serving cached
-  results.
+  the GraphQL execution for example a plugin such as the
+  [response-cache](https://the-guild.dev/graphql/envelop/plugins/use-response-cache),
+  can never act on the HTTP level. However, the [yoga
+  response-cache](/docs/features/response-caching), [Persisted
+  Operations](/docs/features/persisted-operations) or
+  [Defer/Stream](/docs/features/defer-stream) plugin utilizes the HTTP level
+  hooks, and thus can completly skip all of the expensive GraphQL execution
+  steps for serving cached results.
 </Callout>
 
 ### Envelop Plugin Example
@@ -92,7 +95,7 @@ Sometimes you might want to build your own plugins. You can write your own Yoga 
   source code of the existing plugins maintained by us.
 </Callout>
 
-The most hooks for Yoga origin from the envelop plugin system. [Please refer to the Envelop Plugin documentation for more information.](TODO: add link)
+The most hooks for Yoga origin from the envelop plugin system. [Please refer to the Envelop Plugin Lifecycle documentation for more information.](https://the-guild.dev/graphql/envelop/docs/plugins/lifecycle)
 
 In addition, Yoga adds more HTTP specific hooks.
 
