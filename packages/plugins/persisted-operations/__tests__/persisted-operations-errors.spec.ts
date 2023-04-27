@@ -19,6 +19,17 @@ describe('Persisted Operations', () => {
       expect(error.message).toBe('Not found')
     })
 
+    it('should allow to customize not found error message with error options', async () => {
+      const error = await generateNotFoundError({
+        notFound: {
+          message: 'Not found',
+          extensions: { code: 'NOT_FOUND' },
+        },
+      })
+      expect(error.message).toBe('Not found')
+      expect(error.extensions.code).toBe('NOT_FOUND')
+    })
+
     it('should allow to customize error when key is not found with a string', async () => {
       const error = await generateKeyNotFoundError({
         keyNotFound: 'Key not found',
@@ -26,11 +37,33 @@ describe('Persisted Operations', () => {
       expect(error.message).toBe('Key not found')
     })
 
+    it('should allow to customize error when key is not found with error options', async () => {
+      const error = await generateKeyNotFoundError({
+        keyNotFound: {
+          message: 'Key not found',
+          extensions: { code: 'KEY_NOT_FOUND' },
+        },
+      })
+      expect(error.message).toBe('Key not found')
+      expect(error.extensions.code).toBe('KEY_NOT_FOUND')
+    })
+
     it('should allow to customize persisted query only error with a string', async () => {
       const error = await generatePersistedQueryOnlyError({
         persistedQueryOnly: 'Persisted query only',
       })
       expect(error.message).toBe('Persisted query only')
+    })
+
+    it('should allow to customize persisted query only error with error options', async () => {
+      const error = await generatePersistedQueryOnlyError({
+        persistedQueryOnly: {
+          message: 'Persisted query only',
+          extensions: { code: 'PERSISTED_ONLY' },
+        },
+      })
+      expect(error.message).toBe('Persisted query only')
+      expect(error.extensions.code).toBe('PERSISTED_ONLY')
     })
   })
 })

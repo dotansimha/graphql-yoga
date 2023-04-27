@@ -1,4 +1,4 @@
-import { DocumentNode } from 'graphql'
+import { DocumentNode, GraphQLErrorOptions } from 'graphql'
 import {
   createGraphQLError,
   GraphQLParams,
@@ -57,7 +57,9 @@ export type UsePersistedOperationsOptions = {
   customErrors?: CustomPersistedQueryErrors
 }
 
-export type CustomErrorFactory = string
+export type CustomErrorFactory =
+  | string
+  | (GraphQLErrorOptions & { message: string })
 
 export type CustomPersistedQueryErrors = {
   /**
@@ -88,6 +90,7 @@ export function usePersistedOperations<
 }: UsePersistedOperationsOptions): Plugin<TPluginContext> {
   const operationASTByRequest = new WeakMap<Request, DocumentNode>()
   const persistedOperationRequest = new WeakSet<Request>()
+
   return {
     async onParams({ request, params, setParams }) {
       if (params.query) {
@@ -97,7 +100,8 @@ export function usePersistedOperations<
             : await allowArbitraryOperations(request)) === false
         ) {
           throw createPersistedOperationError(
-            customErrors?.persistedQueryOnly ?? 'PersistedQueryOnly',
+            'PersistedQueryOnly',
+            customErrors?.persistedQueryOnly,
           )
         }
         return
@@ -107,14 +111,16 @@ export function usePersistedOperations<
 
       if (persistedOperationKey == null) {
         throw createPersistedOperationError(
-          customErrors?.keyNotFound ?? 'PersistedQueryNotFound',
+          'PersistedQueryNotFound',
+          customErrors?.keyNotFound,
         )
       }
 
       const persistedQuery = await getPersistedOperation(persistedOperationKey)
       if (persistedQuery == null) {
         throw createPersistedOperationError(
-          customErrors?.notFound ?? 'PersistedQueryNotFound',
+          'PersistedQueryNotFound',
+          customErrors?.notFound,
         )
       }
 
@@ -148,6 +154,12 @@ export function usePersistedOperations<
   }
 }
 
-function createPersistedOperationError(message: string) {
-  return createGraphQLError(message)
+function createPersistedOperationError(
+  defaultMessage: string,
+  options?: CustomErrorFactory,
+) {
+  if (typeof options === 'string') {
+    return createGraphQLError(options)
+  }
+  return createGraphQLError(options?.message ?? defaultMessage, options)
 }
