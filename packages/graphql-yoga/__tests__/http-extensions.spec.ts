@@ -1,5 +1,5 @@
 import { ExecutionResult } from '@envelop/core'
-import { GraphQLScalarType } from 'graphql'
+import { GraphQLError, GraphQLScalarType } from 'graphql'
 import {
   createGraphQLError,
   createSchema,
@@ -628,5 +628,59 @@ describe('Result Extensions', () => {
       expect(res.status).toBe(status)
       expect(res.statusText).toBe(STATUS_CODES[status])
     }
+  })
+  it('respects toJSON in a custom error', async () => {
+    class CustomError extends GraphQLError {
+      constructor(message: string) {
+        super(message);
+        this.name = 'CustomError';
+      }
+
+      toJSON() {
+        return { message: this.message, extensions: { name: this.name, foo: 'bar' } };
+      }
+    }
+
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            throwMe: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            throwMe: () => {
+              throw new CustomError('test');
+            }
+          }
+        }
+      }),
+      maskedErrors: false,
+    });
+
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ throwMe }',
+      }),
+    });
+
+    expect(res.status).toBe(200);
+    const resJson = await res.json();
+    expect(resJson).toMatchObject({
+      errors: [
+        {
+          message: 'test',
+          extensions: {
+            name: 'CustomError',
+            foo: 'bar'
+          }
+        }
+      ]
+    })
   })
 })
