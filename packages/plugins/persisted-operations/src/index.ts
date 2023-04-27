@@ -50,6 +50,20 @@ export type UsePersistedOperationsOptions = {
    * Whether to skip validation of the persisted operation
    */
   skipDocumentValidation?: boolean
+
+  /**
+   * Custom errors to be thrown
+   */
+  customErrors?: CustomPersistedQueryErrors
+}
+
+export type CustomErrorFactory = string
+
+export type CustomPersistedQueryErrors = {
+  /**
+   * Error to be thrown when the persisted operation is not found
+   */
+  notFound?: CustomErrorFactory
 }
 
 export function usePersistedOperations<
@@ -60,6 +74,7 @@ export function usePersistedOperations<
   extractPersistedOperationId = defaultExtractPersistedOperationId,
   getPersistedOperation,
   skipDocumentValidation = false,
+  customErrors,
 }: UsePersistedOperationsOptions): Plugin<TPluginContext> {
   const operationASTByRequest = new WeakMap<Request, DocumentNode>()
   const persistedOperationRequest = new WeakSet<Request>()
@@ -84,7 +99,9 @@ export function usePersistedOperations<
 
       const persistedQuery = await getPersistedOperation(persistedOperationKey)
       if (persistedQuery == null) {
-        throw createGraphQLError('PersistedQueryNotFound')
+        throw createGraphQLError(
+          customErrors?.notFound ?? 'PersistedQueryNotFound',
+        )
       }
 
       if (typeof persistedQuery === 'object') {

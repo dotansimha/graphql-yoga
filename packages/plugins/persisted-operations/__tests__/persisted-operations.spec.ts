@@ -1,4 +1,7 @@
-import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+import {
+  CustomPersistedQueryErrors,
+  usePersistedOperations,
+} from '@graphql-yoga/plugin-persisted-operations'
 import { DocumentNode, parse, validate } from 'graphql'
 import { createSchema, createYoga, GraphQLParams } from 'graphql-yoga'
 
@@ -115,6 +118,7 @@ describe('Persisted Operations', () => {
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryOnly')
   })
+
   it('allows non-persisted operations via allowArbitraryOperations flag', async () => {
     const store = new Map<string, string>()
 
@@ -150,6 +154,7 @@ describe('Persisted Operations', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
+
   it('allows non-persisted operations via allowArbitraryOperations based on a header', async () => {
     const store = new Map<string, string>()
 
@@ -187,6 +192,7 @@ describe('Persisted Operations', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
+
   it('should respect the custom getPersistedQueryKey implementation (Relay)', async () => {
     const store = new Map<string, string>()
     const yoga = createYoga({
@@ -356,4 +362,43 @@ describe('Persisted Operations', () => {
 
     expect(validateFn).not.toHaveBeenCalled()
   })
+
+  it('should allow to customize not found error message with a string', async () => {
+    const error = await generateNotFoundError({ notFound: 'Not found' })
+    expect(error.message).toBe('Not found')
+  })
 })
+
+async function generateNotFoundError(customErrors: CustomPersistedQueryErrors) {
+  const yoga = createYoga({
+    plugins: [
+      usePersistedOperations({
+        getPersistedOperation() {
+          return null
+        },
+        customErrors,
+      }),
+    ],
+    schema,
+  })
+
+  const response = await yoga.fetch('http://yoga/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      extensions: {
+        persistedQuery: {
+          version: 1,
+          sha256Hash:
+            'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+        },
+      },
+    }),
+  })
+
+  const body = await response.json()
+  expect(body.errors).toBeDefined()
+  return body.errors[0]
+}
