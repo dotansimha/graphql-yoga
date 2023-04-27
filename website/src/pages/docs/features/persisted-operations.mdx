@@ -274,3 +274,49 @@ server.listen(4000, () => {
   console.info('Server is running on http://localhost:4000/graphql')
 })
 ```
+
+## Customize errors
+
+This plugin can throw three different types of errors::
+
+- `PersistedOperationNotFound`: The persisted operation cannot be found.
+- `PersistedOperationKeyNotFound`: The persistence key cannot be extracted from the request.
+- `PersistedOperationOnly`: An arbitrary operation is rejected because only persisted operations are allowed.
+
+Each error can be customized to change the HTTP status or add a translation message ID, for example.
+
+```ts filename="Customize errors"
+import { createYoga } from 'graphql-yoga'
+import { createServer } from 'node:http'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+import { CustomErrorClass } from './custom-error-class'
+
+const yoga = createYoga({
+  plugins: [
+    usePersistedOperations({
+      customErrors: {
+        // You can change the error message
+        notFound: 'Not Found',
+        // Or customize the error with a GraphqlError options object, allowing you to add extensions
+        keyNotFound: {
+          message: 'Key Not Found',
+          extensions: {
+            http: {
+              status: 404
+            }
+          }
+        },
+        // Or customize with a factory function allowing you to use your own error class or format
+        onlyPersisted: () => {
+          return new CustomErrorClass('Only Persisted Operations are allowed')
+        }
+      }
+    })
+  ]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
