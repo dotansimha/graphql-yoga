@@ -60,6 +60,7 @@ export type UsePersistedOperationsOptions = {
 export type CustomErrorFactory =
   | string
   | (GraphQLErrorOptions & { message: string })
+  | (() => Error)
 
 export type CustomPersistedQueryErrors = {
   /**
@@ -160,6 +161,9 @@ function createPersistedOperationError(
 ) {
   if (typeof options === 'string') {
     return createGraphQLError(options)
+  }
+  if (typeof options === 'function') {
+    return options()
   }
   return createGraphQLError(options?.message ?? defaultMessage, options)
 }

@@ -2,7 +2,7 @@ import {
   CustomPersistedQueryErrors,
   usePersistedOperations,
 } from '@graphql-yoga/plugin-persisted-operations'
-import { createSchema, createYoga } from 'graphql-yoga'
+import { createSchema, createYoga, createGraphQLError } from 'graphql-yoga'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -30,6 +30,17 @@ describe('Persisted Operations', () => {
       expect(error.extensions.code).toBe('NOT_FOUND')
     })
 
+    it('should allow to customize not found error message with a function', async () => {
+      const error = await generateNotFoundError({
+        notFound: () =>
+          createGraphQLError('Not found', {
+            extensions: { code: 'NOT_FOUND' },
+          }),
+      })
+      expect(error.message).toBe('Not found')
+      expect(error.extensions.code).toBe('NOT_FOUND')
+    })
+
     it('should allow to customize error when key is not found with a string', async () => {
       const error = await generateKeyNotFoundError({
         keyNotFound: 'Key not found',
@@ -48,6 +59,17 @@ describe('Persisted Operations', () => {
       expect(error.extensions.code).toBe('KEY_NOT_FOUND')
     })
 
+    it('should allow to customize error when key is not found with a function', async () => {
+      const error = await generateKeyNotFoundError({
+        keyNotFound: () =>
+          createGraphQLError('Key not found', {
+            extensions: { code: 'KEY_NOT_FOUND' },
+          }),
+      })
+      expect(error.message).toBe('Key not found')
+      expect(error.extensions.code).toBe('KEY_NOT_FOUND')
+    })
+
     it('should allow to customize persisted query only error with a string', async () => {
       const error = await generatePersistedQueryOnlyError({
         persistedQueryOnly: 'Persisted query only',
@@ -61,6 +83,17 @@ describe('Persisted Operations', () => {
           message: 'Persisted query only',
           extensions: { code: 'PERSISTED_ONLY' },
         },
+      })
+      expect(error.message).toBe('Persisted query only')
+      expect(error.extensions.code).toBe('PERSISTED_ONLY')
+    })
+
+    it('should allow to customize persisted query only error with a function', async () => {
+      const error = await generatePersistedQueryOnlyError({
+        persistedQueryOnly: () =>
+          createGraphQLError('Persisted query only', {
+            extensions: { code: 'PERSISTED_ONLY' },
+          }),
       })
       expect(error.message).toBe('Persisted query only')
       expect(error.extensions.code).toBe('PERSISTED_ONLY')
