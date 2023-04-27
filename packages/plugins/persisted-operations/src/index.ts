@@ -5,6 +5,7 @@ import {
   Plugin,
   PromiseOrValue,
 } from 'graphql-yoga'
+import { OnParamsEventPayload } from 'graphql-yoga/src/plugins/types'
 
 export type ExtractPersistedOperationId = (
   params: GraphQLParams,
@@ -60,7 +61,7 @@ export type UsePersistedOperationsOptions = {
 export type CustomErrorFactory =
   | string
   | (GraphQLErrorOptions & { message: string })
-  | (() => Error)
+  | ((payload: OnParamsEventPayload) => Error)
 
 export type CustomPersistedQueryErrors = {
   /**
@@ -93,7 +94,9 @@ export function usePersistedOperations<
   const persistedOperationRequest = new WeakSet<Request>()
 
   return {
-    async onParams({ request, params, setParams }) {
+    async onParams(payload) {
+      const { request, params, setParams } = payload
+
       if (params.query) {
         if (
           (typeof allowArbitraryOperations === 'boolean'
@@ -102,6 +105,7 @@ export function usePersistedOperations<
         ) {
           throw createPersistedOperationError(
             'PersistedQueryOnly',
+            payload,
             customErrors?.persistedQueryOnly,
           )
         }
@@ -113,6 +117,7 @@ export function usePersistedOperations<
       if (persistedOperationKey == null) {
         throw createPersistedOperationError(
           'PersistedQueryNotFound',
+          payload,
           customErrors?.keyNotFound,
         )
       }
@@ -121,6 +126,7 @@ export function usePersistedOperations<
       if (persistedQuery == null) {
         throw createPersistedOperationError(
           'PersistedQueryNotFound',
+          payload,
           customErrors?.notFound,
         )
       }
@@ -157,13 +163,14 @@ export function usePersistedOperations<
 
 function createPersistedOperationError(
   defaultMessage: string,
+  payload: OnParamsEventPayload,
   options?: CustomErrorFactory,
 ) {
   if (typeof options === 'string') {
     return createGraphQLError(options)
   }
   if (typeof options === 'function') {
-    return options()
+    return options(payload)
   }
   return createGraphQLError(options?.message ?? defaultMessage, options)
 }
