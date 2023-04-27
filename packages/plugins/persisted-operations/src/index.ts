@@ -93,6 +93,19 @@ export function usePersistedOperations<
   const operationASTByRequest = new WeakMap<Request, DocumentNode>()
   const persistedOperationRequest = new WeakSet<Request>()
 
+  const notFoundErrorFactory = createErrorFactory(
+    'PersistedQueryNotFound',
+    customErrors?.notFound,
+  )
+  const keyNotFoundErrorFactory = createErrorFactory(
+    'PersistedQueryKeyNotFound',
+    customErrors?.keyNotFound,
+  )
+  const persistentQueryOnlyErrorFactory = createErrorFactory(
+    'PersistedQueryOnly',
+    customErrors?.persistedQueryOnly,
+  )
+
   return {
     async onParams(payload) {
       const { request, params, setParams } = payload
@@ -103,11 +116,7 @@ export function usePersistedOperations<
             ? allowArbitraryOperations
             : await allowArbitraryOperations(request)) === false
         ) {
-          throw createPersistedOperationError(
-            'PersistedQueryOnly',
-            payload,
-            customErrors?.persistedQueryOnly,
-          )
+          throw persistentQueryOnlyErrorFactory(payload)
         }
         return
       }
@@ -115,20 +124,12 @@ export function usePersistedOperations<
       const persistedOperationKey = extractPersistedOperationId(params)
 
       if (persistedOperationKey == null) {
-        throw createPersistedOperationError(
-          'PersistedQueryNotFound',
-          payload,
-          customErrors?.keyNotFound,
-        )
+        throw keyNotFoundErrorFactory(payload)
       }
 
       const persistedQuery = await getPersistedOperation(persistedOperationKey)
       if (persistedQuery == null) {
-        throw createPersistedOperationError(
-          'PersistedQueryNotFound',
-          payload,
-          customErrors?.notFound,
-        )
+        throw notFoundErrorFactory(payload)
       }
 
       if (typeof persistedQuery === 'object') {
@@ -161,16 +162,19 @@ export function usePersistedOperations<
   }
 }
 
-function createPersistedOperationError(
+function createErrorFactory(
   defaultMessage: string,
-  payload: OnParamsEventPayload,
   options?: CustomErrorFactory,
 ) {
   if (typeof options === 'string') {
-    return createGraphQLError(options)
+    return () => createGraphQLError(options)
   }
+
   if (typeof options === 'function') {
-    return options(payload)
+    return options
   }
-  return createGraphQLError(options?.message ?? defaultMessage, options)
+
+  return () => {
+    return createGraphQLError(options?.message ?? defaultMessage, options)
+  }
 }

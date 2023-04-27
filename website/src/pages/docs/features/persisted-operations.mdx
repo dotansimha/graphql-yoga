@@ -307,7 +307,7 @@ const yoga = createYoga({
           }
         },
         // Or customize with a factory function allowing you to use your own error class or format
-        onlyPersisted: () => {
+        persistedQueryOnly: () => {
           return new CustomErrorClass('Only Persisted Operations are allowed')
         }
       }
