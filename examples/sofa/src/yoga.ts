@@ -218,12 +218,15 @@ const schema = createSchema({
   },
 })
 
+export const swaggerEndpoint = '/swagger'
+export const restEndpoint = '/rest'
+
 export const yoga = createYoga({
   schema,
   plugins: [
     useSofaWithSwaggerUI({
-      basePath: '/rest',
-      swaggerUIEndpoint: '/swagger',
+      basePath: restEndpoint,
+      swaggerUIEndpoint: swaggerEndpoint,
       servers: [
         {
           url: '/', // Specify Server's URL.

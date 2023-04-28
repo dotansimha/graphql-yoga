@@ -56,5 +56,5 @@ export function buildApp() {
     handler,
   })
 
-  return app
+  return [app, handler.endpoint] as const
 }

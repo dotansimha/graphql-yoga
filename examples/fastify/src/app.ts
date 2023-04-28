@@ -87,5 +87,5 @@ export function buildApp(logging = true) {
     },
   })
 
-  return app
+  return [app, graphQLServer.graphqlEndpoint] as const
 }

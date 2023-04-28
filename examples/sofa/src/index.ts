@@ -1,4 +1,4 @@
-import { yoga } from './yoga'
+import { yoga, swaggerEndpoint, restEndpoint } from './yoga'
 import { createServer } from 'http'
 import { titleBold, infoColor } from 'graphql-yoga'
 
@@ -12,18 +12,20 @@ server.listen(4000, async () => {
   }
 
   console.log(`
-    ${titleBold('Swagger UI: ')}    ${printUrl('/swagger')}
+    ${titleBold('Swagger UI: ')}    ${printUrl(swaggerEndpoint)}
 
-    ${titleBold('GraphQL:')}        ${printUrl('/graphql')}
+    ${titleBold('GraphQL:')}        ${printUrl(yoga.graphqlEndpoint)}
 
     ${titleBold('Queries:')}
-      me:           ${printUrl('/rest/me')}
-      users:        ${printUrl('/rest/users')}
-      user:         ${printUrl('/rest/user/1')}
-      books:        ${printUrl('/rest/books')}
-      book:         ${printUrl('/rest/book/1')}
+      me:           ${printUrl(`${restEndpoint}/me`)}
+      users:        ${printUrl(`${restEndpoint}/users`)}
+      user:         ${printUrl(`${restEndpoint}/user/1`)}
+      books:        ${printUrl(`${restEndpoint}/books`)}
+      book:         ${printUrl(`${restEndpoint}/book/1`)}
 
     ${titleBold('Mutations:')}
-      addBook:      ${printUrl('/rest/add-book')} ${infoColor('POST: {title}')}
+      addBook:      ${printUrl(`${restEndpoint}/add-book`)} ${infoColor(
+    'POST: {title}',
+  )}
   `)
 })

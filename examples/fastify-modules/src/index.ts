@@ -1,13 +1,13 @@
 import { buildApp } from './app'
 
-const app = buildApp()
+const [app, endpoint] = buildApp()
 
 app
   .listen({
     port: 4000,
   })
   .then((serverUrl) => {
-    app.log.info(`GraphQL API located at ${serverUrl}/graphql`)
+    app.log.info(`GraphQL API located at ${serverUrl}${endpoint}`)
   })
   .catch((err) => {
     app.log.error(err)

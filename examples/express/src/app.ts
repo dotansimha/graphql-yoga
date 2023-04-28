@@ -40,5 +40,5 @@ export function buildApp(app: ReturnType<typeof express>) {
 
   app.use(graphQLServer.graphqlEndpoint, graphQLServer)
 
-  return app
+  return graphQLServer.graphqlEndpoint
 }
