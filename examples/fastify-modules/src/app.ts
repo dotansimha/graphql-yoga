@@ -15,7 +15,9 @@ export function createGraphQLApp() {
   })
 }
 
-export function createGraphQLHandler(): RouteHandlerMethod {
+export function createGraphQLHandler(): RouteHandlerMethod & {
+  endpoint: string
+} {
   const graphQLServer = createYoga<{
     req: FastifyRequest
     reply: FastifyReply
@@ -24,7 +26,7 @@ export function createGraphQLHandler(): RouteHandlerMethod {
     plugins: [useGraphQLModules(createGraphQLApp())],
   })
 
-  return async (req, reply) => {
+  const handler = async (req, reply) => {
     const response = await graphQLServer.handleNodeRequest(req, {
       req,
       reply,
@@ -39,15 +41,19 @@ export function createGraphQLHandler(): RouteHandlerMethod {
 
     return reply
   }
+
+  handler.endpoint = graphQLServer.graphqlEndpoint
+  return handler
 }
 
 export function buildApp() {
   const app = fastify({ logger: false })
+  const handler = createGraphQLHandler()
 
   app.route({
-    url: '/graphql',
+    url: handler.endpoint,
     method: ['GET', 'POST', 'OPTIONS'],
-    handler: createGraphQLHandler(),
+    handler,
   })
 
   return app
