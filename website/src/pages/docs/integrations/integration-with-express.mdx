@@ -37,3 +37,24 @@ app.listen(4000, () => {
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/express)
+
+## Custom endpoint
+
+By default, GraphQL Yoga will bind to the `/graphql` endpoint. You can change this behavior by passing a `graphqlEndpoint` option to the `createYoga` function.
+
+```ts
+import express from 'express'
+import { createYoga } from 'graphql-yoga'
+
+const app = express()
+
+const yoga = createYoga({
+  graphqlEndpoint: '/custom/endpoint'
+})
+
+app.use('/custom/endpoint', yoga)
+
+app.listen(4000, () => {
+  console.log('Running a GraphQL API server at http://localhost:4000/graphql')
+})
+```
