@@ -632,12 +632,15 @@ describe('Result Extensions', () => {
   it('respects toJSON in a custom error', async () => {
     class CustomError extends GraphQLError {
       constructor(message: string) {
-        super(message);
-        this.name = 'CustomError';
+        super(message)
+        this.name = 'CustomError'
       }
 
       toJSON() {
-        return { message: this.message, extensions: { name: this.name, foo: 'bar' } };
+        return {
+          message: this.message,
+          extensions: { name: this.name, foo: 'bar' },
+        }
       }
     }
 
@@ -651,13 +654,13 @@ describe('Result Extensions', () => {
         resolvers: {
           Query: {
             throwMe: () => {
-              throw new CustomError('test');
-            }
-          }
-        }
+              throw new CustomError('test')
+            },
+          },
+        },
       }),
       maskedErrors: false,
-    });
+    })
 
     const res = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -667,20 +670,20 @@ describe('Result Extensions', () => {
       body: JSON.stringify({
         query: '{ throwMe }',
       }),
-    });
+    })
 
-    expect(res.status).toBe(200);
-    const resJson = await res.json();
+    expect(res.status).toBe(200)
+    const resJson = await res.json()
     expect(resJson).toMatchObject({
       errors: [
         {
           message: 'test',
           extensions: {
             name: 'CustomError',
-            foo: 'bar'
-          }
-        }
-      ]
+            foo: 'bar',
+          },
+        },
+      ],
     })
   })
 })
