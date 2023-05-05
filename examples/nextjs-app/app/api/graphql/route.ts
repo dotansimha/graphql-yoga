@@ -17,6 +17,7 @@ const yoga = createYoga({
   }),
   fetchAPI: {
     Response: Response,
+    Request: Request,
   },
 })
 
