@@ -2,14 +2,14 @@ import { yoga } from '../src/yoga.js'
 
 describe('SOFA', () => {
   it('serve Swagger UI correctly', async () => {
-    const response = await yoga.fetch('http://localhost:4000/swagger')
+    const response = await yoga.fetch('http://localhost:4000/rest/docs')
     expect(response.status).toBe(200)
     expect(response.headers.get('Content-Type')).toBe('text/html')
     const html = await response.text()
     expect(html).toContain('<title>SwaggerUI</title>')
   })
   it('serve Swagger JSON correctly', async () => {
-    const response = await yoga.fetch('http://localhost:4000/swagger.json')
+    const response = await yoga.fetch('http://localhost:4000/rest/openapi.json')
     expect(response.status).toBe(200)
     expect(response.headers.get('Content-Type')).toBe('application/json')
     const json = await response.json()

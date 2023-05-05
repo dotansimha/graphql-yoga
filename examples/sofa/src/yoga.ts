@@ -1,5 +1,5 @@
 import { createPubSub, createSchema, createYoga } from 'graphql-yoga'
-import { useSofaWithSwaggerUI } from '@graphql-yoga/plugin-sofa'
+import { useSofa } from '@graphql-yoga/plugin-sofa'
 
 const pizzas = [
   { id: 1, dough: 'pan', toppings: ['cheese'] },
@@ -218,25 +218,15 @@ const schema = createSchema({
   },
 })
 
-export const swaggerEndpoint = '/swagger'
 export const restEndpoint = '/rest'
 
 export const yoga = createYoga({
   schema,
   plugins: [
-    useSofaWithSwaggerUI({
+    useSofa({
       basePath: restEndpoint,
-      swaggerUIEndpoint: swaggerEndpoint,
-      servers: [
-        {
-          url: '/', // Specify Server's URL.
-          description: 'Development server',
-        },
-      ],
-      info: {
-        title: 'Example API',
-        version: '3.0.0',
-      },
+      title: 'Example API',
+      version: '3.0.0',
     }),
   ],
 })
