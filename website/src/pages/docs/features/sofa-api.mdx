@@ -17,7 +17,7 @@ Sofa takes your GraphQL Schema, looks for available queries, mutations and subsc
 ```ts filename="server.ts"
 import { createServer } from 'http'
 import { createSchema, createYoga } from 'graphql-yoga'
-import { useSofaWithSwaggerUI } from '@graphql-yoga/plugin-sofa'
+import { useSofa } from '@graphql-yoga/plugin-sofa'
 
 const books = [
   { id: 1, title: 'Book A', type: 'AUDIO' },
@@ -134,19 +134,11 @@ const schema = createSchema({
 export const yoga = createYoga({
   schema,
   plugins: [
-    useSofaWithSwaggerUI({
+    useSofa({
       basePath: '/rest',
       swaggerUIEndpoint: '/swagger',
-      servers: [
-        {
-          url: '/', // Specify Server's URL.
-          description: 'Development server'
-        }
-      ],
-      info: {
-        title: 'Example API',
-        version: '1.0.0'
-      }
+      title: 'Example API',
+      version: '1.0.0'
     })
   ]
 })

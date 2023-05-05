@@ -1,4 +1,4 @@
-import { yoga, swaggerEndpoint, restEndpoint } from './yoga'
+import { yoga, restEndpoint } from './yoga'
 import { createServer } from 'http'
 import { titleBold, infoColor } from 'graphql-yoga'
 
@@ -12,7 +12,7 @@ server.listen(4000, async () => {
   }
 
   console.log(`
-    ${titleBold('Swagger UI: ')}    ${printUrl(swaggerEndpoint)}
+    ${titleBold('Swagger UI: ')}    ${printUrl(`${restEndpoint}/docs`)}
 
     ${titleBold('GraphQL:')}        ${printUrl(yoga.graphqlEndpoint)}
 

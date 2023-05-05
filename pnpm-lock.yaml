@@ -1816,12 +1816,9 @@ importers:
 
   packages/plugins/sofa:
     dependencies:
-      '@graphql-tools/utils':
-        specifier: ^9.2.1
-        version: 9.2.1
       sofa-api:
-        specifier: ^0.16.3
-        version: 0.16.3
+        specifier: ^0.17.1
+        version: 0.17.1
     publishDirectory: dist
 
   packages/render-graphiql:
@@ -2781,6 +2778,19 @@ packages:
     engines: {node: '>=14'}
     dev: false
     optional: true
+
+  /@ardatan/fast-json-stringify@0.0.6(ajv-formats@2.1.1)(ajv@8.12.0):
+    resolution: {integrity: sha512-//BefMIP6U1ptNeBf44Le4vqThejTwZndtYLtAuFBwA/DmbVbbYTCLNIMhZ96WZnhI92EvTXneT5tKJrgINE9A==}
+    peerDependencies:
+      ajv: ^8.10.0
+      ajv-formats: ^2.1.1
+    dependencies:
+      '@fastify/deepmerge': 1.1.0
+      ajv: 8.12.0
+      ajv-formats: 2.1.1
+      fast-deep-equal: 3.1.3
+      rfdc: 1.3.0
+    dev: false
 
   /@ardatan/relay-compiler@12.0.0(graphql@16.6.0):
     resolution: {integrity: sha512-9anThAaj1dQr6IGmzBMcfzOQKTa5artjuPmw8NYK/fiGEMjADbSguBY2FMDykt+QhilR3wc9VA/3yVju7JHg7Q==}
@@ -13073,8 +13083,19 @@ packages:
       '@xtuc/long': 4.2.2
     dev: true
 
+  /@whatwg-node/cookie-store@0.0.1:
+    resolution: {integrity: sha512-uoti8QU5xd+X+9PULOGpPpOqPDdwkz+ukMc4kyQG1GwXeKVGktr4FSllr6dBotjOjNVPSBPpmj5V6zrUdDcLaw==}
+    dependencies:
+      '@whatwg-node/events': 0.0.3
+      tslib: 2.5.0
+    dev: false
+
   /@whatwg-node/events@0.0.2:
     resolution: {integrity: sha512-WKj/lI4QjnLuPrim0cfO7i+HsDSXHxNv1y0CrJhdntuO3hxWZmnXCwNDnwOvry11OjRin6cgWNF+j/9Pn8TN4w==}
+
+  /@whatwg-node/events@0.0.3:
+    resolution: {integrity: sha512-IqnKIDWfXBJkvy/k6tzskWTc2NK3LcqHlb+KHGCrjOCH4jfQckRX0NAiIcC/vIqQkzLYw2r2CTSwAxcrtcD6lA==}
+    dev: false
 
   /@whatwg-node/fetch@0.4.7:
     resolution: {integrity: sha512-+oKDMGtmUJ7H37VDL5U2Vdk+ZxsIypZxO2q6y42ytu6W3PL6OIIUYZGliNqQgWtCdtxOZ9WPQvbIAuiLpnLlUw==}
@@ -13114,18 +13135,6 @@ packages:
     transitivePeerDependencies:
       - '@types/node'
     dev: true
-
-  /@whatwg-node/fetch@0.6.7:
-    resolution: {integrity: sha512-n29y5RtM7pmH9VXFC4flV0Kv0VZIoLJcncDki/bTpxC525EFLze5JR9l+WmPYBNfLQgMtDti30ANuOmbETeubw==}
-    dependencies:
-      '@peculiar/webcrypto': 1.4.0
-      '@whatwg-node/node-fetch': 0.0.3
-      busboy: 1.6.0
-      urlpattern-polyfill: 6.0.2
-      web-streams-polyfill: 3.2.1
-    transitivePeerDependencies:
-      - '@types/node'
-    dev: false
 
   /@whatwg-node/fetch@0.6.9:
     resolution: {integrity: sha512-JfrBCJdMu9n9OARc0e/hPHcD98/8Nz1CKSdGYDg6VbObDkV/Ys30xe5i/wPOatYbxuvatj1kfWeHf7iNX3i17w==}
@@ -13180,16 +13189,6 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@whatwg-node/node-fetch@0.0.3:
-    resolution: {integrity: sha512-kUFCR5Qf8n5FYqhk5PzEi8WoCoP89MhlvZzDnoKcCjne8VM5rW8bjJMnSO/4oMHLIN+hqHD1pDeN63xmmpmtIA==}
-    peerDependencies:
-      '@types/node': ^18.0.6
-    dependencies:
-      '@whatwg-node/events': 0.0.2
-      busboy: 1.6.0
-      tslib: 2.5.0
-    dev: false
-
   /@whatwg-node/node-fetch@0.0.5:
     resolution: {integrity: sha512-hbccmaSZaItdsRuBKBEEhLoO+5oXJPxiyd0kG2xXd0Dh3Rt+vZn4pADHxuSiSHLd9CM+S2z4+IxlEGbWUgiz9g==}
     peerDependencies:
@@ -13219,16 +13218,6 @@ packages:
       fast-url-parser: 1.1.3
       tslib: 2.5.0
 
-  /@whatwg-node/router@0.2.3:
-    resolution: {integrity: sha512-xRkX5f6/KusmGrUh/9mfGhoOt+pI+TZIstpSnBvCUiDEb0ElJHrkKN0iQGq/QlWpK00S47p8/f3jJQemM3o1+A==}
-    dependencies:
-      '@whatwg-node/fetch': 0.6.7
-      '@whatwg-node/server': 0.6.2
-      tslib: 2.5.0
-    transitivePeerDependencies:
-      - '@types/node'
-    dev: false
-
   /@whatwg-node/server-plugin-cookies@0.0.1:
     resolution: {integrity: sha512-c2q8bqm0vQ6v6N7FrwV8qSykWrgdiLwQAAid/KKPG8bKUt3PdC0Ug+b0Refa0UhmYDYNaFG0kJOiBSn5cn3lkw==}
     peerDependencies:
@@ -13238,17 +13227,15 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /@whatwg-node/server@0.6.2:
-    resolution: {integrity: sha512-hkM/WtEdT6yQ+KYuXMWwjhmQHXl9oCVGgEciwRdARWmwCRTMWdDLlj/XwsMVHvh7+qDs3rXpXW3+ifUAQT87lQ==}
-    dependencies:
-      '@whatwg-node/fetch': 0.6.7
-      tslib: 2.5.0
-    transitivePeerDependencies:
-      - '@types/node'
-    dev: false
-
   /@whatwg-node/server@0.7.3:
     resolution: {integrity: sha512-ToaxdIXka8WHre92b1n9Wne/jXPOgg5w17Hx/UqFtL+HM2+0M+AAEz31kY9bjHGaKBfWE8YZwVVIYvGMgb3ARA==}
+    dependencies:
+      '@whatwg-node/fetch': 0.8.4
+      tslib: 2.5.0
+    dev: false
+
+  /@whatwg-node/server@0.7.5:
+    resolution: {integrity: sha512-xTDJdPqr/wULxW3mGXQXD92SRXUm6jwQxqIvyHG17dykRTd21HuCaS2ggBn5lSAM/sYjjrT+OYv3fXbtS4+Mjw==}
     dependencies:
       '@whatwg-node/fetch': 0.8.4
       tslib: 2.5.0
@@ -19038,6 +19025,23 @@ packages:
       is-plain-obj: 4.1.0
     dev: true
 
+  /fets@0.1.4:
+    resolution: {integrity: sha512-xGyKf/spFh8rgiy/I0h/Ab798Vj3mcKF5ociCuPkRUbbPYXVgf8f0fLwi40TkLJzFPEfW5W75J04poMysyLK9Q==}
+    dependencies:
+      '@ardatan/fast-json-stringify': 0.0.6(ajv-formats@2.1.1)(ajv@8.12.0)
+      '@whatwg-node/cookie-store': 0.0.1
+      '@whatwg-node/fetch': 0.8.4
+      '@whatwg-node/server': 0.7.5
+      ajv: 8.12.0
+      ajv-formats: 2.1.1
+      hotscript: 1.0.11
+      json-schema-to-ts: 2.8.0
+      openapi-types: 12.1.0
+      tslib: 2.5.0
+      zod: 3.21.4
+      zod-to-json-schema: 3.21.0(zod@3.21.4)
+    dev: false
+
   /figures@1.7.0:
     resolution: {integrity: sha512-UxKlfCRuCBxSXU4C6t9scbDyWZ4VlaFFdojKtzJuSkuOBQ5CNFum+zZXFwHjo+CxBC1t6zlYPgHIgFjL8ggoEQ==}
     engines: {node: '>=0.10.0'}
@@ -20841,6 +20845,10 @@ packages:
     optionalDependencies:
       unix-dgram: 2.0.6
     dev: true
+
+  /hotscript@1.0.11:
+    resolution: {integrity: sha512-p7tUz9Lb0M1a/tUJxrXp/8NJ0QbD2UyfFIa89tCkeXB+K8jdIIVSHm7njNDbxw8uorjxRk3iGc2y2KJB5UMKIg==}
+    dev: false
 
   /htm@3.1.1:
     resolution: {integrity: sha512-983Vyg8NwUE7JkZ6NmOqpCZ+sh1bKv2iYTlUkzlWmA5JD2acKoxd4KVxbMmxX/85mtfdnDmTFoNKcg5DGAvxNQ==}
@@ -22655,6 +22663,15 @@ packages:
   /json-ptr@3.1.1:
     resolution: {integrity: sha512-SiSJQ805W1sDUCD1+/t1/1BIrveq2Fe9HJqENxZmMCILmrPI7WhS/pePpIOx85v6/H2z1Vy7AI08GV2TzfXocg==}
     dev: true
+
+  /json-schema-to-ts@2.8.0:
+    resolution: {integrity: sha512-fNAnQ6N0a/0rJlqkzKBdb+5EnMgcKTlrAwMLg3adlKRTT1uNNT4ziqwBzMhj4vp768pO9PoQzZcUyv3QWmD0pQ==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@types/json-schema': 7.0.11
+      ts-algebra: 1.2.0
+    dev: false
 
   /json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
@@ -25394,7 +25411,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.4
-      zod: 3.20.2
+      zod: 3.21.4
     dev: false
 
   /nextra@2.4.2(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
@@ -25428,7 +25445,7 @@ packages:
       title: 3.5.3
       unist-util-remove: 3.1.1
       unist-util-visit: 4.1.2
-      zod: 3.20.2
+      zod: 3.21.4
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -29171,21 +29188,19 @@ packages:
       ip: 2.0.0
       smart-buffer: 4.2.0
 
-  /sofa-api@0.16.3:
-    resolution: {integrity: sha512-AH4a+CesdV18/YZYDsSgXsqvJRI9wZ0gFdQPNN6fSgSoamIGBaDnP8kv8rjvVy6ccZov+pzfJhApog64P58vKA==}
+  /sofa-api@0.17.1:
+    resolution: {integrity: sha512-jQU8v/+cd/ebIVhEHaoyjhF2qHvTNqoJdQFfHT9yyi4uJrYsMGJlo/jznOEGord/3lzUyWDo6sjSmRfWETasAA==}
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
     dependencies:
       '@graphql-tools/utils': 9.2.1
-      '@whatwg-node/fetch': 0.6.9
-      '@whatwg-node/router': 0.2.3
+      '@whatwg-node/fetch': 0.8.4
       ansi-colors: 4.1.3
+      fets: 0.1.4
       openapi-types: 12.1.0
       param-case: 3.0.4
       title-case: 3.0.3
       tslib: 2.5.0
-    transitivePeerDependencies:
-      - '@types/node'
     dev: false
 
   /sonic-boom@3.2.0:
@@ -30573,6 +30588,10 @@ packages:
 
   /trough@2.1.0:
     resolution: {integrity: sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==}
+
+  /ts-algebra@1.2.0:
+    resolution: {integrity: sha512-kMuJJd8B2N/swCvIvn1hIFcIOrLGbWl9m/J6O3kHx9VRaevh00nvgjPiEGaRee7DRaAczMYR2uwWvXU22VFltw==}
+    dev: false
 
   /ts-dedent@2.2.0:
     resolution: {integrity: sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==}
@@ -32566,8 +32585,21 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
+  /zod-to-json-schema@3.21.0(zod@3.21.4):
+    resolution: {integrity: sha512-+KyFCzqKwE6CxMSZxEUBaGmdXzB09BoFebO+xef/ISE4cTfReQlyThYbS8aqd3uWkdt9fz5BGHsY0CbY+Ra9oA==}
+    peerDependencies:
+      zod: ^3.21.4
+    dependencies:
+      zod: 3.21.4
+    dev: false
+
   /zod@3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+    dev: true
+
+  /zod@3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
 
   /zwitch@2.0.2:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
