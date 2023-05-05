@@ -133,4 +133,6 @@ const wsHandler = makeBehavior({
   },
 })
 
-export const app = App().any('/*', yogaHandler).ws('/graphql', wsHandler)
+export const app = App()
+  .any('/*', yogaHandler)
+  .ws(yoga.graphqlEndpoint, wsHandler)

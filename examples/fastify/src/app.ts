@@ -68,7 +68,7 @@ export function buildApp(logging = true) {
   )
 
   app.route({
-    url: '/graphql',
+    url: graphQLServer.graphqlEndpoint,
     method: ['GET', 'POST', 'OPTIONS'],
     handler: async (req, reply) => {
       const response = await graphQLServer.handleNodeRequest(req, {
@@ -87,5 +87,5 @@ export function buildApp(logging = true) {
     },
   })
 
-  return app
+  return [app, graphQLServer.graphqlEndpoint] as const
 }

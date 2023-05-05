@@ -3,7 +3,7 @@ import request from 'supertest'
 import { buildApp } from '../src/app.js'
 
 describe('fastify-modules example integration', () => {
-  const app = buildApp()
+  const [app] = buildApp()
 
   beforeAll(async () => {
     await app.ready()

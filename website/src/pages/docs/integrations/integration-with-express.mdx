@@ -28,8 +28,8 @@ const app = express()
 
 const yoga = createYoga()
 
-// Bind GraphQL Yoga to `/graphql` endpoint
-app.use('/graphql', yoga)
+// Bind GraphQL Yoga to the graphql endpoint to avoid rendering the playground on any path
+app.use(yoga.graphqlEndpoint, yoga)
 
 app.listen(4000, () => {
   console.log('Running a GraphQL API server at http://localhost:4000/graphql')

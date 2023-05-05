@@ -38,7 +38,7 @@ export function buildApp(app: ReturnType<typeof express>) {
     logging: false,
   })
 
-  app.use('/graphql', graphQLServer)
+  app.use(graphQLServer.graphqlEndpoint, graphQLServer)
 
-  return app
+  return graphQLServer.graphqlEndpoint
 }

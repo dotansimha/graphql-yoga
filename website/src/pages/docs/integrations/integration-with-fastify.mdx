@@ -44,7 +44,8 @@ const yoga = createYoga<{
  * Learn more about `reply` https://www.fastify.io/docs/latest/Reply/
  **/
 app.route({
-  url: '/graphql',
+  // Bind to the Yoga's endpoint to avoid rendering on any path
+  url: yoga.graphqlEndpoint,
   method: ['GET', 'POST', 'OPTIONS'],
   handler: async (req, reply) => {
     // Second parameter adds Fastify's `req` and `reply` to the GraphQL Context
