@@ -1,10 +1,11 @@
-import { DocumentNode } from 'graphql'
+import { DocumentNode, GraphQLErrorOptions } from 'graphql'
 import {
   createGraphQLError,
   GraphQLParams,
   Plugin,
   PromiseOrValue,
 } from 'graphql-yoga'
+import { OnParamsEventPayload } from 'graphql-yoga/src/plugins/types'
 
 export type ExtractPersistedOperationId = (
   params: GraphQLParams,
@@ -50,6 +51,33 @@ export type UsePersistedOperationsOptions = {
    * Whether to skip validation of the persisted operation
    */
   skipDocumentValidation?: boolean
+
+  /**
+   * Custom errors to be thrown
+   */
+  customErrors?: CustomPersistedQueryErrors
+}
+
+export type CustomErrorFactory =
+  | string
+  | (GraphQLErrorOptions & { message: string })
+  | ((payload: OnParamsEventPayload) => Error)
+
+export type CustomPersistedQueryErrors = {
+  /**
+   * Error to be thrown when the persisted operation is not found
+   */
+  notFound?: CustomErrorFactory
+
+  /**
+   * Error to be thrown when rejecting non-persisted operations
+   */
+  persistedQueryOnly?: CustomErrorFactory
+
+  /**
+   * Error to be thrown when the extraction of the persisted operation id failed
+   */
+  keyNotFound?: CustomErrorFactory
 }
 
 export function usePersistedOperations<
@@ -60,18 +88,35 @@ export function usePersistedOperations<
   extractPersistedOperationId = defaultExtractPersistedOperationId,
   getPersistedOperation,
   skipDocumentValidation = false,
+  customErrors,
 }: UsePersistedOperationsOptions): Plugin<TPluginContext> {
   const operationASTByRequest = new WeakMap<Request, DocumentNode>()
   const persistedOperationRequest = new WeakSet<Request>()
+
+  const notFoundErrorFactory = createErrorFactory(
+    'PersistedQueryNotFound',
+    customErrors?.notFound,
+  )
+  const keyNotFoundErrorFactory = createErrorFactory(
+    'PersistedQueryKeyNotFound',
+    customErrors?.keyNotFound,
+  )
+  const persistentQueryOnlyErrorFactory = createErrorFactory(
+    'PersistedQueryOnly',
+    customErrors?.persistedQueryOnly,
+  )
+
   return {
-    async onParams({ request, params, setParams }) {
+    async onParams(payload) {
+      const { request, params, setParams } = payload
+
       if (params.query) {
         if (
           (typeof allowArbitraryOperations === 'boolean'
             ? allowArbitraryOperations
             : await allowArbitraryOperations(request)) === false
         ) {
-          throw createGraphQLError('PersistedQueryOnly')
+          throw persistentQueryOnlyErrorFactory(payload)
         }
         return
       }
@@ -79,12 +124,12 @@ export function usePersistedOperations<
       const persistedOperationKey = extractPersistedOperationId(params)
 
       if (persistedOperationKey == null) {
-        throw createGraphQLError('PersistedQueryNotFound')
+        throw keyNotFoundErrorFactory(payload)
       }
 
       const persistedQuery = await getPersistedOperation(persistedOperationKey)
       if (persistedQuery == null) {
-        throw createGraphQLError('PersistedQueryNotFound')
+        throw notFoundErrorFactory(payload)
       }
 
       if (typeof persistedQuery === 'object') {
@@ -114,5 +159,22 @@ export function usePersistedOperations<
         setParsedDocument(ast)
       }
     },
+  }
+}
+
+function createErrorFactory(
+  defaultMessage: string,
+  options?: CustomErrorFactory,
+) {
+  if (typeof options === 'string') {
+    return () => createGraphQLError(options)
+  }
+
+  if (typeof options === 'function') {
+    return options
+  }
+
+  return () => {
+    return createGraphQLError(options?.message ?? defaultMessage, options)
   }
 }

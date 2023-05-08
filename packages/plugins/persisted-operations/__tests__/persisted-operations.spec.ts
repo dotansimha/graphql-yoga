@@ -115,6 +115,7 @@ describe('Persisted Operations', () => {
     expect(body.errors).toBeDefined()
     expect(body.errors[0].message).toBe('PersistedQueryOnly')
   })
+
   it('allows non-persisted operations via allowArbitraryOperations flag', async () => {
     const store = new Map<string, string>()
 
@@ -150,6 +151,7 @@ describe('Persisted Operations', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
+
   it('allows non-persisted operations via allowArbitraryOperations based on a header', async () => {
     const store = new Map<string, string>()
 
@@ -187,6 +189,7 @@ describe('Persisted Operations', () => {
     expect(body.errors).toBeUndefined()
     expect(body.data).toEqual({ __typename: 'Query' })
   })
+
   it('should respect the custom getPersistedQueryKey implementation (Relay)', async () => {
     const store = new Map<string, string>()
     const yoga = createYoga({
