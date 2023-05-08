@@ -633,6 +633,15 @@ importers:
         specifier: 5.0.4
         version: 5.0.4
 
+  examples/gcp-cloud-run:
+    dependencies:
+      graphql:
+        specifier: 16.6.0
+        version: 16.6.0
+      graphql-yoga:
+        specifier: workspace:^3.9.1
+        version: link:../../packages/graphql-yoga
+
   examples/generic-auth:
     dependencies:
       '@envelop/generic-auth':
@@ -3014,6 +3023,7 @@ packages:
       '@aws-cdk/core': 1.200.0
       '@aws-cdk/custom-resources': 1.200.0(@aws-cdk/aws-ec2@1.200.0)(@aws-cdk/aws-iam@1.200.0)(@aws-cdk/aws-lambda@1.200.0)(@aws-cdk/aws-logs@1.200.0)(@aws-cdk/aws-s3@1.200.0)(@aws-cdk/core@1.200.0)(@aws-cdk/cx-api@1.200.0)(constructs@3.4.127)
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -3319,6 +3329,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema@1.200.0:
     resolution: {integrity: sha512-sgMBMWQR2boMPZa8h92cFf6VmPUAPOhMfrrABZqAU5LDSpfl8JGE6jQ8nKngKIQKlFPjLQfDG7/SOkIdR3xkJg==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - jsonschema
@@ -3384,6 +3397,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.200.0
+      semver: 7.3.8
     dev: false
     bundledDependencies:
       - semver
@@ -22772,7 +22786,6 @@ packages:
 
   /jsonschema@1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
-    dev: true
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
