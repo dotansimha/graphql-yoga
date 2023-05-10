@@ -361,14 +361,14 @@ describe('Persisted Operations', () => {
   })
 
   it('uses a persisted query from the store based on request header', async () => {
-    const store = new Map<string, string>();
-    const clientOneStore = new Map<string, string>();
+    const store = new Map<string, string>()
+    const clientOneStore = new Map<string, string>()
 
     const yoga = createYoga({
       plugins: [
         usePersistedOperations({
           getPersistedOperation(key: string, request: Request) {
-            if(request.headers.get('client-name') === 'ClientOne') {
+            if (request.headers.get('client-name') === 'ClientOne') {
               return clientOneStore.get(key) || null
             }
 
@@ -385,13 +385,13 @@ describe('Persisted Operations', () => {
         'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
     }
 
-    clientOneStore.set(persistedQueryEntry.sha256Hash, '{__typename}');
+    clientOneStore.set(persistedQueryEntry.sha256Hash, '{__typename}')
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'client-name': 'ClientOne'
+        'client-name': 'ClientOne',
       },
       body: JSON.stringify({
         extensions: {

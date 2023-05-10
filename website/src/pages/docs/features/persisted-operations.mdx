@@ -289,7 +289,7 @@ import {
 import { parse } from 'graphql'
 
 const persistedOperationsStores = {
-  'ClientOne': {
+  ClientOne: {
     'my-key': parse(/* GraphQL */ `
       query {
         __typename
@@ -300,8 +300,8 @@ const persistedOperationsStores = {
 
 const plugin = usePersistedOperations({
   getPersistedOperation(key: string, request: Request) {
-    const store = persistedOperationsStores[request.headers.get('client-name')];
-    return store && store[key] || null;
+    const store = persistedOperationsStores[request.headers.get('client-name')]
+    return (store && store[key]) || null
   }
 })
 ```
