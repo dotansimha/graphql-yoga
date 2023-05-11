@@ -1,6 +1,6 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 
-const yoga = createYoga({
+const { handleRequest } = createYoga({
   graphqlEndpoint: '/api/graphql',
   schema: createSchema({
     typeDefs: /* GraphQL */ `
@@ -21,4 +21,4 @@ const yoga = createYoga({
   },
 })
 
-export { yoga as GET, yoga as POST }
+export { handleRequest as GET, handleRequest as POST }
