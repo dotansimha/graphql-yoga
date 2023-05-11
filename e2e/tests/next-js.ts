@@ -48,7 +48,7 @@ export const nextJSDeployment = (
     )
 
     return {
-      endpoint: interpolate`http://${endpoint}/graphql`,
+      endpoint: interpolate`http://${endpoint}/api/graphql`,
     }
   },
   test: async ({ endpoint }) => {
