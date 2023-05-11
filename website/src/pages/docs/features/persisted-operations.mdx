@@ -220,10 +220,7 @@ const yoga = createYoga({
   plugins: [
     usePersistedOperations({
       extractPersistedOperationId(params: GraphqlParams & { doc_id?: unknown }) {
-        if (typeof params.doc_id === 'string') {
-          return params.doc_id
-        }
-        return null
+        return typeof params.doc_id === 'string' ? params.doc_id : null
       }
       getPersistedOperation(key: string) {
         return store[key]
