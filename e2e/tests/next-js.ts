@@ -27,7 +27,7 @@ export const nextJSDeployment = (
 
     const container = new docker.Container('container', {
       image: remoteImage.repoDigest,
-      command: [`pnpm`, 'start'],
+      command: [`./node_modules/.bin/next`, 'start'],
       volumes: [
         {
           containerPath: '/app',
