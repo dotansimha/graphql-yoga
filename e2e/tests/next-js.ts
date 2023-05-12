@@ -2,12 +2,15 @@ import { DeploymentConfiguration } from '../types'
 import {
   assertGraphiQL,
   assertQuery,
+  env,
   execPromise,
   waitForEndpoint,
 } from '../utils'
 import * as docker from '@pulumi/docker'
 import { interpolate } from '@pulumi/pulumi'
+import * as awsx from '@pulumi/awsx'
 import { resolve } from 'path'
+import { Stack } from '@pulumi/pulumi/automation'
 
 export const nextJSDeployment = (
   image: string,
@@ -19,36 +22,43 @@ export const nextJSDeployment = (
       cwd: '../examples/nextjs-app',
     })
   },
+  config: async (stack: Stack) => {
+    // Configure the Pulumi environment with the AWS credentials
+    // This will allow Pulummi program to just run without caring about secrets/configs.
+    // See: https://www.pulumi.com/registry/packages/aws/installation-configuration/
+    await stack.setConfig('aws:accessKey', {
+      value: env('AWS_ACCESS_KEY'),
+    })
+    await stack.setConfig('aws:secretKey', {
+      value: env('AWS_SECRET_KEY'),
+    })
+    await stack.setConfig('aws:region', {
+      value: env('AWS_REGION'),
+    })
+    await stack.setConfig('aws:allowedAccountIds', {
+      value: `[${env('AWS_ACCOUNT_ID')}]`,
+    })
+  },
   program: async () => {
-    const remoteImage = new docker.RemoteImage('node-image', {
-      name: image,
-      keepLocally: true,
+    const listener = new awsx.elasticloadbalancingv2.NetworkListener('node', {
+      port: 80,
     })
 
-    const container = new docker.Container('container', {
-      image: remoteImage.repoDigest,
-      command: [`./node_modules/.bin/next`, 'start'],
-      volumes: [
-        {
-          containerPath: '/app',
-          hostPath: resolve('../'),
+    const service = new awsx.ecs.FargateService('node', {
+      desiredCount: 2,
+      taskDefinitionArgs: {
+        containers: {
+          nginx: {
+            image: awsx.ecs.Image.fromPath('node', '../examples/nextjs-app'),
+            memory: 512,
+            portMappings: [listener],
+          },
         },
-      ],
-      workingDir: '/app/examples/nextjs-app',
-      ports: [
-        {
-          internal: 3000,
-        },
-      ],
+      },
     })
-
-    // Since the provider picked a random ephemeral port for this container, export the endpoint.
-    const endpoint = container.ports.apply(
-      (ports) => `localhost:${ports![0].external}`,
-    )
 
     return {
-      endpoint: interpolate`http://${endpoint}/api/graphql`,
+      endpoint: interpolate`http://${listener.endpoint.hostname}/api/graphql`,
     }
   },
   test: async ({ endpoint }) => {
