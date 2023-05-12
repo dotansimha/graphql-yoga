@@ -12,7 +12,7 @@ import * as awsx from '@pulumi/awsx'
 import { resolve } from 'path'
 import { Stack } from '@pulumi/pulumi/automation'
 
-export const nextJSDeployment = (
+export const nextJSECSDeployment = (
   image: string,
 ): DeploymentConfiguration<{
   endpoint: string
@@ -63,7 +63,6 @@ export const nextJSDeployment = (
   },
   test: async ({ endpoint }) => {
     console.log(`ℹ️ Docker container deployed to URL: ${endpoint.value}`)
-    await waitForEndpoint(endpoint.value, 5, 10000)
     await assertGraphiQL(endpoint.value)
     await assertQuery(endpoint.value)
   },
