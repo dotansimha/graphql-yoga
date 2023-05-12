@@ -132,7 +132,7 @@ export const vercelDeployment: DeploymentConfiguration<{
     // Build and bundle the function
     console.info('\t\tℹ️ Bundling the Vercel Function....')
     await execPromise('pnpm bundle', {
-      cwd: '../examples/nextjs',
+      cwd: '../examples/nextjs-legacy-pages',
     })
   },
   program: async () => {
@@ -141,7 +141,7 @@ export const vercelDeployment: DeploymentConfiguration<{
         {
           file: '/api/graphql.js',
           data: await fsPromises.readFile(
-            '../examples/nextjs/dist/index.js',
+            '../examples/nextjs-legacy-pages/dist/index.js',
             'utf-8',
           ),
         },
