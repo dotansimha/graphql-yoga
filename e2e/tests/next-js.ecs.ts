@@ -12,11 +12,9 @@ import * as awsx from '@pulumi/awsx'
 import { resolve } from 'path'
 import { Stack } from '@pulumi/pulumi/automation'
 
-export const nextJSECSDeployment = (
-  image: string,
-): DeploymentConfiguration<{
+export const nextJSECSDeployment: DeploymentConfiguration<{
   endpoint: string
-}> => ({
+}> = {
   prerequisites: async () => {
     await execPromise('pnpm build', {
       cwd: '../examples/nextjs-app',
@@ -66,4 +64,4 @@ export const nextJSECSDeployment = (
     await assertGraphiQL(endpoint.value)
     await assertQuery(endpoint.value)
   },
-})
+}
