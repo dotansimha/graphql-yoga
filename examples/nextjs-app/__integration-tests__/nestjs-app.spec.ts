@@ -59,14 +59,22 @@ function cmd(cmd: string) {
     cwd: join(module.path, '..'),
     timeout: 1000 * 60 * 1,
   })
-  cp.stdout?.on('data', (data: any) => console.log(data))
-  cp.stderr?.on('data', (data: any) => console.error(data))
 
-  const exited = new Promise<void>((resolve, reject) => {
-    cp.on('close', async (code: number) => (code == 0 ? resolve() : reject()))
+  const getStdout = saveOut(cp.stdout!)
+  const getStderr = saveOut(cp.stderr!)
+
+  const exited = new Promise<string>((resolve, reject) => {
+    cp.on('close', async (code: number) => {
+      const out = getStdout()
+      const err = getStderr()
+      if (out) console.log(out)
+      if (err) console.error(err)
+
+      return code == 0 ? resolve(out) : reject(new Error(err))
+    })
     cp.on('error', (error) => {
       console.error(error)
-      reject()
+      reject(error)
     })
   })
 
@@ -77,6 +85,12 @@ function cmd(cmd: string) {
       return exited
     },
   }
+}
+
+export function saveOut(stream: Readable) {
+  const out: Buffer[] = []
+  stream.on('data', (data: string) => out.push(Buffer.from(data)))
+  return () => Buffer.concat(out).toString('utf-8')
 }
 
 export async function waitForEndpoint(
