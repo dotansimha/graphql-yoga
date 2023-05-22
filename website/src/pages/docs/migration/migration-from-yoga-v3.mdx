@@ -22,3 +22,9 @@ const yoga = createYoga({
   }
 })
 ```
+
+## Subscriptions use GraphQL over SSE "distinct connections mode"
+
+Yoga previously used a custom, and simple, subscriptions transport over SSE. Now it implements the [GraphQL over SSE "distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) instead.
+
+Nothing has changed on the server; but, on the client-side, we recommend you use [`graphql-sse`](https://the-guild.dev/graphql/sse). The [recipes section](https://the-guild.dev/graphql/sse/recipes) will help you get going with any client out there!
