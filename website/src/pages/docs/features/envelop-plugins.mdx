@@ -107,9 +107,47 @@ In addition, Yoga adds more HTTP specific hooks.
   as stable.
 </Callout>
 
+### `onRequest`
+
+This hook is invoked for any incoming HTTP request. Here you can manipulate the request, create a short circuit before Yoga handles the request or apply security measures such as checking for access tokens etc.
+
+#### API
+
+- `request`: The incoming HTTP request as WHATWG `Request` object. [Learn more about the request](https://developer.mozilla.org/en-US/docs/Web/API/Request).
+- `serverContext`: The early context object that is shared between all hooks and the GraphQL execution. [Learn more about the context](/docs/features/context).
+- `fetchAPI`: WHATWG Fetch API implementation. [Learn more about the fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+- `url`: WHATWG URL object of the incoming request. [Learn more about the URL object](https://developer.mozilla.org/en-US/docs/Web/API/URL).
+- `endResponse`: A function that allows you to end the request early and send a response to the client.
+
+#### Example
+
+```ts
+import { Plugin } from 'graphql-yoga'
+
+function useAuth(): Plugin {
+ return {
+  onRequest({ request, fetchAPI, endResponse }) {
+    if (!request.headers.get('authorization')) {
+      endResponse(
+        new fetchAPI.Response(
+          null,
+          {
+            status: 401,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      )
+    }
+  }
+ }
+}
+```
+
 ### `onRequestParse`
 
-This hooks is invoked for any incoming HTTP request.
+This hook is invoked for any incoming HTTP request.
 Here you can manipulate the request, set a custom request parser or apply security measures such as checking for access tokens etc.
 
 ### `onParams`
@@ -128,3 +166,27 @@ Example use cases:
 ### `onResultProcess`
 
 This hook is invoked after a GraphQL request has been processed and before the response is forwarded to the client. Here you can customize what transport/response processor format should be used for sending the result over the wire.
+
+### `onResponse`
+
+This hook is invoked after a GraphQL request has been processed and after the response has been forwarded to the client. Here you can perform any cleanup or logging operations, or you can manipulate the outgoing response object.
+
+#### API
+
+- `request`: The incoming HTTP request as WHATWG `Request` object. [Learn more about the request](https://developer.mozilla.org/en-US/docs/Web/API/Request).
+- `serverContext`: The final context object that is shared between all hooks and the GraphQL execution. [Learn more about the context](/docs/features/context).
+- `response`: The outgoing HTTP response as WHATWG `Response` object. [Learn more about the response interface](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+
+#### Example
+
+```ts
+import { Plugin } from 'graphql-yoga'
+
+function useYogaSignature(): Plugin {
+  return {
+    onResponse({ request, response }) {
+      response.headers.set('X-GraphQL-Server', 'Yoga')
+    }
+  }
+}
+```
