@@ -126,8 +126,8 @@ importers:
         specifier: 5.0.6
         version: 5.0.6(graphql@16.6.0)
       '@faker-js/faker':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@graphql-yoga/plugin-response-cache':
         specifier: 1.9.1
         version: link:../packages/plugins/response-cache
@@ -2919,6 +2919,7 @@ packages:
       '@aws-cdk/core': 1.201.0
       '@aws-cdk/custom-resources': 1.201.0(@aws-cdk/aws-ec2@1.201.0)(@aws-cdk/aws-iam@1.201.0)(@aws-cdk/aws-lambda@1.201.0)(@aws-cdk/aws-logs@1.201.0)(@aws-cdk/aws-s3@1.201.0)(@aws-cdk/core@1.201.0)(@aws-cdk/cx-api@1.201.0)(constructs@3.4.127)
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -3224,6 +3225,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema@1.201.0:
     resolution: {integrity: sha512-s/W9GvkoaJytySiflMtelW5B/H00dpi503XwG8l1XD3RVzlpT2RU4PGKCho3+uZna4G4468TpgnnxqDY/a4IjA==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.5.1
     dev: false
     bundledDependencies:
       - jsonschema
@@ -3289,6 +3293,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.201.0
+      semver: 7.5.1
     dev: false
     bundledDependencies:
       - semver
@@ -6840,9 +6845,9 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@faker-js/faker@7.6.0:
-    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
-    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+  /@faker-js/faker@8.0.1:
+    resolution: {integrity: sha512-kbh5MenpTN9U0B4QcOI1NoTPlZHniSYQ3BHbhAnPjJGAmmFqxoxTE4sGdpy7ZOO9038DPGCuhXyMkjOr05uVwA==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
     dev: false
 
   /@fastify/accept-negotiator@1.1.0:
@@ -23466,7 +23471,6 @@ packages:
 
   /jsonschema@1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
-    dev: true
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
