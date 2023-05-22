@@ -221,7 +221,7 @@ export class YogaServer<
   >
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
   private onParamsHooks: OnParamsHook[]
-  private onResultProcessHooks: OnResultProcess[]
+  private onResultProcessHooks: OnResultProcess<TServerContext>[]
   private maskedErrorsOpts: YogaMaskedErrorOpts | null
   private id: string
 
@@ -362,7 +362,7 @@ export class YogaServer<
       useResultProcessors({
         legacySSE: options?.legacySse !== false,
       }),
-      useErrorHandling((error, request) => {
+      useErrorHandling((error, request, serverContext) => {
         const errors = handleError(error, this.maskedErrorsOpts, this.logger)
 
         const result = {
@@ -374,6 +374,7 @@ export class YogaServer<
           result,
           fetchAPI: this.fetchAPI,
           onResultProcessHooks: this.onResultProcessHooks,
+          serverContext,
         })
       }),
 
@@ -610,6 +611,7 @@ export class YogaServer<
       result,
       fetchAPI: this.fetchAPI,
       onResultProcessHooks: this.onResultProcessHooks,
+      serverContext,
     })
   }
 }
