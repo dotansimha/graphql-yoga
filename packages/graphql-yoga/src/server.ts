@@ -371,10 +371,12 @@ export class YogaServer<
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
-          addPlugin(
-            // @ts-expect-error Add plugins has context but this hook doesn't care
-            useParserAndValidationCache(parserAndValidationCacheOptions),
-          )
+          if (options?.parserAndValidationCache !== false) {
+            addPlugin(
+              // @ts-expect-error Add plugins has context but this hook doesn't care
+              useParserAndValidationCache(options?.parserAndValidationCache),
+            )
+          }
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(useLimitBatching(batchingLimit))
           // @ts-expect-error Add plugins has context but this hook doesn't care
