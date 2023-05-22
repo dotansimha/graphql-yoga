@@ -340,7 +340,6 @@ describe('incremental delivery: node-fetch', () => {
   })
 
   it('should get subscription', async () => {
-    expect.assertions(3)
     let counter = 0
     setTimeout(() => {
       push?.(counter)
@@ -350,30 +349,45 @@ describe('incremental delivery: node-fetch', () => {
         Accept: 'text/event-stream',
       },
     })
-    for await (const chunk of response.body!) {
-      const chunkString = Buffer.from(chunk).toString('utf-8')
+    const reader = response.body!.getReader()
 
-      const parts = chunkString
-        .split('\n')
-        .filter((line) => line.trim() !== '' && line.trim() !== ':')
+    let chunk = await reader.read()
+    expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
+      ":
 
-      for (const chunkString of parts) {
-        const result = JSON.parse(chunkString.replace('data:', ''))
-        if (counter === 0) {
-          expect(result.data.counter).toBe(0)
-          counter++
-          push?.(counter)
-        } else if (counter === 1) {
-          expect(result.data.counter).toBe(1)
-          counter++
-          push?.(counter)
-        } else if (counter === 2) {
-          expect(result.data.counter).toBe(2)
-          counter++
-          stop?.()
-          return
-        }
-      }
-    }
+      "
+    `)
+    counter++
+    push?.(counter)
+
+    chunk = await reader.read()
+    expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
+      "event: next
+      data: {"data":{"counter":1}}
+
+      "
+    `)
+    counter++
+    push?.(counter)
+
+    chunk = await reader.read()
+    expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
+      "event: next
+      data: {"data":{"counter":2}}
+
+      "
+    `)
+    counter++
+    stop?.()
+
+    chunk = await reader.read()
+    expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
+      "event: complete
+
+      "
+    `)
+
+    chunk = await reader.read()
+    expect(chunk.done).toBeTruthy()
   })
 })
