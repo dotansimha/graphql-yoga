@@ -72,8 +72,6 @@ describe('disable introspection', () => {
             request.headers.get('x-disable-introspection') === '1',
         }),
       ],
-      // uncomment this and the tests will pass
-      // validationCache: false,
     })
 
     // First request uses the header to disable introspection
