@@ -2,6 +2,9 @@
   "name": "graphql-yoga-monorepo",
   "private": true,
   "packageManager": "pnpm@7.32.4",
+  "engines": {
+    "pnpm": "^7.32.4"
+  },
   "scripts": {
     "prebuild": "rimraf packages/*/dist",
     "check": "pnpm -r run check",
