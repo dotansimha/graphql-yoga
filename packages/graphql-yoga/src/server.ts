@@ -175,15 +175,6 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * @default false
    */
   batching?: BatchingOptions | undefined
-  /**
-   * Whether to use the legacy Yoga Server-Sent Events and not
-   * the GraphQL over SSE spec's distinct connection mode.
-   *
-   * @default false
-   *
-   * @deprecated Please migrate your clients to use [GraphQL over SSE](https://github.com/graphql/graphql-over-http/blob/main/rfcs/GraphQLOverSSE.md). This option will be removed starting from the next major release.
-   */
-  legacySse?: boolean
 }
 
 export type BatchingOptions =
@@ -359,9 +350,7 @@ export class YogaServer<
         parse: parsePOSTFormUrlEncodedRequest,
       }),
       // Middlewares after the GraphQL execution
-      useResultProcessors({
-        legacySSE: options?.legacySse === true,
-      }),
+      useResultProcessors(),
       useErrorHandling((error, request) => {
         const errors = handleError(error, this.maskedErrorsOpts, this.logger)
 
