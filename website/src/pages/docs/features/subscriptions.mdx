@@ -136,10 +136,6 @@ import { createYoga } from 'graphql-yoga'
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
 
 const yogaApp = createYoga({
-  graphiql: {
-    // Use graphql-sse in GraphiQL.
-    subscriptionsProtocol: 'GRAPHQL_SSE'
-  },
   plugins: [
     // Simply install the graphql-sse plugin and you're off!
     useGraphQLSSE()

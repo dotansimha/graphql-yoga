@@ -110,7 +110,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const fetcher: Fetcher = useMemo(() => {
     const executor = urlLoader.getExecutorAsync(endpoint, {
-      subscriptionsProtocol: SubscriptionProtocol.SSE,
+      subscriptionsProtocol: SubscriptionProtocol.GRAPHQL_SSE,
       credentials: 'same-origin',
       specifiedByUrl: true,
       directiveIsRepeatable: true,
