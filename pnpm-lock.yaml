@@ -1862,8 +1862,8 @@ importers:
   website:
     dependencies:
       '@theguild/components':
-        specifier: 4.5.11
-        version: 4.5.11(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 4.5.12
+        version: 4.5.12(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       clsx:
         specifier: 1.2.1
         version: 1.2.1
@@ -2919,6 +2919,7 @@ packages:
       '@aws-cdk/core': 1.201.0
       '@aws-cdk/custom-resources': 1.201.0(@aws-cdk/aws-ec2@1.201.0)(@aws-cdk/aws-iam@1.201.0)(@aws-cdk/aws-lambda@1.201.0)(@aws-cdk/aws-logs@1.201.0)(@aws-cdk/aws-s3@1.201.0)(@aws-cdk/core@1.201.0)(@aws-cdk/cx-api@1.201.0)(constructs@3.4.127)
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -3224,6 +3225,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema@1.201.0:
     resolution: {integrity: sha512-s/W9GvkoaJytySiflMtelW5B/H00dpi503XwG8l1XD3RVzlpT2RU4PGKCho3+uZna4G4468TpgnnxqDY/a4IjA==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.5.1
     dev: false
     bundledDependencies:
       - jsonschema
@@ -3289,6 +3293,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.201.0
+      semver: 7.5.1
     dev: false
     bundledDependencies:
       - semver
@@ -10766,8 +10771,8 @@ packages:
       - supports-color
     dev: true
 
-  /@next/bundle-analyzer@13.4.1:
-    resolution: {integrity: sha512-wbSVjc1RM43vLuvMLZL2hSq6+76VgyVWqgpgk4AlJM//KjynVMezo+c6HI8tRzMI0p0txzDtSUA3na32fuY67A==}
+  /@next/bundle-analyzer@13.4.2:
+    resolution: {integrity: sha512-VDFTWpRI5IFS++37A/eHfVNX8SoB4gbTd8HPUYMHAJ7zpK3t2oW8L+leTlPUw/pAt7Aia2MyYvSYBK4vYKSBlA==}
     dependencies:
       webpack-bundle-analyzer: 4.7.0
     transitivePeerDependencies:
@@ -12315,8 +12320,8 @@ packages:
       remove-markdown: 0.5.0
     dev: true
 
-  /@theguild/components@4.5.11(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-CMgvCPYygzW5rqrN+kuk4Pj0pnGvwiUctiXoV/kic/8jh9PwtABxa6dxQoZCUr6fYhcxzR5SJPOLlnrbd8Mr3Q==}
+  /@theguild/components@4.5.12(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-LcRvfriNw+ft4ufUa8vXGlhplGcqn9DZ61mNeoj4v5WqoaCN8XIxOLiuYB5caPOr/iwYc3U2rQ/tz6nRQJv59g==}
     peerDependencies:
       next: ^12.3.1 || ^13.0.0
       react: ^18.2.0
@@ -12327,17 +12332,17 @@ packages:
       '@algolia/autocomplete-plugin-query-suggestions': 1.9.2(algoliasearch@4.17.0)(search-insights@2.6.0)
       '@algolia/autocomplete-theme-classic': 1.9.2
       '@giscus/react': 2.2.8(react-dom@18.2.0)(react@18.2.0)
-      '@next/bundle-analyzer': 13.4.1
+      '@next/bundle-analyzer': 13.4.2
       '@radix-ui/react-navigation-menu': 1.1.2(react-dom@18.2.0)(react@18.2.0)
       algoliasearch: 4.17.0
       clsx: 1.2.1
-      focus-trap-react: 10.1.1(react-dom@18.2.0)(react@18.2.0)
+      focus-trap-react: 10.1.2(react-dom@18.2.0)(react@18.2.0)
       fuzzy: 0.1.3
       mermaid: 10.0.2
       next: 13.3.0(react-dom@18.2.0)(react@18.2.0)
       next-videos: 1.5.0
-      nextra: 2.5.0(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
-      nextra-theme-docs: 2.5.0(next@13.3.0)(nextra@2.5.0)(react-dom@18.2.0)(react@18.2.0)
+      nextra: 2.5.2(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+      nextra-theme-docs: 2.5.2(next@13.3.0)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-instantsearch-dom: 6.39.1(algoliasearch@4.17.0)(react-dom@18.2.0)(react@18.2.0)
@@ -12345,7 +12350,7 @@ packages:
       react-player: 2.12.0(react@18.2.0)
       remark-mdx-disable-explicit-jsx: 0.1.0
       search-insights: 2.6.0
-      semver: 7.3.8
+      semver: 7.5.1
       unist-util-visit: 4.1.2
       use-debounce: 9.0.4(react@18.2.0)
     transitivePeerDependencies:
@@ -20125,23 +20130,23 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /focus-trap-react@10.1.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-OtLeSIQPKFzMzbLHkGtfZYwGLMhTRHd3CDhfyd0DDx8tvXzlgpseClDiuiKoiIHZtdjsbXTfTmUuuLKaxrwSyQ==}
+  /focus-trap-react@10.1.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-E419LzaENAxp95bXKvGmatPzuPQtAQ6l2o576shXV82u53WvnjogcotgcD5d9veYoqXvPZI303RP6ZysXLGVsg==}
     peerDependencies:
       prop-types: ^15.8.1
       react: '>=16.3.0'
       react-dom: '>=16.3.0'
     dependencies:
-      focus-trap: 7.4.0
+      focus-trap: 7.4.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tabbable: 6.1.1
+      tabbable: 6.1.2
     dev: false
 
-  /focus-trap@7.4.0:
-    resolution: {integrity: sha512-yI7FwUqU4TVb+7t6PaQ3spT/42r/KLEi8mtdGoQo2li/kFzmu9URmalTvw7xCCJtSOyhBxscvEAmvjeN9iHARg==}
+  /focus-trap@7.4.3:
+    resolution: {integrity: sha512-BgSSbK4GPnS2VbtZ50VtOv1Sti6DIkj3+LkVjiWMNjLeAp1SH1UlLx3ULu/DCu4vq5R4/uvTm+zrvsMsuYmGLg==}
     dependencies:
-      tabbable: 6.1.1
+      tabbable: 6.1.2
     dev: false
 
   /focus-visible@5.2.0:
@@ -23466,7 +23471,6 @@ packages:
 
   /jsonschema@1.4.1:
     resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
-    dev: true
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -24217,6 +24221,7 @@ packages:
 
   /loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
     dependencies:
       js-tokens: 4.0.0
 
@@ -26094,11 +26099,11 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /nextra-theme-docs@2.5.0(next@13.3.0)(nextra@2.5.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-xmJx0xj0Mewfr/h4xkZH5TuTB6qWeygCGW384ySqZA81LargQjEqw8a25BSif8dWaMAZZ+oIBOvJ2Et+CJytQQ==}
+  /nextra-theme-docs@2.5.2(next@13.3.0)(nextra@2.5.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-DLrAtMtlUx3y3QsHcnIHhkb8b/VUFSvU5Cgb0Tzm7VlngKJW8ftPg9IxgoRZouqgQvkvvxbMLTPgBw+8n0VZTw==}
     peerDependencies:
       next: '>=9.5.3'
-      nextra: 2.5.0
+      nextra: 2.5.2
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
@@ -26113,15 +26118,15 @@ packages:
       next: 13.3.0(react-dom@18.2.0)(react@18.2.0)
       next-seo: 6.0.0(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
-      nextra: 2.5.0(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+      nextra: 2.5.2(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.4
       zod: 3.21.4
     dev: false
 
-  /nextra@2.5.0(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-YvknuUvV2fdFY3F3gsxNFA2lwDWg3KHEAiyumUxZKOnW8+yTwocXGFccD76Py9fYxcmUL9ARo+PEusnXlWmLeQ==}
+  /nextra@2.5.2(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-22kw8s2OShvA625cKi3P9JioUybL5hEcCn1txXyQh+Mn3jmQXlXdbzmuT4BdYRNWo5lGqmYwm2h73igXjbssRQ==}
     engines: {node: '>=16'}
     peerDependencies:
       next: '>=9.5.3'
@@ -30748,8 +30753,8 @@ packages:
     resolution: {integrity: sha512-H1XoH1URcBOa/rZZWxLxHCtOdVUEev+9vo5YdYhC9tCY4wnybX+VQrCYuy9ubkg69fCBxCONJOSLGfw0DWMffQ==}
     dev: false
 
-  /tabbable@6.1.1:
-    resolution: {integrity: sha512-4kl5w+nCB44EVRdO0g/UGoOp3vlwgycUVtkk/7DPyeLZUCuNFFKCFG6/t/DgHLrUPHjrZg6s5tNm+56Q2B0xyg==}
+  /tabbable@6.1.2:
+    resolution: {integrity: sha512-qCN98uP7i9z0fIS4amQ5zbGBOq+OSigYeGvPy7NDk8Y9yncqDZ9pRPgfsc2PJIVM9RrJj7GIfuRgmjoUU9zTHQ==}
     dev: false
 
   /table@6.8.1:
