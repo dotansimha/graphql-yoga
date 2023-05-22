@@ -29,7 +29,7 @@ server.listen(4000, () => {
 Furthermore, you can provide your own cache store to both of these plugins by implementing the following interface:
 
 ```ts filename="Custom cache store" {11-14,18-22}
-import { DocumentNode, GraphQLError, validate } from 'graphql'
+import { DocumentNode, validate } from 'graphql'
 import { createYoga } from 'graphql-yoga'
 import { createServer } from 'node:http'
 import { schema } from './my-schema'
