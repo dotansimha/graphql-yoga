@@ -179,9 +179,9 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * Whether to use the legacy Yoga Server-Sent Events and not
    * the GraphQL over SSE spec's distinct connection mode.
    *
-   * @default true
+   * @default false
    *
-   * @deprecated Consider using GraphQL over SSE spec instead by setting this to `false`. Starting with the next major release, this flag will default to `false`.
+   * @deprecated Please migrate your clients to use [GraphQL over SSE](https://github.com/graphql/graphql-over-http/blob/main/rfcs/GraphQLOverSSE.md). This option will be removed starting from the next major release.
    */
   legacySse?: boolean
 }
@@ -360,7 +360,7 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessors({
-        legacySSE: options?.legacySse !== false,
+        legacySSE: options?.legacySse === true,
       }),
       useErrorHandling((error, request) => {
         const errors = handleError(error, this.maskedErrorsOpts, this.logger)

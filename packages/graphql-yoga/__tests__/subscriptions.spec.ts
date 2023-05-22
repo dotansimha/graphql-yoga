@@ -154,7 +154,8 @@ describe('Subscription', () => {
         ":
 
       ",
-        "data: {"data":{"hi":"hi"}}
+        "event: next
+      data: {"data":{"hi":"hi"}}
 
       ",
         "event: complete
@@ -296,8 +297,10 @@ describe('Subscription', () => {
     const text = await response.text()
 
     expect(text).toMatchInlineSnapshot(`
-      "data: {"data":{"hi":"hi"}}
+      "event: next
+      data: {"data":{"hi":"hi"}}
 
+      event: next
       data: {"errors":[{"message":"Unexpected error.","locations":[{"line":2,"column":11}]}]}
 
       event: complete
@@ -360,8 +363,10 @@ describe('Subscription', () => {
     const text = await response.text()
 
     expect(text).toMatchInlineSnapshot(`
-      "data: {"data":{"hi":"hi"}}
+      "event: next
+      data: {"data":{"hi":"hi"}}
 
+      event: next
       data: {"errors":[{"message":"hi","locations":[{"line":2,"column":11}]}]}
 
       event: complete
