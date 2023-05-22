@@ -371,11 +371,12 @@ export class YogaServer<
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
-          if (options?.parserAndValidationCache) {
+          if (options?.parserAndValidationCache !== false) {
             addPlugin(
               // @ts-expect-error Add plugins has context but this hook doesn't care
               useParserAndValidationCache(
-                options?.parserAndValidationCache === true
+                !options?.parserAndValidationCache ||
+                  options?.parserAndValidationCache === true
                   ? {}
                   : options?.parserAndValidationCache,
               ),
