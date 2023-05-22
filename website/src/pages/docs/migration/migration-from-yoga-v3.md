@@ -6,7 +6,7 @@ import { PackageCmd } from '@theguild/components'
 
 <PackageCmd packages={['graphql-yoga']} />
 
-## Parse and validation cache are now a single option `parserAndValidationCache`
+## Parse and validation cache are now under a single option `parserAndValidationCache`
 
 Previously Yoga used two separate envelop plugins for parsing and caching. Now, it leverages a custom built plugin focused on Yoga. It therefore yields better performance, feels more native and of course reduces bundle size.
 
