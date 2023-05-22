@@ -634,3 +634,10 @@ export function createYoga<
   }) as unknown as YogaServerInstance<TServerContext, TUserContext>
   // TODO: Fix in @whatwg-node/server later
 }
+
+createYoga({
+  graphiql: {
+    defaultVariableEditorOpen: false,
+    headerEditorEnabled: false,
+  },
+})
