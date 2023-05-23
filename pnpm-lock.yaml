@@ -30,8 +30,8 @@ importers:
         specifier: 7.21.5
         version: 7.21.5(@babel/core@7.21.8)
       '@babel/preset-typescript':
-        specifier: 7.21.4
-        version: 7.21.4(@babel/core@7.21.8)
+        specifier: 7.21.5
+        version: 7.21.5(@babel/core@7.21.8)
       '@changesets/changelog-github':
         specifier: 0.4.8
         version: 0.4.8
@@ -2919,6 +2919,7 @@ packages:
       '@aws-cdk/core': 1.202.0
       '@aws-cdk/custom-resources': 1.202.0(@aws-cdk/aws-ec2@1.202.0)(@aws-cdk/aws-iam@1.202.0)(@aws-cdk/aws-lambda@1.202.0)(@aws-cdk/aws-logs@1.202.0)(@aws-cdk/aws-s3@1.202.0)(@aws-cdk/core@1.202.0)(@aws-cdk/cx-api@1.202.0)(constructs@3.4.127)
       constructs: 3.4.127
+      punycode: 2.3.0
     transitivePeerDependencies:
       - '@aws-cdk/aws-ec2'
       - '@aws-cdk/aws-logs'
@@ -3224,6 +3225,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema@1.202.0:
     resolution: {integrity: sha512-UFcxQcky31kFUu6GbWgaweOKEt9yAPy5ttGV/26Ue5BCGHVow6ivri3/4o9fpFEYLF5Brl+mGyhaH6Y4LkHYKw==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.5.1
     dev: false
     bundledDependencies:
       - jsonschema
@@ -3248,7 +3252,11 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 1.202.0
       '@aws-cdk/cx-api': 1.202.0
       '@aws-cdk/region-info': 1.202.0
+      '@balena/dockerignore': 1.0.2
       constructs: 3.4.127
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      minimatch: 3.1.2
     dev: false
     bundledDependencies:
       - fs-extra
@@ -3285,6 +3293,7 @@ packages:
     engines: {node: '>= 14.15.0'}
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 1.202.0
+      semver: 7.5.1
     dev: false
     bundledDependencies:
       - semver
@@ -5315,20 +5324,6 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/plugin-transform-modules-commonjs@7.21.2(@babel/core@7.21.8):
-    resolution: {integrity: sha512-Cln+Yy04Gxua7iPdj6nOV96smLGjpElir5YwzF0LBPKoPlLDNJePNlrGGaybAJkd0zKRnOVXOgizSqPYMNYkzA==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.21.8
-      '@babel/helper-module-transforms': 7.21.5
-      '@babel/helper-plugin-utils': 7.21.5
-      '@babel/helper-simple-access': 7.21.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /@babel/plugin-transform-modules-commonjs@7.21.5(@babel/core@7.21.8):
     resolution: {integrity: sha512-OVryBEgKUbtqMoB7eG2rs6UFexJi6Zj6FDXx+esBLPTCxCNxAY9o+8Di7IsUGJ+AVhp5ncK0fxWUBd0/1gPhrQ==}
     engines: {node: '>=6.9.0'}
@@ -5677,17 +5672,17 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /@babel/preset-typescript@7.21.4(@babel/core@7.21.8):
-    resolution: {integrity: sha512-sMLNWY37TCdRH/bJ6ZeeOH1nPuanED7Ai9Y/vH31IPqalioJ6ZNFUWONsakhv4r4n+I6gm5lmoE0olkgib/j/A==}
+  /@babel/preset-typescript@7.21.5(@babel/core@7.21.8):
+    resolution: {integrity: sha512-iqe3sETat5EOrORXiQ6rWfoOg2y68Cs75B9wNxdPW4kixJxh7aXQE1KPdWLDniC24T/6dSnguF33W9j/ZZQcmA==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.21.8
-      '@babel/helper-plugin-utils': 7.20.2
+      '@babel/helper-plugin-utils': 7.21.5
       '@babel/helper-validator-option': 7.21.0
       '@babel/plugin-syntax-jsx': 7.21.4(@babel/core@7.21.8)
-      '@babel/plugin-transform-modules-commonjs': 7.21.2(@babel/core@7.21.8)
+      '@babel/plugin-transform-modules-commonjs': 7.21.5(@babel/core@7.21.8)
       '@babel/plugin-transform-typescript': 7.21.3(@babel/core@7.21.8)
     transitivePeerDependencies:
       - supports-color
@@ -5782,6 +5777,9 @@ packages:
       '@babel/helper-string-parser': 7.21.5
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
+
+  /@balena/dockerignore@1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -14512,7 +14510,6 @@ packages:
   /at-least-node@1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
-    dev: true
 
   /atob@2.1.2:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
@@ -14567,6 +14564,16 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.183
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.153
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
+      fs-extra: 11.1.1
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.5.1
+      table: 6.8.1
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -15481,6 +15488,11 @@ packages:
     dependencies:
       ansicolors: 0.3.2
       redeyed: 2.1.1
+    dev: true
+
+  /case@1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /caseless@0.12.0:
@@ -20210,7 +20222,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-jetpack@5.1.0:
     resolution: {integrity: sha512-Xn4fDhLydXkuzepZVsr02jakLlmoARPy+YWIclo4kh0GyNGUHnTqeH/w/qIsVn50dFxtp8otPL2t/HcPJBbxUA==}
@@ -23328,7 +23339,6 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /jsonify@0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
@@ -23338,6 +23348,9 @@ packages:
     resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /jsonschema@1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
 
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -32045,7 +32058,6 @@ packages:
   /universalify@2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /unix-dgram@2.0.6:
     resolution: {integrity: sha512-AURroAsb73BZ6CdAyMrTk/hYKNj3DuYYEuOaB8bYMOHGKupRNScw90Q5C71tWJc3uE7dIeXRyuwN0xLLq3vDTg==}
