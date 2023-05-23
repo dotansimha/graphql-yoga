@@ -1,0 +1,44 @@
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { buildDynamicMDX, buildDynamicMeta } from 'nextra/remote'
+import { defaultRemarkPlugins } from '@theguild/components/next.config'
+import json from '../../remote-files/v2.json' assert { type: 'json' }
+
+const { user, repo, branch, docsPath, filePaths } = json
+
+export const getStaticPaths: GetStaticPaths = async () => ({
+  fallback: 'blocking',
+  paths: filePaths.map((filePath) => ({
+    params: { slug: filePath.replace(/\.mdx?$/, '').split('/') },
+  })),
+})
+
+export const getStaticProps: GetStaticProps = async ({
+  // @ts-expect-error TODO: fix type error
+  params: { slug = ['index'] },
+}) => {
+  const path = slug.join('/')
+  const foundPath = filePaths.find((filePath) => filePath.startsWith(path))
+
+  const baseURL = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${docsPath}${foundPath}`
+  const response = await fetch(baseURL)
+  const data = await response.text()
+
+  const mdx = await buildDynamicMDX(data, {
+    defaultShowCopyCode: true,
+    // TODO: fix links
+    remarkLinkRewriteOptions: {
+      pattern: /^\/docs(\/.*)?$/,
+      replace: '/v2$1',
+    },
+    mdxOptions: {
+      remarkPlugins: defaultRemarkPlugins,
+    },
+  })
+
+  return {
+    props: {
+      ...mdx,
+      ...(await buildDynamicMeta()),
+    },
+  }
+}
