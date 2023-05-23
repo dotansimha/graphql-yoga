@@ -33,7 +33,7 @@ server.listen(4000, () => {
 You can also pass a factory function for your schema that can return a `Promise`.
 The factory function is invoked for **every** GraphQL request.
 
-<Callout>
+<Callout type="warning">
   We do not recommend building a GraphQL schema from scratch for every single
   incoming request. Please, use a caching mechanism or pre-build your GraphQL
   schemas before starting the server.
