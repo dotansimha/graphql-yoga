@@ -46,7 +46,11 @@ export async function handler(
   lambdaContext: Context
 ): Promise<APIGatewayProxyResult> {
   const response = await yoga.fetch(
-    event.path + '?' + new URLSearchParams(event.queryStringParameters as Record<string, string> || {}).toString(),
+    event.path +
+      '?' +
+      new URLSearchParams(
+        (event.queryStringParameters as Record<string, string>) || {}
+      ).toString(),
     {
       method: event.httpMethod,
       headers: event.headers as HeadersInit,
