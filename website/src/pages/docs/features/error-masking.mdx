@@ -338,16 +338,15 @@ throw new GraphQLError(
   `User with id '${args.byId}' not found.`,
   // error extensions
   {
-      extensions: {
-        http: {
-          status: 400,
-          headers: {
-            'x-custom-header': 'some-value',
-          }
-        },
-      },
-    },
-  },
+    extensions: {
+      http: {
+        status: 400,
+        headers: {
+          'x-custom-header': 'some-value'
+        }
+      }
+    }
+  }
 )
 ```
 
