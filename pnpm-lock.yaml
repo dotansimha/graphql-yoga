@@ -117,8 +117,8 @@ importers:
         specifier: 2.0.2
         version: 2.0.2
       wrangler:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
 
   benchmark:
     dependencies:
@@ -157,8 +157,8 @@ importers:
         specifier: 4.16.0
         version: 4.16.0
       '@pulumi/docker':
-        specifier: 4.2.1
-        version: 4.2.1
+        specifier: 4.2.2
+        version: 4.2.2
       '@pulumi/pulumi':
         specifier: 3.68.0
         version: 3.68.0
@@ -343,8 +343,8 @@ importers:
         version: link:../../packages/graphql-yoga
     devDependencies:
       ts-loader:
-        specifier: 9.4.2
-        version: 9.4.2(typescript@5.0.4)(webpack@5.83.1)
+        specifier: 9.4.3
+        version: 9.4.3(typescript@5.0.4)(webpack@5.83.1)
       typescript:
         specifier: 5.0.4
         version: 5.0.4
@@ -352,8 +352,8 @@ importers:
         specifier: 5.83.1
         version: 5.83.1
       wrangler:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
 
   examples/cloudflare-modules:
     dependencies:
@@ -374,8 +374,8 @@ importers:
         specifier: 5.0.4
         version: 5.0.4
       wrangler:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
 
   examples/cookies:
     dependencies:
@@ -1224,8 +1224,8 @@ importers:
         specifier: 5.0.4
         version: 5.0.4
       wrangler:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
 
   examples/sofa:
     dependencies:
@@ -11438,8 +11438,8 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/docker@4.2.1:
-    resolution: {integrity: sha512-uA2zoqGOMO8m7BXmngR+Zfq2jjIpE1x+mSgYcbuy//T49l2qtSpFwflKHSa2XbDW3nCT3mfJazUnAXFSy40AcA==}
+  /@pulumi/docker@4.2.2:
+    resolution: {integrity: sha512-6eeGTP+cNWC7WVU1sNZb95zjM+B7kGUUf7qQgwqAsbfu/jq9gNDKz1fjVIKNemo793xPKPjy6jjpxPmBW+IqyA==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.68.0
@@ -17744,14 +17744,6 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
-    dev: true
-
-  /enhanced-resolve@5.10.0:
-    resolution: {integrity: sha512-T0yTFjdpldGY8PmuXXR0PyQ1ufZpEGiHVrp7zHKB7jdR4qlmZHhONVM5AQOAWXuF/w3dnHbEQVrNptJgt7F+cQ==}
-    engines: {node: '>=10.13.0'}
-    dependencies:
-      graceful-fs: 4.2.10
-      tapable: 2.2.1
     dev: true
 
   /enhanced-resolve@5.14.0:
@@ -31277,17 +31269,17 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
-  /ts-loader@9.4.2(typescript@5.0.4)(webpack@5.83.1):
-    resolution: {integrity: sha512-OmlC4WVmFv5I0PpaxYb+qGeGOdm5giHU7HwDDUjw59emP2UYMHy9fFSDcYgSNoH8sXcj4hGCSEhlDZ9ULeDraA==}
+  /ts-loader@9.4.3(typescript@5.0.4)(webpack@5.83.1):
+    resolution: {integrity: sha512-n3hBnm6ozJYzwiwt5YRiJZkzktftRpMiBApHaJPoWLA+qetQBAXkHqCLM6nwSdRDimqVtA5ocIkcTRLMTt7yzA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       typescript: '*'
       webpack: ^5.0.0
     dependencies:
       chalk: 4.1.2
-      enhanced-resolve: 5.10.0
+      enhanced-resolve: 5.14.0
       micromatch: 4.0.5
-      semver: 7.3.8
+      semver: 7.5.1
       typescript: 5.0.4
       webpack: 5.83.1
     dev: true
@@ -32848,8 +32840,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20230518.0
     dev: true
 
-  /wrangler@3.0.0:
-    resolution: {integrity: sha512-azppXJjEQeaVg3wxFZJOGDGtpR8e9clHr2aHuanGHOk9vX3gvesCv97BF/n8qh1Y1d7vDKOBdfQW3UOYZNFGNw==}
+  /wrangler@3.0.1:
+    resolution: {integrity: sha512-YamXlRjkMO/V3Fvq7IC9H9GDWIbNGc4IV3l1Z5q45XYTWxUYbkwXyiTAfpmqhyl5wx+XEPKe3k/ubqmW+r63yQ==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
