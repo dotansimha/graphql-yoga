@@ -1,6 +1,8 @@
 /* eslint sort-keys: error */
-import { useTheme, Giscus, defineConfig } from '@theguild/components'
+import { useTheme, Giscus, defineConfig, Callout } from '@theguild/components'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
+import * as React from 'react'
 
 export default defineConfig({
   chat: {
@@ -27,6 +29,20 @@ export default defineConfig({
 
     return (
       <>
+        {route.startsWith('/v2') && (
+          <Callout type="warning">
+            This is the documentation for the <b>old</b> GraphQL Yoga version 2.
+            We recommend upgrading to the latest GraphQL Yoga version 3.
+            <br />
+            <br />
+            <Link
+              href="/docs/migration/migration-from-yoga-v2"
+              className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+            >
+              Get started with GraphQL Yoga v3
+            </Link>
+          </Callout>
+        )}
         {children}
         {comments}
       </>
