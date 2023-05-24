@@ -225,8 +225,12 @@ export const yoga = createYoga({
   plugins: [
     useSofa({
       basePath: restEndpoint,
-      title: 'Example API',
-      version: '3.0.0',
+      openAPI: {
+        info: {
+          title: 'Example API',
+          version: '3.0.0',
+        },
+      },
     }),
   ],
 })

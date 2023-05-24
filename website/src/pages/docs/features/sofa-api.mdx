@@ -136,9 +136,15 @@ export const yoga = createYoga({
   plugins: [
     useSofa({
       basePath: '/rest',
-      swaggerUIEndpoint: '/swagger',
-      title: 'Example API',
-      version: '1.0.0'
+      openAPI: {
+        info: {
+          title: 'Example API',
+          version: '1.0.0'
+        }
+      },
+      swaggerUI: {
+        endpoint: '/swagger'
+      }
     })
   ]
 })
