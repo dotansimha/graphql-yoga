@@ -19,8 +19,8 @@ export const getStaticProps: GetStaticProps<
     __nextra_dynamic_opts: string
   },
   { slug?: string[] }
-> = async ({ params: { slug = ['index'] } = {} }) => {
-  const path = slug.join('/')
+> = async ({ params }) => {
+  const path = params?.slug?.join('/') ?? 'index'
   const foundPath = filePaths.find((filePath) => filePath.startsWith(path))
 
   const baseURL = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${docsPath}${foundPath}`
