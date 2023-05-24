@@ -4,65 +4,67 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  _FieldSet: any;
+  ID: { input: string | number; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  _FieldSet: { input: any; output: any; }
 };
 
 export type CaseStudy = {
   __typename?: 'CaseStudy';
-  caseNumber: Scalars['ID'];
-  description?: Maybe<Scalars['String']>;
+  caseNumber: Scalars['ID']['output'];
+  description?: Maybe<Scalars['String']['output']>;
 };
 
 export type DeprecatedProduct = {
   __typename?: 'DeprecatedProduct';
   createdBy?: Maybe<User>;
-  package: Scalars['String'];
-  reason?: Maybe<Scalars['String']>;
-  sku: Scalars['String'];
+  package: Scalars['String']['output'];
+  reason?: Maybe<Scalars['String']['output']>;
+  sku: Scalars['String']['output'];
 };
 
 export type Inventory = {
   __typename?: 'Inventory';
   deprecatedProducts: Array<DeprecatedProduct>;
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type Product = {
   __typename?: 'Product';
   createdBy?: Maybe<User>;
   dimensions?: Maybe<ProductDimension>;
-  id: Scalars['ID'];
-  notes?: Maybe<Scalars['String']>;
-  package?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  package?: Maybe<Scalars['String']['output']>;
   research: Array<ProductResearch>;
-  sku?: Maybe<Scalars['String']>;
+  sku?: Maybe<Scalars['String']['output']>;
   variation?: Maybe<ProductVariation>;
 };
 
 export type ProductDimension = {
   __typename?: 'ProductDimension';
-  size?: Maybe<Scalars['String']>;
-  unit?: Maybe<Scalars['String']>;
-  weight?: Maybe<Scalars['Float']>;
+  size?: Maybe<Scalars['String']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+  weight?: Maybe<Scalars['Float']['output']>;
 };
 
 export type ProductResearch = {
   __typename?: 'ProductResearch';
-  outcome?: Maybe<Scalars['String']>;
+  outcome?: Maybe<Scalars['String']['output']>;
   study: CaseStudy;
 };
 
 export type ProductVariation = {
   __typename?: 'ProductVariation';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type Query = {
@@ -74,22 +76,22 @@ export type Query = {
 
 
 export type QueryDeprecatedProductArgs = {
-  package: Scalars['String'];
-  sku: Scalars['String'];
+  package: Scalars['String']['input'];
+  sku: Scalars['String']['input'];
 };
 
 
 export type QueryProductArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type User = {
   __typename?: 'User';
-  averageProductsCreatedPerYear?: Maybe<Scalars['Int']>;
-  email: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  totalProductsCreated?: Maybe<Scalars['Int']>;
-  yearsOfEmployment: Scalars['Int'];
+  averageProductsCreatedPerYear?: Maybe<Scalars['Int']['output']>;
+  email: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  totalProductsCreated?: Maybe<Scalars['Int']['output']>;
+  yearsOfEmployment: Scalars['Int']['output'];
 };
 
 
@@ -170,40 +172,42 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   CaseStudy: ResolverTypeWrapper<CaseStudy>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   DeprecatedProduct: ResolverTypeWrapper<DeprecatedProduct>;
   Inventory: ResolverTypeWrapper<Inventory>;
   Product: ResolverTypeWrapper<Product>;
   ProductDimension: ResolverTypeWrapper<ProductDimension>;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ProductResearch: ResolverTypeWrapper<ProductResearch>;
   ProductVariation: ResolverTypeWrapper<ProductVariation>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   CaseStudy: CaseStudy;
-  ID: Scalars['ID'];
-  String: Scalars['String'];
+  ID: Scalars['ID']['output'];
+  String: Scalars['String']['output'];
   DeprecatedProduct: DeprecatedProduct;
   Inventory: Inventory;
   Product: Product;
   ProductDimension: ProductDimension;
-  Float: Scalars['Float'];
+  Float: Scalars['Float']['output'];
   ProductResearch: ProductResearch;
   ProductVariation: ProductVariation;
   Query: {};
   User: User;
-  Int: Scalars['Int'];
-  Boolean: Scalars['Boolean'];
+  Int: Scalars['Int']['output'];
+  Boolean: Scalars['Boolean']['output'];
 };
 
 export type CustomDirectiveArgs = { };
