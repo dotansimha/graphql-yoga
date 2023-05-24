@@ -364,11 +364,11 @@ import { GraphQLServer, PubSub } from 'graphql-yoga'
 const pubSub = new PubSub()
 
 const server = new GraphQLServer({
-context: { pubSub },
-typeDefs: /_ GraphQL _/ `
-type Query {
-\_: Boolean
-}
+  context: { pubSub },
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: Boolean
+    }
 
     type Subscription {
       randomNumber: Int!
@@ -377,28 +377,26 @@ type Query {
     type Mutation {
       publishRandomNumber(randomNumber: Int!): Boolean
     }
-
-`,
-resolvers: {
-Subscription: {
-randomNumber: {
-subscribe(_, \_2, context) {
-return context.asyncIterator('randomNumber')
-},
-resolve: (value) => value
-}
-},
-Mutation: {
-publishRandomNumber(_, args, context) {
-context.pubSub.publish('randomNumber', args.randomNumber)
-}
-}
-}
+  `,
+  resolvers: {
+    Subscription: {
+      randomNumber: {
+        subscribe(_, _2, context) {
+          return context.asyncIterator('randomNumber')
+        },
+        resolve: (value) => value
+      }
+    },
+    Mutation: {
+      publishRandomNumber(_, args, context) {
+        context.pubSub.publish('randomNumber', args.randomNumber)
+      }
+    }
+  }
 })
 server.start()
 ```
   </Tab>
-
   <Tab>
 ```ts
 import { createPubSub, createServer } from '@graphql-yoga/node'
@@ -440,7 +438,6 @@ const server = createServer({
 })
 server.start()
 ```
-
   </Tab>
 </Tabs>
 
@@ -491,9 +488,7 @@ context.pubSub.publish('randomNumber', args.randomNumber)
 })
 server.start()
 ```
-
   </Tab>
-
   <Tab>
 ```ts
 import { createPubSub, createServer, pipe, filter } from '@graphql-yoga/node'
