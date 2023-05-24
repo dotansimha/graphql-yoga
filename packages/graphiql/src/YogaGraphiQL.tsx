@@ -111,6 +111,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const fetcher: Fetcher = useMemo(() => {
     const executor = urlLoader.getExecutorAsync(endpoint, {
       subscriptionsProtocol: SubscriptionProtocol.GRAPHQL_SSE,
+      subscriptionsEndpoint: props.endpoint ?? location.pathname, // necessary because graphql-sse in graphql-tools url-loader defaults to endpoint+'/stream'
       credentials: 'same-origin',
       specifiedByUrl: true,
       directiveIsRepeatable: true,
