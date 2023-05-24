@@ -19,7 +19,7 @@ export const getStaticProps: GetStaticProps<
     __nextra_dynamic_opts: string
   },
   { slug?: string[] }
-> = async ({ params: { slug = ['index'] } }) => {
+> = async ({ params: { slug = ['index'] } = {} }) => {
   const path = slug.join('/')
   const foundPath = filePaths.find((filePath) => filePath.startsWith(path))
 
