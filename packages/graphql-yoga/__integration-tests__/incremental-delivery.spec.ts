@@ -341,9 +341,6 @@ describe('incremental delivery: node-fetch', () => {
 
   it('should get subscription', async () => {
     let counter = 0
-    setTimeout(() => {
-      push?.(counter)
-    }, 500)
     const response = await fetch(`${url}?query=subscription{counter}`, {
       headers: {
         Accept: 'text/event-stream',
@@ -358,7 +355,7 @@ describe('incremental delivery: node-fetch', () => {
       "
     `)
     counter++
-    push?.(counter)
+    push!(counter)
 
     chunk = await reader.read()
     expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
@@ -368,7 +365,7 @@ describe('incremental delivery: node-fetch', () => {
       "
     `)
     counter++
-    push?.(counter)
+    push!(counter)
 
     chunk = await reader.read()
     expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
@@ -378,7 +375,7 @@ describe('incremental delivery: node-fetch', () => {
       "
     `)
     counter++
-    stop?.()
+    stop!()
 
     chunk = await reader.read()
     expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
