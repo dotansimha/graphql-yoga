@@ -26,8 +26,7 @@ import { typeDefs, resolvers } from './schema'
 const server = new GraphQLServer({ typeDefs, resolvers })
 
 server.start()
-
-````
+```
   </Tab>
   <Tab>
 ```ts
@@ -39,8 +38,7 @@ const server = createServer({
 })
 
 server.start()
-````
-
+```
   </Tab>
 </Tabs>
 
@@ -62,7 +60,6 @@ const server = new GraphQLServer({
 
 server.start()
 ```
-
   </Tab>
   <Tab>
 In Yoga v2 you now need to use the `fs` module for Node.js.
@@ -85,7 +82,6 @@ const server = createServer({
 
 server.start()
 ```
-
   </Tab>
 </Tabs>
 
@@ -115,9 +111,7 @@ server.start()
 ```
 
 Before deciding upon using schema directives, you should consider whether your custom directive could be instead implemented via a field argument (abstraction).
-
   </Tab>
-
   <Tab>
 In Yoga v2 you have to leverage the `mapSchema` API from graphql-tools.
 
@@ -163,7 +157,6 @@ const server = createServer({ schema })
 ```
 
 You can learn more about this practice within the [`graphql-tools` schema directives documentation](https://graphql-tools.com/docs/schema-directives#using-schema-directives).
-
   </Tab>
 </Tabs>
 
@@ -187,19 +180,17 @@ import { typeDefs, resolvers } from './schema'
 import { db } from './db'
 
 const server = new GraphQLServer({
-typeDefs,
-resolvers,
-context(initialContext) {
-const authHeader = initialContext.request.headers['authorization'] ?? null
-return { ...initialContext, db, authHeader }
-}
+  typeDefs,
+  resolvers,
+  context(initialContext) {
+    const authHeader = initialContext.request.headers['authorization'] ?? null
+    return { ...initialContext, db, authHeader }
+  }
 })
 
 server.start()
-
-````
+```
   </Tab>
-
   <Tab>
 ```ts
 import { createServer } from '@graphql-yoga/node'
@@ -219,8 +210,7 @@ const server = new GraphQLServer({
 })
 
 server.start()
-````
-
+```
   </Tab>
 </Tabs>
 
@@ -244,32 +234,32 @@ import { typeDefs, resolvers } from './schema'
 const code = 'supersecret'
 
 async function isLoggedIn(resolve, parent, args, ctx, info) {
-// Include your agent code as Authorization: <token> header.
-const permit = ctx.request.get('Authorization') === code
+  // Include your agent code as Authorization: <token> header.
+  const permit = ctx.request.get('Authorization') === code
 
-if (!permit) {
-throw new Error(`Not authorised!`)
-}
+  if (!permit) {
+    throw new Error(`Not authorised!`)
+  }
 
-return resolve()
+  return resolve()
 }
 
 const permissions = {
-Query: {
-secured: isLoggedIn,
-},
-Me: isLoggedIn
+  Query: {
+    secured: isLoggedIn
+  },
+  Me: isLoggedIn
 }
 
 const server = new GraphQLServer({
-typeDefs,
-resolvers,
-middleware: [permissions]
+  typeDefs,
+  resolvers,
+  middleware: [permissions]
 })
 
 server.start()
+```
 
-````
   </Tab>
 
   <Tab>
@@ -306,8 +296,7 @@ const server = createServer({
 })
 
 server.start()
-````
-
+```
   </Tab>
 </Tabs>
 
@@ -354,7 +343,6 @@ import { PubSub } from 'graphql-yoga'
 const pubSub = new PubSub()
 ```
   </Tab>
-
   <Tab>
 ```ts
 import { createPubSub } from '@graphql-yoga/node'
@@ -376,11 +364,11 @@ import { GraphQLServer, PubSub } from 'graphql-yoga'
 const pubSub = new PubSub()
 
 const server = new GraphQLServer({
-context: { pubSub },
-typeDefs: /_ GraphQL _/ `
-type Query {
-\_: Boolean
-}
+  context: { pubSub },
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: Boolean
+    }
 
     type Subscription {
       randomNumber: Int!
@@ -389,29 +377,26 @@ type Query {
     type Mutation {
       publishRandomNumber(randomNumber: Int!): Boolean
     }
-
-`,
-resolvers: {
-Subscription: {
-randomNumber: {
-subscribe(_, \_2, context) {
-return context.asyncIterator('randomNumber')
-},
-resolve: (value) => value
-}
-},
-Mutation: {
-publishRandomNumber(_, args, context) {
-context.pubSub.publish('randomNumber', args.randomNumber)
-}
-}
-}
+  `,
+  resolvers: {
+    Subscription: {
+      randomNumber: {
+        subscribe(_, _2, context) {
+          return context.asyncIterator('randomNumber')
+        },
+        resolve: (value) => value
+      }
+    },
+    Mutation: {
+      publishRandomNumber(_, args, context) {
+        context.pubSub.publish('randomNumber', args.randomNumber)
+      }
+    }
+  }
 })
 server.start()
-
-````
+```
   </Tab>
-
   <Tab>
 ```ts
 import { createPubSub, createServer } from '@graphql-yoga/node'
@@ -452,8 +437,7 @@ const server = createServer({
   }
 })
 server.start()
-````
-
+```
   </Tab>
 </Tabs>
 
@@ -470,11 +454,11 @@ import { GraphQLServer, PubSub, withFilter } from 'graphql-yoga'
 const pubSub = new PubSub()
 
 const server = new GraphQLServer({
-context: { pubSub },
-typeDefs: /_ GraphQL _/ `
-type Query {
-\_: Boolean
-}
+  context: { pubSub },
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: Boolean
+    }
 
     type Subscription {
       randomNumber(greaterThan: Int!): Int!
@@ -483,30 +467,27 @@ type Query {
     type Mutation {
       publishRandomNumber(randomNumber: Int!): Boolean
     }
-
-`,
-resolvers: {
-Subscription: {
-randomNumber: {
-subscribe: withFilter(
-(_, \_2, context) => context.asyncIterator('randomNumber'),
-(payload, args) => payload > args,
-),
-resolve: (value) => value
-}
-},
-Mutation: {
-publishRandomNumber(_, args, context) {
-context.pubSub.publish('randomNumber', args.randomNumber)
-}
-}
-}
+  `,
+  resolvers: {
+    Subscription: {
+      randomNumber: {
+        subscribe: withFilter(
+          (_, _2, context) => context.asyncIterator('randomNumber'),
+          (payload, args) => payload > args
+        ),
+        resolve: (value) => value
+      }
+    },
+    Mutation: {
+      publishRandomNumber(_, args, context) {
+        context.pubSub.publish('randomNumber', args.randomNumber)
+      }
+    }
+  }
 })
 server.start()
-
-````
+```
   </Tab>
-
   <Tab>
 ```ts
 import { createPubSub, createServer, pipe, filter } from '@graphql-yoga/node'
@@ -549,7 +530,6 @@ const server = createServer({
 })
 
 server.start()
-````
-
+```
   </Tab>
 </Tabs>
