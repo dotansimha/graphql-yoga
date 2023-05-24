@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { buildDynamicMDX, buildDynamicMeta } from 'nextra/remote'
 import { defaultRemarkPlugins } from '@theguild/components/next.config'
 import json from '../../remote-files/v2.json' assert { type: 'json' }
+import { remarkLinkRewrite } from 'nextra/mdx-plugins'
 
 const { user, repo, branch, docsPath, filePaths } = json
 
@@ -12,10 +13,13 @@ export const getStaticPaths: GetStaticPaths = async () => ({
   })),
 })
 
-export const getStaticProps: GetStaticProps = async ({
-  // @ts-expect-error TODO: fix type error
-  params: { slug = ['index'] },
-}) => {
+export const getStaticProps: GetStaticProps<
+  {
+    __nextra_dynamic_mdx: string
+    __nextra_dynamic_opts: string
+  },
+  { slug?: string[] }
+> = async ({ params: { slug = ['index'] } }) => {
   const path = slug.join('/')
   const foundPath = filePaths.find((filePath) => filePath.startsWith(path))
 
@@ -25,13 +29,11 @@ export const getStaticProps: GetStaticProps = async ({
 
   const mdx = await buildDynamicMDX(data, {
     defaultShowCopyCode: true,
-    // TODO: fix links
-    remarkLinkRewriteOptions: {
-      pattern: /^\/docs(\/.*)?$/,
-      replace: '/v2$1',
-    },
     mdxOptions: {
-      remarkPlugins: defaultRemarkPlugins,
+      remarkPlugins: [
+        ...defaultRemarkPlugins,
+        [remarkLinkRewrite, { pattern: /^\/docs(\/.*)?$/, replace: '/v2$1' }],
+      ],
     },
   })
 

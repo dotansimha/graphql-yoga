@@ -6,21 +6,8 @@ import {
   Tabs,
   mdxComponents
 } from '@theguild/components'
-import Link from 'next/link'
 
 export { getStaticPaths, getStaticProps } from '../../lib/v2-get-static-props'
-
-export const LatestVersionNotice = () => (
-  <Callout>
-    This is the documentation for the <b>old</b> GraphQL Yoga version 2. We
-    recommend upgrading to the latest GraphQL Yoga version 3.
-    <br />
-    <br />
-    <Link href="/docs/migration/migration-from-yoga-v2">
-      <b>Get started with GraphQL Yoga v3</b>
-    </Link>
-  </Callout>
-)
 
 <RemoteContent
   components={{
@@ -28,7 +15,6 @@ export const LatestVersionNotice = () => (
     Callout,
     PackageCmd,
     Tab,
-    Tabs,
-    LatestVersionNotice
+    Tabs
   }}
 />
