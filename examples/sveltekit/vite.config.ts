@@ -3,7 +3,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 const config: UserConfig = {
 	plugins: [sveltekit()],
-	resolve :{
+	resolve: {
 		alias: {
 			tslib: 'tslib/tslib.es6.js'
 		}

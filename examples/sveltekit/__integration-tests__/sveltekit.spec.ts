@@ -43,7 +43,7 @@ const tslibAdd = `
 		__classPrivateFieldSet: __classPrivateFieldSet,
 		__classPrivateFieldIn: __classPrivateFieldIn
 	}
-`
+`;
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
@@ -57,7 +57,10 @@ describe('SvelteKit integration', () => {
 		const tslibPackageJson = await fsPromises.readFile(tslibPackageJsonPath, 'utf8');
 		const tslibPackageJsonParsed = JSON.parse(tslibPackageJson);
 		tslibPackageJsonParsed.type = 'module';
-		await fsPromises.writeFile(tslibPackageJsonPath, JSON.stringify(tslibPackageJsonParsed, null, 2));
+		await fsPromises.writeFile(
+			tslibPackageJsonPath,
+			JSON.stringify(tslibPackageJsonParsed, null, 2)
+		);
 		const nodeVersion = execSync('node -v').toString();
 		if (nodeVersion.includes('v12')) {
 			toSkip = true;
@@ -127,7 +130,7 @@ describe('SvelteKit integration', () => {
 
 			const bodyContent = await body?.text();
 			// B/ Check that GraphiQL is showing
-			expect(bodyContent).toContain(`Yoga GraphiQL`)
+			expect(bodyContent).toContain(`Yoga GraphiQL`);
 
 			// C/ Tigger the default request and wait for the response
 			const [res] = await Promise.all([
