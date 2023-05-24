@@ -1,0 +1,24 @@
+import { PackageCmd } from '@theguild/components'
+
+# Migration from Yoga V3
+
+## Install the new NPM package
+
+<PackageCmd packages={['graphql-yoga']} />
+
+## Drop unused graphiql options `defaultVariableEditorOpen` and `headerEditorEnabled`
+
+These two graphiql options were not used and are now removed completely.
+
+```diff
+import { createYoga } from 'graphql-yoga'
+import { schema } from './schema'
+
+const yoga = createYoga({
+  schema,
+  graphiql: {
+-    defaultVariableEditorOpen: false,
+-    headerEditorEnabled: false
+  }
+})
+```
