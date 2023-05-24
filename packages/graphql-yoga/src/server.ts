@@ -7,7 +7,6 @@ import {
   useExtendContext,
   useMaskedErrors,
 } from '@envelop/core'
-import { useValidationCache, ValidationCache } from '@envelop/validation-cache'
 import { normalizedExecutor } from '@graphql-tools/executor'
 import * as defaultFetchAPI from '@whatwg-node/fetch'
 import {
@@ -155,8 +154,10 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
       >
     | undefined
 
-  parserCache?: boolean | ParserAndValidationCacheOptions | undefined
-  validationCache?: boolean | ValidationCache | undefined
+  parserAndValidationCache?:
+    | boolean
+    | ParserAndValidationCacheOptions
+    | undefined
   fetchAPI?: Partial<Record<keyof FetchAPI, any>> | undefined
   /**
    * GraphQL Multipart Request spec support
@@ -370,35 +371,15 @@ export class YogaServer<
       // To make sure those are called at the end
       {
         onPluginInit({ addPlugin }) {
-          // Performance things
-          if (options?.parserCache !== false) {
-            const parserAndValidationCacheOptions: ParserAndValidationCacheOptions =
-              {}
-
-            if (typeof options?.parserCache === 'object') {
-              parserAndValidationCacheOptions.documentCache =
-                options.parserCache.documentCache
-              parserAndValidationCacheOptions.errorCache =
-                options.parserCache.errorCache
-            }
-
-            if (options?.validationCache === false) {
-              parserAndValidationCacheOptions.validationCache = false
-            } else if (typeof options?.validationCache === 'object') {
-              // TODO: Remove this in the next major version
-              // Backward compatibility for the old API
-              parserAndValidationCacheOptions.validationCache = false
-              addPlugin(
-                // @ts-expect-error Add plugins has context but this hook doesn't care
-                useValidationCache({
-                  cache: options.validationCache,
-                }),
-              )
-            }
-
+          if (options?.parserAndValidationCache !== false) {
             addPlugin(
               // @ts-expect-error Add plugins has context but this hook doesn't care
-              useParserAndValidationCache(parserAndValidationCacheOptions),
+              useParserAndValidationCache(
+                !options?.parserAndValidationCache ||
+                  options?.parserAndValidationCache === true
+                  ? {}
+                  : options?.parserAndValidationCache,
+              ),
             )
           }
           // @ts-expect-error Add plugins has context but this hook doesn't care

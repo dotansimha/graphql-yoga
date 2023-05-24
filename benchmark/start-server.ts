@@ -98,8 +98,7 @@ const yogaMap: Record<string, YogaServerInstance<{}, {}>> = {
     schema,
     logging: false,
     multipart: false,
-    validationCache: false,
-    parserCache: false,
+    parserAndValidationCache: false,
     graphqlEndpoint: '/graphql-no-parse-validate-cache',
   }),
   '/ping': (_req: IncomingMessage, res: ServerResponse<IncomingMessage>) => {

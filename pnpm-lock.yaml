@@ -1512,9 +1512,6 @@ importers:
       '@envelop/core':
         specifier: 3.0.4
         version: 3.0.4
-      '@envelop/validation-cache':
-        specifier: ^5.1.2
-        version: 5.1.2(@envelop/core@3.0.4)(graphql@16.6.0)
       '@graphql-tools/executor':
         specifier: ^0.0.20
         version: 0.0.20(graphql@16.6.0)
@@ -6285,20 +6282,6 @@ packages:
     resolution: {integrity: sha512-Ok62K1K+rlS+wQw77k8Pis8+1/h7+/9Wk5Fgcc2U6M5haEWsLFAHcHsk8rYlnJdEUl2Y3yJcCSOYbt1dyTaU5w==}
     dependencies:
       tslib: 2.5.2
-
-  /@envelop/validation-cache@5.1.2(@envelop/core@3.0.4)(graphql@16.6.0):
-    resolution: {integrity: sha512-APofOvjaHrF+IW71VCXdyG+EbA6EQJXdunUe1EECU9vZzGKYUuQXfVeCOD6IYNF44KKSQArTfU8RhnUlW6VyOQ==}
-    peerDependencies:
-      '@envelop/core': ^3.0.6
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@envelop/core': 3.0.4
-      fast-json-stable-stringify: 2.1.0
-      graphql: 16.6.0
-      lru-cache: 6.0.0
-      sha1-es: 1.8.2
-      tslib: 2.5.2
-    dev: false
 
   /@esbuild-plugins/node-globals-polyfill@0.1.1(esbuild@0.16.3):
     resolution: {integrity: sha512-MR0oAA+mlnJWrt1RQVQ+4VYuRJW/P2YmRTv1AsplObyvuBMnPHiizUF95HHYiSsMGLhyGtWufaq2XQg6+iurBg==}
@@ -29509,10 +29492,6 @@ packages:
     dependencies:
       inherits: 2.0.4
       safe-buffer: 5.2.1
-
-  /sha1-es@1.8.2:
-    resolution: {integrity: sha512-7gzO0Y7RBt1Qsq8D1fC+So6zsnkwRcZas8sGO9Xp4bOkDhG5s4fzSP0i9yUs6aVzSH7+urqqh6uk0z+dMDeF9A==}
-    dev: false
 
   /shebang-command@1.2.0:
     resolution: {integrity: sha512-EV3L1+UQWGor21OmnvojK36mhg+TyIKDh3iFBKBohr5xeXIhNBcx8oWdgkTEEQ+BEFFYdLRuqMfd5L84N1V5Vg==}
