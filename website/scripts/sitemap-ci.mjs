@@ -1,9 +1,9 @@
 import { XMLParser } from 'fast-xml-parser'
-import { fileURLToPath } from 'url'
-import { dirname } from 'path'
-import * as fs from 'fs'
-import * as path from 'path'
-import config from '../next.config.mjs'
+import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import config from '../next.config.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
