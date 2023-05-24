@@ -5,7 +5,7 @@ import {
   isMatchingMediaType,
 } from './resultProcessor/accept.js'
 import { processMultipartResult } from './resultProcessor/multipart.js'
-import { getSSEProcessor, SSEProcessorOptions } from './resultProcessor/sse.js'
+import { getSSEProcessor } from './resultProcessor/sse.js'
 import { processRegularResult } from './resultProcessor/regular.js'
 import { Plugin, ResultProcessor } from './types.js'
 
@@ -21,13 +21,11 @@ const multipart: ResultProcessorConfig = {
   processResult: processMultipartResult,
 }
 
-function getSSEProcessorConfig(
-  opts: SSEProcessorOptions,
-): ResultProcessorConfig {
+function getSSEProcessorConfig(): ResultProcessorConfig {
   return {
     mediaTypes: ['text/event-stream'],
     asyncIterables: true,
-    processResult: getSSEProcessor(opts),
+    processResult: getSSEProcessor(),
   }
 }
 
@@ -37,10 +35,10 @@ const regular: ResultProcessorConfig = {
   processResult: processRegularResult,
 }
 
-export function useResultProcessors(opts: SSEProcessorOptions): Plugin {
+export function useResultProcessors(): Plugin {
   const isSubscriptionRequestMap = new WeakMap<Request, boolean>()
 
-  const sse = getSSEProcessorConfig(opts)
+  const sse = getSSEProcessorConfig()
   const defaultList = [sse, multipart, regular]
   const subscriptionList = [multipart, sse, regular]
 
