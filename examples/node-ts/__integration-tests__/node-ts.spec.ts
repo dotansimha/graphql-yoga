@@ -22,7 +22,8 @@ describe('node-ts example integration', () => {
 
     expect(response.status).toBe(400)
     expect(await response.text()).toMatchInlineSnapshot(`
-      "data: {"errors":[{"message":"Subscriptions have been disabled"}]}
+      "event: next
+      data: {"errors":[{"message":"Subscriptions have been disabled"}]}
 
       event: complete
 

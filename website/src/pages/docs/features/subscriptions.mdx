@@ -10,8 +10,7 @@ A GraphQL subscription initiates an event stream, where each event in the stream
 
 Example use cases for subscriptions are applications that require real-time data such as chat applications or stock trading platforms.
 
-GraphQL Yoga uses [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) for the subscription protocol.
-You don't need any extra packages to use subscriptions.
+GraphQL Yoga uses [GraphQL over Server-Sent Events spec "distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) for subscriptions. You're recommended to use [`graphql-sse`](https://the-guild.dev/graphql/sse) on the client.
 
 <Callout>
   Compared to implementing query and mutation resolvers, subscriptions are more
@@ -20,7 +19,7 @@ You don't need any extra packages to use subscriptions.
   event streams must be distributed across all servers.
 </Callout>
 
-## Quick Start with simple Server-Sent Events (SSE)
+## Quick Start with Server-Sent Events (SSE)
 
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
@@ -79,18 +78,27 @@ Alternatively, you can also send the subscription operation via curl.
 
 ```bash
 $ curl -N -H "accept:text/event-stream" http://localhost:4000/graphql?query=subscription%20%7B%0A%20%20countdown%28from%3A%205%29%0A%7D
+event: next
 data: {"data":{"countdown":5}}
 
+event: next
 data: {"data":{"countdown":4}}
 
+event: next
 data: {"data":{"countdown":3}}
 
+event: next
 data: {"data":{"countdown":2}}
 
+event: next
 data: {"data":{"countdown":1}}
 
+event: next
 data: {"data":{"countdown":0}}
 ```
+
+{/* prettier-ignore */}
+{/* TODO: use graphql-sse instead
 
 <Callout>
   Watch [Episode #52 of
@@ -102,317 +110,25 @@ data: {"data":{"countdown":0}}
 <iframe
   src="https://youtube.com/embed/oZtTut7QsZ8"
   title="GraphQL Subscriptions with Server Sent Events"
-/>
+/> */}
 
 ## Handling Subscriptions on the Client
 
-WHATWG standard [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) can be used without any extra packages to handle SSE.
-
-```ts filename="eventsource.ts"
-const url = new URL('http://localhost:4000/graphql')
-
-url.searchParams.append(
-  'query',
-  /* GraphQL */ `
-    subscription Countdown($from: Int!) {
-      countdown(from: $from)
-    }
-  `
-)
-url.searchParams.append('variables', JSON.stringify({ from: 10 }))
-
-const eventsource = new EventSource(url.toString(), {
-  withCredentials: true // This is required for cookies
-})
-
-eventsource.onmessage = function (event) {
-  const data = JSON.parse(event.data)
-  console.log(data) // This will result something like `{ "data": { "countdown": 0 } }`
-}
-
-eventsource.addEventListener('complete', () => {
-  eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
-})
-```
-
-### Client Usage with Apollo
-
-You can either decide to use the pre-built Yoga Apollo Link, or build your own from scratch.
-The Yoga Apollo Link requires you to install an additional package, while the custom link requires you to write more code.
-However, by writing the link yourself you get full control over the link and can customize it to your needs.
-
-<Tabs items={['Yoga Apollo Link', 'Custom Link Recipe']}>
-
-<Tab>
-
-Install the `@graphql-yoga/apollo-link` package.
-
-<PackageCmd packages={['@graphql-yoga/apollo-link']} />
-
-You can use `YogaLink` from `@graphql-yoga/apollo-link` package to use subscriptions together with file uploads and defer/stream in Apollo Client.
-
-```ts filename="YogaLink apollo client usage"
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
-import { YogaLink } from '@graphql-yoga/apollo-link'
-
-const client = new ApolloClient({
-  link: new YogaLink({
-    endpoint: 'http://localhost:4000/graphql'
-  }),
-  cache: new InMemoryCache()
-})
-```
-
-</Tab>
-
-<Tab>
-You can create an `SSELink` to use with Apollo Client.
-To send non Subscription operations via the default HTTP protocol, the `split` function from the Apollo Link package is used.
-[For more information please refer to the Apollo Link documentation](https://apollographql.com/docs/react/api/link/introduction).
-
-```ts filename="SSELink apollo client usage"
-import {
-  ApolloLink,
-  Operation,
-  FetchResult,
-  Observable,
-  ApolloClient,
-  InMemoryCache
-} from '@apollo/client/core'
-import { split } from '@apollo/client/link/core'
-import { HttpLink } from '@apollo/client/link/http'
-import { print, getOperationAST } from 'graphql'
-
-type SSELinkOptions = EventSourceInit & { uri: string }
-
-class SSELink extends ApolloLink {
-  constructor(private options: SSELinkOptions) {
-    super()
-  }
-
-  request(operation: Operation): Observable<FetchResult> {
-    const url = new URL(this.options.uri)
-    url.searchParams.append('query', print(operation.query))
-    if (operation.operationName) {
-      url.searchParams.append('operationName', operation.operationName)
-    }
-    if (operation.variables) {
-      url.searchParams.append('variables', JSON.stringify(operation.variables))
-    }
-    if (operation.extensions) {
-      url.searchParams.append(
-        'extensions',
-        JSON.stringify(operation.extensions)
-      )
-    }
-
-    return new Observable((sink) => {
-      const eventsource = new EventSource(url.toString(), this.options)
-      eventsource.onmessage = function (event) {
-        const data = JSON.parse(event.data)
-        sink.next(data)
-        if (eventsource.readyState === 2) {
-          sink.complete()
-        }
-      }
-      eventsource.onerror = function (error) {
-        sink.error(error)
-      }
-      eventsource.addEventListener('complete', () => {
-        eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
-      })
-      return () => eventsource.close()
-    })
-  }
-}
-
-const uri = 'http://localhost:4000/graphql'
-const sseLink = new SSELink({ uri })
-const httpLink = new HttpLink({ uri })
-
-const link = split(
-  ({ query, operationName }) => {
-    const definition = getOperationAST(query, operationName)
-
-    return (
-      definition?.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    )
-  },
-  sseLink,
-  httpLink
-)
-
-const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache()
-})
-```
-
-</Tab>
-
-</Tabs>
-
-### Client Usage with urql
-
-You can either decide to use the pre-built Yoga Urql Exchange, or build your own from scratch.
-The Yoga Urql Exchange requires you to install an additional package, while the custom link requires you to write more code.
-However, by writing the link yourself you get full control over the link and can customize it to your needs.
-
-<Tabs items={['Yoga Urql Exchange', 'Custom Exchange Recipe']}>
-
-<Tab>
-
-You need to install `@urql/exchange-graphql` for GraphQL Yoga, and use `yogaExchange` from that package.
-
-<PackageCmd packages={['@graphql-yoga/urql-exchange']} />
-
-```ts
-import { createClient, defaultExchanges } from 'urql'
-import { yogaExchange } from '@graphql-yoga/urql-exchange'
-
-const client = createClient({
-  url: 'http://localhost:4000/graphql',
-  exchanges: [...defaultExchanges, yogaExchange()]
-})
-```
-
-</Tab>
-
-<Tab>
-
-```ts
-import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
-
-const client = createClient({
-  url: 'http://localhost:4000/graphql',
-  exchanges: [
-    ...defaultExchanges,
-    subscriptionExchange({
-      forwardSubscription(operation) {
-        const url = new URL('http://localhost:4000/graphql')
-        url.searchParams.append('query', operation.query)
-        if (operation.variables) {
-          url.searchParams.append(
-            'variables',
-            JSON.stringify(operation.variables)
-          )
-        }
-        return {
-          subscribe(sink) {
-            const eventsource = new EventSource(url.toString(), {
-              withCredentials: true // This is required for cookies
-            })
-            eventsource.onmessage = (event) => {
-              const data = JSON.parse(event.data)
-              sink.next(data)
-              if (eventsource.readyState === 2) {
-                sink.complete()
-              }
-            }
-            eventsource.onerror = (error) => {
-              sink.error(error)
-            }
-            eventsource.addEventListener('complete', () => {
-              eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
-            })
-            return {
-              unsubscribe: () => eventsource.close()
-            }
-          }
-        }
-      }
-    })
-  ]
-})
-```
-
-</Tab>
-
-</Tabs>
-
-### Client usage with Relay
-
-```ts filename="Relay Subscription client."
-import {
-  type RequestParameters,
-  type GraphQLResponse,
-  Observable,
-  Network
-} from 'relay-runtime'
-import type { Variables } from 'react-relay'
-import { executeQueryOrMutation } from './execute-query-or-mutation.js'
-
-const executeSubscription = (
-  request: RequestParameters,
-  variables: Variables
-): Observable<GraphQLResponse> => {
-  if (!request.text) throw new Error('Missing document.')
-  const { text: operation, name } = request
-
-  const url = new URL('http://localhost:4000/graphql')
-  url.searchParams.append('query', operation)
-  if (name) {
-    url.searchParams.append('operationName', name)
-  }
-  if (variables) {
-    url.searchParams.append('variables', JSON.stringify(variables))
-  }
-
-  return Observable.create<GraphQLResponse>((sink) => {
-    const source = new EventSource(url.toString())
-    source.onmessage = function (event) {
-      const data = JSON.parse(event.data)
-      sink.next(data)
-      if (source.readyState === 2) {
-        sink.complete()
-      }
-    }
-    source.onerror = function (ev) {
-      console.error(ev)
-      sink.error(new Error('Unexpected error.'))
-    }
-    eventsource.addEventListener('complete', () => {
-      eventsource.close() // If operation ends, close the connection and prevent the client from reconnecting
-    })
-    return () => source.close()
-  })
-}
-
-const network = Network.create(executeQueryOrMutation, executeSubscription)
-```
+The [`graphql-sse` library](https://the-guild.dev/graphql/sse) should be used for GraphQL Yoga subscriptions. Please advise the [`graphql-sse` recipes](https://the-guild.dev/graphql/sse/recipes) for various examples of client integrations (including Apollo, Relay and Urql).
 
 ## GraphQL over Server-Sent Events Protocol (via `graphql-sse`)
 
 There are two different modes in [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md). You can see the differences in the [protocol specification](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md).
 
-### Distinct Connection Mode
+### Distinct Connections Mode
 
-GraphQL Yoga supports [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) only in distinct connection mode with an `legacySse = false` flag.
-
-```ts filename="yoga.ts"
-import { createServer } from 'node:http'
-import { createYoga } from 'graphql-yoga'
-
-const yogaApp = createYoga({
-  // ...
-  legacySse: false
-})
-```
-
-<Callout>
-  When you enable this, simple SSE recipes won't work because it changes the
-  data events format. You should use refer to [`graphql-sse` client
-  recipes](https://github.com/enisdenjo/graphql-sse#recipes).
-</Callout>
+GraphQL Yoga supports [GraphQL over Server-Sent Events spec "distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) out of the box.
 
 ### Single Connection Mode
 
-In case you want the subscriptions to be transported following the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode) also in the single connection mode, you simply use the `@graphql-yoga/plugin-graphql-sse` plugin for GraphQL Yoga that exposes an additional endpoint (defaulting to `/graphql/stream`) used for [graphql-sse](https://github.com/enisdenjo/graphql-sse) clients.
+In case you want the subscriptions to be transported following the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode) also in the "single connection mode", you simply use the `@graphql-yoga/plugin-graphql-sse` plugin for GraphQL Yoga that exposes an additional endpoint (defaulting to `/graphql/stream`) used for [`graphql-sse`](https://the-guild.dev/graphql/sse) clients.
 
 The plugin will hijack the request from the `onRequest` hook and will use **all** envelop plugins provided.
-
-Also, consider setting the `subscriptionsProtocol` in GraphiQL options to `GRAPHQL_SSE` in order to have it use [graphql-sse](https://github.com/enisdenjo/graphql-sse).
 
 ```ts filename="yoga-with-graphql-sse.ts"
 import { createServer } from 'node:http'
@@ -420,10 +136,6 @@ import { createYoga } from 'graphql-yoga'
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
 
 const yogaApp = createYoga({
-  graphiql: {
-    // Use graphql-sse in GraphiQL.
-    subscriptionsProtocol: 'GRAPHQL_SSE'
-  },
   plugins: [
     // Simply install the graphql-sse plugin and you're off!
     useGraphQLSSE()
@@ -446,7 +158,7 @@ httpServer.listen(4000, () => {
 
 ### Client Integration
 
-Please refer to the [`graphql-sse` client recipes](https://github.com/enisdenjo/graphql-sse#recipes).
+Please refer to the [`graphql-sse` client recipes](https://the-guild.dev/graphql/sse/recipes).
 
 ## GraphQL over WebSocket Protocol (via `graphql-ws`)
 

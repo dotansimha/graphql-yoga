@@ -6,11 +6,7 @@ import { FetchAPI, MaybeArray } from '../../types.js'
 import { ResultProcessor, ResultProcessorInput } from '../types.js'
 import { jsonStringifyResultWithoutInternals } from './stringify.js'
 
-export interface SSEProcessorOptions {
-  legacySSE: boolean
-}
-
-export function getSSEProcessor(opts: SSEProcessorOptions): ResultProcessor {
+export function getSSEProcessor(): ResultProcessor {
   return function processSSEResult(
     result: ResultProcessorInput,
     fetchAPI: FetchAPI,
@@ -32,7 +28,7 @@ export function getSSEProcessor(opts: SSEProcessorOptions): ResultProcessor {
     const responseInit = getResponseInitByRespectingErrors(
       result,
       headersInit,
-      !opts.legacySSE,
+      true,
     )
 
     let iterator: AsyncIterator<MaybeArray<ExecutionResult>>
@@ -68,9 +64,7 @@ export function getSSEProcessor(opts: SSEProcessorOptions): ResultProcessor {
       async pull(controller) {
         const { done, value } = await iterator.next()
         if (value != null) {
-          if (!opts.legacySSE) {
-            controller.enqueue(textEncoder.encode(`event: next\n`))
-          }
+          controller.enqueue(textEncoder.encode(`event: next\n`))
           const chunk = jsonStringifyResultWithoutInternals(value)
           controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`))
         }

@@ -698,13 +698,13 @@ describe('browser', () => {
           | { error?: never; data: Array<string> }
         >((res) => {
           const values: Array<string> = []
-          source.onmessage = (event) => {
+          source.addEventListener('next', (event) => {
             values.push(event.data)
             if (values.length === 2) {
               res({ data: values })
               source.close()
             }
-          }
+          })
           source.onerror = (err) => {
             res({ error: String(err) })
           }

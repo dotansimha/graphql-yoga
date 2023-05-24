@@ -87,20 +87,17 @@ describe('graphql-auth example integration', () => {
         },
       },
     )
+    await expect(response.text()).resolves.toMatchInlineSnapshot(`
+      "event: next
+      data: {"data":{"requiresAuth":"hi foo@foo.com"}}
 
-    for await (const chunk of response.body!) {
-      const chunkStr = Buffer.from(chunk).toString('utf-8')
-      if (chunkStr.startsWith('data:')) {
-        expect(chunkStr.trim()).toContain(
-          'data: {"data":{"requiresAuth":"hi foo@foo.com"}}',
-        )
-        break
-      }
-    }
+      event: complete
+
+      "
+    `)
   })
 
   it('should not execute on auth required field with subscription', async () => {
-    expect.assertions(1)
     const response = await fetch(
       `http://localhost:${port}/graphql?query=subscription{requiresAuth}`,
       {
@@ -109,14 +106,13 @@ describe('graphql-auth example integration', () => {
         },
       },
     )
-    for await (const chunk of response.body!) {
-      const chunkStr = Buffer.from(chunk).toString('utf-8')
-      if (chunkStr.startsWith('data:')) {
-        expect(chunkStr.trim()).toContain(
-          'data: {"data":null,"errors":[{"message":"Accessing \'Subscription.requiresAuth\' requires authentication.","locations":[{"line":1,"column":14}]}]}',
-        )
-        break
-      }
-    }
+    await expect(response.text()).resolves.toMatchInlineSnapshot(`
+      "event: next
+      data: {"data":null,"errors":[{"message":"Accessing 'Subscription.requiresAuth' requires authentication.","locations":[{"line":1,"column":14}]}]}
+
+      event: complete
+
+      "
+    `)
   })
 })
