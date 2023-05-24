@@ -4,12 +4,33 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import * as React from 'react'
 
+const docsRepositoryBase =
+  'https://github.com/dotansimha/graphql-yoga/tree/main/website'
+
 export default defineConfig({
   chat: {
     link: 'https://discord.gg/94CDTmgmbs',
   },
-  docsRepositoryBase:
-    'https://github.com/dotansimha/graphql-yoga/tree/main/website',
+  docsRepositoryBase,
+  editLink: {
+    component({ children, className, filePath }) {
+      const { asPath } = useRouter()
+
+      if (asPath.startsWith('/v2')) {
+        return null
+      }
+      return (
+        <a
+          className={className}
+          target="_blank"
+          rel="noreferrer"
+          href={`${docsRepositoryBase}/${filePath}`}
+        >
+          {children}
+        </a>
+      )
+    },
+  },
   main({ children }) {
     const { resolvedTheme } = useTheme()
     const { route } = useRouter()

@@ -8,6 +8,7 @@ type Params = {
   repo: string
   branch: string
   docsPath: string
+  outputPath: string
 }
 
 async function fetchRemoteFilePaths({
@@ -15,6 +16,7 @@ async function fetchRemoteFilePaths({
   repo,
   branch,
   docsPath,
+  outputPath,
 }: Params): Promise<void> {
   async function fillNestedMeta(
     metaPaths: string[],
@@ -71,7 +73,7 @@ async function fetchRemoteFilePaths({
   const json = JSON.stringify(result, null, 2)
 
   await fs.writeFile(
-    path.join(process.cwd(), 'remote-files', 'v2.json'),
+    outputPath,
     prettier.format(json, { parser: 'json' }),
     'utf8',
   )
@@ -85,4 +87,5 @@ fetchRemoteFilePaths({
   // last commit with v2 source docs
   branch: '8bb0fb0a010bfca17c3e1b771a704b631952ca4c',
   docsPath: 'website/src/pages/v2/',
+  outputPath: path.join(process.cwd(), 'remote-files', 'v2.json'),
 })
