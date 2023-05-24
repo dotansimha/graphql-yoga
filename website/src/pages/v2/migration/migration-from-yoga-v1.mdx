@@ -26,8 +26,8 @@ import { typeDefs, resolvers } from './schema'
 const server = new GraphQLServer({ typeDefs, resolvers })
 
 server.start()
+```
 
-````
   </Tab>
   <Tab>
 ```ts
@@ -39,7 +39,7 @@ const server = createServer({
 })
 
 server.start()
-````
+```
 
   </Tab>
 </Tabs>
@@ -196,8 +196,8 @@ return { ...initialContext, db, authHeader }
 })
 
 server.start()
+```
 
-````
   </Tab>
 
   <Tab>
@@ -219,7 +219,7 @@ const server = new GraphQLServer({
 })
 
 server.start()
-````
+```
 
   </Tab>
 </Tabs>
@@ -268,8 +268,8 @@ middleware: [permissions]
 })
 
 server.start()
+```
 
-````
   </Tab>
 
   <Tab>
@@ -306,7 +306,7 @@ const server = createServer({
 })
 
 server.start()
-````
+```
 
   </Tab>
 </Tabs>
@@ -408,8 +408,8 @@ context.pubSub.publish('randomNumber', args.randomNumber)
 }
 })
 server.start()
+```
 
-````
   </Tab>
 
   <Tab>
@@ -452,7 +452,7 @@ const server = createServer({
   }
 })
 server.start()
-````
+```
 
   </Tab>
 </Tabs>
@@ -503,8 +503,8 @@ context.pubSub.publish('randomNumber', args.randomNumber)
 }
 })
 server.start()
+```
 
-````
   </Tab>
 
   <Tab>
@@ -549,7 +549,7 @@ const server = createServer({
 })
 
 server.start()
-````
+```
 
   </Tab>
 </Tabs>
