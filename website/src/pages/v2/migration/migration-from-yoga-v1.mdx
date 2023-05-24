@@ -454,11 +454,11 @@ import { GraphQLServer, PubSub, withFilter } from 'graphql-yoga'
 const pubSub = new PubSub()
 
 const server = new GraphQLServer({
-context: { pubSub },
-typeDefs: /_ GraphQL _/ `
-type Query {
-\_: Boolean
-}
+  context: { pubSub },
+  typeDefs: /* GraphQL */ `
+    type Query {
+      _: Boolean
+    }
 
     type Subscription {
       randomNumber(greaterThan: Int!): Int!
@@ -467,24 +467,23 @@ type Query {
     type Mutation {
       publishRandomNumber(randomNumber: Int!): Boolean
     }
-
-`,
-resolvers: {
-Subscription: {
-randomNumber: {
-subscribe: withFilter(
-(_, \_2, context) => context.asyncIterator('randomNumber'),
-(payload, args) => payload > args,
-),
-resolve: (value) => value
-}
-},
-Mutation: {
-publishRandomNumber(_, args, context) {
-context.pubSub.publish('randomNumber', args.randomNumber)
-}
-}
-}
+  `,
+  resolvers: {
+    Subscription: {
+      randomNumber: {
+        subscribe: withFilter(
+          (_, _2, context) => context.asyncIterator('randomNumber'),
+          (payload, args) => payload > args
+        ),
+        resolve: (value) => value
+      }
+    },
+    Mutation: {
+      publishRandomNumber(_, args, context) {
+        context.pubSub.publish('randomNumber', args.randomNumber)
+      }
+    }
+  }
 })
 server.start()
 ```
@@ -532,6 +531,5 @@ const server = createServer({
 
 server.start()
 ```
-
   </Tab>
 </Tabs>
