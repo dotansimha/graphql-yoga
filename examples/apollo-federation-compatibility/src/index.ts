@@ -103,7 +103,7 @@ const resolvers: Resolvers = {
     variation(parent) {
       if (parent.variation) return parent.variation
       const p = products.find((p) => p.id == parent.id)
-      return p && p.variation ? p.variation : null
+      return p?.variation || null
     },
 
     research: (reference) => {
