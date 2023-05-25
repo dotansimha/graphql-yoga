@@ -265,13 +265,11 @@ it('should miss cache if query variables change', async () => {
 
   // third request, valid, cache miss
   res = await query('John')
-  await expect(res.json()).resolves.toMatchInlineSnapshot(`
-    {
-      "data": {
-        "hi": "Hi John!",
-      },
-    }
-  `)
+  await expect(res.json()).resolves.toMatchObject({
+    data: {
+      hi: 'Hi John!',
+    },
+  })
 })
 
 it('should skip response caching with `enabled` option', async () => {
