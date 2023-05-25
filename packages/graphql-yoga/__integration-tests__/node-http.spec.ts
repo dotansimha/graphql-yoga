@@ -28,7 +28,7 @@ describe('node-http', () => {
         `,
         resolvers: {
           Query: {
-            isNode: (_, __, { req, res }) => Boolean(req) && Boolean(res),
+            isNode: (_, __, { req, res }) => !!(req && res),
             throw(_, { status }) {
               throw createGraphQLError('Test', {
                 extensions: {

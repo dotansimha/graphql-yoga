@@ -52,7 +52,7 @@ export function useDeferStream<
       addValidationRule(rule: ValidationRule): void
     }) => {
       // Just to make TS happy because rules are always defined by useEngine.
-      params.rules = params.rules || []
+      params.rules ||= []
       params.rules = params.rules.filter(
         (rule) => rule.name !== 'OverlappingFieldsCanBeMergedRule',
       )

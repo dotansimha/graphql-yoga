@@ -79,7 +79,7 @@ const DIGIT_0 = 48
 const DIGIT_9 = 57
 
 function isDigit(code: number): boolean {
-  return !isNaN(code) && DIGIT_0 <= code && code <= DIGIT_9
+  return !Number.isNaN(code) && DIGIT_0 <= code && code <= DIGIT_9
 }
 
 function sortValueNode(valueNode: ValueNode): ValueNode {

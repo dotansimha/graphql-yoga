@@ -24,11 +24,9 @@ const inventory = {
 
 @Resolver('Inventory')
 export class InventoryResolver {
-  constructor() {}
-
   @ResolveReference()
   resolveReference(reference: Inventory) {
-    if (reference.id == inventory.id) {
+    if (reference.id === inventory.id) {
       return inventory
     }
     return null

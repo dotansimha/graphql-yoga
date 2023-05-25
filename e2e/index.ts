@@ -40,10 +40,14 @@ async function main() {
     console.info(`ℹ️ Creating new temporary Pulumi environment...`)
     console.info(`\t✅ Successfully initialized stack...`)
     console.info('\tℹ️ Running prerequisites...')
-    testPlan.prerequisites && (await testPlan.prerequisites(stack))
+    if (testPlan.prerequisites) {
+      await testPlan.prerequisites(stack)
+    }
     console.info('\t✅ Done with prerequisites')
     console.info('\tℹ️ Setting up Pulumi config...')
-    testPlan.config && (await testPlan.config(stack))
+    if (testPlan.config) {
+      await testPlan.config(stack)
+    }
     console.info('\t✅ Pulumi configuration is now set')
     console.info('ℹ️ Running Pulumi program...')
     const info = await stack.info()
@@ -83,7 +87,6 @@ async function main() {
     console.info('✅ Tests execution is done!')
   } catch (e) {
     console.error(`⚠️ Failed to run test plan, error: `, e)
-
     throw e
   } finally {
     // In KEEP is set, we can test and experiment with deployment before they are being removed.

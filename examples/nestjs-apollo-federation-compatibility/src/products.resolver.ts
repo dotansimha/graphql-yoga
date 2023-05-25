@@ -39,17 +39,15 @@ const products: Product[] = [
 
 @Resolver('Product')
 export class ProductsResolver {
-  constructor() {}
-
   @Query()
   product(@Args('id') id: string) {
-    return products.find((p) => p.id == id)
+    return products.find((p) => p.id === id)
   }
 
   @ResolveField('variation')
   getVariation(@Parent() parent: Product) {
     if (parent.variation) return { id: parent.variation.id }
-    return { id: products.find((p) => p.id == parent.id)?.variation.id }
+    return { id: products.find((p) => p.id === parent.id)?.variation.id }
   }
 
   @ResolveField('dimensions')
@@ -90,16 +88,16 @@ export class ProductsResolver {
   @ResolveReference()
   resolveReference(productRef: Product) {
     if (productRef.id) {
-      return products.find((p) => p.id == productRef.id)
+      return products.find((p) => p.id === productRef.id)
     }
     if (productRef.sku && productRef.package) {
       return products.find(
-        (p) => p.sku == productRef.sku && p.package == productRef.package,
+        (p) => p.sku === productRef.sku && p.package === productRef.package,
       )
     }
     return products.find(
       (p) =>
-        p.sku == productRef.sku && p.variation.id == productRef.variation.id,
+        p.sku === productRef.sku && p.variation.id === productRef.variation.id,
     )
   }
 }

@@ -125,14 +125,12 @@ export function createTestSchema() {
         },
         error: {
           type: GraphQLBoolean,
-          // eslint-disable-next-line
           async *subscribe() {
             throw new Error('This is not okay')
           },
         },
         eventEmitted: {
           type: GraphQLFloat,
-          // eslint-disable-next-line
           async *subscribe() {
             yield { eventEmitted: Date.now() }
           },
