@@ -41,7 +41,7 @@ const yoga = createYoga({
           async *subscribe() {
             for (let i = 0; i < 5; i++) {
               yield { clock: new Date().toString() }
-              await new Promise((resolve) => setTimeout(resolve, 1_000))
+              await new Promise((resolve) => setTimeout(resolve, 1000))
             }
           },
         },

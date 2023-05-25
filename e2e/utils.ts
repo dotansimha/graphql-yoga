@@ -13,7 +13,7 @@ export async function getCommitId() {
 export async function waitForEndpoint(
   endpoint: string,
   retries: number,
-  timeout = 10000,
+  timeout = 10_000,
 ): Promise<boolean> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     console.info(

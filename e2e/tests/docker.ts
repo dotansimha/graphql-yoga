@@ -53,7 +53,7 @@ export const dockerDeployment = (
   },
   test: async ({ endpoint }) => {
     console.log(`ℹ️ Docker container deployed to URL: ${endpoint.value}`)
-    await waitForEndpoint(endpoint.value, 5, 10000)
+    await waitForEndpoint(endpoint.value, 5, 10_000)
     await assertGraphiQL(endpoint.value)
     await assertQuery(endpoint.value)
   },

@@ -172,7 +172,7 @@ export const vercelDeployment: DeploymentConfiguration<{
   },
   test: async ({ functionUrl }) => {
     console.log(`ℹ️ Vercel Function deployed to URL: ${functionUrl.value}`)
-    await waitForEndpoint(functionUrl.value, 5, 10000)
+    await waitForEndpoint(functionUrl.value, 5, 10_000)
     await assertGraphiQL(functionUrl.value)
     await assertQuery(functionUrl.value)
   },

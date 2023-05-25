@@ -78,7 +78,7 @@ export function createCFDeployment(
     },
     test: async ({ workerUrl }) => {
       console.log(`ℹ️ CloudFlare Worker deployed to URL: ${workerUrl.value}`)
-      await waitForEndpoint(workerUrl.value, 5, 10000)
+      await waitForEndpoint(workerUrl.value, 5, 10_000)
       await assertGraphiQL(workerUrl.value)
       await assertQuery(workerUrl.value)
     },
