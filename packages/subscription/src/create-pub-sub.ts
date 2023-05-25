@@ -76,7 +76,7 @@ export const createPubSub = <
       routingKey: TKey,
       ...args: TPubSubPublishArgsByKey[TKey]
     ) {
-      const payload = args[1] ?? args[0]
+      const payload = args[1] ?? args[0] ?? null
       const topic =
         args[1] === undefined
           ? routingKey

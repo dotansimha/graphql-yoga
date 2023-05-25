@@ -21,7 +21,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     }
 
     const event = new CustomEvent(channel, {
-      detail: message === '' ? undefined : JSON.parse(message),
+      detail: message === '' ? null : JSON.parse(message),
     }) as TEvent
     for (const callback of callbacks) {
       callback(event)

@@ -149,7 +149,7 @@ describe('createPubSub', () => {
       })
 
       const result = await allValues
-      expect(result).toEqual([undefined, undefined, undefined])
+      expect(result).toEqual([null, null, null])
     })
   })
 })
