@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [14, 16, 18]
+        node-version: [16, 18, 20]
         graphql-version: ['15.8.0', '16.6.0']
     steps:
       - name: Checkout Repository
@@ -29,8 +29,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7
 
       - name: Get pnpm store path
         id: pnpm-store
@@ -66,7 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [14, 16, 18]
+        node-version: [16, 18, 20]
         graphql-version: ['15.8.0', '16.6.0']
     steps:
       - name: Checkout Repository
@@ -79,8 +77,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7
 
       - name: Get pnpm store path
         id: pnpm-store
@@ -116,7 +112,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [14, 16, 18]
+        node-version: [16, 18, 20]
         graphql-version: ['15.8.0', '16.6.0']
     steps:
       - name: Checkout Repository
@@ -129,8 +125,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7
 
       - name: Get pnpm store path
         id: pnpm-store
@@ -221,8 +215,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7
       - name: Get pnpm store path
         id: pnpm-store
         run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
@@ -268,8 +260,6 @@ jobs:
   #         node-version: ${{ matrix.node-version }}
   #     - name: Install pnpm
   #       uses: pnpm/action-setup@v2.2.4
-  #       with:
-  #         version: 7
   #     - name: Get pnpm store path
   #       id: pnpm-store
   #       run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
