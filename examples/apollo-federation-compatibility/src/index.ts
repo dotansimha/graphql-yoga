@@ -126,7 +126,7 @@ const resolvers: Resolvers = {
 
     __resolveReference(productRef) {
       // will be improved in the future: https://github.com/dotansimha/graphql-code-generator/pull/5645
-      let ref = productRef as Product
+      const ref = productRef as Product
       if (ref.id) {
         return (products.find((p) => p.id == ref.id) ||
           null) as unknown as Product
