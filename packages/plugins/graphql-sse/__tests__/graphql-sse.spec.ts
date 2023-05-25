@@ -40,7 +40,7 @@ describe('graphql-sse', () => {
     const client = createClient({
       url: 'http://yoga/graphql/stream',
       fetchFn: yoga.fetch,
-      abortControllerImpl: yoga.fetchAPI.AbortController,
+      abortControllerImpl: AbortController,
       singleConnection: false, // distinct connection mode
       retryAttempts: 0,
     })
@@ -100,7 +100,7 @@ describe('graphql-sse', () => {
     const client = createClient({
       url: 'http://yoga/graphql/stream',
       fetchFn: yoga.fetch,
-      abortControllerImpl: yoga.fetchAPI.AbortController,
+      abortControllerImpl: AbortController,
       singleConnection: true, // single connection mode
       lazy: true,
       retryAttempts: 0,
@@ -161,7 +161,7 @@ describe('graphql-sse', () => {
     const client = createClient({
       url: 'http://yoga/graphql/stream',
       fetchFn: yoga.fetch,
-      abortControllerImpl: yoga.fetchAPI.AbortController,
+      abortControllerImpl: AbortController,
       singleConnection: true, // single connection mode
       lazy: false,
       retryAttempts: 0,

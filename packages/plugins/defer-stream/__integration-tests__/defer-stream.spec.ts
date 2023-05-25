@@ -1,7 +1,7 @@
 import { createServer, get, IncomingMessage } from 'node:http'
 import { AddressInfo } from 'node:net'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
-import { AbortController, fetch } from '@whatwg-node/fetch'
+import { fetch } from '@whatwg-node/fetch'
 import { createSchema, createYoga } from 'graphql-yoga'
 
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js'

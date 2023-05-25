@@ -1,5 +1,8 @@
 {
   "name": "@graphql-yoga/apollo-link",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "version": "1.8.1",
   "description": "",
   "repository": {
@@ -49,9 +52,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@graphql-tools/executor-http": "^0.1.9",
-    "@graphql-tools/executor-apollo-link": "^0.0.9",
-    "tslib": "^2.3.1"
+    "tslib": "^2.5.2",
+    "@graphql-tools/executor-http": "^1.0.0",
+    "@graphql-tools/executor-apollo-link": "^1.0.0"
   },
   "devDependencies": {
     "@apollo/client": "3.7.14",

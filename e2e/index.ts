@@ -14,7 +14,7 @@ const AVAILABLE_TEST_PLANS = {
   'azure-function': azureFunctionDeployment,
   'aws-lambda': awsLambdaDeployment,
   'vercel-function': vercelDeployment,
-  'docker-node-17': dockerDeployment('node:17.8.0-alpine3.14'),
+  'docker-node-17': dockerDeployment('node:18-slim'),
 }
 
 async function main() {

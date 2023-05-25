@@ -1,5 +1,4 @@
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
-import { EventTarget } from '@whatwg-node/events'
 import Redis from 'ioredis-mock'
 
 import { createPubSub } from './create-pub-sub.js'
@@ -149,7 +148,7 @@ describe('createPubSub', () => {
       })
 
       const result = await allValues
-      expect(result).toEqual([undefined, undefined, undefined])
+      expect(result).toEqual([null, null, null])
     })
   })
 })

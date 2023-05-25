@@ -1,4 +1,5 @@
 ---
 'graphql-yoga': patch
 ---
-Respect `toJSON` in the thrown errors
+
+Respect `toJSON` in the thrown errors.

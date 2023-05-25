@@ -71,7 +71,7 @@ describe('GraphQL over SSE', () => {
       const client = createClient({
         url: 'http://yoga/graphql',
         fetchFn: yoga.fetch,
-        abortControllerImpl: yoga.fetchAPI.AbortController,
+        abortControllerImpl: AbortController,
         singleConnection: false, // distinct connection mode
         retryAttempts: 0,
       })
@@ -109,7 +109,7 @@ describe('GraphQL over SSE', () => {
       const client = createClient({
         url: 'http://yoga/graphql',
         fetchFn: yoga.fetch,
-        abortControllerImpl: yoga.fetchAPI.AbortController,
+        abortControllerImpl: AbortController,
         singleConnection: false, // distinct connection mode
         retryAttempts: 0,
       })

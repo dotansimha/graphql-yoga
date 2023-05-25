@@ -56,7 +56,6 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
         },
       },
     )
-
     if (response.status !== 200) {
       throw new Error(
         `Failed to delete Vercel deployment: invalid status code (${
@@ -145,6 +144,14 @@ export const vercelDeployment: DeploymentConfiguration<{
             '../examples/nextjs/dist/index.js',
             'utf-8',
           ),
+        },
+        {
+          file: '/package.json',
+          data: JSON.stringify({
+            engines: {
+              node: '^18.0.0',
+            },
+          }),
         },
       ],
       name: `yoga-e2e-testing`,

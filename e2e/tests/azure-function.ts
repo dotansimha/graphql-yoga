@@ -142,6 +142,11 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       resourceGroup,
     )
 
+    /**
+     * For the person that has to update this in the future:
+     * You need to bump both `linuxFxVersion` and maybe `FUNCTIONS_EXTENSION_VERSION`
+     * @link  https://learn.microsoft.com/en-us/azure/azure-functions/functions-versions?tabs=v4&pivots=programming-language-javascript#languages
+     */
     const app = new web.WebApp(
       'fa',
       {
@@ -151,13 +156,13 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
         siteConfig: {
           appSettings: [
             { name: 'AzureWebJobsStorage', value: storageConnectionString },
-            { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~3' },
+            { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~4' },
             { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' },
             { name: 'WEBSITE_RUN_FROM_PACKAGE', value: codeBlobUrl },
           ],
           http20Enabled: true,
           httpLoggingEnabled: true,
-          linuxFxVersion: 'node|14',
+          linuxFxVersion: 'node|18',
         },
       },
       {
