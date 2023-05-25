@@ -32,9 +32,7 @@ export const useSchema = <
       onRequestParse() {
         return {
           async onRequestParseDone() {
-            if (!schema) {
-              schema = await schemaDef
-            }
+            schema ||= await schemaDef;
           },
         }
       },
