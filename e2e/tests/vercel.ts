@@ -44,25 +44,25 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
   }
 
   async delete(_id: string) {
-    //   const teamId = this.getTeamId()
-    //   const response = await fetch(
-    //     `${this.baseUrl}/v13/deployments/${id}${
-    //       teamId ? `?teamId=${teamId}` : ''
-    //     }`,
-    //     {
-    //       method: 'DELETE',
-    //       headers: {
-    //         Authorization: `Bearer ${this.authToken}`,
-    //       },
-    //     },
-    //   )
-    //   if (response.status !== 200) {
-    //     throw new Error(
-    //       `Failed to delete Vercel deployment: invalid status code (${
-    //         response.status
-    //       }), body: ${await response.text()}`,
-    //     )
-    //   }
+    const teamId = this.getTeamId()
+    const response = await fetch(
+      `${this.baseUrl}/v13/deployments/${id}${
+        teamId ? `?teamId=${teamId}` : ''
+      }`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${this.authToken}`,
+        },
+      },
+    )
+    if (response.status !== 200) {
+      throw new Error(
+        `Failed to delete Vercel deployment: invalid status code (${
+          response.status
+        }), body: ${await response.text()}`,
+      )
+    }
   }
 
   async create(
@@ -144,6 +144,10 @@ export const vercelDeployment: DeploymentConfiguration<{
             '../examples/nextjs/dist/index.js',
             'utf-8',
           ),
+        },
+        {
+          file: '/package.json',
+          data: `{ "engines": { "node": "^18.0.0" } }}`,
         },
       ],
       name: `yoga-e2e-testing`,
