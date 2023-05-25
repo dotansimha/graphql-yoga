@@ -52,13 +52,13 @@ const yogaHandler = async (res: HttpResponse, req: HttpRequest) => {
       read() {},
     })
     res
-      .onData(function (chunk, isLast) {
+      .onData((chunk, isLast) => {
         body.push(Buffer.from(chunk))
         if (isLast) {
           body.push(null)
         }
       })
-      .onAborted(function () {
+      .onAborted(() => {
         body.push(null)
       })
   }
