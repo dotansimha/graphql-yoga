@@ -380,8 +380,8 @@ importers:
   examples/cookies:
     dependencies:
       '@whatwg-node/server-plugin-cookies':
-        specifier: 0.0.1
-        version: 0.0.1
+        specifier: ^0.0.7
+        version: 0.0.7
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -1514,8 +1514,8 @@ importers:
         specifier: ^0.9.0
         version: 0.9.0
       '@whatwg-node/server':
-        specifier: ^0.7.3
-        version: 0.7.3
+        specifier: ^0.8.0
+        version: 0.8.0
       dset:
         specifier: ^3.1.1
         version: 3.1.2
@@ -13332,6 +13332,7 @@ packages:
       busboy: 1.6.0
       urlpattern-polyfill: 6.0.2
       web-streams-polyfill: 3.2.1
+    dev: true
 
   /@whatwg-node/fetch@0.9.0:
     resolution: {integrity: sha512-zEyXaoz5w6BpKYKyZLTwBA41fqGuscOvSoPHytADRo1FY/s/fmjwiKq4QGmB88DlNuQ8e57s6AgWqIYyAT0Zmg==}
@@ -13358,6 +13359,7 @@ packages:
       fast-querystring: 1.1.1
       fast-url-parser: 1.1.3
       tslib: 2.5.2
+    dev: true
 
   /@whatwg-node/node-fetch@0.4.0:
     resolution: {integrity: sha512-aFfJNTMwkWrkl8I9nTkslVjPlkL+zb/Z71ng+71UbYYm1gPHfltHHXBiM99aZgUCaqyvaR5XzzwyCL6m0ikqsA==}
@@ -13369,19 +13371,13 @@ packages:
       fast-url-parser: 1.1.3
       tslib: 2.5.2
 
-  /@whatwg-node/server-plugin-cookies@0.0.1:
-    resolution: {integrity: sha512-c2q8bqm0vQ6v6N7FrwV8qSykWrgdiLwQAAid/KKPG8bKUt3PdC0Ug+b0Refa0UhmYDYNaFG0kJOiBSn5cn3lkw==}
+  /@whatwg-node/server-plugin-cookies@0.0.7:
+    resolution: {integrity: sha512-ypgK2sUz3h+SlZLFM9479Oe0fGHn5nj6Atjrx+nHIMokg4Lxxlr7w/lEwr7WgWieD6OlPIS81ZL1Blwjk+pP1w==}
+    engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@whatwg-node/server': ^0.7.1
+      '@whatwg-node/server': ^0.7.6
     dependencies:
-      '@whatwg-node/events': 0.0.2
-      tslib: 2.5.2
-    dev: false
-
-  /@whatwg-node/server@0.7.3:
-    resolution: {integrity: sha512-ToaxdIXka8WHre92b1n9Wne/jXPOgg5w17Hx/UqFtL+HM2+0M+AAEz31kY9bjHGaKBfWE8YZwVVIYvGMgb3ARA==}
-    dependencies:
-      '@whatwg-node/fetch': 0.8.4
+      '@whatwg-node/cookie-store': 0.1.0
       tslib: 2.5.2
     dev: false
 
