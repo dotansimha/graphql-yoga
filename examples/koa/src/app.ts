@@ -42,9 +42,9 @@ export function buildApp() {
     ctx.status = response.status
 
     // Set headers
-    response.headers.forEach((value, key) => {
+    for (const [key, value] of response.headers.entries()) {
       ctx.append(key, value)
-    })
+    }
 
     ctx.body = response.body
   })

@@ -31,9 +31,9 @@ export function createGraphQLHandler(): RouteHandlerMethod & {
       req,
       reply,
     })
-    response.headers.forEach((value, key) => {
+    for (const [key, value] of response.headers.entries()) {
       reply.header(key, value)
-    })
+    }
 
     reply.status(response.status)
 

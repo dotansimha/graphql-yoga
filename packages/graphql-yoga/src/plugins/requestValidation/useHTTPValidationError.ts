@@ -8,12 +8,12 @@ export function useHTTPValidationError<
     onValidate() {
       return ({ valid, result }) => {
         if (!valid) {
-          result.forEach((error) => {
+          for (const error of result) {
             error.extensions.http = {
               spec: true,
               status: 400,
             }
-          })
+          }
         }
       }
     },
