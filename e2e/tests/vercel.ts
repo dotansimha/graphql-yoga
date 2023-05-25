@@ -43,7 +43,7 @@ class VercelProvider implements pulumi.dynamic.ResourceProvider {
     }
   }
 
-  async delete(_id: string) {
+  async delete(id: string) {
     const teamId = this.getTeamId()
     const response = await fetch(
       `${this.baseUrl}/v13/deployments/${id}${
