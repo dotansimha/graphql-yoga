@@ -28,7 +28,10 @@ export async function waitForEndpoint(
       })
 
       if (r.status !== 200) {
-        throw new Error(`Endpoint not ready yet, status code is ${r.status}`)
+        const body = await r.text()
+        throw new Error(
+          `Endpoint not ready yet, status code is ${r.status}, response is ${body}`,
+        )
       }
 
       const response = await r.text()
