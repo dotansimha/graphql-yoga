@@ -542,3 +542,12 @@ mutation {
   }
 }
 ```
+
+### Shared subscriptions in a distributed/serverless environment
+
+The approach above won't work if you want to publish from one GraphQL process to another GraphQL process, e.g. when using topic-based subscriptions like in chat rooms in a serverless environment.
+In order to use a global subscriptions pool, you'll have to keep track of the subscriptions in a database.
+
+See [graphql-workers-subscriptions](https://github.com/bubblydoo/graphql-workers-subscriptions) for an example on such an approach in Cloudflare Workers.
+This library uses an SQLite database (Cloudflare D1) to keep track of subscriptions, and Cloudflare Durable Objects to manage the WebSocket connections.
+It sits on top of GraphQL Yoga and handles the subscriptions separately.
