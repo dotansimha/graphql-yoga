@@ -29,6 +29,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 8.4.0
 
       - name: Get pnpm store path
         id: pnpm-store
@@ -77,6 +79,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 8.4.0
 
       - name: Get pnpm store path
         id: pnpm-store
@@ -125,6 +129,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 8.4.0
 
       - name: Get pnpm store path
         id: pnpm-store
@@ -215,6 +221,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 8.4.0
       - name: Get pnpm store path
         id: pnpm-store
         run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
