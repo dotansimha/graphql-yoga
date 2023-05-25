@@ -1417,23 +1417,6 @@ importers:
         version: 6.3.2
     publishDirectory: dist
 
-  packages/common:
-    dependencies:
-      graphql-yoga:
-        specifier: 3.9.1
-        version: link:../graphql-yoga
-      tslib:
-        specifier: ^2.3.1
-        version: 2.4.0
-    devDependencies:
-      '@types/node':
-        specifier: 18.16.14
-        version: 18.16.14
-      html-minifier-terser:
-        specifier: 7.2.0
-        version: 7.2.0
-    publishDirectory: dist
-
   packages/event-target/redis-event-target:
     dependencies:
       '@graphql-yoga/typed-event-target':
@@ -1705,16 +1688,6 @@ importers:
       tslib:
         specifier: ^2.5.0
         version: 2.5.0
-
-  packages/node:
-    dependencies:
-      graphql-yoga:
-        specifier: 3.9.1
-        version: link:../graphql-yoga
-      tslib:
-        specifier: ^2.3.1
-        version: 2.4.0
-    publishDirectory: dist
 
   packages/plugins/apollo-inline-trace:
     dependencies:
