@@ -30,8 +30,7 @@ export class InventoryResolver {
   resolveReference(reference: Inventory) {
     if (reference.id == inventory.id) {
       return inventory
-    } else {
-      return null
     }
+    return null
   }
 }

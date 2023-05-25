@@ -58,8 +58,7 @@ export class DeprecatedProductsResolver {
       reference.package === deprecatedProduct.package
     ) {
       return deprecatedProduct
-    } else {
-      return null
     }
+    return null
   }
 }

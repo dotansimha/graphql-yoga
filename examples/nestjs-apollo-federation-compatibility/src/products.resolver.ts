@@ -73,7 +73,8 @@ export class ProductsResolver {
           },
         },
       ]
-    } else if (parent.id === 'apollo-studio') {
+    }
+    if (parent.id === 'apollo-studio') {
       return [
         {
           study: {
@@ -82,24 +83,23 @@ export class ProductsResolver {
           },
         },
       ]
-    } else {
-      return []
     }
+    return []
   }
 
   @ResolveReference()
   resolveReference(productRef: Product) {
     if (productRef.id) {
       return products.find((p) => p.id == productRef.id)
-    } else if (productRef.sku && productRef.package) {
+    }
+    if (productRef.sku && productRef.package) {
       return products.find(
         (p) => p.sku == productRef.sku && p.package == productRef.package,
       )
-    } else {
-      return products.find(
-        (p) =>
-          p.sku == productRef.sku && p.variation.id == productRef.variation.id,
-      )
     }
+    return products.find(
+      (p) =>
+        p.sku == productRef.sku && p.variation.id == productRef.variation.id,
+    )
   }
 }
