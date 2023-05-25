@@ -148,7 +148,8 @@ export abstract class AbstractYogaDriver<
         req,
         reply,
       })
-      for (const [key, value] of response.headers.entries()) reply.header(key, value)
+      for (const [key, value] of response.headers.entries())
+        reply.header(key, value)
       reply.status(response.status)
       reply.send(response.body)
       return reply

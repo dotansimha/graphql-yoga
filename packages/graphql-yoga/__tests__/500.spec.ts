@@ -6,7 +6,9 @@ describe('Handle non GraphQL Errors as 500 when error masking is disabled', () =
     Object: { toString: () => 'Oops!' },
     String: 'Oops!',
   }
-  for (const [name, error] of Object.entries(errorVariationsForContextFactory)) {
+  for (const [name, error] of Object.entries(
+    errorVariationsForContextFactory,
+  )) {
     it(`${name} from context factory`, async () => {
       const yoga = createYoga({
         schema: createSchema({
