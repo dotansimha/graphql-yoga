@@ -145,10 +145,14 @@ export default { fetch: yoga.fetch }
 
 ## Enabling Subscriptions
 
-In order to enable Server Sent Events based subscriptions with Cloudflare Workers, you should add a compatibility flag in your wrangler configuration file like below;
+For a library enabling topic-based subscriptions using GraphQL Yoga, `graphql-ws`, see [graphql-workers-subscriptions](https://github.com/bubblydoo/graphql-workers-subscriptions). This library uses Durable Objects and D1 to manage the subscriptions state.
+
+### Compatibility for Server Sent Events
+
+In order to enable Server Sent Events based subscriptions with Cloudflare Workers, make sure you have set the compatibility date in your wrangler configuration file to a date after 2022-11-30 (if that's not possible, add compatibility flag `streams_enable_constructors`).
 
 ```toml
-compatibility_flags = ["streams_enable_constructors"]
+compatibility_date = "2022-11-30"
 ```
 
 ## Debug Logging
