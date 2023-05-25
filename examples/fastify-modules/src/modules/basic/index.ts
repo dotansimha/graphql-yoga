@@ -1,5 +1,5 @@
 import { createModule } from 'graphql-modules'
-import { join } from 'path'
+import { join } from 'node:path'
 import { loadFilesSync } from '@graphql-tools/load-files'
 import { resolvers } from './resolvers'
 import { BasicProvider } from './providers'

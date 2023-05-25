@@ -1,5 +1,5 @@
 import { createYoga, createSchema } from 'graphql-yoga'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { useLiveQuery } from '@envelop/live-query'
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
 import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'

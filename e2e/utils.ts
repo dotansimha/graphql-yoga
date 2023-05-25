@@ -1,6 +1,6 @@
-import { exec } from 'child_process'
-import { promises as fsPromises } from 'fs'
-import { promisify } from 'util'
+import { exec } from 'node:child_process'
+import { promises as fsPromises } from 'node:fs'
+import { promisify } from 'node:util'
 
 export { fsPromises }
 export const execPromise = promisify(exec)

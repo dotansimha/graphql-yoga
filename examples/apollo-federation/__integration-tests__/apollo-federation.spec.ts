@@ -1,7 +1,7 @@
 import { gateway } from '../gateway/gateway'
 import { yoga as service1 } from '../service/yoga'
-import { createServer, Server } from 'http'
-import { AddressInfo } from 'net'
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { fetch } from '@whatwg-node/fetch'
 import { GatewayConfig, IntrospectAndCompose } from '@apollo/gateway'
 

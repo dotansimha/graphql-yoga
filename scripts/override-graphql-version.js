@@ -1,6 +1,6 @@
 /* eslint-env node */
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 
 // supply the wished graphql version as first argument of script
 const graphqlVersion = process.argv[2]

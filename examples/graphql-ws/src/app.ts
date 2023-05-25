@@ -1,5 +1,5 @@
-import { Socket } from 'net'
-import { createServer } from 'http'
+import { Socket } from 'node:net'
+import { createServer } from 'node:http'
 import { WebSocketServer } from 'ws'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { useServer } from 'graphql-ws/lib/use/ws'

@@ -1,5 +1,5 @@
 import { Injectable, Inject, CONTEXT, Scope } from 'graphql-modules'
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 @Injectable({
   scope: Scope.Operation,

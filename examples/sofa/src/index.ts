@@ -1,5 +1,5 @@
 import { yoga, restEndpoint } from './yoga'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 
 const server = createServer(yoga)
 

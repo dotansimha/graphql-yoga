@@ -1,8 +1,8 @@
-import { createServer, Server } from 'http'
-import { AddressInfo } from 'net'
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { fetch, File, FormData } from '@whatwg-node/fetch'
-import * as fs from 'fs'
-import * as path from 'path'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 import yoga from '../pages/api/graphql'
 
 describe('file-upload-nextjs-pothos example integration', () => {

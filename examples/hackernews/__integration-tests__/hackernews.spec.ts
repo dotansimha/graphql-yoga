@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import { DbDrop, MigrateDev } from '@prisma/migrate'
 import { PrismaClient } from '@prisma/client'
 import { createYoga, YogaServerInstance } from 'graphql-yoga'

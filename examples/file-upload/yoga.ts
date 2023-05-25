@@ -1,6 +1,6 @@
 import { createYoga, createSchema } from 'graphql-yoga'
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 export const yoga = createYoga({
   schema: createSchema({

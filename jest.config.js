@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { resolve } = require('path')
+const { resolve } = require('node:path')
 const { pathsToModuleNameMapper } = require('ts-jest')
 const CI = !!process.env.CI
 

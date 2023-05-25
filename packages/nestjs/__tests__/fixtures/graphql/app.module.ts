@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { join } from 'node:path'
 import { Module } from '@nestjs/common'
 import { DynamicModule } from '@nestjs/common/interfaces'
 import { GraphQLModule } from '@nestjs/graphql'

@@ -1,7 +1,7 @@
 import { buildApp } from '../src/app.js'
 import WebSocket from 'ws'
 import { createClient } from 'graphql-ws'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { useServer } from 'graphql-ws/lib/use/ws'
 

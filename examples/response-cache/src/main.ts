@@ -1,4 +1,4 @@
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { createYoga, createSchema } from 'graphql-yoga'
 import {
   useResponseCache,

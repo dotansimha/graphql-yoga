@@ -1,5 +1,5 @@
-import { Socket } from 'net'
-import { createServer } from 'http'
+import { Socket } from 'node:net'
+import { createServer } from 'node:http'
 import { createYoga, createSchema } from 'graphql-yoga'
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
 
