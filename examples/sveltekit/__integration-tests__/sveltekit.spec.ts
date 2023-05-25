@@ -48,18 +48,23 @@ let toSkip = false;
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
 		const tslibDirPath = join(__dirname, '../node_modules/tslib');
-		const tslibFilePath = join(tslibDirPath, 'tslib.es6.js');
+		const tslibFilePath = join(tslibDirPath, 'tslib.js');
 		const tslibFile = await fsPromises.readFile(tslibFilePath, 'utf8');
-		// if (!tslibFile.includes('export default')) {
-		// 	await fsPromises.writeFile(tslibFilePath, tslibFile + tslibAdd);
-		// }
 		const tslibPackageJsonPath = join(tslibDirPath, 'package.json');
 		const tslibPackageJson = await fsPromises.readFile(tslibPackageJsonPath, 'utf8');
 		const tslibPackageJsonParsed = JSON.parse(tslibPackageJson);
 		tslibPackageJsonParsed.type = 'module';
+		tslibPackageJsonParsed.main = "tslib.cjs";
+		if (tslibPackageJsonParsed.exports?.['.']?.default) {
+			tslibPackageJsonParsed.exports['.'].default = "./tslib.cjs";
+		}
 		await fsPromises.writeFile(
 			tslibPackageJsonPath,
 			JSON.stringify(tslibPackageJsonParsed, null, 2)
+		);
+		await fsPromises.writeFile(
+			tslibFilePath.replace('.js', '.cjs'),
+			tslibFile
 		);
 		const nodeVersion = execSync('node -v').toString();
 		if (nodeVersion.includes('v12')) {
