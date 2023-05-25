@@ -1,11 +1,13 @@
 import type { TypedEventTarget } from '@graphql-yoga/typed-event-target'
 import { Repeater } from '@repeaterjs/repeater'
-import { CustomEvent, EventTarget } from '@whatwg-node/events'
+import { CustomEvent } from '@whatwg-node/events'
 
 type PubSubPublishArgsByKey = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: [] | [any] | [number | string, any]
 }
+
+type MapToNull<T> = T extends undefined ? null : T
 
 export type PubSubEvent<
   TPubSubPublishArgsByKey extends PubSubPublishArgsByKey,
@@ -54,8 +56,8 @@ export type PubSub<TPubSubPublishArgsByKey extends PubSubPublishArgsByKey> = {
       : [TKey, TPubSubPublishArgsByKey[TKey][0]]
   ): Repeater<
     TPubSubPublishArgsByKey[TKey][1] extends undefined
-      ? TPubSubPublishArgsByKey[TKey][0]
-      : TPubSubPublishArgsByKey[TKey][1]
+      ? MapToNull<TPubSubPublishArgsByKey[TKey][0]>
+      : MapToNull<TPubSubPublishArgsByKey[TKey][1]>
   >
 }
 
