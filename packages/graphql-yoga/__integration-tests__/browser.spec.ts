@@ -39,6 +39,7 @@ const fakeAsyncIterable = {
     return Promise.resolve({ done: true })
   },
 }
+
 export function createTestSchema() {
   let liveQueryCounter = 0
 
@@ -222,7 +223,7 @@ describe('browser', () => {
     await page.waitForFunction(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      () => Boolean(window.g.resultComponent.viewer.getValue()),
+      () => !!window.g.resultComponent.viewer.getValue(),
     )
     const resultContents = await page.evaluate(() => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -346,7 +347,7 @@ describe('browser', () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.g.resultComponent.viewer.getValue(),
-            Boolean(window.document.querySelector(stopButtonSelector)),
+            !!window.document.querySelector(stopButtonSelector),
           ]
         },
         stopButtonSelector,
@@ -375,7 +376,7 @@ describe('browser', () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.g.resultComponent.viewer.getValue(),
-            Boolean(window.document.querySelector(stopButtonSelector)),
+            !!window.document.querySelector(stopButtonSelector),
           ]
         },
         stopButtonSelector,
@@ -393,7 +394,7 @@ describe('browser', () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.g.resultComponent.viewer.getValue(),
-            Boolean(window.document.querySelector(playButtonSelector)),
+            !!window.document.querySelector(playButtonSelector),
           ]
         },
         playButtonSelector,
@@ -453,7 +454,7 @@ describe('browser', () => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.g.resultComponent.viewer.getValue(),
-          Boolean(window.document.querySelector(stopButtonSelector)),
+          !!window.document.querySelector(stopButtonSelector),
         ]
       }, stopButtonSelector)
       const resultJson = JSON.parse(resultContents)
@@ -481,7 +482,7 @@ describe('browser', () => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           window.g.resultComponent.viewer.getValue(),
-          Boolean(window.document.querySelector(playButtonSelector)),
+          !!window.document.querySelector(playButtonSelector),
         ]
       }, playButtonSelector)
       const resultJson1 = JSON.parse(resultContents1)

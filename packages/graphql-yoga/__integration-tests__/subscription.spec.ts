@@ -11,7 +11,6 @@ describe('subscription', () => {
 
     const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
-      // eslint-disable-next-line @typescript-eslint/require-await
       async next() {
         counter++
         return {

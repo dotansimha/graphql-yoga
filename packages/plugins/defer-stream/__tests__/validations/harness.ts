@@ -15,7 +15,7 @@ import { SDLValidationRule } from 'graphql/validation/ValidationContext'
  * `import { isObjectLike } from 'graphql/jsutils/isObjectLike'` does not always have TS files.
  */
 function isObjectLike(val: unknown): val is Record<string, unknown> {
-  return Boolean(val) && typeof val === 'object'
+  return !!val && typeof val === 'object'
 }
 
 /**

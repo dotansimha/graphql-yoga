@@ -22,7 +22,6 @@ function createGenerator<T>(): Generator<T> {
       }
       // first flush
       while (pending.length) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         yield pending.shift()!
       }
       // then error

@@ -1,3 +1,4 @@
+/* eslint-env node */
 const { createServer } = require('http')
 const { WebSocketServer } = require('ws')
 const { createYoga, createSchema } = require('graphql-yoga')

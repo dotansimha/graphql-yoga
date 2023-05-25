@@ -1,23 +1,12 @@
 module.exports = {
+  root: true,
   extends: ['@theguild'],
-  parserOptions: {
-    tsconfigRootDir: __dirname,
-    project: './tsconfig.json',
-  },
   overrides: [
     {
       files: ['packages/graphql-yoga/src/plugins/**/*.ts'],
       rules: {
         'unicorn/filename-case': 'off',
       },
-    },
-    {
-      files: ['website/**'],
-      parserOptions: {
-        tsconfigRootDir: __dirname,
-        project: './website/tsconfig.json',
-      },
-      rules: { 'import/no-default-export': 'off' },
     },
     {
       files: ['examples/**/*'],

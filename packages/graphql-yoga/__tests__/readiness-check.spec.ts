@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { createSchema, createYoga } from '../src/index.js'
 import { useReadinessCheck } from '../src/plugins/useReadinessCheck'
 
