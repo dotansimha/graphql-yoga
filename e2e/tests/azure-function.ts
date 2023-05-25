@@ -142,6 +142,11 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       resourceGroup,
     )
 
+    /**
+     * For the person that has to update this in the future:
+     * You need to bump both `linuxFxVersion` and maybe `FUNCTIONS_EXTENSION_VERSION`
+     * @link  https://learn.microsoft.com/en-us/azure/azure-functions/functions-versions?tabs=v4&pivots=programming-language-javascript#languages
+     */
     const app = new web.WebApp(
       'fa',
       {
