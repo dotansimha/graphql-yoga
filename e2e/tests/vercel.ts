@@ -147,7 +147,11 @@ export const vercelDeployment: DeploymentConfiguration<{
         },
         {
           file: '/package.json',
-          data: `{ "engines": { "node": "^18.0.0" } }}`,
+          data: JSON.stringify({
+            engines: {
+              node: '^18.0.0',
+            },
+          }),
         },
       ],
       name: `yoga-e2e-testing`,
