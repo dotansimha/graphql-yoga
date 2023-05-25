@@ -44,7 +44,9 @@ function generateData() {
 
 const data = generateData()
 
-const schema = createSchema({
+type Context = {}
+
+const schema = createSchema<Context>({
   typeDefs: /* GraphQL */ `
     type Author {
       id: ID!
@@ -69,20 +71,23 @@ const schema = createSchema({
   },
 })
 
-const yogaMap: Record<string, YogaServerInstance<{}, {}>> = {
-  '/graphql': createYoga({
+const yogaMap: Record<
+  string,
+  (_req: IncomingMessage, res: ServerResponse<IncomingMessage>) => void
+> = {
+  '/graphql': createYoga<Context>({
     schema,
     logging: false,
     multipart: false,
   }),
-  '/graphql-jit': createYoga({
+  '/graphql-jit': createYoga<Context>({
     schema,
     logging: false,
     multipart: false,
     plugins: [useGraphQlJit()],
     graphqlEndpoint: '/graphql-jit',
   }),
-  '/graphql-response-cache': createYoga({
+  '/graphql-response-cache': createYoga<Context>({
     schema,
     logging: false,
     multipart: false,
@@ -94,14 +99,14 @@ const yogaMap: Record<string, YogaServerInstance<{}, {}>> = {
     ],
     graphqlEndpoint: '/graphql-response-cache',
   }),
-  '/graphql-no-parse-validate-cache': createYoga({
+  '/graphql-no-parse-validate-cache': createYoga<Context>({
     schema,
     logging: false,
     multipart: false,
     parserAndValidationCache: false,
     graphqlEndpoint: '/graphql-no-parse-validate-cache',
   }),
-  '/ping': (_req: IncomingMessage, res: ServerResponse<IncomingMessage>) => {
+  '/ping': (_req, res) => {
     res.writeHead(200)
     res.end()
   },
