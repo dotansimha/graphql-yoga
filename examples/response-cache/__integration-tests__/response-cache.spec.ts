@@ -66,6 +66,8 @@ describe('example-response-cache', () => {
   })
 
   test('cache with TTL', async () => {
+    jest.useFakeTimers()
+
     const [port, close] = await create({
       ttlPerType: {
         User: 500,
@@ -97,7 +99,7 @@ describe('example-response-cache', () => {
         response.headers.get('last-modified')!,
       ).getTime()
 
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      jest.advanceTimersByTime(1000)
 
       response = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
