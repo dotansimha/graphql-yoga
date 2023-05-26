@@ -1,0 +1,73 @@
+{
+  "name": "create-graphql-yoga",
+  "version": "0.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/create-graphql-yoga"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "bin": {
+    "create-graphql-yoga": "dist/cjs/bin.js"
+  },
+  "buildOptions": {
+    "bin": {
+      "create-graphql-yoga": {
+        "input": "src/bin.ts"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typings": "dist/typings/index.d.ts",
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "dependencies": {
+    "@whatwg-node/fetch": "^0.8.5",
+    "get-npm-tarball-url": "^2.0.3",
+    "ora": "^5.4.1",
+    "tslib": "^2.3.1",
+    "tar": "^6.1.13"
+  },
+  "devDependencies": {
+    "@types/tar": "^6.1.4",
+    "ts-node": "^10.9.1",
+    "rimraf": "^5.0.0"
+  },
+  "type": "module",
+  "sideEffects": false
+}
