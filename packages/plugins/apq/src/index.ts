@@ -1,5 +1,9 @@
-import { createGraphQLError, Plugin, PromiseOrValue } from 'graphql-yoga'
-import LRU from 'lru-cache'
+import {
+  createGraphQLError,
+  Plugin,
+  PromiseOrValue,
+  createLRUCache,
+} from 'graphql-yoga'
 
 export async function hashSHA256(
   str: string,
@@ -27,7 +31,7 @@ export interface APQStoreOptions {
 export function createInMemoryAPQStore(
   options: APQStoreOptions = {},
 ): APQStore {
-  return new LRU({
+  return createLRUCache<string>({
     max: options.max ?? 1000,
     ttl: options.ttl ?? 36_000,
   })
