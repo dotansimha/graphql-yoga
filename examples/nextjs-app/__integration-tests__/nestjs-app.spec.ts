@@ -1,7 +1,6 @@
-import { rejects } from 'node:assert'
 import { exec } from 'node:child_process'
-import { join, resolve } from 'node:path'
-import { Readable, finished } from 'node:stream'
+import { join } from 'node:path'
+import { Readable } from 'node:stream'
 import { fetch } from '@whatwg-node/fetch'
 
 describe('nextjs 13 App Router', () => {
@@ -50,8 +49,12 @@ describe('nextjs 13 App Router', () => {
   })
 
   afterAll(async () => {
-    await buildProcess?.stop()
-    await serverProcess?.stop().catch(() => {})
+    await buildProcess?.stop().catch((err) => {
+      console.error('Failed to stop build process', err)
+    })
+    await serverProcess?.stop().catch((err) => {
+      console.error('Failed to stop server process', err)
+    })
   })
 })
 
@@ -71,7 +74,7 @@ function cmd(cmd: string) {
       if (out) console.log(out)
       if (err) console.error(err)
 
-      return code == 0 ? resolve(out) : reject(new Error(err))
+      return code === 0 ? resolve(out) : reject(new Error(err))
     })
     cp.on('error', (error) => {
       console.error(error)
@@ -97,7 +100,7 @@ export function saveOut(stream: Readable) {
 export async function waitForEndpoint(
   endpoint: string,
   retries: number,
-  timeout = 10000,
+  timeout = 1000,
 ): Promise<boolean> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     console.info(
@@ -114,7 +117,7 @@ export async function waitForEndpoint(
     } catch (e) {
       console.warn(
         `Failed to connect to endpoint: ${endpoint}, waiting ${timeout}ms...`,
-        (e as any).message,
+        (e as Error).message,
       )
 
       await new Promise((resolve) => setTimeout(resolve, timeout))
