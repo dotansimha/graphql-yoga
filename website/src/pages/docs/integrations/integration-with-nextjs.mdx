@@ -6,13 +6,49 @@ import { PackageCmd } from '@theguild/components'
 
 # Integration with Next.js
 
-[Next.js](https://nextjs.org) is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as [an API Route](https://nextjs.org/docs/api-routes/api-middlewares).
+[Next.js](https://nextjs.org) is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as [a custom route handler](https://nextjs.org/docs/app/building-your-application/routing/router-handlers).
 
 ## Installation
 
 <PackageCmd packages={['graphql', 'graphql-yoga']} />
 
 ## Example
+
+```ts filename="app/api/graphql/route.ts"
+// Next.js Custom Route Handler: https://nextjs.org/docs/app/building-your-application/routing/router-handlers
+import { createYoga, createSchema } from 'graphql-yoga'
+
+const { handleRequest } = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        greetings: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        greetings: () =>
+          'This is the `greetings` field of the root `Query` type'
+      }
+    }
+  }),
+
+  // While using Next.js file convention for routing, we need to configure Yoga to use the correct endpoint
+  graphqlEndpoint: '/api/graphql',
+
+  // Yoga needs to know how to create a valid Next response
+  fetchAPI: { Response }
+})
+
+export { handleRequest as GET, handleRequest as POST }
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/nextjs)
+
+### Using legacy Pages Directory
+
+The App Router and custom Route Handlers only exist since NextJS 13.
+If you are using an older version of NextJS or still using Pages Directory layout, you can still use GraphQL Yoga as an [API Route](https://nextjs.org/docs/pages/building-your-application/routing/api-routes).
 
 ```ts filename="pages/api/graphql.ts"
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
@@ -49,7 +85,7 @@ export default createYoga<{
 })
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/nextjs)
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/v3/examples/nextjs-legacy-pages)
 
 ## WebSockets for subscriptions
 
