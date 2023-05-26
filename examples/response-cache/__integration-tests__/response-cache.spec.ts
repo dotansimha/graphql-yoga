@@ -68,7 +68,7 @@ describe('example-response-cache', () => {
   test('cache with TTL expires', async () => {
     const [port, close] = await create({
       ttlPerType: {
-        User: 1000,
+        User: 1100,
       },
     })
     try {
@@ -97,7 +97,7 @@ describe('example-response-cache', () => {
         response.headers.get('last-modified')!,
       ).getTime()
 
-      await new Promise((res) => setTimeout(res, 400))
+      await new Promise((res) => setTimeout(res, 1000))
 
       response = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
@@ -126,7 +126,7 @@ describe('example-response-cache', () => {
         lastModified
       expect(diff).toEqual(0)
 
-      await new Promise((res) => setTimeout(res, 600))
+      await new Promise((res) => setTimeout(res, 1000))
 
       response = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
@@ -149,13 +149,12 @@ describe('example-response-cache', () => {
       expect(response.headers.get('etag')).toMatchInlineSnapshot(
         `"7490da5629533a4fc101a2188569a79b776d6a3d75920287e6fa9b203f2e8d34"`,
       )
-      console.log(response.headers.get('last-modified')!)
       diff =
         new Date(response.headers.get('last-modified')!).getTime() -
         lastModified
 
       // diff should be 1000 because we forwarded by 1000ms and the cache only caches for 500ms
-      expect(diff).toEqual(1000)
+      expect(diff).toEqual(2000)
     } finally {
       await close()
     }
