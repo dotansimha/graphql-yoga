@@ -65,7 +65,7 @@ export function createPubSub<T>() {
   const producers: Generator<T>['produce'][] = []
   return {
     pub(val: T) {
-      producers.forEach((next) => next(val))
+      for (const next of producers) next(val)
     },
     sub() {
       const { gen, produce } = createGenerator<T>()

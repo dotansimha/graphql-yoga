@@ -56,10 +56,18 @@ export function buildApp(logging = true) {
     }),
     // Integrate Fastify Logger to Yoga
     logging: {
-      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-      info: (...args) => args.forEach((arg) => app.log.info(arg)),
-      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg)),
+      debug: (...args) => {
+        for (const arg of args) app.log.debug(arg)
+      },
+      info: (...args) => {
+        for (const arg of args) app.log.info(arg)
+      },
+      warn: (...args) => {
+        for (const arg of args) app.log.warn(arg)
+      },
+      error: (...args) => {
+        for (const arg of args) app.log.error(arg)
+      },
     },
   })
 

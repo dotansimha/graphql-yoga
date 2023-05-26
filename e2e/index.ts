@@ -88,7 +88,9 @@ async function main() {
   } finally {
     // In KEEP is set, we can test and experiment with deployment before they are being removed.
     // DOTAN: If you are using it, please make sure to run it again without `KEEP` set to make sure to remove all resources, or delete manually.
-    if (!process.env.KEEP) {
+    if (process.env.KEEP) {
+      console.info('<---> KEEPING RESOURCES <--->')
+    } else {
       // DOTAN: maybe there is a way to tell Pulumi to start the delete process, but not wait for all resources to be deleted?
       // This section adds ~30-60s on Azure Functions (because it has ~10 "heavy" resources to delete)
       console.info(
@@ -96,8 +98,6 @@ async function main() {
       )
       await stack.destroy({ onOutput: console.log })
       console.info('✅ Destroy/cleanup done')
-    } else {
-      console.info('<---> KEEPING RESOURCES <--->')
     }
   }
 }

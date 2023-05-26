@@ -35,6 +35,7 @@ const fakeAsyncIterable = {
     })),
   return: () => {
     resolveOnReturn()
+    // eslint-disable-next-line unicorn/no-array-for-each -- is Set
     timeouts.forEach(clearTimeout)
     return Promise.resolve({ done: true })
   },

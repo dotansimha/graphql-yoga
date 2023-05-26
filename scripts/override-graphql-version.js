@@ -18,7 +18,8 @@ fs.writeFileSync(pkgPath, JSON.stringify(pkg, undefined, '  ') + '\n')
 
 // disable apollo federation testing with <16 versions
 const graphql15AndLess = parseInt(graphqlVersion.split('.')[0]) <= 15
-;[`examples/apollo-federation`].forEach((testPath) => {
+
+for (const testPath of [`examples/apollo-federation`]) {
   if (graphql15AndLess) {
     // disable
     const testPathAbs = path.resolve(
@@ -53,4 +54,4 @@ const graphql15AndLess = parseInt(graphqlVersion.split('.')[0]) <= 15
       )
     }
   }
-})
+}

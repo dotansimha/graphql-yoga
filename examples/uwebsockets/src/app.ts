@@ -52,17 +52,18 @@ const yogaHandler = async (res: HttpResponse, req: HttpRequest) => {
       read() {},
     })
     res
-      .onData(function (chunk, isLast) {
+      .onData((chunk, isLast) => {
         body.push(Buffer.from(chunk))
         if (isLast) {
           body.push(null)
         }
       })
-      .onAborted(function () {
+      .onAborted(() => {
         body.push(null)
       })
   }
   const headers = {}
+  // eslint-disable-next-line unicorn/no-array-for-each -- req is not array
   req.forEach((key, value) => {
     headers[key] = value
   })
@@ -79,13 +80,13 @@ const yogaHandler = async (res: HttpResponse, req: HttpRequest) => {
     },
   )
   res.writeStatus(`${response.status} ${response.statusText}`)
-  response.headers.forEach((value, key) => {
-    // content-length causes an error with Node.js's fetch
+  for (const [key, value] of response.headers.entries()) {
+    // content-length causes an error with Node.js' fetch
     if (key === 'content-length') {
-      return
+      continue
     }
     res.writeHeader(key, value)
-  })
+  }
   if (response.body) {
     if (response.body instanceof Uint8Array) {
       res.end(response.body)

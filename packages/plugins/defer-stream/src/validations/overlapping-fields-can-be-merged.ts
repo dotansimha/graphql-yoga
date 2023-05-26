@@ -860,9 +860,7 @@ function _collectFieldsAndFragmentNames(
           fieldDef = parentType.getFields()[fieldName]
         }
         const responseName = selection.alias ? selection.alias.value : fieldName
-        if (!nodeAndDefs[responseName]) {
-          nodeAndDefs[responseName] = []
-        }
+        nodeAndDefs[responseName] ||= []
         nodeAndDefs[responseName].push([parentType, selection, fieldDef])
         break
       }

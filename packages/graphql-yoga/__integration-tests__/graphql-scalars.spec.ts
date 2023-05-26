@@ -48,7 +48,7 @@ describe('graphql-scalars', () => {
       ],
     }),
   })
-  allScalars.forEach(({ name: typeName }) => {
+  for (const { name: typeName } of allScalars) {
     it(`should respond with 400 if ${typeName} scalar parsing fails from "variables"`, async () => {
       const res = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',
@@ -87,5 +87,5 @@ describe('graphql-scalars', () => {
 
       expect(res.status).toBe(400)
     })
-  })
+  }
 })

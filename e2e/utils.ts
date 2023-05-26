@@ -1,8 +1,6 @@
 import { exec } from 'node:child_process'
-import { promises as fsPromises } from 'node:fs'
 import { promisify } from 'node:util'
 
-export { fsPromises }
 export const execPromise = promisify(exec)
 
 export async function getCommitId() {
@@ -163,3 +161,5 @@ export async function assertQuery(
 
   console.log(`\t✅ All good!`)
 }
+
+export { promises as fsPromises } from 'node:fs'

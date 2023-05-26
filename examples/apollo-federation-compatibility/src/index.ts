@@ -74,9 +74,8 @@ const resolvers: Resolvers = {
         args.package === deprecatedProduct.package
       ) {
         return deprecatedProduct
-      } else {
-        return null
       }
+      return null
     },
   },
   DeprecatedProduct: {
@@ -89,9 +88,8 @@ const resolvers: Resolvers = {
         reference.package === deprecatedProduct.package
       ) {
         return deprecatedProduct
-      } else {
-        return null
       }
+      return null
     },
   },
   ProductResearch: {
@@ -105,17 +103,17 @@ const resolvers: Resolvers = {
     variation(parent) {
       if (parent.variation) return parent.variation
       const p = products.find((p) => p.id == parent.id)
-      return p && p.variation ? p.variation : null
+      return p?.variation || null
     },
 
     research: (reference) => {
       if (reference.id === 'apollo-federation') {
         return [productResearch[0]]
-      } else if (reference.id === 'apollo-studio') {
-        return [productResearch[1]]
-      } else {
-        return []
       }
+      if (reference.id === 'apollo-studio') {
+        return [productResearch[1]]
+      }
+      return []
     },
 
     dimensions() {
@@ -128,23 +126,23 @@ const resolvers: Resolvers = {
 
     __resolveReference(productRef) {
       // will be improved in the future: https://github.com/dotansimha/graphql-code-generator/pull/5645
-      let ref = productRef as Product
+      const ref = productRef as Product
       if (ref.id) {
         return (products.find((p) => p.id == ref.id) ||
           null) as unknown as Product
-      } else if (ref.sku && ref.package) {
+      }
+      if (ref.sku && ref.package) {
         return (products.find(
           (p) => p.sku == ref.sku && p.package == ref.package,
         ) || null) as unknown as Product
-      } else {
-        return (products.find(
-          (p) =>
-            p.sku == ref.sku &&
-            p.variation &&
-            ref.variation &&
-            p.variation.id == ref.variation.id,
-        ) || null) as unknown as Product
       }
+      return (products.find(
+        (p) =>
+          p.sku == ref.sku &&
+          p.variation &&
+          ref.variation &&
+          p.variation.id == ref.variation.id,
+      ) || null) as unknown as Product
     },
   },
   User: {
@@ -176,18 +174,16 @@ const resolvers: Resolvers = {
           user.yearsOfEmployment = ref.yearsOfEmployment
         }
         return user
-      } else {
-        return null
       }
+      return null
     },
   },
   Inventory: {
     __resolveReference: (reference) => {
       if (inventory.id === reference.id) {
         return inventory
-      } else {
-        return null
       }
+      return null
     },
   },
 }

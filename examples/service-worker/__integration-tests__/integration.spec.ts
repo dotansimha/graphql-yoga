@@ -27,7 +27,8 @@ globalThis.self = {
   },
 } as any
 
-function trigger(eventName: string, data: any) {
+function trigger(eventName: string, data) {
+  // eslint-disable-next-line unicorn/no-array-for-each -- is Set
   listenerMap.get(eventName)?.forEach((listener: any) => {
     const listenerFn = listener.handleEvent ?? listener
     listenerFn(data)
