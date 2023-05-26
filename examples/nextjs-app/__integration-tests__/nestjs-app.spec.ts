@@ -2,8 +2,9 @@ import { rejects } from 'node:assert'
 import { exec } from 'node:child_process'
 import { join, resolve } from 'node:path'
 import { Readable, finished } from 'node:stream'
+import { fetch } from '@whatwg-node/fetch'
 
-describeIf(!!global.fetch)('nextjs 13 App Router', () => {
+describe('nextjs 13 App Router', () => {
   it('should show GraphiQL', async () => {
     const response = await fetch('http://127.0.0.1:3333/api/graphql', {
       headers: {
@@ -123,10 +124,4 @@ export async function waitForEndpoint(
   throw new Error(
     `Failed to connect to endpoint: ${endpoint} (attempts: ${retries})`,
   )
-}
-
-function describeIf(
-  condition: boolean,
-): (name: string, fn: () => void) => void {
-  return condition ? describe : describe.skip
 }
