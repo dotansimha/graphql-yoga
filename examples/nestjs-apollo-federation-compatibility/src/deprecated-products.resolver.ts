@@ -33,8 +33,6 @@ const deprecatedProduct = {
 
 @Resolver('DeprecatedProduct')
 export class DeprecatedProductsResolver {
-  constructor() {}
-
   @Query()
   deprecatedProduct(
     @Args('sku') sku: string,

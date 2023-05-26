@@ -1,4 +1,3 @@
-import { ExecutionResult } from 'graphql'
 import { createSchema, createYoga } from '../src'
 
 describe('requests', () => {

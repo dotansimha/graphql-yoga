@@ -66,9 +66,9 @@ const inventory: Inventory = {
 const resolvers: Resolvers = {
   Query: {
     product(_: unknown, args: { id: string }) {
-      return products.find((p) => p.id == args.id)! as unknown as Product
+      return products.find((p) => p.id === args.id)! as unknown as Product
     },
-    deprecatedProduct: (_, args, context) => {
+    deprecatedProduct: (_, args) => {
       if (
         args.sku === deprecatedProduct.sku &&
         args.package === deprecatedProduct.package
@@ -102,7 +102,7 @@ const resolvers: Resolvers = {
   Product: {
     variation(parent) {
       if (parent.variation) return parent.variation
-      const p = products.find((p) => p.id == parent.id)
+      const p = products.find((p) => p.id === parent.id)
       return p?.variation || null
     },
 
@@ -128,26 +128,26 @@ const resolvers: Resolvers = {
       // will be improved in the future: https://github.com/dotansimha/graphql-code-generator/pull/5645
       const ref = productRef as Product
       if (ref.id) {
-        return (products.find((p) => p.id == ref.id) ||
+        return (products.find((p) => p.id === ref.id) ||
           null) as unknown as Product
       }
       if (ref.sku && ref.package) {
         return (products.find(
-          (p) => p.sku == ref.sku && p.package == ref.package,
+          (p) => p.sku === ref.sku && p.package === ref.package,
         ) || null) as unknown as Product
       }
       return (products.find(
         (p) =>
-          p.sku == ref.sku &&
+          p.sku === ref.sku &&
           p.variation &&
           ref.variation &&
-          p.variation.id == ref.variation.id,
+          p.variation.id === ref.variation.id,
       ) || null) as unknown as Product
     },
   },
   User: {
-    averageProductsCreatedPerYear: (user, args, context) => {
-      if (user.email != 'support@apollographql.com') {
+    averageProductsCreatedPerYear: (user) => {
+      if (user.email !== 'support@apollographql.com') {
         throw new Error("user.email was not 'support@apollographql.com'")
       }
       return Math.round(
@@ -157,7 +157,7 @@ const resolvers: Resolvers = {
     name() {
       return 'Jane Smith'
     },
-    // @ts-ignore
+    // @ts-expect-error
     __resolveReference(userRef) {
       const ref = userRef as User
       if (ref.email) {
@@ -170,7 +170,7 @@ const resolvers: Resolvers = {
           user.totalProductsCreated = ref.totalProductsCreated
         }
         if (ref.yearsOfEmployment) {
-          // @ts-ignore
+          // @ts-expect-error
           user.yearsOfEmployment = ref.yearsOfEmployment
         }
         return user

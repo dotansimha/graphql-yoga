@@ -27,8 +27,6 @@ const productResearch = [
 
 @Resolver('ProductResearch')
 export class ProductResearchResolver {
-  constructor() {}
-
   @ResolveField()
   getStudy() {
     return productResearch[0].study
