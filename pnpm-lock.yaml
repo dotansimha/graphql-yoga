@@ -1523,8 +1523,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.2
       lru-cache:
-        specifier: ^7.14.1
-        version: 7.14.1
+        specifier: ^9.0.0
+        version: 9.1.1
       tslib:
         specifier: ^2.5.2
         version: 2.5.2
@@ -1713,10 +1713,6 @@ importers:
     publishDirectory: dist
 
   packages/plugins/apq:
-    dependencies:
-      lru-cache:
-        specifier: ^7.14.1
-        version: 7.18.3
     devDependencies:
       graphql-yoga:
         specifier: 3.9.1
@@ -1770,9 +1766,6 @@ importers:
 
   packages/plugins/persisted-operations:
     devDependencies:
-      '@types/lru-cache':
-        specifier: 7.10.9
-        version: 7.10.9
       graphql-yoga:
         specifier: ^3.9.1
         version: link:../../graphql-yoga
@@ -12279,12 +12272,6 @@ packages:
 
   /@types/long@4.0.2:
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
-
-  /@types/lru-cache@7.10.9:
-    resolution: {integrity: sha512-wrwgkdJ0xr8AbzKhVaRI8SXZN9saapPwwLoydBEr4HqMZET1LUTi1gdoaj82XmRJ9atqN7MtB0aja29iiK+7ag==}
-    dependencies:
-      lru-cache: 7.18.3
-    dev: true
 
   /@types/markdown-it@12.2.3:
     resolution: {integrity: sha512-GKMHFfv3458yYy+v/N8gjufHO6MSZKCOXpZc5GXIWWy8uldwfmPn98vp81gZ5f9SVw8YYBctgfJ22a2d7AOMeQ==}
@@ -23500,11 +23487,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
-
-  /lru-cache@7.14.1:
-    resolution: {integrity: sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==}
-    engines: {node: '>=12'}
-    dev: false
 
   /lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
