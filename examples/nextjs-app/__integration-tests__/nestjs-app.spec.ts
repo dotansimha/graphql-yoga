@@ -5,7 +5,7 @@ import { Readable, finished } from 'node:stream'
 
 describe('nextjs 13 App Router', () => {
   it('should show GraphiQL', async () => {
-    const response = await fetch('http://localhost:3000/api/graphql', {
+    const response = await fetch('http://localhost:3333/api/graphql', {
       headers: {
         accept: 'text/html',
       },
@@ -16,7 +16,7 @@ describe('nextjs 13 App Router', () => {
   })
 
   it('should run basic query', async () => {
-    const response = await fetch('http://localhost:3000/api/graphql', {
+    const response = await fetch('http://localhost:3333/api/graphql', {
       method: 'POST',
       headers: {
         accept: 'application/json',
@@ -44,8 +44,8 @@ describe('nextjs 13 App Router', () => {
   beforeAll(async () => {
     buildProcess = cmd('pnpm build')
     await buildProcess.exited
-    serverProcess = cmd('pnpm start')
-    await waitForEndpoint('http://localhost:3000', 5, 500)
+    serverProcess = cmd('PORT=3333 pnpm start')
+    await waitForEndpoint('http://localhost:3333', 5, 500)
   })
 
   afterAll(async () => {
