@@ -65,12 +65,10 @@ describe('example-response-cache', () => {
     }
   })
 
-  test('cache with TTL', async () => {
-    jest.useFakeTimers()
-
+  test('cache with TTL expires', async () => {
     const [port, close] = await create({
       ttlPerType: {
-        User: 500,
+        User: 1100,
       },
     })
     try {
@@ -99,7 +97,7 @@ describe('example-response-cache', () => {
         response.headers.get('last-modified')!,
       ).getTime()
 
-      jest.advanceTimersByTime(1000)
+      await new Promise((res) => setTimeout(res, 1000))
 
       response = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
@@ -123,12 +121,40 @@ describe('example-response-cache', () => {
         `"7490da5629533a4fc101a2188569a79b776d6a3d75920287e6fa9b203f2e8d34"`,
       )
 
-      const diff =
+      let diff =
+        new Date(response.headers.get('last-modified')!).getTime() -
+        lastModified
+      expect(diff).toEqual(0)
+
+      await new Promise((res) => setTimeout(res, 1000))
+
+      response = await fetch(`http://localhost:${port}/graphql`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+        body: JSON.stringify({
+          query: /* GraphQL */ `
+            query {
+              me {
+                id
+              }
+            }
+          `,
+        }),
+      })
+
+      expect(response.status).toEqual(200)
+      expect(response.headers.get('etag')).toMatchInlineSnapshot(
+        `"7490da5629533a4fc101a2188569a79b776d6a3d75920287e6fa9b203f2e8d34"`,
+      )
+      diff =
         new Date(response.headers.get('last-modified')!).getTime() -
         lastModified
 
       // diff should be 1000 because we forwarded by 1000ms and the cache only caches for 500ms
-      expect(diff).toEqual(1000)
+      expect(diff).toEqual(2000)
     } finally {
       await close()
     }
