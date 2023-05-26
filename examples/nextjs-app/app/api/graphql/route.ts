@@ -1,7 +1,7 @@
 // Next.js Custom Route Handler: https://nextjs.org/docs/app/building-your-application/routing/router-handlers
 import { createYoga, createSchema } from 'graphql-yoga'
 
-const yoga = createYoga({
+const { handleRequest } = createYoga({
   schema: createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
@@ -23,4 +23,4 @@ const yoga = createYoga({
   fetchAPI: { Response },
 })
 
-export { yoga as GET, yoga as POST }
+export { handleRequest as GET, handleRequest as POST }
