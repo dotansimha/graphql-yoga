@@ -272,6 +272,37 @@ server.listen(4000, () => {
 })
 ```
 
+## Using multiple Persisted Operation Stores
+
+You can vary the persisted operations store you read from by switching based on the request.
+
+An example of this may be to use request headers.
+
+```ts filename="Use parsed GraphQL documents as AST"
+import {
+  usePersistedOperations,
+  PersistedOperationType
+} from '@graphql-yoga/plugin-persisted-operations'
+import { parse } from 'graphql'
+
+const persistedOperationsStores = {
+  ClientOne: {
+    'my-key': parse(/* GraphQL */ `
+      query {
+        __typename
+      }
+    `)
+  }
+}
+
+const plugin = usePersistedOperations({
+  getPersistedOperation(key: string, request: Request) {
+    const store = persistedOperationsStores[request.headers.get('client-name')]
+    return (store && store[key]) || null
+  }
+})
+```
+
 ## Customize errors
 
 This plugin can throw three different types of errors::

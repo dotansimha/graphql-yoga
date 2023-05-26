@@ -37,6 +37,7 @@ export type UsePersistedOperationsOptions = {
    */
   getPersistedOperation(
     key: string,
+    request: Request,
   ): PromiseOrValue<DocumentNode | string | null>
   /**
    * Whether to allow execution of arbitrary GraphQL operations aside from persisted operations.
@@ -127,7 +128,10 @@ export function usePersistedOperations<
         throw keyNotFoundErrorFactory(payload)
       }
 
-      const persistedQuery = await getPersistedOperation(persistedOperationKey)
+      const persistedQuery = await getPersistedOperation(
+        persistedOperationKey,
+        request,
+      )
       if (persistedQuery == null) {
         throw notFoundErrorFactory(payload)
       }
