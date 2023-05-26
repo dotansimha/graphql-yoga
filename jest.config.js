@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('node:path')
 const { pathsToModuleNameMapper } = require('ts-jest')
+const fs = require('fs')
 const CI = !!process.env.CI
 
 const ROOT_DIR = __dirname

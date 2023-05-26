@@ -1,18 +1,6 @@
 import { withGuildDocs } from '@theguild/components/next.config'
 
 export default withGuildDocs({
-  transformPageOpts(pageOpts) {
-    // TODO: temporal fix to show link for versioned folder in navbar (otherwise you can see only when navigated to it directly)
-    pageOpts.pageMap
-      .find((o) => o.kind === 'Folder' && o.name === 'v2')
-      .children.push({
-        kind: 'MdxPage',
-        name: 'index',
-        route: '/v2',
-        frontMatter: {},
-      })
-    return pageOpts
-  },
   redirects: () =>
     Object.entries({
       '/docs/quick-start': '/docs',
@@ -86,7 +74,4 @@ export default withGuildDocs({
       destination: to,
       permanent: true,
     })),
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 })
