@@ -7,8 +7,6 @@ import { dockerDeployment } from './tests/docker'
 import { DeploymentConfiguration } from './types'
 import { env, getCommitId } from './utils'
 import { vercelDeployment } from './tests/vercel'
-import { nextJSECSDeployment } from './tests/next-js.ecs'
-import { nextJSAzureDeployment } from './tests/next-js.azure'
 
 const AVAILABLE_TEST_PLANS = {
   'cf-worker': cloudFlareDeployment,
@@ -17,8 +15,6 @@ const AVAILABLE_TEST_PLANS = {
   'aws-lambda': awsLambdaDeployment,
   'vercel-function': vercelDeployment,
   'docker-node-17': dockerDeployment('node:18-slim'),
-  'next-js-ecs': nextJSECSDeployment,
-  'next-js-azure': nextJSAzureDeployment,
 }
 
 async function main() {
