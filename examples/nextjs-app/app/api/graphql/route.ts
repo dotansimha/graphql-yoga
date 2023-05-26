@@ -20,7 +20,7 @@ const { handleRequest } = createYoga({
   graphqlEndpoint: '/api/graphql',
 
   // Yoga needs to know how to create a valid Next response
-  fetchAPI: { Response },
+  fetchAPI: { Response, Request },
 })
 
 export { handleRequest as GET, handleRequest as POST }
