@@ -1,5 +1,5 @@
 import { createYoga } from 'graphql-yoga'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { schema } from './schema'
 import { createContext } from './context'
 

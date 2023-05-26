@@ -12,7 +12,6 @@ async function collectAsyncIterableValues<TType>(
 
 describe('map', () => {
   it('maps source stream', async () => {
-    // eslint-disable-next-line @typescript-eslint/require-await
     async function* source() {
       yield 1
       yield 2

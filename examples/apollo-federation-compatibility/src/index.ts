@@ -1,7 +1,7 @@
 import { buildSubgraphSchema } from '@apollo/subgraph'
 import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace'
 import { createYoga } from 'graphql-yoga'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { gql } from 'graphql-tag'
 import { readFileSync } from 'node:fs'
 

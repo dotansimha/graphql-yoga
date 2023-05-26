@@ -1,4 +1,4 @@
-import * as path from 'path'
+import * as path from 'node:path'
 import * as cdk from '@aws-cdk/core'
 import * as lambda from '@aws-cdk/aws-lambda'
 import * as apiGateway from '@aws-cdk/aws-apigateway'

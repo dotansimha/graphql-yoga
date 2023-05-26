@@ -1,6 +1,6 @@
-import { exec } from 'child_process'
-import { promises as fsPromises } from 'fs'
-import { promisify } from 'util'
+import { exec } from 'node:child_process'
+import { promises as fsPromises } from 'node:fs'
+import { promisify } from 'node:util'
 
 export { fsPromises }
 export const execPromise = promisify(exec)
@@ -13,7 +13,7 @@ export async function getCommitId() {
 export async function waitForEndpoint(
   endpoint: string,
   retries: number,
-  timeout = 10000,
+  timeout = 10_000,
 ): Promise<boolean> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     console.info(

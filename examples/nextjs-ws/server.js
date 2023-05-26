@@ -1,8 +1,9 @@
-const { createServer } = require('http')
+/* eslint-env node */
+const { createServer } = require('node:http')
 const { WebSocketServer } = require('ws')
 const { createYoga, createSchema } = require('graphql-yoga')
 const { useServer } = require('graphql-ws/lib/use/ws')
-const { parse } = require('url')
+const { parse } = require('node:url')
 const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -40,7 +41,7 @@ const yoga = createYoga({
           async *subscribe() {
             for (let i = 0; i < 5; i++) {
               yield { clock: new Date().toString() }
-              await new Promise((resolve) => setTimeout(resolve, 1_000))
+              await new Promise((resolve) => setTimeout(resolve, 1000))
             }
           },
         },

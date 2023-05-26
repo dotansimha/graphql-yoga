@@ -7,7 +7,7 @@ import {
   pipe,
   map,
 } from 'graphql-yoga'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { Resolvers } from './generated/graphql'
 
 const typeDefs = /* GraphQL */ `

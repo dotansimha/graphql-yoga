@@ -1,10 +1,10 @@
 import { yoga } from '../yoga'
-import { createServer, Server } from 'http'
-import { AddressInfo } from 'net'
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { fetch, File, FormData } from '@whatwg-node/fetch'
-import * as fs from 'fs'
-import * as crypto from 'crypto'
-import * as path from 'path'
+import * as fs from 'node:fs'
+import * as crypto from 'node:crypto'
+import * as path from 'node:path'
 
 function md5File(path: string) {
   return new Promise((resolve, reject) => {

@@ -6,7 +6,7 @@ import {
   createYoga,
   Plugin,
 } from '../src/index.js'
-import { STATUS_CODES } from 'http'
+import { STATUS_CODES } from 'node:http'
 
 describe('GraphQLError.extensions.http', () => {
   it('sets correct status code and headers for thrown GraphQLError in a resolver', async () => {

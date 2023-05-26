@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { GraphQLSchema } from 'graphql'
 
 import { createSchema, createYoga, YogaInitialContext } from '../src/index.js'

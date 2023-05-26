@@ -27,7 +27,6 @@ describe('Context', () => {
       },
       Subscription: {
         greetings: {
-          // eslint-disable-next-line @typescript-eslint/require-await
           async *subscribe() {
             yield { greetings: 'Hi' }
           },

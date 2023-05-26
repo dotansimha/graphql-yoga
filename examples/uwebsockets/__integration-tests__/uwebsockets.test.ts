@@ -1,9 +1,9 @@
-import { createServer, AddressInfo } from 'net'
+import { createServer, AddressInfo } from 'node:net'
 import type { us_listen_socket } from 'uWebSockets.js'
 import { fetch } from '@whatwg-node/fetch'
 import { Client, createClient } from 'graphql-ws'
 import ws from 'ws'
-import Crypto from 'crypto'
+import Crypto from 'node:crypto'
 
 describe('uWebSockets', () => {
   const nodeMajor = parseInt(process.versions.node.split('.')[0], 10)

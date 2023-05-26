@@ -1,6 +1,6 @@
 import { yoga } from '../src/yoga'
-import { createServer, Server } from 'http'
-import { AddressInfo } from 'net'
+import { createServer, Server } from 'node:http'
+import { AddressInfo } from 'node:net'
 import { fetch } from '@whatwg-node/fetch'
 
 describe('error-handling example integration', () => {

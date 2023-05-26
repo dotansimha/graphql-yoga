@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { Trace } from 'apollo-reporting-protobuf'
 import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga'
 

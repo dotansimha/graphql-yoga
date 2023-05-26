@@ -123,7 +123,7 @@ describe('SvelteKit integration', () => {
 
 	it('go to GraphiQL page', async () => {
 		if (!toSkip) {
-			// Go the the right route
+			// Go the right route
 			const body = await page.goto(
 				'http://localhost:3007/api/graphql?query=query+Hello+%7B%0A%09hello%0A%7D'
 			);

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { resolve } = require('path')
+const { resolve } = require('node:path')
 const { pathsToModuleNameMapper } = require('ts-jest')
 const CI = !!process.env.CI
 
@@ -14,7 +14,7 @@ const testMatch = []
 let testTimeout = undefined
 
 if (process.env.INTEGRATION_TEST === 'true') {
-  testTimeout = 10000
+  testTimeout = 10_000
   testMatch.push(
     '<rootDir>/**/__integration-tests__/**/?(*.)+(spec|test).[jt]s?(x)',
   )

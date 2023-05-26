@@ -1,5 +1,5 @@
 import { createYoga, createSchema } from 'graphql-yoga'
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 
 // 1. Please add the schema that causes your issue here
 const schema = createSchema({

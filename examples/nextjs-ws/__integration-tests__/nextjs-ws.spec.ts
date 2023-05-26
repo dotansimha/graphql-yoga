@@ -7,7 +7,7 @@ let stop = () => {
   // noop
 }
 beforeAll(async () => {
-  stop = await start(53000)
+  stop = await start(53_000)
 })
 afterAll(() => stop())
 
