@@ -19,16 +19,27 @@ function getOptionsForScenario(scenario, index) {
   const noErrors = `no_errors{mode:${scenario}}`
   const expectedResult = `expected_result{mode:${scenario}}`
   const httpReqDuration = `http_req_duration{mode:${scenario}}`
+  const scenarioField = {
+    executor: 'constant-vus',
+    exec: 'run',
+    startTime: DURATION * index + 's',
+    vus: VUS,
+    duration: DURATION + 's',
+    env: { MODE: scenario },
+    tags: { mode: scenario },
+  }
+  if (scenario === 'graphql-no-parse-validate-cache') {
+    return {
+      scenario: scenarioField,
+      thresholds: {
+        [noErrors]: ['rate>0.99'],
+        [expectedResult]: ['rate>0.99'],
+        [httpReqDuration]: ['avg<=2'],
+      },
+    }
+  }
   return {
-    scenario: {
-      executor: 'constant-vus',
-      exec: 'run',
-      startTime: DURATION * index + 's',
-      vus: VUS,
-      duration: DURATION + 's',
-      env: { MODE: scenario },
-      tags: { mode: scenario },
-    },
+    scenario: scenarioField,
     thresholds: {
       [noErrors]: ['rate>0.99'],
       [expectedResult]: ['rate>0.99'],
