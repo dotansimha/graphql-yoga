@@ -40,7 +40,7 @@ export function useResultProcessors(): Plugin {
 
   const sse = getSSEProcessorConfig()
   const defaultList = [sse, multipart, regular]
-  const subscriptionList = [multipart, sse, regular]
+  const subscriptionList = [sse, regular]
 
   return {
     onSubscribe({ args: { contextValue } }) {
