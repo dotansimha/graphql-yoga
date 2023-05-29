@@ -34,6 +34,7 @@ function getOptionsForScenario(scenario, index) {
       thresholds: {
         [noErrors]: ['rate>0.99'],
         [expectedResult]: ['rate>0.99'],
+        [httpReqDuration]: ['avg<=2'],
       },
     }
   }
