@@ -11,6 +11,8 @@ const hostname = 'localhost'
 const port = 3000
 
 // prepare nextjs
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 const app = next({ dev, hostname, port })
 
 // match the route next would use if yoga was in `pages/api/graphql.ts`
