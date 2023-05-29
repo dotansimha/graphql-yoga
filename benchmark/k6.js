@@ -31,6 +31,10 @@ function getOptionsForScenario(scenario, index) {
   if (scenario === 'graphql-no-parse-validate-cache') {
     return {
       scenario: scenarioField,
+      thresholds: {
+        [noErrors]: ['rate>0.99'],
+        [expectedResult]: ['rate>0.99'],
+      },
     }
   }
   return {
