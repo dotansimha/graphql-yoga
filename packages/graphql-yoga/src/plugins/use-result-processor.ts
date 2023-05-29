@@ -3,10 +3,10 @@ import { isAsyncIterable } from '@envelop/core'
 import {
   getMediaTypesForRequestInOrder,
   isMatchingMediaType,
-} from './resultProcessor/accept.js'
-import { processMultipartResult } from './resultProcessor/multipart.js'
-import { getSSEProcessor } from './resultProcessor/sse.js'
-import { processRegularResult } from './resultProcessor/regular.js'
+} from './result-processor/accept.js'
+import { processMultipartResult } from './result-processor/multipart.js'
+import { getSSEProcessor } from './result-processor/sse.js'
+import { processRegularResult } from './result-processor/regular.js'
 import { Plugin, ResultProcessor } from './types.js'
 
 interface ResultProcessorConfig {

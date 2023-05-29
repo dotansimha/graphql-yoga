@@ -1,5 +1,5 @@
 import { createSchema, createYoga } from '../src/index.js'
-import { useReadinessCheck } from '../src/plugins/useReadinessCheck'
+import { useReadinessCheck } from '../src/plugins/use-readiness-check.js'
 
 describe('Readiness Check', () => {
   const schema = createSchema({

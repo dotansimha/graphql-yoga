@@ -20,28 +20,28 @@ import {
 import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
 import { handleError } from './error.js'
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger'
-import { isGETRequest, parseGETRequest } from './plugins/requestParser/GET.js'
+import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js'
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
-} from './plugins/requestParser/POSTFormUrlEncoded.js'
+} from './plugins/request-parser/post-form-url-encoded.js'
 import {
   isPOSTGraphQLStringRequest,
   parsePOSTGraphQLStringRequest,
-} from './plugins/requestParser/POSTGraphQLString.js'
+} from './plugins/request-parser/post-graphql-string.js'
 import {
   isPOSTJsonRequest,
   parsePOSTJsonRequest,
-} from './plugins/requestParser/POSTJson.js'
+} from './plugins/request-parser/post-json.js'
 import {
   isPOSTMultipartRequest,
   parsePOSTMultipartRequest,
-} from './plugins/requestParser/POSTMultipart.js'
-import { useCheckGraphQLQueryParams } from './plugins/requestValidation/useCheckGraphQLQueryParams.js'
-import { useCheckMethodForGraphQL } from './plugins/requestValidation/useCheckMethodForGraphQL.js'
-import { useHTTPValidationError } from './plugins/requestValidation/useHTTPValidationError.js'
-import { useLimitBatching } from './plugins/requestValidation/useLimitBatching.js'
-import { usePreventMutationViaGET } from './plugins/requestValidation/usePreventMutationViaGET.js'
+} from './plugins/request-parser/post-multipart.js'
+import { useCheckGraphQLQueryParams } from './plugins/request-validation/use-check-graphql-query-params.js'
+import { useCheckMethodForGraphQL } from './plugins/request-validation/use-check-method-for-graphql.js'
+import { useHTTPValidationError } from './plugins/request-validation/use-http-validation-error.js'
+import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js'
+import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js'
 import {
   OnParamsHook,
   OnRequestParseDoneHook,
@@ -55,16 +55,16 @@ import {
   GraphiQLOptions,
   GraphiQLOptionsOrFactory,
   useGraphiQL,
-} from './plugins/useGraphiQL.js'
-import { useHealthCheck } from './plugins/useHealthCheck.js'
+} from './plugins/use-graphiql.js'
+import { useHealthCheck } from './plugins/use-health-check.js'
 import {
   ParserAndValidationCacheOptions,
   useParserAndValidationCache,
-} from './plugins/useParserAndValidationCache.js'
-import { useRequestParser } from './plugins/useRequestParser.js'
-import { useResultProcessors } from './plugins/useResultProcessor.js'
-import { useSchema, YogaSchemaDefinition } from './plugins/useSchema.js'
-import { useUnhandledRoute } from './plugins/useUnhandledRoute.js'
+} from './plugins/use-parser-and-validation-cache.js'
+import { useRequestParser } from './plugins/use-request-parser.js'
+import { useResultProcessors } from './plugins/use-result-processor.js'
+import { useSchema, YogaSchemaDefinition } from './plugins/use-schema.js'
+import { useUnhandledRoute } from './plugins/use-unhandled-route.js'
 import {
   processRequest as processGraphQLParams,
   processResult,
