@@ -262,4 +262,39 @@ describe('accept header', () => {
     const result = await response.json()
     expect(result).toEqual({ data: { ping: 'pong' } })
   })
+
+  it('subscription can not be delivered with accept: multipart/mixed', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            ping: String
+          }
+
+          type Subscription {
+            ping: String
+          }
+        `,
+        resolvers: {
+          Query: { ping: () => 'pong' },
+          Subscription: {
+            async *ping() {
+              yield { foo: 'bar' }
+            },
+          },
+        },
+      }),
+    })
+
+    const response = await yoga.fetch(
+      `http://yoga/graphql?query=subscription{ping}`,
+      {
+        headers: {
+          accept: 'multipart/mixed',
+        },
+      },
+    )
+
+    expect(response.status).toEqual(406)
+  })
 })
