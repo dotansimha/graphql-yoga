@@ -11,7 +11,7 @@ const hostname = 'localhost'
 const port = 3000
 
 // prepare nextjs
-const app = next.default({ dev, hostname, port })
+const app = next({ dev, hostname, port })
 
 // match the route next would use if yoga was in `pages/api/graphql.ts`
 const graphqlEndpoint = '/api/graphql'
