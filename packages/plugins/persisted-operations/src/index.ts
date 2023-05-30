@@ -4,8 +4,8 @@ import {
   GraphQLParams,
   Plugin,
   PromiseOrValue,
+  type OnParamsEventPayload,
 } from 'graphql-yoga'
-import { OnParamsEventPayload } from 'graphql-yoga/src/plugins/types'
 
 export type ExtractPersistedOperationId = (
   params: GraphQLParams,
