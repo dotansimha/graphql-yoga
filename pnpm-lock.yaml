@@ -1460,7 +1460,7 @@ importers:
         version: 1.0.0(@types/node@18.16.16)(graphql@16.6.0)
       '@graphql-tools/executor-urql-exchange':
         specifier: ^1.0.0
-        version: 1.0.0(@urql/core@4.0.7)(graphql@16.6.0)(wonka@6.3.2)
+        version: 1.0.0(@urql/core@4.0.8)(graphql@16.6.0)(wonka@6.3.2)
       graphql:
         specifier: ^15.2.0 || ^16.0.0
         version: 16.6.0
@@ -1469,8 +1469,8 @@ importers:
         version: 2.5.2
     devDependencies:
       '@urql/core':
-        specifier: 4.0.7
-        version: 4.0.7(graphql@16.6.0)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.6.0)
       graphql-yoga:
         specifier: 3.9.1
         version: link:../../graphql-yoga/dist
@@ -7811,7 +7811,7 @@ packages:
       - bufferutil
       - utf-8-validate
 
-  /@graphql-tools/executor-urql-exchange@1.0.0(@urql/core@4.0.7)(graphql@16.6.0)(wonka@6.3.2):
+  /@graphql-tools/executor-urql-exchange@1.0.0(@urql/core@4.0.8)(graphql@16.6.0)(wonka@6.3.2):
     resolution: {integrity: sha512-Osmx7I/g5V+yNyC95GYT51mxiA3SpQjD+zkQ18yVGRqnKcqXF2GvtwN5jY3ujR9+WwdG20Plt1bNOLw4cYDX/w==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -7820,7 +7820,7 @@ packages:
       wonka: ^6.0.0
     dependencies:
       '@graphql-tools/utils': 10.0.0(graphql@16.6.0)
-      '@urql/core': 4.0.7(graphql@16.6.0)
+      '@urql/core': 4.0.8(graphql@16.6.0)
       graphql: 16.6.0
       tslib: 2.5.2
       wonka: 6.3.2
@@ -13355,8 +13355,8 @@ packages:
       eslint-visitor-keys: 3.4.1
     dev: true
 
-  /@urql/core@4.0.7(graphql@16.6.0):
-    resolution: {integrity: sha512-UtZ9oSbSFODXzFydgLCXpAQz26KGT1d6uEfcylKphiRWNXSWZi8k7vhJXNceNm/Dn0MiZ+kaaJHKcnGY1jvHRQ==}
+  /@urql/core@4.0.8(graphql@16.6.0):
+    resolution: {integrity: sha512-8aKNAAqKqnzcE6lcUA48JepghXZC72hZePXz5sYZ//oCPodQPRcBpj+eO1QTq2t0QM32B+grzYj8xEGukgBiXQ==}
     dependencies:
       '@0no-co/graphql.web': 1.0.1(graphql@16.6.0)
       wonka: 6.3.2
