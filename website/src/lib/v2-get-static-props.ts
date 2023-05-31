@@ -8,9 +8,12 @@ const { user, repo, branch, docsPath, filePaths } = json
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   fallback: 'blocking',
-  paths: filePaths.map((filePath) => ({
-    params: { slug: filePath.replace(/\.mdx?$/, '').split('/') },
-  })),
+  paths: filePaths
+    // this fix `TOO MANY REDIRECTS` error in CF
+    .map((filePath) => filePath.replace(/\/?index\.mdx?$/, ''))
+    .map((filePath) => ({
+      params: { slug: filePath.replace(/\.mdx?$/, '').split('/') },
+    })),
 })
 
 export const getStaticProps: GetStaticProps<

@@ -85,7 +85,7 @@ fetchRemoteFilePaths({
   user: 'dotansimha',
   repo: 'graphql-yoga',
   // last commit with v2 source docs
-  branch: '8bb0fb0a010bfca17c3e1b771a704b631952ca4c',
+  branch: '291daaaf3921b2ab875d988b7a7880ee277f247e',
   docsPath: 'website/src/pages/v2/',
   outputPath: path.join(process.cwd(), 'remote-files', 'v2.json'),
 })
