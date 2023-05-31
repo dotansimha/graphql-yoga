@@ -2,8 +2,6 @@ import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga'
 import { useSofa as createSofaHandler } from 'sofa-api'
 import { SofaHandler } from './types.js'
 
-export { OpenAPI } from 'sofa-api'
-
 type SofaHandlerConfig = Parameters<typeof createSofaHandler>[0]
 
 export type SofaPluginConfig = Omit<
