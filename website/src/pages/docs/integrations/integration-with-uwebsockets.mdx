@@ -17,7 +17,6 @@ uWebSockets or [µWebSockets.js](https://github.com/uNetworking/uWebSockets.js) 
 ```ts filename="index.ts"
 import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
 import { createSchema, createYoga } from 'graphql-yoga'
-import { Readable } from 'node:stream'
 
 interface ServerContext {
   req: HttpRequest
@@ -39,63 +38,7 @@ const yoga = createYoga<ServerContext>({
   })
 })
 
-App()
-  .any('/*', async (res, req) => {
-    let body: any
-    const method = req.getMethod()
-    if (method !== 'get' && method !== 'head') {
-      body = new Readable({
-        read() {}
-      })
-      res
-        .onData(function (chunk, isLast) {
-          body.push(Buffer.from(chunk))
-          if (isLast) {
-            body.push(null)
-          }
-        })
-        .onAborted(function () {
-          body.push(null)
-        })
-    }
-    const headers = {}
-    req.forEach((key, value) => {
-      headers[key] = value
-    })
-    const response = await yoga.fetch(
-      req.getUrl(),
-      {
-        method,
-        headers,
-        body
-      },
-      {
-        req,
-        res
-      }
-    )
-    res.writeStatus(`${response.status} ${response.statusText}`)
-    response.headers.forEach((value, key) => {
-      // content-length causes an error with Node.js's fetch
-      if (key === 'content-length') {
-        return
-      }
-      res.writeHeader(key, value)
-    })
-    if (response.body) {
-      if (response.body instanceof Uint8Array) {
-        res.end(response.body)
-        return
-      }
-      for await (const chunk of response.body) {
-        res.write(chunk)
-      }
-    }
-    res.end()
-  })
-  .listen(4000, () => {
-    console.log(`Server is running on http://localhost:4000`)
-  })
+App().any('/*', yoga)
 ```
 
 ## Subscriptions with WebSockets
@@ -107,7 +50,6 @@ You can also use WebSockets instead of SSE with `graphql-ws`;
 ```ts filename="index.ts"
 import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
 import { createSchema, createYoga, Repeater } from 'graphql-yoga'
-import { Readable } from 'node:stream'
 import { makeBehavior } from 'graphql-ws/lib/use/uWebSockets'
 import { ExecutionArgs, execute, subscribe } from 'graphql'
 
@@ -151,60 +93,6 @@ export const yoga = createYoga<ServerContext>({
   }
 })
 
-const yogaHandler = async (res: HttpResponse, req: HttpRequest) => {
-  let body: any
-  const method = req.getMethod()
-  if (method !== 'get' && method !== 'head') {
-    body = new Readable({
-      read() {}
-    })
-    res
-      .onData(function (chunk, isLast) {
-        body.push(Buffer.from(chunk))
-        if (isLast) {
-          body.push(null)
-        }
-      })
-      .onAborted(function () {
-        body.push(null)
-      })
-  }
-  const headers = {}
-  req.forEach((key, value) => {
-    headers[key] = value
-  })
-  const response = await yoga.fetch(
-    req.getUrl(),
-    {
-      method,
-      headers,
-      body
-    },
-    {
-      req,
-      res
-    }
-  )
-  res.writeStatus(`${response.status} ${response.statusText}`)
-  response.headers.forEach((value, key) => {
-    // content-length causes an error with Node.js's fetch
-    if (key === 'content-length') {
-      return
-    }
-    res.writeHeader(key, value)
-  })
-  if (response.body) {
-    if (response.body instanceof Uint8Array) {
-      res.end(response.body)
-      return
-    }
-    for await (const chunk of response.body) {
-      res.write(chunk)
-    }
-  }
-  res.end()
-}
-
 // yoga's envelop may augment the `execute` and `subscribe` operations
 // so we need to make sure we always use the freshest instance
 type EnvelopedExecutionArgs = ExecutionArgs & {
@@ -241,8 +129,8 @@ const wsHandler = makeBehavior({
 })
 
 App()
-  .any('/*', yogaHandler)
-  .ws('/graphql', wsHandler)
+  .any('/*', yoga)
+  .ws(yoga.graphqlEndpoint, wsHandler)
   .listen(() => {
     console.log(`Server is running on http://localhost:4000`)
   })

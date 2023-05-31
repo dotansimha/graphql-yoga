@@ -1,6 +1,5 @@
 import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
 import { createSchema, createYoga, Repeater } from 'graphql-yoga'
-import { Readable } from 'node:stream'
 import { makeBehavior } from 'graphql-ws/lib/use/uWebSockets'
 import { ExecutionArgs, execute, subscribe } from 'graphql'
 
@@ -44,61 +43,6 @@ export const yoga = createYoga<ServerContext>({
   },
 })
 
-const yogaHandler = async (res: HttpResponse, req: HttpRequest) => {
-  let body: any
-  const method = req.getMethod()
-  if (method !== 'get' && method !== 'head') {
-    body = new Readable({
-      read() {},
-    })
-    res
-      .onData((chunk, isLast) => {
-        body.push(Buffer.from(chunk))
-        if (isLast) {
-          body.push(null)
-        }
-      })
-      .onAborted(() => {
-        body.push(null)
-      })
-  }
-  const headers = {}
-  // eslint-disable-next-line unicorn/no-array-for-each -- req is not array
-  req.forEach((key, value) => {
-    headers[key] = value
-  })
-  const response = await yoga.fetch(
-    req.getUrl(),
-    {
-      method,
-      headers,
-      body,
-    },
-    {
-      req,
-      res,
-    },
-  )
-  res.writeStatus(`${response.status} ${response.statusText}`)
-  for (const [key, value] of response.headers.entries()) {
-    // content-length causes an error with Node.js' fetch
-    if (key === 'content-length') {
-      continue
-    }
-    res.writeHeader(key, value)
-  }
-  if (response.body) {
-    if (response.body instanceof Uint8Array) {
-      res.end(response.body)
-      return
-    }
-    for await (const chunk of response.body) {
-      res.write(chunk)
-    }
-  }
-  res.end()
-}
-
 // yoga's envelop may augment the `execute` and `subscribe` operations
 // so we need to make sure we always use the freshest instance
 type EnvelopedExecutionArgs = ExecutionArgs & {
@@ -134,6 +78,4 @@ const wsHandler = makeBehavior({
   },
 })
 
-export const app = App()
-  .any('/*', yogaHandler)
-  .ws(yoga.graphqlEndpoint, wsHandler)
+export const app = App().any('/*', yoga).ws(yoga.graphqlEndpoint, wsHandler)
