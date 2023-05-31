@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "pnpm fetch-remote-filepaths",
+    "prebuild": "pnpm predev",
+    "fetch-remote-filepaths": "tsx scripts/fetch-remote-filepaths.ts",
     "build": "next build",
     "postbuild": "next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "algolia-sync": "node scripts/algolia-ci.mjs",
@@ -19,6 +22,7 @@
     "@types/react": "18.2.7",
     "cross-env": "7.0.3",
     "fast-xml-parser": "4.2.2",
+    "tsx": "^3.12.7",
     "typescript": "5.0.4"
   },
   "dependencies": {
@@ -27,6 +31,7 @@
     "graphql": "16.6.0",
     "next": "13.4.4",
     "next-sitemap": "4.1.3",
+    "nextra": "2.6.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "4.9.0"

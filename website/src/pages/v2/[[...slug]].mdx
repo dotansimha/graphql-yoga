@@ -1,0 +1,20 @@
+import { RemoteContent } from 'nextra/data'
+import {
+  Callout,
+  PackageCmd,
+  Tab,
+  Tabs,
+  mdxComponents
+} from '@theguild/components'
+
+export { getStaticPaths, getStaticProps } from '../../lib/v2-get-static-props'
+
+<RemoteContent
+  components={{
+    ...mdxComponents,
+    Callout,
+    PackageCmd,
+    Tab,
+    Tabs
+  }}
+/>
