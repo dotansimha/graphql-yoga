@@ -606,8 +606,8 @@ importers:
         version: link:../../../packages/graphql-yoga/dist
     devDependencies:
       concurrently:
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 8.1.0
+        version: 8.1.0
       firebase-functions-test:
         specifier: ^3.0.0
         version: 3.0.0(firebase-admin@11.5.0)(firebase-functions@4.2.1)(jest@29.5.0)
@@ -9899,7 +9899,7 @@ packages:
       read-pkg: 7.1.0
       semver: 7.5.1
       yaml: 2.2.1
-      yargs: 17.7.1
+      yargs: 17.7.2
     dev: true
 
   /@netlify/build@29.11.5(@types/node@18.16.16):
@@ -9959,7 +9959,7 @@ packages:
       ts-node: 10.9.1(@types/node@18.16.16)(typescript@5.0.4)
       typescript: 5.0.4
       uuid: 8.3.2
-      yargs: 17.7.1
+      yargs: 17.7.2
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -10008,7 +10008,7 @@ packages:
       toml: 3.0.0
       tomlify-j0.4: 3.0.0
       validate-npm-package-name: 4.0.0
-      yargs: 17.7.1
+      yargs: 17.7.2
     dev: true
 
   /@netlify/edge-bundler@8.14.2:
@@ -10467,7 +10467,7 @@ packages:
       tmp-promise: 3.0.3
       toml: 3.0.0
       unixify: 1.0.0
-      yargs: 17.7.1
+      yargs: 17.7.2
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -16460,6 +16460,23 @@ packages:
       supports-color: 8.1.1
       tree-kill: 1.2.2
       yargs: 17.7.1
+    dev: false
+
+  /concurrently@8.1.0:
+    resolution: {integrity: sha512-0AB6eOAtaW/r/kX2lCdolaWtT191ICeuJjEJvI9hT3zbPFuZ/iZaJwMRKwbuwADome7OKxk73L7od+fsveZ7tA==}
+    engines: {node: ^14.13.0 || >=16.0.0}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      date-fns: 2.29.3
+      lodash: 4.17.21
+      rxjs: 7.8.0
+      shell-quote: 1.8.0
+      spawn-command: 0.0.2-1
+      supports-color: 8.1.1
+      tree-kill: 1.2.2
+      yargs: 17.7.2
+    dev: true
 
   /config-chain@1.1.13:
     resolution: {integrity: sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==}
@@ -31710,7 +31727,7 @@ packages:
       smartwrap: 2.0.2
       strip-ansi: 6.0.1
       wcwidth: 1.0.1
-      yargs: 17.7.1
+      yargs: 17.7.2
     dev: true
 
   /tunnel-agent@0.6.0:
