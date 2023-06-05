@@ -8,6 +8,7 @@ overrides:
   graphql: 16.6.0
   '@envelop/core': 4.0.0
   '@changesets/assemble-release-plan': 5.2.1
+  '@types/react': 18.2.8
 
 patchedDependencies:
   '@changesets/assemble-release-plan@5.2.1':
@@ -553,8 +554,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@types/react':
-        specifier: ^18.0.17
-        version: 18.0.21
+        specifier: 18.2.8
+        version: 18.2.8
       '@whatwg-node/fetch':
         specifier: ^0.9.0
         version: 0.9.0
@@ -12727,14 +12728,6 @@ packages:
     resolution: {integrity: sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==}
     dependencies:
       '@types/react': 18.2.8
-
-  /@types/react@18.0.21:
-    resolution: {integrity: sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.1
-    dev: true
 
   /@types/react@18.2.8:
     resolution: {integrity: sha512-lTyWUNrd8ntVkqycEEplasWy2OxNlShj3zqS0LuB1ENUGis5HodmhM7DtCoUGbxj3VW/WsGA0DUhpG6XrM7gPA==}

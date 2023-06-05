@@ -364,7 +364,7 @@ function FeatureWrapper({ children }: { children: ReactNode }): ReactElement {
         even:dark:bg-black
       `}
     >
-      {children as any}
+      {children}
     </div>
   )
 }
