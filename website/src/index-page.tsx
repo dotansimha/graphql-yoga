@@ -54,7 +54,7 @@ export function IndexPage(): ReactElement {
             performance and great developer experience.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Anchor className={classes.button} href="/v3">
+            <Anchor className={classes.button} href="/docs">
               Documentation
             </Anchor>
             <Anchor
@@ -90,28 +90,28 @@ export function IndexPage(): ReactElement {
                 textColor={gradients[3][0]}
                 highlights={[
                   {
-                    link: '/v3/features/parsing-and-validation-caching',
+                    link: '/docs/features/parsing-and-validation-caching',
                     icon: <AiFillAppstore size={36} />,
                     title: 'Parse and validate cache',
                     description:
                       'Fast requests by caching intensive operations',
                   },
                   {
-                    link: '/v3/features/error-masking',
+                    link: '/docs/features/error-masking',
                     icon: <MdError size={36} />,
                     title: 'Error masking',
                     description:
                       'Never leak sensitive information through errors',
                   },
                   {
-                    link: '/v3/features/health-check',
+                    link: '/docs/features/health-check',
                     icon: <GiHealthNormal size={36} />,
                     title: 'Health checks',
                     description:
                       'Ping the server for liveliness check and/or supply a custom readiness check',
                   },
                   {
-                    link: '/v3/features/graphiql',
+                    link: '/docs/features/graphiql',
                     icon: <GrGraphQl size={36} />,
                     title: 'GraphiQL',
                     description:
@@ -142,7 +142,7 @@ export function IndexPage(): ReactElement {
                 </Anchor>{' '}
                 you can use{' '}
                 <Anchor
-                  href="/v3/features/envelop-plugins"
+                  href="/docs/features/envelop-plugins"
                   className={classes.link}
                 >
                   any plugin
@@ -154,7 +154,7 @@ export function IndexPage(): ReactElement {
                 textColor={gradients[0][0]}
                 highlights={[
                   {
-                    link: '/v3/features/apollo-federation',
+                    link: '/docs/features/apollo-federation',
                     icon: <SiApollographql size={36} />,
                     title: 'Apollo Federation',
                     description: (
@@ -165,7 +165,7 @@ export function IndexPage(): ReactElement {
                           onClick={(e) => {
                             e.preventDefault()
                             router.push(
-                              '/v3/comparison#compatibility-with-apollo-federation',
+                              '/docs/comparison#compatibility-with-apollo-federation',
                             )
                           }}
                         >
@@ -176,14 +176,14 @@ export function IndexPage(): ReactElement {
                     ),
                   },
                   {
-                    link: '/v3/features/persisted-operations',
+                    link: '/docs/features/persisted-operations',
                     icon: <BsFillSafeFill size={36} />,
                     title: 'Persisted operations',
                     description:
                       'Prevent execution of arbitrary GraphQL operations',
                   },
                   {
-                    link: '/v3/features/response-caching',
+                    link: '/docs/features/response-caching',
                     icon: <MdCached size={36} />,
                     title: 'Response caching',
                     description:
@@ -246,7 +246,7 @@ export function IndexPage(): ReactElement {
                       <>
                         Built-in GraphQL{' '}
                         <Anchor
-                          href="/v3/features/subscriptions"
+                          href="/docs/features/subscriptions"
                           className={classes.link}
                         >
                           Subscriptions over Server-Sent Events
@@ -295,41 +295,41 @@ export function IndexPage(): ReactElement {
             {[
               {
                 name: 'AWS Lambda',
-                href: '/v3/integrations/integration-with-aws-lambda',
+                href: '/docs/integrations/integration-with-aws-lambda',
               },
               {
                 name: 'Cloudflare Workers',
-                href: '/v3/integrations/integration-with-cloudflare-workers',
+                href: '/docs/integrations/integration-with-cloudflare-workers',
               },
               {
                 name: 'Deno',
-                href: '/v3/integrations/integration-with-deno',
+                href: '/docs/integrations/integration-with-deno',
               },
               {
                 name: 'Express',
-                href: '/v3/integrations/integration-with-express',
+                href: '/docs/integrations/integration-with-express',
               },
               {
                 name: 'Fastify',
-                href: '/v3/integrations/integration-with-fastify',
+                href: '/docs/integrations/integration-with-fastify',
               },
-              { name: 'Koa', href: '/v3/integrations/integration-with-koa' },
+              { name: 'Koa', href: '/docs/integrations/integration-with-koa' },
               {
                 name: 'NestJS',
-                href: '/v3/integrations/integration-with-nestjs',
+                href: '/docs/integrations/integration-with-nestjs',
               },
               {
                 name: 'Next.js',
-                href: '/v3/integrations/integration-with-nextjs',
+                href: '/docs/integrations/integration-with-nextjs',
               },
               {
                 name: 'SvelteKit',
-                href: '/v3/integrations/integration-with-sveltekit',
+                href: '/docs/integrations/integration-with-sveltekit',
               },
-              { name: 'Bun', href: '/v3/integrations/integration-with-bun' },
+              { name: 'Bun', href: '/docs/integrations/integration-with-bun' },
               {
                 name: '& more...',
-                href: '/v3/integrations/z-other-environments',
+                href: '/docs/integrations/z-other-environments',
               },
             ].map((env) => (
               <div className="p-2 sm:w-1/2 md:w-1/3 w-full" key={env.name}>

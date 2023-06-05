@@ -3,7 +3,7 @@
 <div align="center">
   <h3>GraphQL Yoga</h3>
   <h6>Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</h6>
-  <a href="https://www.the-guild.dev/graphql/yoga-server/v3"><b>Go to documenation</b></a>
+  <a href="https://www.the-guild.dev/graphql/yoga-server/docs"><b>Go to documenation</b></a>
 </div>
 
 <br />
@@ -64,36 +64,36 @@ server.listen(4000, () => {
 - **WHATWG Fetch API:** the core package depends on [WHATWG Fetch API](https://fetch.spec.whatwg.org/) so it can run and deploy on any environment (Serverless, Workers, Deno, Node).
 - **Easily Extendable:** New GraphQL-Yoga support all [`envelop`](https://www.envelop.dev) plugins.
 
-## [Features](https://www.the-guild.dev/graphql/yoga-server/v3)
+## [Features](https://www.the-guild.dev/graphql/yoga-server/docs)
 
 - Fully typed with [TypeScript](https://www.typescriptlang.org)
 - [GraphQL over HTTP spec compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga)
-- [GraphiQL included](https://www.the-guild.dev/graphql/yoga-server/v3/features/graphiql)
-- [File uploads with GraphQL Multipart Request spec](https://www.the-guild.dev/graphql/yoga-server/v3/features/file-uploads)
-- [Subscriptions and realtime capabilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/subscriptions)
-- [Automatic persisted queries](https://www.the-guild.dev/graphql/yoga-server/v3/features/automatic-persisted-queries)
-- [Built-in parsing and validation caching](https://www.the-guild.dev/graphql/yoga-server/v3/features/parsing-and-validation-caching)
-- [Testing utilities](https://www.the-guild.dev/graphql/yoga-server/v3/features/testing)
+- [GraphiQL included](https://www.the-guild.dev/graphql/yoga-server/docs/features/graphiql)
+- [File uploads with GraphQL Multipart Request spec](https://www.the-guild.dev/graphql/yoga-server/docs/features/file-uploads)
+- [Subscriptions and realtime capabilities](https://www.the-guild.dev/graphql/yoga-server/docs/features/subscriptions)
+- [Automatic persisted queries](https://www.the-guild.dev/graphql/yoga-server/docs/features/automatic-persisted-queries)
+- [Built-in parsing and validation caching](https://www.the-guild.dev/graphql/yoga-server/docs/features/parsing-and-validation-caching)
+- [Testing utilities](https://www.the-guild.dev/graphql/yoga-server/docs/features/testing)
 - Supports [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - Runs **everywhere**, including environments like:
-  - [Deno](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-deno)
-  - [Bun](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-bun)
-  - [Cloudflare Workers](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-cloudflare-workers)
-  - [AWS Lambda](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/integration-with-aws-lambda)
-  - [_And other..._](https://www.the-guild.dev/graphql/yoga-server/v3/integrations/z-other-environments)
-- [_And more..._](https://www.the-guild.dev/graphql/yoga-server/v3)
+  - [Deno](https://www.the-guild.dev/graphql/yoga-server/docs/integrations/integration-with-deno)
+  - [Bun](https://www.the-guild.dev/graphql/yoga-server/docs/integrations/integration-with-bun)
+  - [Cloudflare Workers](https://www.the-guild.dev/graphql/yoga-server/docs/integrations/integration-with-cloudflare-workers)
+  - [AWS Lambda](https://www.the-guild.dev/graphql/yoga-server/docs/integrations/integration-with-aws-lambda)
+  - [_And other..._](https://www.the-guild.dev/graphql/yoga-server/docs/integrations/z-other-environments)
+- [_And more..._](https://www.the-guild.dev/graphql/yoga-server/docs)
 
-## [Documentation](https://www.the-guild.dev/graphql/yoga-server/v3)
+## [Documentation](https://www.the-guild.dev/graphql/yoga-server/docs)
 
-Our [documentation website](https://www.the-guild.dev/graphql/yoga-server/v3) will help you get started.
+Our [documentation website](https://www.the-guild.dev/graphql/yoga-server/docs) will help you get started.
 
 ## [Examples](https://github.com/dotansimha/graphql-yoga/tree/main/examples)
 
 We've made sure developers can quickly start with GraphQL Yoga by providing a comprehensive set of examples. [See all of them in the `examples/` folder.](https://github.com/dotansimha/graphql-yoga/tree/main/examples)
 
-## [Comparison](https://www.the-guild.dev/graphql/yoga-server/v3/comparison)
+## [Comparison](https://www.the-guild.dev/graphql/yoga-server/docs/comparison)
 
-Read more about how GraphQL Yoga compares to other servers in the ecosystem [here](https://www.the-guild.dev/graphql/yoga-server/v3/comparison).
+Read more about how GraphQL Yoga compares to other servers in the ecosystem [here](https://www.the-guild.dev/graphql/yoga-server/docs/comparison).
 
 ## Contributing
 
