@@ -1,29 +1,8 @@
-# functions
+# graphql-yoga-cloud-run-guide
 
-## null
+## 2.0.0
 
 ### Patch Changes
 
 - Updated dependencies [[`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca), [`34ecb4bb`](https://github.com/dotansimha/graphql-yoga/commit/34ecb4bbad3823f1bfde8aa7e1e92139481f9daf), [`ec318fe6`](https://github.com/dotansimha/graphql-yoga/commit/ec318fe6d3945190abbe8b643223268ff9a5e0e9), [`cc370691`](https://github.com/dotansimha/graphql-yoga/commit/cc370691cc525fe5b15cb846c60621d99d313310), [`b309ca0d`](https://github.com/dotansimha/graphql-yoga/commit/b309ca0db1c45264878c3cec0137c3fdbd22fc97), [`dd699c4b`](https://github.com/dotansimha/graphql-yoga/commit/dd699c4bcef24b373ee49237c187df3f093e1dfc), [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca), [`0522c740`](https://github.com/dotansimha/graphql-yoga/commit/0522c7408c69a1b72af5c220411cf19d7fa859e9)]:
   - graphql-yoga@4.0.0
-
-## null
-
-### Patch Changes
-
-- Updated dependencies [[`e1a60e21`](https://github.com/dotansimha/graphql-yoga/commit/e1a60e21f10813aa6d0f4673e4eb13979720c2c8), [`c50ea51c`](https://github.com/dotansimha/graphql-yoga/commit/c50ea51c992a6a480799655225727081585f0010), [`c50ea51c`](https://github.com/dotansimha/graphql-yoga/commit/c50ea51c992a6a480799655225727081585f0010)]:
-  - graphql-yoga@3.9.1
-
-## null
-
-### Patch Changes
-
-- Updated dependencies [[`aff69200`](https://github.com/dotansimha/graphql-yoga/commit/aff69200d512c530751c617ee685f9b3f82303f8)]:
-  - graphql-yoga@3.9.0
-
-## null
-
-### Patch Changes
-
-- Updated dependencies [[`ebb65b14`](https://github.com/dotansimha/graphql-yoga/commit/ebb65b14b29bbb4c50c6bb242262444315e99a73), [`528941cb`](https://github.com/dotansimha/graphql-yoga/commit/528941cb4d1670833ee0307de0c715e6b9681d7a)]:
-  - graphql-yoga@3.8.1
