@@ -1,5 +1,13 @@
 # @graphql-yoga/graphiql
 
+## 4.0.0
+
+### Major Changes
+
+- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767) [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca) Thanks [@renovate](https://github.com/apps/renovate)! - Drop support for Node.js 14. Require Node.js `>=16`.
+
+- [#2775](https://github.com/dotansimha/graphql-yoga/pull/2775) [`dd699c4b`](https://github.com/dotansimha/graphql-yoga/commit/dd699c4bcef24b373ee49237c187df3f093e1dfc) Thanks [@enisdenjo](https://github.com/enisdenjo)! - GRAPHQL_SSE is the default subscription protocol
+
 ## 3.0.12
 
 ### Patch Changes

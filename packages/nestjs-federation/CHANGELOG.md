@@ -1,5 +1,17 @@
 # @graphql-yoga/nestjs-federation
 
+## 2.0.0
+
+### Major Changes
+
+- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767) [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca) Thanks [@renovate](https://github.com/apps/renovate)! - Drop support for Node.js 14. Require Node.js `>=16`.
+
+### Patch Changes
+
+- Updated dependencies [[`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca)]:
+  - @graphql-yoga/plugin-apollo-inline-trace@2.0.0
+  - @graphql-yoga/nestjs@2.0.0
+
 ## 1.1.1
 
 ### Patch Changes

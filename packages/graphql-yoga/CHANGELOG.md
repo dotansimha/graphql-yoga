@@ -1,5 +1,31 @@
 # graphql-yoga
 
+## 4.0.0
+
+### Major Changes
+
+- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767) [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca) Thanks [@renovate](https://github.com/apps/renovate)! - Drop support for Node.js 14. Require Node.js `>=16`.
+
+- [#2776](https://github.com/dotansimha/graphql-yoga/pull/2776) [`34ecb4bb`](https://github.com/dotansimha/graphql-yoga/commit/34ecb4bbad3823f1bfde8aa7e1e92139481f9daf) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Drop unused graphiql options `defaultVariableEditorOpen` and `headerEditorEnabled`
+
+- [#2810](https://github.com/dotansimha/graphql-yoga/pull/2810) [`ec318fe6`](https://github.com/dotansimha/graphql-yoga/commit/ec318fe6d3945190abbe8b643223268ff9a5e0e9) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Remove support for executing Subscription operations over the incremental delivery response protocol (`multipart/mixed`)
+
+- [#2775](https://github.com/dotansimha/graphql-yoga/pull/2775) [`dd699c4b`](https://github.com/dotansimha/graphql-yoga/commit/dd699c4bcef24b373ee49237c187df3f093e1dfc) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Subscriptions use GraphQL over SSE "distinct connections mode"
+
+- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767) [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca) Thanks [@renovate](https://github.com/apps/renovate)! - Events without an event payload will now always have `null` as the event payload instead of `undefined`.
+
+- [#2777](https://github.com/dotansimha/graphql-yoga/pull/2777) [`0522c740`](https://github.com/dotansimha/graphql-yoga/commit/0522c7408c69a1b72af5c220411cf19d7fa859e9) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Parse and validation cache are now under a single option `parserAndValidationCache`
+
+### Patch Changes
+
+- [#2720](https://github.com/dotansimha/graphql-yoga/pull/2720) [`cc370691`](https://github.com/dotansimha/graphql-yoga/commit/cc370691cc525fe5b15cb846c60621d99d313310) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Skip validation caching when there is no `schema` specified. This previously caused a cryptic error message when reaching execution/validation without a schema. Now the missing schema error will actually originate from within the `validate` function instead.
+
+- [#2726](https://github.com/dotansimha/graphql-yoga/pull/2726) [`b309ca0d`](https://github.com/dotansimha/graphql-yoga/commit/b309ca0db1c45264878c3cec0137c3fdbd22fc97) Thanks [@ardatan](https://github.com/ardatan)! - Respect `toJSON` in the thrown errors.
+
+- Updated dependencies [[`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca), [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca)]:
+  - @graphql-yoga/subscription@4.0.0
+  - @graphql-yoga/logger@1.0.0
+
 ## 3.9.1
 
 ### Patch Changes
