@@ -29,6 +29,10 @@ Yoga previously used a custom, and simple, subscriptions transport over SSE. Now
 
 Nothing has changed on the server; but, on the client-side, we recommend you use [`graphql-sse`](https://the-guild.dev/graphql/sse). The [recipes section](https://the-guild.dev/graphql/sse/recipes) will help you get going with any client out there!
 
+## Subscriptions only use SSE (text/event-stream) as transport method
+
+Previously Yoga supported `multipart/mixed` just like `text/event-stream`. However, this was not a standard and it was not supported by any client. So, we decided to drop it and only support `text/event-stream` as the transport method.
+
 ## Parse and validation cache are now under a single option `parserAndValidationCache`
 
 Previously Yoga used two separate envelop plugins for parsing and caching. Now, it leverages a custom built plugin focused on Yoga. It therefore yields better performance, feels more native and of course reduces bundle size.
