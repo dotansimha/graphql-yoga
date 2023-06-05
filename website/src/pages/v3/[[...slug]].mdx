@@ -9,12 +9,15 @@ import {
 
 export { getStaticPaths, getStaticProps } from '../../lib/v3-get-static-props'
 
+import CodegenCallout from '../../components/codegen-callout.mdx'
+
 <RemoteContent
   components={{
     ...mdxComponents,
     Callout,
     PackageCmd,
     Tab,
-    Tabs
+    Tabs,
+    CodegenCallout
   }}
 />
