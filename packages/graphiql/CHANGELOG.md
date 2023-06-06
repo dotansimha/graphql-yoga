@@ -1,5 +1,11 @@
 # @graphql-yoga/graphiql
 
+## 4.1.0
+
+### Minor Changes
+
+- [#2842](https://github.com/dotansimha/graphql-yoga/pull/2842) [`8e8168f3`](https://github.com/dotansimha/graphql-yoga/commit/8e8168f30a7301073ad219255b4a9abec53031bb) Thanks [@saihaj](https://github.com/saihaj)! - allow customizing Logo using prop
+
 ## 4.0.0
 
 ### Major Changes
