@@ -56,6 +56,10 @@ export type YogaGraphiQLProps = Omit<
   Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
     title?: string
     /**
+     * Logo to be displayed in the top left corner
+     */
+    logo?: React.ReactNode
+    /**
      * Extra headers you always want to pass with users' headers input
      */
     additionalHeaders?: LoadFromUrlOptions['headers']
@@ -170,7 +174,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
           <GraphiQL.Logo>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div style={{ width: 40, display: 'flex' }}>
-                <YogaLogo />
+                {props?.logo || <YogaLogo />}
               </div>
               <span>
                 {props?.title || (
