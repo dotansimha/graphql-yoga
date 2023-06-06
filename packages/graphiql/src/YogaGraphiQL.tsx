@@ -56,7 +56,7 @@ export type YogaGraphiQLProps = Omit<
   Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
     title?: string
     /**
-     * Logo to be displayed in the top left corner
+     * Logo to be displayed in the top right corner
      */
     logo?: React.ReactNode
     /**
