@@ -8,171 +8,79 @@ import { PackageCmd, Callout } from '@theguild/components'
 
 [Nest (Nest JS)](https://nestjs.com) is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
 
-GraphQL Yoga provides its [own Nest GraphQL Driver](https://github.com/charlypoly/graphql-yoga-nestjs) that support building standalone GraphQL APIs and Federation GraphQL APIs (Gateway and Services).
+GraphQL Yoga provides its own Nest GraphQL Driver that support building standalone GraphQL APIs and Apollo Federation GraphQL APIs (Gateway and Services).
 
-## Standalone GraphQL API
+## Standalone GraphQL APIs
 
-### Installation
+### Install
 
-<PackageCmd packages={['@graphql-yoga/nestjs @nestjs/graphql']} />
+```shell
+npm i @nestjs/graphql graphql-yoga graphql @graphql-yoga/nestjs
+```
 
 <Callout>
   For the setup of a new Nest project, please make sure to read the [Nest
   GraphQL documentation](https://docs.nestjs.com/graphql/quick-start).
 </Callout>
 
-### Schema-First Approach
+### Create Application Module
 
-With the following Nest project structure:
-
-```bash
-- src/
-  - cats/
-    - cats.graphql
-    - cats.resolver.ts
-    - cats.module.ts
-  - app.module.ts
-  - main.ts
-```
-
-and the following `.graphql` schema definition (and its associated resolvers):
-
-```graphql
-type Query {
-  cats: [Cat]
-  cat(id: ID!): Cat
-}
-
-type Mutation {
-  createCat(createCatInput: CreateCatInput): Cat
-}
-
-type Subscription {
-  catCreated: Cat
-}
-
-type Owner {
-  id: Int!
-  name: String!
-  age: Int
-  cats: [Cat!]
-}
-
-type Cat {
-  id: Int
-  name: String
-  age: Int
-  owner: Owner
-}
-"""
-Test comment
-"""
-input CreateCatInput {
-  name: String
-  age: Int
-}
-```
-
-Our Yoga Nest GraphQL Module (`app.module.ts`) will be defined as follows:
-
-```ts filename="app.module.ts"
+```typescript
 import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
-import { CatsModule } from './cats/cats.module'
 
 @Module({
   imports: [
-    CatsModule,
     GraphQLModule.forRoot<YogaDriverConfig>({
-      driver: YogaDriver,
-      typePaths: ['./**/*.graphql'],
-      installSubscriptionHandlers: true
+      driver: YogaDriver
     })
   ]
 })
 export class AppModule {}
 ```
 
-More information [on the dedicated example](https://github.com/charlypoly/graphql-yoga-nestjs/tree/master/examples/schema-first).
+### Develop GraphQL
 
-### Code-First Approach
-
-The code-first approach generates the GraphQL Schema based on resolvers and models.
-
-With the following example Recipe model:
-
-```ts
-import { Directive, Field, ID, ObjectType } from '@nestjs/graphql'
-
-@ObjectType({ description: 'recipe ' })
-export class Recipe {
-  @Field((type) => ID)
-  id: string
-
-  @Directive('@upper')
-  title: string
-
-  @Field({ nullable: true })
-  description?: string
-
-  @Field()
-  creationDate: Date
-
-  @Field((type) => [String])
-  ingredients: string[]
-}
-```
-
-and the following resolvers:
-
-```ts
-@Resolver((of) => Recipe)
-export class RecipesResolver {
-  constructor(private readonly recipesService: RecipesService) {}
-
-  // ...
-
-  @Query((returns) => [Recipe])
-  recipes(@Args() recipesArgs: RecipesArgs): Promise<Recipe[]> {
-    return this.recipesService.findAll(recipesArgs)
-  }
-
-  // ...
-}
-```
-
-Our Yoga Nest GraphQL Module (`app.module.ts`) will be defined as follows:
-
-```ts filename="app.module.ts"
-import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs'
-import { Module } from '@nestjs/common'
-import { GraphQLModule } from '@nestjs/graphql'
-import { RecipesModule } from './recipes/recipes.module'
-
-@Module({
-  imports: [
-    RecipesModule,
-    GraphQLModule.forRoot<YogaDriverConfig>({
-      driver: YogaDriver,
-      autoSchemaFile: 'schema.gql'
-    })
-  ]
-})
-export class AppModule {}
-```
-
-More information [on the dedicated example](https://github.com/charlypoly/graphql-yoga-nestjs/tree/master/examples/code-first).
-
----
+This is just a HTTP transport driver; meaning, everything else should work as [showcased in NestJS documentation](https://docs.nestjs.com/graphql/resolvers).
 
 ## Apollo Federation
 
-Yoga Nest GraphQL integration supports building Apollo Federation Gateway and Services through the `YogaGatewayDriver` and `YogaFederationDriver` drivers.
+Separately, we offer a `@graphql-yoga/nestjs-federation` driver which allows building Apollo Federation Gateways and Services through the `YogaGatewayDriver` and `YogaFederationDriver` drivers.
 
-A complete example [is available in the repository](https://github.com/charlypoly/graphql-yoga-nestjs/tree/master/examples/graphql-federation-code-first).
+### Install
 
-<Callout type="warning">
-  `YogaGatewayDriver` and `YogaFederationDriver` drivers should be used with
-  `graphql@15`.
+```shell
+npm i @nestjs/graphql graphql-yoga graphql @graphql-yoga/nestjs-federation
+```
+
+### Create application module
+
+```typescript
+import {
+  YogaFederationDriver,
+  YogaFederationDriverConfig
+} from '@graphql-yoga/nestjs-federation'
+import { Module } from '@nestjs/common'
+import { GraphQLModule } from '@nestjs/graphql'
+
+@Module({
+  imports: [
+    GraphQLModule.forRoot<YogaFederationDriverConfig>({
+      driver: YogaFederationDriver,
+      typePaths: ['**/*.graphql']
+    })
+  ]
+})
+export class AppModule {}
+```
+
+### Develop GraphQL
+
+This is just a federation and gateway driver; meaning, everything else should work as [showcased in NestJS federation documentation](https://docs.nestjs.com/graphql/federation).
+
+<Callout>
+  A complete example, with full Apollo Federation Subgraph Compatibility, [is
+  available in the
+  repository](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nestjs-apollo-federation-compatibility).
 </Callout>
