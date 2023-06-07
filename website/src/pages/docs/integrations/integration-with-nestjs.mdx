@@ -10,18 +10,23 @@ import { PackageCmd, Callout } from '@theguild/components'
 
 GraphQL Yoga provides its own Nest GraphQL Driver that support building standalone GraphQL APIs and Apollo Federation GraphQL APIs (Gateway and Services).
 
-## Standalone GraphQL APIs
-
-### Install
-
-```shell
-npm i @nestjs/graphql graphql-yoga graphql @graphql-yoga/nestjs
-```
-
 <Callout>
   For the setup of a new Nest project, please make sure to read the [Nest
   GraphQL documentation](https://docs.nestjs.com/graphql/quick-start).
 </Callout>
+
+## Standalone GraphQL APIs
+
+### Install
+
+<PackageCmd
+  packages={[
+    'graphql',
+    '@nestjs/graphql',
+    'graphql-yoga',
+    '@graphql-yoga/nestjs'
+  ]}
+/>
 
 ### Create Application Module
 
@@ -50,9 +55,14 @@ Separately, we offer a `@graphql-yoga/nestjs-federation` driver which allows bui
 
 ### Install
 
-```shell
-npm i @nestjs/graphql graphql-yoga graphql @graphql-yoga/nestjs-federation
-```
+<PackageCmd
+  packages={[
+    'graphql',
+    '@nestjs/graphql',
+    'graphql-yoga',
+    '@graphql-yoga/nestjs-federation'
+  ]}
+/>
 
 ### Create application module
 
