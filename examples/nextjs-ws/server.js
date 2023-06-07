@@ -108,7 +108,12 @@ async function start(port, handle) {
       subscribe: (args) => args.rootValue.subscribe(args),
       onSubscribe: async (ctx, msg) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yoga.getEnveloped(ctx)
+          yoga.getEnveloped({
+            ...ctx,
+            req: ctx.extra.request,
+            socket: ctx.extra.socket,
+            params: msg.payload,
+          })
 
         /** @type EnvelopedExecutionArgs */
         const args = {

@@ -43,7 +43,7 @@ const { handleRequest } = createYoga({
 export { handleRequest as GET, handleRequest as POST }
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs)
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs-app)
 
 ### Using legacy Pages Directory
 
@@ -180,7 +180,12 @@ const yoga = createYoga({
       subscribe: (args) => args.rootValue.subscribe(args),
       onSubscribe: async (ctx, msg) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yoga.getEnveloped(ctx)
+          yoga.getEnveloped({
+            ...ctx,
+            req: ctx.extra.request,
+            socket: ctx.extra.socket,
+            params: msg.payload
+          })
 
         const args = {
           schema,
