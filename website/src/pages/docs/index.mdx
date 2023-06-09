@@ -2,7 +2,7 @@
 description: Batteries-included GraphQL Server with focus on easy setup, performance & great developer experience
 ---
 
-import { PackageCmd, Tabs, Tab, Callout } from '@theguild/components'
+import { Tabs, Tab } from '@theguild/components'
 import CodegenCallout from '../../components/codegen-callout.mdx'
 
 # Quick start
@@ -11,7 +11,9 @@ GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-comp
 
 ## Installation
 
-<PackageCmd packages={['graphql graphql-yoga']} />
+```sh npm2yarn
+npm i graphql-yoga graphql
+```
 
 ## Schema
 
@@ -45,7 +47,9 @@ export const schema = createSchema({
   <Tab>
 [`makeExecutableSchema` from @graphql-tools/schema](https://www.graphql-tools.com/docs/generate-schema) is very simple, but powerful. Install it and create a schema.
 
-<PackageCmd packages={['@graphql-tools/schema']} />
+```sh npm2yarn
+npm i @graphql-tools/schema
+```
 
 ```js filename="schema.js"
 import { makeExecutableSchema } from '@graphql-tools/schema'
@@ -72,7 +76,9 @@ export const schema = makeExecutableSchema({
 
 [Pothos](https://pothos-graphql.dev) is a plugin based GraphQL schema builder for TypeScript. Install it and create a schema.
 
-<PackageCmd packages={['@pothos/core']} />
+```sh npm2yarn
+npm i @pothos/core
+```
 
 ```js filename="schema.js"
 import SchemaBuilder from '@pothos/core'
@@ -95,7 +101,9 @@ export const schema = builder.toSchema()
   <Tab>
 Declarative, Code-First GraphQL Schemas for JavaScript/TypeScript through [Nexus GraphQL](https://nexusjs.org/). Install it and create schema.
 
-<PackageCmd packages={['nexus']} />
+```sh npm2yarn
+npm i nexus
+```
 
 ```js filename="schema.js"
 import { makeSchema, queryField } from 'nexus'
@@ -113,7 +121,9 @@ export const schema = makeSchema({ types: [helloField] })
   <Tab>
 Code-first type-safe GraphQL schema without codegen or metaprogramming using [gqtx](https://github.com/sikanhe/gqtx). Install it and create schema.
 
-<PackageCmd packages={['gqtx']} />
+```sh npm2yarn
+npm i gqtx
+```
 
 ```js filename="schema.js"
 import { createTypesFactory, buildGraphQLSchema } from 'gqtx'

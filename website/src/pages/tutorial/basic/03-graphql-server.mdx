@@ -2,7 +2,7 @@
 description: Now that you have a GraphQL schema, and you understand the concept of GraphQL schema and a GraphQL query, it's time to create a real GraphQL server.
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # GraphQL Server
 
@@ -26,7 +26,9 @@ In this tutorial, we will be using GraphQL Yoga for building our Node.js GraphQL
 
 You'll need the `@graphql-yoga/node` package available in your project, so install it using the following command:
 
-<PackageCmd packages={['--save-exact @graphql-yoga/node']} />
+```sh npm2yarn
+npm i --save-exact @graphql-yoga/node
+```
 
 Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:
 
@@ -61,7 +63,9 @@ $ cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts
 You'll need the `graphql-yoga` package available in your project, so install it using
 the following command:
 
-<PackageCmd packages={['--save-exact graphql-yoga']} />
+```sh npm2yarn
+npm i --save-exact graphql-yoga
+```
 
 Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:
 

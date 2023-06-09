@@ -2,15 +2,15 @@
 description: Migrate from Yoga V1 to Yoga V2. Learn about the new features and how to upgrade.
 ---
 
-import { PackageCmd } from '@theguild/components'
-
 # Migration from Yoga V1
 
 ## Installation
 
 You can start with updating `graphql-yoga` package.
 
-<PackageCmd packages={['graphql-yoga']} />
+```sh npm2yarn
+npm i graphql-yoga
+```
 
 ## Server setup
 
@@ -120,7 +120,9 @@ Before deciding upon using schema directives, you should consider whether your c
 
 In Yoga v3 you have to leverage the `mapSchema` API from graphql-tools.
 
-<PackageCmd packages={['@graphql-tools/utils', '@graphql-tools/schema']} />
+```sh npm2yarn
+npm i @graphql-tools/utils @graphql-tools/schema
+```
 
 **Yoga v3**
 
@@ -226,9 +228,11 @@ server.listen(4000, () => {
 GraphQL Yoga v1 included [`graphql-middleware`](https://github.com/maticzav/graphql-middleware) for wrapping resolver functions with common logic.
 GraphQL Yoga v2 no longer includes `graphql-middleware` by default as using it can result in bad performance as it wraps all field resolvers within the schema.
 
-If you cannot migrate your `graphql-middleware` code to something like [`graphql-tool` `mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://www.npmjs.com/package/@envelop/graphql-middleware) plugin.
+If you cannot migrate your `graphql-middleware` code to something like `graphql-tools`' [`mapSchema`](https://github.com/ardatan/graphql-tools/blob/master/packages/utils/src/mapSchema.ts), we recommend using the [`@envelop/graphql-middleware`](https://npmjs.com/package/@envelop/graphql-middleware) plugin.
 
-<PackageCmd packages={['@envelop/graphql-middleware']} />
+```sh npm2yarn
+npm i @envelop/graphql-middleware
+```
 
 **Yoga v1**
 

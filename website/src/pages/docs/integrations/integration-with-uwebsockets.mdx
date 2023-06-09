@@ -2,15 +2,15 @@
 description: µWebSockets.js is an HTTP/WebSocket server for Node.js.
 ---
 
-import { PackageCmd } from '@theguild/components'
-
 # Integration with µWebSockets.js
 
 [µWebSockets.js](https://github.com/uNetworking/uWebSockets.js) is an HTTP/WebSocket server for Node.js.
 
 ## Installation
 
-<PackageCmd packages={['graphql-yoga graphql']} />
+```sh npm2yarn
+npm i graphql-yoga graphql
+```
 
 ## Example
 
@@ -45,7 +45,9 @@ App().any('/*', yoga)
 
 You can also use WebSockets instead of SSE with `graphql-ws`;
 
-<PackageCmd packages={['graphql-ws']} />
+```sh npm2yarn
+npm i graphql-ws
+```
 
 ```ts filename="index.ts"
 import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'

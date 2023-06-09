@@ -2,8 +2,6 @@
 description: If you have CORS enabled, almost all requests coming from the browser will have a preflight request - however, some requests are deemed "simple" and don't make a preflight.
 ---
 
-import { PackageCmd } from '@theguild/components'
-
 # CSRF Prevention
 
 If you have CORS enabled, almost all requests coming from the browser will have a preflight request - however, some requests are deemed "simple" and don't make a preflight. One example of such a request is a good ol' GET request without any headers, this request can be marked as "simple" and have preflight CORS checks skipped therefore skipping the CORS check.
@@ -14,7 +12,9 @@ By using the `@graphql-yoga/plugin-csrf-prevention` GraphQL Yoga plugin, you can
 
 ## Installation
 
-<PackageCmd packages={['@graphql-yoga/plugin-csrf-prevention']} />
+```sh npm2yarn
+npm i @graphql-yoga/plugin-csrf-prevention
+```
 
 ## Quick Start
 

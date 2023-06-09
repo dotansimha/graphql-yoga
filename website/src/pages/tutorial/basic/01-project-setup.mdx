@@ -2,7 +2,7 @@
 description: Learn how to create a basic NodeJS project with TypeScript.
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Project Setup
 
@@ -36,11 +36,9 @@ To add TypeScript supports for your NodeJS project, do the following:
 
 In your project directory, install the packages required to run a TypeScript project:
 
-<PackageCmd
-  packages={[
-    '-D --save-exact typescript @types/node ts-node ts-node-dev cross-env'
-  ]}
-/>
+```sh npm2yarn
+npm i -D --save-exact typescript @types/node ts-node ts-node-dev cross-env
+```
 
 This will add the dependencies to your project under the `node_modules` folder, and update the `package.json`.
 

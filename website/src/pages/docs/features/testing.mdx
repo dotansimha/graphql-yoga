@@ -2,7 +2,7 @@
 description: GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection. You can use any testing framework of your choice.
 ---
 
-import { PackageCmd, Tabs, Tab, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Testing
 
@@ -19,9 +19,11 @@ You can use the `fetch` method on your yoga instance for calling the yoga instan
 ## Test Utility
 
 Writing parsers for the Subscription or Incremental Delivery (`@defer`/`@stream`) protocol is annoying and cumbersome.
-Instead you can use the `buildHTTPExecutor` utility function from `@graphql-tools/executor-http`.
+Instead, you can use the `buildHTTPExecutor` utility function from `@graphql-tools/executor-http`.
 
-<PackageCmd packages={['@graphql-tools/executor-http']} />
+```sh npm2yarn
+npm i @graphql-tools/executor-http
+```
 
 ```ts filename="Building an executor"
 import { createYoga, createSchema } from 'graphql-yoga'

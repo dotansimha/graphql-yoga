@@ -2,7 +2,7 @@
 description: Response caching is a technique for reducing server load by caching GraphQL query operation results.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Response Caching
 
@@ -13,7 +13,9 @@ For incoming GraphQL Query operations with the same variable values, the same re
 
 The response cache is a separate package that needs to be installed.
 
-<PackageCmd packages={['@graphql-yoga/plugin-response-cache']} />
+```sh npm2yarn
+npm i @graphql-yoga/plugin-response-cache
+```
 
 The following sample setup show as slow field resolver (`Query.slow`).
 
@@ -198,7 +200,9 @@ If you want a cache that is shared between multiple server instances you can use
 
 <Callout>The Redis cache currently only works in Node.js environments.</Callout>
 
-<PackageCmd packages={['@envelop/response-cache-redis']} />
+```sh npm2yarn
+npm i @envelop/response-cache-redis
+```
 
 ```ts filename="Create a custom Redis Cache"
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'

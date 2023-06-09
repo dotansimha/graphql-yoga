@@ -2,7 +2,7 @@
 description: Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL documents to the server over and over again.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Automatic Persisted Queries
 
@@ -29,7 +29,9 @@ Furthermore, an potential DDOS attacker could spam your GraphQL API with persist
 
 Using Automatic Persisted Queries requires installing a separate package.
 
-<PackageCmd packages={['@graphql-yoga/plugin-apq']} />
+```sh npm2yarn
+npm i @graphql-yoga/plugin-apq
+```
 
 ```ts filename="Automatic Persisted Queries Yoga setup" {3, 13}
 import { createYoga, createSchema } from 'graphql-yoga'

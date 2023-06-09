@@ -2,7 +2,7 @@
 description: Learn how to use GraphQL Yoga with Apollo Federation to build a gateway server and a federated service.
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Apollo Federation
 
@@ -28,14 +28,9 @@ Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-f
 
 ### Installation for Gateway
 
-<PackageCmd
-  packages={[
-    'graphql-yoga',
-    '@apollo/gateway',
-    '@envelop/apollo-federation',
-    'graphql@15'
-  ]}
-/>
+```sh npm2yarn
+npm i @apollo/gateway @envelop/apollo-federation graphql-yoga graphql@15
+```
 
 ### Example Gateway
 
@@ -103,7 +98,9 @@ You don't need any extra plugins for Yoga for Federation Service.
 
 ### Installation
 
-<PackageCmd packages={['graphql-yoga', '@apollo/subgraph', 'graphql']} />
+```sh npm2yarn
+npm i graphql-yoga @apollo/subgraph graphql
+```
 
 ### Example User Service
 
@@ -155,13 +152,9 @@ You'll need the `@graphql-yoga/plugin-apollo-inline-trace` Yoga plugin for this.
 
 ### Installation
 
-<PackageCmd
-  packages={[
-    'graphql-yoga',
-    '@graphql-yoga/plugin-apollo-inline-trace',
-    'graphql'
-  ]}
-/>
+```sh npm2yarn
+npm i graphql-yoga @graphql-yoga/plugin-apollo-inline-trace graphql
+```
 
 ### Example Federated tracing
 

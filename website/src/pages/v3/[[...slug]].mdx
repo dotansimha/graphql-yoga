@@ -1,7 +1,7 @@
 import { RemoteContent } from 'nextra/data'
 import {
   Callout,
-  PackageCmd,
+  LegacyPackageCmd,
   Tab,
   Tabs,
   mdxComponents
@@ -15,7 +15,7 @@ import CodegenCallout from '../../components/codegen-callout.mdx'
   components={{
     ...mdxComponents,
     Callout,
-    PackageCmd,
+    PackageCmd: LegacyPackageCmd,
     Tab,
     Tabs,
     CodegenCallout
