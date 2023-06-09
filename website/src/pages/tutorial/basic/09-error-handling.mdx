@@ -11,7 +11,7 @@ In this chapter, you will learn the origin of this error and learn how to proper
 
 This is the resolver implementation that caused the issue when using a `linkId` that has no counter-part within the database.
 
-```ts
+```ts filename="src/schema.ts"
 const resolvers = {
   // ... other resolver maps ...
   Mutation: {
@@ -132,7 +132,7 @@ For doing so you will use the `GraphQLYogaError` class that is exported from the
 
 Add the following catch handler for mapping a foreign key error into a `GraphQLYogaError`:
 
-```ts
+```ts filename="src/schema.ts"
 // ... other imports ...
 import { GraphQLYogaError } from '@graphql-yoga/node'
 // ... other imports ...
@@ -185,7 +185,7 @@ For doing so you will use the `GraphQLError` class that is exported from the `gr
 
 Add the following catch handler for mapping a foreign key error into a `GraphQLError`:
 
-```ts
+```ts filename="src/schema.ts"
 // ... other imports ...
 import { GraphQLError } from 'graphql'
 // ... other imports ...

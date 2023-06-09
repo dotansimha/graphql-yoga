@@ -63,7 +63,7 @@ These are our type definitions that describe what data can be retrieved from the
 
 Up next you define the corresponding resolver functions that are used for resolving the data.
 
-```ts
+```ts filename="src/schema.ts"
 const typeDefinitions = /* GraphQL */ `
   type Query {
     hello: String!
@@ -83,7 +83,7 @@ The typename (`Query`) is an object in which the fields (`hello`) are functions 
 
 Now you still need to glue together the type definitions and the resolver map.
 
-```ts
+```ts filename="src/schema.ts"
 import { makeExecutableSchema } from '@graphql-tools/schema'
 
 const typeDefinitions = /* GraphQL */ `

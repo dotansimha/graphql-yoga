@@ -120,7 +120,7 @@ This is the skeleton of your new field resolver. As you might notice, it looks a
 
 Add the following business logic within the resolver, that uses the newly generated Prisma functions:
 
-```ts
+```ts filename="src/schema.ts"
 const resolvers = {
   // ... other resolver maps ...
   Mutation: {
@@ -237,7 +237,7 @@ Instead, you will first create a resolver for retrieving a comment via its id.
 
 Within the `Query` object type resolver map create a new `comment` field resolver function.
 
-```ts
+```ts filename="src/schema.ts"
 const resolvers = {
   // ... other resolver maps ...
   Query: {
@@ -256,7 +256,7 @@ Within the resolver, you want to fetch the comment by its id.
 
 Add the corresponding logic for retrieving a comment by its id.
 
-```ts
+```ts filename="src/schema.ts"
 const resolvers = {
   // ... other resolver maps ...
   Query: {
@@ -351,7 +351,7 @@ Up next, you implement the corresponding `Link.comments` resolver. For this, you
 
 Add the following `Link.resolvers` implementation:
 
-```ts
+```ts filename="src/schema.ts"
 const resolvers = {
   // ... other resolver maps ...
   Link: {
