@@ -2,8 +2,6 @@
 description: Now GraphQL Yoga has a single NPM package for all environments `graphql-yoga` instead of `@graphql-yoga/common` and `@graphql-yoga/node`.
 ---
 
-import { PackageCmd } from '@theguild/components'
-
 # Migration from Yoga V2
 
 ## Install the new NPM package
@@ -11,7 +9,9 @@ import { PackageCmd } from '@theguild/components'
 Now GraphQL Yoga has a single NPM package for all environments `graphql-yoga` instead of `@graphql-yoga/common` and `@graphql-yoga/node`.
 So you need to uninstall `@graphql-yoga/common` and `@graphql-yoga/node` then install `graphql-yoga` from NPM.
 
-<PackageCmd packages={['graphql-yoga']} />
+```sh npm2yarn
+npm i graphql-yoga
+```
 
 ## `createServer` renamed to `createYoga`
 

@@ -2,7 +2,7 @@
 description: Learn how to disable GraphQL schema introspection and the "did you mean x" suggestion feature.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Introspection
 
@@ -90,7 +90,9 @@ This can be considered a security issue, as it can leak information about the Gr
 
 Disabling the "did you mean x" suggestion feature can be achieved via the `blockFieldSuggestionsPlugin` from [`graphql-armor`](https://github.com/Escape-Technologies/graphql-armor).
 
-<PackageCmd packages={['@escape.tech/graphql-armor-block-field-suggestions']} />
+```sh npm2yarn
+npm i @escape.tech/graphql-armor-block-field-suggestions
+```
 
 ```ts filename="Disabling the 'did you mean x' suggestion feature with a plugin" {2, 7}
 import { createYoga } from 'graphql-yoga'

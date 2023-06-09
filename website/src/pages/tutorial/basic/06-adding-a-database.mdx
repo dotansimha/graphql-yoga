@@ -2,8 +2,6 @@
 description: Learn how to build a GraphQL server from scratch using Node.js, TypeScript, and Prisma
 ---
 
-import { Callout, PackageCmd } from '@theguild/components'
-
 # Adding a Database
 
 Your GraphQL API can connect to any kind of data source, such as a remote REST (or even GraphQL) API or database. In this chapter, we are covering connecting to a relational SQL database.
@@ -45,7 +43,9 @@ Speaking of being productive and building awesome stuff, let's jump back in and 
 
 First, let's install the Prisma CLI and Prisma Client by running the following command in your terminal:
 
-<PackageCmd packages={['-D --save-exact prisma @prisma/client']} />
+```sh npm2yarn
+npm i -D --save-exact prisma @prisma/client
+```
 
 Next, use the Prisma CLI to initialize Prisma in the project.
 

@@ -2,7 +2,7 @@
 description: A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the server to the client that issued the subscription.
 ---
 
-import { PackageCmd, Callout, Tabs, Tab } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Subscriptions
 
@@ -413,7 +413,9 @@ The minimal `EventTarget` implementation is described by the [`TypedEventTarget`
 
 Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).
 
-<PackageCmd packages={['@graphql-yoga/redis-event-target ioredis']} />
+```sh npm2yarn
+npm i @graphql-yoga/redis-event-target ioredis
+```
 
 ```ts
 import { Redis } from 'ioredis'

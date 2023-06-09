@@ -2,7 +2,7 @@
 description: GraphiQL is an in-browser IDE for writing, validating, and testing GraphQL queries.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # GraphiQL
 
@@ -119,7 +119,9 @@ server.listen(4000, () => {
 By default, GraphiQL code is served from a CDN because if we added GraphiQL code inside Yoga, it would end up with huge bundle size and exceed the payload limit for some environments for example (CF Workers, AWS etc).
 If you want to use GraphiQL from a local version, you need to install it manually.
 
-<PackageCmd packages={['@graphql-yoga/render-graphiql']} />
+```sh npm2yarn
+npm i @graphql-yoga/render-graphiql
+```
 
 And you need to pass imported `renderGraphiQL` to `createYoga` like below:
 

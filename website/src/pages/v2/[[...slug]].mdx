@@ -1,7 +1,7 @@
 import { RemoteContent } from 'nextra/data'
 import {
   Callout,
-  PackageCmd,
+  LegacyPackageCmd,
   Tab,
   Tabs,
   mdxComponents
@@ -13,7 +13,7 @@ export { getStaticPaths, getStaticProps } from '../../lib/v2-get-static-props'
   components={{
     ...mdxComponents,
     Callout,
-    PackageCmd,
+    PackageCmd: LegacyPackageCmd,
     Tab,
     Tabs
   }}

@@ -2,7 +2,7 @@
 description: Stream and defer are directives that allow you to improve latency for clients by sending data the most important data as soon as it's ready.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Defer and Stream
 
@@ -26,7 +26,9 @@ meaning GraphQL libraries can start implementing this as experimental feature to
 
 Enabling support for the `@defer` and `@stream` directive requires installing a plugin.
 
-<PackageCmd packages={['@graphql-yoga/plugin-defer-stream']} />
+```sh npm2yarn
+npm i @graphql-yoga/plugin-defer-stream
+```
 
 ## Quick Start
 

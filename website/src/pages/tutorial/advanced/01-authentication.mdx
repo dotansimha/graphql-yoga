@@ -2,7 +2,7 @@
 description: Implement signup and login functionality that allows your users to authenticate against your GraphQL server.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Authentication
 
@@ -132,13 +132,15 @@ You'll also use `bcryptjs` for simple encryption for the user's password.
 
 Start by installing `jsonwebtoken` library from NPM:
 
-<PackageCmd packages={['--save-exact jsonwebtoken bcryptjs']} />
+```sh npm2yarn
+npm i --save-exact jsonwebtoken bcryptjs
+```
 
 And to get better integration with TypeScript, you need to install the typing libraries:
 
-<PackageCmd
-  packages={['-D --save-exact @types/jsonwebtoken @types/bcryptjs']}
-/>
+```sh npm2yarn
+npm i -D --save-exact @types/jsonwebtoken @types/bcryptjs
+```
 
 Create a new file called `src/auth.ts`, and for now just app a simple variable to hold our signing secret (you'll later use that as the base for our encryption):
 

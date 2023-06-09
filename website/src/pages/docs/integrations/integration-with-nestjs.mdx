@@ -2,7 +2,7 @@
 description: Nest (Nest JS) is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
 ---
 
-import { PackageCmd, Callout } from '@theguild/components'
+import { Callout } from '@theguild/components'
 
 # Integration with NestJS
 
@@ -19,14 +19,9 @@ GraphQL Yoga provides its own Nest GraphQL Driver that support building standalo
 
 ### Install
 
-<PackageCmd
-  packages={[
-    'graphql',
-    '@nestjs/graphql',
-    'graphql-yoga',
-    '@graphql-yoga/nestjs'
-  ]}
-/>
+```sh npm2yarn
+npm i @nestjs/graphql @graphql-yoga/nestjs graphql-yoga graphql
+```
 
 ### Create Application Module
 
@@ -55,14 +50,9 @@ Separately, we offer a `@graphql-yoga/nestjs-federation` driver which allows bui
 
 ### Install
 
-<PackageCmd
-  packages={[
-    'graphql',
-    '@nestjs/graphql',
-    'graphql-yoga',
-    '@graphql-yoga/nestjs-federation'
-  ]}
-/>
+```sh npm2yarn
+npm i @nestjs/graphql @graphql-yoga/nestjs-federation graphql-yoga graphql
+```
 
 ### Create Application Module
 
