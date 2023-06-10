@@ -36,7 +36,7 @@ Next, you need to update the implementation of the `Query.feed` resolver functio
 
 Now, update the `Query.feed` resolver function to look as follows:
 
-```ts
+```ts filename="src/schema.ts"
 const resolvers = {
   // ... other resolver maps ...
   Query: {
@@ -123,7 +123,7 @@ Now, adjust the field resolver function implementation:
 
 And now adjust the implementation of the `Query.feed` resolver function:
 
-```ts
+```ts filename="src/schema.ts"
 const resolvers = {
   // ... other resolvers maps ...
   Query: {
@@ -185,7 +185,7 @@ Adjust the current schema resolver implementation according to the following.
 <details>
   <summary>v2</summary>
 
-```ts
+```ts filename="src/schema.ts"
 import { GraphQLYogaError } from '@graphql-yoga/node'
 // ... other code ...
 
@@ -241,7 +241,7 @@ const resolvers = {
 <details open>
   <summary>v3</summary>
 
-```ts
+```ts filename="src/schema.ts"
 // ... other code ...
 import { GraphQLError } from 'graphql'
 
