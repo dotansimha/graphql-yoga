@@ -17,7 +17,13 @@ import {
   useCORS,
   useErrorHandling,
 } from '@whatwg-node/server'
-import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
+import {
+  DocumentNode,
+  ExecutionResult,
+  parse,
+  specifiedRules,
+  validate,
+} from 'graphql'
 import { handleError } from './error.js'
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger'
 import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js'
@@ -58,6 +64,7 @@ import {
 } from './plugins/use-graphiql.js'
 import { useHealthCheck } from './plugins/use-health-check.js'
 import {
+  Cache,
   ParserAndValidationCacheOptions,
   useParserAndValidationCache,
 } from './plugins/use-parser-and-validation-cache.js'
@@ -77,6 +84,7 @@ import {
   YogaMaskedErrorOpts,
 } from './types.js'
 import { maskError } from './utils/mask-error.js'
+import { createLRUCache } from './utils/create-lru-cache.js'
 
 /**
  * Configuration options for the server
@@ -216,6 +224,11 @@ export class YogaServer<
   private onResultProcessHooks: OnResultProcess[]
   private maskedErrorsOpts: YogaMaskedErrorOpts | null
   private id: string
+
+  parserCaches?: {
+    documentCache: Cache<DocumentNode>
+    errorCache: Cache<unknown>
+  }
 
   constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
     this.id = options?.id ?? 'yoga'
@@ -370,16 +383,29 @@ export class YogaServer<
       ...(options?.plugins ?? []),
       // To make sure those are called at the end
       {
-        onPluginInit({ addPlugin }) {
+        onPluginInit: ({ addPlugin }) => {
           if (options?.parserAndValidationCache !== false) {
+            this.parserCaches = {
+              documentCache:
+                options?.parserAndValidationCache === true ||
+                !options?.parserAndValidationCache?.documentCache
+                  ? createLRUCache()
+                  : options.parserAndValidationCache.documentCache,
+              errorCache:
+                options?.parserAndValidationCache === true ||
+                !options?.parserAndValidationCache?.errorCache
+                  ? createLRUCache()
+                  : options.parserAndValidationCache.errorCache,
+            }
             addPlugin(
               // @ts-expect-error Add plugins has context but this hook doesn't care
-              useParserAndValidationCache(
-                !options?.parserAndValidationCache ||
-                  options?.parserAndValidationCache === true
-                  ? {}
-                  : options?.parserAndValidationCache,
-              ),
+              useParserAndValidationCache({
+                documentCache: this.parserCaches.documentCache,
+                errorCache: this.parserCaches.errorCache,
+                validationCache:
+                  options?.parserAndValidationCache !== true &&
+                  options?.parserAndValidationCache?.validationCache !== false,
+              }),
             )
           }
           // @ts-expect-error Add plugins has context but this hook doesn't care

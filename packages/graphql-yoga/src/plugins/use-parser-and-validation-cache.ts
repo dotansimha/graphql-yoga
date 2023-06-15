@@ -9,21 +9,21 @@ import type {
 import { createLRUCache } from '../utils/create-lru-cache.js'
 import type { Plugin } from './types.js'
 
-interface Cache<T> {
+export interface Cache<T> {
   get(key: string): T | undefined
   set(key: string, value: T): void
 }
 
 export interface ParserAndValidationCacheOptions {
-  documentCache?: Cache<DocumentNode>
-  errorCache?: Cache<unknown>
-  validationCache?: boolean | Cache<typeof validate>
+  documentCache: Cache<DocumentNode>
+  errorCache: Cache<unknown>
+  validationCache: boolean | Cache<typeof validate>
 }
 
 export function useParserAndValidationCache({
-  documentCache = createLRUCache(),
-  errorCache = createLRUCache(),
-  validationCache = true,
+  documentCache,
+  errorCache,
+  validationCache,
 }: // eslint-disable-next-line @typescript-eslint/ban-types
 ParserAndValidationCacheOptions): Plugin<{}> {
   const validationCacheByRules =
