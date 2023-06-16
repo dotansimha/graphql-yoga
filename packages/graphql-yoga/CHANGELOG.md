@@ -1,5 +1,15 @@
 # graphql-yoga
 
+## 4.0.1
+
+### Patch Changes
+
+- [#2866](https://github.com/dotansimha/graphql-yoga/pull/2866) [`bb739b05`](https://github.com/dotansimha/graphql-yoga/commit/bb739b0555e67a9ee40da9343cec323463a0f568) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`lru-cache@^10.0.0` ↗︎](https://www.npmjs.com/package/lru-cache/v/10.0.0) (from `^9.0.0`, in `dependencies`)
+
+- [#2869](https://github.com/dotansimha/graphql-yoga/pull/2869) [`8f7d7abc`](https://github.com/dotansimha/graphql-yoga/commit/8f7d7abc7f71de33e428ea74f2903290f2b4ed70) Thanks [@enisdenjo](https://github.com/enisdenjo)! - Properly serialise GraphQLError on graphql-js v15
+
 ## 4.0.0
 
 ### Major Changes
