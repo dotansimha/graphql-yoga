@@ -9,8 +9,8 @@ const pkgPath = path.resolve(__dirname, '..', 'package.json')
 const pkgFile = fs.readFileSync(pkgPath)
 
 const pkg = JSON.parse(pkgFile.toString())
-pkg.resolutions = {
-  ...pkg.resolutions,
+pkg.pnpm.overrides = {
+  ...pkg.pnpm.overrides,
   graphql: graphqlVersion,
 }
 
