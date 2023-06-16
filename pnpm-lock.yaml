@@ -1763,9 +1763,6 @@ importers:
       apollo-reporting-protobuf:
         specifier: ^3.3.2
         version: 3.3.3
-      graphql:
-        specifier: ^15.2.0 || ^16.0.0
-        version: 16.6.0
       tslib:
         specifier: ^2.5.2
         version: 2.5.2
@@ -1773,6 +1770,9 @@ importers:
       '@whatwg-node/fetch':
         specifier: ^0.9.0
         version: 0.9.0
+      graphql:
+        specifier: 16.6.0
+        version: 16.6.0
       graphql-yoga:
         specifier: 4.0.0
         version: link:../../graphql-yoga/dist
@@ -1804,9 +1804,6 @@ importers:
       '@graphql-tools/utils':
         specifier: ^10.0.0
         version: 10.0.0(graphql@16.6.0)
-      graphql:
-        specifier: ^15.2.0 || ^16.0.0
-        version: 16.6.0
       graphql-yoga:
         specifier: ^4.0.0
         version: link:../../graphql-yoga/dist
@@ -1817,14 +1814,19 @@ importers:
       '@whatwg-node/fetch':
         specifier: ^0.9.0
         version: 0.9.0
+      graphql:
+        specifier: 16.6.0
+        version: 16.6.0
+      tslib:
+        specifier: ^2.5.2
+        version: 2.5.3
     publishDirectory: dist
 
   packages/plugins/disable-introspection:
-    dependencies:
-      graphql:
-        specifier: ^15.2.0 || ^16.0.0
-        version: 16.6.0
     devDependencies:
+      graphql:
+        specifier: 16.6.0
+        version: 16.6.0
       graphql-yoga:
         specifier: workspace:*
         version: link:../../graphql-yoga/dist
@@ -1852,10 +1854,10 @@ importers:
       '@graphql-tools/utils':
         specifier: ^10.0.0
         version: 10.0.0(graphql@16.6.0)
-      graphql:
-        specifier: ^15.2.0 || ^16.0.0
-        version: 16.6.0
     devDependencies:
+      graphql:
+        specifier: 16.6.0
+        version: 16.6.0
       graphql-yoga:
         specifier: ^4.0.0
         version: link:../../graphql-yoga/dist
@@ -1883,12 +1885,13 @@ importers:
       '@envelop/response-cache':
         specifier: ^5.0.0
         version: 5.0.0(@envelop/core@4.0.0)(graphql@16.6.0)
-      graphql:
-        specifier: ^15.2.0 || ^16.0.0
-        version: 16.6.0
       graphql-yoga:
         specifier: ^4.0.0
         version: link:../../graphql-yoga/dist
+    devDependencies:
+      graphql:
+        specifier: 16.6.0
+        version: 16.6.0
     publishDirectory: dist
 
   packages/plugins/sofa:
