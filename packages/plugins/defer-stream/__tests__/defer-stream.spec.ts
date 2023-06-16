@@ -504,6 +504,8 @@ describe('Defer/Stream', () => {
       })
 
       const result = await executor({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+        // @ts-ignore
         document: parse(/* GraphQL */ `
           query {
             stream @stream(initialCount: 2)
@@ -540,6 +542,8 @@ describe('Defer/Stream', () => {
       })
 
       const result = await executor({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+        // @ts-ignore
         document: parse(/* GraphQL */ `
           query {
             hello

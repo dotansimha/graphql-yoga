@@ -271,10 +271,15 @@ export class YogaDriver<
         {
           schema: options.schema,
           path: options.path,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+          // @ts-ignore
           execute: (...args) => {
             const contextValue =
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+              // @ts-ignore
               args[0].contextValue ||
-              // @ts-expect-error args can be inlined with graphql-js@<=15
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+              // @ts-ignore
               args[3]
             if (!contextValue) {
               throw new Error(
@@ -283,14 +288,20 @@ export class YogaDriver<
             }
             return (
               contextValue
-                // @ts-expect-error execute method will be available, see above
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+                // @ts-ignore
                 .execute(...args)
             )
           },
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+          // @ts-ignore
           subscribe: (...args) => {
             const contextValue =
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+              // @ts-ignore
               args[0].contextValue ||
-              // @ts-expect-error args can be inlined with graphql-js@<=15
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+              // @ts-ignore
               args?.[3]
             if (!contextValue) {
               throw new Error(
@@ -299,7 +310,8 @@ export class YogaDriver<
             }
             return (
               contextValue
-                // @ts-expect-error execute method will be available, see above
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- because we test both graphql v15 and v16
+                // @ts-ignore
                 .subscribe(...args)
             )
           },

@@ -37,7 +37,10 @@ function omitInternalsFromError<E extends GraphQLError | Error | undefined>(
   err: E,
 ): E {
   if (isGraphQLError(err)) {
-    const serializedError = err.toJSON ? err.toJSON() : Object(err)
+    const serializedError =
+      'toJSON' in err && typeof err.toJSON === 'function'
+        ? err.toJSON()
+        : Object(err)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TS should check for unused vars instead
     const { http, unexpected, ...extensions } = serializedError.extensions || {}
     return createGraphQLError(err.message, {
@@ -45,7 +48,7 @@ function omitInternalsFromError<E extends GraphQLError | Error | undefined>(
       source: err.source,
       positions: err.positions,
       path: err.path,
-      originalError: omitInternalsFromError(err.originalError),
+      originalError: omitInternalsFromError(err.originalError || undefined),
       extensions: Object.keys(extensions).length ? extensions : undefined,
     }) as E
   }

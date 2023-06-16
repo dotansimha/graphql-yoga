@@ -112,7 +112,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 
   const urlLoader = useMemo(() => new UrlLoader(), [])
 
-  const fetcher: Fetcher = useMemo(() => {
+  const fetcher = useMemo(() => {
     const executor = urlLoader.getExecutorAsync(endpoint, {
       subscriptionsProtocol: SubscriptionProtocol.GRAPHQL_SSE,
       subscriptionsEndpoint: props.endpoint ?? location.pathname, // necessary because graphql-sse in graphql-tools url-loader defaults to endpoint+'/stream'
@@ -128,7 +128,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         graphQLParams.operationName ?? undefined,
       )
       return executor({
-        document,
+        document:
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          document as any,
         operationName: graphQLParams.operationName ?? undefined,
         variables: graphQLParams.variables,
         extensions: {
@@ -136,7 +138,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         },
       })
     }
-  }, [urlLoader, endpoint])
+  }, [urlLoader, endpoint]) as Fetcher
 
   const [params, setParams] = useUrlSearchParams(
     {

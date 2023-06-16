@@ -1,11 +1,22 @@
-import { DocumentNode, GraphQLErrorOptions } from 'graphql'
+import { ASTNode, DocumentNode, GraphQLErrorExtensions, Source } from 'graphql'
 import {
   createGraphQLError,
   GraphQLParams,
   Plugin,
   PromiseOrValue,
   type OnParamsEventPayload,
+  Maybe,
 } from 'graphql-yoga'
+
+// GraphQLErrorOptions interface does not exist in graphql-js v15
+export interface GraphQLErrorOptions {
+  nodes?: ReadonlyArray<ASTNode> | ASTNode | null | undefined
+  source?: Maybe<Source>
+  positions?: Maybe<ReadonlyArray<number>>
+  path?: Maybe<ReadonlyArray<string | number>>
+  originalError?: Maybe<Error & { readonly extensions?: unknown }>
+  extensions?: Maybe<GraphQLErrorExtensions>
+}
 
 export type ExtractPersistedOperationId = (
   params: GraphQLParams,
