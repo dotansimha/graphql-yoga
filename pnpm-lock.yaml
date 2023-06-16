@@ -1823,11 +1823,10 @@ importers:
     publishDirectory: dist
 
   packages/plugins/disable-introspection:
-    dependencies:
-      graphql:
-        specifier: ^15.2.0 || ^16.0.0
-        version: 16.6.0
     devDependencies:
+      graphql:
+        specifier: 16.6.0
+        version: 16.6.0
       graphql-yoga:
         specifier: workspace:*
         version: link:../../graphql-yoga/dist
