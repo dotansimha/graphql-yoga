@@ -29,6 +29,9 @@ describe('useHTTPValidationError', () => {
                     error.extensions.http = {
                       status: 400,
                       spec: false,
+                      headers: {
+                        'custom-header': 'custom-value',
+                      },
                     }
                   }
                 }
@@ -47,6 +50,7 @@ describe('useHTTPValidationError', () => {
         },
       })
       expect(result.status).toEqual(400)
+      expect(result.headers.get('custom-header')).toEqual('custom-value')
     })
   })
 })
