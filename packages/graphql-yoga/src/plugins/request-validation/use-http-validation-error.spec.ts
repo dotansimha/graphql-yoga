@@ -1,3 +1,4 @@
+import { AfterValidateEventPayload } from '@envelop/core'
 import { createSchema } from '../../schema.js'
 import { createYoga } from '../../server.js'
 
@@ -23,7 +24,11 @@ describe('useHTTPValidationError', () => {
         plugins: [
           {
             onValidate() {
-              return ({ valid, result }) => {
+              return ({
+                valid,
+                result,
+              }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              AfterValidateEventPayload<Record<string, any>>) => {
                 if (!valid) {
                   for (const error of result) {
                     error.extensions.http = {
