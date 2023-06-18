@@ -10,8 +10,9 @@ export function useHTTPValidationError<
         if (!valid) {
           for (const error of result) {
             error.extensions.http = {
-              spec: true,
-              status: 400,
+              ...error.extensions.http,
+              spec: error.extensions.http?.spec ?? true,
+              status: error.extensions.http?.status ?? 400,
             }
           }
         }
