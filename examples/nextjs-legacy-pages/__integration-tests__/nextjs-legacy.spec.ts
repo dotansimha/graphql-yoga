@@ -34,12 +34,13 @@ describe('NextJS Legacy Pages', () => {
     expect({
       ...Object.fromEntries(response.headers.entries()),
       date: null,
+      'keep-alive': null,
     }).toMatchInlineSnapshot(`
       {
         "connection": "close",
         "content-type": "application/json; charset=utf-8",
         "date": null,
-        "keep-alive": "timeout=5",
+        "keep-alive": null,
         "transfer-encoding": "chunked",
         "vary": "Accept-Encoding",
       }
