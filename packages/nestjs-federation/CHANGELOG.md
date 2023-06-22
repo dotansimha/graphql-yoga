@@ -1,5 +1,20 @@
 # @graphql-yoga/nestjs-federation
 
+## 2.0.2
+
+### Patch Changes
+
+- [#2864](https://github.com/dotansimha/graphql-yoga/pull/2864) [`9feb88f6`](https://github.com/dotansimha/graphql-yoga/commit/9feb88f6804ce05c28deb4c442fc21c0f23b8db8) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency [`@nestjs/common@^10.0.0` ↗︎](https://www.npmjs.com/package/@nestjs/common/v/10.0.0) (from `^8.4.7 || ^9.0.0`, in `peerDependencies`)
+  - Updated dependency [`@nestjs/core@^10.0.0` ↗︎](https://www.npmjs.com/package/@nestjs/core/v/10.0.0) (from `^8.4.7 || ^9.0.0`, in `peerDependencies`)
+
+- [#2871](https://github.com/dotansimha/graphql-yoga/pull/2871) [`93c96eed`](https://github.com/dotansimha/graphql-yoga/commit/93c96eedd43b63314a05181feea45bdedecd31b4) Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`@nestjs/graphql@^12.0.0` ↗︎](https://www.npmjs.com/package/@nestjs/graphql/v/12.0.0) (from `^11.0.0`, in `peerDependencies`)
+- Updated dependencies [[`9feb88f6`](https://github.com/dotansimha/graphql-yoga/commit/9feb88f6804ce05c28deb4c442fc21c0f23b8db8), [`93c96eed`](https://github.com/dotansimha/graphql-yoga/commit/93c96eedd43b63314a05181feea45bdedecd31b4)]:
+  - @graphql-yoga/nestjs@2.0.2
+  - @graphql-yoga/plugin-apollo-inline-trace@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes

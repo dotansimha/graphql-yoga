@@ -1,5 +1,12 @@
 # cloudflare
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`ce6d2465`](https://github.com/dotansimha/graphql-yoga/commit/ce6d24655eb3c59d9a506baf09dbe185da9a8b2b)]:
+  - graphql-yoga@4.0.2
+
 ## 2.0.1
 
 ### Patch Changes
