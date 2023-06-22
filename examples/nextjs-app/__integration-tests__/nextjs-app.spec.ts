@@ -3,9 +3,11 @@ import { join } from 'node:path'
 import { Readable } from 'node:stream'
 import { fetch } from '@whatwg-node/fetch'
 
+const PORT = 3333
+
 describe('nextjs 13 App Router', () => {
   it('should show GraphiQL', async () => {
-    const response = await fetch('http://127.0.0.1:3333/api/graphql', {
+    const response = await fetch(`http://127.0.0.1:${PORT}/api/graphql`, {
       headers: {
         accept: 'text/html',
       },
@@ -16,7 +18,7 @@ describe('nextjs 13 App Router', () => {
   })
 
   it('should run basic query', async () => {
-    const response = await fetch('http://127.0.0.1:3333/api/graphql', {
+    const response = await fetch(`http://127.0.0.1:${PORT}/api/graphql`, {
       method: 'POST',
       headers: {
         accept: 'application/json',
@@ -29,6 +31,21 @@ describe('nextjs 13 App Router', () => {
 
     expect(response.ok).toBe(true)
 
+    expect({
+      ...Object.fromEntries(response.headers.entries()),
+      date: null,
+      'keep-alive': null,
+    }).toMatchInlineSnapshot(`
+      {
+        "connection": "close",
+        "content-type": "application/json; charset=utf-8",
+        "date": null,
+        "keep-alive": null,
+        "transfer-encoding": "chunked",
+        "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept-Encoding",
+      }
+    `)
+
     const json = await response.json()
 
     expect(json.errors).toBeFalsy()
@@ -39,19 +56,13 @@ describe('nextjs 13 App Router', () => {
 
   jest.setTimeout(1000 * 60 * 5)
   let serverProcess: ReturnType<typeof cmd>
-  let buildProcess: ReturnType<typeof cmd>
 
   beforeAll(async () => {
-    buildProcess = cmd('pnpm build')
-    await buildProcess.exited
-    serverProcess = cmd('PORT=3333 pnpm start')
-    await waitForEndpoint('http://127.0.0.1:3333', 5, 1000)
+    serverProcess = cmd(`PORT=${PORT} pnpm dev`)
+    await waitForEndpoint(`http://127.0.0.1:${PORT}`, 5, 1000)
   })
 
   afterAll(async () => {
-    await buildProcess?.stop().catch((err) => {
-      console.error('Failed to stop build process', err)
-    })
     await serverProcess?.stop().catch((err) => {
       console.error('Failed to stop server process', err)
     })
@@ -85,7 +96,7 @@ function cmd(cmd: string) {
   return {
     exited,
     stop: () => {
-      cp.kill()
+      cp.kill('SIGKILL')
       return exited
     },
   }
