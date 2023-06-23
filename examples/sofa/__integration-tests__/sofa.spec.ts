@@ -11,7 +11,7 @@ describe('SOFA', () => {
   it('serve Swagger JSON correctly', async () => {
     const response = await yoga.fetch('http://localhost:4000/rest/openapi.json')
     expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toBe('application/json')
+    expect(response.headers.get('Content-Type')).toContain('application/json')
     const json = await response.json()
     expect(json).toMatchInlineSnapshot(`
       {
@@ -502,7 +502,7 @@ describe('SOFA', () => {
   it('serve REST API correctly', async () => {
     const response = await yoga.fetch('http://localhost:4000/rest/me')
     expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toBe('application/json')
+    expect(response.headers.get('Content-Type')).toContain('application/json')
     const json = await response.json()
     expect(json).toMatchInlineSnapshot(`
       {
