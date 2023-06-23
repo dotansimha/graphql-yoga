@@ -1,3 +1,4 @@
+import { cacheControlDirective } from '@envelop/response-cache'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 import { createSchema, createYoga } from 'graphql-yoga'
 
@@ -323,6 +324,70 @@ it('should skip response caching with `enabled` option', async () => {
   expect(body2).toMatchObject({
     data: {
       hi: 'Hi!',
+    },
+  })
+})
+
+it('should work with @cacheControl directive', async () => {
+  const yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        ${cacheControlDirective}
+
+        type Query @cacheControl(maxAge: 0) {
+          _: String
+        }
+      `,
+      resolvers: {
+        Query: {
+          _: () => 'DUMMY',
+        },
+      },
+    }),
+    plugins: [
+      useResponseCache({
+        session: () => null,
+        includeExtensionMetadata: true,
+      }),
+    ],
+  })
+  function fetch() {
+    return yoga.fetch('http://localhost:3000/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{__typename}' }),
+    })
+  }
+
+  let response = await fetch()
+
+  expect(response.status).toEqual(200)
+  let body = await response.json()
+  expect(body).toEqual({
+    data: {
+      __typename: 'Query',
+    },
+    extensions: {
+      responseCache: {
+        didCache: false,
+        hit: false,
+      },
+    },
+  })
+
+  response = await fetch()
+  expect(response.status).toEqual(200)
+  body = await response.json()
+  expect(body).toMatchObject({
+    data: {
+      __typename: 'Query',
+    },
+    extensions: {
+      responseCache: {
+        hit: false,
+      },
     },
   })
 })

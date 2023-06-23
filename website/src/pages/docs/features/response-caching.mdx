@@ -96,6 +96,8 @@ Either globally, based on [schema coordinates](https://github.com/graphql/graphq
 
 If a query operation result contains multiple objects of the same or different types, the lowest TTL is picked.
 
+### Using plugin configuration
+
 ```ts filename="Response Cache configuration with TTL"
 useResponseCache({
   session: () => null,
@@ -110,6 +112,31 @@ useResponseCache({
     'Query.lazy': 10_000
   }
 })
+```
+
+### Using Schema directive directive `@cacheControl`
+
+For a schema first approach, the `@cacheControl` directive can be used to define the TTL.
+
+Notice that the global default TTL can only be define in the plugin options `ttl` and not via the directive.
+
+```ts filenmae="Response Cache configuration with TTL using @cacheControl directive"
+import { cacheControlDirective } from '@graphql-yoga/plugin-response-cache'
+
+const typeDefs = /* GraphQL */ `
+  # the directive needs to be defined in the schema
+  ${cacheControlDirective}
+
+  type Query {
+    # cache operations selecting Query.lazy for 10 seconds
+    lazy: Something @cacheControl(maxAge: 10000)
+  }
+
+  # only cache query operations containing User for 500ms
+  type User @cacheControl(maxAge: 500) {
+    #...
+  }
+`
 ```
 
 ## Invalidations via Mutation
