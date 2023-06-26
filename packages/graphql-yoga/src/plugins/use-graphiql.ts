@@ -3,6 +3,7 @@ import graphiqlHTML from '../graphiql-html.js'
 import { YogaLogger } from '@graphql-yoga/logger'
 import { FetchAPI } from '../types.js'
 import { Plugin } from './types.js'
+import { isGraphqlEndpoint } from '../utils/url.js'
 
 export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
   return method === 'GET' && !!headers?.get('accept')?.includes('text/html')
@@ -100,7 +101,7 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
     async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
       if (
         shouldRenderGraphiQL(request) &&
-        (request.url.endsWith(config.graphqlEndpoint) ||
+        (isGraphqlEndpoint(request.url, config.graphqlEndpoint) ||
           url.pathname === config.graphqlEndpoint ||
           getUrlPattern(fetchAPI).test(url))
       ) {

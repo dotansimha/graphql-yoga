@@ -17,6 +17,24 @@ describe('GraphiQL', () => {
       expect(result).toMatch(/<title>Test GraphiQL<\/title>/)
     })
 
+    it('renders graphiql when passing query params and trailing slash', async () => {
+      const yoga = createYoga({
+        graphiql: () => Promise.resolve({ title: 'Test GraphiQL' }),
+      })
+      const response = await yoga.fetch(
+        'http://localhost:3000/graphql/?query=something+awesome',
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'text/html',
+          },
+        },
+      )
+      expect(response.headers.get('content-type')).toEqual('text/html')
+      const result = await response.text()
+      expect(result).toMatch(/<title>Test GraphiQL<\/title>/)
+    })
+
     it('returns error when graphiql is disabled', async () => {
       const yoga = createYoga({
         graphiql: () => Promise.resolve(false),

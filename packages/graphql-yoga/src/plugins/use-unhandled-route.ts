@@ -1,4 +1,5 @@
 import landingPageBody from '../landing-page-html.js'
+import { isGraphqlEndpoint } from '../utils/url.js'
 import { FetchAPI } from '../types.js'
 import type { Plugin } from './types.js'
 
@@ -16,7 +17,7 @@ export function useUnhandledRoute(args: {
   return {
     onRequest({ request, fetchAPI, endResponse, url }) {
       if (
-        !request.url.endsWith(args.graphqlEndpoint) &&
+        !isGraphqlEndpoint(request.url, args.graphqlEndpoint) &&
         url.pathname !== args.graphqlEndpoint &&
         !getUrlPattern(fetchAPI).test(url)
       ) {
