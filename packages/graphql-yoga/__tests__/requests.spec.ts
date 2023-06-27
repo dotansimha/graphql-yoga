@@ -377,7 +377,7 @@ describe('requests', () => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        accept: ['application/xml', 'application/json'],
+        accept: 'application/xml, application/json',
       },
       body: JSON.stringify({ query: '{ ping }' }),
     })
@@ -397,8 +397,7 @@ describe('requests', () => {
     const response = await yoga.fetch('http://yoga/test-graphql', {
       method: 'POST',
       headers: {
-        // not valid as per HTTP spec, but some clients dont care
-        'content-type': ['application/json', 'application/json'],
+        'content-type': 'application/json, application/json',
       },
       body: JSON.stringify({ query: '{ ping }' }),
     })
