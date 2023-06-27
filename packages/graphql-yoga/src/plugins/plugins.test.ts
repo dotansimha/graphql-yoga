@@ -35,7 +35,7 @@ describe('Yoga Plugins', () => {
       plugins: [testPluginToAdd],
       schema,
     })
-    const response = await yoga.fetch('http://localhost:3000/graphql/', {
+    const response = await yoga.fetch('http://localhost:3000/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

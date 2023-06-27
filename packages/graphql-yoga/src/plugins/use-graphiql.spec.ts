@@ -22,7 +22,7 @@ describe('GraphiQL', () => {
         graphiql: () => Promise.resolve({ title: 'Test GraphiQL' }),
       })
       const response = await yoga.fetch(
-        'http://localhost:3000/graphql/?query=something+awesome',
+        'http://localhost:3000/graphql?query=something+awesome',
         {
           method: 'GET',
           headers: {
