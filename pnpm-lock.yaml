@@ -1577,8 +1577,8 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       '@whatwg-node/server':
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: 0.9.1-alpha-20230627164718-7594724
+        version: 0.9.1-alpha-20230627164718-7594724
       dset:
         specifier: ^3.1.1
         version: 3.1.2
@@ -13701,6 +13701,14 @@ packages:
 
   /@whatwg-node/server@0.9.0:
     resolution: {integrity: sha512-dEpgIgLlUA9IRIUbAhsPuFvJjuAQIjWqRhNc6VpMMLnumw2bvOHd9b/Nm2UN9cLvUSSA6//Fy+v0jhxiA2LFAw==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@whatwg-node/fetch': 0.9.7
+      tslib: 2.5.3
+    dev: false
+
+  /@whatwg-node/server@0.9.1-alpha-20230627164718-7594724:
+    resolution: {integrity: sha512-nVviUJ/Iqcx3peVTY4n5Axnq4gFUAAo+roP9NInRT2XdF/p+F1kIyWcIqODUFuqS/sorfrfBaNA8kyghaClY9Q==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@whatwg-node/fetch': 0.9.7
