@@ -1,5 +1,12 @@
 # @graphql-yoga/render-graphiql
 
+## 4.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`5efb8250`](https://github.com/dotansimha/graphql-yoga/commit/5efb82502da245f2fe730cc18f4af283d31a835c)]:
+  - graphql-yoga@4.0.3
+
 ## 4.0.2
 
 ### Patch Changes
