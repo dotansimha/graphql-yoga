@@ -1883,8 +1883,8 @@ importers:
   packages/plugins/response-cache:
     dependencies:
       '@envelop/response-cache':
-        specifier: ^5.0.0
-        version: 5.0.0(@envelop/core@4.0.0)(graphql@16.6.0)
+        specifier: ^5.1.0
+        version: 5.1.0(@envelop/core@4.0.0)(graphql@16.6.0)
       graphql-yoga:
         specifier: ^4.0.2
         version: link:../../graphql-yoga/dist
@@ -6587,8 +6587,8 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@envelop/response-cache@5.0.0(@envelop/core@4.0.0)(graphql@16.6.0):
-    resolution: {integrity: sha512-CVcH0D2Ht0Rr1UJhOPPN5LUK18/UaoBi1PtNlqusY2yI5yHbzztqVsg9mxQv6jHuIHE6FWAYzZJN38viPGyYuA==}
+  /@envelop/response-cache@5.1.0(@envelop/core@4.0.0)(graphql@16.6.0):
+    resolution: {integrity: sha512-G81MF9XCQdmyZWgTkZa09rBusXNXhvjPMDjP4cfOpr8g1DEvEsxskEGT08f22hvl9Fg+G2wlVXBsHPLEr798Lg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@envelop/core': ^4.0.0
@@ -6599,7 +6599,7 @@ packages:
       '@whatwg-node/fetch': 0.9.7
       fast-json-stable-stringify: 2.1.0
       graphql: 16.6.0
-      lru-cache: 9.1.1
+      lru-cache: 10.0.0
       tslib: 2.5.3
     dev: false
 
@@ -24288,6 +24288,7 @@ packages:
   /lru-cache@9.1.1:
     resolution: {integrity: sha512-65/Jky17UwSb0BuB9V+MyDpsOtXKmYwzhyl+cOa9XUiI4uV2Ouy/2voFP3+al0BjZbJgMBD8FojMpAf+Z+qn4A==}
     engines: {node: 14 || >=16.14}
+    dev: true
 
   /lru-memoizer@2.2.0:
     resolution: {integrity: sha512-QfOZ6jNkxCcM/BkIPnFsqDhtrazLRsghi9mBwFAzol5GCvj4EkFT899Za3+QwikCg5sRX8JstioBDwOxEyzaNw==}
