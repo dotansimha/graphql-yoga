@@ -1,5 +1,18 @@
 # @graphql-yoga/plugin-response-cache
 
+## 2.1.0
+
+### Minor Changes
+
+- [`96882491`](https://github.com/dotansimha/graphql-yoga/commit/968824919efefc7d239ea7fd742944ddc90ad0fd) Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Add @cacheControl directive to configure cache in a schema first approach
+
+### Patch Changes
+
+- [`96882491`](https://github.com/dotansimha/graphql-yoga/commit/968824919efefc7d239ea7fd742944ddc90ad0fd) Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+  - Updated dependency [`@envelop/response-cache@^5.1.0` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/5.1.0) (from `^5.0.0`, in `dependencies`)
+- Updated dependencies [[`5efb8250`](https://github.com/dotansimha/graphql-yoga/commit/5efb82502da245f2fe730cc18f4af283d31a835c)]:
+  - graphql-yoga@4.0.3
+
 ## 2.0.2
 
 ### Patch Changes

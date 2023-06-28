@@ -1,5 +1,14 @@
 # @graphql-yoga/plugin-apollo-inline-trace
 
+## 2.0.3
+
+### Patch Changes
+
+- [`5efb8250`](https://github.com/dotansimha/graphql-yoga/commit/5efb82502da245f2fe730cc18f4af283d31a835c) Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+  - Updated dependency [`@whatwg-node/fetch@^0.9.7` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.9.7) (from `^0.9.0`, in `peerDependencies`)
+- Updated dependencies [[`5efb8250`](https://github.com/dotansimha/graphql-yoga/commit/5efb82502da245f2fe730cc18f4af283d31a835c)]:
+  - graphql-yoga@4.0.3
+
 ## 2.0.2
 
 ### Patch Changes
