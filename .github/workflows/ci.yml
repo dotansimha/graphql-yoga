@@ -232,7 +232,7 @@ jobs:
       - name: Bundle Apollo Federation Subgraph Example
         run: pnpm --filter=example-apollo-federation-compatibility build
       - name: Install Rover
-        run: curl -sSL https://rover.apollo.dev/nix/v0.11.1 | sh
+        run: curl -sSL https://rover.apollo.dev/nix/latest | sh
       - name: Add Rover to PATH
         run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Apollo Federation Subgraph Compatibility
