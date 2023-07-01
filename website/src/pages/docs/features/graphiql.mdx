@@ -131,3 +131,17 @@ import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
 
 const yoga = createYoga({ renderGraphiQL })
 ```
+
+## Usage with Content Security Policy
+
+In production, chances are you have enabled [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) (CSP) to prevent attacks.
+
+Yoga by itself doesn't require any special CSP configuration, but if you plan to use GraphiQL, you will need to add some sources to your CSP configuration:
+
+- `script-src`:
+  - `unpgk.com`: used to load the graphql module.
+  - `unsafe-inline`: GraphiQL is bundled with Webpack which rely on script tag injections.
+- `style-src`:
+  - `unpkg.com`: GraphiQL styles are loaded directly from its module bundle, next to its scripts.
+- `img-src`:
+  - `raw.githubusercontent.com`: The Guild logo is loaded from github
