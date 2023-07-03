@@ -37,3 +37,69 @@ app.listen(4000, () => {
 ```
 
 > You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/express)
+
+## Using Helmet
+
+If you are using [Helmet](https://helmetjs.github.io/) to set your [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), you can use the following configuration:
+
+```ts
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'style-src': ["'self'", 'unpkg.com'],
+        'script-src': ["'self'", 'unpkg.com', "'unsafe-inline'"],
+        'img-src': ["'self'", 'raw.githubusercontent.com']
+      }
+    }
+  })
+)
+```
+
+[See GraphiQL documentation page for more informations](../features/graphiql#usage-with-content-security-policy)
+
+### Isolate GraphiQL configuration
+
+To avoid applying this configuration to other endpoints you may have on your Express server,
+you can use `Express.Router` to create a new router instance and apply the configuration only to the GraphQL Yoga endpoint.
+
+```ts
+import express from 'express'
+import helmet from 'helmet'
+
+const app = express()
+
+const yoga = createYoga()
+const yogaRouter = express.Router()
+// GraphiQL specefic CSP configuration
+yogaRouter.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'style-src': ["'self'", 'unpkg.com'],
+        'script-src': ["'self'", 'unpkg.com', "'unsafe-inline'"],
+        'img-src': ["'self'", 'raw.githubusercontent.com']
+      }
+    }
+  })
+)
+yogaRouter.use(yoga)
+
+// By adding the GraphQL Yoga router before the global helmet middleware,
+// you can be sure that the global CSP configuration will not be applied to the GraphQL Yoga endpoint
+app.use(yoga.graphqlEndpoint, yogaRouter)
+
+// Add the global CSP configuration for the rest of your server.
+app.use(helmet())
+
+// You can know register your other endpoints that will not be affected by the GraphiQL CSP configuration
+app.get('/hello', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(4000, () => {
+  console.log('Running a GraphQL API server at http://localhost:4000/graphql')
+})
+```
+
+> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/express-helmet)
