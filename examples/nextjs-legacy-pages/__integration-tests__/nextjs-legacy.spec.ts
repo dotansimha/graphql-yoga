@@ -38,10 +38,10 @@ describe('NextJS Legacy Pages', () => {
     }).toMatchInlineSnapshot(`
       {
         "connection": "close",
+        "content-length": "79",
         "content-type": "application/json; charset=utf-8",
         "date": null,
         "keep-alive": null,
-        "transfer-encoding": "chunked",
         "vary": "Accept-Encoding",
       }
     `)
