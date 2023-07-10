@@ -35,21 +35,9 @@ export interface JwtPluginOptions {
    */
   extendContextField?: string
   /**
-   * The name of the header to be used to extract the token from.
-   *
-   * Default: "Authorization"
-   */
-  headerName?: string
-  /**
-   * The type of the header
-   *
-   * Default: Bearer
-   */
-  headerType?: string
-  /**
    * Function to extract the token from the request object
    *
-   * Default: (request) => request.headers[headerName]
+   * Default: Extracts the token from the Authorization header with the format `Bearer <token>`
    */
   getToken?: (params: {
     request: Request
@@ -69,12 +57,7 @@ export function useJwt(options: JwtPluginOptions): Plugin {
     )
   }
 
-  const {
-    jwksUri,
-    headerName = 'authorization',
-    headerType = 'Bearer',
-    extendContextField = 'jwt',
-  } = options
+  const { jwksUri, extendContextField = 'jwt' } = options
 
   const payloadByRequest = new WeakMap<Request, JwtPayload | string>()
 
@@ -88,7 +71,7 @@ export function useJwt(options: JwtPluginOptions): Plugin {
     })
   }
 
-  const getToken = options.getToken ?? defaultGetToken(headerName, headerType)
+  const getToken = options.getToken ?? defaultGetToken
 
   return {
     async onRequest({ request, serverContext, url }) {
@@ -166,19 +149,16 @@ async function fetchKey(
   return signingKey
 }
 
-const defaultGetToken =
-  (
-    headerName: string,
-    headerType: string,
-  ): NonNullable<JwtPluginOptions['getToken']> =>
-  ({ request }) => {
-    const header = request.headers.get(headerName)
-    if (!header) {
-      return
-    }
-    const [type, token] = header.split(' ')
-    if (type !== headerType) {
-      throw unauthorizedError(`Unsupported token type provided: "${type}"`)
-    }
-    return token
+const defaultGetToken: NonNullable<JwtPluginOptions['getToken']> = ({
+  request,
+}) => {
+  const header = request.headers.get('authorization')
+  if (!header) {
+    return
   }
+  const [type, token] = header.split(' ')
+  if (type !== 'Bearer') {
+    throw unauthorizedError(`Unsupported token type provided: "${type}"`)
+  }
+  return token
+}
