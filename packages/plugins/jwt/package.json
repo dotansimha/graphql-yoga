@@ -40,12 +40,17 @@
     "access": "public"
   },
   "dependencies": {
-    "jsonwebtoken": "8.5.1",
-    "jwks-rsa": "2.1.5"
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.1.5"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "8.5.8",
-    "tslib": "^2.4.0"
+    "@types/jsonwebtoken": "^8.5.8",
+    "graphql-scalars": "^1.22.2",
+    "tslib": "^2.4.0",
+    "graphql": "^16.5.0"
+  },
+  "peerDependencies": {
+    "graphql": "^16.5.0"
   },
   "type": "module"
 }
