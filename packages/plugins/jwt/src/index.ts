@@ -46,6 +46,16 @@ export interface JwtPluginOptions {
    * Default: Bearer
    */
   headerType?: string
+  /**
+   * Function to extract the token from the request object
+   *
+   * Default: (request) => request.headers[headerName]
+   */
+  getToken?: (params: {
+    request: Request
+    serverContext: object | undefined
+    url: URL
+  }) => string | undefined
 }
 
 export function useJwt(options: JwtPluginOptions): Plugin {
@@ -78,15 +88,12 @@ export function useJwt(options: JwtPluginOptions): Plugin {
     })
   }
 
-  return {
-    async onRequest({ request }) {
-      const header = request.headers.get(headerName)
-      if (header != null) {
-        const [type, token] = header.split(' ')
-        if (type !== headerType) {
-          throw unauthorizedError(`Unsupported token type provided: "${type}"`)
-        }
+  const getToken = options.getToken ?? defaultGetToken(headerName, headerType)
 
+  return {
+    async onRequest({ request, serverContext, url }) {
+      const token = getToken({ request, serverContext, url })
+      if (token != null) {
         const signingKey =
           options.signingKey ?? (await fetchKey(jwksClient, token))
 
@@ -158,3 +165,20 @@ async function fetchKey(
   }
   return signingKey
 }
+
+const defaultGetToken =
+  (
+    headerName: string,
+    headerType: string,
+  ): NonNullable<JwtPluginOptions['getToken']> =>
+  ({ request }) => {
+    const header = request.headers.get(headerName)
+    if (!header) {
+      return
+    }
+    const [type, token] = header.split(' ')
+    if (type !== headerType) {
+      throw unauthorizedError(`Unsupported token type provided: "${type}"`)
+    }
+    return token
+  }

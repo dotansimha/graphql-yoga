@@ -127,6 +127,15 @@ describe('jwt', () => {
       },
     })
   })
+
+  it('should allow to get token from something else than headers', async () => {
+    const server = createTestServer({
+      getToken: () => buildJWT({}).split(' ')[1],
+    })
+
+    const response = await server.queryWithAuth('')
+    expect(response.status).toBe(200)
+  })
 })
 
 const createTestServer = (options?: Partial<Parameters<typeof useJwt>[0]>) => {
