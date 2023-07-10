@@ -1,7 +1,6 @@
 import { JwksClient } from 'jwks-rsa'
 import jsonwebtoken, { JwtPayload, Algorithm } from 'jsonwebtoken'
-import { Plugin } from 'graphql-yoga'
-import { GraphQLError } from 'graphql'
+import { Plugin, createGraphQLError } from 'graphql-yoga'
 
 const { decode } = jsonwebtoken
 
@@ -117,7 +116,7 @@ export function useJwt(options: JwtPluginOptions): Plugin {
 }
 
 function unauthorizedError(message: string) {
-  return new GraphQLError(message, {
+  return createGraphQLError(message, {
     extensions: {
       http: {
         status: 401,
