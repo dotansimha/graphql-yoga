@@ -57,7 +57,11 @@ export function useJwt(options: JwtPluginOptions): Plugin {
     )
   }
 
-  const { jwksUri, extendContextField = 'jwt' } = options
+  const {
+    jwksUri,
+    extendContextField = 'jwt',
+    getToken = defaultGetToken,
+  } = options
 
   const payloadByRequest = new WeakMap<Request, JwtPayload | string>()
 
@@ -70,8 +74,6 @@ export function useJwt(options: JwtPluginOptions): Plugin {
       jwksUri,
     })
   }
-
-  const getToken = options.getToken ?? defaultGetToken
 
   return {
     async onRequest({ request, serverContext, url }) {
