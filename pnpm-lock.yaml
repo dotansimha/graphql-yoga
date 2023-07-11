@@ -1876,6 +1876,9 @@ importers:
 
   packages/plugins/jwt:
     dependencies:
+      graphql-yoga:
+        specifier: ^4.0.3
+        version: link:../../graphql-yoga/dist
       jsonwebtoken:
         specifier: ^8.5.1
         version: 8.5.1
