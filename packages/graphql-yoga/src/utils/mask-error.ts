@@ -1,8 +1,7 @@
-import { GraphQLErrorExtensions } from 'graphql'
-import { createGraphQLError } from '@graphql-tools/utils'
-
-import { isGraphQLError } from '../error.js'
-import { MaskError } from '../types.js'
+import { GraphQLErrorExtensions } from 'graphql';
+import { createGraphQLError } from '@graphql-tools/utils';
+import { isGraphQLError } from '../error.js';
+import { MaskError } from '../types.js';
 
 export const maskError: MaskError = (
   error: unknown,
@@ -12,18 +11,18 @@ export const maskError: MaskError = (
   if (isGraphQLError(error)) {
     if (error.originalError) {
       if (error.originalError.name === 'GraphQLError') {
-        return error
+        return error;
       }
       // Original error should be removed
       const extensions: GraphQLErrorExtensions = {
         ...error.extensions,
         unexpected: true,
-      }
+      };
       if (isDev) {
         extensions.originalError = {
           message: error.originalError.message,
           stack: error.originalError.stack,
-        }
+        };
       }
       return createGraphQLError(message, {
         nodes: error.nodes,
@@ -31,9 +30,9 @@ export const maskError: MaskError = (
         positions: error.positions,
         path: error.path,
         extensions,
-      })
+      });
     }
-    return error
+    return error;
   }
 
   return createGraphQLError(message, {
@@ -48,5 +47,5 @@ export const maskError: MaskError = (
           : error
         : undefined,
     },
-  })
-}
+  });
+};

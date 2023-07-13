@@ -1,9 +1,7 @@
 {
   "name": "@graphql-yoga/nestjs-federation",
   "version": "2.0.3",
-  "engines": {
-    "node": ">=16.0.0"
-  },
+  "type": "module",
   "description": "GraphQL Yoga driver with Apollo Federation for NestJS GraphQL.",
   "repository": {
     "type": "git",
@@ -12,8 +10,8 @@
   },
   "author": "Denis Badurina <badurinadenis@gmail.com>",
   "license": "MIT",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
+  "engines": {
+    "node": ">=16.0.0"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -35,9 +33,6 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
   "keywords": [
     "graphql",
     "server",
@@ -48,6 +43,9 @@
     "apollo",
     "federation"
   ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
@@ -72,6 +70,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

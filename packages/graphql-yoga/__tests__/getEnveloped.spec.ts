@@ -1,5 +1,5 @@
-import { createSchema } from '../src/schema'
-import { createYoga } from '../src/server'
+import { createSchema } from '../src/schema';
+import { createYoga } from '../src/server';
 
 describe('getEnveloped', () => {
   it('be accessible', async () => {
@@ -16,27 +16,26 @@ describe('getEnveloped', () => {
           },
         },
       }),
-    })
+    });
 
-    const { schema, execute, parse, validate, contextFactory } =
-      yoga.getEnveloped()
+    const { schema, execute, parse, validate, contextFactory } = yoga.getEnveloped();
 
     const document = parse(/* GraphQL */ `
       query {
         hello
       }
-    `)
+    `);
 
-    const errors = validate(schema, document)
+    const errors = validate(schema, document);
 
-    expect(errors).toEqual([])
+    expect(errors).toEqual([]);
 
     const result = await execute({
       schema,
       document,
       contextValue: await contextFactory(),
-    })
+    });
 
-    expect(result.data).toEqual({ hello: 'Hello World!' })
-  })
-})
+    expect(result.data).toEqual({ hello: 'Hello World!' });
+  });
+});

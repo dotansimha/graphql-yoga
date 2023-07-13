@@ -1,22 +1,20 @@
 {
   "name": "@graphql-yoga/plugin-prometheus",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "version": "2.0.3",
+  "type": "module",
   "description": "Prometheus plugin for GraphQL Yoga.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/plugins/prometheus"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
   "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -35,23 +33,25 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "peerDependencies": {
+    "graphql": "^15.2.0 || ^16.0.0",
+    "graphql-yoga": "^4.0.3",
+    "prom-client": "^13 || ^14.0.0"
+  },
+  "dependencies": {
+    "@envelop/prometheus": "8.0.0"
+  },
+  "devDependencies": {
+    "prom-client": "14.2.0"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "dependencies": {
-    "@envelop/prometheus": "8.0.0"
-  },
-  "peerDependencies": {
-    "prom-client": "^13 || ^14.0.0",
-    "graphql": "^15.2.0 || ^16.0.0",
-    "graphql-yoga": "^4.0.3"
-  },
-  "devDependencies": {
-    "prom-client": "14.2.0"
-  },
-  "type": "module"
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

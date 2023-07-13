@@ -1,25 +1,25 @@
 {
   "name": "example-file-upload-nextjs-pothos",
-  "private": true,
   "version": "0.11.11",
+  "private": true,
   "scripts": {
-    "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "check": "tsc --pretty --noEmit",
+    "dev": "next",
     "lint": "next lint",
-    "check": "tsc --pretty --noEmit"
+    "start": "next start"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
     "@pothos/core": "3.30.0",
     "graphql": "16.6.0",
+    "graphql-yoga": "4.0.3",
     "next": "13.4.9",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@whatwg-node/fetch": "^0.9.7",
     "@types/react": "^18.0.17",
+    "@whatwg-node/fetch": "^0.9.7",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.9",
     "typescript": "5.1.6"

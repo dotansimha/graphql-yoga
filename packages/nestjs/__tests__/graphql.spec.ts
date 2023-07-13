@@ -1,20 +1,20 @@
-import { INestApplication } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
-import { fetch } from '@whatwg-node/fetch'
-import { AppModule } from './fixtures/graphql/app.module'
+import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { fetch } from '@whatwg-node/fetch';
+import { AppModule } from './fixtures/graphql/app.module';
 
-let app: INestApplication, url: string
+let app: INestApplication, url: string;
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
     imports: [AppModule.forRoot()],
-  }).compile()
-  app = module.createNestApplication()
-  await app.listen(0)
-  url = (await app.getUrl()) + '/graphql'
-})
+  }).compile();
+  app = module.createNestApplication();
+  await app.listen(0);
+  url = (await app.getUrl()) + '/graphql';
+});
 
-afterAll(() => app.close())
+afterAll(() => app.close());
 
 it('should return query result', async () => {
   const res = await fetch(url, {
@@ -33,7 +33,7 @@ it('should return query result', async () => {
         }
       `,
     }),
-  })
+  });
   await expect(res.json()).resolves.toMatchInlineSnapshot(`
     {
       "data": {
@@ -46,5 +46,5 @@ it('should return query result', async () => {
         ],
       },
     }
-  `)
-})
+  `);
+});

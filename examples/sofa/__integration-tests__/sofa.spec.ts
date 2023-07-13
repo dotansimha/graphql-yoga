@@ -1,18 +1,18 @@
-import { yoga } from '../src/yoga.js'
+import { yoga } from '../src/yoga.js';
 
 describe('SOFA', () => {
   it('serve Swagger UI correctly', async () => {
-    const response = await yoga.fetch('http://localhost:4000/rest/docs')
-    expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toBe('text/html')
-    const html = await response.text()
-    expect(html).toContain('<title>SwaggerUI</title>')
-  })
+    const response = await yoga.fetch('http://localhost:4000/rest/docs');
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Content-Type')).toBe('text/html');
+    const html = await response.text();
+    expect(html).toContain('<title>SwaggerUI</title>');
+  });
   it('serve Swagger JSON correctly', async () => {
-    const response = await yoga.fetch('http://localhost:4000/rest/openapi.json')
-    expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toContain('application/json')
-    const json = await response.json()
+    const response = await yoga.fetch('http://localhost:4000/rest/openapi.json');
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Content-Type')).toContain('application/json');
+    const json = await response.json();
     expect(json).toMatchInlineSnapshot(`
       {
         "components": {
@@ -449,20 +449,20 @@ describe('SOFA', () => {
           },
         ],
       }
-    `)
-  })
+    `);
+  });
   it('serve GraphiQL correctly', async () => {
     const response = await yoga.fetch('http://localhost:4000/graphql', {
       method: 'GET',
       headers: {
         Accept: 'text/html',
       },
-    })
-    expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toBe('text/html')
-    const html = await response.text()
-    expect(html).toContain('<title>Yoga GraphiQL</title>')
-  })
+    });
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Content-Type')).toBe('text/html');
+    const html = await response.text();
+    expect(html).toContain('<title>Yoga GraphiQL</title>');
+  });
   it('serve GraphQL API correctly', async () => {
     const response = await yoga.fetch('http://localhost:4000/graphql', {
       method: 'POST',
@@ -479,9 +479,9 @@ describe('SOFA', () => {
           }
         `,
       }),
-    })
-    expect(response.status).toBe(200)
-    const json = await response.json()
+    });
+    expect(response.status).toBe(200);
+    const json = await response.json();
     expect(json).toMatchInlineSnapshot(`
       {
         "data": {
@@ -497,13 +497,13 @@ describe('SOFA', () => {
           ],
         },
       }
-    `)
-  })
+    `);
+  });
   it('serve REST API correctly', async () => {
-    const response = await yoga.fetch('http://localhost:4000/rest/me')
-    expect(response.status).toBe(200)
-    expect(response.headers.get('Content-Type')).toContain('application/json')
-    const json = await response.json()
+    const response = await yoga.fetch('http://localhost:4000/rest/me');
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Content-Type')).toContain('application/json');
+    const json = await response.json();
     expect(json).toMatchInlineSnapshot(`
       {
         "favoriteBook": {
@@ -532,6 +532,6 @@ describe('SOFA', () => {
           },
         ],
       }
-    `)
-  })
-})
+    `);
+  });
+});

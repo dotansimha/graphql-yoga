@@ -22,4 +22,5 @@ pnpm start   # or npm start
 
 ### Counter
 
-Visit [http://localhost:4000](http://localhost:4000) i your browser and play around with the operations.
+Visit [http://localhost:4000](http://localhost:4000) i your browser and play around with the
+operations.

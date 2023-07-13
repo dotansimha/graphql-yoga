@@ -1,13 +1,13 @@
-import { ResolveField, Resolver, ResolveReference } from '@nestjs/graphql'
+import { ResolveField, Resolver, ResolveReference } from '@nestjs/graphql';
 
 interface CaseStudy {
-  caseNumber: string
-  description: string
+  caseNumber: string;
+  description: string;
 }
 
 interface ProductResearch {
-  study: CaseStudy
-  outcome: string
+  study: CaseStudy;
+  outcome: string;
 }
 
 const productResearch = [
@@ -23,19 +23,17 @@ const productResearch = [
       description: 'Studio Study',
     },
   },
-]
+];
 
 @Resolver('ProductResearch')
 export class ProductResearchResolver {
   @ResolveField()
   getStudy() {
-    return productResearch[0].study
+    return productResearch[0].study;
   }
 
   @ResolveReference()
   resolveReference(reference: ProductResearch) {
-    return productResearch.find(
-      (p) => reference.study.caseNumber === p.study.caseNumber,
-    )
+    return productResearch.find(p => reference.study.caseNumber === p.study.caseNumber);
   }
 }

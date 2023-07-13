@@ -1,6 +1,6 @@
-import { AfterValidateEventPayload } from '@envelop/core'
-import { createSchema } from '../../schema.js'
-import { createYoga } from '../../server.js'
+import { AfterValidateEventPayload } from '@envelop/core';
+import { createSchema } from '../../schema.js';
+import { createYoga } from '../../server.js';
 
 describe('useHTTPValidationError', () => {
   describe('when doing a request with an invalid query', () => {
@@ -17,8 +17,8 @@ describe('useHTTPValidationError', () => {
               foo: () => 'bar',
             },
           },
-        })
-      }
+        });
+      };
       const yoga = createYoga({
         schema: schemaFactory,
         plugins: [
@@ -37,14 +37,14 @@ describe('useHTTPValidationError', () => {
                       headers: {
                         'custom-header': 'custom-value',
                       },
-                    }
+                    };
                   }
                 }
-              }
+              };
             },
           },
         ],
-      })
+      });
       const result = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',
         body: JSON.stringify({
@@ -53,9 +53,9 @@ describe('useHTTPValidationError', () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
-      expect(result.status).toEqual(400)
-      expect(result.headers.get('custom-header')).toEqual('custom-value')
-    })
-  })
-})
+      });
+      expect(result.status).toEqual(400);
+      expect(result.headers.get('custom-header')).toEqual('custom-value');
+    });
+  });
+});

@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createYoga, createSchema } from 'graphql-yoga'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { createSchema, createYoga } from 'graphql-yoga';
 
 // Docs: https://vercel.com/docs/concepts/functions/serverless-functions
 
@@ -9,11 +9,11 @@ export const config = {
     // Disable body parsing (required for file uploads)
     bodyParser: false,
   },
-}
+};
 
 export default createYoga<{
-  req: NextApiRequest
-  res: NextApiResponse
+  req: NextApiRequest;
+  res: NextApiResponse;
 }>({
   graphqlEndpoint: '/api/graphql',
   schema: createSchema({
@@ -24,9 +24,8 @@ export default createYoga<{
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
     },
   }),
-})
+});

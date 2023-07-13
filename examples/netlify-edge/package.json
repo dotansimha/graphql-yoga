@@ -1,18 +1,18 @@
 {
   "name": "example-netlify-edge",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "start": "pnpm build && netlify dev",
     "build": "node ./build.js",
-    "check": "exit 0"
-  },
-  "devDependencies": {
-    "netlify-cli": "^15.0.0",
-    "esbuild": "0.17.19"
+    "check": "exit 0",
+    "start": "pnpm build && netlify dev"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
-    "graphql": "16.6.0"
+    "graphql": "16.6.0",
+    "graphql-yoga": "4.0.3"
+  },
+  "devDependencies": {
+    "esbuild": "0.17.19",
+    "netlify-cli": "^15.0.0"
   }
 }

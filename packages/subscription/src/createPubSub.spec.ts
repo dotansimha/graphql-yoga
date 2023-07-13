@@ -1,22 +1,21 @@
-import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
-import Redis from 'ioredis-mock'
-
-import { createPubSub } from './create-pub-sub.js'
+import Redis from 'ioredis-mock';
+import { createRedisEventTarget } from '@graphql-yoga/redis-event-target';
+import { createPubSub } from './create-pub-sub.js';
 
 async function collectAsyncIterableValues<TType>(
   asyncIterable: AsyncIterable<TType>,
 ): Promise<Array<TType>> {
-  const values: Array<TType> = []
+  const values: Array<TType> = [];
   for await (const value of asyncIterable) {
-    values.push(value)
+    values.push(value);
   }
-  return values
+  return values;
 }
 
 describe('createPubSub', () => {
   it('create', () => {
-    createPubSub()
-  })
+    createPubSub();
+  });
 
   describe.each([
     ['InMemory', () => new EventTarget()],
@@ -31,124 +30,124 @@ describe('createPubSub', () => {
   ])(`API %s`, (_, createEventTarget) => {
     it('subscribe to topic', async () => {
       const pubSub = createPubSub<{
-        a: [number]
+        a: [number];
       }>({
         eventTarget: createEventTarget(),
-      })
+      });
 
-      const sub = pubSub.subscribe('a')
-      const allValues = collectAsyncIterableValues(sub)
-      pubSub.publish('a', 1)
-      pubSub.publish('a', 2)
-      pubSub.publish('a', 3)
+      const sub = pubSub.subscribe('a');
+      const allValues = collectAsyncIterableValues(sub);
+      pubSub.publish('a', 1);
+      pubSub.publish('a', 2);
+      pubSub.publish('a', 3);
 
       setImmediate(() => {
-        sub.return()
-      })
+        sub.return();
+      });
 
-      const result = await allValues
-      expect(result).toEqual([1, 2, 3])
-    })
+      const result = await allValues;
+      expect(result).toEqual([1, 2, 3]);
+    });
     it('subscribe to multiple topics', async () => {
       const pubSub = createPubSub<{
-        a: [number]
-        b: [string]
+        a: [number];
+        b: [string];
       }>({
         eventTarget: createEventTarget(),
-      })
+      });
 
-      const sub1 = pubSub.subscribe('a')
-      const sub2 = pubSub.subscribe('b')
-      const allValues1 = collectAsyncIterableValues(sub1)
-      const allValues2 = collectAsyncIterableValues(sub2)
+      const sub1 = pubSub.subscribe('a');
+      const sub2 = pubSub.subscribe('b');
+      const allValues1 = collectAsyncIterableValues(sub1);
+      const allValues2 = collectAsyncIterableValues(sub2);
 
-      pubSub.publish('a', 1)
-      pubSub.publish('b', '1')
-      pubSub.publish('a', 2)
-      pubSub.publish('b', '2')
-      pubSub.publish('a', 3)
-      pubSub.publish('b', '3')
+      pubSub.publish('a', 1);
+      pubSub.publish('b', '1');
+      pubSub.publish('a', 2);
+      pubSub.publish('b', '2');
+      pubSub.publish('a', 3);
+      pubSub.publish('b', '3');
 
       setImmediate(() => {
-        sub1.return()
-        sub2.return()
-      })
+        sub1.return();
+        sub2.return();
+      });
 
-      const result1 = await allValues1
-      const result2 = await allValues2
-      expect(result1).toEqual([1, 2, 3])
-      expect(result2).toEqual(['1', '2', '3'])
-    })
+      const result1 = await allValues1;
+      const result2 = await allValues2;
+      expect(result1).toEqual([1, 2, 3]);
+      expect(result2).toEqual(['1', '2', '3']);
+    });
     it('subscribe to fine-grained topic', async () => {
       const pubSub = createPubSub<{
-        a: [id: string, payload: number]
+        a: [id: string, payload: number];
       }>({
         eventTarget: createEventTarget(),
-      })
-      const id1 = '1'
-      const sub1 = pubSub.subscribe('a', id1)
-      const allValues1 = collectAsyncIterableValues(sub1)
-      pubSub.publish('a', id1, 1)
-      pubSub.publish('a', id1, 2)
-      pubSub.publish('a', id1, 3)
+      });
+      const id1 = '1';
+      const sub1 = pubSub.subscribe('a', id1);
+      const allValues1 = collectAsyncIterableValues(sub1);
+      pubSub.publish('a', id1, 1);
+      pubSub.publish('a', id1, 2);
+      pubSub.publish('a', id1, 3);
       setImmediate(() => {
-        sub1.return()
-      })
+        sub1.return();
+      });
 
-      const result1 = await allValues1
-      expect(result1).toEqual([1, 2, 3])
-    })
+      const result1 = await allValues1;
+      expect(result1).toEqual([1, 2, 3]);
+    });
     it('subscribe to multiple fine-grained topics', async () => {
       const pubSub = createPubSub<{
-        a: [id: string, payload: number]
-        b: [id: string, payload: string]
+        a: [id: string, payload: number];
+        b: [id: string, payload: string];
       }>({
         eventTarget: createEventTarget(),
-      })
-      const id1 = '1'
-      const id2 = '1'
+      });
+      const id1 = '1';
+      const id2 = '1';
 
-      const sub1 = pubSub.subscribe('a', id1)
-      const sub2 = pubSub.subscribe('b', id2)
+      const sub1 = pubSub.subscribe('a', id1);
+      const sub2 = pubSub.subscribe('b', id2);
 
-      const allValues1 = collectAsyncIterableValues(sub1)
-      const allValues2 = collectAsyncIterableValues(sub2)
+      const allValues1 = collectAsyncIterableValues(sub1);
+      const allValues2 = collectAsyncIterableValues(sub2);
 
-      pubSub.publish('a', id1, 1)
-      pubSub.publish('b', id1, '1')
-      pubSub.publish('a', id1, 2)
-      pubSub.publish('b', id1, '2')
-      pubSub.publish('a', id1, 3)
-      pubSub.publish('b', id1, '3')
+      pubSub.publish('a', id1, 1);
+      pubSub.publish('b', id1, '1');
+      pubSub.publish('a', id1, 2);
+      pubSub.publish('b', id1, '2');
+      pubSub.publish('a', id1, 3);
+      pubSub.publish('b', id1, '3');
       setImmediate(() => {
-        sub1.return()
-        sub2.return()
-      })
+        sub1.return();
+        sub2.return();
+      });
 
-      const result1 = await allValues1
-      const result2 = await allValues2
-      expect(result1).toEqual([1, 2, 3])
-      expect(result2).toEqual(['1', '2', '3'])
-    })
+      const result1 = await allValues1;
+      const result2 = await allValues2;
+      expect(result1).toEqual([1, 2, 3]);
+      expect(result2).toEqual(['1', '2', '3']);
+    });
     it('subscribe to topic without payload', async () => {
       const pubSub = createPubSub<{
-        a: []
+        a: [];
       }>({
         eventTarget: createEventTarget(),
-      })
+      });
 
-      const sub = pubSub.subscribe('a')
-      const allValues = collectAsyncIterableValues(sub)
-      pubSub.publish('a')
-      pubSub.publish('a')
-      pubSub.publish('a')
+      const sub = pubSub.subscribe('a');
+      const allValues = collectAsyncIterableValues(sub);
+      pubSub.publish('a');
+      pubSub.publish('a');
+      pubSub.publish('a');
 
       setImmediate(() => {
-        sub.return()
-      })
+        sub.return();
+      });
 
-      const result = await allValues
-      expect(result).toEqual([null, null, null])
-    })
-  })
-})
+      const result = await allValues;
+      expect(result).toEqual([null, null, null]);
+    });
+  });
+});

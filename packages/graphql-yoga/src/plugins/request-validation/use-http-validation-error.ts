@@ -1,4 +1,4 @@
-import type { Plugin } from '../types.js'
+import type { Plugin } from '../types.js';
 
 export function useHTTPValidationError<
   // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
@@ -13,10 +13,10 @@ export function useHTTPValidationError<
               ...error.extensions.http,
               spec: error.extensions.http?.spec ?? true,
               status: error.extensions.http?.status ?? 400,
-            }
+            };
           }
         }
-      }
+      };
     },
-  }
+  };
 }

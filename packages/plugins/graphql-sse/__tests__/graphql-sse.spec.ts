@@ -1,6 +1,6 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import { createClient } from 'graphql-sse'
-import { useGraphQLSSE } from '../src/index.js'
+import { createClient } from 'graphql-sse';
+import { createSchema, createYoga } from 'graphql-yoga';
+import { useGraphQLSSE } from '../src/index.js';
 
 describe('graphql-sse', () => {
   const schema = createSchema({
@@ -15,26 +15,26 @@ describe('graphql-sse', () => {
     resolvers: {
       Query: {
         async hello() {
-          return 'world'
+          return 'world';
         },
       },
       Subscription: {
         greetings: {
           async *subscribe() {
             for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
-              yield { greetings: hi }
+              yield { greetings: hi };
             }
           },
         },
       },
     },
-  })
+  });
 
   const yoga = createYoga({
     schema,
     plugins: [useGraphQLSSE()],
     maskedErrors: false,
-  })
+  });
 
   it('should stream using distinct connection mode', async () => {
     const client = createClient({
@@ -43,11 +43,11 @@ describe('graphql-sse', () => {
       abortControllerImpl: AbortController,
       singleConnection: false, // distinct connection mode
       retryAttempts: 0,
-    })
+    });
 
     await expect(
       new Promise((resolve, reject) => {
-        const msgs: unknown[] = []
+        const msgs: unknown[] = [];
         client.subscribe(
           {
             query: /* GraphQL */ `
@@ -57,11 +57,11 @@ describe('graphql-sse', () => {
             `,
           },
           {
-            next: (msg) => msgs.push(msg),
+            next: msg => msgs.push(msg),
             error: reject,
             complete: () => resolve(msgs),
           },
-        )
+        );
       }),
     ).resolves.toMatchInlineSnapshot(`
       [
@@ -91,10 +91,10 @@ describe('graphql-sse', () => {
           },
         },
       ]
-    `)
+    `);
 
-    client.dispose()
-  })
+    client.dispose();
+  });
 
   it('should stream using single connection and lazy mode', async () => {
     const client = createClient({
@@ -104,11 +104,11 @@ describe('graphql-sse', () => {
       singleConnection: true, // single connection mode
       lazy: true,
       retryAttempts: 0,
-    })
+    });
 
     await expect(
       new Promise((resolve, reject) => {
-        const msgs: unknown[] = []
+        const msgs: unknown[] = [];
         client.subscribe(
           {
             query: /* GraphQL */ `
@@ -118,11 +118,11 @@ describe('graphql-sse', () => {
             `,
           },
           {
-            next: (msg) => msgs.push(msg),
+            next: msg => msgs.push(msg),
             error: reject,
             complete: () => resolve(msgs),
           },
-        )
+        );
       }),
     ).resolves.toMatchInlineSnapshot(`
       [
@@ -152,10 +152,10 @@ describe('graphql-sse', () => {
           },
         },
       ]
-    `)
+    `);
 
-    client.dispose()
-  })
+    client.dispose();
+  });
 
   it('should stream using single connection and non-lazy mode', async () => {
     const client = createClient({
@@ -165,11 +165,11 @@ describe('graphql-sse', () => {
       singleConnection: true, // single connection mode
       lazy: false,
       retryAttempts: 0,
-    })
+    });
 
     await expect(
       new Promise((resolve, reject) => {
-        const msgs: unknown[] = []
+        const msgs: unknown[] = [];
         client.subscribe(
           {
             query: /* GraphQL */ `
@@ -179,11 +179,11 @@ describe('graphql-sse', () => {
             `,
           },
           {
-            next: (msg) => msgs.push(msg),
+            next: msg => msgs.push(msg),
             error: reject,
             complete: () => resolve(msgs),
           },
-        )
+        );
       }),
     ).resolves.toMatchInlineSnapshot(`
       [
@@ -213,10 +213,10 @@ describe('graphql-sse', () => {
           },
         },
       ]
-    `)
+    `);
 
-    client.dispose()
-  })
+    client.dispose();
+  });
 
   it('should use CORS settings from the server', async () => {
     const yoga = createYoga({
@@ -229,16 +229,16 @@ describe('graphql-sse', () => {
       },
       plugins: [useGraphQLSSE()],
       maskedErrors: false,
-    })
+    });
 
     const res = await yoga.fetch('http://yoga/graphql/stream', {
       method: 'OPTIONS',
       headers: {
         origin: 'http://yoga',
       },
-    })
+    });
 
-    const headersObj = Object.fromEntries(res.headers.entries())
+    const headersObj = Object.fromEntries(res.headers.entries());
     expect(headersObj).toMatchInlineSnapshot(`
       {
         "access-control-allow-credentials": "true",
@@ -247,6 +247,6 @@ describe('graphql-sse', () => {
         "access-control-allow-origin": "http://yoga",
         "content-length": "0",
       }
-    `)
-  })
-})
+    `);
+  });
+});

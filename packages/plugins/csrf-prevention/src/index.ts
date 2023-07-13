@@ -1,4 +1,4 @@
-import { createGraphQLError, Plugin, YogaInitialContext } from 'graphql-yoga'
+import { createGraphQLError, Plugin, YogaInitialContext } from 'graphql-yoga';
 
 export interface CSRFPreventionPluginOptions {
   /**
@@ -6,7 +6,7 @@ export interface CSRFPreventionPluginOptions {
    *
    * @default 'x-graphql-yoga-csrf'
    */
-  requestHeaders?: string[]
+  requestHeaders?: string[];
 }
 
 /**
@@ -23,20 +23,18 @@ export interface CSRFPreventionPluginOptions {
 export function useCSRFPrevention(
   options: CSRFPreventionPluginOptions = {},
 ): Plugin<YogaInitialContext> {
-  const { requestHeaders = ['x-graphql-yoga-csrf'] } = options
+  const { requestHeaders = ['x-graphql-yoga-csrf'] } = options;
   return {
     async onRequestParse({ request }) {
-      if (
-        !requestHeaders.some((headerName) => request.headers.has(headerName))
-      ) {
+      if (!requestHeaders.some(headerName => request.headers.has(headerName))) {
         throw createGraphQLError('Required CSRF header(s) not present', {
           extensions: {
             http: {
               status: 403,
             },
           },
-        })
+        });
       }
     },
-  }
+  };
 }

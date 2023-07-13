@@ -1,59 +1,52 @@
-import {
-  createGraphQLError,
-  Plugin,
-  PromiseOrValue,
-  createLRUCache,
-} from 'graphql-yoga'
+import { createGraphQLError, createLRUCache, Plugin, PromiseOrValue } from 'graphql-yoga';
 
 export async function hashSHA256(
   str: string,
   api: {
-    crypto: Crypto
-    TextEncoder: typeof globalThis['TextEncoder']
+    crypto: Crypto;
+    TextEncoder: (typeof globalThis)['TextEncoder'];
   } = globalThis,
 ) {
-  const { crypto, TextEncoder } = api
-  const textEncoder = new TextEncoder()
-  const utf8 = textEncoder.encode(str)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', utf8)
-  let hashHex = ''
+  const { crypto, TextEncoder } = api;
+  const textEncoder = new TextEncoder();
+  const utf8 = textEncoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+  let hashHex = '';
   for (const bytes of new Uint8Array(hashBuffer)) {
-    hashHex += bytes.toString(16).padStart(2, '0')
+    hashHex += bytes.toString(16).padStart(2, '0');
   }
-  return hashHex
+  return hashHex;
 }
 
 export interface APQStoreOptions {
-  max?: number
-  ttl?: number
+  max?: number;
+  ttl?: number;
 }
 
-export function createInMemoryAPQStore(
-  options: APQStoreOptions = {},
-): APQStore {
+export function createInMemoryAPQStore(options: APQStoreOptions = {}): APQStore {
   return createLRUCache<string>({
     max: options.max ?? 1000,
     ttl: options.ttl ?? 36_000,
-  })
+  });
 }
 
 export interface APQOptions {
-  store?: APQStore
+  store?: APQStore;
   hash?: (
     str: string,
     api: { crypto: Crypto; TextEncoder: typeof TextEncoder },
-  ) => PromiseOrValue<string>
+  ) => PromiseOrValue<string>;
 }
 
 export interface APQStore {
-  get(key: string): PromiseOrValue<string | null | undefined>
+  get(key: string): PromiseOrValue<string | null | undefined>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  set(key: string, query: string): PromiseOrValue<any>
+  set(key: string, query: string): PromiseOrValue<any>;
 }
 
 export interface APQExtension {
-  version: 1
-  sha256Hash: string
+  version: 1;
+  sha256Hash: string;
 }
 
 function isAPQExtension(input: unknown): input is APQExtension {
@@ -64,33 +57,31 @@ function isAPQExtension(input: unknown): input is APQExtension {
     input?.version === 1 &&
     'sha256Hash' in input &&
     typeof input?.sha256Hash === 'string'
-  )
+  );
 }
 
 function decodeAPQExtension(
   input: Record<string, unknown> | null | undefined,
 ): null | APQExtension {
   if (isAPQExtension(input)) {
-    return input as APQExtension
+    return input as APQExtension;
   }
-  return null
+  return null;
 }
 
 export function useAPQ(options: APQOptions = {}): Plugin {
-  const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options
+  const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options;
 
   return {
     async onParams({ params, setParams, fetchAPI }) {
-      const persistedQueryData = decodeAPQExtension(
-        params.extensions?.persistedQuery,
-      )
+      const persistedQueryData = decodeAPQExtension(params.extensions?.persistedQuery);
 
       if (persistedQueryData === null) {
-        return
+        return;
       }
 
       if (params.query == null) {
-        const persistedQuery = await store.get(persistedQueryData.sha256Hash)
+        const persistedQuery = await store.get(persistedQueryData.sha256Hash);
         if (persistedQuery == null) {
           throw createGraphQLError('PersistedQueryNotFound', {
             extensions: {
@@ -98,14 +89,14 @@ export function useAPQ(options: APQOptions = {}): Plugin {
                 status: 404,
               },
             },
-          })
+          });
         }
         setParams({
           ...params,
           query: persistedQuery,
-        })
+        });
       } else {
-        const expectedHash = await hash(params.query, fetchAPI)
+        const expectedHash = await hash(params.query, fetchAPI);
         if (persistedQueryData.sha256Hash !== expectedHash) {
           throw createGraphQLError('PersistedQueryMismatch', {
             extensions: {
@@ -113,10 +104,10 @@ export function useAPQ(options: APQOptions = {}): Plugin {
                 status: 400,
               },
             },
-          })
+          });
         }
-        await store.set(persistedQueryData.sha256Hash, params.query)
+        await store.set(persistedQueryData.sha256Hash, params.query);
       }
     },
-  }
+  };
 }

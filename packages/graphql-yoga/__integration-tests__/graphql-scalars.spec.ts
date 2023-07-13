@@ -1,10 +1,6 @@
-import { specifiedScalarTypes } from 'graphql'
-import {
-  resolvers as scalarsResolvers,
-  typeDefs as scalarsTypeDefs,
-} from 'graphql-scalars'
-
-import { createSchema, createYoga } from '../src/index.js'
+import { specifiedScalarTypes } from 'graphql';
+import { resolvers as scalarsResolvers, typeDefs as scalarsTypeDefs } from 'graphql-scalars';
+import { createSchema, createYoga } from '../src/index.js';
 
 describe('graphql-scalars', () => {
   const ignoredScalars = [
@@ -17,11 +13,10 @@ describe('graphql-scalars', () => {
     'Locale',
     'Currency',
     'Timestamp',
-  ]
-  const allScalars = [
-    ...specifiedScalarTypes,
-    ...Object.values(scalarsResolvers),
-  ].filter((type) => !ignoredScalars.includes(type.name))
+  ];
+  const allScalars = [...specifiedScalarTypes, ...Object.values(scalarsResolvers)].filter(
+    type => !ignoredScalars.includes(type.name),
+  );
   const yoga = createYoga({
     schema: createSchema({
       typeDefs: [
@@ -29,25 +24,21 @@ describe('graphql-scalars', () => {
         /* GraphQL */ `
         type Query {
           ${allScalars
-            .map(
-              (scalar) =>
-                `get${scalar.name}(input: ${scalar.name}!): ${scalar.name}!`,
-            )
+            .map(scalar => `get${scalar.name}(input: ${scalar.name}!): ${scalar.name}!`)
             .join('\n')}
         }
       `,
       ],
       resolvers: [
         scalarsResolvers,
-        ...allScalars.map((scalar) => ({
+        ...allScalars.map(scalar => ({
           Query: {
-            [`get${scalar.name}`]: (_: never, { input }: { input: unknown }) =>
-              input,
+            [`get${scalar.name}`]: (_: never, { input }: { input: unknown }) => input,
           },
         })),
       ],
     }),
-  })
+  });
   for (const { name: typeName } of allScalars) {
     it(`should respond with 400 if ${typeName} scalar parsing fails from "variables"`, async () => {
       const res = await yoga.fetch('http://yoga/graphql', {
@@ -66,9 +57,9 @@ describe('graphql-scalars', () => {
             input: 'NaD',
           },
         }),
-      })
-      expect(res.status).toBe(400)
-    })
+      });
+      expect(res.status).toBe(400);
+    });
     it(`should respond with 400 if ${typeName} scalar parsing fails from "SDL"`, async () => {
       const res = await yoga.fetch('http://yoga/graphql', {
         method: 'POST',
@@ -83,9 +74,9 @@ describe('graphql-scalars', () => {
           }
         `,
         }),
-      })
+      });
 
-      expect(res.status).toBe(400)
-    })
+      expect(res.status).toBe(400);
+    });
   }
-})
+});

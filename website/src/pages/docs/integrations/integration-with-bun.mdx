@@ -1,12 +1,15 @@
 ---
-description: GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
+description:
+  GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any
+  platform besides Node.js.
 ---
 
 # Integration with Bun
 
-GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any platform besides Node.js.
-[Bun](https://bun.sh) is a modern JavaScript runtime like Node or Deno, and it supports Fetch API as a first class citizen.
-So the configuration is really simple like any other JS runtime with Yoga;
+GraphQL Yoga provides you a cross-platform GraphQL Server. So you can easily integrate it into any
+platform besides Node.js. [Bun](https://bun.sh) is a modern JavaScript runtime like Node or Deno,
+and it supports Fetch API as a first class citizen. So the configuration is really simple like any
+other JS runtime with Yoga;
 
 ## Installation
 
@@ -19,7 +22,8 @@ npm i graphql-yoga graphql
 The following code is a simple example of how to use GraphQL Yoga with Bun.
 
 ```ts
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
+
 const yoga = createYoga({
   schema: createSchema({
     typeDefs: /* GraphQL */ `

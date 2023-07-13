@@ -1,26 +1,26 @@
 {
   "name": "example-graphql-armor",
   "version": "0.0.5",
-  "private": true,
   "description": "Adding security layer to GraphQL Yoga using GraphQL Armor.",
-  "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
-    "start": "ts-node src/main.ts",
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [],
   "author": "",
   "license": "ISC",
+  "private": true,
+  "keywords": [],
+  "scripts": {
+    "check": "tsc --pretty --noEmit",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
+    "start": "ts-node src/main.ts"
+  },
+  "dependencies": {
+    "@escape.tech/graphql-armor": "2.0.0",
+    "graphql": "16.6.0",
+    "graphql-yoga": "4.0.3"
+  },
   "devDependencies": {
     "@types/node": "18.16.16",
     "cross-env": "7.0.3",
     "ts-node": "10.9.1",
     "ts-node-dev": "2.0.0",
     "typescript": "5.1.6"
-  },
-  "dependencies": {
-    "@escape.tech/graphql-armor": "2.0.0",
-    "graphql-yoga": "4.0.3",
-    "graphql": "16.6.0"
   }
 }

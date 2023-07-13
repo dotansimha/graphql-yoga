@@ -1,5 +1,5 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import fastify, { FastifyReply, FastifyRequest } from 'fastify';
+import { createSchema, createYoga } from 'graphql-yoga';
 
 export function buildApp(logging = true) {
   const app = fastify({
@@ -9,11 +9,11 @@ export function buildApp(logging = true) {
       },
       level: 'debug',
     },
-  })
+  });
 
   const graphQLServer = createYoga<{
-    req: FastifyRequest
-    reply: FastifyReply
+    req: FastifyRequest;
+    reply: FastifyReply;
   }>({
     schema: createSchema({
       typeDefs: /* GraphQL */ `
@@ -44,10 +44,8 @@ export function buildApp(logging = true) {
           countdown: {
             async *subscribe(_, { from, interval }) {
               for (let i = from; i >= 0; i--) {
-                await new Promise((resolve) =>
-                  setTimeout(resolve, interval ?? 1000),
-                )
-                yield { countdown: i }
+                await new Promise(resolve => setTimeout(resolve, interval ?? 1000));
+                yield { countdown: i };
               }
             },
           },
@@ -57,23 +55,21 @@ export function buildApp(logging = true) {
     // Integrate Fastify Logger to Yoga
     logging: {
       debug: (...args) => {
-        for (const arg of args) app.log.debug(arg)
+        for (const arg of args) app.log.debug(arg);
       },
       info: (...args) => {
-        for (const arg of args) app.log.info(arg)
+        for (const arg of args) app.log.info(arg);
       },
       warn: (...args) => {
-        for (const arg of args) app.log.warn(arg)
+        for (const arg of args) app.log.warn(arg);
       },
       error: (...args) => {
-        for (const arg of args) app.log.error(arg)
+        for (const arg of args) app.log.error(arg);
       },
     },
-  })
+  });
 
-  app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
-    done(null),
-  )
+  app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) => done(null));
 
   app.route({
     url: graphQLServer.graphqlEndpoint,
@@ -82,18 +78,18 @@ export function buildApp(logging = true) {
       const response = await graphQLServer.handleNodeRequest(req, {
         req,
         reply,
-      })
+      });
       for (const [name, value] of response.headers) {
-        reply.header(name, value)
+        reply.header(name, value);
       }
 
-      reply.status(response.status)
+      reply.status(response.status);
 
-      reply.send(response.body)
+      reply.send(response.body);
 
-      return reply
+      return reply;
     },
-  })
+  });
 
-  return [app, graphQLServer.graphqlEndpoint] as const
+  return [app, graphQLServer.graphqlEndpoint] as const;
 }

@@ -1,11 +1,14 @@
 ---
-description: Fastify is one of the popular HTTP server frameworks for Node.js. It is a very simple, yet powerful framework that is easy to learn and use.
+description:
+  Fastify is one of the popular HTTP server frameworks for Node.js. It is a very simple, yet
+  powerful framework that is easy to learn and use.
 ---
 
 # Integration with Fastify
 
-[Fastify is one of the popular HTTP server frameworks for Node.js.](https://www.fastify.io/) It is a very simple, yet powerful framework that is easy to learn and use.
-You can easily integrate GraphQL Yoga with Fastify.
+[Fastify is one of the popular HTTP server frameworks for Node.js.](https://www.fastify.io/) It is a
+very simple, yet powerful framework that is easy to learn and use. You can easily integrate GraphQL
+Yoga with Fastify.
 
 So you can benefit from the powerful plugins of Fastify ecosystem with GraphQL Yoga.
 [See the ecosystem](https://fastify.io/docs/latest/Guides/Ecosystem)
@@ -19,8 +22,8 @@ npm i fastify graphql-yoga graphql
 ## Example
 
 ```ts
+import fastify, { FastifyReply, FastifyRequest } from 'fastify'
 import { createYoga } from 'graphql-yoga'
-import fastify, { FastifyRequest, FastifyReply } from 'fastify'
 
 // This is the fastify instance you have created
 const app = fastify({ logger: true })
@@ -31,10 +34,10 @@ const yoga = createYoga<{
 }>({
   // Integrate Fastify logger
   logging: {
-    debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-    info: (...args) => args.forEach((arg) => app.log.info(arg)),
-    warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-    error: (...args) => args.forEach((arg) => app.log.error(arg))
+    debug: (...args) => args.forEach(arg => app.log.debug(arg)),
+    info: (...args) => args.forEach(arg => app.log.info(arg)),
+    warn: (...args) => args.forEach(arg => app.log.warn(arg)),
+    error: (...args) => args.forEach(arg => app.log.error(arg))
   }
 })
 
@@ -70,13 +73,13 @@ app.listen(4000)
 
 ## Add dummy content type parser for File Uploads
 
-Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requests because otherwise it will throw an error something like `Unsupported media type`.
+Fastify needs to be aware of GraphQL Yoga will handle `multipart/form-data` requests because
+otherwise it will throw an error something like `Unsupported media type`.
 
 ```ts
 // This will allow Fastify to forward multipart requests to GraphQL Yoga
-app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) =>
-  done(null)
-)
+app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) => done(null))
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/fastify)
+> You can also check a full example on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/fastify)

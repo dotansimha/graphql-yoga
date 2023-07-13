@@ -1,10 +1,13 @@
 ---
-description: Sofa takes your GraphQL Schema, looks for available queries, mutations and subscriptions and turns all of that into REST API.
+description:
+  Sofa takes your GraphQL Schema, looks for available queries, mutations and subscriptions and turns
+  all of that into REST API.
 ---
 
 # Sofa API
 
-Sofa takes your GraphQL Schema, looks for available queries, mutations and subscriptions and turns all of that into REST API.
+Sofa takes your GraphQL Schema, looks for available queries, mutations and subscriptions and turns
+all of that into REST API.
 
 ## Installation
 
@@ -42,7 +45,7 @@ const UsersCollection = {
   get(id: string | number) {
     const uid = typeof id === 'string' ? parseInt(id, 10) : id
 
-    return users.find((u) => u.id === uid)
+    return users.find(u => u.id === uid)
   },
   all() {
     return users
@@ -53,7 +56,7 @@ const BooksCollection = {
   get(id: string | number) {
     const bid = typeof id === 'string' ? parseInt(id, 10) : id
 
-    return books.find((u) => u.id === bid)
+    return books.find(u => u.id === bid)
   },
   all() {
     return books

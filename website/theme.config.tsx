@@ -1,11 +1,10 @@
 /* eslint sort-keys: error */
-import { useTheme, Giscus, defineConfig, Callout } from '@theguild/components'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import * as React from 'react'
+import * as React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { Callout, defineConfig, Giscus, useTheme } from '@theguild/components';
 
-const docsRepositoryBase =
-  'https://github.com/dotansimha/graphql-yoga/tree/main/website'
+const docsRepositoryBase = 'https://github.com/dotansimha/graphql-yoga/tree/main/website';
 
 export default defineConfig({
   chat: {
@@ -14,10 +13,10 @@ export default defineConfig({
   docsRepositoryBase,
   editLink: {
     component({ children, className, filePath }) {
-      const { asPath } = useRouter()
+      const { asPath } = useRouter();
 
       if (asPath.startsWith('/v2')) {
-        return null
+        return null;
       }
       return (
         <a
@@ -28,12 +27,12 @@ export default defineConfig({
         >
           {children}
         </a>
-      )
+      );
     },
   },
   main({ children }) {
-    const { resolvedTheme } = useTheme()
-    const { route } = useRouter()
+    const { resolvedTheme } = useTheme();
+    const { route } = useRouter();
 
     const comments = route !== '/' && (
       <Giscus
@@ -46,14 +45,14 @@ export default defineConfig({
         mapping="pathname"
         theme={resolvedTheme}
       />
-    )
+    );
 
     return (
       <>
         {route.startsWith('/v2') && (
           <Callout type="warning">
-            This is the documentation for the <b>old</b> GraphQL Yoga version 2.
-            We recommend upgrading to the latest GraphQL Yoga version 4.
+            This is the documentation for the <b>old</b> GraphQL Yoga version 2. We recommend
+            upgrading to the latest GraphQL Yoga version 4.
             <br />
             <br />
             <Link
@@ -66,8 +65,8 @@ export default defineConfig({
         )}
         {route.startsWith('/v3') && (
           <Callout type="warning">
-            This is the documentation for the <b>old</b> GraphQL Yoga version 3.
-            We recommend upgrading to the latest GraphQL Yoga version 4.
+            This is the documentation for the <b>old</b> GraphQL Yoga version 3. We recommend
+            upgrading to the latest GraphQL Yoga version 4.
             <br />
             <br />
             <Link
@@ -81,7 +80,7 @@ export default defineConfig({
         {children}
         {comments}
       </>
-    )
+    );
   },
   siteName: 'YOGA',
-})
+});

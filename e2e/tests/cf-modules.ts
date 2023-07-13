@@ -1,6 +1,3 @@
-import { createCFDeployment } from './create-cf-deployment'
+import { createCFDeployment } from './create-cf-deployment';
 
-export const cfModulesDeployment = createCFDeployment(
-  'cloudflare-modules',
-  true,
-)
+export const cfModulesDeployment = createCFDeployment('cloudflare-modules', true);

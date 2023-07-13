@@ -1,14 +1,8 @@
-import {
-  DocumentNode,
-  getOperationAST,
-  GraphQLError,
-  OperationDefinitionNode,
-} from 'graphql'
-import { Maybe } from '@envelop/core'
-import { createGraphQLError } from '@graphql-tools/utils'
-
-import type { YogaInitialContext } from '../../types.js'
-import type { Plugin } from '../types.js'
+import { DocumentNode, getOperationAST, GraphQLError, OperationDefinitionNode } from 'graphql';
+import { Maybe } from '@envelop/core';
+import { createGraphQLError } from '@graphql-tools/utils';
+import type { YogaInitialContext } from '../../types.js';
+import type { Plugin } from '../types.js';
 
 export function assertMutationViaGet(
   method: string,
@@ -17,7 +11,7 @@ export function assertMutationViaGet(
 ) {
   const operation: OperationDefinitionNode | undefined = document
     ? getOperationAST(document, operationName) ?? undefined
-    : undefined
+    : undefined;
 
   if (!operation) {
     throw createGraphQLError('Could not determine what operation to execute.', {
@@ -26,23 +20,20 @@ export function assertMutationViaGet(
           status: 400,
         },
       },
-    })
+    });
   }
 
   if (operation.operation === 'mutation' && method === 'GET') {
-    throw createGraphQLError(
-      'Can only perform a mutation operation from a POST request.',
-      {
-        extensions: {
-          http: {
-            status: 405,
-            headers: {
-              Allow: 'POST',
-            },
+    throw createGraphQLError('Can only perform a mutation operation from a POST request.', {
+      extensions: {
+        http: {
+          status: 405,
+          headers: {
+            Allow: 'POST',
           },
         },
       },
-    )
+    });
   }
 }
 
@@ -63,7 +54,7 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
         // the `request` might be missing when using graphql-ws for example
         // in which case throwing an error would abruptly close the socket
         if (!request) {
-          return
+          return;
         }
 
         if (result instanceof Error) {
@@ -71,13 +62,13 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
             result.extensions.http = {
               spec: true,
               status: 400,
-            }
+            };
           }
-          throw result
+          throw result;
         }
 
-        assertMutationViaGet(request.method, result, operationName)
-      }
+        assertMutationViaGet(request.method, result, operationName);
+      };
     },
-  }
+  };
 }

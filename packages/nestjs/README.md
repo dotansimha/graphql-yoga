@@ -41,11 +41,13 @@ export class AppModule {}
 
 ### Develop GraphQL
 
-This is just a HTTP transport driver; meaning, everything else should work as [showcased in NestJS documentation](https://docs.nestjs.com/graphql/resolvers).
+This is just a HTTP transport driver; meaning, everything else should work as
+[showcased in NestJS documentation](https://docs.nestjs.com/graphql/resolvers).
 
 ### Apollo Federation
 
-Separately, we offer a [`@graphql-yoga/nestjs-federation` driver](/packages/nestjs-federation) which allows building Apollo Federation Gateways and Services. Check it out!
+Separately, we offer a [`@graphql-yoga/nestjs-federation` driver](/packages/nestjs-federation) which
+allows building Apollo Federation Gateways and Services. Check it out!
 
 ## Contributing
 

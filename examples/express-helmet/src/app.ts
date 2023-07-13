@@ -1,6 +1,6 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import express from 'express'
-import helmet from 'helmet'
+import express from 'express';
+import { createSchema, createYoga } from 'graphql-yoga';
+import helmet from 'helmet';
 
 export function buildApp(app: ReturnType<typeof express>) {
   const graphQLServer = createYoga({
@@ -17,9 +17,9 @@ export function buildApp(app: ReturnType<typeof express>) {
       },
     }),
     logging: false,
-  })
+  });
 
-  const router = express.Router()
+  const router = express.Router();
 
   // Add specific CSP for GraphiQL by using an express router
   router.use(
@@ -32,20 +32,20 @@ export function buildApp(app: ReturnType<typeof express>) {
         },
       },
     }),
-  )
+  );
 
-  router.use(graphQLServer)
+  router.use(graphQLServer);
 
   // First register the router, to avoid Global CSP configuration to override the specific one
-  app.use(graphQLServer.graphqlEndpoint, router)
+  app.use(graphQLServer.graphqlEndpoint, router);
 
   // Global CSP configuration
-  app.use(helmet())
+  app.use(helmet());
 
   // Rest of the routes
   app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
+    res.send('Hello World!');
+  });
 
-  return graphQLServer.graphqlEndpoint
+  return graphQLServer.graphqlEndpoint;
 }

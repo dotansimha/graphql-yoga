@@ -1,19 +1,12 @@
-import { buildSubgraphSchema } from '@apollo/subgraph'
-import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace'
-import { createYoga } from 'graphql-yoga'
-import { createServer } from 'node:http'
-import { gql } from 'graphql-tag'
-import { readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs';
+import { createServer } from 'node:http';
+import { gql } from 'graphql-tag';
+import { createYoga } from 'graphql-yoga';
+import { buildSubgraphSchema } from '@apollo/subgraph';
+import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace';
+import { Inventory, Product, ProductResearch, Resolvers, User } from './resolvers-types';
 
-import {
-  Inventory,
-  Product,
-  ProductResearch,
-  Resolvers,
-  User,
-} from './resolvers-types'
-
-const typeDefs = readFileSync('./schema.graphql', 'utf8')
+const typeDefs = readFileSync('./schema.graphql', 'utf8');
 
 const productResearch: ProductResearch[] = [
   {
@@ -28,7 +21,7 @@ const productResearch: ProductResearch[] = [
       description: 'Studio Study',
     },
   },
-]
+];
 
 const products: Omit<Product, 'research'>[] = [
   {
@@ -43,158 +36,146 @@ const products: Omit<Product, 'research'>[] = [
     package: '',
     variation: { id: 'platform', __typename: 'ProductVariation' },
   },
-]
+];
 
 const deprecatedProduct = {
   sku: 'apollo-federation-v1',
   package: '@apollo/federation-v1',
   reason: 'Migrate to Federation V2',
-}
+};
 
 const user: User = {
   email: 'support@apollographql.com',
   name: 'Jane Smith',
   totalProductsCreated: 1337,
   yearsOfEmployment: 10,
-}
+};
 
 const inventory: Inventory = {
   id: 'apollo-oss',
   deprecatedProducts: [deprecatedProduct],
-}
+};
 
 const resolvers: Resolvers = {
   Query: {
     product(_: unknown, args: { id: string }) {
-      return products.find((p) => p.id === args.id)! as unknown as Product
+      return products.find(p => p.id === args.id)! as unknown as Product;
     },
     deprecatedProduct: (_, args) => {
-      if (
-        args.sku === deprecatedProduct.sku &&
-        args.package === deprecatedProduct.package
-      ) {
-        return deprecatedProduct
+      if (args.sku === deprecatedProduct.sku && args.package === deprecatedProduct.package) {
+        return deprecatedProduct;
       }
-      return null
+      return null;
     },
   },
   DeprecatedProduct: {
     createdBy: () => {
-      return user
+      return user;
     },
-    __resolveReference: (reference) => {
+    __resolveReference: reference => {
       if (
         reference.sku === deprecatedProduct.sku &&
         reference.package === deprecatedProduct.package
       ) {
-        return deprecatedProduct
+        return deprecatedProduct;
       }
-      return null
+      return null;
     },
   },
   ProductResearch: {
-    __resolveReference: (reference) => {
-      return productResearch.find(
-        (p) => reference.study.caseNumber === p.study.caseNumber,
-      )!
+    __resolveReference: reference => {
+      return productResearch.find(p => reference.study.caseNumber === p.study.caseNumber)!;
     },
   },
   Product: {
     variation(parent) {
-      if (parent.variation) return parent.variation
-      const p = products.find((p) => p.id === parent.id)
-      return p?.variation || null
+      if (parent.variation) return parent.variation;
+      const p = products.find(p => p.id === parent.id);
+      return p?.variation || null;
     },
 
-    research: (reference) => {
+    research: reference => {
       if (reference.id === 'apollo-federation') {
-        return [productResearch[0]]
+        return [productResearch[0]];
       }
       if (reference.id === 'apollo-studio') {
-        return [productResearch[1]]
+        return [productResearch[1]];
       }
-      return []
+      return [];
     },
 
     dimensions() {
-      return { size: 'small', weight: 1, unit: 'kg' }
+      return { size: 'small', weight: 1, unit: 'kg' };
     },
 
     createdBy() {
-      return user
+      return user;
     },
 
     __resolveReference(productRef) {
       // will be improved in the future: https://github.com/dotansimha/graphql-code-generator/pull/5645
-      const ref = productRef as Product
+      const ref = productRef as Product;
       if (ref.id) {
-        return (products.find((p) => p.id === ref.id) ||
-          null) as unknown as Product
+        return (products.find(p => p.id === ref.id) || null) as unknown as Product;
       }
       if (ref.sku && ref.package) {
-        return (products.find(
-          (p) => p.sku === ref.sku && p.package === ref.package,
-        ) || null) as unknown as Product
+        return (products.find(p => p.sku === ref.sku && p.package === ref.package) ||
+          null) as unknown as Product;
       }
       return (products.find(
-        (p) =>
-          p.sku === ref.sku &&
-          p.variation &&
-          ref.variation &&
-          p.variation.id === ref.variation.id,
-      ) || null) as unknown as Product
+        p =>
+          p.sku === ref.sku && p.variation && ref.variation && p.variation.id === ref.variation.id,
+      ) || null) as unknown as Product;
     },
   },
   User: {
-    averageProductsCreatedPerYear: (user) => {
+    averageProductsCreatedPerYear: user => {
       if (user.email !== 'support@apollographql.com') {
-        throw new Error("user.email was not 'support@apollographql.com'")
+        throw new Error("user.email was not 'support@apollographql.com'");
       }
-      return Math.round(
-        (user.totalProductsCreated || 0) / user.yearsOfEmployment,
-      )
+      return Math.round((user.totalProductsCreated || 0) / user.yearsOfEmployment);
     },
     name() {
-      return 'Jane Smith'
+      return 'Jane Smith';
     },
     // @ts-expect-error
     __resolveReference(userRef) {
-      const ref = userRef as User
+      const ref = userRef as User;
       if (ref.email) {
         const user = {
           email: ref.email,
           name: 'Jane Smith',
           totalProductsCreated: 1337,
-        }
+        };
         if (ref.totalProductsCreated) {
-          user.totalProductsCreated = ref.totalProductsCreated
+          user.totalProductsCreated = ref.totalProductsCreated;
         }
         if (ref.yearsOfEmployment) {
           // @ts-expect-error
-          user.yearsOfEmployment = ref.yearsOfEmployment
+          user.yearsOfEmployment = ref.yearsOfEmployment;
         }
-        return user
+        return user;
       }
-      return null
+      return null;
     },
   },
   Inventory: {
-    __resolveReference: (reference) => {
+    __resolveReference: reference => {
       if (inventory.id === reference.id) {
-        return inventory
+        return inventory;
       }
-      return null
+      return null;
     },
   },
-}
+};
 
 const yoga = createYoga({
   schema: buildSubgraphSchema([{ typeDefs: gql(typeDefs), resolvers }]),
   plugins: [useApolloInlineTrace()],
-})
+});
 
-const server = createServer(yoga)
+const server = createServer(yoga);
 
 server.listen(4001, () => {
-  console.log(`🚀 Server ready at http://localhost:4001`)
-})
+  console.log(`🚀 Server ready at http://localhost:4001`);
+});

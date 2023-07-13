@@ -1,47 +1,13 @@
 {
   "name": "graphql-yoga-monorepo",
-  "private": true,
-  "packageManager": "pnpm@8.6.1",
-  "engines": {
-    "node": ">=16.14",
-    "pnpm": ">=8.6.1"
-  },
-  "scripts": {
-    "prebuild": "rimraf packages/*/dist",
-    "check": "pnpm -r run check",
-    "build": "pnpm --filter=@graphql-yoga/graphiql run build && pnpm --filter=@graphql-yoga/render-graphiql run build && pnpm --filter=graphql-yoga run generate-graphiql-html && bob build",
-    "test": "jest --detectOpenHandles",
-    "test:integration": "cross-env INTEGRATION_TEST=true jest --forceExit",
-    "test:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks --logHeapUsage && cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks --logHeapUsage",
-    "release": "pnpm build && changeset publish",
-    "start:docs": "pnpm --filter=website dev",
-    "postinstall": "husky install",
-    "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx .",
-    "prettier": "prettier --ignore-path .prettierignore --write --list-different .",
-    "prettier:check": "prettier --ignore-path .prettierignore --check .",
-    "build-website": "pnpm build && cd website && pnpm build",
-    "changeset": "changeset",
-    "postchangeset": "pnpm install --no-frozen-lockfile"
-  },
-  "lint-staged": {
-    "packages/**/src/**/*.{ts,tsx}": [
-      "eslint --fix"
-    ],
-    "**/*.{ts,tsx,graphql,yml,yaml,md,json,html,mdx}": [
-      "prettier --write"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dotansimha/graphql-yoga.git"
   },
-  "keywords": [
-    "graphql",
-    "server",
-    "api",
-    "graphql-server",
-    "apollo"
-  ],
+  "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-yoga/issues"
+  },
   "contributors": [
     "Johannes Schickling <johannes@graph.cool>",
     "Saihajpreet Singh <saihajpreet.singh@gmail.com> (https://github.com/saihaj)",
@@ -50,10 +16,36 @@
     "Laurin Quast <laurinquast@googlemail.com>"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/dotansimha/graphql-yoga/issues"
+  "private": true,
+  "packageManager": "pnpm@8.6.1",
+  "engines": {
+    "node": ">=16.14",
+    "pnpm": ">=8.6.1"
   },
-  "homepage": "https://github.com/dotansimha/graphql-yoga#readme",
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server",
+    "apollo"
+  ],
+  "scripts": {
+    "build": "pnpm --filter=@graphql-yoga/graphiql run build && pnpm --filter=@graphql-yoga/render-graphiql run build && pnpm --filter=graphql-yoga run generate-graphiql-html && bob build",
+    "build-website": "pnpm build && cd website && pnpm build",
+    "changeset": "changeset",
+    "check": "pnpm -r run check",
+    "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx .",
+    "postchangeset": "pnpm install --no-frozen-lockfile",
+    "postinstall": "husky install",
+    "prebuild": "rimraf packages/*/dist",
+    "prettier": "prettier --ignore-path .prettierignore --write --list-different .",
+    "prettier:check": "prettier --ignore-path .prettierignore --check .",
+    "release": "pnpm build && changeset publish",
+    "start:docs": "pnpm --filter=website dev",
+    "test": "jest --detectOpenHandles",
+    "test:integration": "cross-env INTEGRATION_TEST=true jest --forceExit",
+    "test:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks --logHeapUsage && cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks --logHeapUsage"
+  },
   "devDependencies": {
     "@babel/core": "7.22.1",
     "@babel/plugin-proposal-class-properties": "7.18.6",
@@ -63,6 +55,7 @@
     "@changesets/changelog-github": "0.4.8",
     "@changesets/cli": "2.26.2",
     "@theguild/eslint-config": "0.11.0",
+    "@theguild/prettier-config": "2.0.0",
     "@types/babel__core": "^7",
     "@types/babel__preset-env": "^7",
     "@types/jest": "^29.0.0",
@@ -89,6 +82,14 @@
     "typescript": "5.1.6",
     "weak-napi": "2.0.2",
     "wrangler": "3.1.0"
+  },
+  "lint-staged": {
+    "packages/**/src/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ],
+    "**/*.{ts,tsx,graphql,yml,yaml,md,json,html,mdx}": [
+      "prettier --write"
+    ]
   },
   "pnpm": {
     "patchedDependencies": {

@@ -1,5 +1,5 @@
-import { AzureFunction, Context, HttpRequest } from '@azure/functions'
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga';
+import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 
 const httpTrigger: AzureFunction = async function (
   context: Context,
@@ -21,32 +21,31 @@ const httpTrigger: AzureFunction = async function (
       `,
       resolvers: {
         Query: {
-          greetings: () =>
-            'This is the `greetings` field of the root `Query` type',
+          greetings: () => 'This is the `greetings` field of the root `Query` type',
         },
       },
     }),
-  })
-  context.log('HTTP trigger function processed a request.')
+  });
+  context.log('HTTP trigger function processed a request.');
 
   const response = await app.fetch(req.url, {
     method: req.method?.toString(),
     body: req.rawBody,
     headers: req.headers,
-  })
+  });
 
-  const headersObj = Object.fromEntries(response.headers.entries())
+  const headersObj = Object.fromEntries(response.headers.entries());
 
-  context.log('GraphQL Yoga response headers:', headersObj)
+  context.log('GraphQL Yoga response headers:', headersObj);
 
-  const responseText = await response.text()
-  context.log('GraphQL Yoga response text:', responseText)
+  const responseText = await response.text();
+  context.log('GraphQL Yoga response text:', responseText);
 
   context.res = {
     status: response.status,
     body: responseText,
     headers: headersObj,
-  }
-}
+  };
+};
 
-export default httpTrigger
+export default httpTrigger;

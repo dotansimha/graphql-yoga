@@ -1,11 +1,10 @@
-import { createClient } from 'graphql-ws'
+import { createClient } from 'graphql-ws';
+import { WebSocket } from 'ws';
+import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { AppModule } from './fixtures/graphql/app.module';
 
-import { WebSocket } from 'ws'
-import { INestApplication } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
-import { AppModule } from './fixtures/graphql/app.module'
-
-let app: INestApplication, url: string
+let app: INestApplication, url: string;
 
 beforeAll(async () => {
   const module = await Test.createTestingModule({
@@ -16,13 +15,13 @@ beforeAll(async () => {
         },
       }),
     ],
-  }).compile()
-  app = module.createNestApplication()
-  await app.listen(0)
-  url = (await app.getUrl()) + '/graphql'
-})
+  }).compile();
+  app = module.createNestApplication();
+  await app.listen(0);
+  url = (await app.getUrl()) + '/graphql';
+});
 
-afterAll(() => app.close())
+afterAll(() => app.close());
 
 it('should subscribe using graphql-ws', async () => {
   const client = createClient({
@@ -30,11 +29,11 @@ it('should subscribe using graphql-ws', async () => {
     webSocketImpl: WebSocket,
     lazy: true,
     retryAttempts: 0,
-  })
+  });
 
   await expect(
     new Promise((resolve, reject) => {
-      const msgs: unknown[] = []
+      const msgs: unknown[] = [];
       client.subscribe(
         {
           query: /* GraphQL */ `
@@ -45,12 +44,12 @@ it('should subscribe using graphql-ws', async () => {
         },
         {
           next(msg) {
-            msgs.push(msg)
+            msgs.push(msg);
           },
           error: reject,
           complete: () => resolve(msgs),
         },
-      )
+      );
     }),
   ).resolves.toMatchInlineSnapshot(`
       [
@@ -80,5 +79,5 @@ it('should subscribe using graphql-ws', async () => {
           },
         },
       ]
-    `)
-})
+    `);
+});

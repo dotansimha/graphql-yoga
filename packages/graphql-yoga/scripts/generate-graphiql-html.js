@@ -1,9 +1,9 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { minify as minifyT } from 'html-minifier-terser'
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { minify as minifyT } from 'html-minifier-terser';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function minify(str) {
   return (
@@ -14,45 +14,39 @@ async function minify(str) {
       collapseWhitespace: true,
       minifyCSS: true,
     })
-  ).toString('utf-8')
+  ).toString('utf-8');
 }
 
 async function minifyGraphiQLHTML() {
   const graphiqlVersion = JSON.parse(
-    fs.readFileSync(
-      path.join(__dirname, '..', '..', 'graphiql', 'package.json'),
-      'utf-8',
-    ),
-  ).version
+    fs.readFileSync(path.join(__dirname, '..', '..', 'graphiql', 'package.json'), 'utf-8'),
+  ).version;
 
   const minified = await minify(
     fs
       .readFileSync(path.join(__dirname, '..', 'src', 'graphiql.html'), 'utf-8')
       .replace(/__GRAPHIQL_VERSION__/g, graphiqlVersion),
-  )
+  );
 
   fs.writeFileSync(
     path.join(__dirname, '../src/graphiql-html.ts'),
     `export default ${JSON.stringify(minified)}`,
-  )
+  );
 }
 
 async function minifyLandingPageHTML() {
   const minified = await minify(
-    fs.readFileSync(
-      path.join(__dirname, '..', 'src', 'landing-page.html'),
-      'utf-8',
-    ),
-  )
+    fs.readFileSync(path.join(__dirname, '..', 'src', 'landing-page.html'), 'utf-8'),
+  );
 
   await fs.promises.writeFile(
     path.join(__dirname, '../src/landing-page-html.ts'),
     `export default ${JSON.stringify(minified)}`,
-  )
+  );
 }
 
 async function main() {
-  await Promise.all([minifyGraphiQLHTML(), minifyLandingPageHTML()])
+  await Promise.all([minifyGraphiQLHTML(), minifyLandingPageHTML()]);
 }
 
-main()
+main();

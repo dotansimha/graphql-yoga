@@ -1,4 +1,4 @@
-import { app } from '../src/app'
+import { app } from '../src/app';
 
 describe('Cookies', () => {
   it('reads existing cookies', async () => {
@@ -9,16 +9,16 @@ describe('Cookies', () => {
         cookie: 'foo=bar',
       },
       body: JSON.stringify({ query: '{ cookie(name: "foo") }' }),
-    })
+    });
 
-    const result = await res.json()
+    const result = await res.json();
 
     expect(result).toMatchObject({
       data: {
         cookie: 'bar',
       },
-    })
-  })
+    });
+  });
   it('sets cookies', async () => {
     const res = await app.fetch('http://localhost:4000/graphql', {
       method: 'POST',
@@ -28,15 +28,15 @@ describe('Cookies', () => {
       body: JSON.stringify({
         query: 'mutation { setCookie(name: "foo", value: "bar") }',
       }),
-    })
+    });
 
-    const result = await res.json()
+    const result = await res.json();
 
     expect(result).toMatchObject({
       data: {
         setCookie: 'bar',
       },
-    })
-    expect(res.headers.get('set-cookie')).toContain('foo=bar')
-  })
-})
+    });
+    expect(res.headers.get('set-cookie')).toContain('foo=bar');
+  });
+});

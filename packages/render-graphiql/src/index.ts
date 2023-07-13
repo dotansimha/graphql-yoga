@@ -1,9 +1,8 @@
-import type { GraphiQLOptions } from 'graphql-yoga'
-
-import { css, js, favicon } from './graphiql.js'
+import type { GraphiQLOptions } from 'graphql-yoga';
+import { css, favicon, js } from './graphiql.js';
 
 export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
-  <!DOCTYPE html>
+  <!doctype html>
   <html lang="en">
     <head>
       <meta charset="utf-8" />
@@ -18,12 +17,12 @@ export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
       <div id="root"></div>
 
       <script>
-        ${js}
+        ${js};
         YogaGraphiQL.renderYogaGraphiQL(
           window.document.querySelector('#root'),
           ${JSON.stringify(opts ?? {})},
-        )
+        );
       </script>
     </body>
   </html>
-`
+`;

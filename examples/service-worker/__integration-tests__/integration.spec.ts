@@ -1,38 +1,32 @@
-import { getIntrospectionQuery } from 'graphql'
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
-import { Request } from '@whatwg-node/fetch'
+import { getIntrospectionQuery } from 'graphql';
+import { createSchema, createYoga, Repeater } from 'graphql-yoga';
+import { Request } from '@whatwg-node/fetch';
 
-const listenerMap = new Map<string, Set<EventListenerOrEventListenerObject>>()
+const listenerMap = new Map<string, Set<EventListenerOrEventListenerObject>>();
 
 globalThis.self = {
-  addEventListener(
-    eventName: string,
-    listener: EventListenerOrEventListenerObject,
-  ) {
-    let listeners = listenerMap.get(eventName)
+  addEventListener(eventName: string, listener: EventListenerOrEventListenerObject) {
+    let listeners = listenerMap.get(eventName);
     if (!listeners) {
-      listeners = new Set()
-      listenerMap.set(eventName, listeners)
+      listeners = new Set();
+      listenerMap.set(eventName, listeners);
     }
-    listeners.add(listener)
+    listeners.add(listener);
   },
-  removeEventListener(
-    eventName: string,
-    listener: EventListenerOrEventListenerObject,
-  ) {
-    const listeners = listenerMap.get(eventName)
+  removeEventListener(eventName: string, listener: EventListenerOrEventListenerObject) {
+    const listeners = listenerMap.get(eventName);
     if (listeners) {
-      listeners.delete(listener)
+      listeners.delete(listener);
     }
   },
-} as any
+} as any;
 
 function trigger(eventName: string, data) {
   // eslint-disable-next-line unicorn/no-array-for-each -- is Set
   listenerMap.get(eventName)?.forEach((listener: any) => {
-    const listenerFn = listener.handleEvent ?? listener
-    listenerFn(data)
-  })
+    const listenerFn = listener.handleEvent ?? listener;
+    listenerFn(data);
+  });
 }
 
 describe('Service worker', () => {
@@ -55,45 +49,45 @@ describe('Service worker', () => {
           time: {
             subscribe: () =>
               new Repeater(async (push, end) => {
-                let ended = false
-                let i = 3
+                let ended = false;
+                let i = 3;
                 async function pushTime() {
                   if (ended) {
-                    return end()
+                    return end();
                   }
                   if (i) {
-                    await new Promise((resolve) => setTimeout(resolve, 300))
-                    await push(new Date().toISOString())
-                    i--
-                    return pushTime()
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    await push(new Date().toISOString());
+                    i--;
+                    return pushTime();
                   }
                 }
 
                 end.then(() => {
-                  ended = true
-                })
+                  ended = true;
+                });
 
-                return pushTime()
+                return pushTime();
               }),
-            resolve: (value) => value,
+            resolve: value => value,
           },
         },
       },
     }),
-  })
+  });
 
   beforeEach(() => {
-    self.addEventListener('fetch', yoga)
-  })
+    self.addEventListener('fetch', yoga);
+  });
   afterEach(() => {
-    self.removeEventListener('fetch', yoga)
-  })
+    self.removeEventListener('fetch', yoga);
+  });
   it('should add fetch listener', async () => {
-    expect(listenerMap.get('fetch')?.size).toBe(1)
-  })
+    expect(listenerMap.get('fetch')?.size).toBe(1);
+  });
 
   it('should render GraphiQL', async () => {
-    const response: Response = await new Promise((respondWith) => {
+    const response: Response = await new Promise(respondWith => {
       trigger('fetch', {
         request: new Request('http://localhost:3000/graphql', {
           method: 'GET',
@@ -102,15 +96,15 @@ describe('Service worker', () => {
           },
         }),
         respondWith,
-      })
-    })
-    expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('text/html')
-    expect(await response.text()).toMatch(/GraphiQL/)
-  })
+      });
+    });
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toBe('text/html');
+    expect(await response.text()).toMatch(/GraphiQL/);
+  });
 
   it('succeeds introspection query', async () => {
-    const response: Response = await new Promise((respondWith) => {
+    const response: Response = await new Promise(respondWith => {
       trigger('fetch', {
         request: new Request('http://localhost:3000/graphql', {
           method: 'POST',
@@ -123,11 +117,11 @@ describe('Service worker', () => {
           }),
         }),
         respondWith,
-      })
-    })
+      });
+    });
 
-    expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toContain('application/json')
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('application/json');
     expect(await response.json()).toMatchObject({
       data: {
         __schema: {
@@ -136,12 +130,12 @@ describe('Service worker', () => {
           },
         },
       },
-    })
-  })
+    });
+  });
 
   it('handles subscriptions', async () => {
-    expect.assertions(5)
-    const response: Response = await new Promise((respondWith) => {
+    expect.assertions(5);
+    const response: Response = await new Promise(respondWith => {
       trigger('fetch', {
         request: new Request('http://localhost:3000/graphql', {
           method: 'POST',
@@ -158,22 +152,22 @@ describe('Service worker', () => {
           }),
         }),
         respondWith,
-      })
-    })
+      });
+    });
 
-    expect(response.status).toBe(200)
-    expect(response.headers.get('content-type')).toBe('text/event-stream')
-    let counter = 0
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toBe('text/event-stream');
+    let counter = 0;
     for await (const chunk of response.body as any) {
-      const data = Buffer.from(chunk).toString('utf-8')
+      const data = Buffer.from(chunk).toString('utf-8');
       if (data === ':\n\n') {
-        continue
+        continue;
       }
-      expect(data).toMatch(/data: {/)
-      counter++
+      expect(data).toMatch(/data: {/);
+      counter++;
       if (counter === 3) {
-        break
+        break;
       }
     }
-  })
-})
+  });
+});

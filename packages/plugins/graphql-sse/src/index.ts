@@ -1,7 +1,7 @@
-import { getOperationAST } from 'graphql'
-import { Plugin, YogaInitialContext } from 'graphql-yoga'
-import { HandlerOptions } from 'graphql-sse'
-import { createHandler, RequestContext } from 'graphql-sse/lib/use/fetch'
+import { getOperationAST } from 'graphql';
+import { HandlerOptions } from 'graphql-sse';
+import { createHandler, RequestContext } from 'graphql-sse/lib/use/fetch';
+import { Plugin, YogaInitialContext } from 'graphql-yoga';
 
 export interface GraphQLSSEPluginOptions
   extends Omit<
@@ -14,7 +14,7 @@ export interface GraphQLSSEPluginOptions
    *
    * @default '/graphql/stream'
    */
-  endpoint?: string
+  endpoint?: string;
 }
 
 /**
@@ -22,13 +22,11 @@ export interface GraphQLSSEPluginOptions
  *
  * Note that the endpoint defaults to `/graphql/stream`, this is where your [graphql-sse](https://github.com/enisdenjo/graphql-sse) client should connect.
  */
-export function useGraphQLSSE(
-  options: GraphQLSSEPluginOptions = {},
-): Plugin<YogaInitialContext> {
-  const { endpoint = '/graphql/stream', ...handlerOptions } = options
+export function useGraphQLSSE(options: GraphQLSSEPluginOptions = {}): Plugin<YogaInitialContext> {
+  const { endpoint = '/graphql/stream', ...handlerOptions } = options;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ctxForReq = new WeakMap<Request, any>()
-  let handler!: (request: Request) => Promise<Response>
+  const ctxForReq = new WeakMap<Request, any>();
+  let handler!: (request: Request) => Promise<Response>;
   return {
     onYogaInit({ yoga }) {
       handler = createHandler(
@@ -39,17 +37,17 @@ export function useGraphQLSSE(
               ...ctxForReq.get(req.raw),
               request: req.raw,
               params,
-            })
+            });
 
-            const document = enveloped.parse(params.query)
+            const document = enveloped.parse(params.query);
 
-            const errors = enveloped.validate(enveloped.schema, document)
+            const errors = enveloped.validate(enveloped.schema, document);
 
             if (errors.length > 0) {
-              return { errors }
+              return { errors };
             }
 
-            const contextValue = await enveloped.contextFactory()
+            const contextValue = await enveloped.contextFactory();
 
             const executionArgs = {
               schema: enveloped.schema,
@@ -57,27 +55,25 @@ export function useGraphQLSSE(
               contextValue,
               variableValues: params.variables,
               operationName: params.operationName,
-            }
+            };
 
-            const operation = getOperationAST(document, params.operationName)
+            const operation = getOperationAST(document, params.operationName);
 
             const executeFn =
-              operation?.operation === 'subscription'
-                ? enveloped.subscribe
-                : enveloped.execute
+              operation?.operation === 'subscription' ? enveloped.subscribe : enveloped.execute;
 
-            return executeFn(executionArgs)
+            return executeFn(executionArgs);
           },
         },
         yoga.fetchAPI,
-      )
+      );
     },
     async onRequest({ request, endResponse, serverContext }) {
-      const [path, _search] = request.url.split('?')
+      const [path, _search] = request.url.split('?');
       if (path.endsWith(endpoint)) {
-        ctxForReq.set(request, serverContext)
-        endResponse(await handler(request))
+        ctxForReq.set(request, serverContext);
+        endResponse(await handler(request));
       }
     },
-  }
+  };
 }

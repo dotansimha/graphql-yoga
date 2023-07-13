@@ -1,24 +1,24 @@
 /* eslint-disable */
-import { createSchema } from 'graphql-yoga'
-import { faker } from '@faker-js/faker'
+import { createSchema } from 'graphql-yoga';
+import { faker } from '@faker-js/faker';
 
 type Book = {
-  id: string
-  name: string
-  numPages: number
-}
+  id: string;
+  name: string;
+  numPages: number;
+};
 
 type Author = {
-  id: string
-  name: string
-  company: string
-  books: Array<Book>
-}
+  id: string;
+  name: string;
+  company: string;
+  books: Array<Book>;
+};
 
 function generateData() {
-  const authors: Array<Author> = []
+  const authors: Array<Author> = [];
   for (let i = 0; i < 20; i++) {
-    const books: Array<Book> = []
+    const books: Array<Book> = [];
 
     for (let k = 0; k < 3; k++) {
       books.push({
@@ -28,7 +28,7 @@ function generateData() {
           min: 1,
           max: 1000,
         }),
-      })
+      });
     }
 
     authors.push({
@@ -36,15 +36,15 @@ function generateData() {
       name: faker.person.fullName(),
       company: faker.company.buzzPhrase(),
       books,
-    })
+    });
   }
 
-  return authors
+  return authors;
 }
 
-const data = generateData()
+const data = generateData();
 
-export type Context = {}
+export type Context = {};
 
 export const schema = createSchema<Context>({
   typeDefs: /* GraphQL */ `
@@ -69,4 +69,4 @@ export const schema = createSchema<Context>({
       authors: () => data,
     },
   },
-})
+});

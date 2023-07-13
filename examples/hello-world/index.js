@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { createServer } = require('node:http')
-const { createYoga, createSchema } = require('graphql-yoga')
-const { renderGraphiQL } = require('@graphql-yoga/render-graphiql')
+const { createServer } = require('node:http');
+const { createYoga, createSchema } = require('graphql-yoga');
+const { renderGraphiQL } = require('@graphql-yoga/render-graphiql');
 
 const yoga = createYoga({
   schema: createSchema({
@@ -26,11 +26,9 @@ const yoga = createYoga({
     `,
   },
   renderGraphiQL,
-})
+});
 
-const server = createServer(yoga)
+const server = createServer(yoga);
 server.listen(4000, () => {
-  console.log(
-    `Server is running on http://localhost:4000${yoga.graphqlEndpoint}`,
-  )
-})
+  console.log(`Server is running on http://localhost:4000${yoga.graphqlEndpoint}`);
+});

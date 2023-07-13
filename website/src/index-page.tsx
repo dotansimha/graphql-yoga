@@ -1,47 +1,42 @@
-import { ReactElement, ReactNode } from 'react'
-import { useRouter } from 'next/router'
-import { Anchor, Image } from '@theguild/components'
-import clsx from 'clsx'
-import ecosystemImage from 'public/assets/ecosystem.svg'
-import httpImage from 'public/assets/http.svg'
-import subscriptionsImage from 'public/assets/subscriptions.svg'
-import { AiFillAppstore } from 'react-icons/ai'
-import {
-  BsCheckCircle,
-  BsFillPlayFill,
-  BsFillSafeFill,
-  BsFillStopwatchFill,
-} from 'react-icons/bs'
-import { FiGithub, FiUpload } from 'react-icons/fi'
-import { GiHealthNormal } from 'react-icons/gi'
-import { GrGraphQl } from 'react-icons/gr'
-import { MdCached, MdError } from 'react-icons/md'
-import { SiApollographql } from 'react-icons/si'
-import { TbPlugConnected } from 'react-icons/tb'
+import { ReactElement, ReactNode } from 'react';
+import { useRouter } from 'next/router';
+import clsx from 'clsx';
+import { AiFillAppstore } from 'react-icons/ai';
+import { BsCheckCircle, BsFillPlayFill, BsFillSafeFill, BsFillStopwatchFill } from 'react-icons/bs';
+import { FiGithub, FiUpload } from 'react-icons/fi';
+import { GiHealthNormal } from 'react-icons/gi';
+import { GrGraphQl } from 'react-icons/gr';
+import { MdCached, MdError } from 'react-icons/md';
+import { SiApollographql } from 'react-icons/si';
+import { TbPlugConnected } from 'react-icons/tb';
+import { Anchor, Image } from '@theguild/components';
+import ecosystemImage from 'public/assets/ecosystem.svg';
+import httpImage from 'public/assets/http.svg';
+import subscriptionsImage from 'public/assets/subscriptions.svg';
 
 const gradients: [string, string][] = [
   ['#8b5cf6', '#6d28d9'], // violet
   ['#06b6d4', '#0e7490'], // cyan
   ['#f59e0b', '#d97706'], // amber
   ['#ec4899', '#db2777'], // pink
-]
+];
 
 const classes = {
   button:
     'inline-block bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-gray-600 px-6 py-3 rounded-lg font-medium shadow-sm',
   link: 'text-primary-500',
-}
+};
 
 function pickGradient(i: number) {
-  const gradient = gradients[i % gradients.length]
+  const gradient = gradients[i % gradients.length];
   if (!gradient) {
-    throw new Error('No gradient found')
+    throw new Error('No gradient found');
   }
-  return gradient
+  return gradient;
 }
 
 export function IndexPage(): ReactElement {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <>
       <FeatureWrapper>
@@ -50,24 +45,18 @@ export function IndexPage(): ReactElement {
             GraphQL Yoga
           </h1>
           <p className="max-w-screen-sm mx-auto mt-6 text-2xl text-gray-600 text-center dark:text-gray-400">
-            The fully-featured GraphQL Server with focus on easy setup,
-            performance and great developer experience.
+            The fully-featured GraphQL Server with focus on easy setup, performance and great
+            developer experience.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Anchor className={classes.button} href="/docs">
               Documentation
             </Anchor>
-            <Anchor
-              className={clsx(classes.button, 'hidden lg:block')}
-              href="/tutorial/basic"
-            >
+            <Anchor className={clsx(classes.button, 'hidden lg:block')} href="/tutorial/basic">
               Tutorial
             </Anchor>
             <Anchor
-              className={clsx(
-                classes.button,
-                'flex flex-row gap-2 items-center',
-              )}
+              className={clsx(classes.button, 'flex flex-row gap-2 items-center')}
               href="https://github.com/dotansimha/graphql-yoga"
             >
               <FiGithub /> GitHub
@@ -93,15 +82,13 @@ export function IndexPage(): ReactElement {
                     link: '/docs/features/parsing-and-validation-caching',
                     icon: <AiFillAppstore size={36} />,
                     title: 'Parse and validate cache',
-                    description:
-                      'Fast requests by caching intensive operations',
+                    description: 'Fast requests by caching intensive operations',
                   },
                   {
                     link: '/docs/features/error-masking',
                     icon: <MdError size={36} />,
                     title: 'Error masking',
-                    description:
-                      'Never leak sensitive information through errors',
+                    description: 'Never leak sensitive information through errors',
                   },
                   {
                     link: '/docs/features/health-check',
@@ -114,8 +101,7 @@ export function IndexPage(): ReactElement {
                     link: '/docs/features/graphiql',
                     icon: <GrGraphQl size={36} />,
                     title: 'GraphiQL',
-                    description:
-                      'In-browser IDE for writing, validating, and testing operations',
+                    description: 'In-browser IDE for writing, validating, and testing operations',
                   },
                 ]}
               />
@@ -134,17 +120,11 @@ export function IndexPage(): ReactElement {
             <div>
               <p>
                 because GraphQL Yoga is powered by{' '}
-                <Anchor
-                  href="https://the-guild.dev/graphql/envelop"
-                  className={classes.link}
-                >
+                <Anchor href="https://the-guild.dev/graphql/envelop" className={classes.link}>
                   Envelop
                 </Anchor>{' '}
                 you can use{' '}
-                <Anchor
-                  href="/docs/features/envelop-plugins"
-                  className={classes.link}
-                >
+                <Anchor href="/docs/features/envelop-plugins" className={classes.link}>
                   any plugin
                 </Anchor>
               </p>
@@ -162,11 +142,9 @@ export function IndexPage(): ReactElement {
                         The{' '}
                         <button
                           className={classes.link}
-                          onClick={(e) => {
-                            e.preventDefault()
-                            router.push(
-                              '/docs/comparison#compatibility-with-apollo-federation',
-                            )
+                          onClick={e => {
+                            e.preventDefault();
+                            router.push('/docs/comparison#compatibility-with-apollo-federation');
                           }}
                         >
                           best supergraph and subgraph
@@ -179,15 +157,13 @@ export function IndexPage(): ReactElement {
                     link: '/docs/features/persisted-operations',
                     icon: <BsFillSafeFill size={36} />,
                     title: 'Persisted operations',
-                    description:
-                      'Prevent execution of arbitrary GraphQL operations',
+                    description: 'Prevent execution of arbitrary GraphQL operations',
                   },
                   {
                     link: '/docs/features/response-caching',
                     icon: <MdCached size={36} />,
                     title: 'Response caching',
-                    description:
-                      'Reducing server load by caching operation results',
+                    description: 'Reducing server load by caching operation results',
                   },
                   {
                     link: 'https://the-guild.dev/graphql/envelop/plugins/use-rate-limiter',
@@ -211,10 +187,7 @@ export function IndexPage(): ReactElement {
             <div>
               <p>
                 following the{' '}
-                <Anchor
-                  href="https://graphql.github.io/graphql-over-http"
-                  className={classes.link}
-                >
+                <Anchor href="https://graphql.github.io/graphql-over-http" className={classes.link}>
                   GraphQL over HTTP specification
                 </Anchor>
               </p>
@@ -245,10 +218,7 @@ export function IndexPage(): ReactElement {
                     description: (
                       <>
                         Built-in GraphQL{' '}
-                        <Anchor
-                          href="/docs/features/subscriptions"
-                          className={classes.link}
-                        >
+                        <Anchor href="/docs/features/subscriptions" className={classes.link}>
                           Subscriptions over Server-Sent Events
                         </Anchor>
                         .
@@ -278,17 +248,11 @@ export function IndexPage(): ReactElement {
         }
       />
 
-      <Feature
-        title="Runs Everywhere"
-        description="supports many environments"
-        gradient={2}
-      >
+      <Feature title="Runs Everywhere" description="supports many environments" gradient={2}>
         <div
           className="flex justify-center max-w-screen-lg p-12 mx-auto rounded-3xl"
           style={{
-            backgroundImage: `linear-gradient(70deg, ${pickGradient(2)[0]}, ${
-              pickGradient(2)[1]
-            })`,
+            backgroundImage: `linear-gradient(70deg, ${pickGradient(2)[0]}, ${pickGradient(2)[1]})`,
           }}
         >
           <div className="flex flex-wrap">
@@ -331,7 +295,7 @@ export function IndexPage(): ReactElement {
                 name: '& more...',
                 href: '/docs/integrations/z-other-environments',
               },
-            ].map((env) => (
+            ].map(env => (
               <div className="p-2 sm:w-1/2 md:w-1/3 w-full" key={env.name}>
                 <Anchor href={env.href}>
                   <div className="bg-amber-100 dark:bg-amber-800 rounded flex p-4 h-full items-center gap-2">
@@ -350,7 +314,7 @@ export function IndexPage(): ReactElement {
         </div>
       </Feature>
     </>
-  )
+  );
 }
 
 function FeatureWrapper({ children }: { children: ReactNode }): ReactElement {
@@ -366,7 +330,7 @@ function FeatureWrapper({ children }: { children: ReactNode }): ReactElement {
     >
       {children}
     </div>
-  )
+  );
 }
 
 function Feature({
@@ -377,19 +341,19 @@ function Feature({
   gradient,
   flipped,
 }: {
-  children?: ReactNode
-  title: string
-  description: ReactNode
+  children?: ReactNode;
+  title: string;
+  description: ReactNode;
   highlights?: {
-    title: string
-    description: ReactNode
-    icon?: ReactNode
-  }[]
-  image?: string
-  gradient: number
-  flipped?: boolean
+    title: string;
+    description: ReactNode;
+    icon?: ReactNode;
+  }[];
+  image?: string;
+  gradient: number;
+  flipped?: boolean;
 }) {
-  const [start, end] = pickGradient(gradient)
+  const [start, end] = pickGradient(gradient);
 
   return (
     <FeatureWrapper>
@@ -417,9 +381,7 @@ function Feature({
             >
               {title}
             </h2>
-            <div className="text-lg text-gray-600 dark:text-gray-400 leading-7">
-              {description}
-            </div>
+            <div className="text-lg text-gray-600 dark:text-gray-400 leading-7">{description}</div>
           </div>
           {image && (
             <div
@@ -428,41 +390,36 @@ function Feature({
                 backgroundImage: `linear-gradient(70deg, ${start}, ${end})`,
               }}
             >
-              <Image
-                src={image}
-                className="rounded-xl mx-auto"
-                placeholder="empty"
-                alt={title}
-              />
+              <Image src={image} className="rounded-xl mx-auto" placeholder="empty" alt={title} />
             </div>
           )}
         </div>
         {children}
       </div>
     </FeatureWrapper>
-  )
+  );
 }
 
 function FeatureHighlights({
   highlights,
   textColor,
 }: {
-  textColor?: string
+  textColor?: string;
   highlights?: {
-    title: string
-    description: ReactNode
-    icon?: ReactNode
-    link?: string
-  }[]
+    title: string;
+    description: ReactNode;
+    icon?: ReactNode;
+    link?: string;
+  }[];
 }) {
   if (!Array.isArray(highlights)) {
-    return null
+    return null;
   }
 
   return (
     <>
       {highlights.map(({ title, description, icon, link }) => {
-        const Comp = link ? Anchor : 'div'
+        const Comp = link ? Anchor : 'div';
         return (
           <Comp
             key={title}
@@ -471,10 +428,7 @@ function FeatureHighlights({
             {...(link && ({ href: link } as any))}
           >
             {icon && (
-              <div
-                className="flex-shrink-0"
-                style={textColor ? { color: textColor } : {}}
-              >
+              <div className="flex-shrink-0" style={textColor ? { color: textColor } : {}}>
                 {icon}
               </div>
             )}
@@ -485,18 +439,13 @@ function FeatureHighlights({
               >
                 {title}
               </h3>
-              <p
-                className={clsx(
-                  'text-gray-600 dark:text-gray-400',
-                  !icon && 'text-sm',
-                )}
-              >
+              <p className={clsx('text-gray-600 dark:text-gray-400', !icon && 'text-sm')}>
                 {description}
               </p>
             </div>
           </Comp>
-        )
+        );
       })}
     </>
-  )
+  );
 }

@@ -1,15 +1,15 @@
 {
   "name": "example-express",
-  "private": true,
   "version": "0.13.6",
+  "private": true,
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "check": "tsc --pretty --noEmit"
+    "check": "tsc --pretty --noEmit",
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
     "@types/express": "^4.17.13",
     "express": "^4.17.1",
+    "graphql-yoga": "4.0.3",
     "supertest": "^6.1.6"
   },
   "devDependencies": {

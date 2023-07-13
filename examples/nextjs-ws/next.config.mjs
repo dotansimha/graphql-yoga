@@ -3,5 +3,5 @@
  */
 const config = {
   reactStrictMode: true,
-}
-export default config
+};
+export default config;

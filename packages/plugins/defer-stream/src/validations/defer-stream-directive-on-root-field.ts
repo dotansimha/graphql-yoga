@@ -1,23 +1,21 @@
-import { ASTVisitor, ValidationContext } from 'graphql'
+import { ASTVisitor, ValidationContext } from 'graphql';
 import {
   createGraphQLError,
   GraphQLDeferDirective,
   GraphQLStreamDirective,
-} from '@graphql-tools/utils'
+} from '@graphql-tools/utils';
 
 /**
  * Stream directive on list field
  *
  * A GraphQL document is only valid if defer directives are not used on root mutation or subscription types.
  */
-export function DeferStreamDirectiveOnRootFieldRule(
-  context: ValidationContext,
-): ASTVisitor {
+export function DeferStreamDirectiveOnRootFieldRule(context: ValidationContext): ASTVisitor {
   return {
     Directive(node) {
-      const mutationType = context.getSchema().getMutationType()
-      const subscriptionType = context.getSchema().getSubscriptionType()
-      const parentType = context.getParentType()
+      const mutationType = context.getSchema().getMutationType();
+      const subscriptionType = context.getSchema().getSubscriptionType();
+      const parentType = context.getParentType();
       if (parentType && node.name.value === GraphQLDeferDirective.name) {
         if (mutationType && parentType === mutationType) {
           context.reportError(
@@ -25,7 +23,7 @@ export function DeferStreamDirectiveOnRootFieldRule(
               `Defer directive cannot be used on root mutation type "${parentType.name}".`,
               { nodes: node },
             ),
-          )
+          );
         }
         if (subscriptionType && parentType === subscriptionType) {
           context.reportError(
@@ -33,7 +31,7 @@ export function DeferStreamDirectiveOnRootFieldRule(
               `Defer directive cannot be used on root subscription type "${parentType.name}".`,
               { nodes: node },
             ),
-          )
+          );
         }
       }
       if (parentType && node.name.value === GraphQLStreamDirective.name) {
@@ -43,7 +41,7 @@ export function DeferStreamDirectiveOnRootFieldRule(
               `Stream directive cannot be used on root mutation type "${parentType.name}".`,
               { nodes: node },
             ),
-          )
+          );
         }
         if (subscriptionType && parentType === subscriptionType) {
           context.reportError(
@@ -51,9 +49,9 @@ export function DeferStreamDirectiveOnRootFieldRule(
               `Stream directive cannot be used on root subscription type "${parentType.name}".`,
               { nodes: node },
             ),
-          )
+          );
         }
       }
     },
-  }
+  };
 }

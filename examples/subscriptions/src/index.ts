@@ -1,14 +1,14 @@
+import { createServer } from 'node:http';
 import {
-  createYoga,
-  createSchema,
-  YogaInitialContext,
   createPubSub,
-  Repeater,
-  pipe,
+  createSchema,
+  createYoga,
   map,
-} from 'graphql-yoga'
-import { createServer } from 'node:http'
-import { Resolvers } from './generated/graphql'
+  pipe,
+  Repeater,
+  YogaInitialContext,
+} from 'graphql-yoga';
+import { Resolvers } from './generated/graphql';
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -35,16 +35,16 @@ const typeDefs = /* GraphQL */ `
     """
     incrementGlobalCounter: Int!
   }
-`
+`;
 
-let globalCounter = 0
+let globalCounter = 0;
 
 const pubSub = createPubSub<{
-  'globalCounter:changed': []
-}>()
+  'globalCounter:changed': [];
+}>();
 
 interface Context extends YogaInitialContext {
-  pubSub: typeof pubSub
+  pubSub: typeof pubSub;
 }
 
 const resolvers: Resolvers<Context> = {
@@ -55,17 +55,17 @@ const resolvers: Resolvers<Context> = {
     counter: {
       subscribe: () =>
         new Repeater((push, stop) => {
-          let counter = 0
+          let counter = 0;
           function increment() {
-            push(counter++)
-            console.log('push')
+            push(counter++);
+            console.log('push');
           }
-          increment()
-          const interval = setInterval(increment, 1000)
+          increment();
+          const interval = setInterval(increment, 1000);
           stop.then(() => {
-            clearInterval(interval)
-            console.log('stop')
-          })
+            clearInterval(interval);
+            console.log('stop');
+          });
         }),
       resolve: (payload: any) => payload,
     },
@@ -88,12 +88,12 @@ const resolvers: Resolvers<Context> = {
   },
   Mutation: {
     incrementGlobalCounter: (_source, _args, context) => {
-      globalCounter++
-      context.pubSub.publish('globalCounter:changed')
-      return globalCounter
+      globalCounter++;
+      context.pubSub.publish('globalCounter:changed');
+      return globalCounter;
     },
   },
-}
+};
 
 const yoga = createYoga<Context, any>({
   schema: createSchema({
@@ -102,7 +102,7 @@ const yoga = createYoga<Context, any>({
   }),
   logging: true,
   context: { pubSub },
-})
+});
 
-const server = createServer(yoga)
-server.listen(4000, () => console.log('Server started on port 4000'))
+const server = createServer(yoga);
+server.listen(4000, () => console.log('Server started on port 4000'));

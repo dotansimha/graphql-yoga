@@ -1,5 +1,5 @@
-import { createSchema } from '../src/schema'
-import { createYoga } from '../src/server'
+import { createSchema } from '../src/schema';
+import { createYoga } from '../src/server';
 
 describe('GraphQL over HTTP', () => {
   // https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#applicationgraphql-responsejson
@@ -17,16 +17,14 @@ describe('GraphQL over HTTP', () => {
             resolvers: {
               Query: {
                 hi: () => {
-                  throw new Error(
-                    'Database password bubatzbieber69 is incorrect.',
-                  )
+                  throw new Error('Database password bubatzbieber69 is incorrect.');
                 },
                 foo: () => 'hi',
               },
             },
           }),
           logging: false,
-        })
+        });
 
         const result = await yoga.fetch('http://yoga/graphql', {
           method: 'POST',
@@ -35,19 +33,19 @@ describe('GraphQL over HTTP', () => {
             accept: 'application/graphql-response+json',
           },
           body: JSON.stringify({ query: '{ hi foo }' }),
-        })
+        });
 
-        const text = await result.text()
+        const text = await result.text();
         expect(text).toMatchInlineSnapshot(
           `"{"errors":[{"message":"Unexpected error.","locations":[{"line":1,"column":3}],"path":["hi"]}],"data":{"hi":null,"foo":"hi"}}"`,
-        )
+        );
 
         expect(result.headers.get('content-type')).toEqual(
           'application/graphql-response+json; charset=utf-8',
-        )
-        expect(result.status).toEqual(200)
-      })
-    })
+        );
+        expect(result.status).toEqual(200);
+      });
+    });
     describe('If the GraphQL response contains the {data} entry and it is {null}, then the server SHOULD reply with a 2xx status code and it is RECOMMENDED it replies with 200 status code.', () => {
       it('Uses status code 200 if data is null due to an error', async () => {
         const yoga = createYoga({
@@ -60,15 +58,13 @@ describe('GraphQL over HTTP', () => {
             resolvers: {
               Query: {
                 hi: () => {
-                  throw new Error(
-                    'Database password bubatzbieber69 is incorrect.',
-                  )
+                  throw new Error('Database password bubatzbieber69 is incorrect.');
                 },
               },
             },
           }),
           logging: false,
-        })
+        });
 
         const result = await yoga.fetch('http://yoga/graphql', {
           method: 'POST',
@@ -77,18 +73,18 @@ describe('GraphQL over HTTP', () => {
             accept: 'application/graphql-response+json',
           },
           body: JSON.stringify({ query: '{ hi }' }),
-        })
+        });
 
-        const text = await result.text()
+        const text = await result.text();
         expect(text).toMatchInlineSnapshot(
           `"{"errors":[{"message":"Unexpected error.","locations":[{"line":1,"column":3}],"path":["hi"]}],"data":null}"`,
-        )
+        );
 
         expect(result.headers.get('content-type')).toEqual(
           'application/graphql-response+json; charset=utf-8',
-        )
-        expect(result.status).toEqual(200)
-      })
-    })
-  })
-})
+        );
+        expect(result.status).toEqual(200);
+      });
+    });
+  });
+});

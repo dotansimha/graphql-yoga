@@ -1,13 +1,12 @@
-import { isAsyncIterable } from '@graphql-tools/utils'
-
+import { isAsyncIterable } from '@graphql-tools/utils';
 import {
   areGraphQLErrors,
   getResponseInitByRespectingErrors,
   isGraphQLError,
-} from '../../error.js'
-import { FetchAPI } from '../../types.js'
-import { ResultProcessorInput } from '../types.js'
-import { jsonStringifyResultWithoutInternals } from './stringify.js'
+} from '../../error.js';
+import { FetchAPI } from '../../types.js';
+import { ResultProcessorInput } from '../types.js';
+import { jsonStringifyResultWithoutInternals } from './stringify.js';
 
 export function processRegularResult(
   executionResult: ResultProcessorInput,
@@ -19,15 +18,14 @@ export function processRegularResult(
       status: 406,
       statusText: 'Not Acceptable',
       headers: {
-        accept:
-          'application/json; charset=utf-8, application/graphql-response+json; charset=utf-8',
+        accept: 'application/json; charset=utf-8, application/graphql-response+json; charset=utf-8',
       },
-    })
+    });
   }
 
   const headersInit = {
     'Content-Type': acceptedHeader + '; charset=utf-8',
-  }
+  };
 
   const responseInit = getResponseInitByRespectingErrors(
     executionResult,
@@ -37,13 +35,11 @@ export function processRegularResult(
       !Array.isArray(executionResult) &&
       areGraphQLErrors(executionResult.errors) &&
       executionResult.errors.some(
-        (err) =>
-          !err.extensions.originalError ||
-          isGraphQLError(err.extensions.originalError),
+        err => !err.extensions.originalError || isGraphQLError(err.extensions.originalError),
       ),
-  )
+  );
 
-  const responseBody = jsonStringifyResultWithoutInternals(executionResult)
+  const responseBody = jsonStringifyResultWithoutInternals(executionResult);
 
-  return new fetchAPI.Response(responseBody, responseInit)
+  return new fetchAPI.Response(responseBody, responseInit);
 }

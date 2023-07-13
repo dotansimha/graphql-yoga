@@ -1,15 +1,15 @@
-import { startApp } from '../src/app.js'
-import { fetch } from '@whatwg-node/fetch'
+import { fetch } from '@whatwg-node/fetch';
+import { startApp } from '../src/app.js';
 
 describe('hapi example integration', () => {
-  const port = 4000
+  const port = 4000;
   let stop = () => {
     // noop
-  }
+  };
   beforeAll(async () => {
-    stop = await startApp(4000)
-  })
-  afterAll(() => stop())
+    stop = await startApp(4000);
+  });
+  afterAll(() => stop());
 
   it('should execute query', async () => {
     const res = await fetch(`http://localhost:${port}/graphql`, {
@@ -18,7 +18,7 @@ describe('hapi example integration', () => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({ query: '{ hello }' }),
-    })
+    });
 
     await expect(res.json()).resolves.toMatchInlineSnapshot(`
       {
@@ -26,8 +26,8 @@ describe('hapi example integration', () => {
           "hello": "world",
         },
       }
-    `)
-  })
+    `);
+  });
 
   it('should execute mutation', async () => {
     const res = await fetch(`http://localhost:${port}/graphql`, {
@@ -36,7 +36,7 @@ describe('hapi example integration', () => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({ query: 'mutation { dontChange }' }),
-    })
+    });
 
     await expect(res.json()).resolves.toMatchInlineSnapshot(`
       {
@@ -44,8 +44,8 @@ describe('hapi example integration', () => {
           "dontChange": "didntChange",
         },
       }
-    `)
-  })
+    `);
+  });
 
   it('should subscribe and stream', async () => {
     const res = await fetch(`http://localhost:${port}/graphql`, {
@@ -55,7 +55,7 @@ describe('hapi example integration', () => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({ query: 'subscription { greetings }' }),
-    })
+    });
 
     await expect(res.text()).resolves.toMatchInlineSnapshot(`
       "event: next
@@ -76,6 +76,6 @@ describe('hapi example integration', () => {
       event: complete
 
       "
-    `)
-  })
-})
+    `);
+  });
+});

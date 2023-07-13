@@ -1,5 +1,5 @@
 // src/index.mjs
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga';
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -12,7 +12,7 @@ const schema = createSchema({
       greetings: () => 'This is the `greetings` field of the root `Query` type',
     },
   },
-})
+});
 
 export default {
   fetch(request: Request, env: Record<string, any>, ...rest: any[]) {
@@ -20,8 +20,8 @@ export default {
       graphqlEndpoint: env.GRAPHQL_ROUTE || '/graphql',
       landingPage: false,
       schema,
-    })
+    });
 
-    return yoga.fetch(request, env, ...rest)
+    return yoga.fetch(request, env, ...rest);
   },
-}
+};

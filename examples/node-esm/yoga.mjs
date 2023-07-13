@@ -1,4 +1,4 @@
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga';
 
 export const yoga = createYoga({
   schema: createSchema({
@@ -13,4 +13,4 @@ export const yoga = createYoga({
       },
     },
   }),
-})
+});

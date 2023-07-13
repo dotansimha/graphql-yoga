@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { createServer, type RequestListener } from 'http'
-import { createYoga } from 'graphql-yoga'
-import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
-import { useGraphQlJit } from '@envelop/graphql-jit'
-import { Context, schema } from './schema.js'
+import { createServer, type RequestListener } from 'http';
+import { createYoga } from 'graphql-yoga';
+import { useGraphQlJit } from '@envelop/graphql-jit';
+import { useResponseCache } from '@graphql-yoga/plugin-response-cache';
+import { Context, schema } from './schema.js';
 
 const yogaMap: Record<string, RequestListener> = {
   '/graphql': createYoga<Context>({
@@ -38,21 +38,21 @@ const yogaMap: Record<string, RequestListener> = {
     graphqlEndpoint: '/graphql-no-parse-validate-cache',
   }),
   '/ping': (req, res) => {
-    res.writeHead(200)
-    res.end()
+    res.writeHead(200);
+    res.end();
   },
-}
+};
 
 const server = createServer((req, res) => {
-  const yoga = yogaMap[req.url!]
+  const yoga = yogaMap[req.url!];
   if (yoga) {
-    yoga(req, res)
+    yoga(req, res);
   } else {
-    res.writeHead(404)
-    res.end()
+    res.writeHead(404);
+    res.end();
   }
-})
+});
 
 server.listen(4000, () => {
-  console.log('ready')
-})
+  console.log('ready');
+});

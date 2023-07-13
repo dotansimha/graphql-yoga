@@ -6,7 +6,8 @@ Showcase of doing authentication for Query, Mutation and Subscription operations
 pnpm --filter example-generic-auth dev
 ```
 
-Provide the authentication token `aaa` or `bbb` via the `x-authorization` header or the `x-authorization` query parameter.
+Provide the authentication token `aaa` or `bbb` via the `x-authorization` header or the
+`x-authorization` query parameter.
 
 **Example: Query with header authorization**
 

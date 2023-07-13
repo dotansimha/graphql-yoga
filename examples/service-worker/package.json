@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "build": "wrangler publish --dry-run --outdir=dist",
+    "check": "tsc --pretty --noEmit",
     "start": "wrangler dev",
-    "test": "jest",
-    "check": "tsc --pretty --noEmit"
+    "test": "jest"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
-    "graphql": "16.6.0"
+    "graphql": "16.6.0",
+    "graphql-yoga": "4.0.3"
   },
   "devDependencies": {
     "@whatwg-node/fetch": "^0.9.7",

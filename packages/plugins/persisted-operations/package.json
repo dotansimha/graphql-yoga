@@ -1,22 +1,20 @@
 {
   "name": "@graphql-yoga/plugin-persisted-operations",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "version": "2.0.3",
+  "type": "module",
   "description": "Persisted Operations plugin for GraphQL Yoga.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/plugins/persisted-operations"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
   "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -35,12 +33,8 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
   },
   "peerDependencies": {
     "@graphql-tools/utils": "^10.0.0",
@@ -48,8 +42,14 @@
     "graphql-yoga": "^4.0.3"
   },
   "devDependencies": {
-    "graphql-yoga": "^4.0.3",
-    "graphql": "^16.6.0"
+    "graphql": "^16.6.0",
+    "graphql-yoga": "^4.0.3"
   },
-  "type": "module"
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

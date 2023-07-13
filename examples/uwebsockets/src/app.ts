@@ -1,11 +1,11 @@
-import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
-import { createSchema, createYoga, Repeater } from 'graphql-yoga'
-import { makeBehavior } from 'graphql-ws/lib/use/uWebSockets'
-import { ExecutionArgs, execute, subscribe } from 'graphql'
+import { execute, ExecutionArgs, subscribe } from 'graphql';
+import { makeBehavior } from 'graphql-ws/lib/use/uWebSockets';
+import { createSchema, createYoga, Repeater } from 'graphql-yoga';
+import { App, HttpRequest, HttpResponse } from 'uWebSockets.js';
 
 interface ServerContext {
-  req: HttpRequest
-  res: HttpResponse
+  req: HttpRequest;
+  res: HttpResponse;
 }
 
 export const yoga = createYoga<ServerContext>({
@@ -30,9 +30,9 @@ export const yoga = createYoga<ServerContext>({
               const interval = setInterval(() => {
                 push({
                   time: new Date().toISOString(),
-                })
-              }, 1000)
-              stop.then(() => clearInterval(interval))
+                });
+              }, 1000);
+              stop.then(() => clearInterval(interval));
             }),
         },
       },
@@ -41,24 +41,22 @@ export const yoga = createYoga<ServerContext>({
   graphiql: {
     subscriptionsProtocol: 'WS', // use WebSockets instead of SSE
   },
-})
+});
 
 // yoga's envelop may augment the `execute` and `subscribe` operations
 // so we need to make sure we always use the freshest instance
 type EnvelopedExecutionArgs = ExecutionArgs & {
   rootValue: {
-    execute: typeof execute
-    subscribe: typeof subscribe
-  }
-}
+    execute: typeof execute;
+    subscribe: typeof subscribe;
+  };
+};
 
 const wsHandler = makeBehavior({
-  execute: (args) => (args as EnvelopedExecutionArgs).rootValue.execute(args),
-  subscribe: (args) =>
-    (args as EnvelopedExecutionArgs).rootValue.subscribe(args),
+  execute: args => (args as EnvelopedExecutionArgs).rootValue.execute(args),
+  subscribe: args => (args as EnvelopedExecutionArgs).rootValue.subscribe(args),
   onSubscribe: async (ctx, msg) => {
-    const { schema, execute, subscribe, contextFactory, parse, validate } =
-      yoga.getEnveloped(ctx)
+    const { schema, execute, subscribe, contextFactory, parse, validate } = yoga.getEnveloped(ctx);
 
     const args: EnvelopedExecutionArgs = {
       schema,
@@ -70,12 +68,12 @@ const wsHandler = makeBehavior({
         execute,
         subscribe,
       },
-    }
+    };
 
-    const errors = validate(args.schema, args.document)
-    if (errors.length) return errors
-    return args
+    const errors = validate(args.schema, args.document);
+    if (errors.length) return errors;
+    return args;
   },
-})
+});
 
-export const app = App().any('/*', yoga).ws(yoga.graphqlEndpoint, wsHandler)
+export const app = App().any('/*', yoga).ws(yoga.graphqlEndpoint, wsHandler);

@@ -1,16 +1,16 @@
 {
   "name": "example-node-esm",
   "version": "0.12.11",
-  "private": true,
   "type": "module",
+  "private": true,
   "module": "index.mjs",
   "scripts": {
+    "check": "exit 0",
     "start": "node index.mjs",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "check": "exit 0"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
-    "graphql": "^16.3.0"
+    "graphql": "^16.3.0",
+    "graphql-yoga": "4.0.3"
   }
 }

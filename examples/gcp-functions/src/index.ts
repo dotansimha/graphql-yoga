@@ -1,4 +1,4 @@
-import { createSchema, createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga';
 
 export const graphql = createYoga({
   schema: createSchema({
@@ -9,10 +9,9 @@ export const graphql = createYoga({
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
     },
   }),
   graphqlEndpoint: '*',
-})
+});

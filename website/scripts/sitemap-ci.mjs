@@ -1,47 +1,47 @@
-import { XMLParser } from 'fast-xml-parser'
-import { fileURLToPath } from 'node:url'
-import { dirname } from 'node:path'
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import config from '../next.config.js'
+import * as fs from 'node:fs';
+import { dirname } from 'node:path';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { XMLParser } from 'fast-xml-parser';
+import config from '../next.config.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const sitemapPath = path.join(__dirname, '..', 'public', 'sitemap.xml')
-const lockfilePath = path.join(__dirname, '..', 'route-lockfile.txt')
+const sitemapPath = path.join(__dirname, '..', 'public', 'sitemap.xml');
+const lockfilePath = path.join(__dirname, '..', 'route-lockfile.txt');
 
 async function main() {
-  const parser = new XMLParser()
+  const parser = new XMLParser();
 
-  const d = parser.parse(fs.readFileSync(sitemapPath, 'utf-8'))
+  const d = parser.parse(fs.readFileSync(sitemapPath, 'utf-8'));
 
-  const routes = d.urlset.url.map((url) =>
+  const routes = d.urlset.url.map(url =>
     url.loc.replace(process.env.SITE_URL || `https://graphql-yoga.com`, ``),
-  )
+  );
 
-  const redirectsPointingToNonExistingStuff = []
+  const redirectsPointingToNonExistingStuff = [];
 
-  const redirects = config.redirects()
+  const redirects = config.redirects();
 
   for (const redirect of redirects) {
     if (routes.includes(redirect.destination) === false) {
-      redirectsPointingToNonExistingStuff.push(redirect)
+      redirectsPointingToNonExistingStuff.push(redirect);
     }
-    routes.push(`${redirect.source} -> ${redirect.destination}`)
+    routes.push(`${redirect.source} -> ${redirect.destination}`);
   }
 
   if (redirectsPointingToNonExistingStuff.length) {
     console.error(
       `The following routes do not point to a route:\n\n` +
         redirectsPointingToNonExistingStuff.map(
-          (redirect) => `- "${redirect.source}" -> "${redirect.destination}"`,
+          redirect => `- "${redirect.source}" -> "${redirect.destination}"`,
         ) +
         `\n`,
-    )
-    throw new Error('Redirect pointing to nothing.')
+    );
+    throw new Error('Redirect pointing to nothing.');
   }
 
-  fs.writeFileSync(lockfilePath, routes.sort().join(`\n`) + `\n`)
+  fs.writeFileSync(lockfilePath, routes.sort().join(`\n`) + `\n`);
 }
 
-main()
+main();

@@ -1,5 +1,5 @@
-import { Injectable, Inject, CONTEXT, Scope } from 'graphql-modules'
-import { inspect } from 'node:util'
+import { inspect } from 'node:util';
+import { CONTEXT, Inject, Injectable, Scope } from 'graphql-modules';
 
 @Injectable({
   scope: Scope.Operation,
@@ -10,17 +10,15 @@ export class BasicProvider {
 
   public getContextKeys(): string[] {
     if (!this.ctx) {
-      throw new Error(
-        `Expected context to be defined but got: ${inspect(this.ctx)}`,
-      )
+      throw new Error(`Expected context to be defined but got: ${inspect(this.ctx)}`);
     }
-    return Object.keys(this.ctx)
+    return Object.keys(this.ctx);
   }
 
   public async *getCountdown(from: number) {
     for (let i = from; i >= 0; i--) {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      yield i
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      yield i;
     }
   }
 }

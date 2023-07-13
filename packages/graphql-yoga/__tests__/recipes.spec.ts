@@ -1,9 +1,4 @@
-import {
-  createSchema,
-  createYoga,
-  GraphQLParams,
-  YogaInitialContext,
-} from '../src/index.js'
+import { createSchema, createYoga, GraphQLParams, YogaInitialContext } from '../src/index.js';
 
 describe('recipe', () => {
   it('id as custom top level POST body query parameter', async () => {
@@ -17,7 +12,7 @@ describe('recipe', () => {
         resolvers: {
           Query: {
             id: (_, __, context: YogaInitialContext) => {
-              return context.params.extensions?.id
+              return context.params.extensions?.id;
             },
           },
         },
@@ -37,12 +32,12 @@ describe('recipe', () => {
                   ...params.extensions,
                   id: params.id,
                 },
-              } as GraphQLParams)
+              } as GraphQLParams);
             }
           },
         },
       ],
-    })
+    });
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -53,9 +48,9 @@ describe('recipe', () => {
         query: '{ id }',
         id: '123456',
       }),
-    })
+    });
 
-    expect(response.status).toEqual(200)
-    expect(await response.json()).toEqual({ data: { id: '123456' } })
-  })
-})
+    expect(response.status).toEqual(200);
+    expect(await response.json()).toEqual({ data: { id: '123456' } });
+  });
+});

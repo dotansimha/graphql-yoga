@@ -1,9 +1,9 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
+import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import { createSchema, createYoga } from 'graphql-yoga';
 
 const yoga = createYoga<{
-  event: APIGatewayEvent
-  lambdaContext: Context
+  event: APIGatewayEvent;
+  lambdaContext: Context;
 }>({
   graphqlEndpoint: '/graphql',
   landingPage: false,
@@ -15,12 +15,11 @@ const yoga = createYoga<{
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
     },
   }),
-})
+});
 
 export async function handler(
   event: APIGatewayEvent,
@@ -29,9 +28,7 @@ export async function handler(
   const response = await yoga.fetch(
     event.path +
       '?' +
-      new URLSearchParams(
-        (event.queryStringParameters as Record<string, string>) || {},
-      ).toString(),
+      new URLSearchParams((event.queryStringParameters as Record<string, string>) || {}).toString(),
     {
       method: event.httpMethod,
       headers: event.headers as HeadersInit,
@@ -43,14 +40,14 @@ export async function handler(
       event,
       lambdaContext,
     },
-  )
+  );
 
-  const responseHeaders = Object.fromEntries(response.headers.entries())
+  const responseHeaders = Object.fromEntries(response.headers.entries());
 
   return {
     statusCode: response.status,
     headers: responseHeaders,
     body: await response.text(),
     isBase64Encoded: false,
-  }
+  };
 }

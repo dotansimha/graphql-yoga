@@ -1,9 +1,9 @@
-import { join } from 'node:path'
-import { Module, DynamicModule } from '@nestjs/common'
-import { GraphQLModule } from '@nestjs/graphql'
-import { YogaDriver, YogaDriverConfig } from '../../../src'
-import { CatsModule } from './cats/cats.module'
-import { HttpAdapterHost } from '@nestjs/core'
+import { join } from 'node:path';
+import { DynamicModule, Module } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
+import { YogaDriver, YogaDriverConfig } from '../../../src';
+import { CatsModule } from './cats/cats.module';
 
 @Module({})
 export class AppModule {
@@ -20,6 +20,6 @@ export class AppModule {
           typePaths: [join(__dirname, '**', '*.graphql')],
         }),
       ],
-    }
+    };
   }
 }

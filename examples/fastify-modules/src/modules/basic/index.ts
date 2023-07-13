@@ -1,8 +1,8 @@
-import { createModule } from 'graphql-modules'
-import { join } from 'node:path'
-import { loadFilesSync } from '@graphql-tools/load-files'
-import { resolvers } from './resolvers'
-import { BasicProvider } from './providers'
+import { join } from 'node:path';
+import { createModule } from 'graphql-modules';
+import { loadFilesSync } from '@graphql-tools/load-files';
+import { BasicProvider } from './providers';
+import { resolvers } from './resolvers';
 
 export const basicModule = createModule({
   id: 'basic',
@@ -10,4 +10,4 @@ export const basicModule = createModule({
   typeDefs: loadFilesSync(join(__dirname, './typeDefs/*.graphql')),
   resolvers,
   providers: () => [BasicProvider],
-})
+});

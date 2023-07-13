@@ -1,26 +1,28 @@
 ---
-description: Learn how to use GraphQL Yoga with Apollo Federation to build a gateway server and a federated service.
+description:
+  Learn how to use GraphQL Yoga with Apollo Federation to build a gateway server and a federated
+  service.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Apollo Federation
 
-[Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies microservice architecture through GraphQL APIs.
+[Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies
+microservice architecture through GraphQL APIs.
 
-Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-federation) plugin, we can use GraphQL Yoga to build our gateway server.
+Thanks to [Envelop's Apollo Federation](https://envelop.dev/plugins/use-apollo-federation) plugin,
+we can use GraphQL Yoga to build our gateway server.
 
 <Callout>
   As documented in the [Apollo Federation
-  docs](https://www.apollographql.com/docs/federation/gateway/#setup),
-  `@apollo/gateway` package doesn't support GraphQL v16 so you have to install
-  `graphql@15`.
+  docs](https://www.apollographql.com/docs/federation/gateway/#setup), `@apollo/gateway` package
+  doesn't support GraphQL v16 so you have to install `graphql@15`.
 </Callout>
 
 <Callout>
-  Please note that Apollo Federation implementation doesn't support GraphQL
-  Subscriptions. If you need to use Subscriptions with a Federated Gateway you
-  can use [Schema
+  Please note that Apollo Federation implementation doesn't support GraphQL Subscriptions. If you
+  need to use Subscriptions with a Federated Gateway you can use [Schema
   Stitching](https://graphql-tools.com/docs/schema-stitching/stitch-federation).
 </Callout>
 
@@ -35,8 +37,8 @@ npm i @apollo/gateway @envelop/apollo-federation graphql-yoga graphql@15
 ### Example Gateway
 
 ```ts
-import { createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
+import { createYoga } from 'graphql-yoga'
 import { ApolloGateway } from '@apollo/gateway'
 import { useApolloFederation } from '@envelop/apollo-federation'
 
@@ -69,13 +71,14 @@ server.listen(4000, () => {
 
 ### Handling Subgraph Errors
 
-By default, GraphQL Yoga masks any unexpected GraphQL Errors. This is done to prevent leaking internal errors to the client.
-If you know that your subgraph is safe and you want to expose the errors to the client, you can customize the error masking bahviour.
+By default, GraphQL Yoga masks any unexpected GraphQL Errors. This is done to prevent leaking
+internal errors to the client. If you know that your subgraph is safe and you want to expose the
+errors to the client, you can customize the error masking bahviour.
 
 [Learn more about error masking](/docs/features/error-masking)
 
 ```ts filename="Expose subgraph errors to the client"
-import { maskError, createYoga } from 'graphql-yoga'
+import { createYoga, maskError } from 'graphql-yoga'
 import { schema } from './schema.js'
 
 const yoga = createYoga({
@@ -146,7 +149,8 @@ server.listen(4001, () => {
 
 ## Federated tracing
 
-Inject additional metrics for [Apollo's federated tracing](https://www.apollographql.com/docs/federation/metrics/).
+Inject additional metrics for
+[Apollo's federated tracing](https://www.apollographql.com/docs/federation/metrics/).
 
 You'll need the `@graphql-yoga/plugin-apollo-inline-trace` Yoga plugin for this.
 
@@ -159,8 +163,8 @@ npm i graphql-yoga @graphql-yoga/plugin-apollo-inline-trace graphql
 ### Example Federated tracing
 
 ```ts
-import { createYoga } from 'graphql-yoga'
 import { createServer } from 'http'
+import { createYoga } from 'graphql-yoga'
 import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace'
 
 const yoga = createYoga({
@@ -179,4 +183,6 @@ server.listen(4000, () => {
 
 ## Working Example
 
-Check our [working example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/apollo-federation) to try it out.
+Check our
+[working example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/apollo-federation)
+to try it out.

@@ -1,24 +1,25 @@
 /* eslint-disable */
 // @ts-check
-import { check } from 'k6'
-import http from 'k6/http'
+
 // @ts-expect-error - TS doesn't know this import
-import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js'
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
 // @ts-expect-error - TS doesn't know this import
-import { githubComment } from 'https://raw.githubusercontent.com/dotansimha/k6-github-pr-comment/master/lib.js'
+import { githubComment } from 'https://raw.githubusercontent.com/dotansimha/k6-github-pr-comment/master/lib.js';
+import { check } from 'k6';
+import http from 'k6/http';
 
 export const options = {
   scenarios: {},
   thresholds: {},
-}
+};
 
-const DURATION = 30
-const VUS = 1
+const DURATION = 30;
+const VUS = 1;
 
 function getOptionsForScenario(scenario, index) {
-  const noErrors = `no_errors{mode:${scenario}}`
-  const expectedResult = `expected_result{mode:${scenario}}`
-  const httpReqDuration = `http_req_duration{mode:${scenario}}`
+  const noErrors = `no_errors{mode:${scenario}}`;
+  const expectedResult = `expected_result{mode:${scenario}}`;
+  const httpReqDuration = `http_req_duration{mode:${scenario}}`;
   const scenarioField = {
     executor: 'constant-vus',
     exec: 'run',
@@ -27,7 +28,7 @@ function getOptionsForScenario(scenario, index) {
     duration: DURATION + 's',
     env: { MODE: scenario },
     tags: { mode: scenario },
-  }
+  };
   if (scenario === 'graphql-no-parse-validate-cache') {
     return {
       scenario: scenarioField,
@@ -36,7 +37,7 @@ function getOptionsForScenario(scenario, index) {
         [expectedResult]: ['rate>0.99'],
         [httpReqDuration]: ['avg<=2'],
       },
-    }
+    };
   }
   return {
     scenario: scenarioField,
@@ -45,7 +46,7 @@ function getOptionsForScenario(scenario, index) {
       [expectedResult]: ['rate>0.99'],
       [httpReqDuration]: ['avg<=1'],
     },
-  }
+  };
 }
 
 const scenarioNames = [
@@ -53,13 +54,13 @@ const scenarioNames = [
   'graphql-jit',
   'graphql-response-cache',
   'graphql-no-parse-validate-cache',
-]
+];
 
 scenarioNames.forEach((name, index) => {
-  const { scenario, thresholds } = getOptionsForScenario(name, index)
-  options.scenarios[name] = scenario
-  Object.assign(options.thresholds, thresholds)
-})
+  const { scenario, thresholds } = getOptionsForScenario(name, index);
+  options.scenarios[name] = scenario;
+  Object.assign(options.thresholds, thresholds);
+});
 
 export function handleSummary(data) {
   if (__ENV.GITHUB_TOKEN) {
@@ -70,34 +71,34 @@ export function handleSummary(data) {
       org: 'dotansimha',
       repo: 'graphql-yoga',
       renderTitle({ passes }) {
-        return passes ? '✅ Benchmark Results' : '❌ Benchmark Failed'
+        return passes ? '✅ Benchmark Results' : '❌ Benchmark Failed';
       },
       renderMessage({ passes, checks, thresholds }) {
-        const result = []
+        const result = [];
 
         if (thresholds.failures) {
           result.push(
             `**Performance regression detected**: it seems like your Pull Request adds some extra latency to GraphQL Yoga`,
-          )
+          );
         }
 
         if (checks.failures) {
-          result.push('**Failed assertions detected**')
+          result.push('**Failed assertions detected**');
         }
 
         if (!passes) {
           result.push(
             `> If the performance regression is expected, please increase the failing threshold.`,
-          )
+          );
         }
 
-        return result.join('\n')
+        return result.join('\n');
       },
-    })
+    });
   }
   return {
     stdout: textSummary(data, { indent: ' ', enableColors: true }),
-  }
+  };
 }
 
 export function run() {
@@ -116,22 +117,17 @@ export function run() {
         }
       }
     `,
-  })
+  });
 
-  const noErrors = `no_errors{mode:${__ENV.MODE}}`
-  const expectedResult = `expected_result{mode:${__ENV.MODE}}`
+  const noErrors = `no_errors{mode:${__ENV.MODE}}`;
+  const expectedResult = `expected_result{mode:${__ENV.MODE}}`;
   check(res, {
-    [noErrors]: (resp) => {
-      const json = resp.json()
-      return (
-        !!json &&
-        typeof json === 'object' &&
-        !Array.isArray(json) &&
-        !json.errors
-      )
+    [noErrors]: resp => {
+      const json = resp.json();
+      return !!json && typeof json === 'object' && !Array.isArray(json) && !json.errors;
     },
-    [expectedResult]: (resp) => {
-      const json = resp.json()
+    [expectedResult]: resp => {
+      const json = resp.json();
       return (
         !!json &&
         typeof json === 'object' &&
@@ -146,7 +142,7 @@ export function run() {
         typeof json.data.authors[0] === 'object' &&
         !Array.isArray(json.data.authors[0]) &&
         !!json.data.authors[0].id
-      )
+      );
     },
-  })
+  });
 }

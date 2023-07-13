@@ -1,26 +1,18 @@
 {
   "name": "@graphql-yoga/subscription",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "version": "4.0.0",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/subscription"
   },
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "pubsub",
-    "graphql",
-    "event",
-    "subscription"
-  ],
   "author": "Laurin Quast <laurinquast@googlemail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "exports": {
@@ -55,12 +47,14 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+  "keywords": [
+    "pubsub",
+    "graphql",
+    "event",
+    "subscription"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
   },
   "dependencies": {
     "@graphql-yoga/typed-event-target": "^2.0.0",
@@ -68,11 +62,17 @@
     "@whatwg-node/events": "^0.1.0",
     "tslib": "^2.5.2"
   },
-  "type": "module",
-  "sideEffects": true,
   "devDependencies": {
+    "@graphql-yoga/redis-event-target": "2.0.0",
     "@types/ioredis-mock": "8.2.2",
-    "ioredis-mock": "8.7.0",
-    "@graphql-yoga/redis-event-target": "2.0.0"
+    "ioredis-mock": "8.7.0"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "sideEffects": true,
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
   }
 }

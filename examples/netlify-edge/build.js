@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { build } = require('esbuild')
+const { build } = require('esbuild');
 
 async function main() {
   await build({
@@ -10,12 +10,12 @@ async function main() {
     bundle: true,
     platform: 'browser',
     target: 'node14',
-  })
+  });
 
-  console.info(`Netlify Edge function build done!`)
+  console.info(`Netlify Edge function build done!`);
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+main().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

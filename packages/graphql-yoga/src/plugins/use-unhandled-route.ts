@@ -1,17 +1,17 @@
-import landingPageBody from '../landing-page-html.js'
-import { FetchAPI } from '../types.js'
-import type { Plugin } from './types.js'
+import landingPageBody from '../landing-page-html.js';
+import { FetchAPI } from '../types.js';
+import type { Plugin } from './types.js';
 
 export function useUnhandledRoute(args: {
-  graphqlEndpoint: string
-  showLandingPage: boolean
+  graphqlEndpoint: string;
+  showLandingPage: boolean;
 }): Plugin {
-  let urlPattern: URLPattern
+  let urlPattern: URLPattern;
   function getUrlPattern({ URLPattern }: FetchAPI) {
     urlPattern ||= new URLPattern({
       pathname: args.graphqlEndpoint,
-    })
-    return urlPattern
+    });
+    return urlPattern;
   }
   return {
     onRequest({ request, fetchAPI, endResponse, url }) {
@@ -38,8 +38,8 @@ export function useUnhandledRoute(args: {
                 },
               },
             ),
-          )
-          return
+          );
+          return;
         }
 
         endResponse(
@@ -47,8 +47,8 @@ export function useUnhandledRoute(args: {
             status: 404,
             statusText: 'Not Found',
           }),
-        )
+        );
       }
     },
-  }
+  };
 }

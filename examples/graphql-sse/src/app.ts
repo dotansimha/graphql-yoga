@@ -1,7 +1,7 @@
-import { Socket } from 'node:net'
-import { createServer } from 'node:http'
-import { createYoga, createSchema } from 'graphql-yoga'
-import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
+import { createServer } from 'node:http';
+import { Socket } from 'node:net';
+import { createSchema, createYoga } from 'graphql-yoga';
+import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse';
 
 export function buildApp() {
   const yoga = createYoga({
@@ -20,19 +20,19 @@ export function buildApp() {
       resolvers: {
         Query: {
           hello() {
-            return 'world'
+            return 'world';
           },
         },
         Mutation: {
           dontChange() {
-            return 'didntChange'
+            return 'didntChange';
           },
         },
         Subscription: {
           greetings: {
             async *subscribe() {
               for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
-                yield { greetings: hi }
+                yield { greetings: hi };
               }
             },
           },
@@ -40,31 +40,31 @@ export function buildApp() {
       },
     }),
     plugins: [useGraphQLSSE()],
-  })
+  });
 
-  const server = createServer(yoga)
+  const server = createServer(yoga);
 
   // for termination
-  const sockets = new Set<Socket>()
-  server.on('connection', (socket) => {
-    sockets.add(socket)
-    server.once('close', () => sockets.delete(socket))
-  })
+  const sockets = new Set<Socket>();
+  server.on('connection', socket => {
+    sockets.add(socket);
+    server.once('close', () => sockets.delete(socket));
+  });
 
   return {
     start: (port: number) =>
       new Promise<void>((resolve, reject) => {
-        server.on('error', (err) => reject(err))
-        server.on('listening', () => resolve())
-        server.listen(port)
+        server.on('error', err => reject(err));
+        server.on('listening', () => resolve());
+        server.listen(port);
       }),
     stop: () =>
-      new Promise<void>((resolve) => {
+      new Promise<void>(resolve => {
         for (const socket of sockets) {
-          socket.destroy()
-          sockets.delete(socket)
+          socket.destroy();
+          sockets.delete(socket);
         }
-        server.close(() => resolve())
+        server.close(() => resolve());
       }),
-  }
+  };
 }

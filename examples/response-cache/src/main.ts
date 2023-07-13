@@ -1,9 +1,6 @@
-import { createServer } from 'node:http'
-import { createYoga, createSchema } from 'graphql-yoga'
-import {
-  useResponseCache,
-  UseResponseCacheParameter,
-} from '@graphql-yoga/plugin-response-cache'
+import { createServer } from 'node:http';
+import { createSchema, createYoga } from 'graphql-yoga';
+import { useResponseCache, UseResponseCacheParameter } from '@graphql-yoga/plugin-response-cache';
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -21,16 +18,13 @@ const schema = createSchema({
         return {
           id: '1',
           name: 'Bob',
-        }
+        };
       },
     },
   },
-})
+});
 
-export const create = (
-  config?: Omit<UseResponseCacheParameter, 'session'>,
-  port?: number,
-) => {
+export const create = (config?: Omit<UseResponseCacheParameter, 'session'>, port?: number) => {
   const yoga = createYoga({
     schema,
     plugins: [
@@ -40,26 +34,26 @@ export const create = (
       }),
     ],
     logging: port !== undefined,
-  })
+  });
 
-  const server = createServer(yoga)
+  const server = createServer(yoga);
 
-  return new Promise<[number, () => Promise<void>]>((resolve) => {
+  return new Promise<[number, () => Promise<void>]>(resolve => {
     server.listen(port, () => {
       resolve([
         (server.address() as any).port as number,
         () =>
-          new Promise<void>((resolve) => {
+          new Promise<void>(resolve => {
             server.close(() => {
-              resolve()
-            })
+              resolve();
+            });
           }),
-      ])
-    })
-  })
-}
+      ]);
+    });
+  });
+};
 
 if (require.main === module) {
-  create(undefined, 4000)
-  console.log(`Server is running on http://localhost:4000`)
+  create(undefined, 4000);
+  console.log(`Server is running on http://localhost:4000`);
 }

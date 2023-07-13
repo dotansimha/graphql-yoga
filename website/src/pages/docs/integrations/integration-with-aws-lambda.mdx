@@ -1,10 +1,13 @@
 ---
-description: AWS Lambda is a serverless computing platform that makes it easy to build applications that run on the AWS cloud. GraphQL Yoga is platform agnostic so they can fit together easily.
+description:
+  AWS Lambda is a serverless computing platform that makes it easy to build applications that run on
+  the AWS cloud. GraphQL Yoga is platform agnostic so they can fit together easily.
 ---
 
 # Integration with AWS Lambda
 
-AWS Lambda is a serverless computing platform that makes it easy to build applications that run on the AWS cloud. GraphQL Yoga is platform agnostic so they can fit together easily.
+AWS Lambda is a serverless computing platform that makes it easy to build applications that run on
+the AWS cloud. GraphQL Yoga is platform agnostic so they can fit together easily.
 
 ## Installation
 
@@ -15,8 +18,8 @@ npm i aws-lambda graphql-yoga graphql
 ## Example
 
 ```ts filename="graphql.ts"
-import { createYoga, createSchema } from 'graphql-yoga'
 import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const yoga = createYoga<{
   event: APIGatewayEvent
@@ -32,8 +35,7 @@ const yoga = createYoga<{
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type'
+        greetings: () => 'This is the `greetings` field of the root `Query` type'
       }
     }
   })
@@ -46,9 +48,7 @@ export async function handler(
   const response = await yoga.fetch(
     event.path +
       '?' +
-      new URLSearchParams(
-        (event.queryStringParameters as Record<string, string>) || {}
-      ).toString(),
+      new URLSearchParams((event.queryStringParameters as Record<string, string>) || {}).toString(),
     {
       method: event.httpMethod,
       headers: event.headers as HeadersInit,
@@ -73,4 +73,5 @@ export async function handler(
 }
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/aws-lambda).
+> You can also check a full example on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/aws-lambda).
