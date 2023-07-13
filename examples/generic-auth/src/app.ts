@@ -1,10 +1,10 @@
-import { createYoga, createSchema, YogaInitialContext } from 'graphql-yoga'
-import { useGenericAuth } from '@envelop/generic-auth'
+import { createSchema, createYoga, YogaInitialContext } from 'graphql-yoga';
+import { useGenericAuth } from '@envelop/generic-auth';
 
 type User = {
-  id: string
-  email: string
-}
+  id: string;
+  email: string;
+};
 
 const users: Record<string, User> = {
   aaa: {
@@ -19,23 +19,23 @@ const users: Record<string, User> = {
     id: '2',
     email: 'foo2@foo.com',
   },
-}
+};
 
 export const yoga = createYoga<unknown, { currentUser: User }>({
   plugins: [
     useGenericAuth({
       mode: 'protect-granular',
       async resolveUserFn(context: YogaInitialContext) {
-        let accessToken = context.request.headers.get('x-authorization') ?? null
+        let accessToken = context.request.headers.get('x-authorization') ?? null;
         if (accessToken === null) {
-          const url = new URL(context.request.url)
-          accessToken = url.searchParams.get('x-authorization')
+          const url = new URL(context.request.url);
+          accessToken = url.searchParams.get('x-authorization');
         }
 
         if (accessToken === null) {
-          return null
+          return null;
         }
-        return users[accessToken] ?? null
+        return users[accessToken] ?? null;
       },
     }),
   ],
@@ -60,18 +60,18 @@ export const yoga = createYoga<unknown, { currentUser: User }>({
       },
       Subscription: {
         requiresAuth: {
-          resolve: (value) => value,
+          resolve: value => value,
           async *subscribe(_, __, context) {
-            yield `hi ${context.currentUser?.email}`
+            yield `hi ${context.currentUser?.email}`;
           },
         },
         public: {
-          resolve: (value) => value,
+          resolve: value => value,
           async *subscribe() {
-            yield `hi`
+            yield `hi`;
           },
         },
       },
     },
   }),
-})
+});

@@ -1,11 +1,11 @@
-import { Stack } from '@pulumi/pulumi/automation'
-import { DeploymentConfiguration } from '../types'
-import { assertGraphiQL, assertQuery, env, execPromise } from '../utils'
-import * as pulumi from '@pulumi/pulumi'
-import * as resources from '@pulumi/azure-native/resources'
-import * as storage from '@pulumi/azure-native/storage'
-import * as web from '@pulumi/azure-native/web'
-import { version } from '@pulumi/azure-native/package.json'
+import { version } from '@pulumi/azure-native/package.json';
+import * as resources from '@pulumi/azure-native/resources';
+import * as storage from '@pulumi/azure-native/storage';
+import * as web from '@pulumi/azure-native/web';
+import * as pulumi from '@pulumi/pulumi';
+import { Stack } from '@pulumi/pulumi/automation';
+import { DeploymentConfiguration } from '../types';
+import { assertGraphiQL, assertQuery, env, execPromise } from '../utils';
 
 export function getConnectionString(
   resourceGroupName: pulumi.Input<string>,
@@ -15,11 +15,11 @@ export function getConnectionString(
   const storageAccountKeys = storage.listStorageAccountKeysOutput({
     resourceGroupName,
     accountName,
-  })
-  const primaryStorageKey = storageAccountKeys.keys[0].value
+  });
+  const primaryStorageKey = storageAccountKeys.keys[0].value;
 
   // Build the connection string to the storage account.
-  return pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${primaryStorageKey}`
+  return pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${primaryStorageKey}`;
 }
 
 export function signedBlobReadUrl(
@@ -41,23 +41,23 @@ export function signedBlobReadUrl(
     cacheControl: 'max-age=5',
     contentDisposition: 'inline',
     contentEncoding: 'deflate',
-  })
-  return pulumi.interpolate`https://${account.name}.blob.core.windows.net/${container.name}/${blob.name}?${blobSAS.serviceSasToken}`
+  });
+  return pulumi.interpolate`https://${account.name}.blob.core.windows.net/${container.name}/${blob.name}?${blobSAS.serviceSasToken}`;
 }
 
 export const azureFunctionDeployment: DeploymentConfiguration<{
-  functionUrl: string
+  functionUrl: string;
 }> = {
   prerequisites: async (stack: Stack) => {
-    console.info('\t\tℹ️ Installing Azure-Native plugin...')
+    console.info('\t\tℹ️ Installing Azure-Native plugin...');
     // Intall Pulumi Azure Plugin
-    await stack.workspace.installPlugin('azure-native', version, 'resource')
+    await stack.workspace.installPlugin('azure-native', version, 'resource');
 
     // Build and bundle the worker
-    console.info('\t\tℹ️ Bundling the Azure Function....')
+    console.info('\t\tℹ️ Bundling the Azure Function....');
     await execPromise('pnpm build', {
       cwd: '../examples/azure-function',
-    })
+    });
   },
   config: async (stack: Stack) => {
     // Configure the Pulumi environment with the Azure credentials
@@ -65,23 +65,23 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
     // See: https://www.pulumi.com/registry/packages/azure-native/installation-configuration/
     await stack.setConfig('azure-native:clientId', {
       value: env('AZURE_CLIENT_ID'),
-    })
+    });
     await stack.setConfig('azure-native:clientSecret', {
       value: env('AZURE_CLIENT_SECRET'),
-    })
+    });
     await stack.setConfig('azure-native:tenantId', {
       value: env('AZURE_TENANT_ID'),
-    })
+    });
     await stack.setConfig('azure-native:subscriptionId', {
       value: env('AZURE_SUBSCRIPTION_ID'),
-    })
+    });
     await stack.setConfig('azure-native:location', {
       value: 'eastus',
-    })
+    });
   },
   program: async () => {
-    const stackName = pulumi.getStack()
-    const resourceGroup = new resources.ResourceGroup(stackName)
+    const stackName = pulumi.getStack();
+    const resourceGroup = new resources.ResourceGroup(stackName);
 
     const storageAccount = new storage.StorageAccount('yogasa', {
       resourceGroupName: resourceGroup.name,
@@ -89,7 +89,7 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
         name: storage.SkuName.Standard_LRS,
       },
       kind: storage.Kind.StorageV2,
-    })
+    });
 
     const codeContainer = new storage.BlobContainer(
       'yogazips',
@@ -100,7 +100,7 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       {
         deleteBeforeReplace: true,
       },
-    )
+    );
 
     const codeBlob = new storage.Blob(
       'zip',
@@ -113,7 +113,7 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       {
         deleteBeforeReplace: true,
       },
-    )
+    );
 
     const plan = new web.AppServicePlan(
       'planlinux',
@@ -129,18 +129,10 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       {
         deleteBeforeReplace: true,
       },
-    )
+    );
 
-    const storageConnectionString = getConnectionString(
-      resourceGroup.name,
-      storageAccount.name,
-    )
-    const codeBlobUrl = signedBlobReadUrl(
-      codeBlob,
-      codeContainer,
-      storageAccount,
-      resourceGroup,
-    )
+    const storageConnectionString = getConnectionString(resourceGroup.name, storageAccount.name);
+    const codeBlobUrl = signedBlobReadUrl(codeBlob, codeContainer, storageAccount, resourceGroup);
 
     /**
      * For the person that has to update this in the future:
@@ -168,15 +160,15 @@ export const azureFunctionDeployment: DeploymentConfiguration<{
       {
         deleteBeforeReplace: true,
       },
-    )
+    );
 
     return {
       functionUrl: pulumi.interpolate`https://${app.defaultHostName}/api/yoga`,
-    }
+    };
   },
   test: async ({ functionUrl }) => {
-    console.log(`ℹ️ Azure Function deployed to URL: ${functionUrl.value}`)
-    await assertGraphiQL(functionUrl.value)
-    await assertQuery(functionUrl.value)
+    console.log(`ℹ️ Azure Function deployed to URL: ${functionUrl.value}`);
+    await assertGraphiQL(functionUrl.value);
+    await assertQuery(functionUrl.value);
   },
-}
+};

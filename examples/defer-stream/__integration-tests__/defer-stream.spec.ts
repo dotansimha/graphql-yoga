@@ -1,14 +1,13 @@
-import { yoga } from '../src/yoga'
+import { yoga } from '../src/yoga';
 
 describe('Defer / Stream', () => {
   it('stream', async () => {
-    const start = Date.now()
+    const start = Date.now();
     const response = await yoga.fetch('/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept:
-          'application/graphql-response+json, application/json, multipart/mixed',
+        Accept: 'application/graphql-response+json, application/json, multipart/mixed',
       },
       body: JSON.stringify({
         query: /* GraphQL */ `
@@ -17,25 +16,24 @@ describe('Defer / Stream', () => {
           }
         `,
       }),
-    })
-    expect(response.status).toEqual(200)
-    const contentType = response.headers.get('Content-Type')
-    expect(contentType).toEqual('multipart/mixed; boundary="-"')
-    const responseText = await response.text()
-    const end = Date.now()
-    expect(responseText).toMatchSnapshot('stream')
-    const diff = end - start
-    expect(diff).toBeLessThan(2650)
-    expect(diff > 2550).toBeTruthy()
-  })
+    });
+    expect(response.status).toEqual(200);
+    const contentType = response.headers.get('Content-Type');
+    expect(contentType).toEqual('multipart/mixed; boundary="-"');
+    const responseText = await response.text();
+    const end = Date.now();
+    expect(responseText).toMatchSnapshot('stream');
+    const diff = end - start;
+    expect(diff).toBeLessThan(2650);
+    expect(diff > 2550).toBeTruthy();
+  });
   it('defer', async () => {
-    const start = Date.now()
+    const start = Date.now();
     const response = await yoga.fetch('/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept:
-          'application/graphql-response+json, application/json, multipart/mixed',
+        Accept: 'application/graphql-response+json, application/json, multipart/mixed',
       },
       body: JSON.stringify({
         query: /* GraphQL */ `
@@ -47,15 +45,15 @@ describe('Defer / Stream', () => {
           }
         `,
       }),
-    })
-    expect(response.status).toEqual(200)
-    const contentType = response.headers.get('Content-Type')
-    expect(contentType).toEqual('multipart/mixed; boundary="-"')
-    const responseText = await response.text()
-    const end = Date.now()
-    expect(responseText).toMatchSnapshot('defer')
-    const diff = end - start
-    expect(diff).toBeLessThan(1600)
-    expect(diff > 1450).toBeTruthy()
-  })
-})
+    });
+    expect(response.status).toEqual(200);
+    const contentType = response.headers.get('Content-Type');
+    expect(contentType).toEqual('multipart/mixed; boundary="-"');
+    const responseText = await response.text();
+    const end = Date.now();
+    expect(responseText).toMatchSnapshot('defer');
+    const diff = end - start;
+    expect(diff).toBeLessThan(1600);
+    expect(diff > 1450).toBeTruthy();
+  });
+});

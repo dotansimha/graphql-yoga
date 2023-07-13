@@ -1,26 +1,24 @@
-import { ASTNode, DocumentNode, GraphQLErrorExtensions, Source } from 'graphql'
+import { ASTNode, DocumentNode, GraphQLErrorExtensions, Source } from 'graphql';
 import {
   createGraphQLError,
   GraphQLParams,
+  Maybe,
   Plugin,
   PromiseOrValue,
   type OnParamsEventPayload,
-  Maybe,
-} from 'graphql-yoga'
+} from 'graphql-yoga';
 
 // GraphQLErrorOptions interface does not exist in graphql-js v15
 export interface GraphQLErrorOptions {
-  nodes?: ReadonlyArray<ASTNode> | ASTNode | null | undefined
-  source?: Maybe<Source>
-  positions?: Maybe<ReadonlyArray<number>>
-  path?: Maybe<ReadonlyArray<string | number>>
-  originalError?: Maybe<Error & { readonly extensions?: unknown }>
-  extensions?: Maybe<GraphQLErrorExtensions>
+  nodes?: ReadonlyArray<ASTNode> | ASTNode | null | undefined;
+  source?: Maybe<Source>;
+  positions?: Maybe<ReadonlyArray<number>>;
+  path?: Maybe<ReadonlyArray<string | number>>;
+  originalError?: Maybe<Error & { readonly extensions?: unknown }>;
+  extensions?: Maybe<GraphQLErrorExtensions>;
 }
 
-export type ExtractPersistedOperationId = (
-  params: GraphQLParams,
-) => null | string
+export type ExtractPersistedOperationId = (params: GraphQLParams) => null | string;
 
 export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
   params: GraphQLParams,
@@ -33,14 +31,12 @@ export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
     params.extensions?.persistedQuery.version === 1 &&
     typeof params.extensions?.persistedQuery.sha256Hash === 'string'
   ) {
-    return params.extensions?.persistedQuery.sha256Hash
+    return params.extensions?.persistedQuery.sha256Hash;
   }
-  return null
-}
+  return null;
+};
 
-type AllowArbitraryOperationsHandler = (
-  request: Request,
-) => PromiseOrValue<boolean>
+type AllowArbitraryOperationsHandler = (request: Request) => PromiseOrValue<boolean>;
 
 export type UsePersistedOperationsOptions = {
   /**
@@ -49,48 +45,48 @@ export type UsePersistedOperationsOptions = {
   getPersistedOperation(
     key: string,
     request: Request,
-  ): PromiseOrValue<DocumentNode | string | null>
+  ): PromiseOrValue<DocumentNode | string | null>;
   /**
    * Whether to allow execution of arbitrary GraphQL operations aside from persisted operations.
    */
-  allowArbitraryOperations?: boolean | AllowArbitraryOperationsHandler
+  allowArbitraryOperations?: boolean | AllowArbitraryOperationsHandler;
   /**
    * The path to the persisted operation id
    */
-  extractPersistedOperationId?: ExtractPersistedOperationId
+  extractPersistedOperationId?: ExtractPersistedOperationId;
 
   /**
    * Whether to skip validation of the persisted operation
    */
-  skipDocumentValidation?: boolean
+  skipDocumentValidation?: boolean;
 
   /**
    * Custom errors to be thrown
    */
-  customErrors?: CustomPersistedQueryErrors
-}
+  customErrors?: CustomPersistedQueryErrors;
+};
 
 export type CustomErrorFactory =
   | string
   | (GraphQLErrorOptions & { message: string })
-  | ((payload: OnParamsEventPayload) => Error)
+  | ((payload: OnParamsEventPayload) => Error);
 
 export type CustomPersistedQueryErrors = {
   /**
    * Error to be thrown when the persisted operation is not found
    */
-  notFound?: CustomErrorFactory
+  notFound?: CustomErrorFactory;
 
   /**
    * Error to be thrown when rejecting non-persisted operations
    */
-  persistedQueryOnly?: CustomErrorFactory
+  persistedQueryOnly?: CustomErrorFactory;
 
   /**
    * Error to be thrown when the extraction of the persisted operation id failed
    */
-  keyNotFound?: CustomErrorFactory
-}
+  keyNotFound?: CustomErrorFactory;
+};
 
 export function usePersistedOperations<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,25 +98,22 @@ export function usePersistedOperations<
   skipDocumentValidation = false,
   customErrors,
 }: UsePersistedOperationsOptions): Plugin<TPluginContext> {
-  const operationASTByRequest = new WeakMap<Request, DocumentNode>()
-  const persistedOperationRequest = new WeakSet<Request>()
+  const operationASTByRequest = new WeakMap<Request, DocumentNode>();
+  const persistedOperationRequest = new WeakSet<Request>();
 
-  const notFoundErrorFactory = createErrorFactory(
-    'PersistedQueryNotFound',
-    customErrors?.notFound,
-  )
+  const notFoundErrorFactory = createErrorFactory('PersistedQueryNotFound', customErrors?.notFound);
   const keyNotFoundErrorFactory = createErrorFactory(
     'PersistedQueryKeyNotFound',
     customErrors?.keyNotFound,
-  )
+  );
   const persistentQueryOnlyErrorFactory = createErrorFactory(
     'PersistedQueryOnly',
     customErrors?.persistedQueryOnly,
-  )
+  );
 
   return {
     async onParams(payload) {
-      const { request, params, setParams } = payload
+      const { request, params, setParams } = payload;
 
       if (params.query) {
         if (
@@ -128,23 +121,20 @@ export function usePersistedOperations<
             ? allowArbitraryOperations
             : await allowArbitraryOperations(request)) === false
         ) {
-          throw persistentQueryOnlyErrorFactory(payload)
+          throw persistentQueryOnlyErrorFactory(payload);
         }
-        return
+        return;
       }
 
-      const persistedOperationKey = extractPersistedOperationId(params)
+      const persistedOperationKey = extractPersistedOperationId(params);
 
       if (persistedOperationKey == null) {
-        throw keyNotFoundErrorFactory(payload)
+        throw keyNotFoundErrorFactory(payload);
       }
 
-      const persistedQuery = await getPersistedOperation(
-        persistedOperationKey,
-        request,
-      )
+      const persistedQuery = await getPersistedOperation(persistedOperationKey, request);
       if (persistedQuery == null) {
-        throw notFoundErrorFactory(payload)
+        throw notFoundErrorFactory(payload);
       }
 
       if (typeof persistedQuery === 'object') {
@@ -152,44 +142,41 @@ export function usePersistedOperations<
           query: `__PERSISTED_OPERATION_${persistedOperationKey}__`,
           variables: params.variables,
           extensions: params.extensions,
-        })
-        operationASTByRequest.set(request, persistedQuery)
+        });
+        operationASTByRequest.set(request, persistedQuery);
       } else {
         setParams({
           query: persistedQuery,
           variables: params.variables,
           extensions: params.extensions,
-        })
+        });
       }
-      persistedOperationRequest.add(request)
+      persistedOperationRequest.add(request);
     },
     onValidate({ setResult, context: { request } }) {
       if (skipDocumentValidation && persistedOperationRequest.has(request)) {
-        setResult([]) // skip validation
+        setResult([]); // skip validation
       }
     },
     onParse({ setParsedDocument, context: { request } }) {
-      const ast = operationASTByRequest.get(request)
+      const ast = operationASTByRequest.get(request);
       if (ast) {
-        setParsedDocument(ast)
+        setParsedDocument(ast);
       }
     },
-  }
+  };
 }
 
-function createErrorFactory(
-  defaultMessage: string,
-  options?: CustomErrorFactory,
-) {
+function createErrorFactory(defaultMessage: string, options?: CustomErrorFactory) {
   if (typeof options === 'string') {
-    return () => createGraphQLError(options)
+    return () => createGraphQLError(options);
   }
 
   if (typeof options === 'function') {
-    return options
+    return options;
   }
 
   return () => {
-    return createGraphQLError(options?.message ?? defaultMessage, options)
-  }
+    return createGraphQLError(options?.message ?? defaultMessage, options);
+  };
 }

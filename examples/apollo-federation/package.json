@@ -2,11 +2,15 @@
   "name": "example-apollo-federation",
   "version": "0.0.1",
   "private": true,
+  "workspaces": [
+    "service",
+    "gateway"
+  ],
   "scripts": {
+    "check": "exit 0",
     "start": "concurrently \"pnpm start:service\" \"pnpm start:gateway\"",
-    "start:service": "cd service && pnpm start",
     "start:gateway": "cd gateway && pnpm start",
-    "check": "exit 0"
+    "start:service": "cd service && pnpm start"
   },
   "dependencies": {
     "concurrently": "^8.0.0"
@@ -14,9 +18,5 @@
   "devDependencies": {
     "@apollo/gateway": "2.4.7",
     "@whatwg-node/fetch": "^0.9.0"
-  },
-  "workspaces": [
-    "service",
-    "gateway"
-  ]
+  }
 }

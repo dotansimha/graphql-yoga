@@ -1,13 +1,7 @@
-import {
-  buildSchema,
-  GraphQLSchema,
-  parse,
-  validate,
-  ValidationRule,
-} from 'graphql'
-import { Maybe } from 'graphql/jsutils/Maybe'
-import { validateSDL } from 'graphql/validation/validate'
-import { SDLValidationRule } from 'graphql/validation/ValidationContext'
+import { buildSchema, GraphQLSchema, parse, validate, ValidationRule } from 'graphql';
+import { Maybe } from 'graphql/jsutils/Maybe';
+import { validateSDL } from 'graphql/validation/validate';
+import { SDLValidationRule } from 'graphql/validation/ValidationContext';
 
 /**
  * Checks whether the value is an object.
@@ -15,7 +9,7 @@ import { SDLValidationRule } from 'graphql/validation/ValidationContext'
  * `import { isObjectLike } from 'graphql/jsutils/isObjectLike'` does not always have TS files.
  */
 function isObjectLike(val: unknown): val is Record<string, unknown> {
-  return !!val && typeof val === 'object'
+  return !!val && typeof val === 'object';
 }
 
 /**
@@ -26,12 +20,12 @@ function mapValue<T, V>(
   map: Record<string, T>,
   fn: (value: T, key: string) => V,
 ): Record<string, V> {
-  const result = Object.create(null)
+  const result = Object.create(null);
 
   for (const key of Object.keys(map)) {
-    result[key] = fn(map[key], key)
+    result[key] = fn(map[key], key);
   }
-  return result
+  return result;
 }
 
 /**
@@ -40,45 +34,45 @@ function mapValue<T, V>(
  */
 function toJSONDeep(value: unknown): unknown {
   if (!isObjectLike(value)) {
-    return value
+    return value;
   }
 
   if (typeof value.toJSON === 'function') {
-    return value.toJSON()
+    return value.toJSON();
   }
 
   if (Array.isArray(value)) {
-    return value.map(toJSONDeep)
+    return value.map(toJSONDeep);
   }
 
-  return mapValue(value, toJSONDeep)
+  return mapValue(value, toJSONDeep);
 }
 
 export function expectJSON(actual: unknown) {
-  const actualJSON = toJSONDeep(actual)
+  const actualJSON = toJSONDeep(actual);
 
   return {
     toDeepEqual(expected: unknown) {
-      const expectedJSON = toJSONDeep(expected) as Record<string, unknown>
-      expect(actualJSON).toMatchObject(expectedJSON)
+      const expectedJSON = toJSONDeep(expected) as Record<string, unknown>;
+      expect(actualJSON).toMatchObject(expectedJSON);
     },
     toDeepNestedProperty(path: string, expected: unknown) {
-      const expectedJSON = toJSONDeep(expected)
-      expect(actualJSON).toHaveProperty(path, expectedJSON)
+      const expectedJSON = toJSONDeep(expected);
+      expect(actualJSON).toHaveProperty(path, expectedJSON);
     },
-  }
+  };
 }
 
 export function expectToThrowJSON(fn: () => unknown) {
   function mapException(): unknown {
     try {
-      return fn()
+      return fn();
     } catch (error) {
-      return error
+      return error;
     }
   }
 
-  return expect(mapException())
+  return expect(mapException());
 }
 
 export const testSchema: GraphQLSchema = buildSchema(`
@@ -183,20 +177,20 @@ export const testSchema: GraphQLSchema = buildSchema(`
   }
 
   directive @onField on FIELD
-`)
+`);
 
 export function expectValidationErrorsWithSchema(
   schema: GraphQLSchema,
   rule: ValidationRule,
   queryStr: string,
 ) {
-  const doc = parse(queryStr)
-  const errors = validate(schema, doc, [rule])
-  return expectJSON(errors)
+  const doc = parse(queryStr);
+  const errors = validate(schema, doc, [rule]);
+  return expectJSON(errors);
 }
 
 export function expectValidationErrors(rule: ValidationRule, queryStr: string) {
-  return expectValidationErrorsWithSchema(testSchema, rule, queryStr)
+  return expectValidationErrorsWithSchema(testSchema, rule, queryStr);
 }
 
 export function expectSDLValidationErrors(
@@ -204,7 +198,7 @@ export function expectSDLValidationErrors(
   rule: SDLValidationRule,
   sdlStr: string,
 ) {
-  const doc = parse(sdlStr)
-  const errors = validateSDL(doc, schema, [rule])
-  return expectJSON(errors)
+  const doc = parse(sdlStr);
+  const errors = validateSDL(doc, schema, [rule]);
+  return expectJSON(errors);
 }

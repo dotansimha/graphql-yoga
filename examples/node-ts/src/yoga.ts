@@ -1,17 +1,12 @@
-import {
-  createYoga,
-  Plugin,
-  createSchema,
-  createGraphQLError,
-} from 'graphql-yoga'
+import { createGraphQLError, createSchema, createYoga, Plugin } from 'graphql-yoga';
 
 // available when handling requests, needs to be provided by the implementor
 // eslint-disable-next-line @typescript-eslint/ban-types
-type ServerContext = {}
+type ServerContext = {};
 
 // available in GraphQL, during execution/subscription
 interface UserContext {
-  disableSubscription: boolean
+  disableSubscription: boolean;
 }
 
 export const yoga = createYoga<ServerContext, UserContext>({
@@ -29,24 +24,23 @@ export const yoga = createYoga<ServerContext, UserContext>({
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type',
+        greetings: () => 'This is the `greetings` field of the root `Query` type',
       },
       Subscription: {
         greetings: {
           async *subscribe() {
-            yield { greetings: 'Hi' }
+            yield { greetings: 'Hi' };
           },
         },
       },
     },
   }),
   plugins: [useDisableSubscription()],
-})
+});
 
 // context only relevant to the plugin
 // eslint-disable-next-line @typescript-eslint/ban-types
-type DisableSubscriptionPluginContext = {}
+type DisableSubscriptionPluginContext = {};
 
 function useDisableSubscription(): Plugin<
   DisableSubscriptionPluginContext,
@@ -62,8 +56,8 @@ function useDisableSubscription(): Plugin<
               status: 400, // report error with a 400
             },
           },
-        })
+        });
       }
     },
-  }
+  };
 }

@@ -1,31 +1,20 @@
 {
   "name": "@graphql-yoga/plugin-response-cache",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "version": "2.1.0",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/plugins/response-cache"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "graphql",
-    "server",
-    "api",
-    "graphql-server"
-  ],
   "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
   "license": "MIT",
-  "buildOptions": {
-    "input": "./src/index.ts"
+  "engines": {
+    "node": ">=16.0.0"
   },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -44,22 +33,33 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
-  },
-  "dependencies": {
-    "@envelop/response-cache": "^5.1.0"
+  "keywords": [
+    "graphql",
+    "server",
+    "api",
+    "graphql-server"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
   },
   "peerDependencies": {
     "graphql": "^15.2.0 || ^16.0.0",
     "graphql-yoga": "^4.0.3"
   },
+  "dependencies": {
+    "@envelop/response-cache": "^5.1.0"
+  },
   "devDependencies": {
     "graphql": "^16.6.0"
   },
-  "type": "module"
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

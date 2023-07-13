@@ -1,5 +1,5 @@
-import { createSchema } from '../schema.js'
-import { createYoga } from '../server.js'
+import { createSchema } from '../schema.js';
+import { createYoga } from '../server.js';
 
 describe('CORS', () => {
   describe('OPTIONS call', () => {
@@ -16,19 +16,19 @@ describe('CORS', () => {
               foo: () => 'bar',
             },
           },
-        })
-      }
+        });
+      };
       const yoga = createYoga({
         schema: schemaFactory,
-      })
+      });
       const result = await yoga.fetch('http://yoga/graphql', {
         method: 'OPTIONS',
         headers: {
           'Content-Type': 'application/json',
         },
-      })
-      expect(result.status).toEqual(204)
-      expect(result.headers.get('Content-Length')).toEqual('0')
-    })
-  })
-})
+      });
+      expect(result.status).toEqual(204);
+      expect(result.headers.get('Content-Length')).toEqual('0');
+    });
+  });
+});

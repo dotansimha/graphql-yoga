@@ -4,49 +4,68 @@
 
 ### Major Changes
 
-- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767) [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca) Thanks [@renovate](https://github.com/apps/renovate)! - Drop support for Node.js 14. Require Node.js `>=16`.
+- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767)
+  [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca)
+  Thanks [@renovate](https://github.com/apps/renovate)! - Drop support for Node.js 14. Require
+  Node.js `>=16`.
 
-- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767) [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca) Thanks [@renovate](https://github.com/apps/renovate)! - Events without an event payload will now always have `null` as the event payload instead of `undefined`.
+- [#2767](https://github.com/dotansimha/graphql-yoga/pull/2767)
+  [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca)
+  Thanks [@renovate](https://github.com/apps/renovate)! - Events without an event payload will now
+  always have `null` as the event payload instead of `undefined`.
 
 ### Patch Changes
 
-- Updated dependencies [[`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca), [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca)]:
+- Updated dependencies
+  [[`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca),
+  [`4228c1d5`](https://github.com/dotansimha/graphql-yoga/commit/4228c1d54ed785fac1fb9669d861ed46659872ca)]:
   - @graphql-yoga/typed-event-target@2.0.0
 
 ## 3.1.0
 
 ### Minor Changes
 
-- [#2291](https://github.com/dotansimha/graphql-yoga/pull/2291) [`fe4a2aca`](https://github.com/dotansimha/graphql-yoga/commit/fe4a2aca4eece85d234be9ce3f82dcae274148a8) Thanks [@n1ru4l](https://github.com/n1ru4l)! - Support returning a `Promise` from the `filter` utility function.
+- [#2291](https://github.com/dotansimha/graphql-yoga/pull/2291)
+  [`fe4a2aca`](https://github.com/dotansimha/graphql-yoga/commit/fe4a2aca4eece85d234be9ce3f82dcae274148a8)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Support returning a `Promise` from the `filter`
+  utility function.
 
   ```ts
-  const applyFilter = filter((value) => Promise.resolve(value > 3))
+  const applyFilter = filter(value => Promise.resolve(value > 3))
   ```
 
 ## 3.0.0
 
 ### Major Changes
 
-- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761) [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8) Thanks [@ardatan](https://github.com/ardatan)! - - Drop `TypedEvent` in favor of [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
+- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761)
+  [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)
+  Thanks [@ardatan](https://github.com/ardatan)! - - Drop `TypedEvent` in favor of
+  [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
   - Use `@whatwg-node/events` as a ponyfill instead of `@whatwg-node/fetch`
 
 ### Patch Changes
 
-- Updated dependencies [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
+- Updated dependencies
+  [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
   - @graphql-yoga/typed-event-target@1.0.0
 
 ## 3.0.0-next.0
 
 ### Major Changes
 
-- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761) [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8) Thanks [@ardatan](https://github.com/ardatan)! - **BREAKING**:
+- [#1761](https://github.com/dotansimha/graphql-yoga/pull/1761)
+  [`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)
+  Thanks [@ardatan](https://github.com/ardatan)! - **BREAKING**:
 
-  - Drop `TypedEvent` in favor of [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
+  - Drop `TypedEvent` in favor of
+    [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent)
   - Use `@whatwg-node/events` as a ponyfill instead of `@whatwg-node/fetch`
 
 ### Patch Changes
 
-- Updated dependencies [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
+- Updated dependencies
+  [[`b2407c6a`](https://github.com/dotansimha/graphql-yoga/commit/b2407c6addab136e3390bd4efa1fbbad7eb8dab8)]:
   - @graphql-yoga/typed-event-target@1.0.0-next.0
 
 ## 2.2.3
@@ -61,7 +80,8 @@
 
 ### Patch Changes
 
-- 3363de2: Use `import type { Foo } from '@pkg'` instead of `import { type Foo } from '@pkg'` as many tools don't yet support this syntax.
+- 3363de2: Use `import type { Foo } from '@pkg'` instead of `import { type Foo } from '@pkg'` as
+  many tools don't yet support this syntax.
 
 ## 2.2.1
 
@@ -73,7 +93,8 @@
 
 ### Minor Changes
 
-- d024757: Use `@graphql-yoga/typed-event-target` as a dependency for the EventTarget implementation.
+- d024757: Use `@graphql-yoga/typed-event-target` as a dependency for the EventTarget
+  implementation.
 
 ### Patch Changes
 
@@ -84,7 +105,8 @@
 
 ### Minor Changes
 
-- 7de07cd: Support TypeScript ECMA script resolution. More information on https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js
+- 7de07cd: Support TypeScript ECMA script resolution. More information on
+  https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#ecmascript-module-support-in-node-js
 
 ## 2.0.0
 
@@ -99,7 +121,8 @@
 
 ### Patch Changes
 
-- 8d03bee: fix publishing values when using the id argument for granular resource based subscriptions
+- 8d03bee: fix publishing values when using the id argument for granular resource based
+  subscriptions
 - de1693e: trigger release
 - f856b58: correctly terminate AsyncIterable returned from map/filter when the source stream ends
 
@@ -107,7 +130,8 @@
 
 ### Patch Changes
 
-- 8d03bee: fix publishing values when using the id argument for granular resource based subscriptions
+- 8d03bee: fix publishing values when using the id argument for granular resource based
+  subscriptions
 
 ## 0.0.1-beta.0
 

@@ -1,22 +1,17 @@
 {
   "name": "@graphql-yoga/logger",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "version": "1.0.0",
+  "type": "module",
   "description": "Simple logger",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/logger"
   },
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
-  "keywords": [
-    "logger"
-  ],
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "exports": {
@@ -51,16 +46,21 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "keywords": [
+    "logger"
+  ],
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "dependencies": {
+    "tslib": "^2.5.2"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "dependencies": {
-    "tslib": "^2.5.2"
-  },
-  "type": "module",
-  "sideEffects": true
+  "sideEffects": true,
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

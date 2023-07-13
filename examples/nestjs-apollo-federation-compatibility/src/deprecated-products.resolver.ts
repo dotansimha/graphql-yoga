@@ -1,52 +1,42 @@
-import {
-  Args,
-  Query,
-  ResolveField,
-  Resolver,
-  ResolveReference,
-} from '@nestjs/graphql'
+import { Args, Query, ResolveField, Resolver, ResolveReference } from '@nestjs/graphql';
 
 interface User {
-  email: string
-  name: string
-  totalProductsCreated: number
+  email: string;
+  name: string;
+  totalProductsCreated: number;
 }
 
 interface DeprecatedProduct {
-  sku: string
-  package: string
-  reason: string
-  createdBy: User
+  sku: string;
+  package: string;
+  reason: string;
+  createdBy: User;
 }
 
 const user = {
   email: 'support@apollographql.com',
   name: 'Jane Smith',
   totalProductsCreated: 1337,
-}
+};
 
 const deprecatedProduct = {
   sku: 'apollo-federation-v1',
   package: '@apollo/federation-v1',
   reason: 'Migrate to Federation V2',
-}
+};
 
 @Resolver('DeprecatedProduct')
 export class DeprecatedProductsResolver {
   @Query()
-  deprecatedProduct(
-    @Args('sku') sku: string,
-    @Args('package') packageName: string,
-  ) {
-    return sku === deprecatedProduct.sku &&
-      packageName === deprecatedProduct.package
+  deprecatedProduct(@Args('sku') sku: string, @Args('package') packageName: string) {
+    return sku === deprecatedProduct.sku && packageName === deprecatedProduct.package
       ? deprecatedProduct
-      : null
+      : null;
   }
 
   @ResolveField('createdBy')
   getCreatedBy() {
-    return user
+    return user;
   }
 
   @ResolveReference()
@@ -55,8 +45,8 @@ export class DeprecatedProductsResolver {
       reference.sku === deprecatedProduct.sku &&
       reference.package === deprecatedProduct.package
     ) {
-      return deprecatedProduct
+      return deprecatedProduct;
     }
-    return null
+    return null;
   }
 }

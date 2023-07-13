@@ -1,1 +1,1 @@
-export * from '@graphql-yoga/subscription'
+export * from '@graphql-yoga/subscription';

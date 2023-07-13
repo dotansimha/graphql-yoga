@@ -1,12 +1,12 @@
-import { StreamDirectiveOnListFieldRule } from '../../src/validations/stream-directive-on-list-field.js'
-import { expectValidationErrors } from './harness.js'
+import { StreamDirectiveOnListFieldRule } from '../../src/validations/stream-directive-on-list-field.js';
+import { expectValidationErrors } from './harness.js';
 
 function expectErrors(queryStr: string) {
-  return expectValidationErrors(StreamDirectiveOnListFieldRule, queryStr)
+  return expectValidationErrors(StreamDirectiveOnListFieldRule, queryStr);
 }
 
 function expectValid(queryStr: string) {
-  expectErrors(queryStr).toDeepEqual([])
+  expectErrors(queryStr).toDeepEqual([]);
 }
 
 describe('Validate: Stream directive on list field', () => {
@@ -17,8 +17,8 @@ describe('Validate: Stream directive on list field', () => {
           name
         }
       }
-    `)
-  })
+    `);
+  });
 
   it('Stream on non-null list field', () => {
     expectValid(`
@@ -27,8 +27,8 @@ describe('Validate: Stream directive on list field', () => {
           name
         }
       }
-    `)
-  })
+    `);
+  });
 
   it("Doesn't validate other directives on list fields", () => {
     expectValid(`
@@ -37,8 +37,8 @@ describe('Validate: Stream directive on list field', () => {
         name
       }
     }
-    `)
-  })
+    `);
+  });
 
   it("Doesn't validate other directives on non-list fields", () => {
     expectValid(`
@@ -47,8 +47,8 @@ describe('Validate: Stream directive on list field', () => {
           name @include(if: true)
         }
       }
-    `)
-  })
+    `);
+  });
 
   it("Doesn't validate misplaced stream directives", () => {
     expectValid(`
@@ -57,8 +57,8 @@ describe('Validate: Stream directive on list field', () => {
           name
         }
       }
-    `)
-  })
+    `);
+  });
 
   it('reports errors when stream is used on non-list field', () => {
     expectErrors(`
@@ -67,10 +67,9 @@ describe('Validate: Stream directive on list field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Stream directive cannot be used on non-list field "name" on type "Human".',
+        message: 'Stream directive cannot be used on non-list field "name" on type "Human".',
         locations: [{ line: 3, column: 14 }],
       },
-    ])
-  })
-})
+    ]);
+  });
+});

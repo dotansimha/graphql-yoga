@@ -4,7 +4,8 @@ description: µWebSockets.js is an HTTP/WebSocket server for Node.js.
 
 # Integration with µWebSockets.js
 
-[µWebSockets.js](https://github.com/uNetworking/uWebSockets.js) is an HTTP/WebSocket server for Node.js.
+[µWebSockets.js](https://github.com/uNetworking/uWebSockets.js) is an HTTP/WebSocket server for
+Node.js.
 
 ## Installation
 
@@ -15,8 +16,8 @@ npm i graphql-yoga graphql
 ## Example
 
 ```ts filename="index.ts"
-import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
 import { createSchema, createYoga } from 'graphql-yoga'
+import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
 
 interface ServerContext {
   req: HttpRequest
@@ -50,10 +51,10 @@ npm i graphql-ws
 ```
 
 ```ts filename="index.ts"
-import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
-import { createSchema, createYoga, Repeater } from 'graphql-yoga'
+import { execute, ExecutionArgs, subscribe } from 'graphql'
 import { makeBehavior } from 'graphql-ws/lib/use/uWebSockets'
-import { ExecutionArgs, execute, subscribe } from 'graphql'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
+import { App, HttpRequest, HttpResponse } from 'uWebSockets.js'
 
 interface ServerContext {
   req: HttpRequest
@@ -105,12 +106,10 @@ type EnvelopedExecutionArgs = ExecutionArgs & {
 }
 
 const wsHandler = makeBehavior({
-  execute: (args) => (args as EnvelopedExecutionArgs).rootValue.execute(args),
-  subscribe: (args) =>
-    (args as EnvelopedExecutionArgs).rootValue.subscribe(args),
+  execute: args => (args as EnvelopedExecutionArgs).rootValue.execute(args),
+  subscribe: args => (args as EnvelopedExecutionArgs).rootValue.subscribe(args),
   onSubscribe: async (ctx, msg) => {
-    const { schema, execute, subscribe, contextFactory, parse, validate } =
-      yoga.getEnveloped(ctx)
+    const { schema, execute, subscribe, contextFactory, parse, validate } = yoga.getEnveloped(ctx)
 
     const args: EnvelopedExecutionArgs = {
       schema,
@@ -138,4 +137,5 @@ App()
   })
 ```
 
-Also see our full example [here](https://github.com/dotansimha/graphql-yoga/blob/main/examples/uwebsockets/src/app.ts).
+Also see our full example
+[here](https://github.com/dotansimha/graphql-yoga/blob/main/examples/uwebsockets/src/app.ts).

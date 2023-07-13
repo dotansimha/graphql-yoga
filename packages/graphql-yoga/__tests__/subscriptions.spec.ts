@@ -1,40 +1,40 @@
-import { GraphQLError } from 'graphql'
-import { createSchema, createYoga, Repeater } from '../src/index.js'
+import { GraphQLError } from 'graphql';
+import { createSchema, createYoga, Repeater } from '../src/index.js';
 
 function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
   return new Repeater<TType>(async (push, end) => {
-    const cancel: Promise<{ done: true }> = end.then(() => ({ done: true }))
-    const iterable = source[Symbol.asyncIterator]()
+    const cancel: Promise<{ done: true }> = end.then(() => ({ done: true }));
+    const iterable = source[Symbol.asyncIterator]();
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const result = await Promise.race([cancel, iterable.next()])
+      const result = await Promise.race([cancel, iterable.next()]);
 
       if (result.done) {
-        break
+        break;
       }
 
-      const values = result.value.toString().split('\n\n').filter(Boolean)
+      const values = result.value.toString().split('\n\n').filter(Boolean);
       for (const value of values) {
         if (!value.startsWith('data: ')) {
-          continue
+          continue;
         }
-        const result = value.replace('data: ', '')
-        push(JSON.parse(result))
+        const result = value.replace('data: ', '');
+        push(JSON.parse(result));
       }
     }
 
-    iterable.return?.()
-    end()
-  })
+    iterable.return?.();
+    end();
+  });
 }
 
 describe('Subscription', () => {
   test('eventStream', async () => {
     const source = (async function* foo() {
-      yield { hi: 'hi' }
-      yield { hi: 'hello' }
-      yield { hi: 'bonjour' }
-    })()
+      yield { hi: 'hi' };
+      yield { hi: 'hello' };
+      yield { hi: 'bonjour' };
+    })();
 
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
@@ -52,9 +52,9 @@ describe('Subscription', () => {
           },
         },
       },
-    })
+    });
 
-    const yoga = createYoga({ schema })
+    const yoga = createYoga({ schema });
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -69,26 +69,26 @@ describe('Subscription', () => {
           }
         `,
       }),
-    })
+    });
 
-    let counter = 0
+    let counter = 0;
 
     for await (const chunk of eventStream(response.body!)) {
       if (counter === 0) {
-        expect(chunk).toEqual({ data: { hi: 'hi' } })
-        counter++
+        expect(chunk).toEqual({ data: { hi: 'hi' } });
+        counter++;
       } else if (counter === 1) {
-        expect(chunk).toEqual({ data: { hi: 'hello' } })
-        counter++
+        expect(chunk).toEqual({ data: { hi: 'hello' } });
+        counter++;
       } else if (counter === 2) {
-        expect(chunk).toEqual({ data: { hi: 'bonjour' } })
-        counter++
+        expect(chunk).toEqual({ data: { hi: 'bonjour' } });
+        counter++;
       }
     }
-  })
+  });
 
   test('should issue pings while connected', async () => {
-    const d = createDeferred()
+    const d = createDeferred();
 
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
@@ -103,15 +103,15 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              await d.promise
-              yield { hi: 'hi' }
+              await d.promise;
+              yield { hi: 'hi' };
             },
           },
         },
       },
-    })
+    });
 
-    const yoga = createYoga({ schema })
+    const yoga = createYoga({ schema });
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -126,20 +126,20 @@ describe('Subscription', () => {
           }
         `,
       }),
-    })
+    });
 
-    const iterator = response.body![Symbol.asyncIterator]()
+    const iterator = response.body![Symbol.asyncIterator]();
 
-    const results = []
-    let value: Uint8Array
+    const results = [];
+    let value: Uint8Array;
 
     while (({ value } = await iterator.next())) {
       if (value === undefined) {
-        break
+        break;
       }
-      results.push(Buffer.from(value).toString('utf-8'))
+      results.push(Buffer.from(value).toString('utf-8'));
       if (results.length === 3) {
-        d.resolve()
+        d.resolve();
       }
     }
 
@@ -162,24 +162,24 @@ describe('Subscription', () => {
 
       ",
       ]
-    `)
-  })
+    `);
+  });
 
   test('should issue pings event if event source never publishes anything', async () => {
-    const d = createDeferred()
+    const d = createDeferred();
     const source: AsyncIterableIterator<unknown> = {
       next: () => d.promise.then(() => ({ done: true, value: undefined })),
       return: () => {
-        d.resolve()
-        return Promise.resolve({ done: true, value: undefined })
+        d.resolve();
+        return Promise.resolve({ done: true, value: undefined });
       },
       throw: () => {
-        throw new Error('Method not implemented. (throw)')
+        throw new Error('Method not implemented. (throw)');
       },
       [Symbol.asyncIterator]() {
-        return this
+        return this;
       },
-    }
+    };
 
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
@@ -197,9 +197,9 @@ describe('Subscription', () => {
           },
         },
       },
-    })
+    });
 
-    const yoga = createYoga({ schema })
+    const yoga = createYoga({ schema });
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -214,24 +214,24 @@ describe('Subscription', () => {
           }
         `,
       }),
-    })
+    });
 
-    const iterator = response.body![Symbol.asyncIterator]()
+    const iterator = response.body![Symbol.asyncIterator]();
 
-    const results = []
-    let value: Uint8Array
+    const results = [];
+    let value: Uint8Array;
 
     while (({ value } = await iterator.next())) {
       if (value === undefined) {
-        break
+        break;
       }
-      results.push(Buffer.from(value).toString('utf-8'))
+      results.push(Buffer.from(value).toString('utf-8'));
       if (results.length === 4) {
-        await iterator.return!()
+        await iterator.return!();
       }
     }
 
-    await d.promise
+    await d.promise;
     expect(results).toMatchInlineSnapshot(`
       [
         ":
@@ -247,8 +247,8 @@ describe('Subscription', () => {
 
       ",
       ]
-    `)
-  })
+    `);
+  });
 
   test('erroring event stream should be handled (non GraphQL error)', async () => {
     const schema = createSchema({
@@ -264,22 +264,22 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              yield { hi: 'hi' }
-              throw new Error('hi')
+              yield { hi: 'hi' };
+              throw new Error('hi');
             },
           },
         },
       },
-    })
+    });
 
     const logging = {
       debug: jest.fn(),
       info: jest.fn(),
       warn: jest.fn(),
       error: jest.fn(),
-    }
+    };
 
-    const yoga = createYoga({ schema, logging })
+    const yoga = createYoga({ schema, logging });
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -293,8 +293,8 @@ describe('Subscription', () => {
           }
         `,
       }),
-    })
-    const text = await response.text()
+    });
+    const text = await response.text();
 
     expect(text).toMatchInlineSnapshot(`
       "event: next
@@ -306,15 +306,15 @@ describe('Subscription', () => {
       event: complete
 
       "
-    `)
+    `);
 
-    expect(logging.error).toBeCalledTimes(1)
+    expect(logging.error).toBeCalledTimes(1);
     expect(logging.error.mock.calls[0]).toMatchInlineSnapshot(`
       [
         [GraphQLError: hi],
       ]
-    `)
-  })
+    `);
+  });
 
   test('erroring event stream should be handled (GraphQL error)', async () => {
     const schema = createSchema({
@@ -330,22 +330,22 @@ describe('Subscription', () => {
         Subscription: {
           hi: {
             async *subscribe() {
-              yield { hi: 'hi' }
-              throw new GraphQLError('hi')
+              yield { hi: 'hi' };
+              throw new GraphQLError('hi');
             },
           },
         },
       },
-    })
+    });
 
     const logging = {
       debug: jest.fn(),
       info: jest.fn(),
       warn: jest.fn(),
       error: jest.fn(),
-    }
+    };
 
-    const yoga = createYoga({ schema, logging })
+    const yoga = createYoga({ schema, logging });
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -359,8 +359,8 @@ describe('Subscription', () => {
           }
         `,
       }),
-    })
-    const text = await response.text()
+    });
+    const text = await response.text();
 
     expect(text).toMatchInlineSnapshot(`
       "event: next
@@ -372,23 +372,23 @@ describe('Subscription', () => {
       event: complete
 
       "
-    `)
+    `);
 
-    expect(logging.error).toBeCalledTimes(0)
-  })
-})
+    expect(logging.error).toBeCalledTimes(0);
+  });
+});
 
 type Deferred<T = void> = {
-  resolve: (value: T) => void
-  reject: (value: unknown) => void
-  promise: Promise<T>
-}
+  resolve: (value: T) => void;
+  reject: (value: unknown) => void;
+  promise: Promise<T>;
+};
 
 function createDeferred<T = void>(): Deferred<T> {
-  const d = {} as Deferred<T>
+  const d = {} as Deferred<T>;
   d.promise = new Promise<T>((resolve, reject) => {
-    d.resolve = resolve
-    d.reject = reject
-  })
-  return d
+    d.resolve = resolve;
+    d.reject = reject;
+  });
+  return d;
 }

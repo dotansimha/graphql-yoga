@@ -1,13 +1,13 @@
-import { yoga, restEndpoint } from './yoga'
-import { createServer } from 'node:http'
+import { createServer } from 'node:http';
+import { restEndpoint, yoga } from './yoga';
 
-const server = createServer(yoga)
+const server = createServer(yoga);
 
 server.listen(4000, async () => {
-  const url = `http://localhost:4000`
+  const url = `http://localhost:4000`;
 
   function printUrl(path: string) {
-    return url + path
+    return url + path;
   }
 
   console.log(`
@@ -24,5 +24,5 @@ server.listen(4000, async () => {
 
     ${'Mutations:'}
       addBook:      ${printUrl(`${restEndpoint}/add-book`)} ${'POST: {title}'}
-  `)
-})
+  `);
+});

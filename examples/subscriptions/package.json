@@ -1,17 +1,17 @@
 {
   "name": "example-subscriptions",
-  "private": true,
   "version": "0.13.6",
+  "private": true,
   "scripts": {
+    "check": "tsc --pretty --noEmit",
     "codegen": "graphql-codegen --config codegen.yml",
     "postinstall": "pnpm run codegen",
-    "start": "ts-node src/index.ts",
     "precheck": "pnpm run codegen",
-    "check": "tsc --pretty --noEmit"
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
-    "graphql": "^16.1.0"
+    "graphql": "^16.1.0",
+    "graphql-yoga": "4.0.3"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "4.0.1",

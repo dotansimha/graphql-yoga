@@ -1,46 +1,36 @@
-import 'json-bigint-patch'
-import React, { useMemo, useState } from 'react'
-import { DocumentNode, Kind, parse } from 'graphql'
-import { useExplorerPlugin } from '@graphiql/plugin-explorer'
-import { Fetcher, FetcherOpts, FetcherParams } from '@graphiql/toolkit'
-import {
-  LoadFromUrlOptions,
-  SubscriptionProtocol,
-  UrlLoader,
-} from '@graphql-tools/url-loader'
-import {
-  GraphiQL,
-  GraphiQLInterface,
-  GraphiQLProps,
-  GraphiQLProvider,
-} from 'graphiql'
-import { useUrlSearchParams } from 'use-url-search-params'
-
-import { YogaLogo } from './YogaLogo'
-import 'graphiql/graphiql.css'
-import '@graphiql/plugin-explorer/dist/style.css'
-import './styles.css'
+import 'json-bigint-patch';
+import React, { useMemo, useState } from 'react';
+import { GraphiQL, GraphiQLInterface, GraphiQLProps, GraphiQLProvider } from 'graphiql';
+import { DocumentNode, Kind, parse } from 'graphql';
+import { useUrlSearchParams } from 'use-url-search-params';
+import { useExplorerPlugin } from '@graphiql/plugin-explorer';
+import { Fetcher, FetcherOpts, FetcherParams } from '@graphiql/toolkit';
+import { LoadFromUrlOptions, SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader';
+import { YogaLogo } from './YogaLogo';
+import 'graphiql/graphiql.css';
+import '@graphiql/plugin-explorer/dist/style.css';
+import './styles.css';
 
 const getOperationWithFragments = (
   document: DocumentNode,
   operationName?: string,
 ): DocumentNode => {
-  const definitions = document.definitions.filter((definition) => {
+  const definitions = document.definitions.filter(definition => {
     if (
       definition.kind === Kind.OPERATION_DEFINITION &&
       operationName &&
       definition.name?.value !== operationName
     ) {
-      return false
+      return false;
     }
-    return true
-  })
+    return true;
+  });
 
   return {
     kind: Kind.DOCUMENT,
     definitions,
-  }
-}
+  };
+};
 
 export type YogaGraphiQLProps = Omit<
   GraphiQLProps,
@@ -54,24 +44,22 @@ export type YogaGraphiQLProps = Omit<
   | 'onEditQuery'
 > &
   Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
-    title?: string
+    title?: string;
     /**
      * Logo to be displayed in the top right corner
      */
-    logo?: React.ReactNode
+    logo?: React.ReactNode;
     /**
      * Extra headers you always want to pass with users' headers input
      */
-    additionalHeaders?: LoadFromUrlOptions['headers']
-  }
+    additionalHeaders?: LoadFromUrlOptions['headers'];
+  };
 
 export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const initialQuery = /* GraphQL */ `#
 # Welcome to ${props.title || 'Yoga GraphiQL'}
 #
-# ${
-    props.title || 'Yoga GraphiQL'
-  } is an in-browser tool for writing, validating, and
+# ${props.title || 'Yoga GraphiQL'} is an in-browser tool for writing, validating, and
 # testing GraphQL queries.
 #
 # Type queries into this side of the screen, and you will see intelligent
@@ -99,18 +87,15 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
 #
 #   Auto Complete:  Ctrl-Space (or just start typing)
 #
-`
+`;
 
-  const endpoint = new URL(
-    props.endpoint ?? location.pathname,
-    location.href,
-  ).toString()
+  const endpoint = new URL(props.endpoint ?? location.pathname, location.href).toString();
 
   const type = {
     query: String,
-  }
+  };
 
-  const urlLoader = useMemo(() => new UrlLoader(), [])
+  const urlLoader = useMemo(() => new UrlLoader(), []);
 
   const fetcher = useMemo(() => {
     const executor = urlLoader.getExecutorAsync(endpoint, {
@@ -121,12 +106,12 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       directiveIsRepeatable: true,
       ...props,
       headers: props.additionalHeaders || {},
-    })
+    });
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
         parse(graphQLParams.query),
         graphQLParams.operationName ?? undefined,
-      )
+      );
       return executor({
         document:
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,9 +121,9 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         extensions: {
           headers: opts?.headers,
         },
-      })
-    }
-  }, [urlLoader, endpoint]) as Fetcher
+      });
+    };
+  }, [urlLoader, endpoint]) as Fetcher;
 
   const [params, setParams] = useUrlSearchParams(
     {
@@ -146,14 +131,14 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     },
     type,
     false,
-  )
+  );
 
-  const [query, setQuery] = useState(params.query?.toString())
+  const [query, setQuery] = useState(params.query?.toString());
   const explorerPlugin = useExplorerPlugin({
     query: query as string,
     onEdit: setQuery,
     showAttribution: true,
-  })
+  });
 
   return (
     <div className="graphiql-container">
@@ -167,7 +152,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         <GraphiQLInterface
           isHeadersEditorEnabled
           defaultEditorToolsVisibility
-          onEditQuery={(query) =>
+          onEditQuery={query =>
             setParams({
               query,
             })
@@ -175,9 +160,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         >
           <GraphiQL.Logo>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: 40, display: 'flex' }}>
-                {props?.logo || <YogaLogo />}
-              </div>
+              <div style={{ width: 40, display: 'flex' }}>{props?.logo || <YogaLogo />}</div>
               <span>
                 {props?.title || (
                   <>
@@ -192,5 +175,5 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         </GraphiQLInterface>
       </GraphiQLProvider>
     </div>
-  )
+  );
 }

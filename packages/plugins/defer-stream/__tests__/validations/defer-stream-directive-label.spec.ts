@@ -1,12 +1,12 @@
-import { DeferStreamDirectiveLabelRule } from '../../src/validations/defer-stream-directive-label.js'
-import { expectValidationErrors } from './harness.js'
+import { DeferStreamDirectiveLabelRule } from '../../src/validations/defer-stream-directive-label.js';
+import { expectValidationErrors } from './harness.js';
 
 function expectErrors(queryStr: string) {
-  return expectValidationErrors(DeferStreamDirectiveLabelRule, queryStr)
+  return expectValidationErrors(DeferStreamDirectiveLabelRule, queryStr);
 }
 
 function expectValid(queryStr: string) {
-  expectErrors(queryStr).toDeepEqual([])
+  expectErrors(queryStr).toDeepEqual([]);
 }
 
 describe('Validate: Defer/Stream directive on root field', () => {
@@ -24,8 +24,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
       fragment dogFragmentB on Dog {
         nickname
       }
-    `)
-  })
+    `);
+  });
 
   it('Defer fragments, one with label, one without', () => {
     expectValid(`
@@ -41,8 +41,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
       fragment dogFragmentB on Dog {
         nickname
       }
-    `)
-  })
+    `);
+  });
 
   it('Defer fragment with variable label', () => {
     expectErrors(`
@@ -63,8 +63,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
         message: 'Directive "defer"\'s label argument must be a static string.',
         locations: [{ line: 4, column: 25 }],
       },
-    ])
-  })
+    ]);
+  });
 
   it('Defer fragments with different labels', () => {
     expectValid(`
@@ -80,8 +80,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
     fragment dogFragmentB on Dog {
       nickname
     }
-    `)
-  })
+    `);
+  });
   it('Defer fragments with same label', () => {
     expectErrors(`
     {
@@ -104,8 +104,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
           { line: 5, column: 25 },
         ],
       },
-    ])
-  })
+    ]);
+  });
   it('Defer and stream with no label', () => {
     expectValid(`
       {
@@ -119,8 +119,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
       fragment dogFragment on Dog {
         name
       }
-    `)
-  })
+    `);
+  });
   it('Stream with variable label', () => {
     expectErrors(`
       query ($label: String!) {
@@ -136,12 +136,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
       `).toDeepEqual([
       {
-        message:
-          'Directive "stream"\'s label argument must be a static string.',
+        message: 'Directive "stream"\'s label argument must be a static string.',
         locations: [{ line: 6, column: 39 }],
       },
-    ])
-  })
+    ]);
+  });
   it('Defer and stream with the same label', () => {
     expectErrors(`
       {
@@ -163,6 +162,6 @@ describe('Validate: Defer/Stream directive on root field', () => {
           { line: 6, column: 39 },
         ],
       },
-    ])
-  })
-})
+    ]);
+  });
+});

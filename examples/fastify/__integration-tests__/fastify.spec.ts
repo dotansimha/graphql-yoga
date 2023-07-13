@@ -1,25 +1,25 @@
-import request from 'supertest'
-import { buildApp } from '../src/app.js'
+import request from 'supertest';
+import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
-  const [app] = buildApp(false)
+  const [app] = buildApp(false);
 
   beforeAll(async () => {
-    await app.ready()
-  })
+    await app.ready();
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   it('sends GraphiQL', async () => {
     const response = await request(app.server).get('/graphql').set({
       accept: 'text/html',
-    })
+    });
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.text).toContain('<title>Yoga GraphiQL</title>')
-  })
+    expect(response.statusCode).toEqual(200);
+    expect(response.text).toContain('<title>Yoga GraphiQL</title>');
+  });
 
   it('handles query operation via POST', async () => {
     const response = await request(app.server)
@@ -33,15 +33,15 @@ describe('fastify example integration', () => {
             }
           `,
         }),
-      )
+      );
 
-    expect(response.statusCode).toEqual(200)
+    expect(response.statusCode).toEqual(200);
     expect(response.body).toStrictEqual({
       data: {
         __typename: 'Query',
       },
-    })
-  })
+    });
+  });
 
   it("exposes fastify's request and reply objects", async () => {
     const response = await request(app.server)
@@ -55,15 +55,15 @@ describe('fastify example integration', () => {
             }
           `,
         }),
-      )
+      );
 
-    expect(response.statusCode).toEqual(200)
+    expect(response.statusCode).toEqual(200);
     expect(response.body).toStrictEqual({
       data: {
         isFastify: true,
       },
-    })
-  })
+    });
+  });
 
   it('handles query operation via GET', async () => {
     const response = await request(app.server)
@@ -74,15 +74,15 @@ describe('fastify example integration', () => {
             __typename
           }
         `,
-      })
+      });
 
-    expect(response.statusCode).toEqual(200)
+    expect(response.statusCode).toEqual(200);
     expect(response.body).toStrictEqual({
       data: {
         __typename: 'Query',
       },
-    })
-  })
+    });
+  });
 
   it('handles mutation operation via POST', async () => {
     const response = await request(app.server)
@@ -96,15 +96,15 @@ describe('fastify example integration', () => {
             }
           `,
         }),
-      )
+      );
 
-    expect(response.statusCode).toEqual(200)
+    expect(response.statusCode).toEqual(200);
     expect(response.body).toStrictEqual({
       data: {
         __typename: 'Mutation',
       },
-    })
-  })
+    });
+  });
 
   it('rejects mutation operation via GET with an useful error message', async () => {
     const response = await request(app.server)
@@ -115,7 +115,7 @@ describe('fastify example integration', () => {
             __typename
           }
         `,
-      })
+      });
 
     expect(response.body).toStrictEqual({
       errors: [
@@ -123,8 +123,8 @@ describe('fastify example integration', () => {
           message: 'Can only perform a mutation operation from a POST request.',
         },
       ],
-    })
-  })
+    });
+  });
 
   it('handles subscription operations via GET', async () => {
     const response = await request(app.server)
@@ -136,8 +136,8 @@ describe('fastify example integration', () => {
             countdown(from: 10, interval: 1)
           }
         `,
-      })
-    expect(response.statusCode).toEqual(200)
+      });
+    expect(response.statusCode).toEqual(200);
     expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
       "event: next
       data: {"data":{"countdown":10}}
@@ -175,8 +175,8 @@ describe('fastify example integration', () => {
       event: complete
 
       "
-    `)
-  })
+    `);
+  });
   it('handles subscription operations via POST', async () => {
     const response = await request(app.server)
       .post('/graphql')
@@ -190,8 +190,8 @@ describe('fastify example integration', () => {
             countdown(from: 10, interval: 1)
           }
         `,
-      })
-    expect(response.statusCode).toEqual(200)
+      });
+    expect(response.statusCode).toEqual(200);
     expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
       "event: next
       data: {"data":{"countdown":10}}
@@ -229,8 +229,8 @@ describe('fastify example integration', () => {
       event: complete
 
       "
-    `)
-  })
+    `);
+  });
   it('should handle file uploads', async () => {
     const response = await request(app.server)
       .post('/graphql')
@@ -245,12 +245,12 @@ describe('fastify example integration', () => {
       .attach('0', Buffer.from('TESTCONTENT'), {
         filename: 'file.txt',
         contentType: 'plain/text',
-      })
-    expect(response.statusCode).toBe(200)
+      });
+    expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual({
       data: {
         getFileName: 'file.txt',
       },
-    })
-  })
-})
+    });
+  });
+});

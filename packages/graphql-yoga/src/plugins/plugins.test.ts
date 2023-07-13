@@ -1,8 +1,8 @@
-import { AfterValidateHook } from '@envelop/core'
-import { createGraphQLError } from '../error.js'
-import { createSchema } from '../schema.js'
-import { createYoga } from '../server.js'
-import { Plugin } from './types.js'
+import { AfterValidateHook } from '@envelop/core';
+import { createGraphQLError } from '../error.js';
+import { createSchema } from '../schema.js';
+import { createYoga } from '../server.js';
+import { Plugin } from './types.js';
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -10,31 +10,29 @@ const schema = createSchema({
       _: String
     }
   `,
-})
+});
 
 describe('Yoga Plugins', () => {
   it(`should respect Envelop's OnPluginInit's addPlugin`, async () => {
     const afterValidateHook: AfterValidateHook<Record<string, unknown>> = jest
       .fn()
       .mockImplementation(({ setResult }) => {
-        setResult([
-          createGraphQLError('My Error', { extensions: { my: 'error' } }),
-        ])
-      })
+        setResult([createGraphQLError('My Error', { extensions: { my: 'error' } })]);
+      });
     const testPlugin: Plugin = {
       onValidate() {
-        return afterValidateHook
+        return afterValidateHook;
       },
-    }
+    };
     const testPluginToAdd: Plugin = {
       onPluginInit({ addPlugin }) {
-        addPlugin(testPlugin)
+        addPlugin(testPlugin);
       },
-    }
+    };
     const yoga = createYoga({
       plugins: [testPluginToAdd],
       schema,
-    })
+    });
     const response = await yoga.fetch('http://localhost:3000/graphql', {
       method: 'POST',
       headers: {
@@ -43,8 +41,8 @@ describe('Yoga Plugins', () => {
       body: JSON.stringify({
         query: '{hello}',
       }),
-    })
-    const result = await response.json()
+    });
+    const result = await response.json();
     expect(result).toMatchObject({
       errors: [
         {
@@ -54,6 +52,6 @@ describe('Yoga Plugins', () => {
           message: 'My Error',
         },
       ],
-    })
-  })
-})
+    });
+  });
+});

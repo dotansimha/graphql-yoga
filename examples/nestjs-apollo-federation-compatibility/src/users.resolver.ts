@@ -1,19 +1,14 @@
-import { ResolveField, Resolver } from '@nestjs/graphql'
+import { ResolveField, Resolver } from '@nestjs/graphql';
 
 @Resolver('User')
 export class UsersResolver {
   @ResolveField('name')
   getName() {
-    return 'Jane Smith'
+    return 'Jane Smith';
   }
 
   @ResolveField('averageProductsCreatedPerYear')
-  getAverageProductsCreatedPerYear({
-    totalProductsCreated,
-    yearsOfEmployment,
-  }) {
-    return totalProductsCreated
-      ? Math.round(totalProductsCreated / yearsOfEmployment)
-      : null
+  getAverageProductsCreatedPerYear({ totalProductsCreated, yearsOfEmployment }) {
+    return totalProductsCreated ? Math.round(totalProductsCreated / yearsOfEmployment) : null;
   }
 }

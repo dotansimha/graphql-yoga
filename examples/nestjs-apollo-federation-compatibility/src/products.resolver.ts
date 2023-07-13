@@ -1,21 +1,14 @@
-import {
-  Args,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-  ResolveReference,
-} from '@nestjs/graphql'
+import { Args, Parent, Query, ResolveField, Resolver, ResolveReference } from '@nestjs/graphql';
 
 interface ProductVariation {
-  id: string
+  id: string;
 }
 
 interface Product {
-  id: string
-  sku: string
-  package: string
-  variation: ProductVariation
+  id: string;
+  sku: string;
+  package: string;
+  variation: ProductVariation;
 }
 
 const products: Product[] = [
@@ -35,29 +28,29 @@ const products: Product[] = [
       id: 'platform',
     },
   },
-]
+];
 
 @Resolver('Product')
 export class ProductsResolver {
   @Query()
   product(@Args('id') id: string) {
-    return products.find((p) => p.id === id)
+    return products.find(p => p.id === id);
   }
 
   @ResolveField('variation')
   getVariation(@Parent() parent: Product) {
-    if (parent.variation) return { id: parent.variation.id }
-    return { id: products.find((p) => p.id === parent.id)?.variation.id }
+    if (parent.variation) return { id: parent.variation.id };
+    return { id: products.find(p => p.id === parent.id)?.variation.id };
   }
 
   @ResolveField('dimensions')
   getDimensions() {
-    return { size: 'small', weight: 1, unit: 'kg' }
+    return { size: 'small', weight: 1, unit: 'kg' };
   }
 
   @ResolveField('createdBy')
   getCreatedBy() {
-    return { email: 'support@apollographql.com', totalProductsCreated: 1337 }
+    return { email: 'support@apollographql.com', totalProductsCreated: 1337 };
   }
 
   @ResolveField('research')
@@ -70,7 +63,7 @@ export class ProductsResolver {
             description: 'Federation Study',
           },
         },
-      ]
+      ];
     }
     if (parent.id === 'apollo-studio') {
       return [
@@ -80,24 +73,21 @@ export class ProductsResolver {
             description: 'Studio Study',
           },
         },
-      ]
+      ];
     }
-    return []
+    return [];
   }
 
   @ResolveReference()
   resolveReference(productRef: Product) {
     if (productRef.id) {
-      return products.find((p) => p.id === productRef.id)
+      return products.find(p => p.id === productRef.id);
     }
     if (productRef.sku && productRef.package) {
-      return products.find(
-        (p) => p.sku === productRef.sku && p.package === productRef.package,
-      )
+      return products.find(p => p.sku === productRef.sku && p.package === productRef.package);
     }
     return products.find(
-      (p) =>
-        p.sku === productRef.sku && p.variation.id === productRef.variation.id,
-    )
+      p => p.sku === productRef.sku && p.variation.id === productRef.variation.id,
+    );
   }
 }

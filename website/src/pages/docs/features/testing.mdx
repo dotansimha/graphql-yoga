@@ -1,31 +1,36 @@
 ---
-description: GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection. You can use any testing framework of your choice.
+description:
+  GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection.
+  You can use any testing framework of your choice.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Testing
 
-GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection. You can use any testing framework of your choice.
+GraphQL Yoga makes it easy to test your GraphQL API. It has built-in support for HTTP injection. You
+can use any testing framework of your choice.
 
-You can use the `fetch` method on your yoga instance for calling the yoga instance as if you were doing an HTTP request.
+You can use the `fetch` method on your yoga instance for calling the yoga instance as if you were
+doing an HTTP request.
 
 <Callout>
-  Calling the `yoga.fetch` method does not send an actual HTTP request. It
-  simulates the HTTP request which 100% conforms with how Request/Response work.
+  Calling the `yoga.fetch` method does not send an actual HTTP request. It simulates the HTTP
+  request which 100% conforms with how Request/Response work.
 </Callout>
 
 ## Test Utility
 
-Writing parsers for the Subscription or Incremental Delivery (`@defer`/`@stream`) protocol is annoying and cumbersome.
-Instead, you can use the `buildHTTPExecutor` utility function from `@graphql-tools/executor-http`.
+Writing parsers for the Subscription or Incremental Delivery (`@defer`/`@stream`) protocol is
+annoying and cumbersome. Instead, you can use the `buildHTTPExecutor` utility function from
+`@graphql-tools/executor-http`.
 
 ```sh npm2yarn
 npm i @graphql-tools/executor-http
 ```
 
 ```ts filename="Building an executor"
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { buildHTTPExecutor } from '@graphql-tools/executor-http'
 
 const schema = createSchema({
@@ -51,9 +56,9 @@ const executor = buildHTTPExecutor({
 ### Mutation and Query Operations
 
 ```ts filename="Mutation and Query Operations"
-import { createYoga, createSchema } from 'graphql-yoga'
-import { buildHTTPExecutor } from '@graphql-tools/executor-http'
 import { parse } from 'graphql'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { buildHTTPExecutor } from '@graphql-tools/executor-http'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -99,9 +104,9 @@ console.assert(
 ### Subscription Operations
 
 ```ts filename="Subscription Operations"
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
-import { buildHTTPExecutor } from '@graphql-tools/executor-http'
 import { parse } from 'graphql'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
+import { buildHTTPExecutor } from '@graphql-tools/executor-http'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -166,16 +171,10 @@ let iterationCounter = 0
 
 for await (const value of result1) {
   if (iterationCounter === 0) {
-    console.assert(
-      value.data?.counter === 1,
-      `Expected 1 but got ${value.data?.counter}`
-    )
+    console.assert(value.data?.counter === 1, `Expected 1 but got ${value.data?.counter}`)
     iterationCounter++
   } else if (iterationCounter === 1) {
-    console.assert(
-      value.data?.counter === 1,
-      `Expected 2 but got ${value.data?.counter}`
-    )
+    console.assert(value.data?.counter === 1, `Expected 2 but got ${value.data?.counter}`)
     break
   } else {
     throw new Error('Expected only two iterations')
@@ -194,14 +193,16 @@ await roomUpdatesIterator.return?.()
 
 ### TypeScript safe Test Suits with GraphQL Code Generator
 
-The GraphQL Code Generator allows you to generate TypeScript types for your GraphQL operations (queries, mutations and subscriptions), leading to a better developer experience when writing tests.
+The GraphQL Code Generator allows you to generate TypeScript types for your GraphQL operations
+(queries, mutations and subscriptions), leading to a better developer experience when writing tests.
 
-You can simply pass the documents from GraphQL Code Generator to the `executor` for a fully typed experience.
+You can simply pass the documents from GraphQL Code Generator to the `executor` for a fully typed
+experience.
 
 ```ts filename="TypeScript safe usage of executor"
 import { buildHTTPExecutor } from '@graphql-tools/executor-http'
-import { yoga } from './yoga'
 import { graphql } from './gql'
+import { yoga } from './yoga'
 
 const HelloWorldQuery = graphql(/* GraphQL */ `
   query HelloWorld {
@@ -225,12 +226,13 @@ const result = await executor({
 
 ## Advanced
 
-Instead of using the convinient `@graphql-tools/executor-http` package you can also process the request body from scratch.
+Instead of using the convinient `@graphql-tools/executor-http` package you can also process the
+request body from scratch.
 
 ### Mutation and Query Operation
 
 ```ts filename="Query Operation Test"
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -268,7 +270,7 @@ console.assert(
 ### Subscription Operation
 
 ```ts filename="Query Operation Test"
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga'
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `

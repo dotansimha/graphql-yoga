@@ -20,8 +20,8 @@ import {
   typeFromAST,
   ValidationContext,
   ValueNode,
-} from 'graphql'
-import { createGraphQLError, inspect, Maybe } from '@graphql-tools/utils'
+} from 'graphql';
+import { createGraphQLError, inspect, Maybe } from '@graphql-tools/utils';
 
 /**
  * Returns a number indicating whether a reference string comes before, or after,
@@ -31,55 +31,55 @@ import { createGraphQLError, inspect, Maybe } from '@graphql-tools/utils'
  *
  */
 export function naturalCompare(aStr: string, bStr: string): number {
-  let aIndex = 0
-  let bIndex = 0
+  let aIndex = 0;
+  let bIndex = 0;
 
   while (aIndex < aStr.length && bIndex < bStr.length) {
-    let aChar = aStr.charCodeAt(aIndex)
-    let bChar = bStr.charCodeAt(bIndex)
+    let aChar = aStr.charCodeAt(aIndex);
+    let bChar = bStr.charCodeAt(bIndex);
 
     if (isDigit(aChar) && isDigit(bChar)) {
-      let aNum = 0
+      let aNum = 0;
       do {
-        ++aIndex
-        aNum = aNum * 10 + aChar - DIGIT_0
-        aChar = aStr.charCodeAt(aIndex)
-      } while (isDigit(aChar) && aNum > 0)
+        ++aIndex;
+        aNum = aNum * 10 + aChar - DIGIT_0;
+        aChar = aStr.charCodeAt(aIndex);
+      } while (isDigit(aChar) && aNum > 0);
 
-      let bNum = 0
+      let bNum = 0;
       do {
-        ++bIndex
-        bNum = bNum * 10 + bChar - DIGIT_0
-        bChar = bStr.charCodeAt(bIndex)
-      } while (isDigit(bChar) && bNum > 0)
+        ++bIndex;
+        bNum = bNum * 10 + bChar - DIGIT_0;
+        bChar = bStr.charCodeAt(bIndex);
+      } while (isDigit(bChar) && bNum > 0);
 
       if (aNum < bNum) {
-        return -1
+        return -1;
       }
 
       if (aNum > bNum) {
-        return 1
+        return 1;
       }
     } else {
       if (aChar < bChar) {
-        return -1
+        return -1;
       }
       if (aChar > bChar) {
-        return 1
+        return 1;
       }
-      ++aIndex
-      ++bIndex
+      ++aIndex;
+      ++bIndex;
     }
   }
 
-  return aStr.length - bStr.length
+  return aStr.length - bStr.length;
 }
 
-const DIGIT_0 = 48
-const DIGIT_9 = 57
+const DIGIT_0 = 48;
+const DIGIT_9 = 57;
 
 function isDigit(code: number): boolean {
-  return !Number.isNaN(code) && DIGIT_0 <= code && code <= DIGIT_9
+  return !Number.isNaN(code) && DIGIT_0 <= code && code <= DIGIT_9;
 }
 
 function sortValueNode(valueNode: ValueNode): ValueNode {
@@ -88,12 +88,12 @@ function sortValueNode(valueNode: ValueNode): ValueNode {
       return {
         ...valueNode,
         fields: sortFields(valueNode.fields),
-      }
+      };
     case Kind.LIST:
       return {
         ...valueNode,
         values: valueNode.values.map(sortValueNode),
-      }
+      };
     case Kind.INT:
     case Kind.FLOAT:
     case Kind.STRING:
@@ -101,21 +101,17 @@ function sortValueNode(valueNode: ValueNode): ValueNode {
     case Kind.NULL:
     case Kind.ENUM:
     case Kind.VARIABLE:
-      return valueNode
+      return valueNode;
   }
 }
 
-function sortFields(
-  fields: ReadonlyArray<ObjectFieldNode>,
-): Array<ObjectFieldNode> {
+function sortFields(fields: ReadonlyArray<ObjectFieldNode>): Array<ObjectFieldNode> {
   return fields
-    .map((fieldNode) => ({
+    .map(fieldNode => ({
       ...fieldNode,
       value: sortValueNode(fieldNode.value),
     }))
-    .sort((fieldA, fieldB) =>
-      naturalCompare(fieldA.name.value, fieldB.name.value),
-    )
+    .sort((fieldA, fieldB) => naturalCompare(fieldA.name.value, fieldB.name.value));
 }
 
 function reasonMessage(reason: ConflictReasonMessage): string {
@@ -123,12 +119,11 @@ function reasonMessage(reason: ConflictReasonMessage): string {
     return reason
       .map(
         ([responseName, subReason]) =>
-          `subfields "${responseName}" conflict because ` +
-          reasonMessage(subReason),
+          `subfields "${responseName}" conflict because ` + reasonMessage(subReason),
       )
-      .join(' and ')
+      .join(' and ');
   }
-  return reason
+  return reason;
 }
 
 /**
@@ -140,18 +135,16 @@ function reasonMessage(reason: ConflictReasonMessage): string {
  *
  * See https://spec.graphql.org/draft/#sec-Field-Selection-Merging
  */
-export function OverlappingFieldsCanBeMergedRule(
-  context: ValidationContext,
-): ASTVisitor {
+export function OverlappingFieldsCanBeMergedRule(context: ValidationContext): ASTVisitor {
   // A memoization for when two fragments are compared "between" each other for
   // conflicts. Two fragments may be compared many times, so memoizing this can
   // dramatically improve the performance of this validator.
-  const comparedFragmentPairs = new PairSet()
+  const comparedFragmentPairs = new PairSet();
 
   // A cache for the "field map" and list of fragment names found in any given
   // selection set. Selection sets may be asked for this information multiple
   // times, so this improves the performance of this validator.
-  const cachedFieldsAndFragmentNames = new Map()
+  const cachedFieldsAndFragmentNames = new Map();
 
   return {
     SelectionSet(selectionSet) {
@@ -161,35 +154,31 @@ export function OverlappingFieldsCanBeMergedRule(
         comparedFragmentPairs,
         context.getParentType(),
         selectionSet,
-      )
+      );
       for (const [[responseName, reason], fields1, fields2] of conflicts) {
-        const reasonMsg = reasonMessage(reason)
+        const reasonMsg = reasonMessage(reason);
         context.reportError(
           createGraphQLError(
             `Fields "${responseName}" conflict because ${reasonMsg}. Use different aliases on the fields to fetch both if this was intentional.`,
             { nodes: fields1.concat(fields2) },
           ),
-        )
+        );
       }
     },
-  }
+  };
 }
 
-type Conflict = [ConflictReason, Array<FieldNode>, Array<FieldNode>]
+type Conflict = [ConflictReason, Array<FieldNode>, Array<FieldNode>];
 // Field name and reason.
-type ConflictReason = [string, ConflictReasonMessage]
+type ConflictReason = [string, ConflictReasonMessage];
 // Reason is a string, or a nested list of conflicts.
-type ConflictReasonMessage = string | Array<ConflictReason>
+type ConflictReasonMessage = string | Array<ConflictReason>;
 // Tuple defining a field node in a context.
-type NodeAndDef = [
-  Maybe<GraphQLNamedType>,
-  FieldNode,
-  Maybe<GraphQLField<unknown, unknown>>,
-]
+type NodeAndDef = [Maybe<GraphQLNamedType>, FieldNode, Maybe<GraphQLField<unknown, unknown>>];
 // Map of array of those.
-type NodeAndDefCollection = Record<string, Array<NodeAndDef>>
-type FragmentNames = ReadonlyArray<string>
-type FieldsAndFragmentNames = readonly [NodeAndDefCollection, FragmentNames]
+type NodeAndDefCollection = Record<string, Array<NodeAndDef>>;
+type FragmentNames = ReadonlyArray<string>;
+type FieldsAndFragmentNames = readonly [NodeAndDefCollection, FragmentNames];
 
 /**
  * Algorithm:
@@ -256,14 +245,14 @@ function findConflictsWithinSelectionSet(
   parentType: Maybe<GraphQLNamedType>,
   selectionSet: SelectionSetNode,
 ): Array<Conflict> {
-  const conflicts: Array<Conflict> = []
+  const conflicts: Array<Conflict> = [];
 
   const [fieldMap, fragmentNames] = getFieldsAndFragmentNames(
     context,
     cachedFieldsAndFragmentNames,
     parentType,
     selectionSet,
-  )
+  );
 
   // (A) Find find all conflicts "within" the fields of this selection set.
   // Note: this is the *only place* `collectConflictsWithin` is called.
@@ -273,7 +262,7 @@ function findConflictsWithinSelectionSet(
     cachedFieldsAndFragmentNames,
     comparedFragmentPairs,
     fieldMap,
-  )
+  );
 
   if (fragmentNames.length !== 0) {
     // (B) Then collect conflicts between these fields and those represented by
@@ -287,7 +276,7 @@ function findConflictsWithinSelectionSet(
         false,
         fieldMap,
         fragmentNames[i],
-      )
+      );
       // (C) Then compare this fragment with all other fragments found in this
       // selection set to collect conflicts between fragments spread together.
       // This compares each item in the list of fragment names to every other
@@ -301,11 +290,11 @@ function findConflictsWithinSelectionSet(
           false,
           fragmentNames[i],
           fragmentNames[j],
-        )
+        );
       }
     }
   }
-  return conflicts
+  return conflicts;
 }
 
 // Collect all conflicts found between a set of fields and a fragment reference
@@ -319,21 +308,20 @@ function collectConflictsBetweenFieldsAndFragment(
   fieldMap: NodeAndDefCollection,
   fragmentName: string,
 ): void {
-  const fragment = context.getFragment(fragmentName)
+  const fragment = context.getFragment(fragmentName);
   if (!fragment) {
-    return
+    return;
   }
 
-  const [fieldMap2, referencedFragmentNames] =
-    getReferencedFieldsAndFragmentNames(
-      context,
-      cachedFieldsAndFragmentNames,
-      fragment,
-    )
+  const [fieldMap2, referencedFragmentNames] = getReferencedFieldsAndFragmentNames(
+    context,
+    cachedFieldsAndFragmentNames,
+    fragment,
+  );
 
   // Do not compare a fragment's fieldMap to itself.
   if (fieldMap === fieldMap2) {
-    return
+    return;
   }
 
   // (D) First collect any conflicts between the provided collection of fields
@@ -346,26 +334,16 @@ function collectConflictsBetweenFieldsAndFragment(
     areMutuallyExclusive,
     fieldMap,
     fieldMap2,
-  )
+  );
 
   // (E) Then collect any conflicts between the provided collection of fields
   // and any fragment names found in the given fragment.
   for (const referencedFragmentName of referencedFragmentNames) {
     // Memoize so two fragments are not compared for conflicts more than once.
-    if (
-      comparedFragmentPairs.has(
-        referencedFragmentName,
-        fragmentName,
-        areMutuallyExclusive,
-      )
-    ) {
-      continue
+    if (comparedFragmentPairs.has(referencedFragmentName, fragmentName, areMutuallyExclusive)) {
+      continue;
     }
-    comparedFragmentPairs.add(
-      referencedFragmentName,
-      fragmentName,
-      areMutuallyExclusive,
-    )
+    comparedFragmentPairs.add(referencedFragmentName, fragmentName, areMutuallyExclusive);
 
     collectConflictsBetweenFieldsAndFragment(
       context,
@@ -375,7 +353,7 @@ function collectConflictsBetweenFieldsAndFragment(
       areMutuallyExclusive,
       fieldMap,
       referencedFragmentName,
-    )
+    );
   }
 }
 
@@ -392,39 +370,31 @@ function collectConflictsBetweenFragments(
 ): void {
   // No need to compare a fragment to itself.
   if (fragmentName1 === fragmentName2) {
-    return
+    return;
   }
 
   // Memoize so two fragments are not compared for conflicts more than once.
-  if (
-    comparedFragmentPairs.has(
-      fragmentName1,
-      fragmentName2,
-      areMutuallyExclusive,
-    )
-  ) {
-    return
+  if (comparedFragmentPairs.has(fragmentName1, fragmentName2, areMutuallyExclusive)) {
+    return;
   }
-  comparedFragmentPairs.add(fragmentName1, fragmentName2, areMutuallyExclusive)
+  comparedFragmentPairs.add(fragmentName1, fragmentName2, areMutuallyExclusive);
 
-  const fragment1 = context.getFragment(fragmentName1)
-  const fragment2 = context.getFragment(fragmentName2)
+  const fragment1 = context.getFragment(fragmentName1);
+  const fragment2 = context.getFragment(fragmentName2);
   if (!fragment1 || !fragment2) {
-    return
+    return;
   }
 
-  const [fieldMap1, referencedFragmentNames1] =
-    getReferencedFieldsAndFragmentNames(
-      context,
-      cachedFieldsAndFragmentNames,
-      fragment1,
-    )
-  const [fieldMap2, referencedFragmentNames2] =
-    getReferencedFieldsAndFragmentNames(
-      context,
-      cachedFieldsAndFragmentNames,
-      fragment2,
-    )
+  const [fieldMap1, referencedFragmentNames1] = getReferencedFieldsAndFragmentNames(
+    context,
+    cachedFieldsAndFragmentNames,
+    fragment1,
+  );
+  const [fieldMap2, referencedFragmentNames2] = getReferencedFieldsAndFragmentNames(
+    context,
+    cachedFieldsAndFragmentNames,
+    fragment2,
+  );
 
   // (F) First, collect all conflicts between these two collections of fields
   // (not including any nested fragments).
@@ -436,7 +406,7 @@ function collectConflictsBetweenFragments(
     areMutuallyExclusive,
     fieldMap1,
     fieldMap2,
-  )
+  );
 
   // (G) Then collect conflicts between the first fragment and any nested
   // fragments spread in the second fragment.
@@ -449,7 +419,7 @@ function collectConflictsBetweenFragments(
       areMutuallyExclusive,
       fragmentName1,
       referencedFragmentName2,
-    )
+    );
   }
 
   // (G) Then collect conflicts between the second fragment and any nested
@@ -463,7 +433,7 @@ function collectConflictsBetweenFragments(
       areMutuallyExclusive,
       referencedFragmentName1,
       fragmentName2,
-    )
+    );
   }
 }
 
@@ -480,20 +450,20 @@ function findConflictsBetweenSubSelectionSets(
   parentType2: Maybe<GraphQLNamedType>,
   selectionSet2: SelectionSetNode,
 ): Array<Conflict> {
-  const conflicts: Array<Conflict> = []
+  const conflicts: Array<Conflict> = [];
 
   const [fieldMap1, fragmentNames1] = getFieldsAndFragmentNames(
     context,
     cachedFieldsAndFragmentNames,
     parentType1,
     selectionSet1,
-  )
+  );
   const [fieldMap2, fragmentNames2] = getFieldsAndFragmentNames(
     context,
     cachedFieldsAndFragmentNames,
     parentType2,
     selectionSet2,
-  )
+  );
 
   // (H) First, collect all conflicts between these two collections of field.
   collectConflictsBetween(
@@ -504,7 +474,7 @@ function findConflictsBetweenSubSelectionSets(
     areMutuallyExclusive,
     fieldMap1,
     fieldMap2,
-  )
+  );
 
   // (I) Then collect conflicts between the first collection of fields and
   // those referenced by each fragment name associated with the second.
@@ -517,7 +487,7 @@ function findConflictsBetweenSubSelectionSets(
       areMutuallyExclusive,
       fieldMap1,
       fragmentName2,
-    )
+    );
   }
 
   // (I) Then collect conflicts between the second collection of fields and
@@ -531,7 +501,7 @@ function findConflictsBetweenSubSelectionSets(
       areMutuallyExclusive,
       fieldMap2,
       fragmentName1,
-    )
+    );
   }
 
   // (J) Also collect conflicts between any fragment names by the first and
@@ -547,10 +517,10 @@ function findConflictsBetweenSubSelectionSets(
         areMutuallyExclusive,
         fragmentName1,
         fragmentName2,
-      )
+      );
     }
   }
-  return conflicts
+  return conflicts;
 }
 
 // Collect all Conflicts "within" one collection of fields.
@@ -580,9 +550,9 @@ function collectConflictsWithin(
             responseName,
             fields[i],
             fields[j],
-          )
+          );
           if (conflict) {
-            conflicts.push(conflict)
+            conflicts.push(conflict);
           }
         }
       }
@@ -610,7 +580,7 @@ function collectConflictsBetween(
   // maps, each field from the first field map must be compared to every field
   // in the second field map to find potential conflicts.
   for (const [responseName, fields1] of Object.entries(fieldMap1)) {
-    const fields2 = fieldMap2[responseName]
+    const fields2 = fieldMap2[responseName];
     if (fields2) {
       for (const field1 of fields1) {
         for (const field2 of fields2) {
@@ -622,9 +592,9 @@ function collectConflictsBetween(
             responseName,
             field1,
             field2,
-          )
+          );
           if (conflict) {
-            conflicts.push(conflict)
+            conflicts.push(conflict);
           }
         }
       }
@@ -643,8 +613,8 @@ function findConflict(
   field1: NodeAndDef,
   field2: NodeAndDef,
 ): Maybe<Conflict> {
-  const [parentType1, node1, def1] = field1
-  const [parentType2, node2, def2] = field2
+  const [parentType1, node1, def1] = field1;
+  const [parentType2, node2, def2] = field2;
 
   // If it is known that two fields could not possibly apply at the same
   // time, due to the parent types, then it is safe to permit them to diverge
@@ -656,61 +626,46 @@ function findConflict(
   // thus may not safely diverge.
   const areMutuallyExclusive =
     parentFieldsAreMutuallyExclusive ||
-    (parentType1 !== parentType2 &&
-      isObjectType(parentType1) &&
-      isObjectType(parentType2))
+    (parentType1 !== parentType2 && isObjectType(parentType1) && isObjectType(parentType2));
 
   if (!areMutuallyExclusive) {
     // Two aliases must refer to the same field.
-    const name1 = node1.name.value
-    const name2 = node2.name.value
+    const name1 = node1.name.value;
+    const name2 = node2.name.value;
     if (name1 !== name2) {
-      return [
-        [responseName, `"${name1}" and "${name2}" are different fields`],
-        [node1],
-        [node2],
-      ]
+      return [[responseName, `"${name1}" and "${name2}" are different fields`], [node1], [node2]];
     }
 
     // Two field calls must have the same arguments.
     if (stringifyArguments(node1) !== stringifyArguments(node2)) {
-      return [[responseName, 'they have differing arguments'], [node1], [node2]]
+      return [[responseName, 'they have differing arguments'], [node1], [node2]];
     }
   }
 
   // FIXME https://github.com/graphql/graphql-js/issues/2203
-  const directives1 = /* c8 ignore next */ node1.directives ?? []
-  const directives2 = /* c8 ignore next */ node2.directives ?? []
+  const directives1 = /* c8 ignore next */ node1.directives ?? [];
+  const directives2 = /* c8 ignore next */ node2.directives ?? [];
   if (!sameStreams(directives1, directives2)) {
-    return [
-      [responseName, 'they have differing stream directives'],
-      [node1],
-      [node2],
-    ]
+    return [[responseName, 'they have differing stream directives'], [node1], [node2]];
   }
 
   // The return type for each field.
-  const type1 = def1?.type
-  const type2 = def2?.type
+  const type1 = def1?.type;
+  const type2 = def2?.type;
 
   if (type1 && type2 && doTypesConflict(type1, type2)) {
     return [
-      [
-        responseName,
-        `they return conflicting types "${inspect(type1)}" and "${inspect(
-          type2,
-        )}"`,
-      ],
+      [responseName, `they return conflicting types "${inspect(type1)}" and "${inspect(type2)}"`],
       [node1],
       [node2],
-    ]
+    ];
   }
 
   // Collect and compare sub-fields. Use the same "visited fragment names" list
   // for both collections so fields in a fragment reference are never
   // compared to themselves.
-  const selectionSet1 = node1.selectionSet
-  const selectionSet2 = node2.selectionSet
+  const selectionSet1 = node1.selectionSet;
+  const selectionSet2 = node2.selectionSet;
   if (selectionSet1 && selectionSet2) {
     const conflicts = findConflictsBetweenSubSelectionSets(
       context,
@@ -721,78 +676,69 @@ function findConflict(
       selectionSet1,
       getNamedType(type2 as GraphQLOutputType),
       selectionSet2,
-    )
-    return subfieldConflicts(conflicts, responseName, node1, node2)
+    );
+    return subfieldConflicts(conflicts, responseName, node1, node2);
   }
-  return
+  return;
 }
 
 function stringifyArguments(fieldNode: FieldNode | DirectiveNode): string {
   // FIXME https://github.com/graphql/graphql-js/issues/2203
-  const args = /* c8 ignore next */ fieldNode.arguments ?? []
+  const args = /* c8 ignore next */ fieldNode.arguments ?? [];
 
   const inputObjectWithArgs: ObjectValueNode = {
     kind: Kind.OBJECT,
-    fields: args.map((argNode) => ({
+    fields: args.map(argNode => ({
       kind: Kind.OBJECT_FIELD,
       name: argNode.name,
       value: argNode.value,
     })),
-  }
-  return print(sortValueNode(inputObjectWithArgs))
+  };
+  return print(sortValueNode(inputObjectWithArgs));
 }
 
-function getStreamDirective(
-  directives: ReadonlyArray<DirectiveNode>,
-): DirectiveNode | undefined {
-  return directives.find((directive) => directive.name.value === 'stream')
+function getStreamDirective(directives: ReadonlyArray<DirectiveNode>): DirectiveNode | undefined {
+  return directives.find(directive => directive.name.value === 'stream');
 }
 
 function sameStreams(
   directives1: ReadonlyArray<DirectiveNode>,
   directives2: ReadonlyArray<DirectiveNode>,
 ): boolean {
-  const stream1 = getStreamDirective(directives1)
-  const stream2 = getStreamDirective(directives2)
+  const stream1 = getStreamDirective(directives1);
+  const stream2 = getStreamDirective(directives2);
   if (!stream1 && !stream2) {
     // both fields do not have streams
-    return true
+    return true;
   }
   if (stream1 && stream2) {
     // check if both fields have equivalent streams
-    return stringifyArguments(stream1) === stringifyArguments(stream2)
+    return stringifyArguments(stream1) === stringifyArguments(stream2);
   }
   // fields have a mix of stream and no stream
-  return false
+  return false;
 }
 
 // Two types conflict if both types could not apply to a value simultaneously.
 // Composite types are ignored as their individual field types will be compared
 // later recursively. However List and Non-Null types must match.
-function doTypesConflict(
-  type1: GraphQLOutputType,
-  type2: GraphQLOutputType,
-): boolean {
+function doTypesConflict(type1: GraphQLOutputType, type2: GraphQLOutputType): boolean {
   if (isListType(type1)) {
-    return isListType(type2)
-      ? doTypesConflict(type1.ofType, type2.ofType)
-      : true
+    return isListType(type2) ? doTypesConflict(type1.ofType, type2.ofType) : true;
   }
   if (isListType(type2)) {
-    return true
+    return true;
   }
   if (isNonNullType(type1)) {
-    return isNonNullType(type2)
-      ? doTypesConflict(type1.ofType, type2.ofType)
-      : true
+    return isNonNullType(type2) ? doTypesConflict(type1.ofType, type2.ofType) : true;
   }
   if (isNonNullType(type2)) {
-    return true
+    return true;
   }
   if (isLeafType(type1) || isLeafType(type2)) {
-    return type1 !== type2
+    return type1 !== type2;
   }
-  return false
+  return false;
 }
 
 // Given a selection set, return the collection of fields (a mapping of response
@@ -804,22 +750,16 @@ function getFieldsAndFragmentNames(
   parentType: Maybe<GraphQLNamedType>,
   selectionSet: SelectionSetNode,
 ): FieldsAndFragmentNames {
-  const cached = cachedFieldsAndFragmentNames.get(selectionSet)
+  const cached = cachedFieldsAndFragmentNames.get(selectionSet);
   if (cached) {
-    return cached
+    return cached;
   }
-  const nodeAndDefs: NodeAndDefCollection = Object.create(null)
-  const fragmentNames = new Set<string>()
-  _collectFieldsAndFragmentNames(
-    context,
-    parentType,
-    selectionSet,
-    nodeAndDefs,
-    fragmentNames,
-  )
-  const result = [nodeAndDefs, [...fragmentNames]] as const
-  cachedFieldsAndFragmentNames.set(selectionSet, result)
-  return result
+  const nodeAndDefs: NodeAndDefCollection = Object.create(null);
+  const fragmentNames = new Set<string>();
+  _collectFieldsAndFragmentNames(context, parentType, selectionSet, nodeAndDefs, fragmentNames);
+  const result = [nodeAndDefs, [...fragmentNames]] as const;
+  cachedFieldsAndFragmentNames.set(selectionSet, result);
+  return result;
 }
 
 // Given a reference to a fragment, return the represented collection of fields
@@ -830,18 +770,18 @@ function getReferencedFieldsAndFragmentNames(
   fragment: FragmentDefinitionNode,
 ) {
   // Short-circuit building a type from the node if possible.
-  const cached = cachedFieldsAndFragmentNames.get(fragment.selectionSet)
+  const cached = cachedFieldsAndFragmentNames.get(fragment.selectionSet);
   if (cached) {
-    return cached
+    return cached;
   }
 
-  const fragmentType = typeFromAST(context.getSchema(), fragment.typeCondition)
+  const fragmentType = typeFromAST(context.getSchema(), fragment.typeCondition);
   return getFieldsAndFragmentNames(
     context,
     cachedFieldsAndFragmentNames,
     fragmentType,
     fragment.selectionSet,
-  )
+  );
 }
 
 function _collectFieldsAndFragmentNames(
@@ -854,32 +794,32 @@ function _collectFieldsAndFragmentNames(
   for (const selection of selectionSet.selections) {
     switch (selection.kind) {
       case Kind.FIELD: {
-        const fieldName = selection.name.value
-        let fieldDef
+        const fieldName = selection.name.value;
+        let fieldDef;
         if (isObjectType(parentType) || isInterfaceType(parentType)) {
-          fieldDef = parentType.getFields()[fieldName]
+          fieldDef = parentType.getFields()[fieldName];
         }
-        const responseName = selection.alias ? selection.alias.value : fieldName
-        nodeAndDefs[responseName] ||= []
-        nodeAndDefs[responseName].push([parentType, selection, fieldDef])
-        break
+        const responseName = selection.alias ? selection.alias.value : fieldName;
+        nodeAndDefs[responseName] ||= [];
+        nodeAndDefs[responseName].push([parentType, selection, fieldDef]);
+        break;
       }
       case Kind.FRAGMENT_SPREAD:
-        fragmentNames.add(selection.name.value)
-        break
+        fragmentNames.add(selection.name.value);
+        break;
       case Kind.INLINE_FRAGMENT: {
-        const typeCondition = selection.typeCondition
+        const typeCondition = selection.typeCondition;
         const inlineFragmentType = typeCondition
           ? typeFromAST(context.getSchema(), typeCondition)
-          : parentType
+          : parentType;
         _collectFieldsAndFragmentNames(
           context,
           inlineFragmentType,
           selection.selectionSet,
           nodeAndDefs,
           fragmentNames,
-        )
-        break
+        );
+        break;
       }
     }
   }
@@ -898,43 +838,43 @@ function subfieldConflicts(
       [responseName, conflicts.map(([reason]) => reason)],
       [node1, ...conflicts.map(([, fields1]) => fields1).flat()],
       [node2, ...conflicts.map(([, , fields2]) => fields2).flat()],
-    ]
+    ];
   }
-  return
+  return;
 }
 
 /**
  * A way to keep track of pairs of things when the ordering of the pair does not matter.
  */
 class PairSet {
-  _data: Map<string, Map<string, boolean>>
+  _data: Map<string, Map<string, boolean>>;
 
   constructor() {
-    this._data = new Map()
+    this._data = new Map();
   }
 
   has(a: string, b: string, areMutuallyExclusive: boolean): boolean {
-    const [key1, key2] = a < b ? [a, b] : [b, a]
+    const [key1, key2] = a < b ? [a, b] : [b, a];
 
-    const result = this._data.get(key1)?.get(key2)
+    const result = this._data.get(key1)?.get(key2);
     if (result === undefined) {
-      return false
+      return false;
     }
 
     // areMutuallyExclusive being false is a superset of being true, hence if
     // we want to know if this PairSet "has" these two with no exclusivity,
     // we have to ensure it was added as such.
-    return areMutuallyExclusive ? true : areMutuallyExclusive === result
+    return areMutuallyExclusive ? true : areMutuallyExclusive === result;
   }
 
   add(a: string, b: string, areMutuallyExclusive: boolean): void {
-    const [key1, key2] = a < b ? [a, b] : [b, a]
+    const [key1, key2] = a < b ? [a, b] : [b, a];
 
-    const map = this._data.get(key1)
+    const map = this._data.get(key1);
     if (map === undefined) {
-      this._data.set(key1, new Map([[key2, areMutuallyExclusive]]))
+      this._data.set(key1, new Map([[key2, areMutuallyExclusive]]));
     } else {
-      map.set(key2, areMutuallyExclusive)
+      map.set(key2, areMutuallyExclusive);
     }
   }
 }

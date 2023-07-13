@@ -1,17 +1,21 @@
 ---
-description: Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL documents to the server over and over again.
+description:
+  Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL
+  documents to the server over and over again.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Automatic Persisted Queries
 
-Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL documents to the server over and over again.
-Thus reducing client to server upstream traffic.
+Automatic Persisted Queries is a protocol for reducing the overhead of sending the same GraphQL
+documents to the server over and over again. Thus reducing client to server upstream traffic.
 
-Since the upload speed can be the bottleneck from client to server, reducing the payload size can improve the performance especially for huge GraphQL documents.
+Since the upload speed can be the bottleneck from client to server, reducing the payload size can
+improve the performance especially for huge GraphQL documents.
 
-The GraphQL Yoga's Automatic Persisted Queries plugin follows [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine).
+The GraphQL Yoga's Automatic Persisted Queries plugin follows
+[the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine).
 
 <Callout>
   Automatic Persisted Queries do not provide any security features, the benefit
@@ -19,7 +23,9 @@ The GraphQL Yoga's Automatic Persisted Queries plugin follows [the APQ Specifica
   arbitrary GraphQL operations please use [Persisted
   Operations](/docs/features/persisted-operations).
 
-Furthermore, an potential DDOS attacker could spam your GraphQL API with persisted operation registrations, thus completly disable the advantages you would get from APQ and, furthermore, even decrease the performance of your GraphQL API.
+Furthermore, an potential DDOS attacker could spam your GraphQL API with persisted operation
+registrations, thus completly disable the advantages you would get from APQ and, furthermore, even
+decrease the performance of your GraphQL API.
 
 </Callout>
 
@@ -34,8 +40,8 @@ npm i @graphql-yoga/plugin-apq
 ```
 
 ```ts filename="Automatic Persisted Queries Yoga setup" {3, 13}
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { useAPQ } from '@graphql-yoga/plugin-apq'
 
 const yoga = createYoga({
@@ -81,13 +87,14 @@ Check the corresponding documentation for more information.
 
 ## Custom Store
 
-By default all the documents strings are stored in memory with an LRU cache that holds up to 1000 unique entries.
+By default all the documents strings are stored in memory with an LRU cache that holds up to 1000
+unique entries.
 
 A custom store implementation can be provided via the `store` option.
 
 ```ts filename="Automatic Persisted Operations with a custom store" {16}
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { useAPQ } from '@graphql-yoga/plugin-apq'
 
 // Note: this store grows infinitely, so it is not a good idea to use it in production.

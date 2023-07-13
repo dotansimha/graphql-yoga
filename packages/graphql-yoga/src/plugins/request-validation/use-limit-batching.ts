@@ -1,5 +1,5 @@
-import { createGraphQLError } from '../../error.js'
-import type { Plugin } from '../types.js'
+import { createGraphQLError } from '../../error.js';
+import type { Plugin } from '../types.js';
 
 export function useLimitBatching(limit?: number): Plugin {
   return {
@@ -14,23 +14,20 @@ export function useLimitBatching(limit?: number): Plugin {
                     status: 400,
                   },
                 },
-              })
+              });
             }
             if (requestParserResult.length > limit) {
-              throw createGraphQLError(
-                `Batching is limited to ${limit} operations per request.`,
-                {
-                  extensions: {
-                    http: {
-                      status: 413,
-                    },
+              throw createGraphQLError(`Batching is limited to ${limit} operations per request.`, {
+                extensions: {
+                  http: {
+                    status: 413,
                   },
                 },
-              )
+              });
             }
           }
         },
-      }
+      };
     },
-  }
+  };
 }

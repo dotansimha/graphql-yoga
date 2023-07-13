@@ -1,4 +1,4 @@
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga';
 
 const yoga = createYoga({
   schema: createSchema({
@@ -13,10 +13,10 @@ const yoga = createYoga({
       },
     },
   }),
-})
+});
 
-const server = Bun.serve(yoga)
+const server = Bun.serve(yoga);
 
 console.info(
   `Server is running on http://${server.hostname}:${server.port}${yoga.graphqlEndpoint}`,
-)
+);

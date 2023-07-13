@@ -1,29 +1,21 @@
-import { buildSchema, GraphQLSchema } from 'graphql'
-
-import { OverlappingFieldsCanBeMergedRule } from '../../src/validations/overlapping-fields-can-be-merged.js'
-import {
-  expectValidationErrors,
-  expectValidationErrorsWithSchema,
-} from './harness.js'
+import { buildSchema, GraphQLSchema } from 'graphql';
+import { OverlappingFieldsCanBeMergedRule } from '../../src/validations/overlapping-fields-can-be-merged.js';
+import { expectValidationErrors, expectValidationErrorsWithSchema } from './harness.js';
 
 function expectErrors(queryStr: string) {
-  return expectValidationErrors(OverlappingFieldsCanBeMergedRule, queryStr)
+  return expectValidationErrors(OverlappingFieldsCanBeMergedRule, queryStr);
 }
 
 function expectValid(queryStr: string) {
-  expectErrors(queryStr).toDeepEqual([])
+  expectErrors(queryStr).toDeepEqual([]);
 }
 
 function expectErrorsWithSchema(schema: GraphQLSchema, queryStr: string) {
-  return expectValidationErrorsWithSchema(
-    schema,
-    OverlappingFieldsCanBeMergedRule,
-    queryStr,
-  )
+  return expectValidationErrorsWithSchema(schema, OverlappingFieldsCanBeMergedRule, queryStr);
 }
 
 function expectValidWithSchema(schema: GraphQLSchema, queryStr: string) {
-  expectErrorsWithSchema(schema, queryStr).toDeepEqual([])
+  expectErrorsWithSchema(schema, queryStr).toDeepEqual([]);
 }
 
 describe('Validate: Overlapping fields can be merged', () => {
@@ -33,8 +25,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         name
         nickname
       }
-    `)
-  })
+    `);
+  });
 
   it('identical fields', () => {
     expectValid(`
@@ -42,8 +34,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         name
         name
       }
-    `)
-  })
+    `);
+  });
 
   it('identical fields with identical args', () => {
     expectValid(`
@@ -51,8 +43,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         doesKnowCommand(dogCommand: SIT)
         doesKnowCommand(dogCommand: SIT)
       }
-    `)
-  })
+    `);
+  });
 
   it('identical fields with identical directives', () => {
     expectValid(`
@@ -60,8 +52,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         name @include(if: true)
         name @include(if: true)
       }
-    `)
-  })
+    `);
+  });
 
   it('different args with different aliases', () => {
     expectValid(`
@@ -69,8 +61,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         knowsSit: doesKnowCommand(dogCommand: SIT)
         knowsDown: doesKnowCommand(dogCommand: DOWN)
       }
-    `)
-  })
+    `);
+  });
 
   it('different directives with different aliases', () => {
     expectValid(`
@@ -78,8 +70,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         nameIfTrue: name @include(if: true)
         nameIfFalse: name @include(if: false)
       }
-    `)
-  })
+    `);
+  });
 
   it('different skip/include directives accepted', () => {
     // Note: Differing skip/include directives don't create an ambiguous return
@@ -90,8 +82,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         name @include(if: true)
         name @include(if: false)
       }
-    `)
-  })
+    `);
+  });
 
   it('Same stream directives supported', () => {
     expectValid(`
@@ -99,8 +91,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         name @stream(label: "streamLabel", initialCount: 1)
         name @stream(label: "streamLabel", initialCount: 1)
       }
-    `)
-  })
+    `);
+  });
 
   it('different stream directive label', () => {
     expectErrors(`
@@ -117,8 +109,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('different stream directive initialCount', () => {
     expectErrors(`
@@ -135,8 +127,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('different stream directive first missing args', () => {
     expectErrors(`
@@ -153,8 +145,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('different stream directive second missing args', () => {
     expectErrors(`
@@ -171,8 +163,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('mix of stream and no stream', () => {
     expectErrors(`
@@ -189,8 +181,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('different stream directive both missing args', () => {
     expectValid(`
@@ -198,8 +190,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         name @stream
         name @stream
       }
-    `)
-  })
+    `);
+  });
 
   it('Same aliases with different field targets', () => {
     expectErrors(`
@@ -216,8 +208,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('Same aliases allowed on non-overlapping fields', () => {
     // This is valid since no object can be both a "Dog" and a "Cat", thus
@@ -231,8 +223,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           name: nickname
         }
       }
-    `)
-  })
+    `);
+  });
 
   it('Alias masking direct field access', () => {
     expectErrors(`
@@ -249,8 +241,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('different args, second adds an argument', () => {
     expectErrors(`
@@ -267,8 +259,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('different args, second missing an argument', () => {
     expectErrors(`
@@ -285,8 +277,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('conflicting arg values', () => {
     expectErrors(`
@@ -303,8 +295,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('conflicting arg names', () => {
     expectErrors(`
@@ -321,8 +313,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 4, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('allows different args where no conflict is possible', () => {
     // This is valid since no object can be both a "Dog" and a "Cat", thus
@@ -336,15 +328,15 @@ describe('Validate: Overlapping fields can be merged', () => {
           name
         }
       }
-    `)
-  })
+    `);
+  });
 
   it('allows different order of args', () => {
     const schema = buildSchema(`
       type Query {
         someField(a: String, b: String): String
       }
-    `)
+    `);
 
     // This is valid since arguments are unordered, see:
     // https://spec.graphql.org/draft/#sec-Language.Arguments.Arguments-are-unordered
@@ -356,8 +348,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           someField(b: null, a: null)
         }
       `,
-    )
-  })
+    );
+  });
 
   it('allows different order of input object fields in arg values', () => {
     const schema = buildSchema(`
@@ -369,7 +361,7 @@ describe('Validate: Overlapping fields can be merged', () => {
       type Query {
         someField(arg: SomeInput): String
       }
-    `)
+    `);
 
     // This is valid since input object fields are unordered, see:
     // https://spec.graphql.org/draft/#sec-Input-Object-Values.Input-object-fields-are-unordered
@@ -381,8 +373,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           someField(arg: { b: null, a: null })
         }
       `,
-    )
-  })
+    );
+  });
 
   it('encounters conflict in fragments', () => {
     expectErrors(`
@@ -405,8 +397,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 10, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('reports each conflict once', () => {
     expectErrors(`
@@ -456,8 +448,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 21, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('deep conflict', () => {
     expectErrors(`
@@ -480,8 +472,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 7, column: 11 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('deep conflict with multiple issues', () => {
     expectErrors(`
@@ -508,8 +500,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 9, column: 11 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('very deep conflict', () => {
     expectErrors(`
@@ -538,8 +530,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 10, column: 13 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('reports deep conflict to nearest common ancestor', () => {
     expectErrors(`
@@ -569,8 +561,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 8, column: 13 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('reports deep conflict to nearest common ancestor in fragments', () => {
     expectErrors(`
@@ -608,8 +600,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 16, column: 13 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('reports deep conflict in nested fragments', () => {
     expectErrors(`
@@ -648,8 +640,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 18, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('ignores unknown fragments', () => {
     expectValid(`
@@ -663,8 +655,8 @@ describe('Validate: Overlapping fields can be merged', () => {
         field
         ...OtherUnknown
       }
-    `)
-  })
+    `);
+  });
 
   describe('return types must be unambiguous', () => {
     const schema = buildSchema(`
@@ -728,7 +720,7 @@ describe('Validate: Overlapping fields can be merged', () => {
         someBox: SomeBox
         connection: Connection
       }
-    `)
+    `);
 
     it('conflicting return types which potentially overlap', () => {
       // This is invalid since an object could potentially be both the Object
@@ -758,8 +750,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 8, column: 17 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('compatible return shapes on different return types', () => {
       // In this case `deepBox` returns `SomeBox` in the first usage, and
@@ -783,8 +775,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             }
           }
         `,
-      )
-    })
+      );
+    });
 
     it('disallows differing return types despite no overlap', () => {
       expectErrorsWithSchema(
@@ -810,8 +802,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 8, column: 17 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('reports correctly when a non-exclusive follows an exclusive', () => {
       expectErrorsWithSchema(
@@ -871,8 +863,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 42, column: 13 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('disallows differing return type nullability despite no overlap', () => {
       expectErrorsWithSchema(
@@ -898,8 +890,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 8, column: 17 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('disallows differing return type list despite no overlap', () => {
       expectErrorsWithSchema(
@@ -929,7 +921,7 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 10, column: 17 },
           ],
         },
-      ])
+      ]);
 
       expectErrorsWithSchema(
         schema,
@@ -958,8 +950,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 10, column: 17 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('disallows differing subfields', () => {
       expectErrorsWithSchema(
@@ -990,8 +982,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 7, column: 19 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('disallows differing deep return types despite no overlap', () => {
       expectErrorsWithSchema(
@@ -1023,8 +1015,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 11, column: 19 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('allows non-conflicting overlapping types', () => {
       expectValidWithSchema(
@@ -1041,8 +1033,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             }
           }
         `,
-      )
-    })
+      );
+    });
 
     it('same wrapped scalar return types', () => {
       expectValidWithSchema(
@@ -1059,8 +1051,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             }
           }
         `,
-      )
-    })
+      );
+    });
 
     it('allows inline fragments without type condition', () => {
       expectValidWithSchema(
@@ -1073,8 +1065,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             }
           }
         `,
-      )
-    })
+      );
+    });
 
     it('compares deep types including list', () => {
       expectErrorsWithSchema(
@@ -1112,8 +1104,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             { line: 16, column: 17 },
           ],
         },
-      ])
-    })
+      ]);
+    });
 
     it('ignores unknown types', () => {
       expectValidWithSchema(
@@ -1130,8 +1122,8 @@ describe('Validate: Overlapping fields can be merged', () => {
             }
           }
         `,
-      )
-    })
+      );
+    });
 
     it('works for field names that are JS keywords', () => {
       const schemaWithKeywords = buildSchema(`
@@ -1142,7 +1134,7 @@ describe('Validate: Overlapping fields can be merged', () => {
         type Query {
           foo: Foo
         }
-      `)
+      `);
 
       expectValidWithSchema(
         schemaWithKeywords,
@@ -1153,9 +1145,9 @@ describe('Validate: Overlapping fields can be merged', () => {
             }
           }
         `,
-      )
-    })
-  })
+      );
+    });
+  });
 
   it('does not infinite loop on recursive fragment', () => {
     expectValid(`
@@ -1164,8 +1156,8 @@ describe('Validate: Overlapping fields can be merged', () => {
       }
 
       fragment fragA on Human { name, relatives { name, ...fragA } }
-    `)
-  })
+    `);
+  });
 
   it('does not infinite loop on immediately recursive fragment', () => {
     expectValid(`
@@ -1174,8 +1166,8 @@ describe('Validate: Overlapping fields can be merged', () => {
       }
 
       fragment fragA on Human { name, ...fragA }
-    `)
-  })
+    `);
+  });
 
   it('does not infinite loop on recursive fragment with a field named after fragment', () => {
     expectValid(`
@@ -1185,8 +1177,8 @@ describe('Validate: Overlapping fields can be merged', () => {
       }
 
       fragment fragA on Query { ...fragA }
-    `)
-  })
+    `);
+  });
 
   it('finds invalid cases even with field named after fragment', () => {
     expectErrors(`
@@ -1207,8 +1199,8 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 8, column: 9 },
         ],
       },
-    ])
-  })
+    ]);
+  });
 
   it('does not infinite loop on transitively recursive fragment', () => {
     expectValid(`
@@ -1220,8 +1212,8 @@ describe('Validate: Overlapping fields can be merged', () => {
       fragment fragA on Human { name, ...fragB }
       fragment fragB on Human { name, ...fragC }
       fragment fragC on Human { name, ...fragA }
-    `)
-  })
+    `);
+  });
 
   it('finds invalid case even with immediately recursive fragment', () => {
     expectErrors(`
@@ -1239,6 +1231,6 @@ describe('Validate: Overlapping fields can be merged', () => {
           { line: 5, column: 9 },
         ],
       },
-    ])
-  })
-})
+    ]);
+  });
+});

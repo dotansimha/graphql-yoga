@@ -1,23 +1,17 @@
-import type { AfterValidateHook } from '@envelop/core'
-import type {
-  DocumentNode,
-  GraphQLError,
-  GraphQLSchema,
-  validate,
-  ValidationRule,
-} from 'graphql'
-import { createLRUCache } from '../utils/create-lru-cache.js'
-import type { Plugin } from './types.js'
+import type { DocumentNode, GraphQLError, GraphQLSchema, validate, ValidationRule } from 'graphql';
+import type { AfterValidateHook } from '@envelop/core';
+import { createLRUCache } from '../utils/create-lru-cache.js';
+import type { Plugin } from './types.js';
 
 interface Cache<T> {
-  get(key: string): T | undefined
-  set(key: string, value: T): void
+  get(key: string): T | undefined;
+  set(key: string, value: T): void;
 }
 
 export interface ParserAndValidationCacheOptions {
-  documentCache?: Cache<DocumentNode>
-  errorCache?: Cache<unknown>
-  validationCache?: boolean | Cache<typeof validate>
+  documentCache?: Cache<DocumentNode>;
+  errorCache?: Cache<unknown>;
+  validationCache?: boolean | Cache<typeof validate>;
 }
 
 export function useParserAndValidationCache({
@@ -27,30 +21,28 @@ export function useParserAndValidationCache({
 }: // eslint-disable-next-line @typescript-eslint/ban-types
 ParserAndValidationCacheOptions): Plugin<{}> {
   const validationCacheByRules =
-    createLRUCache<
-      WeakMap<GraphQLSchema, WeakMap<DocumentNode, GraphQLError[]>>
-    >()
+    createLRUCache<WeakMap<GraphQLSchema, WeakMap<DocumentNode, GraphQLError[]>>>();
   return {
     onParse({ params, setParsedDocument }) {
-      const strDocument = params.source.toString()
-      const document = documentCache.get(strDocument)
+      const strDocument = params.source.toString();
+      const document = documentCache.get(strDocument);
       if (document) {
-        setParsedDocument(document)
-        return
+        setParsedDocument(document);
+        return;
       }
-      const parserError = errorCache.get(strDocument)
+      const parserError = errorCache.get(strDocument);
       if (parserError) {
-        throw parserError
+        throw parserError;
       }
       return ({ result }) => {
         if (result != null) {
           if (result instanceof Error) {
-            errorCache.set(strDocument, result)
+            errorCache.set(strDocument, result);
           } else {
-            documentCache.set(strDocument, result)
+            documentCache.set(strDocument, result);
           }
         }
-      }
+      };
     },
     onValidate({
       params: { schema, documentAST, rules },
@@ -59,36 +51,32 @@ ParserAndValidationCacheOptions): Plugin<{}> {
     }): void | AfterValidateHook<{}> {
       /** No schema no cache */
       if (schema == null) {
-        return
+        return;
       }
 
       if (validationCache !== false) {
-        const rulesKey =
-          rules?.map((rule: ValidationRule) => rule.name).join(',') || ''
-        let validationCacheBySchema = validationCacheByRules.get(rulesKey)
+        const rulesKey = rules?.map((rule: ValidationRule) => rule.name).join(',') || '';
+        let validationCacheBySchema = validationCacheByRules.get(rulesKey);
         if (!validationCacheBySchema) {
-          validationCacheBySchema = new WeakMap()
-          validationCacheByRules.set(rulesKey, validationCacheBySchema)
+          validationCacheBySchema = new WeakMap();
+          validationCacheByRules.set(rulesKey, validationCacheBySchema);
         }
-        let validationCacheByDocument = validationCacheBySchema.get(schema)
+        let validationCacheByDocument = validationCacheBySchema.get(schema);
         if (!validationCacheByDocument) {
-          validationCacheByDocument = new WeakMap()
-          validationCacheBySchema.set(schema, validationCacheByDocument)
+          validationCacheByDocument = new WeakMap();
+          validationCacheBySchema.set(schema, validationCacheByDocument);
         }
-        const cachedResult = validationCacheByDocument.get(documentAST)
+        const cachedResult = validationCacheByDocument.get(documentAST);
         if (cachedResult) {
-          setResult(cachedResult)
-          return
+          setResult(cachedResult);
+          return;
         }
         return ({ result }) => {
           if (result != null) {
-            validationCacheByDocument?.set(
-              documentAST,
-              result as GraphQLError[],
-            )
+            validationCacheByDocument?.set(documentAST, result as GraphQLError[]);
           }
-        }
+        };
       }
     },
-  }
+  };
 }

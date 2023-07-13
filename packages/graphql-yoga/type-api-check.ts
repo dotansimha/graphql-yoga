@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { ClientRequest } from 'node:http'
-import { IResolvers } from '@graphql-tools/utils'
-import type { GraphQLSchema } from 'graphql'
-
-import { createSchema, createYoga, YogaInitialContext } from './src/index.js'
+import { ClientRequest } from 'node:http';
+import type { GraphQLSchema } from 'graphql';
+import { IResolvers } from '@graphql-tools/utils';
+import { createSchema, createYoga, YogaInitialContext } from './src/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const schema: GraphQLSchema = null as any
+const schema: GraphQLSchema = null as any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const request: Request = null as any
+const request: Request = null as any;
 
 /**
  * TServerContext
@@ -18,8 +17,8 @@ const request: Request = null as any
 {
   const server = createYoga<{}>({
     schema,
-  })
-  server.handleRequest(request, {})
+  });
+  server.handleRequest(request, {});
 }
 
 // some results in mandatory context (error)
@@ -27,19 +26,19 @@ const request: Request = null as any
 {
   const server = createYoga<{ req: ClientRequest }>({
     schema,
-  })
+  });
   // @ts-expect-error Arguments for the rest parameter 'serverContext' were not provided.
-  server.handleRequest(request)
+  server.handleRequest(request);
 }
 
 // some results in mandatory context (success)
 {
   const server = createYoga<{ req: ClientRequest }>({
     schema,
-  })
+  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const clientRequest: ClientRequest = null as any
-  server.handleRequest(request, { req: clientRequest })
+  const clientRequest: ClientRequest = null as any;
+  server.handleRequest(request, { req: clientRequest });
 }
 
 /**
@@ -54,12 +53,12 @@ const request: Request = null as any
       resolvers: {
         Query: {
           foo: (_: unknown, __: unknown, context) => {
-            context.iAmHere
+            context.iAmHere;
           },
         },
       },
     }),
-  })
+  });
 }
 
 // context can be accessed from within resolvers
@@ -71,65 +70,65 @@ const request: Request = null as any
         Query: {
           foo: (_: unknown, __: unknown, context) => {
             // @ts-expect-error Property 'iAmHere' does not exist on type 'YogaInitialContext'.ts(2339)
-            context.iAmHere
+            context.iAmHere;
           },
         },
       },
     }),
-  })
+  });
 }
 
 // context can be accessed when defined outside
 {
   type Context = {
-    brrt: 1
-  }
+    brrt: 1;
+  };
 
   const resolvers: IResolvers<unknown, YogaInitialContext & Context> = {
     Query: {
       foo: (_: unknown, __: unknown, context) => {
-        context.brrt
+        context.brrt;
       },
     },
-  }
+  };
   const schema = createSchema<Context>({
     typeDefs: ``,
     resolvers,
-  })
+  });
 
   createYoga<Context>({
     schema,
-  })
+  });
 }
 
 // fetch usage optional serverContext
 {
   const server = createYoga<{}>({
     schema,
-  })
-  server.fetch('http://yoga/graphql?query={greetings}')
+  });
+  server.fetch('http://yoga/graphql?query={greetings}');
 }
 
 createYoga({
   graphiql: false,
-})
+});
 
 createYoga({
   graphiql: true,
-})
+});
 
 createYoga({
   graphiql: () => false,
-})
+});
 
 createYoga({
   graphiql: () => true,
-})
+});
 
 createYoga({
   graphiql: {},
-})
+});
 
 createYoga({
   graphiql: () => ({}),
-})
+});

@@ -1,6 +1,7 @@
 # GraphQL Armor example
 
-[GraphQL Armor](https://github.com/Escape-Technologies/graphql-armor) is a highly customizable security middleware for [Envelop](https://github.com/n1ru4l/envelop) servers.
+[GraphQL Armor](https://github.com/Escape-Technologies/graphql-armor) is a highly customizable
+security middleware for [Envelop](https://github.com/n1ru4l/envelop) servers.
 
 ## Usage
 
@@ -38,22 +39,24 @@ A valid query is:
 
 ```bash
 $ curl --location --request POST 'http://localhost:4000/graphql' \
---header 'Content-Type: application/json' \
---data-raw '{"query":"query { books { title } }"}'
+  --header 'Content-Type: application/json' \
+  --data-raw '{"query":"query { books { title } }"}'
 
 {"data":{"books":[{"title":"The Awakening"},{"title":"City of Glass"}]}}
 ```
 
-But if you try to use the field `title[e]`, you will get an error, the suggestion will be disabled by GraphQL Armor:
+But if you try to use the field `title[e]`, you will get an error, the suggestion will be disabled
+by GraphQL Armor:
 
 ```bash
 $ curl --location --request POST 'http://localhost:4000/graphql' \
---header 'Content-Type: application/json' \
---data-raw '{"query":"query { books { titlee } }"}'
+  --header 'Content-Type: application/json' \
+  --data-raw '{"query":"query { books { titlee } }"}'
 
 {"data":null,"errors":[{"message":"Cannot query field \"titlee\" on type \"Book\". [Suggestion message hidden by GraphQLArmor]?","locations":[{"line":1,"column":17}],"extensions":{}}]}
 ```
 
 ## To go further
 
-You can read more about GraphQL Armor usage [here](https://github.com/Escape-Technologies/graphql-armor)
+You can read more about GraphQL Armor usage
+[here](https://github.com/Escape-Technologies/graphql-armor)

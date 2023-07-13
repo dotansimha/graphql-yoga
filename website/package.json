@@ -1,29 +1,19 @@
 {
   "name": "website",
   "version": "0.0.0",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
-    "predev": "pnpm fetch-remote-filepaths",
-    "prebuild": "pnpm predev",
-    "fetch-remote-filepaths": "tsx scripts/fetch-remote-filepaths.ts",
-    "build": "next build",
-    "postbuild": "next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
     "algolia-sync": "node scripts/algolia-ci.mjs",
-    "dev": "next",
-    "start": "next start",
     "analyze": "cross-env ANALYZE=true next build",
-    "check": "exit 0"
-  },
-  "devDependencies": {
-    "@theguild/algolia": "1.1.9",
-    "@theguild/tailwind-config": "0.3.0",
-    "@types/node": "18.16.16",
-    "@types/react": "18.2.8",
-    "cross-env": "7.0.3",
-    "fast-xml-parser": "4.2.4",
-    "tsx": "^3.12.7",
-    "typescript": "5.1.6"
+    "build": "next build",
+    "check": "exit 0",
+    "dev": "next",
+    "fetch-remote-filepaths": "tsx scripts/fetch-remote-filepaths.ts",
+    "postbuild": "next-sitemap --config next-sitemap.config.cjs && node scripts/sitemap-ci.mjs",
+    "prebuild": "pnpm predev",
+    "predev": "pnpm fetch-remote-filepaths",
+    "start": "next start"
   },
   "dependencies": {
     "@theguild/components": "5.1.1",
@@ -35,5 +25,15 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "4.9.0"
+  },
+  "devDependencies": {
+    "@theguild/algolia": "1.1.9",
+    "@theguild/tailwind-config": "0.3.0",
+    "@types/node": "18.16.16",
+    "@types/react": "18.2.8",
+    "cross-env": "7.0.3",
+    "fast-xml-parser": "4.2.4",
+    "tsx": "^3.12.7",
+    "typescript": "5.1.6"
   }
 }

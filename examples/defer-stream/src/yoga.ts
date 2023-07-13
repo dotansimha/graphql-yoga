@@ -1,9 +1,8 @@
-import { createSchema, createYoga } from 'graphql-yoga'
-import { renderGraphiQL } from '@graphql-yoga/render-graphiql'
-import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+import { createSchema, createYoga } from 'graphql-yoga';
+import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
+import { renderGraphiQL } from '@graphql-yoga/render-graphiql';
 
-const wait = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time))
+const wait = (time: number) => new Promise(resolve => setTimeout(resolve, time));
 
 const typeDefs = /* GraphQL */ `
   type Query {
@@ -24,7 +23,7 @@ const typeDefs = /* GraphQL */ `
     """
     slowField(waitFor: Int! = 5000): String
   }
-`
+`;
 
 const alphabet = [
   'a',
@@ -53,26 +52,26 @@ const alphabet = [
   'x',
   'y',
   'z',
-]
+];
 
 const resolvers = {
   Query: {
     async *alphabet(_, { waitFor }) {
       for (const character of alphabet) {
-        yield character
-        await wait(waitFor)
+        yield character;
+        await wait(waitFor);
       }
     },
     fastField: async () => {
-      await wait(100)
-      return 'I am speed'
+      await wait(100);
+      return 'I am speed';
     },
     slowField: async (_, { waitFor }) => {
-      await wait(waitFor)
-      return 'I am slow'
+      await wait(waitFor);
+      return 'I am slow';
     },
   },
-}
+};
 
 export const yoga = createYoga({
   schema: createSchema({
@@ -119,7 +118,7 @@ export const yoga = createYoga({
 
     `
       .split('\n')
-      .map((line) => line.replace('      ', ''))
+      .map(line => line.replace('      ', ''))
       .join('\n'),
   },
-})
+});

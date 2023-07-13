@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <base href="/" />
@@ -14,11 +14,12 @@
     <div id="root"></div>
 
     <script type="module">
-      import * as yogaGraphiQL from './src/bundle.tsx'
-      const container = window.document.querySelector('#root')
+      import * as yogaGraphiQL from './src/bundle.tsx';
+
+      const container = window.document.querySelector('#root');
       yogaGraphiQL.renderYogaGraphiQL(container, {
         endpoint: '/graphql',
-      })
+      });
     </script>
   </body>
 </html>

@@ -1,5 +1,5 @@
-import { createInMemoryAPQStore, useAPQ } from '@graphql-yoga/plugin-apq'
-import { createSchema, createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga';
+import { createInMemoryAPQStore, useAPQ } from '@graphql-yoga/plugin-apq';
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -7,11 +7,11 @@ const schema = createSchema({
       _: String
     }
   `,
-})
+});
 
 describe('Automatic Persisted Queries', () => {
   it('sends not found error to client if persisted query is missing', async () => {
-    const store = createInMemoryAPQStore()
+    const store = createInMemoryAPQStore();
     const yoga = createYoga({
       plugins: [
         useAPQ({
@@ -19,7 +19,7 @@ describe('Automatic Persisted Queries', () => {
         }),
       ],
       schema,
-    })
+    });
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -30,20 +30,19 @@ describe('Automatic Persisted Queries', () => {
         extensions: {
           persistedQuery: {
             version: 1,
-            sha256Hash:
-              'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+            sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
           },
         },
       }),
-    })
+    });
 
-    expect(response.ok).toBe(false)
-    const body = await response.json()
-    expect(body.errors).toBeDefined()
-    expect(body.errors[0].message).toBe('PersistedQueryNotFound')
-  })
+    expect(response.ok).toBe(false);
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+    expect(body.errors[0].message).toBe('PersistedQueryNotFound');
+  });
   it('uses a stored persisted query', async () => {
-    const store = createInMemoryAPQStore()
+    const store = createInMemoryAPQStore();
     const yoga = createYoga({
       plugins: [
         useAPQ({
@@ -51,13 +50,12 @@ describe('Automatic Persisted Queries', () => {
         }),
       ],
       schema,
-    })
+    });
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
-    }
-    store.set(persistedQueryEntry.sha256Hash, '{__typename}')
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+    };
+    store.set(persistedQueryEntry.sha256Hash, '{__typename}');
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -68,14 +66,14 @@ describe('Automatic Persisted Queries', () => {
           persistedQuery: persistedQueryEntry,
         },
       }),
-    })
+    });
 
-    const body = await response.json()
-    expect(body.errors).toBeUndefined()
-    expect(body.data.__typename).toBe('Query')
-  })
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.__typename).toBe('Query');
+  });
   it('saves a persisted query', async () => {
-    const store = createInMemoryAPQStore()
+    const store = createInMemoryAPQStore();
     const yoga = createYoga({
       plugins: [
         useAPQ({
@@ -83,14 +81,13 @@ describe('Automatic Persisted Queries', () => {
         }),
       ],
       schema,
-    })
+    });
 
     const persistedQueryEntry = {
       version: 1,
-      sha256Hash:
-        'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
-    }
-    const query = `{__typename}`
+      sha256Hash: 'ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38',
+    };
+    const query = `{__typename}`;
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -103,17 +100,17 @@ describe('Automatic Persisted Queries', () => {
           persistedQuery: persistedQueryEntry,
         },
       }),
-    })
+    });
 
-    const entry = store.get(persistedQueryEntry.sha256Hash)
-    expect(entry).toBe(query)
+    const entry = store.get(persistedQueryEntry.sha256Hash);
+    expect(entry).toBe(query);
 
-    const body = await response.json()
-    expect(body.errors).toBeUndefined()
-    expect(body.data.__typename).toBe('Query')
-  })
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.__typename).toBe('Query');
+  });
   it('raises an error when the hash does not match the operation', async () => {
-    const store = createInMemoryAPQStore()
+    const store = createInMemoryAPQStore();
     const yoga = createYoga({
       plugins: [
         useAPQ({
@@ -121,8 +118,8 @@ describe('Automatic Persisted Queries', () => {
         }),
       ],
       schema,
-    })
-    const query = `{__typename}`
+    });
+    const query = `{__typename}`;
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -138,11 +135,11 @@ describe('Automatic Persisted Queries', () => {
           },
         },
       }),
-    })
+    });
 
-    expect(response.ok).toBe(false)
+    expect(response.ok).toBe(false);
     expect(await response.json()).toEqual({
       errors: [{ message: 'PersistedQueryMismatch' }],
-    })
-  })
-})
+    });
+  });
+});

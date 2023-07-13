@@ -1,5 +1,5 @@
-import { FetchAPI } from '../types.js'
-import { Plugin } from './types.js'
+import { FetchAPI } from '../types.js';
+import { Plugin } from './types.js';
 
 export interface ReadinessCheckPluginOptions {
   /**
@@ -7,7 +7,7 @@ export interface ReadinessCheckPluginOptions {
    *
    * @default /ready
    */
-  endpoint?: string
+  endpoint?: string;
   /**
    * The check for whether the service is ready to perform.
    *
@@ -22,9 +22,9 @@ export interface ReadinessCheckPluginOptions {
    * response body. Be careful which information you expose.
    */
   check: (payload: {
-    request: Request
-    fetchAPI: FetchAPI
-  }) => void | boolean | Response | Promise<void | boolean | Response>
+    request: Request;
+    fetchAPI: FetchAPI;
+  }) => void | boolean | Response | Promise<void | boolean | Response>;
 }
 
 /**
@@ -34,38 +34,32 @@ export function useReadinessCheck({
   endpoint = '/ready',
   check,
 }: ReadinessCheckPluginOptions): Plugin {
-  let urlPattern: URLPattern
+  let urlPattern: URLPattern;
   return {
     onYogaInit({ yoga }) {
-      urlPattern = new yoga.fetchAPI.URLPattern({ pathname: endpoint })
+      urlPattern = new yoga.fetchAPI.URLPattern({ pathname: endpoint });
     },
     async onRequest({ request, endResponse, fetchAPI, url }) {
-      if (
-        request.url.endsWith(endpoint) ||
-        url.pathname === endpoint ||
-        urlPattern.test(url)
-      ) {
-        let response: Response
+      if (request.url.endsWith(endpoint) || url.pathname === endpoint || urlPattern.test(url)) {
+        let response: Response;
         try {
-          const readyOrResponse = await check({ request, fetchAPI })
+          const readyOrResponse = await check({ request, fetchAPI });
           if (typeof readyOrResponse === 'object') {
-            response = readyOrResponse
+            response = readyOrResponse;
           } else {
             response = new fetchAPI.Response(null, {
               status: readyOrResponse === false ? 503 : 200,
-            })
+            });
           }
         } catch (err) {
-          const isError = err instanceof Error
+          const isError = err instanceof Error;
           response = new fetchAPI.Response(isError ? err.message : null, {
             status: 503,
-            headers: isError
-              ? { 'content-type': 'text/plain; charset=utf-8' }
-              : {},
-          })
+            headers: isError ? { 'content-type': 'text/plain; charset=utf-8' } : {},
+          });
         }
-        endResponse(response)
+        endResponse(response);
       }
     },
-  }
+  };
 }

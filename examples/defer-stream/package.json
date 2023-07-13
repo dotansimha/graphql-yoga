@@ -1,16 +1,16 @@
 {
   "name": "example-defer-stream",
-  "private": true,
   "version": "0.13.6",
+  "private": true,
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "check": "tsc --pretty --noEmit"
+    "check": "tsc --pretty --noEmit",
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
+    "@graphql-yoga/plugin-defer-stream": "2.0.3",
     "@graphql-yoga/render-graphiql": "4.0.3",
     "graphql": "16.6.0",
-    "@graphql-yoga/plugin-defer-stream": "2.0.3"
+    "graphql-yoga": "4.0.3"
   },
   "devDependencies": {
     "ts-node": "10.9.1",

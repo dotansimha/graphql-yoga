@@ -1,22 +1,20 @@
 {
   "name": "@graphql-yoga/plugin-disable-introspection",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "version": "1.0.3",
+  "type": "module",
   "description": "Disable Introspection plugin for GraphQL Yoga.",
   "repository": {
     "type": "git",
     "url": "https://github.com/dotansimha/graphql-yoga.git",
     "directory": "packages/plugins/disable-introspection"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "scripts": {
-    "check": "tsc --pretty --noEmit"
-  },
   "author": "Laurin Quast <laurinquast@googlemail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": {
@@ -35,20 +33,22 @@
     "./package.json": "./package.json"
   },
   "typings": "dist/typings/index.d.ts",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "peerDependencies": {
+    "graphql": "^15.2.0 || ^16.0.0",
+    "graphql-yoga": "^4.0.3"
+  },
+  "devDependencies": {
+    "graphql": "^16.6.0",
+    "graphql-yoga": "workspace:*"
   },
   "publishConfig": {
     "directory": "dist",
     "access": "public"
   },
-  "peerDependencies": {
-    "graphql-yoga": "^4.0.3",
-    "graphql": "^15.2.0 || ^16.0.0"
-  },
-  "devDependencies": {
-    "graphql-yoga": "workspace:*",
-    "graphql": "^16.6.0"
-  },
-  "type": "module"
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
 }

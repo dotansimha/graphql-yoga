@@ -1,5 +1,7 @@
 ---
-description: Response caching is a technique for reducing server load by caching GraphQL query operation results.
+description:
+  Response caching is a technique for reducing server load by caching GraphQL query operation
+  results.
 ---
 
 import { Callout } from '@theguild/components'
@@ -7,7 +9,8 @@ import { Callout } from '@theguild/components'
 # Response Caching
 
 Response caching is a technique for reducing server load by caching GraphQL query operation results.
-For incoming GraphQL Query operations with the same variable values, the same response is returned from a cache instead of executed again.
+For incoming GraphQL Query operations with the same variable values, the same response is returned
+from a cache instead of executed again.
 
 ## Quick Start
 
@@ -20,8 +23,8 @@ npm i @graphql-yoga/plugin-response-cache
 The following sample setup show as slow field resolver (`Query.slow`).
 
 ```ts filename="Response cache example" {14-17,22-25}
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 
 const yoga = createYoga({
@@ -34,7 +37,7 @@ const yoga = createYoga({
     resolvers: {
       Query: {
         slow: async () => {
-          await new Promise((resolve) => setTimeout(resolve, 5000))
+          await new Promise(resolve => setTimeout(resolve, 5000))
           return 'I am slow.'
         }
       }
@@ -54,11 +57,12 @@ server.listen(4000, () => {
 })
 ```
 
-After starting the server we can execute a GraphQL Query operation, that selects the `Query.slow` field.
+After starting the server we can execute a GraphQL Query operation, that selects the `Query.slow`
+field.
 
 ```sh filename="Execute slow GraphQL Query Operation with cUrl"
 curl -X POST -H 'Content-Type: application/json' http://localhost:4000/graphql \
--d '{"query":"{slow}"}' -w '\nTotal time : %{time_total}'
+  -d '{"query":"{slow}"}' -w '\nTotal time : %{time_total}'
 ```
 
 The output will look similar to the following:
@@ -77,24 +81,28 @@ Total time:0.007571%
 
 ## Session based caching
 
-If your GraphQL API returns specific data depending on the viewer's session, you can use the `session` option to cache the response per session.
-Usually, the session is determined by an HTTP header, e.g. an user id within the encoded access token.
+If your GraphQL API returns specific data depending on the viewer's session, you can use the
+`session` option to cache the response per session. Usually, the session is determined by an HTTP
+header, e.g. an user id within the encoded access token.
 
-The `session` function receives a `request` parameter that is a [`Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request).
+The `session` function receives a `request` parameter that is a
+[`Request` object](https://developer.mozilla.org/en-US/docs/Web/API/Request).
 
 ```ts filename="Response Cache configuration based on  header"
 useResponseCache({
   // cache based on the authentication header
-  session: (request) => request.headers.get('authentication')
+  session: request => request.headers.get('authentication')
 })
 ```
 
 ## Time to Live (TTL)
 
-It is possible to give cached operations a time to live.
-Either globally, based on [schema coordinates](https://github.com/graphql/graphql-wg/blob/main/rfcs/SchemaCoordinates.md) or object types.
+It is possible to give cached operations a time to live. Either globally, based on
+[schema coordinates](https://github.com/graphql/graphql-wg/blob/main/rfcs/SchemaCoordinates.md) or
+object types.
 
-If a query operation result contains multiple objects of the same or different types, the lowest TTL is picked.
+If a query operation result contains multiple objects of the same or different types, the lowest TTL
+is picked.
 
 ### Using plugin configuration
 
@@ -118,7 +126,8 @@ useResponseCache({
 
 For a schema first approach, the `@cacheControl` directive can be used to define the TTL.
 
-Notice that the global default TTL can only be define in the plugin options `ttl` and not via the directive.
+Notice that the global default TTL can only be define in the plugin options `ttl` and not via the
+directive.
 
 ```ts filenmae="Response Cache configuration with TTL using @cacheControl directive"
 import { cacheControlDirective } from '@graphql-yoga/plugin-response-cache'
@@ -141,7 +150,8 @@ const typeDefs = /* GraphQL */ `
 
 ## Invalidations via Mutation
 
-When executing a mutation operation the cached query results that contain type entities within the Mutation result will be automatically be invalidated.
+When executing a mutation operation the cached query results that contain type entities within the
+Mutation result will be automatically be invalidated.
 
 ```graphql filename="GraphQL mutation operation"
 mutation UpdateUser {
@@ -165,13 +175,14 @@ mutation UpdateUser {
 }
 ```
 
-For the given GraphQL operation and execution result all cached query results that contain the type `User` with the id `1` will be invalidated.
+For the given GraphQL operation and execution result all cached query results that contain the type
+`User` with the id `1` will be invalidated.
 
 This behavior can be disabled by setting the `invalidateViaMutation` option to `false`.
 
 ```ts filename="Disabling mutation invalidation"
 useResponseCache({
-  session: (request) => null,
+  session: request => null,
   invalidateViaMutation: false
 })
 ```
@@ -180,13 +191,11 @@ useResponseCache({
 
 You can invalidate a type or specific instances of a type using the cache invalidation API.
 
-In order to use the API, you need to manually instantiate the cache an pass it to the `useResponseCache` plugin.
+In order to use the API, you need to manually instantiate the cache an pass it to the
+`useResponseCache` plugin.
 
 ```ts filename="Manual cache construction" {3,6}
-import {
-  useResponseCache,
-  createInMemoryCache
-} from '@graphql-yoga/plugin-response-cache'
+import { createInMemoryCache, useResponseCache } from '@graphql-yoga/plugin-response-cache'
 
 const cache = createInMemoryCache()
 
@@ -223,7 +232,8 @@ cache.invalidate([
 
 By default, the response cache stores all the cached query results in memory.
 
-If you want a cache that is shared between multiple server instances you can use the Redis cache implementation, which is available as a separate package.
+If you want a cache that is shared between multiple server instances you can use the Redis cache
+implementation, which is available as a separate package.
 
 <Callout>The Redis cache currently only works in Node.js environments.</Callout>
 
@@ -254,11 +264,15 @@ useResponseCache({
 
 ## HTTP Caching via `ETag` and `If-None-Match` headers
 
-Response Caching plugin sends `ETag` headers to the client, and respects `If-None-Match` headers in the HTTP request.
+Response Caching plugin sends `ETag` headers to the client, and respects `If-None-Match` headers in
+the HTTP request.
 
-If the client sends an `If-None-Match` header with the same value as the `ETag` header, the server will respond with a `304 Not Modified` status code without any content, which allows you to reduce the server load.
+If the client sends an `If-None-Match` header with the same value as the `ETag` header, the server
+will respond with a `304 Not Modified` status code without any content, which allows you to reduce
+the server load.
 
-Most of the browsers and some HTTP clients support this behavior, so you can use it to improve the performance of your frontend application.
+Most of the browsers and some HTTP clients support this behavior, so you can use it to improve the
+performance of your frontend application.
 
 [Learn more about `ETag` and `If-None-Match` headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
 
@@ -268,10 +282,11 @@ First we send a request to the GraphQL server, and we can see that the response 
 
 ```bash filename="Get ETag and Last-Modified headers"
 curl -H 'Content-Type: application/json' \
-     "http://localhost:4000/graphql?query={me{id name}}" -v
+  "http://localhost:4000/graphql?query={me{id name}}" -v
 ```
 
-Then the server will respond a data something the following with the `ETag` and `Last-Modified` headers:
+Then the server will respond a data something the following with the `ETag` and `Last-Modified`
+headers:
 
 - `ETag` is the key that is used to identify the cached response.
 - `Last-Modified` is used to determine if the cached response is still valid.
@@ -297,13 +312,14 @@ Then the server will respond a data something the following with the `ETag` and 
 {"data":{"me":{"id":"1","name":"Bob"}}}
 ```
 
-In the next calls, we can use the `ETag` header as the `If-None-Match` header together with `Last-Modified` header as `If-Modified-Since` to check if the cached response is still valid.
+In the next calls, we can use the `ETag` header as the `If-None-Match` header together with
+`Last-Modified` header as `If-Modified-Since` to check if the cached response is still valid.
 
 ```bash filename="Use the headers to check if the cached response is still valid"
 curl -H "Accept: application/json" \
-     -H "If-None-Match: 2c0ebfe7b2b0273029f2fa23a99d213b56f4838756b3ef7b323c04de1e836be3" \
-     -H "If-Modified-Since: Wed Feb 15 2023 15:23:55 GMT" \
-     "http://localhost:4000/graphql?query=\{me\{id,name\}\}" -v
+  -H "If-None-Match: 2c0ebfe7b2b0273029f2fa23a99d213b56f4838756b3ef7b323c04de1e836be3" \
+  -H "If-Modified-Since: Wed Feb 15 2023 15:23:55 GMT" \
+  "http://localhost:4000/graphql?query=\{me\{id,name\}\}" -v
 ```
 
 Then the server will return `304: Not Modified` status code with no content.

@@ -1,28 +1,28 @@
-import { map } from './map.js'
+import { map } from './map.js';
 
 async function collectAsyncIterableValues<TType>(
   asyncIterable: AsyncIterable<TType>,
 ): Promise<Array<TType>> {
-  const values: Array<TType> = []
+  const values: Array<TType> = [];
   for await (const value of asyncIterable) {
-    values.push(value)
+    values.push(value);
   }
-  return values
+  return values;
 }
 
 describe('map', () => {
   it('maps source stream', async () => {
     async function* source() {
-      yield 1
-      yield 2
-      yield 3
-      yield 1
+      yield 1;
+      yield 2;
+      yield 3;
+      yield 1;
     }
 
-    const filterFn = (value: number) => value * 2
-    const stream = map(filterFn)(source())
-    const result = await collectAsyncIterableValues(stream)
+    const filterFn = (value: number) => value * 2;
+    const stream = map(filterFn)(source());
+    const result = await collectAsyncIterableValues(stream);
 
-    expect(result).toEqual([2, 4, 6, 2])
-  })
-})
+    expect(result).toEqual([2, 4, 6, 2]);
+  });
+});

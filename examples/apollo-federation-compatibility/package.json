@@ -1,17 +1,17 @@
 {
-  "private": true,
   "name": "example-apollo-federation-compatibility",
   "version": "1.0.0",
   "description": "Apollo Federation implemented with GraphQL Yoga",
-  "main": "dist/index.js",
-  "scripts": {
-    "prebuild": "graphql-codegen",
-    "build": "node scripts/bundle.js",
-    "start": "node ./dist/index.js",
-    "check": "tsc --pretty --noEmit"
-  },
   "author": "Charly POLY",
   "license": "ISC",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "node scripts/bundle.js",
+    "check": "tsc --pretty --noEmit",
+    "prebuild": "graphql-codegen",
+    "start": "node ./dist/index.js"
+  },
   "dependencies": {
     "@apollo/subgraph": "^2.4.0",
     "@graphql-yoga/plugin-apollo-inline-trace": "2.0.3",
@@ -23,7 +23,7 @@
     "@graphql-codegen/cli": "4.0.1",
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-resolvers": "4.0.1",
-    "esbuild": "0.17.19",
-    "@types/node": "18.16.16"
+    "@types/node": "18.16.16",
+    "esbuild": "0.17.19"
   }
 }

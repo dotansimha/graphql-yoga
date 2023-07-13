@@ -1,15 +1,19 @@
 ---
-description: Learn how to disable GraphQL schema introspection and the "did you mean x" suggestion feature.
+description:
+  Learn how to disable GraphQL schema introspection and the "did you mean x" suggestion feature.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Introspection
 
-A powerful feature of GraphQL is schema introspection.
-This feature is used by GraphiQL for exploring the schema and also by tooling such as [GraphQL Code Generator](https://the-guild.dev/graphql/codegen) for generating type-safe client/frontend code.
+A powerful feature of GraphQL is schema introspection. This feature is used by GraphiQL for
+exploring the schema and also by tooling such as
+[GraphQL Code Generator](https://the-guild.dev/graphql/codegen) for generating type-safe
+client/frontend code.
 
-GraphQL schema introspection is also a feature that allows clients to ask a GraphQL server what GraphQL features it supports (e.g. defer/stream or subscriptions).
+GraphQL schema introspection is also a feature that allows clients to ask a GraphQL server what
+GraphQL features it supports (e.g. defer/stream or subscriptions).
 
 ## Disabling Introspection
 
@@ -40,9 +44,9 @@ server.listen(4000, () => {
 
 ## Disable Introspection based on the GraphQL Request
 
-Sometimes you want to allow introspectition for certain users.
-You can access the `Request` object and determine based on that whether introspection should be enabled or not.
-E.g. you can check the headers.
+Sometimes you want to allow introspectition for certain users. You can access the `Request` object
+and determine based on that whether introspection should be enabled or not. E.g. you can check the
+headers.
 
 ```ts "Disabling GraphQL schema introspection conditionally" {7}
 import { createYoga } from 'graphql-yoga'
@@ -53,8 +57,7 @@ const yoga = createYoga({
   graphiql: false,
   plugins: [
     useDisableIntrospection({
-      isDisabled: (request) =>
-        request.headers.get('x-allow-introspection') !== 'secret-access-key'
+      isDisabled: request => request.headers.get('x-allow-introspection') !== 'secret-access-key'
     })
   ]
 })
@@ -72,12 +75,14 @@ server.listen(4000, () => {
   It allows you to configure various security features such as character limit or blocking field suggestions.
   For more information about `graphql-armor` features, you can refer to the [documentation](https://escape.tech/graphql-armor/docs/category/plugins).
 
-Here is an example of how to use `graphql-armor` to disable introspection and block field suggestions.
+Here is an example of how to use `graphql-armor` to disable introspection and block field
+suggestions.
 
 </Callout>
 
-When executing invalid GraphQL operation the GraphQL engine will try to construct smart suggestions that hint typos in the executed GraphQL document.
-This can be considered a security issue, as it can leak information about the GraphQL schema, even if introspection is disabled.
+When executing invalid GraphQL operation the GraphQL engine will try to construct smart suggestions
+that hint typos in the executed GraphQL document. This can be considered a security issue, as it can
+leak information about the GraphQL schema, even if introspection is disabled.
 
 <Callout>
   If your goal is to avoid unknown actors from reverse-engineering your GraphQL
@@ -88,7 +93,9 @@ This can be considered a security issue, as it can leak information about the Gr
 
 </Callout>
 
-Disabling the "did you mean x" suggestion feature can be achieved via the `blockFieldSuggestionsPlugin` from [`graphql-armor`](https://github.com/Escape-Technologies/graphql-armor).
+Disabling the "did you mean x" suggestion feature can be achieved via the
+`blockFieldSuggestionsPlugin` from
+[`graphql-armor`](https://github.com/Escape-Technologies/graphql-armor).
 
 ```sh npm2yarn
 npm i @escape.tech/graphql-armor-block-field-suggestions

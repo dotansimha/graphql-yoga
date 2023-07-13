@@ -1,27 +1,25 @@
-import { yoga } from '../src/yoga'
-import { createServer, Server } from 'node:http'
-import { AddressInfo } from 'node:net'
-import { fetch } from '@whatwg-node/fetch'
+import { createServer, Server } from 'node:http';
+import { AddressInfo } from 'node:net';
+import { fetch } from '@whatwg-node/fetch';
+import { yoga } from '../src/yoga';
 
 describe('error-handling example integration', () => {
-  let server: Server
-  let port: number
+  let server: Server;
+  let port: number;
 
   beforeAll(async () => {
-    server = createServer(yoga)
-    await new Promise<void>((resolve) => server.listen(0, resolve))
-    port = (server.address() as AddressInfo).port
-  })
+    server = createServer(yoga);
+    await new Promise<void>(resolve => server.listen(0, resolve));
+    port = (server.address() as AddressInfo).port;
+  });
 
   afterAll(async () => {
-    await new Promise((resolve) => server.close(resolve))
-  })
+    await new Promise(resolve => server.close(resolve));
+  });
 
   it('should get a masked error', async () => {
-    const response = await fetch(
-      `http://localhost:${port}/graphql?query=query{greeting}`,
-    )
-    const body = await response.json()
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{greeting}`);
+    const body = await response.json();
 
     expect(body).toMatchInlineSnapshot(`
       {
@@ -41,14 +39,14 @@ describe('error-handling example integration', () => {
           },
         ],
       }
-    `)
-  })
+    `);
+  });
 
   it('should get a custom error', async () => {
     const response = await fetch(
       `http://localhost:${port}/graphql?query=query{user(byId: "6"){id}}`,
-    )
-    const body = await response.json()
+    );
+    const body = await response.json();
 
     expect(body).toMatchInlineSnapshot(`
       {
@@ -74,6 +72,6 @@ describe('error-handling example integration', () => {
           },
         ],
       }
-    `)
-  })
-})
+    `);
+  });
+});

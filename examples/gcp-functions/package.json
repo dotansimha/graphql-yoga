@@ -1,22 +1,22 @@
 {
   "name": "example-gcp-functions",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "check": "exit 0",
     "prestart": "pnpm build",
-    "start": "functions-framework --target=graphql",
-    "check": "exit 0"
+    "start": "functions-framework --target=graphql"
   },
   "dependencies": {
-    "graphql-yoga": "4.0.3",
-    "graphql": "16.6.0"
+    "graphql": "16.6.0",
+    "graphql-yoga": "4.0.3"
   },
   "devDependencies": {
-    "@types/node": "18.16.16",
     "@google-cloud/functions-framework": "3.2.0",
+    "@types/node": "18.16.16",
     "typescript": "5.1.6"
   }
 }

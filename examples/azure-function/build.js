@@ -1,6 +1,6 @@
 /* eslint-disable */
-const { build } = require('esbuild')
-const { writeFileSync } = require('fs')
+const { build } = require('esbuild');
+const { writeFileSync } = require('fs');
 
 async function main() {
   await build({
@@ -11,7 +11,7 @@ async function main() {
     bundle: true,
     platform: 'node',
     target: 'node14',
-  })
+  });
 
   writeFileSync(
     './dist/package.json',
@@ -19,7 +19,7 @@ async function main() {
       name: 'yoga-test-function',
       version: '0.0.1',
     }),
-  )
+  );
 
   writeFileSync(
     './dist/host.json',
@@ -38,7 +38,7 @@ async function main() {
         version: '[2.*, 3.0.0)',
       },
     }),
-  )
+  );
 
   writeFileSync(
     './dist/Yoga/function.json',
@@ -58,12 +58,12 @@ async function main() {
         },
       ],
     }),
-  )
+  );
 
-  console.info(`Azure Function build done!`)
+  console.info(`Azure Function build done!`);
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+main().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

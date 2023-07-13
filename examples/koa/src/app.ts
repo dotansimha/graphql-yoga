@@ -1,8 +1,8 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import Koa from 'koa'
+import { createSchema, createYoga } from 'graphql-yoga';
+import Koa from 'koa';
 
 export function buildApp() {
-  const app = new Koa()
+  const app = new Koa();
 
   const yoga = createYoga<Koa.ParameterizedContext>({
     schema: createSchema({
@@ -24,8 +24,8 @@ export function buildApp() {
           countdown: {
             async *subscribe(_, { from }) {
               for (let i = from; i >= 0; i--) {
-                await new Promise((resolve) => setTimeout(resolve, 1000))
-                yield { countdown: i }
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                yield { countdown: i };
               }
             },
           },
@@ -33,21 +33,21 @@ export function buildApp() {
       },
     }),
     logging: false,
-  })
+  });
 
-  app.use(async (ctx) => {
-    const response = await yoga.handleNodeRequest(ctx.req, ctx)
+  app.use(async ctx => {
+    const response = await yoga.handleNodeRequest(ctx.req, ctx);
 
     // Set status code
-    ctx.status = response.status
+    ctx.status = response.status;
 
     // Set headers
     for (const [key, value] of response.headers.entries()) {
-      ctx.append(key, value)
+      ctx.append(key, value);
     }
 
-    ctx.body = response.body
-  })
+    ctx.body = response.body;
+  });
 
-  return app
+  return app;
 }

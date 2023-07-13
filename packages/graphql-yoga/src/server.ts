@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ExecutionResult, parse, specifiedRules, validate } from 'graphql';
 import {
   envelop,
   GetEnvelopedFn,
@@ -6,9 +7,10 @@ import {
   useEngine,
   useExtendContext,
   useMaskedErrors,
-} from '@envelop/core'
-import { normalizedExecutor } from '@graphql-tools/executor'
-import * as defaultFetchAPI from '@whatwg-node/fetch'
+} from '@envelop/core';
+import { normalizedExecutor } from '@graphql-tools/executor';
+import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
+import * as defaultFetchAPI from '@whatwg-node/fetch';
 import {
   createServerAdapter,
   ServerAdapter,
@@ -16,32 +18,27 @@ import {
   ServerAdapterRequestHandler,
   useCORS,
   useErrorHandling,
-} from '@whatwg-node/server'
-import { ExecutionResult, parse, specifiedRules, validate } from 'graphql'
-import { handleError } from './error.js'
-import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger'
-import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js'
+} from '@whatwg-node/server';
+import { handleError } from './error.js';
+import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js';
 import {
   isPOSTFormUrlEncodedRequest,
   parsePOSTFormUrlEncodedRequest,
-} from './plugins/request-parser/post-form-url-encoded.js'
+} from './plugins/request-parser/post-form-url-encoded.js';
 import {
   isPOSTGraphQLStringRequest,
   parsePOSTGraphQLStringRequest,
-} from './plugins/request-parser/post-graphql-string.js'
-import {
-  isPOSTJsonRequest,
-  parsePOSTJsonRequest,
-} from './plugins/request-parser/post-json.js'
+} from './plugins/request-parser/post-graphql-string.js';
+import { isPOSTJsonRequest, parsePOSTJsonRequest } from './plugins/request-parser/post-json.js';
 import {
   isPOSTMultipartRequest,
   parsePOSTMultipartRequest,
-} from './plugins/request-parser/post-multipart.js'
-import { useCheckGraphQLQueryParams } from './plugins/request-validation/use-check-graphql-query-params.js'
-import { useCheckMethodForGraphQL } from './plugins/request-validation/use-check-method-for-graphql.js'
-import { useHTTPValidationError } from './plugins/request-validation/use-http-validation-error.js'
-import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js'
-import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js'
+} from './plugins/request-parser/post-multipart.js';
+import { useCheckGraphQLQueryParams } from './plugins/request-validation/use-check-graphql-query-params.js';
+import { useCheckMethodForGraphQL } from './plugins/request-validation/use-check-method-for-graphql.js';
+import { useHTTPValidationError } from './plugins/request-validation/use-http-validation-error.js';
+import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js';
+import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js';
 import {
   OnParamsHook,
   OnRequestParseDoneHook,
@@ -50,33 +47,26 @@ import {
   Plugin,
   RequestParser,
   ResultProcessorInput,
-} from './plugins/types.js'
-import {
-  GraphiQLOptions,
-  GraphiQLOptionsOrFactory,
-  useGraphiQL,
-} from './plugins/use-graphiql.js'
-import { useHealthCheck } from './plugins/use-health-check.js'
+} from './plugins/types.js';
+import { GraphiQLOptions, GraphiQLOptionsOrFactory, useGraphiQL } from './plugins/use-graphiql.js';
+import { useHealthCheck } from './plugins/use-health-check.js';
 import {
   ParserAndValidationCacheOptions,
   useParserAndValidationCache,
-} from './plugins/use-parser-and-validation-cache.js'
-import { useRequestParser } from './plugins/use-request-parser.js'
-import { useResultProcessors } from './plugins/use-result-processor.js'
-import { useSchema, YogaSchemaDefinition } from './plugins/use-schema.js'
-import { useUnhandledRoute } from './plugins/use-unhandled-route.js'
-import {
-  processRequest as processGraphQLParams,
-  processResult,
-} from './process-request.js'
+} from './plugins/use-parser-and-validation-cache.js';
+import { useRequestParser } from './plugins/use-request-parser.js';
+import { useResultProcessors } from './plugins/use-result-processor.js';
+import { useSchema, YogaSchemaDefinition } from './plugins/use-schema.js';
+import { useUnhandledRoute } from './plugins/use-unhandled-route.js';
+import { processRequest as processGraphQLParams, processResult } from './process-request.js';
 import {
   FetchAPI,
   GraphQLParams,
   MaskError,
   YogaInitialContext,
   YogaMaskedErrorOpts,
-} from './types.js'
-import { maskError } from './utils/mask-error.js'
+} from './types.js';
+import { maskError } from './utils/mask-error.js';
 
 /**
  * Configuration options for the server
@@ -86,7 +76,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * Enable/disable logging or provide a custom logger.
    * @default true
    */
-  logging?: boolean | YogaLogger | LogLevel | undefined
+  logging?: boolean | YogaLogger | LogLevel | undefined;
   /**
    * Prevent leaking unexpected errors to the client. We highly recommend enabling this in production.
    * If you throw `EnvelopError`/`GraphQLError` within your GraphQL resolvers then that error will be sent back to the client.
@@ -96,7 +86,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default true
    */
-  maskedErrors?: boolean | Partial<YogaMaskedErrorOpts> | undefined
+  maskedErrors?: boolean | Partial<YogaMaskedErrorOpts> | undefined;
   /**
    * Context
    */
@@ -106,9 +96,9 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
       ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
-    | undefined
+    | undefined;
 
-  cors?: Parameters<typeof useCORS>[0] | undefined
+  cors?: Parameters<typeof useCORS>[0] | undefined;
 
   /**
    * GraphQL endpoint
@@ -116,32 +106,30 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default "/graphql"
    */
-  graphqlEndpoint?: string | undefined
+  graphqlEndpoint?: string | undefined;
 
   /**
    * Readiness check endpoint
    *
    * @default "/health"
    */
-  healthCheckEndpoint?: string | undefined
+  healthCheckEndpoint?: string | undefined;
 
   /**
    * Whether the landing page should be shown.
    */
-  landingPage?: boolean | undefined
+  landingPage?: boolean | undefined;
 
   /**
    * GraphiQL options
    *
    * @default true
    */
-  graphiql?: GraphiQLOptionsOrFactory<TServerContext> | undefined
+  graphiql?: GraphiQLOptionsOrFactory<TServerContext> | undefined;
 
-  renderGraphiQL?:
-    | ((options?: GraphiQLOptions) => PromiseOrValue<BodyInit>)
-    | undefined
+  renderGraphiQL?: ((options?: GraphiQLOptions) => PromiseOrValue<BodyInit>) | undefined;
 
-  schema?: YogaSchemaDefinition<TUserContext & TServerContext> | undefined
+  schema?: YogaSchemaDefinition<TUserContext & TServerContext> | undefined;
 
   /**
    * Envelop Plugins
@@ -152,13 +140,10 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
         // eslint-disable-next-line @typescript-eslint/ban-types
         Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
       >
-    | undefined
+    | undefined;
 
-  parserAndValidationCache?:
-    | boolean
-    | ParserAndValidationCacheOptions
-    | undefined
-  fetchAPI?: Partial<Record<keyof FetchAPI, any>> | undefined
+  parserAndValidationCache?: boolean | ParserAndValidationCacheOptions | undefined;
+  fetchAPI?: Partial<Record<keyof FetchAPI, any>> | undefined;
   /**
    * GraphQL Multipart Request spec support
    *
@@ -166,8 +151,8 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default true
    */
-  multipart?: boolean | undefined
-  id?: string | undefined
+  multipart?: boolean | undefined;
+  id?: string | undefined;
   /**
    * Batching RFC Support configuration
    *
@@ -175,8 +160,8 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default false
    */
-  batching?: BatchingOptions | undefined
-}
+  batching?: BatchingOptions | undefined;
+};
 
 export type BatchingOptions =
   | boolean
@@ -186,8 +171,8 @@ export type BatchingOptions =
        *
        * @default 10
        */
-      limit?: number
-    }
+      limit?: number;
+    };
 
 /**
  * Base class that can be extended to create a GraphQL server with any HTTP server framework.
@@ -202,37 +187,34 @@ export class YogaServer<
   /**
    * Instance of envelop
    */
-  public readonly getEnveloped: GetEnvelopedFn<
-    TUserContext & TServerContext & YogaInitialContext
-  >
-  public logger: YogaLogger
-  public readonly graphqlEndpoint: string
-  public fetchAPI: FetchAPI
+  public readonly getEnveloped: GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>;
+  public logger: YogaLogger;
+  public readonly graphqlEndpoint: string;
+  public fetchAPI: FetchAPI;
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
-  >
-  private onRequestParseHooks: OnRequestParseHook<TServerContext>[]
-  private onParamsHooks: OnParamsHook[]
-  private onResultProcessHooks: OnResultProcess[]
-  private maskedErrorsOpts: YogaMaskedErrorOpts | null
-  private id: string
+  >;
+  private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
+  private onParamsHooks: OnParamsHook[];
+  private onResultProcessHooks: OnResultProcess[];
+  private maskedErrorsOpts: YogaMaskedErrorOpts | null;
+  private id: string;
 
   constructor(options?: YogaServerOptions<TServerContext, TUserContext>) {
-    this.id = options?.id ?? 'yoga'
+    this.id = options?.id ?? 'yoga';
 
     this.fetchAPI = {
       ...defaultFetchAPI,
-    }
+    };
     if (options?.fetchAPI) {
       for (const key in options.fetchAPI) {
         if (options.fetchAPI[key as keyof FetchAPI]) {
-          this.fetchAPI[key as keyof FetchAPI] =
-            options.fetchAPI[key as keyof FetchAPI]
+          this.fetchAPI[key as keyof FetchAPI] = options.fetchAPI[key as keyof FetchAPI];
         }
       }
     }
 
-    const logger = options?.logging == null ? true : options.logging
+    const logger = options?.logging == null ? true : options.logging;
     this.logger =
       typeof logger === 'boolean'
         ? logger === true
@@ -240,57 +222,48 @@ export class YogaServer<
           : createLogger('silent')
         : typeof logger === 'string'
         ? createLogger(logger)
-        : logger
+        : logger;
 
     const maskErrorFn: MaskError =
-      (typeof options?.maskedErrors === 'object' &&
-        options.maskedErrors.maskError) ||
-      maskError
+      (typeof options?.maskedErrors === 'object' && options.maskedErrors.maskError) || maskError;
 
-    const maskedErrorSet = new WeakSet()
+    const maskedErrorSet = new WeakSet();
 
     this.maskedErrorsOpts =
       options?.maskedErrors === false
         ? null
         : {
             errorMessage: 'Unexpected error.',
-            ...(typeof options?.maskedErrors === 'object'
-              ? options.maskedErrors
-              : {}),
+            ...(typeof options?.maskedErrors === 'object' ? options.maskedErrors : {}),
             maskError: (error, message) => {
               if (maskedErrorSet.has(error as Error)) {
-                return error as Error
+                return error as Error;
               }
-              const newError = maskErrorFn(
-                error,
-                message,
-                this.maskedErrorsOpts?.isDev,
-              )
+              const newError = maskErrorFn(error, message, this.maskedErrorsOpts?.isDev);
 
               if (newError !== error) {
-                this.logger.error(error)
+                this.logger.error(error);
               }
 
-              maskedErrorSet.add(newError)
+              maskedErrorSet.add(newError);
 
-              return newError
+              return newError;
             },
-          }
+          };
 
-    const maskedErrors =
-      this.maskedErrorsOpts == null ? null : this.maskedErrorsOpts
+    const maskedErrors = this.maskedErrorsOpts == null ? null : this.maskedErrorsOpts;
 
-    let batchingLimit = 0
+    let batchingLimit = 0;
     if (options?.batching) {
       if (typeof options.batching === 'boolean') {
-        batchingLimit = 10
+        batchingLimit = 10;
       } else {
-        batchingLimit = options.batching.limit ?? 10
+        batchingLimit = options.batching.limit ?? 10;
       }
     }
 
-    this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql'
-    const graphqlEndpoint = this.graphqlEndpoint
+    this.graphqlEndpoint = options?.graphqlEndpoint || '/graphql';
+    const graphqlEndpoint = this.graphqlEndpoint;
 
     this.plugins = [
       useEngine({
@@ -304,14 +277,14 @@ export class YogaServer<
       !!options?.schema && useSchema(options.schema),
 
       options?.context != null &&
-        useExtendContext((initialContext) => {
+        useExtendContext(initialContext => {
           if (options?.context) {
             if (typeof options.context === 'function') {
-              return options.context(initialContext)
+              return options.context(initialContext);
             }
-            return options.context
+            return options.context;
           }
-          return {}
+          return {};
         }),
       // Middlewares before processing the incoming HTTP request
       useHealthCheck({
@@ -353,18 +326,18 @@ export class YogaServer<
       // Middlewares after the GraphQL execution
       useResultProcessors(),
       useErrorHandling((error, request) => {
-        const errors = handleError(error, this.maskedErrorsOpts, this.logger)
+        const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
         const result = {
           errors,
-        }
+        };
 
         return processResult({
           request,
           result,
           fetchAPI: this.fetchAPI,
           onResultProcessHooks: this.onResultProcessHooks,
-        })
+        });
       }),
 
       ...(options?.plugins ?? []),
@@ -375,71 +348,68 @@ export class YogaServer<
             addPlugin(
               // @ts-expect-error Add plugins has context but this hook doesn't care
               useParserAndValidationCache(
-                !options?.parserAndValidationCache ||
-                  options?.parserAndValidationCache === true
+                !options?.parserAndValidationCache || options?.parserAndValidationCache === true
                   ? {}
                   : options?.parserAndValidationCache,
               ),
-            )
+            );
           }
           // @ts-expect-error Add plugins has context but this hook doesn't care
-          addPlugin(useLimitBatching(batchingLimit))
+          addPlugin(useLimitBatching(batchingLimit));
           // @ts-expect-error Add plugins has context but this hook doesn't care
-          addPlugin(useCheckGraphQLQueryParams())
+          addPlugin(useCheckGraphQLQueryParams());
           addPlugin(
             // @ts-expect-error Add plugins has context but this hook doesn't care
             useUnhandledRoute({
               graphqlEndpoint,
               showLandingPage: options?.landingPage ?? true,
             }),
-          )
+          );
           // We check the method after user-land plugins because the plugin might support more methods (like graphql-sse).
           // @ts-expect-error Add plugins has context but this hook doesn't care
-          addPlugin(useCheckMethodForGraphQL())
+          addPlugin(useCheckMethodForGraphQL());
           // We make sure that the user doesn't send a mutation with GET
           // @ts-expect-error Add plugins has context but this hook doesn't care
-          addPlugin(usePreventMutationViaGET())
+          addPlugin(usePreventMutationViaGET());
           if (maskedErrors) {
-            addPlugin(useMaskedErrors(maskedErrors))
+            addPlugin(useMaskedErrors(maskedErrors));
           }
           addPlugin(
             // We handle validation errors at the end
             useHTTPValidationError(),
-          )
+          );
         },
       },
-    ]
+    ];
 
     this.getEnveloped = envelop({
       plugins: this.plugins,
-    }) as unknown as GetEnvelopedFn<
-      TUserContext & TServerContext & YogaInitialContext
-    >
+    }) as unknown as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>;
 
     this.plugins = this.getEnveloped._plugins as Plugin<
       TUserContext & TServerContext & YogaInitialContext,
       TServerContext,
       TUserContext
-    >[]
+    >[];
 
-    this.onRequestParseHooks = []
-    this.onParamsHooks = []
-    this.onResultProcessHooks = []
+    this.onRequestParseHooks = [];
+    this.onParamsHooks = [];
+    this.onResultProcessHooks = [];
     for (const plugin of this.plugins) {
       if (plugin) {
         if (plugin.onYogaInit) {
           plugin.onYogaInit({
             yoga: this,
-          })
+          });
         }
         if (plugin.onRequestParse) {
-          this.onRequestParseHooks.push(plugin.onRequestParse)
+          this.onRequestParseHooks.push(plugin.onRequestParse);
         }
         if (plugin.onParams) {
-          this.onParamsHooks.push(plugin.onParams)
+          this.onParamsHooks.push(plugin.onParams);
         }
         if (plugin.onResultProcess) {
-          this.onResultProcessHooks.push(plugin.onResultProcess)
+          this.onResultProcessHooks.push(plugin.onResultProcess);
         }
       }
     }
@@ -450,8 +420,8 @@ export class YogaServer<
       params,
       request,
     }: {
-      params: GraphQLParams
-      request: Request
+      params: GraphQLParams;
+      request: Request;
     },
     // eslint-disable-next-line @typescript-eslint/ban-types
     ...args: {} extends TServerContext
@@ -459,51 +429,51 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) {
     try {
-      let result: ExecutionResult | undefined
+      let result: ExecutionResult | undefined;
 
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({
           params,
           request,
           setParams(newParams) {
-            params = newParams
+            params = newParams;
           },
           setResult(newResult) {
-            result = newResult
+            result = newResult;
           },
           fetchAPI: this.fetchAPI,
-        })
+        });
       }
 
       if (result == null) {
-        const serverContext = args[0]
+        const serverContext = args[0];
         const initialContext = {
           ...serverContext,
           request,
           params,
-        }
+        };
 
-        const enveloped = this.getEnveloped(initialContext)
+        const enveloped = this.getEnveloped(initialContext);
 
-        this.logger.debug(`Processing GraphQL Parameters`)
+        this.logger.debug(`Processing GraphQL Parameters`);
 
         result = await processGraphQLParams({
           params,
           enveloped,
-        })
+        });
 
-        this.logger.debug(`Processing GraphQL Parameters done.`)
+        this.logger.debug(`Processing GraphQL Parameters done.`);
       }
 
-      return result
+      return result;
     } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts, this.logger)
+      const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
       const result: ExecutionResult = {
         errors,
-      }
+      };
 
-      return result
+      return result;
     }
   }
 
@@ -513,13 +483,13 @@ export class YogaServer<
   ) => {
     let url = new Proxy({} as URL, {
       get: (_target, prop, _receiver) => {
-        url = new this.fetchAPI.URL(request.url, 'http://localhost')
-        return Reflect.get(url, prop, url)
+        url = new this.fetchAPI.URL(request.url, 'http://localhost');
+        return Reflect.get(url, prop, url);
       },
-    }) as URL
+    }) as URL;
 
-    let requestParser: RequestParser | undefined
-    const onRequestParseDoneList: OnRequestParseDoneHook[] = []
+    let requestParser: RequestParser | undefined;
+    const onRequestParseDoneList: OnRequestParseDoneHook[] = [];
     for (const onRequestParse of this.onRequestParseHooks) {
       const onRequestParseResult = await onRequestParse({
         request,
@@ -527,37 +497,37 @@ export class YogaServer<
         requestParser,
         serverContext,
         setRequestParser(parser: RequestParser) {
-          requestParser = parser
+          requestParser = parser;
         },
-      })
+      });
       if (onRequestParseResult?.onRequestParseDone != null) {
-        onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone)
+        onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone);
       }
     }
 
-    this.logger.debug(`Parsing request to extract GraphQL parameters`)
+    this.logger.debug(`Parsing request to extract GraphQL parameters`);
 
     if (!requestParser) {
       return new this.fetchAPI.Response(null, {
         status: 415,
         statusText: 'Unsupported Media Type',
-      })
+      });
     }
 
-    let requestParserResult = await requestParser(request)
+    let requestParserResult = await requestParser(request);
 
     for (const onRequestParseDone of onRequestParseDoneList) {
       await onRequestParseDone({
         requestParserResult,
         setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
-          requestParserResult = newParams
+          requestParserResult = newParams;
         },
-      })
+      });
     }
 
     const result = (await (Array.isArray(requestParserResult)
       ? Promise.all(
-          requestParserResult.map((params) =>
+          requestParserResult.map(params =>
             this.getResultForParams(
               {
                 params,
@@ -573,34 +543,31 @@ export class YogaServer<
             request,
           },
           serverContext,
-        ))) as ResultProcessorInput
+        ))) as ResultProcessorInput;
 
     return processResult({
       request,
       result,
       fetchAPI: this.fetchAPI,
       onResultProcessHooks: this.onResultProcessHooks,
-    })
-  }
+    });
+  };
 }
 
 /* eslint-disable */
 export type YogaServerInstance<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
-> = ServerAdapter<TServerContext, YogaServer<TServerContext, TUserContext>>
+> = ServerAdapter<TServerContext, YogaServer<TServerContext, TUserContext>>;
 
 export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
 >(options: YogaServerOptions<TServerContext, TUserContext>) {
-  const server = new YogaServer<TServerContext, TUserContext>(options)
-  return createServerAdapter<
-    TServerContext,
-    YogaServer<TServerContext, TUserContext>
-  >(server, {
+  const server = new YogaServer<TServerContext, TUserContext>(options);
+  return createServerAdapter<TServerContext, YogaServer<TServerContext, TUserContext>>(server, {
     fetchAPI: server.fetchAPI,
     plugins: server['plugins'],
-  }) as unknown as YogaServerInstance<TServerContext, TUserContext>
+  }) as unknown as YogaServerInstance<TServerContext, TUserContext>;
   // TODO: Fix in @whatwg-node/server later
 }

@@ -1,31 +1,30 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createYoga, createSchema } from 'graphql-yoga'
-
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { Session } from 'next-auth'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from './auth/[...nextauth]'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { createSchema, createYoga } from 'graphql-yoga';
+import type { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './auth/[...nextauth]';
 
 export const config = {
   api: {
     // Disable body parsing (required for file uploads)
     bodyParser: false,
   },
-}
+};
 
 export default createYoga<
   {
-    req: NextApiRequest
-    res: NextApiResponse
+    req: NextApiRequest;
+    res: NextApiResponse;
   },
   {
-    session: Session
+    session: Session;
   }
 >({
   context: async ({ req, res }) => {
     return {
       session: await getServerSession(req, res, authOptions),
-    }
+    };
   },
   schema: createSchema({
     typeDefs: /* GraphQL */ `
@@ -48,12 +47,12 @@ export default createYoga<
     resolvers: {
       Query: {
         session(_source, _args, context) {
-          return context.session ?? null
+          return context.session ?? null;
         },
       },
       User: {
         id(source) {
-          return source['email']
+          return source['email'];
         },
       },
     },
@@ -62,4 +61,4 @@ export default createYoga<
     defaultQuery: `query Session { session { expires user { id email image } } }`,
   },
   graphqlEndpoint: '/api/graphql',
-})
+});

@@ -1,6 +1,6 @@
-import worker from '../src/index.js'
-import { Request } from '@whatwg-node/fetch'
-import { getIntrospectionQuery } from 'graphql'
+import { getIntrospectionQuery } from 'graphql';
+import { Request } from '@whatwg-node/fetch';
+import worker from '../src/index.js';
 
 test('should render GraphiQL', async () => {
   // Note we're using Worker APIs in our test, without importing anything extra
@@ -9,13 +9,13 @@ test('should render GraphiQL', async () => {
     headers: {
       Accept: 'text/html',
     },
-  })
-  const response = await worker.fetch(request, {})
+  });
+  const response = await worker.fetch(request, {});
 
-  expect(response.status).toBe(200)
-  expect(response.headers.get('content-type')).toBe('text/html')
-  expect(await response.text()).toMatch(/GraphiQL/)
-})
+  expect(response.status).toBe(200);
+  expect(response.headers.get('content-type')).toBe('text/html');
+  expect(await response.text()).toMatch(/GraphiQL/);
+});
 
 test('should succeeds introspection query', async () => {
   // Note we're using Worker APIs in our test, without importing anything extra
@@ -28,11 +28,11 @@ test('should succeeds introspection query', async () => {
     body: JSON.stringify({
       query: getIntrospectionQuery(),
     }),
-  })
-  const response = await worker.fetch(request, {})
+  });
+  const response = await worker.fetch(request, {});
 
-  expect(response.status).toBe(200)
-  expect(response.headers.get('content-type')).toContain('application/json')
+  expect(response.status).toBe(200);
+  expect(response.headers.get('content-type')).toContain('application/json');
   expect(await response.json()).toMatchObject({
     data: {
       __schema: {
@@ -41,8 +41,8 @@ test('should succeeds introspection query', async () => {
         },
       },
     },
-  })
-})
+  });
+});
 
 test('should succeeds introspection query with custom route', async () => {
   // Note we're using Worker APIs in our test, without importing anything extra
@@ -55,13 +55,13 @@ test('should succeeds introspection query with custom route', async () => {
     body: JSON.stringify({
       query: getIntrospectionQuery(),
     }),
-  })
+  });
   const response = await worker.fetch(request, {
     GRAPHQL_ROUTE: '/api',
-  })
+  });
 
-  expect(response.status).toBe(200)
-  expect(response.headers.get('content-type')).toContain('application/json')
+  expect(response.status).toBe(200);
+  expect(response.headers.get('content-type')).toContain('application/json');
   expect(await response.json()).toMatchObject({
     data: {
       __schema: {
@@ -70,5 +70,5 @@ test('should succeeds introspection query with custom route', async () => {
         },
       },
     },
-  })
-})
+  });
+});

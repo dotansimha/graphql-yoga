@@ -1,6 +1,6 @@
 /* eslint-disable */
-const { build } = require('esbuild')
-const { writeFileSync } = require('fs')
+const { build } = require('esbuild');
+const { writeFileSync } = require('fs');
 
 async function main() {
   await build({
@@ -11,7 +11,7 @@ async function main() {
     bundle: true,
     platform: 'node',
     target: 'node14',
-  })
+  });
 
   writeFileSync(
     './dist/package.json',
@@ -19,12 +19,12 @@ async function main() {
       name: 'yoga-test-function',
       version: '0.0.1',
     }),
-  )
+  );
 
-  console.info(`Node TS build done!`)
+  console.info(`Node TS build done!`);
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+main().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

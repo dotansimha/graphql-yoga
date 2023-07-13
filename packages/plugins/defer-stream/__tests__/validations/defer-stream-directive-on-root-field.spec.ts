@@ -1,18 +1,13 @@
-import { buildSchema } from 'graphql'
-
-import { DeferStreamDirectiveOnRootFieldRule } from '../../src/validations/defer-stream-directive-on-root-field.js'
-import { expectValidationErrorsWithSchema } from './harness.js'
+import { buildSchema } from 'graphql';
+import { DeferStreamDirectiveOnRootFieldRule } from '../../src/validations/defer-stream-directive-on-root-field.js';
+import { expectValidationErrorsWithSchema } from './harness.js';
 
 function expectErrors(queryStr: string) {
-  return expectValidationErrorsWithSchema(
-    schema,
-    DeferStreamDirectiveOnRootFieldRule,
-    queryStr,
-  )
+  return expectValidationErrorsWithSchema(schema, DeferStreamDirectiveOnRootFieldRule, queryStr);
 }
 
 function expectValid(queryStr: string) {
-  expectErrors(queryStr).toDeepEqual([])
+  expectErrors(queryStr).toDeepEqual([]);
 }
 
 const schema = buildSchema(`
@@ -41,7 +36,7 @@ const schema = buildSchema(`
     mutation: MutationRoot
     subscription: SubscriptionRoot
   }
-`)
+`);
 
 describe('Validate: Defer/Stream directive on root field', () => {
   it('Defer fragment spread on root query field', () => {
@@ -54,8 +49,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
           body
         }
       }
-    `)
-  })
+    `);
+  });
 
   it('Defer inline fragment spread on root query field', () => {
     expectValid(`
@@ -66,8 +61,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
           }
         }
       }
-    `)
-  })
+    `);
+  });
 
   it('Defer fragment spread on root mutation field', () => {
     expectErrors(`
@@ -81,12 +76,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Defer directive cannot be used on root mutation type "MutationRoot".',
+        message: 'Defer directive cannot be used on root mutation type "MutationRoot".',
         locations: [{ line: 3, column: 25 }],
       },
-    ])
-  })
+    ]);
+  });
   it('Defer inline fragment spread on root mutation field', () => {
     expectErrors(`
       mutation {
@@ -98,12 +92,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Defer directive cannot be used on root mutation type "MutationRoot".',
+        message: 'Defer directive cannot be used on root mutation type "MutationRoot".',
         locations: [{ line: 3, column: 13 }],
       },
-    ])
-  })
+    ]);
+  });
 
   it('Defer fragment spread on nested mutation field', () => {
     expectValid(`
@@ -114,8 +107,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
           }
         }
       }
-    `)
-  })
+    `);
+  });
 
   it('Defer fragment spread on root subscription field', () => {
     expectErrors(`
@@ -129,12 +122,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Defer directive cannot be used on root subscription type "SubscriptionRoot".',
+        message: 'Defer directive cannot be used on root subscription type "SubscriptionRoot".',
         locations: [{ line: 3, column: 25 }],
       },
-    ])
-  })
+    ]);
+  });
   it('Defer inline fragment spread on root subscription field', () => {
     expectErrors(`
       subscription {
@@ -146,12 +138,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Defer directive cannot be used on root subscription type "SubscriptionRoot".',
+        message: 'Defer directive cannot be used on root subscription type "SubscriptionRoot".',
         locations: [{ line: 3, column: 13 }],
       },
-    ])
-  })
+    ]);
+  });
 
   it('Defer fragment spread on nested subscription field', () => {
     expectValid(`
@@ -163,8 +154,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
       fragment nestedFragment on Message {
         body
       }
-    `)
-  })
+    `);
+  });
   it('Stream field on root query field', () => {
     expectValid(`
       {
@@ -172,8 +163,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
           name
         }
       }
-    `)
-  })
+    `);
+  });
   it('Stream field on fragment on root query field', () => {
     expectValid(`
       {
@@ -184,8 +175,8 @@ describe('Validate: Defer/Stream directive on root field', () => {
           name
         }
       }
-    `)
-  })
+    `);
+  });
   it('Stream field on root mutation field', () => {
     expectErrors(`
       mutation {
@@ -195,12 +186,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Stream directive cannot be used on root mutation type "MutationRoot".',
+        message: 'Stream directive cannot be used on root mutation type "MutationRoot".',
         locations: [{ line: 3, column: 27 }],
       },
-    ])
-  })
+    ]);
+  });
   it('Stream field on fragment on root mutation field', () => {
     expectErrors(`
       mutation {
@@ -213,12 +203,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Stream directive cannot be used on root mutation type "MutationRoot".',
+        message: 'Stream directive cannot be used on root mutation type "MutationRoot".',
         locations: [{ line: 6, column: 27 }],
       },
-    ])
-  })
+    ]);
+  });
   it('Stream field on root subscription field', () => {
     expectErrors(`
       subscription {
@@ -228,12 +217,11 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Stream directive cannot be used on root subscription type "SubscriptionRoot".',
+        message: 'Stream directive cannot be used on root subscription type "SubscriptionRoot".',
         locations: [{ line: 3, column: 31 }],
       },
-    ])
-  })
+    ]);
+  });
   it('Stream field on fragment on root subscription field', () => {
     expectErrors(`
       subscription {
@@ -246,10 +234,9 @@ describe('Validate: Defer/Stream directive on root field', () => {
       }
     `).toDeepEqual([
       {
-        message:
-          'Stream directive cannot be used on root subscription type "SubscriptionRoot".',
+        message: 'Stream directive cannot be used on root subscription type "SubscriptionRoot".',
         locations: [{ line: 6, column: 31 }],
       },
-    ])
-  })
-})
+    ]);
+  });
+});

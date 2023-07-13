@@ -1,22 +1,28 @@
 ---
-description: A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the server to the client that issued the subscription.
+description:
+  A GraphQL subscription initiates an event stream, where each event in the stream is pushed from
+  the server to the client that issued the subscription.
 ---
 
 import { Callout } from '@theguild/components'
 
 # Subscriptions
 
-A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the server to the client that issued the subscription.
+A GraphQL subscription initiates an event stream, where each event in the stream is pushed from the
+server to the client that issued the subscription.
 
-Example use cases for subscriptions are applications that require real-time data such as chat applications or stock trading platforms.
+Example use cases for subscriptions are applications that require real-time data such as chat
+applications or stock trading platforms.
 
-GraphQL Yoga uses [GraphQL over Server-Sent Events spec "distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) for subscriptions. You're recommended to use [`graphql-sse`](https://the-guild.dev/graphql/sse) on the client.
+GraphQL Yoga uses
+[GraphQL over Server-Sent Events spec "distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode)
+for subscriptions. You're recommended to use [`graphql-sse`](https://the-guild.dev/graphql/sse) on
+the client.
 
 <Callout>
-  Compared to implementing query and mutation resolvers, subscriptions are more
-  complex to implement as they require additional infrastructure for scenarios
-  where you have more than one instance of your GraphQL server running as the
-  event streams must be distributed across all servers.
+  Compared to implementing query and mutation resolvers, subscriptions are more complex to implement
+  as they require additional infrastructure for scenarios where you have more than one instance of
+  your GraphQL server running as the event streams must be distributed across all servers.
 </Callout>
 
 ## Quick Start with Server-Sent Events (SSE)
@@ -24,8 +30,8 @@ GraphQL Yoga uses [GraphQL over Server-Sent Events spec "distinct connections mo
 Subscriptions can be added by extending your GraphQL schema with a `Subscription` type.
 
 ```ts filename="Subscription countdown implementation"
-import { createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 // Provide your schema
 const yoga = createYoga({
@@ -48,7 +54,7 @@ const yoga = createYoga({
           // This will return the value on every 1 sec until it reaches 0
           subscribe: async function* (_, { from }) {
             for (let i = from; i >= 0; i--) {
-              await new Promise((resolve) => setTimeout(resolve, 1000))
+              await new Promise(resolve => setTimeout(resolve, 1000))
               yield { countdown: i }
             }
           }
@@ -64,7 +70,8 @@ server.listen(4000, () => {
 })
 ```
 
-Start the server, visit http://localhost:4000/graphql and paste the following operation into the left panel.
+Start the server, visit http://localhost:4000/graphql and paste the following operation into the
+left panel.
 
 ```graphql filename="Subscription countdown operation"
 subscription {
@@ -102,9 +109,8 @@ data: {"data":{"countdown":0}}
 
 <Callout>
   Watch [Episode #52 of
-  `graphql.wtf`](https://graphql.wtf/episodes/52-graphql-subscriptions-with-server-sent-events)
-  for a quick introduction to using GraphQL Subscriptions with Server Sent
-  Events:
+  `graphql.wtf`](https://graphql.wtf/episodes/52-graphql-subscriptions-with-server-sent-events) for
+  a quick introduction to using GraphQL Subscriptions with Server Sent Events:
 </Callout>
 
 <iframe
@@ -114,21 +120,33 @@ data: {"data":{"countdown":0}}
 
 ## Handling Subscriptions on the Client
 
-The [`graphql-sse` library](https://the-guild.dev/graphql/sse) should be used for GraphQL Yoga subscriptions. Please advise the [`graphql-sse` recipes](https://the-guild.dev/graphql/sse/recipes) for various examples of client integrations (including Apollo, Relay and Urql).
+The [`graphql-sse` library](https://the-guild.dev/graphql/sse) should be used for GraphQL Yoga
+subscriptions. Please advise the [`graphql-sse` recipes](https://the-guild.dev/graphql/sse/recipes)
+for various examples of client integrations (including Apollo, Relay and Urql).
 
 ## GraphQL over Server-Sent Events Protocol (via `graphql-sse`)
 
-There are two different modes in [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md). You can see the differences in the [protocol specification](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md).
+There are two different modes in
+[GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md).
+You can see the differences in the
+[protocol specification](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md).
 
 ### Distinct Connections Mode
 
-GraphQL Yoga supports [GraphQL over Server-Sent Events spec "distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode) out of the box.
+GraphQL Yoga supports
+[GraphQL over Server-Sent Events spec "distinct connections mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#distinct-connections-mode)
+out of the box.
 
 ### Single Connection Mode
 
-In case you want the subscriptions to be transported following the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode) also in the "single connection mode", you simply use the `@graphql-yoga/plugin-graphql-sse` plugin for GraphQL Yoga that exposes an additional endpoint (defaulting to `/graphql/stream`) used for [`graphql-sse`](https://the-guild.dev/graphql/sse) clients.
+In case you want the subscriptions to be transported following the
+[GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode)
+also in the "single connection mode", you simply use the `@graphql-yoga/plugin-graphql-sse` plugin
+for GraphQL Yoga that exposes an additional endpoint (defaulting to `/graphql/stream`) used for
+[`graphql-sse`](https://the-guild.dev/graphql/sse) clients.
 
-The plugin will hijack the request from the `onRequest` hook and will use **all** envelop plugins provided.
+The plugin will hijack the request from the `onRequest` hook and will use **all** envelop plugins
+provided.
 
 ```ts filename="yoga-with-graphql-sse.ts"
 import { createServer } from 'node:http'
@@ -152,8 +170,8 @@ httpServer.listen(4000, () => {
 
 <Callout>
   Check out [our working
-  example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/graphql-sse)
-  for this integration.
+  example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/graphql-sse) for this
+  integration.
 </Callout>
 
 ### Client Integration
@@ -162,15 +180,18 @@ Please refer to the [`graphql-sse` client recipes](https://the-guild.dev/graphql
 
 ## GraphQL over WebSocket Protocol (via `graphql-ws`)
 
-Suppose you want to use the [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol with GraphQL Yoga, you can use the [`graphql-ws`](https://github.com/enisdenjo/graphql-ws) library.
-To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from GraphQL Yoga like below in Node.JS.
-Also, you can set `subscriptionsProtocol` in GraphiQL options to use WebSockets instead of Server-Sent Events within GraphiQL.
+Suppose you want to use the
+[`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol
+with GraphQL Yoga, you can use the [`graphql-ws`](https://github.com/enisdenjo/graphql-ws) library.
+To have the same execution pipeline in `graphql-ws`, we can use the **Envelop** instance from
+GraphQL Yoga like below in Node.JS. Also, you can set `subscriptionsProtocol` in GraphiQL options to
+use WebSockets instead of Server-Sent Events within GraphiQL.
 
 ```ts filename="yoga-with-ws.ts"
 import { createServer } from 'node:http'
+import { useServer } from 'graphql-ws/lib/use/ws'
 import { createYoga } from 'graphql-yoga'
 import { WebSocketServer } from 'ws'
-import { useServer } from 'graphql-ws/lib/use/ws'
 
 const yogaApp = createYoga({
   graphiql: {
@@ -193,13 +214,12 @@ useServer(
     execute: (args: any) => args.rootValue.execute(args),
     subscribe: (args: any) => args.rootValue.subscribe(args),
     onSubscribe: async (ctx, msg) => {
-      const { schema, execute, subscribe, contextFactory, parse, validate } =
-        yogaApp.getEnveloped({
-          ...ctx,
-          req: ctx.extra.request,
-          socket: ctx.extra.socket,
-          params: msg.payload
-        })
+      const { schema, execute, subscribe, contextFactory, parse, validate } = yogaApp.getEnveloped({
+        ...ctx,
+        req: ctx.extra.request,
+        socket: ctx.extra.socket,
+        params: msg.payload
+      })
 
       const args = {
         schema,
@@ -228,8 +248,8 @@ httpServer.listen(4000, () => {
 
 <Callout>
   Check out [our working
-  example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/graphql-ws)
-  for this integration.
+  example](https://github.com/dotansimha/graphql-yoga/tree/main/examples/graphql-ws) for this
+  integration.
 </Callout>
 
 ### Client Integration
@@ -251,17 +271,22 @@ Please refer to the [`graphql-ws` client recipes](https://github.com/enisdenjo/g
 
 #### SSE Gotchas
 
-- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x) ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2)). In this case, consider using the [`graphql-sse` integration](#graphql-over-server-sent-events-protocol-via-graphql-sse) with ["single connection mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode).
+- [Maximum open connections limit](https://developer.mozilla.org/en-US/docs/Web/HTTP/Connection_management_in_HTTP_1.x)
+  ([when not using http/2](https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2)). In this case,
+  consider using the
+  [`graphql-sse` integration](#graphql-over-server-sent-events-protocol-via-graphql-sse) with
+  ["single connection mode"](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#single-connection-mode).
 
 ## PubSub
 
 ### Getting Started
 
-GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it easy to send new events to the client from within your mutation resolvers.
+GraphQL Yoga comes with a built-in PubSub (publish/subscribe) bus. This makes it easy to send new
+events to the client from within your mutation resolvers.
 
 ```ts filename="server.ts"
-import { createYoga, createPubSub, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createPubSub, createSchema, createYoga } from 'graphql-yoga'
 
 const pubSub = createPubSub()
 
@@ -289,7 +314,7 @@ const yoga = createYoga({
         randomNumber: {
           // subscribe to the randomNumber event
           subscribe: () => pubSub.subscribe('randomNumber'),
-          resolve: (payload) => payload
+          resolve: payload => payload
         }
       },
       Mutation: {
@@ -310,7 +335,8 @@ server.listen(4000, () => {
 
 ### Topics
 
-When using TypeScript it is possible to make the event emitter type-safe by providing a channel configuration via a generic.
+When using TypeScript it is possible to make the event emitter type-safe by providing a channel
+configuration via a generic.
 
 ```ts
 const pubSub = createPubSub<{
@@ -404,22 +430,28 @@ pubSub.publish('user:followerCount', userId2, { followerCount: 12 })
 
 ### Distributed Pub/Sub for Production
 
-If you spin up multiple instances of your GraphQL server each server instance will have their own in-memory pub/sub instance.
-An event triggered on the one server instance will not be distributed to the other server instances, resulting in subscribers on the other server not receiving any updates.
+If you spin up multiple instances of your GraphQL server each server instance will have their own
+in-memory pub/sub instance. An event triggered on the one server instance will not be distributed to
+the other server instances, resulting in subscribers on the other server not receiving any updates.
 
-The `createPubSub` function allows you to specify a custom [`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) implementation, which can use an external datastore for distributing the events across all server replicas such as [`Redis Pub/Sub`](https://redis.io/topics/pubsub) or [`Kafka`](https://kafka.apache.org/).
+The `createPubSub` function allows you to specify a custom
+[`EventTarget`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) implementation, which
+can use an external datastore for distributing the events across all server replicas such as
+[`Redis Pub/Sub`](https://redis.io/topics/pubsub) or [`Kafka`](https://kafka.apache.org/).
 
-The minimal `EventTarget` implementation is described by the [`TypedEventTarget` interface](https://github.com/dotansimha/graphql-yoga/blob/master/packages/event-target/typed-event-target/src/typed-event-target.ts).
+The minimal `EventTarget` implementation is described by the
+[`TypedEventTarget` interface](https://github.com/dotansimha/graphql-yoga/blob/master/packages/event-target/typed-event-target/src/typed-event-target.ts).
 
-Yoga comes with an `EventTarget` implementation for [Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).
+Yoga comes with an `EventTarget` implementation for
+[Redis Pub/Sub](https://redis.io/docs/manual/pubsub/).
 
 ```sh npm2yarn
 npm i @graphql-yoga/redis-event-target ioredis
 ```
 
 ```ts
-import { Redis } from 'ioredis'
 import { createPubSub } from 'graphql-yoga'
+import { Redis } from 'ioredis'
 import { createRedisEventTarget } from '@graphql-yoga/redis-event-target'
 
 const publishClient = new Redis()
@@ -433,19 +465,23 @@ const eventTarget = createRedisEventTarget({
 const pubSub = createPubSub({ eventTarget })
 ```
 
-**Please note** that Redis Pub/Sub requires a stable long-running connection and thus is not a suitable solution for serverless or edge function environments.
+**Please note** that Redis Pub/Sub requires a stable long-running connection and thus is not a
+suitable solution for serverless or edge function environments.
 
-**Please also note** that the event payloads must be JSON serializable. If you want to send complex data structures over the wire you can use tools such as [`superjson`](https://github.com/blitz-js/superjson).
+**Please also note** that the event payloads must be JSON serializable. If you want to send complex
+data structures over the wire you can use tools such as
+[`superjson`](https://github.com/blitz-js/superjson).
 
 ## Advanced
 
 ### Filter and Map Values
 
-Sometimes it is useful to filter or map events for an individual subscription set up by a client based on subscription field arguments.
-Yoga has a few utility functions that make this as simple as possible.
+Sometimes it is useful to filter or map events for an individual subscription set up by a client
+based on subscription field arguments. Yoga has a few utility functions that make this as simple as
+possible.
 
 ```ts filename="Example PubSub event stream transform"
-import { createServer, createPubSub, pipe, map, filter } from 'graphql-yoga'
+import { createPubSub, createServer, filter, map, pipe } from 'graphql-yoga'
 
 const pubSub = createPubSub<{
   randomNumber: [randomNumber: number]
@@ -453,8 +489,8 @@ const pubSub = createPubSub<{
 
 const source = pipe(
   pubSub.subscribe('randomNumber'),
-  map((publishedNumber) => publishedNumber * 2),
-  filter((multipliedNumber) => multipliedNumber < 10)
+  map(publishedNumber => publishedNumber * 2),
+  filter(multipliedNumber => multipliedNumber < 10)
 )
 
 ;(async () => {
@@ -471,8 +507,8 @@ source.return()
 ```
 
 ```ts filename="Example Random number stream transform"
-import { createPubSub, createYoga, createSchema } from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createPubSub, createSchema, createYoga } from 'graphql-yoga'
 
 const pubSub = createPubSub()
 
@@ -501,10 +537,10 @@ const yoga = createYoga({
           subscribe: (_, args) =>
             pipe(
               pubSub.subscribe('randomNumber'),
-              map((publishedNumber) => publishedNumber * args.multiplyBy),
-              filter((multipliedNumber) => multipliedNumber < args.lessThan)
+              map(publishedNumber => publishedNumber * args.multiplyBy),
+              filter(multipliedNumber => multipliedNumber < args.lessThan)
             ),
-          resolve: (payload) => payload
+          resolve: payload => payload
         }
       },
       Mutation: {
@@ -525,25 +561,24 @@ server.listen(4000, () => {
 
 ### Subscriptions with Initial Value
 
-GraphQL subscriptions are primarily designed to send a stream of events to the client.
-Sometimes it is useful to send an initial value to a client as soon as the GraphQL subscription is set up.
+GraphQL subscriptions are primarily designed to send a stream of events to the client. Sometimes it
+is useful to send an initial value to a client as soon as the GraphQL subscription is set up.
 
-An example for this would be a `Subscription.globalCounter` field that syncs a counter with all clients by streaming the initial counter value to a client that sets up the subscription and then, furthermore, streams the updated counter value to the clients every time it changes.
+An example for this would be a `Subscription.globalCounter` field that syncs a counter with all
+clients by streaming the initial counter value to a client that sets up the subscription and then,
+furthermore, streams the updated counter value to the clients every time it changes.
 
-GraphQL subscriptions are implemented using [Async Iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator), which in itself is a very complex topic with a lot of pitfalls that can cause memory leaks if not treated with caution.
+GraphQL subscriptions are implemented using
+[Async Iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator),
+which in itself is a very complex topic with a lot of pitfalls that can cause memory leaks if not
+treated with caution.
 
-Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org/) ("The missing constructor for creating safe async iterators") for providing a friendly developer experience.
+Yoga uses and re-exports [`Repeater.js`](https://repeater.js.org/) ("The missing constructor for
+creating safe async iterators") for providing a friendly developer experience.
 
 ```ts
-import {
-  createYoga,
-  createSchema,
-  createPubSub,
-  Repeater,
-  pipe,
-  map
-} from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createPubSub, createSchema, createYoga, map, pipe, Repeater } from 'graphql-yoga'
 
 let globalCounter = 0
 const pubSub = createPubSub()
@@ -583,7 +618,7 @@ const yoga = createYoga({
               // map all stream values to the latest globalCounter
               map(() => globalCounter)
             ),
-          resolve: (payload) => payload
+          resolve: payload => payload
         }
       },
       Mutation: {
@@ -609,15 +644,8 @@ server.listen(4000, () => {
 Sometimes it is handy to subscribe to multiple PubSub topics instead of a single one.
 
 ```ts
-import {
-  createYoga,
-  createSchema,
-  createPubSub,
-  Repeater,
-  pipe,
-  map
-} from 'graphql-yoga'
 import { createServer } from 'node:http'
+import { createPubSub, createSchema, createYoga, map, pipe, Repeater } from 'graphql-yoga'
 
 type User = {
   id: string
@@ -672,7 +700,7 @@ const yoga = createYoga({
               // map all stream values to the latest user
               map(() => user)
             ),
-          resolve: (payload) => payload
+          resolve: payload => payload
         }
       },
       Mutation: {

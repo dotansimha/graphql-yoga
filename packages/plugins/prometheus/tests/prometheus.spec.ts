@@ -1,6 +1,6 @@
-import { usePrometheus } from '@graphql-yoga/plugin-prometheus'
-import { createSchema, createYoga } from 'graphql-yoga'
-import { register as registry } from 'prom-client'
+import { createSchema, createYoga } from 'graphql-yoga';
+import { register as registry } from 'prom-client';
+import { usePrometheus } from '@graphql-yoga/plugin-prometheus';
 
 describe('Prometheus', () => {
   const schema = createSchema({
@@ -14,10 +14,10 @@ describe('Prometheus', () => {
         hello: () => 'Hello world!',
       },
     },
-  })
+  });
   afterEach(() => {
-    registry.clear()
-  })
+    registry.clear();
+  });
   it('http flag should work and do not send headers by default', async () => {
     const yoga = createYoga({
       schema,
@@ -27,7 +27,7 @@ describe('Prometheus', () => {
           registry,
         }),
       ],
-    })
+    });
     const result = await yoga.fetch('http://localhost:4000/graphql', {
       method: 'POST',
       headers: {
@@ -41,19 +41,19 @@ describe('Prometheus', () => {
           }
         `,
       }),
-    })
-    await result.text()
-    const metrics = await registry.metrics()
-    expect(metrics).toContain('graphql_yoga_http_duration_bucket')
-    expect(metrics).toContain('operationName="TestProm"')
-    expect(metrics).toContain('operationType="query"')
-    expect(metrics).toContain('url="http://localhost:4000/graphql"')
-    expect(metrics).toContain('method="POST"')
-    expect(metrics).toContain('statusCode="200"')
-    expect(metrics).toContain('statusText="OK"')
-    expect(metrics).not.toContain('requestHeaders')
-    expect(metrics).not.toContain('x-test=test')
-  })
+    });
+    await result.text();
+    const metrics = await registry.metrics();
+    expect(metrics).toContain('graphql_yoga_http_duration_bucket');
+    expect(metrics).toContain('operationName="TestProm"');
+    expect(metrics).toContain('operationType="query"');
+    expect(metrics).toContain('url="http://localhost:4000/graphql"');
+    expect(metrics).toContain('method="POST"');
+    expect(metrics).toContain('statusCode="200"');
+    expect(metrics).toContain('statusText="OK"');
+    expect(metrics).not.toContain('requestHeaders');
+    expect(metrics).not.toContain('x-test=test');
+  });
   it('httpRequestHeaders should work', async () => {
     const yoga = createYoga({
       schema,
@@ -64,7 +64,7 @@ describe('Prometheus', () => {
           registry,
         }),
       ],
-    })
+    });
     const result = await yoga.fetch('http://localhost:4000/graphql', {
       method: 'POST',
       headers: {
@@ -78,20 +78,20 @@ describe('Prometheus', () => {
           }
         `,
       }),
-    })
-    await result.text()
-    const metrics = await registry.metrics()
-    expect(metrics).toContain('graphql_yoga_http_duration_bucket')
-    expect(metrics).toContain('operationName="TestProm"')
-    expect(metrics).toContain('operationType="query"')
-    expect(metrics).toContain('url="http://localhost:4000/graphql"')
-    expect(metrics).toContain('method="POST"')
-    expect(metrics).toContain('statusCode="200"')
-    expect(metrics).toContain('statusText="OK"')
+    });
+    await result.text();
+    const metrics = await registry.metrics();
+    expect(metrics).toContain('graphql_yoga_http_duration_bucket');
+    expect(metrics).toContain('operationName="TestProm"');
+    expect(metrics).toContain('operationType="query"');
+    expect(metrics).toContain('url="http://localhost:4000/graphql"');
+    expect(metrics).toContain('method="POST"');
+    expect(metrics).toContain('statusCode="200"');
+    expect(metrics).toContain('statusText="OK"');
     expect(metrics).toContain(
       'requestHeaders="{\\"content-type\\":\\"application/json\\",\\"x-test\\":\\"test\\",\\"content-length\\":\\"82\\"}"}',
-    )
-  })
+    );
+  });
   it('httpResponseHeaders should work', async () => {
     const yoga = createYoga({
       schema,
@@ -102,7 +102,7 @@ describe('Prometheus', () => {
           registry,
         }),
       ],
-    })
+    });
     const result = await yoga.fetch('http://localhost:4000/graphql', {
       method: 'POST',
       headers: {
@@ -116,20 +116,20 @@ describe('Prometheus', () => {
           }
         `,
       }),
-    })
-    await result.text()
-    const metrics = await registry.metrics()
-    expect(metrics).toContain('graphql_yoga_http_duration_bucket')
-    expect(metrics).toContain('operationName="TestProm"')
-    expect(metrics).toContain('operationType="query"')
-    expect(metrics).toContain('url="http://localhost:4000/graphql"')
-    expect(metrics).toContain('method="POST"')
-    expect(metrics).toContain('statusCode="200"')
-    expect(metrics).toContain('statusText="OK"')
+    });
+    await result.text();
+    const metrics = await registry.metrics();
+    expect(metrics).toContain('graphql_yoga_http_duration_bucket');
+    expect(metrics).toContain('operationName="TestProm"');
+    expect(metrics).toContain('operationType="query"');
+    expect(metrics).toContain('url="http://localhost:4000/graphql"');
+    expect(metrics).toContain('method="POST"');
+    expect(metrics).toContain('statusCode="200"');
+    expect(metrics).toContain('statusText="OK"');
     expect(metrics).toContain(
       `responseHeaders="{\\"content-type\\":\\"application/json; charset=utf-8\\",\\"content-length\\":\\"33\\"}"}`,
-    )
-  })
+    );
+  });
   it('endpoint should work', async () => {
     const yoga = createYoga({
       schema,
@@ -141,7 +141,7 @@ describe('Prometheus', () => {
           registry,
         }),
       ],
-    })
+    });
     const graphqlResult = await yoga.fetch('http://localhost:4000/graphql', {
       method: 'POST',
       headers: {
@@ -154,17 +154,17 @@ describe('Prometheus', () => {
           }
         `,
       }),
-    })
-    await graphqlResult.text()
-    const result = await yoga.fetch('http://localhost:4000/metrics')
-    const metrics = await result.text()
-    expect(metrics).toContain('graphql_envelop_phase_execute_bucket')
-    expect(metrics).toContain('graphql_yoga_http_duration_bucket')
-    expect(metrics).toContain('operationName="TestProm"')
-    expect(metrics).toContain('operationType="query"')
-    expect(metrics).toContain('url="http://localhost:4000/graphql"')
-    expect(metrics).toContain('method="POST"')
-    expect(metrics).toContain('statusCode="200"')
-    expect(metrics).toContain('statusText="OK"')
-  })
-})
+    });
+    await graphqlResult.text();
+    const result = await yoga.fetch('http://localhost:4000/metrics');
+    const metrics = await result.text();
+    expect(metrics).toContain('graphql_envelop_phase_execute_bucket');
+    expect(metrics).toContain('graphql_yoga_http_duration_bucket');
+    expect(metrics).toContain('operationName="TestProm"');
+    expect(metrics).toContain('operationType="query"');
+    expect(metrics).toContain('url="http://localhost:4000/graphql"');
+    expect(metrics).toContain('method="POST"');
+    expect(metrics).toContain('statusCode="200"');
+    expect(metrics).toContain('statusText="OK"');
+  });
+});

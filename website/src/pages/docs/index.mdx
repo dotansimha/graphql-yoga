@@ -1,13 +1,19 @@
 ---
-description: Batteries-included GraphQL Server with focus on easy setup, performance & great developer experience
+description:
+  Batteries-included GraphQL Server with focus on easy setup, performance & great developer
+  experience
 ---
 
-import { Tabs, Tab } from '@theguild/components'
+import { Tab, Tabs } from '@theguild/components'
 import CodegenCallout from '../../components/codegen-callout.mdx'
 
 # Quick start
 
-GraphQL Yoga is a batteries-included cross-platform [GraphQL over HTTP spec-compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga) GraphQL server powered by [Envelop](https://envelop.dev) and [GraphQL Tools](https://graphql-tools.com) that runs anywhere; focused on easy setup, performance and great developer experience.
+GraphQL Yoga is a batteries-included cross-platform
+[GraphQL over HTTP spec-compliant](https://github.com/enisdenjo/graphql-http/tree/master/implementations/graphql-yoga)
+GraphQL server powered by [Envelop](https://envelop.dev) and
+[GraphQL Tools](https://graphql-tools.com) that runs anywhere; focused on easy setup, performance
+and great developer experience.
 
 ## Installation
 
@@ -17,7 +23,8 @@ npm i graphql-yoga graphql
 
 ## Schema
 
-You will need to provide a schema to Yoga, there are many ways to assemble a GraphQL schema, here's just a few:
+You will need to provide a schema to Yoga, there are many ways to assemble a GraphQL schema, here's
+just a few:
 
 <Tabs items={['graphql-yoga', '@graphql-tools/schema', 'Pothos', 'GraphQL Nexus', 'gqtx', 'graphql-js']}>
   <Tab>
@@ -74,7 +81,8 @@ export const schema = makeExecutableSchema({
 
   <Tab>
 
-[Pothos](https://pothos-graphql.dev) is a plugin based GraphQL schema builder for TypeScript. Install it and create a schema.
+[Pothos](https://pothos-graphql.dev) is a plugin based GraphQL schema builder for TypeScript.
+Install it and create a schema.
 
 ```sh npm2yarn
 npm i @pothos/core
@@ -86,7 +94,7 @@ import SchemaBuilder from '@pothos/core'
 const builder = new SchemaBuilder({})
 
 builder.queryType({
-  fields: (t) => ({
+  fields: t => ({
     hello: t.string({
       resolve: () => 'world'
     })
@@ -126,7 +134,7 @@ npm i gqtx
 ```
 
 ```js filename="schema.js"
-import { createTypesFactory, buildGraphQLSchema } from 'gqtx'
+import { buildGraphQLSchema, createTypesFactory } from 'gqtx'
 
 const t = createTypesFactory()
 
@@ -149,7 +157,7 @@ export const schema = buildGraphQLSchema({ query: Query })
 [graphql-js](https://github.com/graphql/graphql-js) is a reference implementation of GraphQL for JavaScript. You should already have it installed, just create schema.
 
 ```js filename="schema.js"
-import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql'
+import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql'
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

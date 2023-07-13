@@ -1,19 +1,19 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import { createServer } from 'node:http'
-import { useLiveQuery } from '@envelop/live-query'
-import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store'
-import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query'
-import { astFromDirective } from '@graphql-tools/utils'
+import { createServer } from 'node:http';
+import { createSchema, createYoga } from 'graphql-yoga';
+import { useLiveQuery } from '@envelop/live-query';
+import { astFromDirective } from '@graphql-tools/utils';
+import { GraphQLLiveDirective } from '@n1ru4l/graphql-live-query';
+import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store';
 
-const liveQueryStore = new InMemoryLiveQueryStore()
+const liveQueryStore = new InMemoryLiveQueryStore();
 
 setInterval(() => {
-  const firstElement = greetings.pop()
-  greetings.unshift(firstElement!)
-  liveQueryStore.invalidate('Query.greetings')
-}, 1000).unref()
+  const firstElement = greetings.pop();
+  greetings.unshift(firstElement!);
+  liveQueryStore.invalidate('Query.greetings');
+}, 1000).unref();
 
-const greetings = ['Hi', 'Hello', 'Sup']
+const greetings = ['Hi', 'Hello', 'Sup'];
 
 const yoga = createYoga<{ greetings: Array<string> }>({
   context: () => ({ greetings }),
@@ -40,11 +40,9 @@ const yoga = createYoga<{ greetings: Array<string> }>({
     `,
   },
   plugins: [useLiveQuery({ liveQueryStore })],
-})
+});
 
-const server = createServer(yoga)
+const server = createServer(yoga);
 server.listen(4000, () => {
-  console.info(
-    `Server is running on http://localhost:4000${yoga.graphqlEndpoint}`,
-  )
-})
+  console.info(`Server is running on http://localhost:4000${yoga.graphqlEndpoint}`);
+});

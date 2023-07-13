@@ -1,6 +1,6 @@
-import { startApp } from './app'
+import { startApp } from './app';
 
-startApp(4000).catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+startApp(4000).catch(e => {
+  console.error(e);
+  process.exit(1);
+});

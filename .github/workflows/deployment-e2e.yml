@@ -9,14 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        plan:
-          [
-            'cf-worker',
-            'cf-modules',
-            'azure-function',
-            'aws-lambda',
-            'vercel-function',
-          ]
+        plan: ['cf-worker', 'cf-modules', 'azure-function', 'aws-lambda', 'vercel-function']
     name: e2e / ${{ matrix.plan }}
 
     runs-on: ubuntu-latest

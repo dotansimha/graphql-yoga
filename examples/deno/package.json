@@ -1,10 +1,10 @@
 {
   "name": "example-deno",
-  "private": true,
-  "type": "module",
   "version": "0.0.0",
+  "type": "module",
+  "private": true,
   "scripts": {
-    "start": "deno run --import-map ../../import-map.json --unstable --allow-env --allow-net index.ts",
-    "check": "deno test --import-map ../../import-map.json --unstable --allow-env --allow-net --no-check ./test.ts"
+    "check": "deno test --import-map ../../import-map.json --unstable --allow-env --allow-net --no-check ./test.ts",
+    "start": "deno run --import-map ../../import-map.json --unstable --allow-env --allow-net index.ts"
   }
 }

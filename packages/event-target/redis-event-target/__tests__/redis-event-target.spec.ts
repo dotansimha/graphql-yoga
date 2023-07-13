@@ -1,79 +1,78 @@
-import { CustomEvent } from '@whatwg-node/events'
-import Redis from 'ioredis-mock'
-
-import { createRedisEventTarget } from '../src'
+import Redis from 'ioredis-mock';
+import { CustomEvent } from '@whatwg-node/events';
+import { createRedisEventTarget } from '../src';
 
 describe('createRedisEventTarget', () => {
-  it('can listen to a simple publish', (done) => {
+  it('can listen to a simple publish', done => {
     const eventTarget = createRedisEventTarget({
       publishClient: new Redis({}),
       subscribeClient: new Redis({}),
-    })
+    });
 
     eventTarget.addEventListener('a', (event: CustomEvent) => {
-      expect(event.type).toEqual('a')
+      expect(event.type).toEqual('a');
       expect(event.detail).toEqual({
         hi: 1,
-      })
-      done()
-    })
+      });
+      done();
+    });
 
     const event = new CustomEvent('a', {
       detail: {
         hi: 1,
       },
-    })
-    eventTarget.dispatchEvent(event)
-  })
+    });
+    eventTarget.dispatchEvent(event);
+  });
 
-  it('does not listen for events for which no lister is set up', (done) => {
+  it('does not listen for events for which no lister is set up', done => {
     const eventTarget = createRedisEventTarget({
       publishClient: new Redis({}),
       subscribeClient: new Redis({}),
-    })
+    });
 
     eventTarget.addEventListener('a', (_event: CustomEvent) => {
-      done(new Error('This should not be invoked'))
-    })
+      done(new Error('This should not be invoked'));
+    });
     eventTarget.addEventListener('b', (event: CustomEvent) => {
-      expect(event.type).toEqual('b')
+      expect(event.type).toEqual('b');
       expect(event.detail).toEqual({
         hi: 1,
-      })
-      done()
-    })
+      });
+      done();
+    });
 
     const event = new CustomEvent('b', {
       detail: {
         hi: 1,
       },
-    })
-    eventTarget.dispatchEvent(event)
-  })
-  it('distributes the event to all event listeners', (done) => {
+    });
+    eventTarget.dispatchEvent(event);
+  });
+  it('distributes the event to all event listeners', done => {
     const eventTarget = createRedisEventTarget({
       publishClient: new Redis({}),
       subscribeClient: new Redis({}),
-    })
+    });
 
-    let counter = 0
+    let counter = 0;
     eventTarget.addEventListener('b', (_event: CustomEvent) => {
-      counter++
-    })
+      counter++;
+    });
     eventTarget.addEventListener('b', (_event: CustomEvent) => {
-      counter++
-    })
+      counter++;
+    });
 
     const event = new CustomEvent('b', {
       detail: {
         hi: 1,
       },
-    })
-    eventTarget.dispatchEvent(event)
+    });
+    eventTarget.dispatchEvent(event);
 
     setImmediate(() => {
-      expect(counter).toEqual(2)
-      done()
-    })
-  })
-})
+      expect(counter).toEqual(2);
+      done();
+    });
+  });
+});

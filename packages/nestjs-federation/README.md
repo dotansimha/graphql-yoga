@@ -25,10 +25,7 @@ npm i @nestjs/graphql graphql-yoga graphql @graphql-yoga/nestjs-federation
 ### Create application module
 
 ```typescript
-import {
-  YogaFederationDriver,
-  YogaFederationDriverConfig
-} from '@graphql-yoga/nestjs-federation'
+import { YogaFederationDriver, YogaFederationDriverConfig } from '@graphql-yoga/nestjs-federation'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 
@@ -45,7 +42,8 @@ export class AppModule {}
 
 ### Develop GraphQL
 
-This is just a federation and gateway driver; meaning, everything else should work as [showcased in NestJS federation documentation](https://docs.nestjs.com/graphql/federation).
+This is just a federation and gateway driver; meaning, everything else should work as
+[showcased in NestJS federation documentation](https://docs.nestjs.com/graphql/federation).
 
 ## Contributing
 

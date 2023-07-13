@@ -1,10 +1,14 @@
 ---
-description: Next.js is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as an API Route.
+description:
+  Next.js is a web framework that allows you to build websites very quickly and GraphQL Yoga can be
+  integrated with Next.js easily as an API Route.
 ---
 
 # Integration with Next.js
 
-[Next.js](https://nextjs.org) is a web framework that allows you to build websites very quickly and GraphQL Yoga can be integrated with Next.js easily as [a custom route handler](https://nextjs.org/docs/app/building-your-application/routing/router-handlers).
+[Next.js](https://nextjs.org) is a web framework that allows you to build websites very quickly and
+GraphQL Yoga can be integrated with Next.js easily as
+[a custom route handler](https://nextjs.org/docs/app/building-your-application/routing/router-handlers).
 
 ## Installation
 
@@ -16,7 +20,7 @@ npm i graphql-yoga graphql
 
 ```ts filename="app/api/graphql/route.ts"
 // Next.js Custom Route Handler: https://nextjs.org/docs/app/building-your-application/routing/router-handlers
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 const { handleRequest } = createYoga({
   schema: createSchema({
@@ -27,8 +31,7 @@ const { handleRequest } = createYoga({
     `,
     resolvers: {
       Query: {
-        greetings: () =>
-          'This is the `greetings` field of the root `Query` type'
+        greetings: () => 'This is the `greetings` field of the root `Query` type'
       }
     }
   }),
@@ -43,17 +46,19 @@ const { handleRequest } = createYoga({
 export { handleRequest as GET, handleRequest as POST }
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs-app)
+> You can also check a full example on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs-app)
 
 ### Using legacy Pages Directory
 
-The App Router and custom Route Handlers only exist since NextJS 13.
-If you are using an older version of NextJS or still using Pages Directory layout, you can still use GraphQL Yoga as an [API Route](https://nextjs.org/docs/pages/building-your-application/routing/api-routes).
+The App Router and custom Route Handlers only exist since NextJS 13. If you are using an older
+version of NextJS or still using Pages Directory layout, you can still use GraphQL Yoga as an
+[API Route](https://nextjs.org/docs/pages/building-your-application/routing/api-routes).
 
 ```ts filename="pages/api/graphql.ts"
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createYoga, createSchema } from 'graphql-yoga'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createSchema, createYoga } from 'graphql-yoga'
 
 export const config = {
   api: {
@@ -85,11 +90,15 @@ export default createYoga<{
 })
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs-legacy-pages)
+> You can also check a full example on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs-legacy-pages)
 
 ## WebSockets for subscriptions
 
-WebSockets cannot be used with [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction), we therefore have to create a [custom Next.js server](https://nextjs.org/docs/advanced-features/custom-server) that will serve the GraphQL API, WebSockets and the rest of Next.js content.
+WebSockets cannot be used with
+[Next.js API Routes](https://nextjs.org/docs/api-routes/introduction), we therefore have to create a
+[custom Next.js server](https://nextjs.org/docs/advanced-features/custom-server) that will serve the
+GraphQL API, WebSockets and the rest of Next.js content.
 
 ### Installation
 
@@ -141,7 +150,7 @@ const yoga = createYoga({
           async *subscribe() {
             for (let i = 0; i < 5; i++) {
               yield { clock: new Date().toString() }
-              await new Promise((resolve) => setTimeout(resolve, 1_000))
+              await new Promise(resolve => setTimeout(resolve, 1_000))
             }
           }
         }
@@ -178,16 +187,15 @@ const yoga = createYoga({
   // prepare graphql-ws
   useServer(
     {
-      execute: (args) => args.rootValue.execute(args),
-      subscribe: (args) => args.rootValue.subscribe(args),
+      execute: args => args.rootValue.execute(args),
+      subscribe: args => args.rootValue.subscribe(args),
       onSubscribe: async (ctx, msg) => {
-        const { schema, execute, subscribe, contextFactory, parse, validate } =
-          yoga.getEnveloped({
-            ...ctx,
-            req: ctx.extra.request,
-            socket: ctx.extra.socket,
-            params: msg.payload
-          })
+        const { schema, execute, subscribe, contextFactory, parse, validate } = yoga.getEnveloped({
+          ...ctx,
+          req: ctx.extra.request,
+          socket: ctx.extra.socket,
+          params: msg.payload
+        })
 
         const args = {
           schema,
@@ -210,7 +218,7 @@ const yoga = createYoga({
   )
 
   await new Promise((resolve, reject) =>
-    server.listen(port, (err) => (err ? reject(err) : resolve()))
+    server.listen(port, err => (err ? reject(err) : resolve()))
   )
 
   console.log(`
@@ -229,4 +237,5 @@ Now that we have the custom server implemented, you start it by running:
 node server.js
 ```
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs-ws)
+> You can also check a full example on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nextjs-ws)

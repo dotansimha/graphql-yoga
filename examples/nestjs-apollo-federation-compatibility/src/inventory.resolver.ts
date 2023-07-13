@@ -1,14 +1,14 @@
-import { Resolver, ResolveReference } from '@nestjs/graphql'
+import { Resolver, ResolveReference } from '@nestjs/graphql';
 
 interface DeprecatedProduct {
-  sku: string
-  package: string
-  reason: string
+  sku: string;
+  package: string;
+  reason: string;
 }
 
 interface Inventory {
-  id: string
-  deprecatedProducts: [DeprecatedProduct]
+  id: string;
+  deprecatedProducts: [DeprecatedProduct];
 }
 
 const inventory = {
@@ -20,15 +20,15 @@ const inventory = {
       reason: 'Migrate to Federation V2',
     },
   ],
-}
+};
 
 @Resolver('Inventory')
 export class InventoryResolver {
   @ResolveReference()
   resolveReference(reference: Inventory) {
     if (reference.id === inventory.id) {
-      return inventory
+      return inventory;
     }
-    return null
+    return null;
   }
 }

@@ -1,9 +1,9 @@
-import * as functions from 'firebase-functions'
-import { createSchema, createYoga } from 'graphql-yoga'
+import * as functions from 'firebase-functions';
+import { createSchema, createYoga } from 'graphql-yoga';
 
 interface ServerContext {
-  req: functions.https.Request
-  res: functions.Response
+  req: functions.https.Request;
+  res: functions.Response;
 }
 
 const yoga = createYoga<ServerContext>({
@@ -20,6 +20,6 @@ const yoga = createYoga<ServerContext>({
     },
   }),
   graphqlEndpoint: '*',
-})
+});
 
-export const graphql = functions.https.onRequest(yoga)
+export const graphql = functions.https.onRequest(yoga);

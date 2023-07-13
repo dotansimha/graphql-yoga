@@ -4,4 +4,4 @@ export default {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   testEnvironment: 'miniflare',
-}
+};

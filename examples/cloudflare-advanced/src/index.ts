@@ -1,6 +1,6 @@
-import { createYoga, createSchema, Repeater } from 'graphql-yoga'
+import { createSchema, createYoga, Repeater } from 'graphql-yoga';
 
-declare const EXAMPLE_KV: KVNamespace
+declare const EXAMPLE_KV: KVNamespace;
 
 const yoga = createYoga({
   schema: createSchema({
@@ -53,52 +53,47 @@ const yoga = createYoga({
       },
       Mutation: {
         addTodo: async (_, { content }) => {
-          const id = Date.now().toString()
-          await EXAMPLE_KV.put(`todo_${Date.now()}`, content)
-          return id
+          const id = Date.now().toString();
+          await EXAMPLE_KV.put(`todo_${Date.now()}`, content);
+          return id;
         },
         deleteTodo: (_, { id }) => {
-          EXAMPLE_KV.delete(`todo_${id}`)
-          return true
+          EXAMPLE_KV.delete(`todo_${id}`);
+          return true;
         },
         uploadFile: async (_, { file }: { file: File }) => {
-          const name = file.name
-          const arrayBuffer = await file.arrayBuffer()
-          await EXAMPLE_KV.put(`textFile_${name}`, arrayBuffer)
-          return true
+          const name = file.name;
+          const arrayBuffer = await file.arrayBuffer();
+          await EXAMPLE_KV.put(`textFile_${name}`, arrayBuffer);
+          return true;
         },
         deleteFile: async (_, { name }) => {
-          EXAMPLE_KV.delete(`textFile_${name}`)
-          return true
+          EXAMPLE_KV.delete(`textFile_${name}`);
+          return true;
         },
       },
       Subscription: {
         time: {
           subscribe: () =>
             new Repeater((push, end) => {
-              const interval = setInterval(
-                () => push(new Date().toISOString()),
-                1000,
-              )
-              end.then(() => clearInterval(interval))
+              const interval = setInterval(() => push(new Date().toISOString()), 1000);
+              end.then(() => clearInterval(interval));
             }),
-          resolve: (value) => value,
+          resolve: value => value,
         },
         scheduled: {
           subscribe: () =>
             new Repeater((push, end) => {
-              const eventListener = (event: ScheduledEvent) => push(event)
-              self.addEventListener('scheduled', eventListener)
-              end.then(() =>
-                self.removeEventListener('scheduled', eventListener),
-              )
+              const eventListener = (event: ScheduledEvent) => push(event);
+              self.addEventListener('scheduled', eventListener);
+              end.then(() => self.removeEventListener('scheduled', eventListener));
             }),
-          resolve: (event) => event,
+          resolve: event => event,
         },
       },
     },
   }),
   maskedErrors: false,
-})
+});
 
-self.addEventListener('fetch', yoga)
+self.addEventListener('fetch', yoga);

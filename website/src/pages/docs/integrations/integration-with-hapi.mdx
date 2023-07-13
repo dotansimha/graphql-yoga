@@ -1,10 +1,13 @@
 ---
-description: Hapi allows you to build powerful, scalable applications, with minimal overhead and full out-of-the-box functionality - your code, your way.
+description:
+  Hapi allows you to build powerful, scalable applications, with minimal overhead and full
+  out-of-the-box functionality - your code, your way.
 ---
 
 # Integration with Hapi
 
-[Hapi](https://hapi.dev) allows you to build powerful, scalable applications, with minimal overhead and full out-of-the-box functionality - your code, your way.
+[Hapi](https://hapi.dev) allows you to build powerful, scalable applications, with minimal overhead
+and full out-of-the-box functionality - your code, your way.
 
 It continues to be the proven choice for enterprise-grade backend needs.
 
@@ -17,10 +20,10 @@ npm i @hapi/hapi graphql-yoga graphql
 ## Example
 
 ```ts
-import Hapi from '@hapi/hapi'
 import http from 'node:http'
 import { Readable } from 'node:stream'
-import { createYoga, createSchema } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
+import Hapi from '@hapi/hapi'
 import { schema } from './my-graphql-schema'
 
 interface ServerContext {
@@ -63,6 +66,8 @@ server.route({
 server.start()
 ```
 
-The GraphQL Yoga server should now be available at [http://localhost:4000/graphql](http://localhost:4000/graphql).
+The GraphQL Yoga server should now be available at
+[http://localhost:4000/graphql](http://localhost:4000/graphql).
 
-> You can also check a full example on our GitHub repository [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/hapi).
+> You can also check a full example on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/hapi).

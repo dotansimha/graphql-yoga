@@ -1,6 +1,6 @@
-import { cacheControlDirective } from '@envelop/response-cache'
-import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
-import { createSchema, createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga';
+import { cacheControlDirective } from '@envelop/response-cache';
+import { useResponseCache } from '@graphql-yoga/plugin-response-cache';
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -13,10 +13,10 @@ const schema = createSchema({
       _: () => 'DUMMY',
     },
   },
-})
+});
 
 it('should not hit GraphQL pipeline if cached', async () => {
-  const onEnveloped = jest.fn()
+  const onEnveloped = jest.fn();
   const yoga = createYoga({
     schema,
     plugins: [
@@ -28,17 +28,17 @@ it('should not hit GraphQL pipeline if cached', async () => {
         onEnveloped,
       },
     ],
-  })
+  });
   const response = await yoga.fetch('http://localhost:3000/graphql', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
     },
     body: JSON.stringify({ query: '{ _ }' }),
-  })
+  });
 
-  expect(response.status).toEqual(200)
-  const body = await response.json()
+  expect(response.status).toEqual(200);
+  const body = await response.json();
   expect(body).toEqual({
     data: {
       _: 'DUMMY',
@@ -50,15 +50,15 @@ it('should not hit GraphQL pipeline if cached', async () => {
         ttl: null,
       },
     },
-  })
+  });
   const response2 = await yoga.fetch('http://localhost:3000/graphql', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
     },
     body: JSON.stringify({ query: '{ _ }' }),
-  })
-  const body2 = await response2.json()
+  });
+  const body2 = await response2.json();
   expect(body2).toMatchObject({
     data: {
       _: 'DUMMY',
@@ -68,9 +68,9 @@ it('should not hit GraphQL pipeline if cached', async () => {
         hit: true,
       },
     },
-  })
-  expect(onEnveloped).toHaveBeenCalledTimes(1)
-})
+  });
+  expect(onEnveloped).toHaveBeenCalledTimes(1);
+});
 
 it('cache a query operation', async () => {
   const yoga = createYoga({
@@ -81,7 +81,7 @@ it('cache a query operation', async () => {
       }),
     ],
     schema,
-  })
+  });
   function fetch() {
     return yoga.fetch('http://localhost:3000/graphql', {
       method: 'POST',
@@ -89,13 +89,13 @@ it('cache a query operation', async () => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({ query: '{__typename}' }),
-    })
+    });
   }
 
-  let response = await fetch()
+  let response = await fetch();
 
-  expect(response.status).toEqual(200)
-  let body = await response.json()
+  expect(response.status).toEqual(200);
+  let body = await response.json();
   expect(body).toEqual({
     data: {
       __typename: 'Query',
@@ -107,11 +107,11 @@ it('cache a query operation', async () => {
         ttl: null,
       },
     },
-  })
+  });
 
-  response = await fetch()
-  expect(response.status).toEqual(200)
-  body = await response.json()
+  response = await fetch();
+  expect(response.status).toEqual(200);
+  body = await response.json();
   expect(body).toMatchObject({
     data: {
       __typename: 'Query',
@@ -121,19 +121,19 @@ it('cache a query operation', async () => {
         hit: true,
       },
     },
-  })
-})
+  });
+});
 
 it('cache a query operation per session', async () => {
   const yoga = createYoga({
     plugins: [
       useResponseCache({
-        session: (request) => request.headers.get('x-session-id') ?? null,
+        session: request => request.headers.get('x-session-id') ?? null,
         includeExtensionMetadata: true,
       }),
     ],
     schema,
-  })
+  });
   function fetch(sessionId: string) {
     return yoga.fetch('http://localhost:3000/graphql', {
       method: 'POST',
@@ -142,13 +142,13 @@ it('cache a query operation per session', async () => {
         'x-session-id': sessionId,
       },
       body: JSON.stringify({ query: '{__typename}' }),
-    })
+    });
   }
 
-  let response = await fetch('1')
+  let response = await fetch('1');
 
-  expect(response.status).toEqual(200)
-  let body = await response.json()
+  expect(response.status).toEqual(200);
+  let body = await response.json();
   expect(body).toMatchObject({
     data: {
       __typename: 'Query',
@@ -160,11 +160,11 @@ it('cache a query operation per session', async () => {
         ttl: null,
       },
     },
-  })
+  });
 
-  response = await fetch('1')
-  expect(response.status).toEqual(200)
-  body = await response.json()
+  response = await fetch('1');
+  expect(response.status).toEqual(200);
+  body = await response.json();
   expect(body).toMatchObject({
     data: {
       __typename: 'Query',
@@ -174,12 +174,12 @@ it('cache a query operation per session', async () => {
         hit: true,
       },
     },
-  })
+  });
 
-  response = await fetch('2')
+  response = await fetch('2');
 
-  expect(response.status).toEqual(200)
-  body = await response.json()
+  expect(response.status).toEqual(200);
+  body = await response.json();
   expect(body).toMatchObject({
     data: {
       __typename: 'Query',
@@ -191,8 +191,8 @@ it('cache a query operation per session', async () => {
         ttl: null,
       },
     },
-  })
-})
+  });
+});
 
 it('should miss cache if query variables change', async () => {
   const yoga = createYoga({
@@ -213,7 +213,7 @@ it('should miss cache if query variables change', async () => {
         session: () => 'testing',
       }),
     ],
-  })
+  });
 
   const query = (person: string | null) =>
     yoga.fetch('/graphql', {
@@ -226,10 +226,10 @@ it('should miss cache if query variables change', async () => {
         query: 'query Welcomer($person: String!) { hi(person: $person) }',
         variables: { person },
       }),
-    })
+    });
 
   // first invalid request, will be cached
-  let res = await query(null)
+  let res = await query(null);
   await expect(res.json()).resolves.toMatchInlineSnapshot(`
     {
       "errors": [
@@ -244,10 +244,10 @@ it('should miss cache if query variables change', async () => {
         },
       ],
     }
-  `)
+  `);
 
   // second invalid request, cache hit
-  res = await query(null)
+  res = await query(null);
   await expect(res.json()).resolves.toMatchInlineSnapshot(`
     {
       "errors": [
@@ -262,19 +262,19 @@ it('should miss cache if query variables change', async () => {
         },
       ],
     }
-  `)
+  `);
 
   // third request, valid, cache miss
-  res = await query('John')
+  res = await query('John');
   expect(await res.json()).toMatchObject({
     data: {
       hi: 'Hi John!',
     },
-  })
-})
+  });
+});
 
 it('should skip response caching with `enabled` option', async () => {
-  const hiResolver = jest.fn(() => 'Hi!')
+  const hiResolver = jest.fn(() => 'Hi!');
   const yoga = createYoga({
     schema: createSchema({
       typeDefs: /* GraphQL */ `
@@ -294,7 +294,7 @@ it('should skip response caching with `enabled` option', async () => {
         session: () => null,
       }),
     ],
-  })
+  });
 
   const resOptions: RequestInit = {
     method: 'POST',
@@ -308,25 +308,25 @@ it('should skip response caching with `enabled` option', async () => {
         }
       `,
     }),
-  }
+  };
 
-  const res1 = await yoga.fetch('/graphql', resOptions)
+  const res1 = await yoga.fetch('/graphql', resOptions);
 
-  const body1 = await res1.json()
+  const body1 = await res1.json();
   expect(body1).toMatchObject({
     data: {
       hi: 'Hi!',
     },
-  })
+  });
 
-  const res2 = await yoga.fetch('/graphql', resOptions)
-  const body2 = await res2.json()
+  const res2 = await yoga.fetch('/graphql', resOptions);
+  const body2 = await res2.json();
   expect(body2).toMatchObject({
     data: {
       hi: 'Hi!',
     },
-  })
-})
+  });
+});
 
 it('should work with @cacheControl directive', async () => {
   const yoga = createYoga({
@@ -350,7 +350,7 @@ it('should work with @cacheControl directive', async () => {
         includeExtensionMetadata: true,
       }),
     ],
-  })
+  });
   function fetch() {
     return yoga.fetch('http://localhost:3000/graphql', {
       method: 'POST',
@@ -358,13 +358,13 @@ it('should work with @cacheControl directive', async () => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({ query: '{__typename}' }),
-    })
+    });
   }
 
-  let response = await fetch()
+  let response = await fetch();
 
-  expect(response.status).toEqual(200)
-  let body = await response.json()
+  expect(response.status).toEqual(200);
+  let body = await response.json();
   expect(body).toEqual({
     data: {
       __typename: 'Query',
@@ -375,11 +375,11 @@ it('should work with @cacheControl directive', async () => {
         hit: false,
       },
     },
-  })
+  });
 
-  response = await fetch()
-  expect(response.status).toEqual(200)
-  body = await response.json()
+  response = await fetch();
+  expect(response.status).toEqual(200);
+  body = await response.json();
   expect(body).toMatchObject({
     data: {
       __typename: 'Query',
@@ -389,5 +389,5 @@ it('should work with @cacheControl directive', async () => {
         hit: false,
       },
     },
-  })
-})
+  });
+});

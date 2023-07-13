@@ -1,14 +1,14 @@
-import { createPubSub, createSchema, createYoga } from 'graphql-yoga'
-import { useSofa } from '@graphql-yoga/plugin-sofa'
+import { createPubSub, createSchema, createYoga } from 'graphql-yoga';
+import { useSofa } from '@graphql-yoga/plugin-sofa';
 
 const pizzas = [
   { id: 1, dough: 'pan', toppings: ['cheese'] },
   { id: 2, dough: 'classic', toppings: ['ham'] },
-]
+];
 const books = [
   { id: 1, title: 'Book A', type: 'AUDIO' },
   { id: 2, title: 'Book B', type: 'LEGACY' },
-]
+];
 const users = [
   {
     id: 1,
@@ -24,65 +24,59 @@ const users = [
     favoritePizza: pizzas[1],
     favoriteBook: books[1],
     favoriteFood: {
-      ingredients: [
-        'green shit',
-        'chicken',
-        'green shit',
-        'yellow shit',
-        'red shit',
-      ],
+      ingredients: ['green shit', 'chicken', 'green shit', 'yellow shit', 'red shit'],
     },
     shelf: books,
   },
-]
+];
 
 const posts = [
   {
     comments: ['Foo', 'Bar', 'Baz', 'Foo Bar', 'Foo Baz', 'Bar Baz'],
   },
-]
+];
 
 const UsersCollection = {
   get(id: string | number) {
-    const uid = typeof id === 'string' ? parseInt(id, 10) : id
+    const uid = typeof id === 'string' ? parseInt(id, 10) : id;
 
-    return users.find((u) => u.id === uid)
+    return users.find(u => u.id === uid);
   },
   all() {
-    return users
+    return users;
   },
-}
+};
 
 const BooksCollection = {
   get(id: string | number) {
-    const bid = typeof id === 'string' ? parseInt(id, 10) : id
+    const bid = typeof id === 'string' ? parseInt(id, 10) : id;
 
-    return books.find((u) => u.id === bid)
+    return books.find(u => u.id === bid);
   },
   all() {
-    return books
+    return books;
   },
   add(title: string) {
     const book = {
       id: parseInt(Math.random().toString(10).substr(2), 10),
       title,
       type: 'LEGACY',
-    }
+    };
 
-    books.push(book)
+    books.push(book);
 
-    return book
+    return book;
   },
-}
+};
 
 const PostsCollection = {
   all() {
-    return posts
+    return posts;
   },
-}
+};
 
-const pubsub = createPubSub()
-const BOOK_ADDED = 'BOOK_ADDED'
+const pubsub = createPubSub();
+const BOOK_ADDED = 'BOOK_ADDED';
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
     type Pizza {
@@ -152,41 +146,41 @@ const schema = createSchema({
   resolvers: {
     Query: {
       me() {
-        return UsersCollection.get(1)
+        return UsersCollection.get(1);
       },
       user(_: any, { id }: any) {
-        return UsersCollection.get(id)
+        return UsersCollection.get(id);
       },
       users() {
-        return UsersCollection.all()
+        return UsersCollection.all();
       },
       usersLimit(_: any, { limit }: any) {
-        return UsersCollection.all().slice(0, limit)
+        return UsersCollection.all().slice(0, limit);
       },
       usersSort(_: any, { sort }: any) {
-        const users = UsersCollection.all()
-        return sort ? users.sort((a, b) => b.id - a.id) : users
+        const users = UsersCollection.all();
+        return sort ? users.sort((a, b) => b.id - a.id) : users;
       },
       book(_: any, { id }: any) {
-        return BooksCollection.get(id)
+        return BooksCollection.get(id);
       },
       books() {
-        return BooksCollection.all()
+        return BooksCollection.all();
       },
       feed() {
-        return PostsCollection.all()
+        return PostsCollection.all();
       },
       never() {
-        throw new Error('Some Message')
+        throw new Error('Some Message');
       },
     },
     Mutation: {
       addBook(_: any, { title }: any) {
-        const book = BooksCollection.add(title)
+        const book = BooksCollection.add(title);
 
-        pubsub.publish(BOOK_ADDED, { onBook: book })
+        pubsub.publish(BOOK_ADDED, { onBook: book });
 
-        return book
+        return book;
       },
     },
     Subscription: {
@@ -197,28 +191,27 @@ const schema = createSchema({
     Food: {
       __resolveType(obj: any) {
         if (obj.ingredients) {
-          return 'Salad'
+          return 'Salad';
         }
 
         if (obj.toppings) {
-          return 'Pizza'
+          return 'Pizza';
         }
 
-        return null
+        return null;
       },
     },
     Post: {
       comments(post: { comments: string[] }, { filter }: { filter: string }) {
         return post.comments.filter(
-          (comment) =>
-            !filter || comment.toLowerCase().includes(filter.toLowerCase()),
-        )
+          comment => !filter || comment.toLowerCase().includes(filter.toLowerCase()),
+        );
       },
     },
   },
-})
+});
 
-export const restEndpoint = '/rest'
+export const restEndpoint = '/rest';
 
 export const yoga = createYoga({
   schema,
@@ -227,4 +220,4 @@ export const yoga = createYoga({
       basePath: restEndpoint,
     }),
   ],
-})
+});

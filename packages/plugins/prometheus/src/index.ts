@@ -1,34 +1,33 @@
+import { getOperationAST } from 'graphql';
+import { Plugin } from 'graphql-yoga';
+import { register as defaultRegistry, Histogram } from 'prom-client';
 import {
-  PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
-  usePrometheus as useEnvelopPrometheus,
   createCounter,
   createHistogram,
   createSummary,
+  PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
   FillLabelsFnParams,
-} from '@envelop/prometheus'
-import { getOperationAST } from 'graphql'
-import { Plugin } from 'graphql-yoga'
-import { Histogram, register as defaultRegistry } from 'prom-client'
+  usePrometheus as useEnvelopPrometheus,
+} from '@envelop/prometheus';
 
-export { createCounter, createHistogram, createSummary, FillLabelsFnParams }
+export { createCounter, createHistogram, createSummary, FillLabelsFnParams };
 
-export interface PrometheusTracingPluginConfig
-  extends EnvelopPrometheusTracingPluginConfig {
-  http?: boolean | ReturnType<typeof createHistogram>
-  httpRequestHeaders?: boolean
-  httpResponseHeaders?: boolean
+export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
+  http?: boolean | ReturnType<typeof createHistogram>;
+  httpRequestHeaders?: boolean;
+  httpResponseHeaders?: boolean;
   /**
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
    */
-  endpoint?: string
+  endpoint?: string;
 }
 
 export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
-  const endpoint = options.endpoint || '/metrics'
-  const registry = options.registry || defaultRegistry
+  const endpoint = options.endpoint || '/metrics';
+  const registry = options.registry || defaultRegistry;
 
-  let httpHistogram: ReturnType<typeof createHistogram> | undefined
+  let httpHistogram: ReturnType<typeof createHistogram> | undefined;
 
   if (options.http) {
     const labelNames = [
@@ -38,12 +37,12 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
       'statusText',
       'operationName',
       'operationType',
-    ]
+    ];
     if (options.httpRequestHeaders) {
-      labelNames.push('requestHeaders')
+      labelNames.push('requestHeaders');
     }
     if (options.httpResponseHeaders) {
-      labelNames.push('responseHeaders')
+      labelNames.push('responseHeaders');
     }
     httpHistogram =
       typeof options.http === 'object'
@@ -62,59 +61,59 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
                 method: request.method,
                 statusCode: response.status,
                 statusText: response.statusText,
-              }
+              };
               if (params?.operationType) {
-                labels.operationType = params.operationType
+                labels.operationType = params.operationType;
               }
               if (options.httpRequestHeaders) {
                 labels.requestHeaders = JSON.stringify(
                   Object.fromEntries(request.headers.entries()),
-                )
+                );
               }
               if (options.httpResponseHeaders) {
                 labels.responseHeaders = JSON.stringify(
                   Object.fromEntries(response.headers.entries()),
-                )
+                );
               }
-              return labels
+              return labels;
             },
-          })
+          });
   }
 
-  const startByRequest = new WeakMap<Request, number>()
-  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>()
+  const startByRequest = new WeakMap<Request, number>();
+  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>();
 
   return {
     onPluginInit({ addPlugin }) {
-      addPlugin(useEnvelopPrometheus({ ...options, registry }) as Plugin)
+      addPlugin(useEnvelopPrometheus({ ...options, registry }) as Plugin);
     },
     async onRequest({ request, url, fetchAPI, endResponse }) {
-      startByRequest.set(request, Date.now())
+      startByRequest.set(request, Date.now());
       if (url.pathname === endpoint) {
-        const metrics = await registry.metrics()
+        const metrics = await registry.metrics();
         const response = new fetchAPI.Response(metrics, {
           headers: {
             'Content-Type': registry.contentType,
           },
-        })
-        endResponse(response)
+        });
+        endResponse(response);
       }
     },
     onExecute({ args }) {
-      const operationAST = getOperationAST(args.document, args.operationName)
-      const operationType = operationAST?.operation
-      const operationName = operationAST?.name?.value
+      const operationAST = getOperationAST(args.document, args.operationName);
+      const operationType = operationAST?.operation;
+      const operationName = operationAST?.name?.value;
       paramsByRequest.set(args.contextValue.request, {
         document: args.document,
         operationName,
         operationType,
-      })
+      });
     },
     onResponse({ request, response, serverContext }) {
-      const start = startByRequest.get(request)
+      const start = startByRequest.get(request);
       if (start) {
-        const duration = Date.now() - start
-        const params = paramsByRequest.get(request)
+        const duration = Date.now() - start;
+        const params = paramsByRequest.get(request);
         httpHistogram?.histogram.observe(
           httpHistogram.fillLabelsFn(params || {}, {
             ...serverContext,
@@ -122,8 +121,8 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
             response,
           }),
           duration,
-        )
+        );
       }
     },
-  }
+  };
 }

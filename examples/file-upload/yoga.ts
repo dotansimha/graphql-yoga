@@ -1,6 +1,6 @@
-import { createYoga, createSchema } from 'graphql-yoga'
-import fs from 'node:fs'
-import path from 'node:path'
+import fs from 'node:fs';
+import path from 'node:path';
+import { createSchema, createYoga } from 'graphql-yoga';
 
 export const yoga = createYoga({
   schema: createSchema({
@@ -20,20 +20,20 @@ export const yoga = createYoga({
       },
       Mutation: {
         readTextFile: async (_, { file }: { file: File }) => {
-          const fileContent = await file.text()
-          return fileContent
+          const fileContent = await file.text();
+          return fileContent;
         },
         saveFile: async (_, { file }: { file: File }) => {
           try {
-            const fileArrayBuffer = await file.arrayBuffer()
+            const fileArrayBuffer = await file.arrayBuffer();
             await fs.promises.writeFile(
               path.join(__dirname, file.name),
               Buffer.from(fileArrayBuffer),
-            )
+            );
           } catch (e) {
-            return false
+            return false;
           }
-          return true
+          return true;
         },
       },
     },
@@ -41,4 +41,4 @@ export const yoga = createYoga({
   graphiql: {
     title: 'Hello World',
   },
-})
+});

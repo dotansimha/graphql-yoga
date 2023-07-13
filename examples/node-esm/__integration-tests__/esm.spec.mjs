@@ -1,4 +1,4 @@
-import { yoga } from '../yoga.mjs'
+import { yoga } from '../yoga.mjs';
 
 describe('Node ESM', () => {
   it('should work', async () => {
@@ -10,13 +10,13 @@ describe('Node ESM', () => {
       body: JSON.stringify({
         query: '{ greetings }',
       }),
-    })
-    const body = await response.json()
+    });
+    const body = await response.json();
     expect(body).toMatchObject({
       data: {
         greetings: 'Hello world!',
       },
-    })
-    expect(response.status).toBe(200)
-  })
-})
+    });
+    expect(response.status).toBe(200);
+  });
+});

@@ -1,14 +1,10 @@
-import { GraphQLDirective, GraphQLSchema, ValidationRule } from 'graphql'
-import {
-  GraphQLDeferDirective,
-  GraphQLStreamDirective,
-} from '@graphql-tools/utils'
-import { Plugin } from 'graphql-yoga'
-
-import { DeferStreamDirectiveLabelRule } from './validations/defer-stream-directive-label.js'
-import { DeferStreamDirectiveOnRootFieldRule } from './validations/defer-stream-directive-on-root-field.js'
-import { OverlappingFieldsCanBeMergedRule } from './validations/overlapping-fields-can-be-merged.js'
-import { StreamDirectiveOnListFieldRule } from './validations/stream-directive-on-list-field.js'
+import { GraphQLDirective, GraphQLSchema, ValidationRule } from 'graphql';
+import { Plugin } from 'graphql-yoga';
+import { GraphQLDeferDirective, GraphQLStreamDirective } from '@graphql-tools/utils';
+import { DeferStreamDirectiveLabelRule } from './validations/defer-stream-directive-label.js';
+import { DeferStreamDirectiveOnRootFieldRule } from './validations/defer-stream-directive-on-root-field.js';
+import { OverlappingFieldsCanBeMergedRule } from './validations/overlapping-fields-can-be-merged.js';
+import { StreamDirectiveOnListFieldRule } from './validations/stream-directive-on-list-field.js';
 
 export function useDeferStream<
   TPluginContext extends Record<string, unknown>,
@@ -18,19 +14,19 @@ export function useDeferStream<
       schema,
       replaceSchema,
     }: {
-      schema: GraphQLSchema
-      replaceSchema(schema: GraphQLSchema): void
+      schema: GraphQLSchema;
+      replaceSchema(schema: GraphQLSchema): void;
     }) => {
-      const directives: GraphQLDirective[] = []
+      const directives: GraphQLDirective[] = [];
 
-      const deferInSchema = schema.getDirective('defer')
+      const deferInSchema = schema.getDirective('defer');
       if (deferInSchema == null) {
-        directives.push(GraphQLDeferDirective)
+        directives.push(GraphQLDeferDirective);
       }
 
-      const streamInSchema = schema.getDirective('stream')
+      const streamInSchema = schema.getDirective('stream');
       if (streamInSchema == null) {
-        directives.push(GraphQLStreamDirective)
+        directives.push(GraphQLStreamDirective);
       }
 
       if (directives.length) {
@@ -39,7 +35,7 @@ export function useDeferStream<
             ...schema.toConfig(),
             directives: [...schema.getDirectives(), ...directives],
           }),
-        )
+        );
       }
     },
     onValidate: ({
@@ -47,19 +43,17 @@ export function useDeferStream<
       addValidationRule,
     }: {
       params: {
-        rules?: ValidationRule[]
-      }
-      addValidationRule(rule: ValidationRule): void
+        rules?: ValidationRule[];
+      };
+      addValidationRule(rule: ValidationRule): void;
     }) => {
       // Just to make TS happy because rules are always defined by useEngine.
-      params.rules ||= []
-      params.rules = params.rules.filter(
-        (rule) => rule.name !== 'OverlappingFieldsCanBeMergedRule',
-      )
-      addValidationRule(OverlappingFieldsCanBeMergedRule)
-      addValidationRule(DeferStreamDirectiveLabelRule)
-      addValidationRule(DeferStreamDirectiveOnRootFieldRule)
-      addValidationRule(StreamDirectiveOnListFieldRule)
+      params.rules ||= [];
+      params.rules = params.rules.filter(rule => rule.name !== 'OverlappingFieldsCanBeMergedRule');
+      addValidationRule(OverlappingFieldsCanBeMergedRule);
+      addValidationRule(DeferStreamDirectiveLabelRule);
+      addValidationRule(DeferStreamDirectiveOnRootFieldRule);
+      addValidationRule(StreamDirectiveOnListFieldRule);
     },
-  }
+  };
 }
