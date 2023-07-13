@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { GraphiQL, GraphiQLInterface, GraphiQLProps, GraphiQLProvider } from 'graphiql';
 import { DocumentNode, Kind, parse } from 'graphql';
 import { useUrlSearchParams } from 'use-url-search-params';
-import { useExplorerPlugin } from '@graphiql/plugin-explorer';
+import { explorerPlugin, GraphiQLExplorerPluginProps } from '@graphiql/plugin-explorer';
 import { Fetcher, FetcherOpts, FetcherParams } from '@graphiql/toolkit';
 import { LoadFromUrlOptions, SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader';
 import { YogaLogo } from './YogaLogo';
@@ -134,16 +134,16 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   );
 
   const [query, setQuery] = useState(params.query?.toString());
-  const explorerPlugin = useExplorerPlugin({
+  const explorerPluginInstance = explorerPlugin({
     query: query as string,
     onEdit: setQuery,
     showAttribution: true,
-  });
+  } as GraphiQLExplorerPluginProps);
 
   return (
     <div className="graphiql-container">
       <GraphiQLProvider
-        plugins={[explorerPlugin]}
+        plugins={[explorerPluginInstance]}
         query={query}
         headers={props.headers}
         schemaDescription={true}
