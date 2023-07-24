@@ -37,7 +37,7 @@ describe('404', () => {
 
     expect(response.status).toEqual(200);
     const body = await response.text();
-    expect(body).toContain('<!DOCTYPE html>');
+    expect(body).toMatch(/<!DOCTYPE html>/i);
     expect(body).toContain('GraphQL Yoga');
   });
   it('returns 404 without landing page when accepting text/html and sending a GET request but disabled landing page', async () => {
