@@ -146,11 +146,66 @@ The persisted operations plugin follows the
 [the APQ Specification of Apollo](https://github.com/apollographql/apollo-link-persisted-queries#apollo-engine)
 for SENDING hashes to the server.
 
-GraphQL clients such `Apollo Client` and `Urql` support that out of the box. Check the corresponding
-documentation for more information.
+GraphQL clients such `Apollo Client` and `Urql` support that out of the box.
 
-- [Apollo Client](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
-- [urql](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/)
+### Urql and GraphQL Code Generator
+
+When using the GraphQL Code Generator `client` preset together with urql, sending the hashes is
+straight-forward using the `@urql/exchange-persisted` package.
+
+<Callout>
+  When you are using the urql graph cache you need to ensure the `__typename` selections are added to your GraphQL documents selection set.
+
+[Please refer to the GraphQL Code Generator `client` preset documentation for normalized caches for more information.](https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#normalized-caches-urql-and-apollo-client)
+
+</Callout>
+
+```ts filename="Urql Client Configuration" {2,8-13}
+import { cacheExchange, createClient } from '@urql/core'
+import { persistedExchange } from '@urql/exchange-persisted'
+
+const client = new createClient({
+  url: 'YOUR_GRAPHQL_ENDPOINT',
+  exchanges: [
+    cacheExchange,
+    persistedExchange({
+      enforcePersistedQueries: true,
+      enableForMutation: true,
+      generateHash: (_, document) => Promise.resolve(document['__meta__']['hash'])
+    })
+  ]
+})
+```
+
+[More information on `@urql/exchange-persisted` on the the urql documentation](https://formidable.com/open-source/urql/docs/advanced/persistence-and-uploads/))
+
+### Apollo Client and GraphQL Code Generator
+
+When using the GraphQL Code Generator `client` preset together with Apollo Client, sending the
+hashes is straight-forward.
+
+<Callout>
+  When you are using the urql graph cache you need to ensure the `__typename` selections are added to your GraphQL documents selection set.
+
+[Please refer to the GraphQL Code Generator `client` preset documentation for normalized caches for more information.](https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#normalized-caches-urql-and-apollo-client)
+
+</Callout>
+
+```ts filename="Apollo Client Configuration" {2,4-6}
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { createPersistedQueryLink } from '@apollo/client/link/persisted-queries'
+
+const link = createPersistedQueryLink({
+  generateHash: document => document['__meta__']['hash']
+})
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: link.concat(new HttpLink({ uri: '/graphql' }))
+})
+```
+
+[More information on the Apollo Client documentation](https://www.apollographql.com/docs/apollo-server/performance/apq/#step-2-enable-automatic-persisted-queries)
 
 ## Using parsed GraphQL documents as AST
 
