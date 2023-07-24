@@ -1,4 +1,3 @@
-import { GraphQLErrorOptions } from 'graphql';
 import { createGraphQLError, Plugin } from 'graphql-yoga';
 import jsonwebtoken, { Algorithm, JwtPayload } from 'jsonwebtoken';
 import { JwksClient } from 'jwks-rsa';
@@ -111,7 +110,7 @@ export function useJWT(options: JwtPluginOptions): Plugin {
   };
 }
 
-function unauthorizedError(message: string, options?: GraphQLErrorOptions | undefined) {
+function unauthorizedError(message: string, options?: Parameters<typeof createGraphQLError>[1]) {
   return createGraphQLError(message, {
     extensions: {
       http: {
