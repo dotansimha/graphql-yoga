@@ -65,7 +65,7 @@ async function fetchRemoteFilePaths({
   };
   const json = JSON.stringify(result, null, 2);
 
-  await fs.writeFile(outputPath, prettier.format(json, { parser: 'json' }), 'utf8');
+  await fs.writeFile(outputPath, await prettier.format(json, { parser: 'json' }), 'utf8');
 
   console.log(`✅ Remote files from "${url}" saved!`);
 }

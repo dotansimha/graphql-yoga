@@ -1,0 +1,60 @@
+{
+  "name": "@graphql-yoga/plugin-jwt",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "jwt plugin for GraphQL Yoga.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/plugins/jwt"
+  },
+  "author": "Arda TANRIKULU <ardatanrikulu@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typings": "dist/typings/index.d.ts",
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "peerDependencies": {
+    "graphql": "^16.5.0",
+    "graphql-yoga": "^4.0.3"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.1.5",
+    "tslib": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.8",
+    "graphql": "^16.5.0",
+    "graphql-scalars": "^1.22.2"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
+}
