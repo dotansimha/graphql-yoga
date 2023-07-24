@@ -2,18 +2,20 @@ import { createSchema, createYoga } from 'graphql-yoga'
 import jwt from 'jsonwebtoken'
 import crypto from 'node:crypto'
 
-import { useJwt } from '..'
+import { JwtPluginOptions, useJWT } from '@graphql-yoga/plugin-jwt'
 
 describe('jwt', () => {
   it('should throw if no signing key or jwksUri is provided', () => {
-    expect(() => useJwt({ issuer: 'yoga' })).toThrow(
+    // @ts-expect-error testing invalid options fo JS users
+    expect(() => useJWT({ issuer: 'yoga' })).toThrow(
       'You need to provide either a signingKey or a jwksUri',
     )
   })
 
   it('should throw if both signing key and jwksUri are provided', () => {
     expect(() =>
-      useJwt({ signingKey: 'test', jwksUri: 'test', issuer: 'yoga' }),
+      // @ts-expect-error testing invalid options fo JS users
+      useJWT({ signingKey: 'test', jwksUri: 'test', issuer: 'yoga' }),
     ).toThrow('You need to provide either a signingKey or a jwksUri, not both')
   })
 
@@ -82,7 +84,7 @@ describe('jwt', () => {
     await expect(
       server.queryWithAuth(buildJWT({}, { keyid: 'unknown' })),
     ).rejects.toMatchObject({
-      message: 'Failed to decode authentication token',
+      message: 'Failed to decode authentication token. Unknown key id.',
       extensions: { http: { status: 401 } },
     })
   })
@@ -138,11 +140,12 @@ describe('jwt', () => {
   })
 })
 
-const createTestServer = (options?: Partial<Parameters<typeof useJwt>[0]>) => {
+const createTestServer = (options?: Partial<JwtPluginOptions>) => {
   const yoga = createYoga({
     schema,
     plugins: [
-      useJwt({
+      // @ts-expect-error testing invalid options fo JS users
+      useJWT({
         issuer: 'http://yoga',
         signingKey: 'very secret key',
         ...options,

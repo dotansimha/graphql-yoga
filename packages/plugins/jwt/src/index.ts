@@ -1,21 +1,15 @@
 import { JwksClient } from 'jwks-rsa'
 import jsonwebtoken, { JwtPayload, Algorithm } from 'jsonwebtoken'
 import { Plugin, createGraphQLError } from 'graphql-yoga'
+import { GraphQLErrorOptions } from 'graphql'
 
 const { decode } = jsonwebtoken
 
-export interface JwtPluginOptions {
-  /**
-   * The endpoint to fetch keys from.
-   *
-   * For example: https://example.com/.well-known/jwks.json
-   */
-  jwksUri?: string
-  /**
-   * Signing key to be used to verify the token
-   * You can also use the jwks option to fetch the key from a JWKS endpoint
-   */
-  signingKey?: string
+export type JwtPluginOptions =
+  | JwtPluginOptionsWithJWKS
+  | JwtPluginOptionsWithSigningKey
+
+export interface JwtPluginOptionsBase {
   /**
    * List of the algorithms used to verify the token
    *
@@ -46,7 +40,26 @@ export interface JwtPluginOptions {
   }) => string | undefined
 }
 
-export function useJwt(options: JwtPluginOptions): Plugin {
+export interface JwtPluginOptionsWithJWKS extends JwtPluginOptionsBase {
+  /**
+   * The endpoint to fetch keys from.
+   *
+   * For example: https://example.com/.well-known/jwks.json
+   */
+  jwksUri: string
+  signingKey?: never
+}
+
+export interface JwtPluginOptionsWithSigningKey extends JwtPluginOptionsBase {
+  /**
+   * Signing key to be used to verify the token
+   * You can also use the jwks option to fetch the key from a JWKS endpoint
+   */
+  signingKey: string
+  jwksUri?: never
+}
+
+export function useJWT(options: JwtPluginOptions): Plugin {
   if (!options.signingKey && !options.jwksUri) {
     throw new TypeError('You need to provide either a signingKey or a jwksUri')
   }
@@ -57,21 +70,17 @@ export function useJwt(options: JwtPluginOptions): Plugin {
     )
   }
 
-  const {
-    jwksUri,
-    extendContextField = 'jwt',
-    getToken = defaultGetToken,
-  } = options
+  const { extendContextField = 'jwt', getToken = defaultGetToken } = options
 
   const payloadByRequest = new WeakMap<Request, JwtPayload | string>()
 
   let jwksClient: JwksClient
-  if (jwksUri) {
+  if (options.jwksUri) {
     jwksClient = new JwksClient({
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 5,
-      jwksUri,
+      jwksUri: options.jwksUri,
     })
   }
 
@@ -107,13 +116,17 @@ export function useJwt(options: JwtPluginOptions): Plugin {
   }
 }
 
-function unauthorizedError(message: string) {
+function unauthorizedError(
+  message: string,
+  options?: GraphQLErrorOptions | undefined,
+) {
   return createGraphQLError(message, {
     extensions: {
       http: {
         status: 401,
       },
     },
+    ...options,
   })
 }
 
@@ -126,7 +139,11 @@ function verify(
     jsonwebtoken.verify(token, signingKey, options, (err, result) => {
       if (err) {
         // Should we expose the error message? Perhaps only in development mode?
-        reject(unauthorizedError('Failed to decode authentication token'))
+        reject(
+          unauthorizedError('Failed to decode authentication token', {
+            originalError: err,
+          }),
+        )
       } else {
         resolve(result as JwtPayload)
       }
@@ -140,13 +157,17 @@ async function fetchKey(
 ): Promise<string> {
   const decodedToken = decode(token, { complete: true })
   if (decodedToken?.header?.kid == null) {
-    throw unauthorizedError(`Failed to decode authentication token`)
+    throw unauthorizedError(
+      `Failed to decode authentication token. Missing key id.`,
+    )
   }
 
   const secret = await jwksClient.getSigningKey(decodedToken.header.kid)
   const signingKey = secret?.getPublicKey()
   if (!signingKey) {
-    throw unauthorizedError(`Failed to decode authentication token`)
+    throw unauthorizedError(
+      `Failed to decode authentication token. Unknown key id.`,
+    )
   }
   return signingKey
 }
