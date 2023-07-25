@@ -943,7 +943,7 @@ importers:
         version: 12.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(class-transformer@0.5.1)(class-validator@0.14.0)(graphql@16.6.0)(reflect-metadata@0.1.13)(ts-morph@19.0.0)
       '@nestjs/microservices':
         specifier: ^10.0.0
-        version: 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/websockets@10.0.0)(amqp-connection-manager@4.1.11)(amqplib@0.10.3)(cache-manager@5.2.0)(kafkajs@2.2.4)(mqtt@4.3.7)(nats@2.13.1)(reflect-metadata@0.1.13)(rxjs@7.8.0)
+        version: 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/websockets@10.0.0)(amqp-connection-manager@4.1.11)(amqplib@0.10.3)(cache-manager@5.2.0)(kafkajs@2.2.4)(mqtt@5.0.0)(nats@2.13.1)(reflect-metadata@0.1.13)(rxjs@7.8.0)
       '@nestjs/platform-socket.io':
         specifier: ^10.0.0
         version: 10.0.0(@nestjs/common@10.0.0)(@nestjs/websockets@10.0.0)(rxjs@7.8.0)
@@ -975,8 +975,8 @@ importers:
         specifier: ^2.2.4
         version: 2.2.4
       mqtt:
-        specifier: ^4.3.7
-        version: 4.3.7
+        specifier: ^5.0.0
+        version: 5.0.0
       nats:
         specifier: ^2.13.1
         version: 2.13.1
@@ -7416,7 +7416,7 @@ packages:
       fastify-plugin: 4.5.0
       glob: 8.1.0
       p-limit: 3.1.0
-      readable-stream: 4.2.0
+      readable-stream: 4.4.2
     dev: true
 
   /@firebase/app-types@0.9.0:
@@ -9698,7 +9698,7 @@ packages:
         optional: true
     dependencies:
       '@nestjs/common': 10.0.0(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.0)
-      '@nestjs/microservices': 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/websockets@10.0.0)(amqp-connection-manager@4.1.11)(amqplib@0.10.3)(cache-manager@5.2.0)(kafkajs@2.2.4)(mqtt@4.3.7)(nats@2.13.1)(reflect-metadata@0.1.13)(rxjs@7.8.0)
+      '@nestjs/microservices': 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/websockets@10.0.0)(amqp-connection-manager@4.1.11)(amqplib@0.10.3)(cache-manager@5.2.0)(kafkajs@2.2.4)(mqtt@5.0.0)(nats@2.13.1)(reflect-metadata@0.1.13)(rxjs@7.8.0)
       '@nestjs/websockets': 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/platform-socket.io@10.0.0)(reflect-metadata@0.1.13)(rxjs@7.8.0)
       '@nuxtjs/opencollective': 0.3.2
       fast-safe-stringify: 2.1.1
@@ -9930,7 +9930,7 @@ packages:
       reflect-metadata: 0.1.13
     dev: true
 
-  /@nestjs/microservices@10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/websockets@10.0.0)(amqp-connection-manager@4.1.11)(amqplib@0.10.3)(cache-manager@5.2.0)(kafkajs@2.2.4)(mqtt@4.3.7)(nats@2.13.1)(reflect-metadata@0.1.13)(rxjs@7.8.0):
+  /@nestjs/microservices@10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/websockets@10.0.0)(amqp-connection-manager@4.1.11)(amqplib@0.10.3)(cache-manager@5.2.0)(kafkajs@2.2.4)(mqtt@5.0.0)(nats@2.13.1)(reflect-metadata@0.1.13)(rxjs@7.8.0):
     resolution: {integrity: sha512-ZXMny2nUFPLWaFxlkwUlEYHmDWUFilkscMHaDbCMdYLVvRsNPm3nM2dBuunu/K+dqQIgUdNq+Yqo3C3tUyeAIA==}
     peerDependencies:
       '@grpc/grpc-js': '*'
@@ -9974,7 +9974,7 @@ packages:
       cache-manager: 5.2.0
       iterare: 1.2.1
       kafkajs: 2.2.4
-      mqtt: 4.3.7
+      mqtt: 5.0.0
       nats: 2.13.1
       reflect-metadata: 0.1.13
       rxjs: 7.8.0
@@ -16504,11 +16504,8 @@ packages:
       repeat-string: 1.6.1
     dev: true
 
-  /commist@1.1.0:
-    resolution: {integrity: sha512-rraC8NXWOEjhADbZe9QBNzLAN5Q3fsTPQtBV+fEVj6xKIgDgNiEVE6ZNfHpZOqfQ21YUzfVNUXLOEZquYvQPPg==}
-    dependencies:
-      leven: 2.1.0
-      minimist: 1.2.8
+  /commist@3.2.0:
+    resolution: {integrity: sha512-4PIMoPniho+LqXmpS5d3NuGYncG6XWlkBSVGiWycL22dd42OYdUGil2CWuzklaJoNxyxUSpO4MKIBU94viWNAw==}
     dev: true
 
   /common-path-prefix@3.0.0:
@@ -21556,19 +21553,19 @@ packages:
     engines: {node: '>=16.0.0'}
     dev: false
 
-  /help-me@3.0.0:
-    resolution: {integrity: sha512-hx73jClhyk910sidBB7ERlnhMlFsJJIBqSVMFDwPN8o2v9nmp5KgLq1Xz1Bf1fCMMZ6mPrX159iG0VLy/fPMtQ==}
-    dependencies:
-      glob: 7.2.3
-      readable-stream: 3.6.2
-    dev: true
-
   /help-me@4.1.0:
     resolution: {integrity: sha512-5HMrkOks2j8Fpu2j5nTLhrBhT7VwHwELpqnSnx802ckofys5MO2SkLpgSz3dgNFHV7IYFX2igm5CM75SmuYidw==}
     dependencies:
       glob: 8.1.0
       readable-stream: 3.6.2
     dev: false
+
+  /help-me@4.2.0:
+    resolution: {integrity: sha512-TAOnTB8Tz5Dw8penUuzHVrKNKlCIbwwbHnXraNJxPwf8LRtE2HlM84RYuezMFcwOJmoYOCWVDyJ8TQGxn9PgxA==}
+    dependencies:
+      glob: 8.1.0
+      readable-stream: 3.6.2
+    dev: true
 
   /hexoid@1.0.0:
     resolution: {integrity: sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g==}
@@ -24114,11 +24111,6 @@ packages:
       readable-stream: 2.3.8
     dev: true
 
-  /leven@2.1.0:
-    resolution: {integrity: sha512-nvVPLpIHUxCUoRLrFqTgSxXJ614d8AgQoWl7zPe/2VadE8+1dpU3LBhowRuBAcuwruWtOdD8oYC9jDNJjXDPyA==}
-    engines: {node: '>=0.10.0'}
-    dev: true
-
   /leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
     engines: {node: '>=6'}
@@ -25947,37 +25939,35 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: true
 
-  /mqtt-packet@6.10.0:
-    resolution: {integrity: sha512-ja8+mFKIHdB1Tpl6vac+sktqy3gA8t9Mduom1BA75cI+R9AHnZOiaBQwpGiWnaVJLDGRdNhQmFaAqd7tkKSMGA==}
+  /mqtt-packet@8.2.0:
+    resolution: {integrity: sha512-21Vo7XdRXUw2qhdTfk8GeOl2jtb8Dkwd4dKxn/epvf37mxTxHodvBJoozTPZGVwh57JXlsh2ChsaxMsAfqxp+A==}
     dependencies:
-      bl: 4.1.0
+      bl: 5.1.0
       debug: 4.3.4(supports-color@9.2.3)
       process-nextick-args: 2.0.1
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /mqtt@4.3.7:
-    resolution: {integrity: sha512-ew3qwG/TJRorTz47eW46vZ5oBw5MEYbQZVaEji44j5lAUSQSqIEoul7Kua/BatBW0H0kKQcC9kwUHa1qzaWHSw==}
-    engines: {node: '>=10.0.0'}
+  /mqtt@5.0.0:
+    resolution: {integrity: sha512-chIdEUb5Ky/ArqlNJnB7XrkLfOHjCbuYhBSvVdmfEbmk90E11RCiO5EcQaE6bDkxVGitLVDMrRJWwpv0s+ug4w==}
+    engines: {node: '>=16.0.0'}
+    hasBin: true
     dependencies:
-      commist: 1.1.0
+      commist: 3.2.0
       concat-stream: 2.0.0
       debug: 4.3.4(supports-color@9.2.3)
       duplexify: 4.1.2
-      help-me: 3.0.0
-      inherits: 2.0.4
-      lru-cache: 6.0.0
+      help-me: 4.2.0
+      lru-cache: 7.18.3
       minimist: 1.2.8
-      mqtt-packet: 6.10.0
+      mqtt-packet: 8.2.0
       number-allocator: 1.0.14
-      pump: 3.0.0
-      readable-stream: 3.6.0
+      readable-stream: 4.4.2
       reinterval: 1.1.0
       rfdc: 1.3.0
-      split2: 3.2.2
-      ws: 7.5.9
-      xtend: 4.0.2
+      split2: 4.2.0
+      ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -27745,7 +27735,7 @@ packages:
   /pgpass@1.0.5:
     resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==}
     dependencies:
-      split2: 4.1.0
+      split2: 4.2.0
     dev: true
 
   /picocolors@1.0.0:
@@ -27788,8 +27778,8 @@ packages:
   /pino-abstract-transport@1.0.0:
     resolution: {integrity: sha512-c7vo5OpW4wIS42hUVcT5REsL8ZljsUfBjqV/e2sFxmFEFZiq1XLUp5EYLtuDH6PEHq9W1egWqRbnLUP5FuZmOA==}
     dependencies:
-      readable-stream: 4.2.0
-      split2: 4.1.0
+      readable-stream: 4.4.2
+      split2: 4.2.0
 
   /pino-pretty@10.0.0:
     resolution: {integrity: sha512-zKFjYXBzLaLTEAN1ayKpHXtL5UeRQC7R3lvhKe7fWs7hIVEjKGG/qIXwQt9HmeUp71ogUd/YcW+LmMwRp4KT6Q==}
@@ -29195,15 +29185,6 @@ packages:
       string_decoder: 1.1.1
       util-deprecate: 1.0.2
 
-  /readable-stream@3.6.0:
-    resolution: {integrity: sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==}
-    engines: {node: '>= 6'}
-    dependencies:
-      inherits: 2.0.4
-      string_decoder: 1.3.0
-      util-deprecate: 1.0.2
-    dev: true
-
   /readable-stream@3.6.2:
     resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}
     engines: {node: '>= 6'}
@@ -29220,6 +29201,17 @@ packages:
       buffer: 6.0.3
       events: 3.3.0
       process: 0.11.10
+    dev: false
+
+  /readable-stream@4.4.2:
+    resolution: {integrity: sha512-Lk/fICSyIhodxy1IDK2HazkeGjSmezAWX2egdtJnYhtzKEsBPJowlI6F6LPb5tqIQILrMbx22S5o3GuJavPusA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dependencies:
+      abort-controller: 3.0.0
+      buffer: 6.0.3
+      events: 3.3.0
+      process: 0.11.10
+      string_decoder: 1.3.0
 
   /readdir-glob@1.1.2:
     resolution: {integrity: sha512-6RLVvwJtVwEDfPdn6X6Ille4/lxGl0ATOY4FN/B9nxQcgOazvvI0nodiD19ScKq0PvA/29VpaOQML36o5IzZWA==}
@@ -30570,14 +30562,8 @@ packages:
       through2: 2.0.5
     dev: true
 
-  /split2@3.2.2:
-    resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
-    dependencies:
-      readable-stream: 3.6.2
-    dev: true
-
-  /split2@4.1.0:
-    resolution: {integrity: sha512-VBiJxFkxiXRlUIeyMQi8s4hgvKCSjtknJv/LVYbrgALPwf5zSKmEwV9Lst25AkvMDnvxODugjdl6KZgwKM1WYQ==}
+  /split2@4.2.0:
+    resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
 
   /split@0.3.3:
