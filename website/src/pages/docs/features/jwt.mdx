@@ -23,7 +23,7 @@ npm i @graphql-yoga/plugin-jwt
 ```ts filename=index.ts
 import { createSchema, createYoga } from 'graphql-yoga'
 import jwt from 'jsonwebtoken'
-import { useJwt } from '@graphql-yoga/plugin-jwt'
+import { useJWT } from '@graphql-yoga/plugin-jwt'
 import { getUserById, getUserByLogin } from './db'
 
 const signingKey = process.env.JWT_SECRET
@@ -67,7 +67,7 @@ const yoga = createYoga({
     }
   }),
   plugins: [
-    useJwt({
+    useJWT({
       issuer: 'http://graphql-yoga.com',
       signingKey
     })
@@ -92,7 +92,7 @@ cookies.
 ```ts filename=index.ts
 import { createSchema, createYoga } from 'graphql-yoga'
 import jwt from 'jsonwebtoken'
-import { useJwt } from '@graphql-yoga/plugin-jwt'
+import { useJWT } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
 import { getUserById, getUserByLogin } from './db'
 
@@ -148,7 +148,7 @@ const yoga = createYoga({
   }),
   plugins: [
     useCookies(),
-    useJwt({
+    useJWT({
       issuer: 'http://graphql-yoga.com',
       signingKey,
       getToken: ({ request }) => request.cookieStore?.get('authorization')
