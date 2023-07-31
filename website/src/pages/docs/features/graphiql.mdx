@@ -102,7 +102,7 @@ import { createYoga } from 'graphql-yoga'
 const yoga = createYoga({
   graphiql(request, { req, res }) {
     // access something attached to the request object
-    // e.g. an user object added by an auth middleware.
+    // e.g. a user object added by an auth middleware.
     if (req.user.role === 'admin') {
       return true
     }
