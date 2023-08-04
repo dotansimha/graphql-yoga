@@ -24,9 +24,9 @@ npm i graphql-yoga graphql
 
 ### Create your graphql endpoint
 
-Create the file `src/routes/api/graphql.ts`:
+Create the file `src/routes/api/graphql/+server.ts`:
 
-```ts filename="src/routes/api/graphql.ts"
+```ts filename="src/routes/api/graphql/+server.ts"
 import { createSchema, createYoga } from 'graphql-yoga'
 import type { RequestEvent } from '@sveltejs/kit'
 
@@ -50,7 +50,7 @@ const yogaApp = createYoga<RequestEvent>({
   fetchAPI: globalThis
 })
 
-export { yogaApp as get, yogaApp as post }
+export { yogaApp as GET, yogaApp as POST }
 ```
 
 > **Simple example** on our GitHub repository
