@@ -1,3 +1,5 @@
+[![GraphQL Conf 2023](/GraphQLConf-2023-Banner.png)](https://graphql.org/conf/)
+
 <div align="center"><img src="./website/public/cover.png" width="720" /></div>
 
 <div align="center">
