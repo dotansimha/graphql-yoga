@@ -297,16 +297,18 @@ describe('Subscription', () => {
     const text = await response.text();
 
     expect(text).toMatchInlineSnapshot(`
-      "event: next
-      data: {"data":{"hi":"hi"}}
+":
 
-      event: next
-      data: {"errors":[{"message":"Unexpected error.","locations":[{"line":2,"column":11}]}]}
+event: next
+data: {"data":{"hi":"hi"}}
 
-      event: complete
+event: next
+data: {"errors":[{"message":"Unexpected error.","locations":[{"line":2,"column":11}]}]}
 
-      "
-    `);
+event: complete
+
+"
+`);
 
     expect(logging.error).toBeCalledTimes(1);
     expect(logging.error.mock.calls[0]).toMatchInlineSnapshot(`
@@ -363,16 +365,18 @@ describe('Subscription', () => {
     const text = await response.text();
 
     expect(text).toMatchInlineSnapshot(`
-      "event: next
-      data: {"data":{"hi":"hi"}}
+":
 
-      event: next
-      data: {"errors":[{"message":"hi","locations":[{"line":2,"column":11}]}]}
+event: next
+data: {"data":{"hi":"hi"}}
 
-      event: complete
+event: next
+data: {"errors":[{"message":"hi","locations":[{"line":2,"column":11}]}]}
 
-      "
-    `);
+event: complete
+
+"
+`);
 
     expect(logging.error).toBeCalledTimes(0);
   });
