@@ -80,4 +80,16 @@ event: complete
 "
 `);
   });
+
+  it('should render graphiql page', async () => {
+    const res = await fetch(`http://localhost:${port}/graphql`, {
+      method: 'GET',
+      headers: {
+        accept: 'text/html',
+      },
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toBe('text/html; charset=utf-8');
+  });
 });
