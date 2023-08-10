@@ -54,4 +54,6 @@ module.exports = {
   testMatch,
   testTimeout,
   resolver: 'bob-the-bundler/jest-resolver',
+  // jest-snapshots don't support prettier v3 (https://github.com/jestjs/jest/issues/14305)
+  prettierPath: null,
 };
