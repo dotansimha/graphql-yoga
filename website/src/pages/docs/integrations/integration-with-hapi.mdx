@@ -45,21 +45,20 @@ server.route({
     }
   },
   handler: async (req, h) => {
-    const { status, headers, body } = await yoga.handleNodeRequest(
-      // will be an incoming message because the payload output option is stream
-      req.payload as http.IncomingMessage,
-      { req, h }
+    const { status, headers, body } = await yoga.handleNodeRequest(req.raw.req, { req, h })
+
+    const res = h.response(
+      Readable.from(body, {
+        // hapi needs the stream not to be in object mode
+        objectMode: false
+      })
     )
 
-    const res = h.response().code(status)
     for (const [key, val] of headers) {
       res.header(key, val)
     }
 
-    return Readable.from(body, {
-      // stream cannot be in object mode
-      objectMode: false
-    })
+    return res.code(status)
   }
 })
 
