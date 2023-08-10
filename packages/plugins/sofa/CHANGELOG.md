@@ -179,14 +179,14 @@
   [`a8979090`](https://github.com/dotansimha/graphql-yoga/commit/a8979090098444223cd185a9b1fc0570f67974bd)
   Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
 
-  - Updated dependency [`sofa-api@0.16.0` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.16.0)
-    (from `0.15.5`, in `dependencies`)
+  - Updated dependency [`sofa-api@0.16.0` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.16.0) (from
+    `0.15.5`, in `dependencies`)
 
 - [#2370](https://github.com/dotansimha/graphql-yoga/pull/2370)
   [`49d21f8f`](https://github.com/dotansimha/graphql-yoga/commit/49d21f8fda4eb5ffa6207f2df8d41b94807f2d64)
   Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
-  - Updated dependency [`sofa-api@0.16.1` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.16.1)
-    (from `0.16.0`, in `dependencies`)
+  - Updated dependency [`sofa-api@0.16.1` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.16.1) (from
+    `0.16.0`, in `dependencies`)
 - Updated dependencies
   [[`3a8446df`](https://github.com/dotansimha/graphql-yoga/commit/3a8446dfb50c6d234e030cd1e4260c5de9daefc4)]:
   - graphql-yoga@3.5.1
@@ -216,15 +216,15 @@
   [`8cd8b5a5`](https://github.com/dotansimha/graphql-yoga/commit/8cd8b5a5ab1dd28e2a2ddd7424c98c0493c535ad)
   Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
 
-  - Updated dependency [`sofa-api@0.15.2` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.2)
-    (from `0.15.1`, in `dependencies`)
+  - Updated dependency [`sofa-api@0.15.2` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.2) (from
+    `0.15.1`, in `dependencies`)
 
 - [#2316](https://github.com/dotansimha/graphql-yoga/pull/2316)
   [`6ee252db`](https://github.com/dotansimha/graphql-yoga/commit/6ee252dbed6f38840284bbe47c72c453ac8e648b)
   Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
 
-  - Updated dependency [`sofa-api@0.15.4` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.4)
-    (from `0.15.2`, in `dependencies`)
+  - Updated dependency [`sofa-api@0.15.4` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.4) (from
+    `0.15.2`, in `dependencies`)
   - Updated dependency
     [`@graphql-tools/utils@9.1.4` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/9.1.4)
     (from `9.1.3`, in `dependencies`)
@@ -233,8 +233,8 @@
   [`be50a38b`](https://github.com/dotansimha/graphql-yoga/commit/be50a38bdec59c5b8b984121f52136f745a70d6f)
   Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
 
-  - Updated dependency [`sofa-api@0.15.5` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.5)
-    (from `0.15.4`, in `dependencies`)
+  - Updated dependency [`sofa-api@0.15.5` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.5) (from
+    `0.15.4`, in `dependencies`)
 
 - [#2287](https://github.com/dotansimha/graphql-yoga/pull/2287)
   [`e5018f5e`](https://github.com/dotansimha/graphql-yoga/commit/e5018f5ec97ec72bb42925f8ce4cf02fefb66330)
@@ -312,8 +312,8 @@
 - [#2167](https://github.com/dotansimha/graphql-yoga/pull/2167)
   [`a7bfdf2e`](https://github.com/dotansimha/graphql-yoga/commit/a7bfdf2e7b6c8d4a0578cf4db1770d6e04fb28a8)
   Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
-  - Updated dependency [`sofa-api@0.15.1` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.1)
-    (from `0.15.0`, in `dependencies`)
+  - Updated dependency [`sofa-api@0.15.1` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.15.1) (from
+    `0.15.0`, in `dependencies`)
 - Updated dependencies
   [[`534780c9`](https://github.com/dotansimha/graphql-yoga/commit/534780c99ed61dd761826d44d99a83748630cb61)]:
   - graphql-yoga@3.1.1

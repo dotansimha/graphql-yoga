@@ -2,7 +2,7 @@ import type { GraphiQLOptions } from 'graphql-yoga';
 import { css, favicon, js } from './graphiql.js';
 
 export const renderGraphiQL = (opts?: GraphiQLOptions) => /* HTML */ `
-  <!doctype html>
+  <!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="utf-8" />
