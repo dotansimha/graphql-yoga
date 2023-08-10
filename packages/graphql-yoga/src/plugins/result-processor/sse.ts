@@ -29,6 +29,10 @@ export function getSSEProcessor(): ResultProcessor {
     const textEncoder = new fetchAPI.TextEncoder();
     const readableStream = new fetchAPI.ReadableStream({
       start(controller) {
+        // always start with a ping because some browsers dont accept a header flush
+        // causing the fetch to stall until something is streamed through the response
+        controller.enqueue(textEncoder.encode(':\n\n'));
+
         // ping client every 12 seconds to keep the connection alive
         pingInterval = setInterval(() => {
           if (!controller.desiredSize) {
