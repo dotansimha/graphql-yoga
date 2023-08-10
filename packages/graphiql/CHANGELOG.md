@@ -1,5 +1,14 @@
 # @graphql-yoga/graphiql
 
+## 4.1.1
+
+### Patch Changes
+
+- [#2959](https://github.com/dotansimha/graphql-yoga/pull/2959)
+  [`eba29911`](https://github.com/dotansimha/graphql-yoga/commit/eba29911369bb465a81c261b089079b4f6018532)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - Use correct subscriptions endpoint in Yoga
+  GraphiQL
+
 ## 4.1.0
 
 ### Minor Changes

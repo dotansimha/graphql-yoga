@@ -1,5 +1,13 @@
 # apollo-federation-gateway-with-yoga
 
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies
+  [[`5f182006`](https://github.com/dotansimha/graphql-yoga/commit/5f1820066e8a340ad214b55232fcf439793f91bf)]:
+  - graphql-yoga@4.0.4
+
 ## 2.0.3
 
 ### Patch Changes
