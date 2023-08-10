@@ -1,5 +1,13 @@
 # graphql-yoga
 
+## 4.0.4
+
+### Patch Changes
+
+- [#2958](https://github.com/dotansimha/graphql-yoga/pull/2958)
+  [`5f182006`](https://github.com/dotansimha/graphql-yoga/commit/5f1820066e8a340ad214b55232fcf439793f91bf)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - Start SSE stream with a ping
+
 ## 4.0.3
 
 ### Patch Changes
