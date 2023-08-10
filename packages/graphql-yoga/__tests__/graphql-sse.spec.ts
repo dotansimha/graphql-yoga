@@ -52,16 +52,18 @@ describe('GraphQL over SSE', () => {
       });
       expect(res.ok).toBeTruthy();
       await expect(res.text()).resolves.toMatchInlineSnapshot(`
-        ":
+":
 
-        :
+:
 
-        :
+:
 
-        event: complete
+:
 
-        "
-      `);
+event: complete
+
+"
+`);
     });
 
     it('should support single result operations', async () => {
@@ -170,13 +172,15 @@ describe('GraphQL over SSE', () => {
       });
       expect(res.ok).toBeTruthy();
       await expect(res.text()).resolves.toMatchInlineSnapshot(`
-        "event: next
-        data: {"errors":[{"message":"Cannot query field \\"nope\\" on type \\"Query\\".","locations":[{"line":1,"column":2}]}]}
+":
 
-        event: complete
+event: next
+data: {"errors":[{"message":"Cannot query field \\"nope\\" on type \\"Query\\".","locations":[{"line":1,"column":2}]}]}
 
-        "
-      `);
+event: complete
+
+"
+`);
     });
 
     it('accept: application/graphql-response+json, application/json,  multipart/mixed, text/event-stream', async () => {

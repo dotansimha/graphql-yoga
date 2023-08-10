@@ -76,13 +76,15 @@ describe('graphql-auth example integration', () => {
       },
     );
     await expect(response.text()).resolves.toMatchInlineSnapshot(`
-      "event: next
-      data: {"data":{"requiresAuth":"hi foo@foo.com"}}
+":
 
-      event: complete
+event: next
+data: {"data":{"requiresAuth":"hi foo@foo.com"}}
 
-      "
-    `);
+event: complete
+
+"
+`);
   });
 
   it('should not execute on auth required field with subscription', async () => {
@@ -95,12 +97,14 @@ describe('graphql-auth example integration', () => {
       },
     );
     await expect(response.text()).resolves.toMatchInlineSnapshot(`
-      "event: next
-      data: {"data":null,"errors":[{"message":"Accessing 'Subscription.requiresAuth' requires authentication.","locations":[{"line":1,"column":14}]}]}
+":
 
-      event: complete
+event: next
+data: {"data":null,"errors":[{"message":"Accessing 'Subscription.requiresAuth' requires authentication.","locations":[{"line":1,"column":14}]}]}
 
-      "
-    `);
+event: complete
+
+"
+`);
   });
 });

@@ -58,24 +58,26 @@ describe('hapi example integration', () => {
     });
 
     await expect(res.text()).resolves.toMatchInlineSnapshot(`
-      "event: next
-      data: {"data":{"greetings":"Hi"}}
+":
 
-      event: next
-      data: {"data":{"greetings":"Bonjour"}}
+event: next
+data: {"data":{"greetings":"Hi"}}
 
-      event: next
-      data: {"data":{"greetings":"Hola"}}
+event: next
+data: {"data":{"greetings":"Bonjour"}}
 
-      event: next
-      data: {"data":{"greetings":"Ciao"}}
+event: next
+data: {"data":{"greetings":"Hola"}}
 
-      event: next
-      data: {"data":{"greetings":"Zdravo"}}
+event: next
+data: {"data":{"greetings":"Ciao"}}
 
-      event: complete
+event: next
+data: {"data":{"greetings":"Zdravo"}}
 
-      "
-    `);
+event: complete
+
+"
+`);
   });
 });
