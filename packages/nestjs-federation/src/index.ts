@@ -10,7 +10,11 @@ import {
 } from '@graphql-yoga/nestjs';
 import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace';
 import { Injectable, Type } from '@nestjs/common';
-import { GraphQLFederationFactory } from '@nestjs/graphql';
+import {
+  GqlSubscriptionService,
+  GraphQLFederationFactory,
+  SubscriptionConfig,
+} from '@nestjs/graphql';
 
 export type YogaFederationDriverConfig<Platform extends YogaDriverPlatform = 'express'> =
   YogaDriverConfig<Platform>;
@@ -19,6 +23,8 @@ export type YogaFederationDriverConfig<Platform extends YogaDriverPlatform = 'ex
 export class YogaFederationDriver<
   Platform extends YogaDriverPlatform = 'express',
 > extends AbstractYogaDriver<Platform> {
+  private subscriptionService?: GqlSubscriptionService;
+
   constructor(private readonly graphqlFederationFactory: GraphQLFederationFactory) {
     super();
   }
@@ -40,10 +46,28 @@ export class YogaFederationDriver<
       plugins: [...(options?.plugins || []), useApolloInlineTrace()],
     });
 
-    if (options.subscriptions) {
-      // See more: https://github.com/apollographql/apollo-server/issues/2776
-      throw new Error('No support for subscriptions when using Apollo Federation');
+    if (options.subscriptions && options.schema) {
+      const config: SubscriptionConfig =
+        options.subscriptions === true
+          ? {
+              'graphql-ws': true,
+            }
+          : options.subscriptions;
+
+      this.subscriptionService = new GqlSubscriptionService(
+        {
+          schema: options.schema,
+          path: options.path,
+          context: options.context,
+          ...config,
+        },
+        this.httpAdapterHost.httpAdapter?.getHttpServer(),
+      );
     }
+  }
+
+  public async stop(): Promise<void> {
+    await this.subscriptionService?.stop();
   }
 }
 
