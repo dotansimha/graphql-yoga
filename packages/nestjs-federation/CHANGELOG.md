@@ -1,5 +1,14 @@
 # @graphql-yoga/nestjs-federation
 
+## 2.1.0
+
+### Minor Changes
+
+- [#2966](https://github.com/dotansimha/graphql-yoga/pull/2966)
+  [`5740159d`](https://github.com/dotansimha/graphql-yoga/commit/5740159d6f599affc04cb58ea40f9fcbe2efd32f)
+  Thanks [@vasily-polonsky](https://github.com/vasily-polonsky)! - support subscriptions for nestjs
+  federation
+
 ## 2.0.4
 
 ### Patch Changes
