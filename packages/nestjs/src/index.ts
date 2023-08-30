@@ -1,7 +1,7 @@
 import type { Express, Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { printSchema } from 'graphql';
-import { createYoga, YogaServerInstance, YogaServerOptions } from 'graphql-yoga';
+import { createYoga, filter, pipe, YogaServerInstance, YogaServerOptions } from 'graphql-yoga';
 import type { ExecutionParams } from 'subscriptions-transport-ws';
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -142,6 +142,28 @@ export abstract class AbstractYogaDriver<
       reply.send(response.body);
       return reply;
     });
+  }
+
+  public subscriptionWithFilter<TPayload, TVariables, TContext>(
+    instanceRef: unknown,
+    filterFn: (
+      payload: TPayload,
+      variables: TVariables,
+      context: TContext,
+    ) => boolean | Promise<boolean>,
+    // disable next error, the original function in @nestjs/graphql is also untyped
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    createSubscribeContext: Function,
+  ) {
+    return async (...args: [TPayload, TVariables, TContext]) => {
+      return pipe(
+        await createSubscribeContext()(...args),
+        filter((payload: TPayload) =>
+          // typecast the spread sliced args to avoid error TS 2556, see https://github.com/microsoft/TypeScript/issues/49802
+          filterFn.call(instanceRef, payload, ...(args.slice(1) as [TVariables, TContext])),
+        ),
+      );
+    };
   }
 }
 
