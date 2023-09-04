@@ -11,6 +11,7 @@ function sha256(input: string) {
 
 describe('Automatic Persisted Queries', () => {
   if (version.startsWith('15')) {
+    it('noop', () => {});
     return;
   }
   const server = createYoga({
