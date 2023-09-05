@@ -88,6 +88,7 @@ export function useAPQ(options: APQOptions = {}): Plugin {
               http: {
                 status: 404,
               },
+              code: 'PERSISTED_QUERY_NOT_FOUND',
             },
           });
         }
@@ -103,6 +104,7 @@ export function useAPQ(options: APQOptions = {}): Plugin {
               http: {
                 status: 400,
               },
+              code: 'PERSISTED_QUERY_MISMATCH',
             },
           });
         }
