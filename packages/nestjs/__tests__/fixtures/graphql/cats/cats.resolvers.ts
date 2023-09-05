@@ -53,4 +53,17 @@ export class CatsResolvers {
       yield { greetings: hi };
     }
   }
+
+  @Subscription('filteredGreetings', {
+    filter: (payload, variables) => {
+      return payload.filteredGreetings
+        .toLowerCase()
+        .startsWith(variables.firstLetter.toLowerCase());
+    },
+  })
+  async *filteredGreetings() {
+    for (const hi of ['Hi', 'Bonjour', 'Hola', 'Ciao', 'Zdravo']) {
+      yield { filteredGreetings: hi };
+    }
+  }
 }

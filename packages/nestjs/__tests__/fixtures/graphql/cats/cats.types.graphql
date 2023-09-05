@@ -10,6 +10,7 @@ type Mutation {
 type Subscription {
   catCreated: Cat
   greetings: String
+  filteredGreetings(firstLetter: String!): String
 }
 
 type Cat {

@@ -54,3 +54,33 @@ event: complete
 "
 `);
 });
+
+it("should execute Nest Subscription decorator's filter function on each emitted value", async () => {
+  const sub = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: /* GraphQL */ `
+        subscription {
+          filteredGreetings(firstLetter: "H")
+        }
+      `,
+    }),
+  });
+
+  await expect(sub.text()).resolves.toMatchInlineSnapshot(`
+":
+
+event: next
+data: {"data":{"filteredGreetings":"Hi"}}
+
+event: next
+data: {"data":{"filteredGreetings":"Hola"}}
+
+event: complete
+
+"
+`);
+});
