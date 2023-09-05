@@ -139,7 +139,9 @@ describe('Automatic Persisted Queries', () => {
 
     expect(response.ok).toBe(false);
     expect(await response.json()).toEqual({
-      errors: [{ message: 'PersistedQueryMismatch' }],
+      errors: [
+        { message: 'PersistedQueryMismatch', extensions: { code: 'PERSISTED_QUERY_MISMATCH' } },
+      ],
     });
   });
 });
