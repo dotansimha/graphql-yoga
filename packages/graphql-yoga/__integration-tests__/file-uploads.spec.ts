@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import { createServer, type Server } from 'node:http';
-import { AddressInfo } from 'node:net';
+import type { AddressInfo, Socket } from 'node:net';
 import * as path from 'node:path';
 import { fetch, File, FormData } from '@whatwg-node/fetch';
 import { createSchema, createYoga } from '../src';
@@ -43,17 +43,24 @@ describe('file uploads', () => {
   });
   let port: number;
   let server: Server;
+  const sockets = new Set<Socket>();
   beforeAll(async () => {
     sourceFile = await fs.promises.readFile(sourceFilePath);
     server = createServer(yoga);
     await new Promise<void>(resolve => server.listen(0, resolve));
     port = (server.address() as AddressInfo).port;
+    server.on('connection', socket => {
+      sockets.add(socket);
+      socket.on('close', () => {
+        sockets.delete(socket);
+      });
+    });
   });
-  afterAll(async () => {
-    if (server) {
-      server.closeAllConnections();
-      await new Promise<void>(resolve => server.close(() => resolve()));
+  afterAll(() => {
+    for (const socket of sockets) {
+      socket.destroy();
     }
+    server.close();
   });
 
   const methods = ['arrayBuffer', 'stream'];
