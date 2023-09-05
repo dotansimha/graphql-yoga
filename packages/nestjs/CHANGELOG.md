@@ -1,5 +1,14 @@
 # @graphql-yoga/nestjs
 
+## 2.1.0
+
+### Minor Changes
+
+- [#2977](https://github.com/dotansimha/graphql-yoga/pull/2977)
+  [`bb583a11`](https://github.com/dotansimha/graphql-yoga/commit/bb583a112a99ea99e4af1af9d6d5e31adecfed3b)
+  Thanks [@gthau](https://github.com/gthau)! - Support for NestJS @Subscription.filter method in
+  YogaDriver.
+
 ## 2.0.4
 
 ### Patch Changes

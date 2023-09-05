@@ -1,5 +1,13 @@
 # @graphql-yoga/nestjs-federation
 
+## 2.2.0
+
+### Patch Changes
+
+- Updated dependencies
+  [[`bb583a11`](https://github.com/dotansimha/graphql-yoga/commit/bb583a112a99ea99e4af1af9d6d5e31adecfed3b)]:
+  - @graphql-yoga/nestjs@2.1.0
+
 ## 2.1.0
 
 ### Minor Changes
