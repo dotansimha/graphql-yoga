@@ -1,87 +1,86 @@
-import * as crypto from 'node:crypto';
 import * as fs from 'node:fs';
-import { createServer } from 'node:http';
+import { createServer, type Server } from 'node:http';
 import { AddressInfo } from 'node:net';
-import * as os from 'node:os';
 import * as path from 'node:path';
 import { fetch, File, FormData } from '@whatwg-node/fetch';
 import { createSchema, createYoga } from '../src';
 
-function md5File(path: string) {
-  return new Promise((resolve, reject) => {
-    const output = crypto.createHash('md5');
-    const input = fs.createReadStream(path);
-
-    input.on('error', err => {
-      reject(err);
-    });
-
-    output.once('readable', () => {
-      resolve(output.read().toString('hex'));
-    });
-
-    input.pipe(output);
-  });
-}
-
 describe('file uploads', () => {
-  it('uploading and streaming a binary file succeeds', async () => {
-    const sourceFilePath = path.join(__dirname, '..', '..', '..', 'website', 'public', 'logo.png');
-    const sourceMd5 = await md5File(sourceFilePath);
-    const id = crypto.randomBytes(20).toString('hex');
-    const targetFilePath = path.join(os.tmpdir(), `${id}.png`);
-
-    const yoga = createYoga({
-      schema: createSchema({
-        resolvers: {
-          Mutation: {
-            uploadFile: async (root, args) => {
-              await fs.promises.writeFile(
-                targetFilePath,
-                Buffer.from(await args.file.arrayBuffer()),
-              );
-              return true;
-            },
+  const sourceFilePath = path.join(__dirname, 'fixtures', 'image.png');
+  let sourceFile: Buffer;
+  const yoga = createYoga({
+    schema: createSchema({
+      resolvers: {
+        Mutation: {
+          arrayBuffer: async (root, args) => {
+            const buf = Buffer.from(await args.file.arrayBuffer());
+            return sourceFile.equals(buf);
+          },
+          stream: async (root, args) => {
+            const chunks = [];
+            for await (const chunk of args.file.stream()) {
+              chunks.push(chunk);
+            }
+            const buffer = Buffer.concat(chunks);
+            return sourceFile.equals(buffer);
           },
         },
-        typeDefs: /* GraphQL */ `
-          scalar File
+      },
+      typeDefs: /* GraphQL */ `
+        scalar File
 
-          type Query {
-            _: Boolean
-          }
-          type Mutation {
-            uploadFile(file: File!): Boolean
-          }
-        `,
-      }),
-      logging: false,
-    });
-    const server = createServer(yoga);
+        type Query {
+          _: Boolean
+        }
+        type Mutation {
+          arrayBuffer(file: File!): Boolean
+          stream(file: File!): Boolean
+        }
+      `,
+    }),
+    logging: false,
+    maskedErrors: false,
+  });
+  let port: number;
+  let server: Server;
+  beforeAll(async () => {
+    sourceFile = await fs.promises.readFile(sourceFilePath);
+    server = createServer(yoga);
+    await new Promise<void>(resolve => server.listen(0, resolve));
+    port = (server.address() as AddressInfo).port;
+  });
+  afterAll(async () => {
+    if (server) {
+      server.closeAllConnections();
+      await new Promise<void>(resolve => server.close(() => resolve()));
+    }
+  });
 
-    try {
-      await new Promise<void>(resolve => server.listen(0, resolve));
-      const port = (server.address() as AddressInfo).port;
+  const methods = ['arrayBuffer', 'stream'];
 
+  for (const method of methods) {
+    it(`consumes as ${method} correctly`, async () => {
       const formData = new FormData();
-      formData.set(
+      formData.append(
         'operations',
         JSON.stringify({
           query: /* GraphQL */ `
-            mutation uploadFile($file: File!) {
-              uploadFile(file: $file)
-            }
-          `,
+        mutation Test($file: File!) {
+          ${method}(file: $file)
+        }
+      `,
         }),
       );
-      formData.set('map', JSON.stringify({ 0: ['variables.file'] }));
-      formData.set(
-        '0',
-        new File([await fs.promises.readFile(sourceFilePath)], path.basename(sourceFilePath), {
-          type: 'image/png',
+      formData.append(
+        'map',
+        JSON.stringify({
+          0: ['variables.file'],
         }),
       );
-
+      const file = new File([sourceFile], 'logo.png', {
+        type: 'image/png',
+      });
+      formData.append('0', file);
       const response = await fetch(`http://localhost:${port}/graphql`, {
         method: 'POST',
         body: formData,
@@ -90,16 +89,8 @@ describe('file uploads', () => {
       const body = await response.json();
       expect(body.errors).toBeUndefined();
       expect(body.data).toEqual({
-        uploadFile: true,
+        [method]: true,
       });
-
-      await fs.promises.stat(targetFilePath);
-      const targetMd5 = await md5File(targetFilePath);
-      expect(targetMd5).toEqual(sourceMd5);
-      fs.promises.unlink(targetFilePath);
-      expect(targetMd5).toBe(sourceMd5);
-    } finally {
-      await new Promise(resolve => server.close(resolve));
-    }
-  });
+    });
+  }
 });
