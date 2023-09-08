@@ -1,8 +1,18 @@
 import type { Express, Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { printSchema } from 'graphql';
-import { createYoga, filter, pipe, YogaServerInstance, YogaServerOptions } from 'graphql-yoga';
+import { GraphQLSchema, printSchema } from 'graphql';
+import {
+  createYoga,
+  filter,
+  GraphQLSchemaWithContext,
+  pipe,
+  PromiseOrValue,
+  YogaInitialContext,
+  YogaServerInstance,
+  YogaServerOptions,
+} from 'graphql-yoga';
 import type { ExecutionParams } from 'subscriptions-transport-ws';
+import { mergeSchemas } from '@graphql-tools/schema';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AbstractGraphQLDriver,
@@ -10,6 +20,12 @@ import {
   GqlSubscriptionService,
   SubscriptionConfig,
 } from '@nestjs/graphql';
+
+export type YogaSchemaDefinition<TContext> =
+  | PromiseOrValue<GraphQLSchemaWithContext<TContext>>
+  | ((
+      context: TContext & YogaInitialContext,
+    ) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>);
 
 export type YogaDriverPlatform = 'express' | 'fastify';
 
@@ -27,7 +43,9 @@ export type YogaDriverServerContext<Platform extends YogaDriverPlatform> =
 export type YogaDriverServerOptions<Platform extends YogaDriverPlatform> = Omit<
   YogaServerOptions<YogaDriverServerContext<Platform>, never>,
   'context' | 'schema'
->;
+> & {
+  conditionalSchema?: YogaSchemaDefinition<YogaDriverServerContext<Platform>> | undefined;
+};
 
 export type YogaDriverServerInstance<Platform extends YogaDriverPlatform> = YogaServerInstance<
   YogaDriverServerContext<Platform>,
@@ -78,7 +96,7 @@ export abstract class AbstractYogaDriver<
   }
 
   protected registerExpress(
-    options: YogaDriverConfig<'express'>,
+    { conditionalSchema, ...options }: YogaDriverConfig<'express'>,
     { preStartHook }: { preStartHook?: (app: Express) => void } = {},
   ) {
     const app: Express = this.httpAdapterHost.httpAdapter.getInstance();
@@ -98,6 +116,28 @@ export abstract class AbstractYogaDriver<
 
     const yoga = createYoga<YogaDriverServerContext<'express'>>({
       ...options,
+      schema: async request => {
+        const schemas: GraphQLSchema[] = [];
+
+        if (options.schema) {
+          schemas.push(options.schema);
+        }
+
+        if (conditionalSchema) {
+          const conditionalSchemaResult =
+            typeof conditionalSchema === 'function'
+              ? await conditionalSchema(request)
+              : await conditionalSchema;
+
+          if (conditionalSchemaResult) {
+            schemas.push(conditionalSchemaResult);
+          }
+        }
+
+        return mergeSchemas({
+          schemas,
+        });
+      },
       graphqlEndpoint: options.path,
       // disable logging by default
       // however, if `true` use nest logger
@@ -115,7 +155,7 @@ export abstract class AbstractYogaDriver<
   }
 
   protected registerFastify(
-    options: YogaDriverConfig<'fastify'>,
+    { conditionalSchema, ...options }: YogaDriverConfig<'fastify'>,
     { preStartHook }: { preStartHook?: (app: FastifyInstance) => void } = {},
   ) {
     const app: FastifyInstance = this.httpAdapterHost.httpAdapter.getInstance();
@@ -124,6 +164,28 @@ export abstract class AbstractYogaDriver<
 
     const yoga = createYoga<YogaDriverServerContext<'fastify'>>({
       ...options,
+      schema: async request => {
+        const schemas: GraphQLSchema[] = [];
+
+        if (options.schema) {
+          schemas.push(options.schema);
+        }
+
+        if (conditionalSchema) {
+          const conditionalSchemaResult =
+            typeof conditionalSchema === 'function'
+              ? await conditionalSchema(request)
+              : await conditionalSchema;
+
+          if (conditionalSchemaResult) {
+            schemas.push(conditionalSchemaResult);
+          }
+        }
+
+        return mergeSchemas({
+          schemas,
+        });
+      },
       graphqlEndpoint: options.path,
       // disable logging by default
       // however, if `true` use fastify logger
