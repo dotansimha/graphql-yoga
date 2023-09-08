@@ -1,4 +1,4 @@
-import { createSchema, createYoga } from 'graphql-yoga';
+import { createSchema, createYoga, Repeater } from 'graphql-yoga';
 import { cacheControlDirective } from '@envelop/response-cache';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createInMemoryCache, useResponseCache } from '@graphql-yoga/plugin-response-cache';
@@ -782,60 +782,57 @@ describe('should support async results', () => {
   });
 });
 
-it('should allow to create the cache outside of the plugin', async () => {
-  const onEnveloped = jest.fn();
+it('should allow subscriptions and ignore it', async () => {
+  const source = (async function* foo() {
+    yield { hi: 'hi' };
+    yield { hi: 'hello' };
+    yield { hi: 'bonjour' };
+  })();
+
+  const schema = createSchema({
+    typeDefs: /* GraphQL */ `
+      type Subscription {
+        hi: String!
+      }
+      type Query {
+        hi: String!
+      }
+    `,
+    resolvers: {
+      Subscription: {
+        hi: {
+          subscribe: () => source,
+        },
+      },
+    },
+  });
+
   const yoga = createYoga({
     schema,
     plugins: [
       useResponseCache({
         session: () => null,
-        includeExtensionMetadata: true,
-        cache: createInMemoryCache(),
       }),
-      {
-        onEnveloped,
-      },
     ],
   });
-  const response = await yoga.fetch('http://localhost:3000/graphql', {
+
+  const response = await yoga.fetch('http://yoga/graphql', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
+      accept: 'text/event-stream',
     },
-    body: JSON.stringify({ query: '{ _ }' }),
+    body: JSON.stringify({
+      query: /* GraphQL */ `
+        subscription {
+          hi
+        }
+      `,
+    }),
   });
 
-  expect(response.status).toEqual(200);
-  const body = await response.json();
-  expect(body).toEqual({
-    data: {
-      _: 'DUMMY',
-    },
-    extensions: {
-      responseCache: {
-        didCache: true,
-        hit: false,
-        ttl: null,
-      },
-    },
-  });
-  const response2 = await yoga.fetch('http://localhost:3000/graphql', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ query: '{ _ }' }),
-  });
-  const body2 = await response2.json();
-  expect(body2).toMatchObject({
-    data: {
-      _: 'DUMMY',
-    },
-    extensions: {
-      responseCache: {
-        hit: true,
-      },
-    },
-  });
-  expect(onEnveloped).toHaveBeenCalledTimes(1);
+  const result = await response.text();
+  expect(result).toContain(JSON.stringify({ data: { hi: 'hi' } }));
+  expect(result).toContain(JSON.stringify({ data: { hi: 'hello' } }));
+  expect(result).toContain(JSON.stringify({ data: { hi: 'bonjour' } }));
 });

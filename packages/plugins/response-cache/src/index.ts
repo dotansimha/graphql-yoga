@@ -1,6 +1,7 @@
 import { ExecutionResult } from 'graphql';
 import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
 import {
+  createInMemoryCache,
   defaultBuildResponseCacheKey,
   BuildResponseCacheKeyFunction as EnvelopBuildResponseCacheKeyFunction,
   Cache as EnvelopCache,
