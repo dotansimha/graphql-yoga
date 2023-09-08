@@ -1940,8 +1940,8 @@ importers:
   packages/plugins/response-cache:
     dependencies:
       '@envelop/response-cache':
-        specifier: ^5.1.0
-        version: 5.1.0(@envelop/core@4.0.0)(graphql@16.6.0)
+        specifier: 5.3.0-alpha-20230908121255-f3c216b2
+        version: 5.3.0-alpha-20230908121255-f3c216b2(@envelop/core@4.0.1)(graphql@16.6.0)
       graphql-yoga:
         specifier: ^4.0.4
         version: link:../../graphql-yoga/dist
@@ -6744,15 +6744,15 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@envelop/response-cache@5.1.0(@envelop/core@4.0.0)(graphql@16.6.0):
-    resolution: {integrity: sha512-G81MF9XCQdmyZWgTkZa09rBusXNXhvjPMDjP4cfOpr8g1DEvEsxskEGT08f22hvl9Fg+G2wlVXBsHPLEr798Lg==}
+  /@envelop/response-cache@5.3.0-alpha-20230908121255-f3c216b2(@envelop/core@4.0.1)(graphql@16.6.0):
+    resolution: {integrity: sha512-iILikdZJ/g3DAM85fmIoAz26Vuw/tTkFFo+yh/cJDBB54HDibbct8nyUXX00nycIqImsEDtgdAfp3WfKH9/o6w==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@envelop/core': ^4.0.0
+      '@envelop/core': ^4.0.1
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@envelop/core': 4.0.0
-      '@graphql-tools/utils': 10.0.1(graphql@16.6.0)
+      '@envelop/core': 4.0.1
+      '@graphql-tools/utils': 10.0.6(graphql@16.6.0)
       '@whatwg-node/fetch': 0.9.12
       fast-json-stable-stringify: 2.1.0
       graphql: 16.6.0
@@ -8353,6 +8353,18 @@ packages:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.6.0)
       graphql: 16.6.0
       tslib: 2.5.3
+
+  /@graphql-tools/utils@10.0.6(graphql@16.6.0):
+    resolution: {integrity: sha512-hZMjl/BbX10iagovakgf3IiqArx8TPsotq5pwBld37uIX1JiZoSbgbCIFol7u55bh32o6cfDEiiJgfAD5fbeyQ==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.6.0)
+      dset: 3.1.2
+      graphql: 16.6.0
+      tslib: 2.5.3
+    dev: false
 
   /@graphql-tools/utils@8.13.1(graphql@16.6.0):
     resolution: {integrity: sha512-qIh9yYpdUFmctVqovwMdheVNJqFh+DQNWIhX87FJStfXYnmweBUDATok9fWPleKeFwxnW8IapKmY8m8toJEkAw==}

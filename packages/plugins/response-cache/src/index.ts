@@ -1,8 +1,8 @@
 import { ExecutionResult } from 'graphql';
 import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
 import {
-  BuildResponseCacheKeyFunction,
   defaultBuildResponseCacheKey,
+  BuildResponseCacheKeyFunction as EnvelopBuildResponseCacheKeyFunction,
   Cache as EnvelopCache,
   createInMemoryCache as envelopCreateInMemoryCache,
   ResponseCacheExtensions as EnvelopResponseCacheExtensions,
@@ -11,30 +11,44 @@ import {
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache';
 
+export type BuildResponseCacheKeyFunction = (
+  params: Omit<Parameters<EnvelopBuildResponseCacheKeyFunction>[0], 'context'>,
+) => ReturnType<EnvelopBuildResponseCacheKeyFunction>;
+
 export type UseResponseCacheParameter = Omit<
   UseEnvelopResponseCacheParameter,
-  'getDocumentString' | 'session' | 'cache' | 'enabled'
+  'getDocumentString' | 'session' | 'cache' | 'enabled' | 'buildResponseCacheKey'
 > & {
   cache?: Cache;
   session: (request: Request) => PromiseOrValue<Maybe<string>>;
   enabled?: (request: Request) => boolean;
+  buildResponseCacheKey?: BuildResponseCacheKeyFunction;
 };
 
 const operationIdByRequest = new WeakMap<Request, string>();
+const sessionByRequest = new WeakMap<Request, Maybe<string>>();
 
-// We trick Envelop plugin by passing operationId as sessionId so we can take it from cache key builder we pass to Envelop
 function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
-  return operationIdByRequest.get(request);
+  return sessionByRequest.get(request);
 }
 
-const cacheKeyFactoryForEnvelop: BuildResponseCacheKeyFunction =
-  async function cacheKeyFactoryForEnvelop({ sessionId }) {
-    if (sessionId == null) {
+const cacheKeyFactoryForEnvelop: EnvelopBuildResponseCacheKeyFunction =
+  async function cacheKeyFactoryForEnvelop({ context }) {
+    const request = (context as YogaInitialContext).request;
+    if (request == null) {
       throw new Error(
         '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
       );
     }
-    return sessionId;
+
+    const operationId = operationIdByRequest.get(request);
+    if (operationId == null) {
+      throw new Error(
+        '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
+      );
+    }
+
+    return operationId;
   };
 
 const getDocumentStringForEnvelop: GetDocumentStringFunction = executionArgs => {
@@ -130,13 +144,15 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       }
     },
     async onParams({ params, request, setResult }) {
+      const sessionId = await options.session(request);
       const operationId = await buildResponseCacheKey({
         documentString: params.query || '',
         variableValues: params.variables,
         operationName: params.operationName,
-        sessionId: await options.session(request),
+        sessionId,
       });
       operationIdByRequest.set(request, operationId);
+      sessionByRequest.set(request, sessionId);
       if (enabled(request)) {
         const cachedResponse = await cache.get(operationId);
         if (cachedResponse) {

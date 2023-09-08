@@ -392,6 +392,272 @@ it('should work with @cacheControl directive', async () => {
   });
 });
 
+describe('should support scope', () => {
+  it('should not cache response with a type with a PRIVATE scope for request without session', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          ${cacheControlDirective}
+
+          type Query @cacheControl(scope: PRIVATE) {
+            _: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            _: () => 'DUMMY',
+          },
+        },
+      }),
+      plugins: [
+        useResponseCache({
+          session: () => null,
+          includeExtensionMetadata: true,
+        }),
+      ],
+    });
+    function fetch() {
+      return yoga.fetch('http://localhost:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ query: '{__typename}' }),
+      });
+    }
+
+    let response = await fetch();
+
+    expect(response.status).toEqual(200);
+    let body = await response.json();
+    expect(body).toEqual({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          didCache: false,
+          hit: false,
+        },
+      },
+    });
+
+    response = await fetch();
+    expect(response.status).toEqual(200);
+    body = await response.json();
+    expect(body).toMatchObject({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          hit: false,
+        },
+      },
+    });
+  });
+
+  it('should cache response with a type with a PRIVATE scope for request with session', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          ${cacheControlDirective}
+
+          type Query @cacheControl(scope: PRIVATE) {
+            _: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            _: () => 'DUMMY',
+          },
+        },
+      }),
+      plugins: [
+        useResponseCache({
+          session: () => 'testing',
+          includeExtensionMetadata: true,
+        }),
+      ],
+    });
+    function fetch() {
+      return yoga.fetch('http://localhost:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ query: '{__typename}' }),
+      });
+    }
+
+    let response = await fetch();
+
+    expect(response.status).toEqual(200);
+    let body = await response.json();
+    expect(body).toEqual({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          didCache: true,
+          hit: false,
+          ttl: null,
+        },
+      },
+    });
+
+    response = await fetch();
+    expect(response.status).toEqual(200);
+    body = await response.json();
+    expect(body).toMatchObject({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          hit: true,
+        },
+      },
+    });
+  });
+
+  it('should not cache response with a type with a PRIVATE scope for request without session using options', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          ${cacheControlDirective}
+
+          type Query {
+            _: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            _: () => 'DUMMY',
+          },
+        },
+      }),
+      plugins: [
+        useResponseCache({
+          session: () => null,
+          includeExtensionMetadata: true,
+          scopePerSchemaCoordinate: {
+            Query: 'PRIVATE',
+          },
+        }),
+      ],
+    });
+    function fetch() {
+      return yoga.fetch('http://localhost:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ query: '{__typename}' }),
+      });
+    }
+
+    let response = await fetch();
+
+    expect(response.status).toEqual(200);
+    let body = await response.json();
+    expect(body).toEqual({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          didCache: false,
+          hit: false,
+        },
+      },
+    });
+
+    response = await fetch();
+    expect(response.status).toEqual(200);
+    body = await response.json();
+    expect(body).toMatchObject({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          hit: false,
+        },
+      },
+    });
+  });
+
+  it('should cache response with a type with a PRIVATE scope for request with session', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          ${cacheControlDirective}
+
+          type Query {
+            _: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            _: () => 'DUMMY',
+          },
+        },
+      }),
+      plugins: [
+        useResponseCache({
+          session: () => 'testing',
+          includeExtensionMetadata: true,
+          scopePerSchemaCoordinate: {
+            Query: 'PRIVATE',
+          },
+        }),
+      ],
+    });
+    function fetch() {
+      return yoga.fetch('http://localhost:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ query: '{__typename}' }),
+      });
+    }
+
+    let response = await fetch();
+
+    expect(response.status).toEqual(200);
+    let body = await response.json();
+    expect(body).toEqual({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          didCache: true,
+          hit: false,
+          ttl: null,
+        },
+      },
+    });
+
+    response = await fetch();
+    expect(response.status).toEqual(200);
+    body = await response.json();
+    expect(body).toMatchObject({
+      data: {
+        __typename: 'Query',
+      },
+      extensions: {
+        responseCache: {
+          hit: true,
+        },
+      },
+    });
+  });
+});
+
 it('should allow to create the cache outside of the plugin', async () => {
   const onEnveloped = jest.fn();
   const yoga = createYoga({
