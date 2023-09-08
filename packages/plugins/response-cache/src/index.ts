@@ -7,6 +7,7 @@ import {
   createInMemoryCache as envelopCreateInMemoryCache,
   ResponseCacheExtensions as EnvelopResponseCacheExtensions,
   GetDocumentStringFunction,
+  resultWithMetadata,
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache';
@@ -157,15 +158,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         const cachedResponse = await cache.get(operationId);
         if (cachedResponse) {
           if (options.includeExtensionMetadata) {
-            setResult({
-              ...cachedResponse,
-              extensions: {
-                ...cachedResponse.extensions,
-                responseCache: {
-                  hit: true,
-                },
-              },
-            });
+            setResult(resultWithMetadata(cachedResponse, { hit: true }));
           } else {
             setResult(cachedResponse);
           }
