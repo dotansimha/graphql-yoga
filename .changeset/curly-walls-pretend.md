@@ -2,4 +2,4 @@
 '@graphql-yoga/plugin-response-cache': minor
 ---
 
-support @cacheControl(scope: CacheControlScope), allowing to reinforce cache depending on session
+support @cacheControl(scope: CacheControlScope), allowing to enforce cache depending on session
