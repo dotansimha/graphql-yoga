@@ -95,6 +95,47 @@ useResponseCache({
 })
 ```
 
+### Enforce session based caching
+
+In some cases, a type or a field should only be cached if their is a session. For this, you can use
+the `scope` to indicate that the cache should only be used if a session is present.
+
+```ts filename="Response Cache configuration with scope"
+useResponseCache({
+  // cache based on the authentication header
+  session: request => request.headers.get('authentication')
+
+  // You can use configuration object to define the scope
+  scopePerSchemaCoordinate: {
+    'Query.me': 'PRIVATE', // on a field
+    'User: 'PRIVATE', // or a type
+  }
+})
+```
+
+It is also possible to use the `@cacheControl` directive to define the scope.
+
+```ts filename="Response Cache configuration with scope using @cacheControl directive"
+import { cacheControlDirective } from '@graphql-yoga/plugin-response-cache'
+
+const typeDefs = /* GraphQL */ `
+  # the directive needs to be defined in the schema
+  ${cacheControlDirective}
+
+  type Query {
+    # cache operations selecting Query.lazy for 10 seconds
+    me: User @cacheControl(scope: PRIVATE)
+  }
+
+  type User @cacheControl(scope: PRIVATE) {
+    #...
+  }
+`
+```
+
+Any query containing a type or a field with the scope `PRIVATE` will only be cached if a session is
+present.
+
 ## Time to Live (TTL)
 
 It is possible to give cached operations a time to live. Either globally, based on
