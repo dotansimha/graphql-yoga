@@ -2,7 +2,12 @@ import { ExecutionArgs, getOperationAST } from 'graphql';
 import { GetEnvelopedFn } from '@envelop/core';
 import { isPromise } from '@graphql-tools/utils';
 import { iterateAsyncVoid } from '@whatwg-node/server';
-import { OnResultProcess, ResultProcessor, ResultProcessorInput } from './plugins/types.js';
+import {
+  OnResultProcess,
+  OnResultProcessEventPayload,
+  ResultProcessor,
+  ResultProcessorInput,
+} from './plugins/types.js';
 import { FetchAPI, GraphQLParams } from './types.js';
 
 export function processResult({
@@ -39,20 +44,26 @@ export function processResult({
     return resultProcessor(result, fetchAPI, acceptedMediaType);
   }
 
+  const onResultProcessHookPayload: OnResultProcessEventPayload = {
+    request,
+    acceptableMediaTypes,
+    get result() {
+      return result;
+    },
+    setResult(newResult) {
+      result = newResult;
+    },
+    get resultProcessor() {
+      return resultProcessor;
+    },
+    setResultProcessor(newResultProcessor, newAcceptedMimeType) {
+      resultProcessor = newResultProcessor;
+      acceptedMediaType = newAcceptedMimeType;
+    },
+  };
+
   const iterationRes$ = iterateAsyncVoid(onResultProcessHooks, onResultProcessHook =>
-    onResultProcessHook({
-      request,
-      acceptableMediaTypes,
-      result,
-      setResult(newResult) {
-        result = newResult;
-      },
-      resultProcessor,
-      setResultProcessor(newResultProcessor, newAcceptedMimeType) {
-        resultProcessor = newResultProcessor;
-        acceptedMediaType = newAcceptedMimeType;
-      },
-    }),
+    onResultProcessHook(onResultProcessHookPayload),
   );
 
   if (isPromise(iterationRes$)) {

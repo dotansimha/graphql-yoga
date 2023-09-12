@@ -42,6 +42,7 @@ import { useHTTPValidationError } from './plugins/request-validation/use-http-va
 import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js';
 import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js';
 import {
+  OnParamsEventPayload,
   OnParamsHook,
   OnRequestParseHook,
   OnRequestParseHookResult,
@@ -434,25 +435,20 @@ export class YogaServer<
     const handleException = (error: unknown) => {
       const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
-      const result: ExecutionResult = {
+      return {
         errors,
       };
-
-      return result;
     };
     try {
       let result: ExecutionResult | undefined;
 
       const handleResult = () => {
         if (result == null) {
-          const serverContext = args[0];
-          const initialContext = {
-            ...serverContext,
-            request,
-            params,
-          };
+          const serverContext: Record<string, unknown> = args[0] || {};
+          serverContext.request = request;
+          serverContext.params = params;
 
-          const enveloped = this.getEnveloped(initialContext);
+          const enveloped = this.getEnveloped(serverContext);
 
           return processGraphQLParams({
             params,
@@ -462,18 +458,22 @@ export class YogaServer<
         return result;
       };
 
+      const onParamsPayload: OnParamsEventPayload = {
+        get params() {
+          return params;
+        },
+        request,
+        setParams(newParams) {
+          params = newParams;
+        },
+        setResult(newResult) {
+          result = newResult;
+        },
+        fetchAPI: this.fetchAPI,
+      };
+
       const onParamsHooksIteration$ = iterateAsyncVoid(this.onParamsHooks, onParamsHook =>
-        onParamsHook({
-          params,
-          request,
-          setParams(newParams) {
-            params = newParams;
-          },
-          setResult(newResult) {
-            result = newResult;
-          },
-          fetchAPI: this.fetchAPI,
-        }),
+        onParamsHook(onParamsPayload),
       );
 
       if (isPromise(onParamsHooksIteration$)) {

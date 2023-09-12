@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { createGraphQLError } from '@graphql-tools/utils';
+import { createGraphQLError, isAsyncIterable } from '@graphql-tools/utils';
 import type { YogaLogger } from '@graphql-yoga/logger';
 import type { ResultProcessorInput } from './plugins/types.js';
 import type { GraphQLHTTPExtensions, YogaMaskedErrorOpts } from './types.js';
@@ -106,15 +106,23 @@ export function handleError(
   }
   return Array.from(errors);
 }
+
 export function getResponseInitByRespectingErrors(
   result: ResultProcessorInput,
   headers: Record<string, string> = {},
   isApplicationJson = false,
 ) {
+  if (Array.isArray(result) || isAsyncIterable(result)) {
+    return {
+      status: 200,
+      headers,
+    };
+  }
+
   let status: number | undefined;
   let unexpectedErrorExists = false;
 
-  if ('extensions' in result && result.extensions?.http) {
+  if (result.extensions?.http) {
     if (result.extensions.http.headers) {
       Object.assign(headers, result.extensions.http.headers);
     }
@@ -123,7 +131,7 @@ export function getResponseInitByRespectingErrors(
     }
   }
 
-  if ('errors' in result && result.errors?.length) {
+  if (result.errors?.length) {
     for (const error of result.errors) {
       if (error.extensions?.http) {
         if (error.extensions.http.headers) {

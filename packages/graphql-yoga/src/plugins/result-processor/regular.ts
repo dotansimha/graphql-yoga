@@ -6,7 +6,7 @@ import {
 } from '../../error.js';
 import { FetchAPI } from '../../types.js';
 import { ResultProcessorInput } from '../types.js';
-import { jsonStringifyResultWithoutInternals } from './stringify.js';
+import { getResultWithoutInternals } from './utils.js';
 
 export function processRegularResult(
   executionResult: ResultProcessorInput,
@@ -39,7 +39,7 @@ export function processRegularResult(
       ),
   );
 
-  const responseBody = jsonStringifyResultWithoutInternals(executionResult);
+  const responseBody = getResultWithoutInternals(executionResult);
 
-  return new fetchAPI.Response(responseBody, responseInit);
+  return fetchAPI.Response.json(responseBody, responseInit);
 }
