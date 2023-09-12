@@ -52,7 +52,7 @@ export const useSchema = <
   return {
     onRequestParse({ request, serverContext }) {
       return {
-        onRequestParseDone() {
+        onRequestParseDone(): PromiseOrValue<void> {
           const schema$ = schemaDef({
             ...serverContext,
             request,
