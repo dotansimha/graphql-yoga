@@ -1,4 +1,3 @@
- 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ExecutionResult, parse, specifiedRules, validate } from 'graphql';
 import {
@@ -487,7 +486,7 @@ export class YogaServer<
     }
   }
 
-  handle: ServerAdapterRequestHandler<TServerContext> = async (
+  handle: ServerAdapterRequestHandler<TServerContext> = (
     request: Request,
     serverContext: TServerContext,
   ) => {
@@ -502,7 +501,84 @@ export class YogaServer<
 
     const onRequestParseHookResults: OnRequestParseHookResult[] = [];
 
-    await iterateAsync(
+    const handleRequestParser = () => {
+      this.logger.debug(`Parsing request to extract GraphQL parameters`);
+
+      if (!requestParser) {
+        return new this.fetchAPI.Response(null, {
+          status: 415,
+          statusText: 'Unsupported Media Type',
+        });
+      }
+
+      const handleRequestParserResult = (requestParserResult: GraphQLParams | GraphQLParams[]) => {
+        const handleRequestParserResultAfterHooks = () => {
+          const result$ = (
+            Array.isArray(requestParserResult)
+              ? Promise.all(
+                  requestParserResult.map(params =>
+                    this.getResultForParams(
+                      {
+                        params,
+                        request,
+                      },
+                      serverContext,
+                    ),
+                  ),
+                )
+              : this.getResultForParams(
+                  {
+                    params: requestParserResult,
+                    request,
+                  },
+                  serverContext,
+                )
+          ) as PromiseOrValue<ResultProcessorInput>;
+
+          if (isPromise(result$)) {
+            return result$.then(result =>
+              processResult({
+                request,
+                result,
+                fetchAPI: this.fetchAPI,
+                onResultProcessHooks: this.onResultProcessHooks,
+              }),
+            );
+          }
+
+          return processResult({
+            request,
+            result: result$,
+            fetchAPI: this.fetchAPI,
+            onResultProcessHooks: this.onResultProcessHooks,
+          });
+        };
+        const iterationResult$ = iterateAsync(
+          onRequestParseHookResults,
+          onRequestParseHookResult =>
+            onRequestParseHookResult?.onRequestParseDone?.({
+              requestParserResult,
+              setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+                requestParserResult = newParams;
+              },
+            }),
+        );
+        if (isPromise(iterationResult$)) {
+          return iterationResult$.then(handleRequestParserResultAfterHooks);
+        }
+        return handleRequestParserResultAfterHooks();
+      };
+
+      const handleRequestParserResult$ = requestParser(request);
+
+      if (isPromise(handleRequestParserResult$)) {
+        return handleRequestParserResult$.then(handleRequestParserResult);
+      }
+
+      return handleRequestParserResult(handleRequestParserResult$);
+    };
+
+    const onRequestParseHookIteration$ = iterateAsync(
       this.onRequestParseHooks,
       onRequestParse =>
         onRequestParse({
@@ -517,67 +593,11 @@ export class YogaServer<
       onRequestParseHookResults,
     );
 
-    this.logger.debug(`Parsing request to extract GraphQL parameters`);
-
-    if (!requestParser) {
-      return new this.fetchAPI.Response(null, {
-        status: 415,
-        statusText: 'Unsupported Media Type',
-      });
+    if (isPromise(onRequestParseHookIteration$)) {
+      return onRequestParseHookIteration$.then(handleRequestParser);
     }
 
-    let requestParserResult = await requestParser(request);
-
-    await iterateAsync(
-      onRequestParseHookResults,
-      onRequestParseHookResult =>
-        onRequestParseHookResult?.onRequestParseDone?.({
-          requestParserResult,
-          setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
-            requestParserResult = newParams;
-          },
-        }),
-    );
-
-    const result$ = (
-      Array.isArray(requestParserResult)
-        ? Promise.all(
-            requestParserResult.map(params =>
-              this.getResultForParams(
-                {
-                  params,
-                  request,
-                },
-                serverContext,
-              ),
-            ),
-          )
-        : this.getResultForParams(
-            {
-              params: requestParserResult,
-              request,
-            },
-            serverContext,
-          )
-    ) as PromiseOrValue<ResultProcessorInput>;
-
-    if (isPromise(result$)) {
-      return result$.then(result =>
-        processResult({
-          request,
-          result,
-          fetchAPI: this.fetchAPI,
-          onResultProcessHooks: this.onResultProcessHooks,
-        }),
-      );
-    }
-
-    return processResult({
-      request,
-      result: result$,
-      fetchAPI: this.fetchAPI,
-      onResultProcessHooks: this.onResultProcessHooks,
-    });
+    return handleRequestParser();
   };
 }
 
