@@ -1,5 +1,6 @@
 import { GraphQLErrorExtensions } from 'graphql';
-import { createGraphQLError } from '@graphql-tools/utils';
+import { PromiseOrValue } from '@envelop/core';
+import { createGraphQLError, isPromise } from '@graphql-tools/utils';
 import { GraphQLParams } from '../../types.js';
 import { isContentTypeMatch } from './utils.js';
 
@@ -11,28 +12,25 @@ export function isPOSTJsonRequest(request: Request) {
   );
 }
 
-export async function parsePOSTJsonRequest(request: Request): Promise<GraphQLParams> {
-  let requestBody: GraphQLParams;
-  try {
-    requestBody = await request.json();
-  } catch (err) {
-    const extensions: GraphQLErrorExtensions = {
-      http: {
-        spec: true,
-        status: 400,
-      },
+function handleJsonError(err: unknown): GraphQLParams {
+  const extensions: GraphQLErrorExtensions = {
+    http: {
+      spec: true,
+      status: 400,
+    },
+  };
+  if (err instanceof Error) {
+    extensions.originalError = {
+      name: err.name,
+      message: err.message,
     };
-    if (err instanceof Error) {
-      extensions.originalError = {
-        name: err.name,
-        message: err.message,
-      };
-    }
-    throw createGraphQLError('POST body sent invalid JSON.', {
-      extensions,
-    });
   }
+  throw createGraphQLError('POST body sent invalid JSON.', {
+    extensions,
+  });
+}
 
+function handleJson(requestBody: GraphQLParams) {
   if (requestBody == null) {
     throw createGraphQLError(`POST body is expected to be object but received ${requestBody}`, {
       extensions: {
@@ -58,4 +56,18 @@ export async function parsePOSTJsonRequest(request: Request): Promise<GraphQLPar
   }
 
   return requestBody;
+}
+
+export function parsePOSTJsonRequest(request: Request): PromiseOrValue<GraphQLParams> {
+  let requestBody$: PromiseOrValue<GraphQLParams>;
+
+  try {
+    requestBody$ = request.json();
+  } catch (err) {
+    return handleJsonError(err);
+  }
+  if (isPromise(requestBody$)) {
+    return requestBody$.then(handleJson).catch(handleJsonError);
+  }
+  return handleJson(requestBody$);
 }

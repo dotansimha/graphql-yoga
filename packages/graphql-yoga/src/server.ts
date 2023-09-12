@@ -1,3 +1,4 @@
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ExecutionResult, parse, specifiedRules, validate } from 'graphql';
 import {
@@ -13,6 +14,8 @@ import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
 import * as defaultFetchAPI from '@whatwg-node/fetch';
 import {
   createServerAdapter,
+  isPromise,
+  iterateAsyncVoid,
   ServerAdapter,
   ServerAdapterBaseObject,
   ServerAdapterRequestHandler,
@@ -41,8 +44,8 @@ import { useLimitBatching } from './plugins/request-validation/use-limit-batchin
 import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js';
 import {
   OnParamsHook,
-  OnRequestParseDoneHook,
   OnRequestParseHook,
+  OnRequestParseHookResult,
   OnResultProcess,
   Plugin,
   RequestParser,
@@ -66,6 +69,7 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js';
+import { iterateAsync } from './utils/iterate-async.js';
 import { maskError } from './utils/mask-error.js';
 
 /**
@@ -415,7 +419,7 @@ export class YogaServer<
     }
   }
 
-  async getResultForParams(
+  getResultForParams(
     {
       params,
       request,
@@ -428,11 +432,39 @@ export class YogaServer<
       ? [serverContext?: TServerContext | undefined]
       : [serverContext: TServerContext]
   ) {
+    const handleException = (error: unknown) => {
+      const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+
+      const result: ExecutionResult = {
+        errors,
+      };
+
+      return result;
+    };
     try {
       let result: ExecutionResult | undefined;
 
-      for (const onParamsHook of this.onParamsHooks) {
-        await onParamsHook({
+      const handleResult = () => {
+        if (result == null) {
+          const serverContext = args[0];
+          const initialContext = {
+            ...serverContext,
+            request,
+            params,
+          };
+
+          const enveloped = this.getEnveloped(initialContext);
+
+          return processGraphQLParams({
+            params,
+            enveloped,
+          });
+        }
+        return result;
+      };
+
+      const onParamsHooksIteration$ = iterateAsyncVoid(this.onParamsHooks, onParamsHook =>
+        onParamsHook({
           params,
           request,
           setParams(newParams) {
@@ -442,38 +474,16 @@ export class YogaServer<
             result = newResult;
           },
           fetchAPI: this.fetchAPI,
-        });
+        }),
+      );
+
+      if (isPromise(onParamsHooksIteration$)) {
+        return onParamsHooksIteration$.then(handleResult).catch(handleException);
       }
 
-      if (result == null) {
-        const serverContext = args[0];
-        const initialContext = {
-          ...serverContext,
-          request,
-          params,
-        };
-
-        const enveloped = this.getEnveloped(initialContext);
-
-        this.logger.debug(`Processing GraphQL Parameters`);
-
-        result = await processGraphQLParams({
-          params,
-          enveloped,
-        });
-
-        this.logger.debug(`Processing GraphQL Parameters done.`);
-      }
-
-      return result;
+      return handleResult();
     } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts, this.logger);
-
-      const result: ExecutionResult = {
-        errors,
-      };
-
-      return result;
+      return handleException(error);
     }
   }
 
@@ -489,21 +499,23 @@ export class YogaServer<
     }) as URL;
 
     let requestParser: RequestParser | undefined;
-    const onRequestParseDoneList: OnRequestParseDoneHook[] = [];
-    for (const onRequestParse of this.onRequestParseHooks) {
-      const onRequestParseResult = await onRequestParse({
-        request,
-        url,
-        requestParser,
-        serverContext,
-        setRequestParser(parser: RequestParser) {
-          requestParser = parser;
-        },
-      });
-      if (onRequestParseResult?.onRequestParseDone != null) {
-        onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone);
-      }
-    }
+
+    const onRequestParseHookResults: OnRequestParseHookResult[] = [];
+
+    await iterateAsync(
+      this.onRequestParseHooks,
+      onRequestParse =>
+        onRequestParse({
+          request,
+          url,
+          requestParser,
+          serverContext,
+          setRequestParser(parser: RequestParser) {
+            requestParser = parser;
+          },
+        }),
+      onRequestParseHookResults,
+    );
 
     this.logger.debug(`Parsing request to extract GraphQL parameters`);
 
@@ -516,38 +528,53 @@ export class YogaServer<
 
     let requestParserResult = await requestParser(request);
 
-    for (const onRequestParseDone of onRequestParseDoneList) {
-      await onRequestParseDone({
-        requestParserResult,
-        setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
-          requestParserResult = newParams;
-        },
-      });
-    }
-
-    const result = (await (Array.isArray(requestParserResult)
-      ? Promise.all(
-          requestParserResult.map(params =>
-            this.getResultForParams(
-              {
-                params,
-                request,
-              },
-              serverContext,
-            ),
-          ),
-        )
-      : this.getResultForParams(
-          {
-            params: requestParserResult,
-            request,
+    await iterateAsync(
+      onRequestParseHookResults,
+      onRequestParseHookResult =>
+        onRequestParseHookResult?.onRequestParseDone?.({
+          requestParserResult,
+          setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+            requestParserResult = newParams;
           },
-          serverContext,
-        ))) as ResultProcessorInput;
+        }),
+    );
+
+    const result$ = (
+      Array.isArray(requestParserResult)
+        ? Promise.all(
+            requestParserResult.map(params =>
+              this.getResultForParams(
+                {
+                  params,
+                  request,
+                },
+                serverContext,
+              ),
+            ),
+          )
+        : this.getResultForParams(
+            {
+              params: requestParserResult,
+              request,
+            },
+            serverContext,
+          )
+    ) as PromiseOrValue<ResultProcessorInput>;
+
+    if (isPromise(result$)) {
+      return result$.then(result =>
+        processResult({
+          request,
+          result,
+          fetchAPI: this.fetchAPI,
+          onResultProcessHooks: this.onResultProcessHooks,
+        }),
+      );
+    }
 
     return processResult({
       request,
-      result,
+      result: result$,
       fetchAPI: this.fetchAPI,
       onResultProcessHooks: this.onResultProcessHooks,
     });

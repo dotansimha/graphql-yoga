@@ -1,9 +1,11 @@
 import { ExecutionArgs, getOperationAST } from 'graphql';
 import { GetEnvelopedFn } from '@envelop/core';
+import { isPromise } from '@graphql-tools/utils';
+import { iterateAsyncVoid } from '@whatwg-node/server';
 import { OnResultProcess, ResultProcessor, ResultProcessorInput } from './plugins/types.js';
 import { FetchAPI, GraphQLParams } from './types.js';
 
-export async function processResult({
+export function processResult({
   request,
   result,
   fetchAPI,
@@ -22,8 +24,23 @@ export async function processResult({
   const acceptableMediaTypes: string[] = [];
   let acceptedMediaType = '*/*';
 
-  for (const onResultProcessHook of onResultProcessHooks) {
-    await onResultProcessHook({
+  function executeResultProcessor() {
+    // If no result processor found for this result, return an error
+    if (!resultProcessor) {
+      return new fetchAPI.Response(null, {
+        status: 406,
+        statusText: 'Not Acceptable',
+        headers: {
+          accept: acceptableMediaTypes.join('; charset=utf-8, '),
+        },
+      });
+    }
+
+    return resultProcessor(result, fetchAPI, acceptedMediaType);
+  }
+
+  const iterationRes$ = iterateAsyncVoid(onResultProcessHooks, onResultProcessHook =>
+    onResultProcessHook({
       request,
       acceptableMediaTypes,
       result,
@@ -35,24 +52,35 @@ export async function processResult({
         resultProcessor = newResultProcessor;
         acceptedMediaType = newAcceptedMimeType;
       },
-    });
+    }),
+  );
+
+  if (isPromise(iterationRes$)) {
+    return iterationRes$.then(executeResultProcessor);
   }
 
-  // If no result processor found for this result, return an error
-  if (!resultProcessor) {
-    return new fetchAPI.Response(null, {
-      status: 406,
-      statusText: 'Not Acceptable',
-      headers: {
-        accept: acceptableMediaTypes.join('; charset=utf-8, '),
-      },
-    });
-  }
-
-  return resultProcessor(result, fetchAPI, acceptedMediaType);
+  return executeResultProcessor();
 }
 
-export async function processRequest({
+function processExecutionArgs({
+  executionArgs,
+  enveloped,
+}: {
+  executionArgs: ExecutionArgs;
+  enveloped: ReturnType<GetEnvelopedFn<unknown>>;
+}) {
+  // Get the actual operation
+  const operation = getOperationAST(executionArgs.document, executionArgs.operationName);
+
+  // Choose the right executor
+  const executeFn =
+    operation?.operation === 'subscription' ? enveloped.subscribe : enveloped.execute;
+
+  // Get the result to be processed
+  return executeFn(executionArgs);
+}
+
+export function processRequest({
   params,
   enveloped,
 }: {
@@ -69,24 +97,24 @@ export async function processRequest({
     return { errors };
   }
 
+  function processContextValue(contextValue: unknown) {
+    const executionArgs: ExecutionArgs = {
+      schema: enveloped.schema,
+      document,
+      contextValue,
+      variableValues: params.variables,
+      operationName: params.operationName,
+    };
+
+    return processExecutionArgs({ executionArgs, enveloped });
+  }
+
   // Build the context for the execution
-  const contextValue = await enveloped.contextFactory();
+  const contextValue$ = enveloped.contextFactory();
 
-  const executionArgs: ExecutionArgs = {
-    schema: enveloped.schema,
-    document,
-    contextValue,
-    variableValues: params.variables,
-    operationName: params.operationName,
-  };
+  if (isPromise(contextValue$)) {
+    return contextValue$.then(processContextValue);
+  }
 
-  // Get the actual operation
-  const operation = getOperationAST(document, params.operationName);
-
-  // Choose the right executor
-  const executeFn =
-    operation?.operation === 'subscription' ? enveloped.subscribe : enveloped.execute;
-
-  // Get the result to be processed
-  return executeFn(executionArgs);
+  return processContextValue(contextValue$);
 }
