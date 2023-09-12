@@ -1,6 +1,6 @@
 import { GraphQLErrorExtensions } from 'graphql';
 import { PromiseOrValue } from '@envelop/core';
-import { createGraphQLError, isPromise } from '@graphql-tools/utils';
+import { createGraphQLError } from '@graphql-tools/utils';
 import { GraphQLParams } from '../../types.js';
 import { isContentTypeMatch } from './utils.js';
 
@@ -66,8 +66,6 @@ export function parsePOSTJsonRequest(request: Request): PromiseOrValue<GraphQLPa
   } catch (err) {
     return handleJsonError(err);
   }
-  if (isPromise(requestBody$)) {
-    return requestBody$.then(handleJson).catch(handleJsonError);
-  }
-  return handleJson(requestBody$);
+
+  return requestBody$.then(handleJson).catch(handleJsonError);
 }
