@@ -42,7 +42,6 @@ describe('requests', () => {
       schema,
       logging: false,
       graphqlEndpoint: '/:version/:path',
-      maskedErrors: false,
     });
     const response = await yoga.fetch('http://yoga/v1/mypath', {
       method: 'POST',
@@ -50,10 +49,10 @@ describe('requests', () => {
       body: JSON.stringify({ query: '{ requestUrl }' }),
     });
 
+    expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.errors).toBeUndefined();
     expect(body.data.requestUrl).toBe('http://yoga/v1/mypath');
-    expect(response.status).toBe(200);
   });
 
   it('allows you to bypass endpoint check with wildcard', async () => {
