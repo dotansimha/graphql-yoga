@@ -1,6 +1,6 @@
 import { createSchema, createYoga } from 'graphql-yoga';
 import { cacheControlDirective } from '@envelop/response-cache';
-import { useResponseCache } from '@graphql-yoga/plugin-response-cache';
+import { createInMemoryCache, useResponseCache } from '@graphql-yoga/plugin-response-cache';
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -390,4 +390,62 @@ it('should work with @cacheControl directive', async () => {
       },
     },
   });
+});
+
+it('should allow to create the cache outside of the plugin', async () => {
+  const onEnveloped = jest.fn();
+  const yoga = createYoga({
+    schema,
+    plugins: [
+      useResponseCache({
+        session: () => null,
+        includeExtensionMetadata: true,
+        cache: createInMemoryCache(),
+      }),
+      {
+        onEnveloped,
+      },
+    ],
+  });
+  const response = await yoga.fetch('http://localhost:3000/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ query: '{ _ }' }),
+  });
+
+  expect(response.status).toEqual(200);
+  const body = await response.json();
+  expect(body).toEqual({
+    data: {
+      _: 'DUMMY',
+    },
+    extensions: {
+      responseCache: {
+        didCache: true,
+        hit: false,
+        ttl: null,
+      },
+    },
+  });
+  const response2 = await yoga.fetch('http://localhost:3000/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ query: '{ _ }' }),
+  });
+  const body2 = await response2.json();
+  expect(body2).toMatchObject({
+    data: {
+      _: 'DUMMY',
+    },
+    extensions: {
+      responseCache: {
+        hit: true,
+      },
+    },
+  });
+  expect(onEnveloped).toHaveBeenCalledTimes(1);
 });
