@@ -114,6 +114,8 @@ export interface OnParamsEventPayload {
   setParams: (params: GraphQLParams) => void;
   setResult: (result: ExecutionResult) => void;
   fetchAPI: FetchAPI;
+  context: YogaInitialContext;
+  extendContext: (partialContext: Record<string, unknown>) => void;
 }
 
 export type OnResultProcess = (payload: OnResultProcessEventPayload) => PromiseOrValue<void>;

@@ -417,7 +417,7 @@ export class YogaServer<
 
   async getResultForParams(
     {
-      params,
+      params: initialParams,
       request,
     }: {
       params: GraphQLParams;
@@ -431,12 +431,23 @@ export class YogaServer<
     try {
       let result: ExecutionResult | undefined;
 
+      const serverContext = args[0];
+      const context = {
+        ...serverContext,
+        request,
+        params: initialParams,
+      };
+
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({
-          params,
+          params: context.params,
           request,
+          context,
+          extendContext: (extension: Record<string, unknown>) => {
+            Object.assign(context, extension);
+          },
           setParams(newParams) {
-            params = newParams;
+            context.params = newParams;
           },
           setResult(newResult) {
             result = newResult;
@@ -446,19 +457,12 @@ export class YogaServer<
       }
 
       if (result == null) {
-        const serverContext = args[0];
-        const initialContext = {
-          ...serverContext,
-          request,
-          params,
-        };
-
-        const enveloped = this.getEnveloped(initialContext);
+        const enveloped = this.getEnveloped(context);
 
         this.logger.debug(`Processing GraphQL Parameters`);
 
         result = await processGraphQLParams({
-          params,
+          params: context.params,
           enveloped,
         });
 

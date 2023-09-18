@@ -16,7 +16,7 @@ export type UseResponseCacheParameter = Omit<
   'getDocumentString' | 'session' | 'cache' | 'enabled'
 > & {
   cache?: Cache;
-  session: (request: Request) => PromiseOrValue<Maybe<string>>;
+  session: (request: Request, context: YogaInitialContext) => PromiseOrValue<Maybe<string>>;
   enabled?: (request: Request) => boolean;
 };
 
@@ -129,12 +129,12 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }
       }
     },
-    async onParams({ params, request, setResult }) {
+    async onParams({ params, request, setResult, context }) {
       const operationId = await buildResponseCacheKey({
         documentString: params.query || '',
         variableValues: params.variables,
         operationName: params.operationName,
-        sessionId: await options.session(request),
+        sessionId: await options.session(request, context),
       });
       operationIdByRequest.set(request, operationId);
       if (enabled(request)) {
