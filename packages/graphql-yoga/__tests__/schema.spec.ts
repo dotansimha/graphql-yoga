@@ -39,7 +39,7 @@ describe('schema', () => {
   });
 
   it('schema factory function', async () => {
-    const schemaFactory = async (ctx: YogaInitialContext) => {
+    const schemaFactory = async (ctx: { request: Request }) => {
       const strFromContext = ctx.request.headers.get('str');
       return createSchema({
         typeDefs: /* GraphQL */ `
