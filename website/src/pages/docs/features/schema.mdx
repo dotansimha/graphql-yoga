@@ -46,7 +46,7 @@ import { createYoga } from 'graphql-yoga'
 import { getSchemaForViewer } from './schema.js'
 
 const yoga = createYoga({
-  schema: async request => getSchemaForViewer(request.headers.get('x-schema') ?? 'default')
+  schema: async ({ request }) => getSchemaForViewer(request.headers.get('x-schema') ?? 'default')
 })
 const server = createServer(yoga)
 
