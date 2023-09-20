@@ -21,9 +21,7 @@ const users: Record<string, User> = {
   },
 };
 
-type Context = { currentUser: User };
-
-export const yoga = createYoga<unknown, Context>({
+export const yoga = createYoga<unknown, { currentUser: User }>({
   plugins: [
     useGenericAuth({
       mode: 'protect-granular',
@@ -41,7 +39,7 @@ export const yoga = createYoga<unknown, Context>({
       },
     }),
   ],
-  schema: createSchema<Context>({
+  schema: createSchema({
     typeDefs: /* GraphQL */ `
       directive @auth on FIELD_DEFINITION
 
