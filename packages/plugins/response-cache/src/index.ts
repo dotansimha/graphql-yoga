@@ -7,7 +7,6 @@ import {
   createInMemoryCache as envelopCreateInMemoryCache,
   ResponseCacheExtensions as EnvelopResponseCacheExtensions,
   GetDocumentStringFunction,
-  InMemoryCacheParameter,
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache';
@@ -161,7 +160,6 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   };
 }
 
-export { InMemoryCacheParameter } from '@envelop/response-cache';
-export function createInMemoryCache(params?: InMemoryCacheParameter): Cache {
-  return envelopCreateInMemoryCache(params) as Cache;
-}
+export const createInMemoryCache = envelopCreateInMemoryCache as (
+  ...args: Parameters<typeof envelopCreateInMemoryCache>
+) => Cache;
