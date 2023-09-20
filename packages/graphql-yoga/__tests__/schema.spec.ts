@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { createSchema, createYoga, YogaInitialContext } from '../src/index.js';
+import { createSchema, createYoga } from '../src/index.js';
 
 describe('schema', () => {
   it('missing schema causes a error', async () => {
