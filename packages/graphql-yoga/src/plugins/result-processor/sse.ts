@@ -3,7 +3,7 @@ import { isAsyncIterable } from '@envelop/core';
 import { getResponseInitByRespectingErrors } from '../../error.js';
 import { FetchAPI, MaybeArray } from '../../types.js';
 import { ResultProcessor, ResultProcessorInput } from '../types.js';
-import { jsonStringifyResultWithoutInternals } from './stringify.js';
+import { getResultWithoutInternals } from './utils.js';
 
 export function getSSEProcessor(): ResultProcessor {
   return function processSSEResult(result: ResultProcessorInput, fetchAPI: FetchAPI): Response {
@@ -61,7 +61,7 @@ export function getSSEProcessor(): ResultProcessor {
         const { done, value } = await iterator.next();
         if (value != null) {
           controller.enqueue(textEncoder.encode(`event: next\n`));
-          const chunk = jsonStringifyResultWithoutInternals(value);
+          const chunk = JSON.stringify(getResultWithoutInternals(value));
           controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`));
         }
         if (done) {
@@ -70,9 +70,9 @@ export function getSSEProcessor(): ResultProcessor {
           controller.close();
         }
       },
-      async cancel(e) {
+      cancel(e) {
         clearInterval(pingInterval);
-        await iterator.return?.(e);
+        return iterator.return?.(e) as void;
       },
     });
     return new fetchAPI.Response(readableStream, responseInit);

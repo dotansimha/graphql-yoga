@@ -4,12 +4,10 @@ import { createGraphQLError, isGraphQLError } from '../../error.js';
 import type { MaybeArray } from '../../types.js';
 
 // JSON stringifier that adjusts the result error extensions while serialising
-export function jsonStringifyResultWithoutInternals(result: MaybeArray<ExecutionResult>) {
-  return JSON.stringify(
-    Array.isArray(result)
-      ? result.map(omitInternalsFromResultErrors)
-      : omitInternalsFromResultErrors(result),
-  );
+export function getResultWithoutInternals(result: MaybeArray<ExecutionResult>) {
+  return Array.isArray(result)
+    ? result.map(omitInternalsFromResultErrors)
+    : omitInternalsFromResultErrors(result);
 }
 
 function omitInternalsFromResultErrors(result: ExecutionResult): ExecutionResult {

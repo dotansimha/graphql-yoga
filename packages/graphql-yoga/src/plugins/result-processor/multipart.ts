@@ -3,7 +3,7 @@ import { isAsyncIterable } from '@envelop/core';
 import { getResponseInitByRespectingErrors } from '../../error.js';
 import { FetchAPI, MaybeArray } from '../../types.js';
 import { ResultProcessorInput } from '../types.js';
-import { jsonStringifyResultWithoutInternals } from './stringify.js';
+import { getResultWithoutInternals } from './utils.js';
 
 export function processMultipartResult(result: ResultProcessorInput, fetchAPI: FetchAPI): Response {
   const headersInit = {
@@ -44,7 +44,7 @@ export function processMultipartResult(result: ResultProcessorInput, fetchAPI: F
         controller.enqueue(textEncoder.encode('Content-Type: application/json; charset=utf-8'));
         controller.enqueue(textEncoder.encode('\r\n'));
 
-        const chunk = jsonStringifyResultWithoutInternals(value);
+        const chunk = JSON.stringify(getResultWithoutInternals(value));
         const encodedChunk = textEncoder.encode(chunk);
 
         controller.enqueue(textEncoder.encode('Content-Length: ' + encodedChunk.byteLength));

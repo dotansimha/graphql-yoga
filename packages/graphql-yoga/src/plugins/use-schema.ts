@@ -1,5 +1,6 @@
 import { GraphQLSchema, isSchema } from 'graphql';
 import { PromiseOrValue } from '@envelop/core';
+import { isPromise } from '@whatwg-node/server';
 import type { GraphQLSchemaWithContext, YogaInitialContext } from '../types.js';
 import type { Plugin } from './types.js';
 
@@ -30,8 +31,10 @@ export const useSchema = <
     return {
       onRequestParse() {
         return {
-          async onRequestParseDone() {
-            schema ||= await schemaDef;
+          onRequestParseDone() {
+            return schemaDef.then(s => {
+              schema = s;
+            });
           },
         };
       },
@@ -49,12 +52,17 @@ export const useSchema = <
   return {
     onRequestParse({ request, serverContext }) {
       return {
-        async onRequestParseDone() {
-          const schema = await schemaDef({
+        onRequestParseDone(): PromiseOrValue<void> {
+          const schema$ = schemaDef({
             ...serverContext,
             request,
           } as TContext & YogaInitialContext);
-          schemaByRequest.set(request, schema);
+          if (isPromise(schema$)) {
+            return schema$.then(schema => {
+              schemaByRequest.set(request, schema);
+            });
+          }
+          schemaByRequest.set(request, schema$);
         },
       };
     },
