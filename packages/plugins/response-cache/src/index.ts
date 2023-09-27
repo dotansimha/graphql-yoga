@@ -2,9 +2,9 @@ import { ExecutionResult } from 'graphql';
 import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
 import {
   BuildResponseCacheKeyFunction,
-  createInMemoryCache,
   defaultBuildResponseCacheKey,
   Cache as EnvelopCache,
+  createInMemoryCache as envelopCreateInMemoryCache,
   ResponseCacheExtensions as EnvelopResponseCacheExtensions,
   GetDocumentStringFunction,
   useResponseCache as useEnvelopResponseCache,
@@ -160,4 +160,6 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   };
 }
 
-export { createInMemoryCache };
+export const createInMemoryCache = envelopCreateInMemoryCache as (
+  ...args: Parameters<typeof envelopCreateInMemoryCache>
+) => Cache;
