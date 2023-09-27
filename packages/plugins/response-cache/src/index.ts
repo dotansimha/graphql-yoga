@@ -1,7 +1,6 @@
 import { ExecutionResult } from 'graphql';
 import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
 import {
-  createInMemoryCache,
   defaultBuildResponseCacheKey,
   BuildResponseCacheKeyFunction as EnvelopBuildResponseCacheKeyFunction,
   Cache as EnvelopCache,
@@ -82,7 +81,7 @@ interface Cache extends EnvelopCache {
 export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey;
-  const cache = options.cache ?? (createInMemoryCache() as Cache);
+  const cache = options.cache ?? (envelopCreateInMemoryCache() as Cache);
   const enabled = options.enabled ?? (() => true);
   let logger: YogaLogger;
   return {
