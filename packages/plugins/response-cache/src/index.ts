@@ -13,7 +13,9 @@ import {
 } from '@envelop/response-cache';
 
 export type BuildResponseCacheKeyFunction = (
-  params: Omit<Parameters<EnvelopBuildResponseCacheKeyFunction>[0], 'context'>,
+  params: Omit<Parameters<EnvelopBuildResponseCacheKeyFunction>[0], 'context'> & {
+    request: Request;
+  },
 ) => ReturnType<EnvelopBuildResponseCacheKeyFunction>;
 
 export type UseResponseCacheParameter = Omit<
@@ -151,6 +153,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         variableValues: params.variables,
         operationName: params.operationName,
         sessionId,
+        request,
       });
       operationIdByRequest.set(request, operationId);
       sessionByRequest.set(request, sessionId);
