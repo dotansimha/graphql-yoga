@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { createSchema, createYoga, YogaInitialContext } from '../src/index.js';
+import { createSchema, createYoga } from '../src/index.js';
 
 describe('schema', () => {
   it('missing schema causes a error', async () => {
@@ -39,23 +39,22 @@ describe('schema', () => {
   });
 
   it('schema factory function', async () => {
-    const schemaFactory = async (ctx: YogaInitialContext) => {
-      const strFromContext = ctx.request.headers.get('str');
-      return createSchema({
-        typeDefs: /* GraphQL */ `
-          type Query {
-            foo: String
-          }
-        `,
-        resolvers: {
-          Query: {
-            foo: () => strFromContext,
-          },
-        },
-      });
-    };
     const yoga = createYoga({
-      schema: schemaFactory,
+      async schema(ctx) {
+        const strFromContext = ctx.request.headers.get('str');
+        return createSchema({
+          typeDefs: /* GraphQL */ `
+            type Query {
+              foo: String
+            }
+          `,
+          resolvers: {
+            Query: {
+              foo: () => strFromContext,
+            },
+          },
+        });
+      },
     });
     const query = `{foo}`;
     let result = await yoga.fetch('http://yoga/graphql', {

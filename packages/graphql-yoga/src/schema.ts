@@ -4,6 +4,6 @@ import { GraphQLSchemaWithContext, YogaInitialContext } from './types.js';
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function createSchema<TContext = {}>(
   opts: IExecutableSchemaDefinition<TContext & YogaInitialContext>,
-): GraphQLSchemaWithContext<TContext> {
+): GraphQLSchemaWithContext<TContext & YogaInitialContext> {
   return makeExecutableSchema<TContext & YogaInitialContext>(opts);
 }

@@ -3,18 +3,22 @@ import { PromiseOrValue } from '@envelop/core';
 import type { GraphQLSchemaWithContext, YogaInitialContext } from '../types.js';
 import type { Plugin } from './types.js';
 
-export type YogaSchemaDefinition<TContext> =
-  | PromiseOrValue<GraphQLSchemaWithContext<TContext>>
+export type YogaSchemaDefinition<TServerContext, TUserContext> =
+  | PromiseOrValue<GraphQLSchemaWithContext<TServerContext & YogaInitialContext & TUserContext>>
   | ((
-      context: TContext & YogaInitialContext,
-    ) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>);
+      context: TServerContext & { request: YogaInitialContext['request'] },
+    ) => PromiseOrValue<
+      GraphQLSchemaWithContext<TServerContext & YogaInitialContext & TUserContext>
+    >);
 
 export const useSchema = <
   // eslint-disable-next-line @typescript-eslint/ban-types
-  TContext = {},
+  TServerContext = {},
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  TUserContext = {},
 >(
-  schemaDef?: YogaSchemaDefinition<TContext>,
-): Plugin<YogaInitialContext & TContext> => {
+  schemaDef?: YogaSchemaDefinition<TServerContext, TUserContext>,
+): Plugin<YogaInitialContext & TServerContext> => {
   if (schemaDef == null) {
     return {};
   }
@@ -51,9 +55,9 @@ export const useSchema = <
       return {
         async onRequestParseDone() {
           const schema = await schemaDef({
-            ...serverContext,
+            ...(serverContext as TServerContext),
             request,
-          } as TContext & YogaInitialContext);
+          });
           schemaByRequest.set(request, schema);
         },
       };
