@@ -15,7 +15,11 @@ const yogaMap: Record<string, RequestListener> = {
     schema,
     logging: false,
     multipart: false,
-    plugins: [useGraphQlJit()],
+    plugins: [
+      useGraphQlJit({
+        customJSONSerializer: true,
+      }),
+    ],
     graphqlEndpoint: '/graphql-jit',
   }),
   '/graphql-response-cache': createYoga<Context>({
