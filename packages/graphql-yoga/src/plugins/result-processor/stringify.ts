@@ -1,20 +1,30 @@
 import { GraphQLError } from 'graphql';
-import { ExecutionResult } from '@graphql-tools/utils';
 import { createGraphQLError, isGraphQLError } from '../../error.js';
-import type { MaybeArray } from '../../types.js';
+import { MaybeArray } from '../../types.js';
+import { ExecutionResultWithSerializer } from '../types.js';
 
 // JSON stringifier that adjusts the result error extensions while serialising
-export function jsonStringifyResultWithoutInternals(result: MaybeArray<ExecutionResult>) {
-  return JSON.stringify(
-    Array.isArray(result)
-      ? result.map(omitInternalsFromResultErrors)
-      : omitInternalsFromResultErrors(result),
-  );
+export function jsonStringifyResultWithoutInternals(
+  result: MaybeArray<ExecutionResultWithSerializer>,
+) {
+  if (Array.isArray(result)) {
+    return `[${result
+      .map(r => {
+        const sanitizedResult = omitInternalsFromResultErrors(r);
+        const stringifier = r.stringify || JSON.stringify;
+        return stringifier(sanitizedResult);
+      })
+      .join(',')}]`;
+  }
+  const sanitizedResult = omitInternalsFromResultErrors(result);
+  const stringifier = result.stringify || JSON.stringify;
+  return stringifier(sanitizedResult);
 }
-
-function omitInternalsFromResultErrors(result: ExecutionResult): ExecutionResult {
+export function omitInternalsFromResultErrors(
+  result: ExecutionResultWithSerializer,
+): ExecutionResultWithSerializer {
   if (result.errors?.length || result.extensions?.http) {
-    const newResult = { ...result } as ExecutionResult;
+    const newResult = { ...result } as ExecutionResultWithSerializer;
     newResult.errors &&= newResult.errors.map(omitInternalsFromError);
     if (newResult.extensions) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars -- TS should check for unused vars instead

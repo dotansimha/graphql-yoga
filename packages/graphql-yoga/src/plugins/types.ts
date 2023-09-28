@@ -118,9 +118,16 @@ export interface OnParamsEventPayload {
 
 export type OnResultProcess = (payload: OnResultProcessEventPayload) => PromiseOrValue<void>;
 
+export type ExecutionResultWithSerializer<TData = any, TExtensions = any> = ExecutionResult<
+  TData,
+  TExtensions
+> & {
+  stringify?: (result: ExecutionResult<TData, TExtensions>) => string;
+};
+
 export type ResultProcessorInput =
-  | MaybeArray<ExecutionResult>
-  | AsyncIterable<ExecutionResult<any, { http?: GraphQLHTTPExtensions }>>;
+  | MaybeArray<ExecutionResultWithSerializer>
+  | AsyncIterable<ExecutionResultWithSerializer<any, { http?: GraphQLHTTPExtensions }>>;
 
 export type ResultProcessor = (
   result: ResultProcessorInput,
