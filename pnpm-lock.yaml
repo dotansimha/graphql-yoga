@@ -131,8 +131,8 @@ importers:
   benchmark:
     dependencies:
       '@envelop/graphql-jit':
-        specifier: 6.0.4
-        version: 6.0.4(@envelop/core@4.0.3)(graphql@16.6.0)
+        specifier: 6.0.5
+        version: 6.0.5(@envelop/core@4.0.3)(graphql@16.6.0)
       '@faker-js/faker':
         specifier: 8.0.2
         version: 8.0.2
@@ -1355,8 +1355,8 @@ importers:
   examples/sveltekit:
     dependencies:
       '@envelop/graphql-jit':
-        specifier: 6.0.4
-        version: 6.0.4(@envelop/core@4.0.3)(graphql@16.6.0)
+        specifier: 6.0.5
+        version: 6.0.5(@envelop/core@4.0.3)(graphql@16.6.0)
       '@graphql-yoga/render-graphiql':
         specifier: 4.0.4
         version: link:../../packages/render-graphiql/dist
@@ -1617,6 +1617,9 @@ importers:
       '@envelop/disable-introspection':
         specifier: 5.0.3
         version: 5.0.3(@envelop/core@4.0.0)(graphql@16.6.0)
+      '@envelop/graphql-jit':
+        specifier: 6.0.5
+        version: 6.0.5(@envelop/core@4.0.0)(graphql@16.6.0)
       '@envelop/live-query':
         specifier: 6.0.3
         version: 6.0.3(@envelop/core@4.0.0)(graphql@16.6.0)
@@ -6581,8 +6584,22 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@envelop/graphql-jit@6.0.4(@envelop/core@4.0.3)(graphql@16.6.0):
-    resolution: {integrity: sha512-NahTh8LjsfFgWGLv0j/cMVdISoWglndRFcublMyF4mOMU+0nzc5ptDLai2e0Wb6FuhLz74OlneUvQCT7ZChUbA==}
+  /@envelop/graphql-jit@6.0.5(@envelop/core@4.0.0)(graphql@16.6.0):
+    resolution: {integrity: sha512-yrgZslAtOBPPfJlW4orT5Ge/k1gSy1gn/1QDNcPVv/6lprbHYaC/QXAo5WdHxSA0KYgzxqYOSX1jnSQjMDkOWA==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      '@envelop/core': ^4.0.3
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@envelop/core': 4.0.0
+      graphql: 16.6.0
+      graphql-jit: 0.8.0(graphql@16.6.0)
+      lru-cache: 10.0.0
+      tslib: 2.6.2
+    dev: true
+
+  /@envelop/graphql-jit@6.0.5(@envelop/core@4.0.3)(graphql@16.6.0):
+    resolution: {integrity: sha512-yrgZslAtOBPPfJlW4orT5Ge/k1gSy1gn/1QDNcPVv/6lprbHYaC/QXAo5WdHxSA0KYgzxqYOSX1jnSQjMDkOWA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@envelop/core': ^4.0.3
@@ -20297,7 +20314,6 @@ packages:
       ajv: 6.12.6
       deepmerge: 4.3.1
       string-similarity: 4.0.4
-    dev: false
 
   /fast-json-stringify@5.7.0:
     resolution: {integrity: sha512-sBVPTgnAZseLu1Qgj6lUbQ0HfjFhZWXAmpZ5AaSGkyLh5gAXBga/uPJjQPHpDFjC9adWIpdOcCLSDTgrZ7snoQ==}
@@ -21305,7 +21321,6 @@ packages:
     resolution: {integrity: sha512-eeB5GfMNeevm/GRYq20ShmsaGcmI81kIX2K9XQx5miC8KdHaC6Jm0qQ8ZNeGOi7wYB8OsdxKs+Y2oVuTFuVwKQ==}
     dependencies:
       is-property: 1.0.2
-    dev: false
 
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -21860,7 +21875,6 @@ packages:
       lodash.memoize: 4.1.2
       lodash.merge: 4.6.2
       lodash.mergewith: 4.6.2
-    dev: false
 
   /graphql-language-service@5.1.0(graphql@16.6.0):
     resolution: {integrity: sha512-APffigZ/l2me6soek+Yq5Us3HBwmfw4vns4QoqsTePXkK3knVO8rn0uAC6PmTyglb1pmFFPbYaRIzW4wmcnnGQ==}
@@ -23293,7 +23307,6 @@ packages:
 
   /is-property@1.0.2:
     resolution: {integrity: sha512-Ks/IoX00TtClbGQr4TWXemAnktAQvYB7HzcCxDGqEZU6oCmb2INHuOoKxbtR+HFkmYWBKv/dOZtGRiAjDhj92g==}
-    dev: false
 
   /is-reference@3.0.1:
     resolution: {integrity: sha512-baJJdQLiYaJdvFbJqXrcGv3WU3QCzBlUcI5QhbesIm6/xPsvmO+2CDoi/GMOFBQEQm+PXkwOPrp9KK5ozZsp2w==}
@@ -25318,7 +25331,6 @@ packages:
 
   /lodash.mergewith@4.6.2:
     resolution: {integrity: sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==}
-    dev: false
 
   /lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
@@ -32035,7 +32047,6 @@ packages:
   /string-similarity@4.0.4:
     resolution: {integrity: sha512-/q/8Q4Bl4ZKAPjj8WerIBJWALKkaPRfrvhfF8k/B23i4nzrlRj2/go1m90In7nG/3XDSbOo0+pu6RvCTM9RGMQ==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    dev: false
 
   /string-template@0.2.1:
     resolution: {integrity: sha512-Yptehjogou2xm4UJbxJ4CxgZx12HBfeystp0y3x7s4Dj32ltVVG1Gg8YhKjHZkHicuKpZX/ffilA8505VbUbpw==}
