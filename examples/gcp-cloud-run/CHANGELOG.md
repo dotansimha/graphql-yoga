@@ -1,5 +1,13 @@
 # graphql-yoga-cloud-run-guide
 
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies
+  [[`bf602edf`](https://github.com/dotansimha/graphql-yoga/commit/bf602edf790590de1db26b5f3fc39f895104055c)]:
+  - graphql-yoga@4.0.5
+
 ## 2.0.4
 
 ### Patch Changes

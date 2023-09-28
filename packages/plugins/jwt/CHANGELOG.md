@@ -1,5 +1,19 @@
 # @graphql-yoga/plugin-jwt
 
+## 1.1.0
+
+### Minor Changes
+
+- [#3029](https://github.com/dotansimha/graphql-yoga/pull/3029)
+  [`2d0cd188`](https://github.com/dotansimha/graphql-yoga/commit/2d0cd1882742ddf6550cc2c6451062062df82ccc)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Allow getToken to return a promise.
+
+### Patch Changes
+
+- Updated dependencies
+  [[`bf602edf`](https://github.com/dotansimha/graphql-yoga/commit/bf602edf790590de1db26b5f3fc39f895104055c)]:
+  - graphql-yoga@4.0.5
+
 ## 1.0.1
 
 ### Patch Changes
