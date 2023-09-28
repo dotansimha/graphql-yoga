@@ -1940,8 +1940,8 @@ importers:
   packages/plugins/response-cache:
     dependencies:
       '@envelop/response-cache':
-        specifier: ^5.3.0
-        version: 5.3.0(@envelop/core@4.0.1)(graphql@16.6.0)
+        specifier: ^5.3.2
+        version: 5.3.2(@envelop/core@4.0.3)(graphql@16.6.0)
       graphql-yoga:
         specifier: ^4.0.4
         version: link:../../graphql-yoga/dist
@@ -6534,14 +6534,6 @@ packages:
       '@envelop/types': 4.0.0
       tslib: 2.5.3
 
-  /@envelop/core@4.0.1:
-    resolution: {integrity: sha512-uBLI7ql3hZopz7vMi9UDAb9HWzKw4STKiqg4QT+lb+tu5ZNaeuJ4fom2rrmgITz38B85QZOhZrGyVrlJXxfDzw==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      '@envelop/types': 4.0.1
-      tslib: 2.6.2
-    dev: false
-
   /@envelop/core@4.0.3:
     resolution: {integrity: sha512-O0Vz8E0TObT6ijAob8jYFVJavcGywKThM3UAsxUIBBVPYZTMiqI9lo2gmAnbMUnrDcAYkUTZEW9FDYPRdF5l6g==}
     engines: {node: '>=16.0.0'}
@@ -6686,14 +6678,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@envelop/response-cache@5.3.0(@envelop/core@4.0.1)(graphql@16.6.0):
-    resolution: {integrity: sha512-v2zwHQmtnOEnNDgP7R8hSyeaO/diBkwOdJYKn7IRmEVuC/ziatUNfJMhkxK6pNAg/1teTk15iL+hjN8uqcWEQA==}
+  /@envelop/response-cache@5.3.2(@envelop/core@4.0.3)(graphql@16.6.0):
+    resolution: {integrity: sha512-q9mX4S2ylU9jj6G4gSUvm8BfD5wc90RVZ8PGgvyiDPXrFc+z3Wp4XgJ3iIm3j9u2DTDYRYOmBNZR4GcB2AZ4QA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@envelop/core': ^4.0.1
+      '@envelop/core': ^4.0.3
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@envelop/core': 4.0.1
+      '@envelop/core': 4.0.3
       '@graphql-tools/utils': 10.0.6(graphql@16.6.0)
       '@whatwg-node/fetch': 0.9.12
       fast-json-stable-stringify: 2.1.0
@@ -33327,7 +33319,7 @@ packages:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
       '@types/node': 18.11.19
-      acorn: 8.9.0
+      acorn: 8.8.2
       acorn-walk: 8.2.0
       arg: 4.1.3
       create-require: 1.1.1
