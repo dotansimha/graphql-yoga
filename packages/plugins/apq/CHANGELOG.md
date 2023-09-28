@@ -1,5 +1,18 @@
 # @graphql-yoga/plugin-apq
 
+## 2.0.5
+
+### Patch Changes
+
+- [#2985](https://github.com/dotansimha/graphql-yoga/pull/2985)
+  [`75ee8523`](https://github.com/dotansimha/graphql-yoga/commit/75ee8523b5507ab44947abfd6e8fe612baee1ada)
+  Thanks [@ardatan](https://github.com/ardatan)! - Add `extensions.code` to match Apollo's APQ
+  implementation
+
+- Updated dependencies
+  [[`bf602edf`](https://github.com/dotansimha/graphql-yoga/commit/bf602edf790590de1db26b5f3fc39f895104055c)]:
+  - graphql-yoga@4.0.5
+
 ## 2.0.4
 
 ### Patch Changes

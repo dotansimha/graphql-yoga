@@ -1,5 +1,46 @@
 # @graphql-yoga/plugin-response-cache
 
+## 2.2.0
+
+### Minor Changes
+
+- [#2993](https://github.com/dotansimha/graphql-yoga/pull/2993)
+  [`0c6625ad`](https://github.com/dotansimha/graphql-yoga/commit/0c6625ad362db284e26b526e508d8506e1aa3a10)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - support @cacheControl(scope:
+  CacheControlScope), allowing to enforce cache depending on session
+
+- [#2993](https://github.com/dotansimha/graphql-yoga/pull/2993)
+  [`0c6625ad`](https://github.com/dotansimha/graphql-yoga/commit/0c6625ad362db284e26b526e508d8506e1aa3a10)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Add support for @stream and @defer
+  directives
+
+### Patch Changes
+
+- [#2993](https://github.com/dotansimha/graphql-yoga/pull/2993)
+  [`0c6625ad`](https://github.com/dotansimha/graphql-yoga/commit/0c6625ad362db284e26b526e508d8506e1aa3a10)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+
+  - Updated dependency
+    [`@envelop/response-cache@^5.3.0` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/5.3.0)
+    (from `^5.1.0`, in `dependencies`)
+
+- [#3006](https://github.com/dotansimha/graphql-yoga/pull/3006)
+  [`2a122360`](https://github.com/dotansimha/graphql-yoga/commit/2a1223601d24d8f5589a0a7be639a5ff2929d7f0)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+
+  - Updated dependency
+    [`@envelop/response-cache@^5.3.2` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/5.3.2)
+    (from `^5.3.0`, in `dependencies`)
+
+- [#3000](https://github.com/dotansimha/graphql-yoga/pull/3000)
+  [`caf75884`](https://github.com/dotansimha/graphql-yoga/commit/caf758844064ddcbbb1becfd1ff444b639c2fa13)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Fix incompatible type of in-memory
+  cache factory with `cache` option
+
+- Updated dependencies
+  [[`bf602edf`](https://github.com/dotansimha/graphql-yoga/commit/bf602edf790590de1db26b5f3fc39f895104055c)]:
+  - graphql-yoga@4.0.5
+
 ## 2.1.1
 
 ### Patch Changes

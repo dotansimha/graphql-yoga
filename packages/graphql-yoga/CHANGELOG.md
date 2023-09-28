@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 4.0.5
+
+### Patch Changes
+
+- [#3004](https://github.com/dotansimha/graphql-yoga/pull/3004)
+  [`bf602edf`](https://github.com/dotansimha/graphql-yoga/commit/bf602edf790590de1db26b5f3fc39f895104055c)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Fix dynamic schema function type and
+  documentation
+
 ## 4.0.4
 
 ### Patch Changes
