@@ -34,7 +34,7 @@ export interface JwtPluginOptionsBase {
     request: Request;
     serverContext: object | undefined;
     url: URL;
-  }) => string | undefined;
+  }) => Promise<string | undefined> | string | undefined;
 }
 
 export interface JwtPluginOptionsWithJWKS extends JwtPluginOptionsBase {
@@ -81,7 +81,7 @@ export function useJWT(options: JwtPluginOptions): Plugin {
 
   return {
     async onRequest({ request, serverContext, url }) {
-      const token = getToken({ request, serverContext, url });
+      const token = await getToken({ request, serverContext, url });
       if (token != null) {
         const signingKey = options.signingKey ?? (await fetchKey(jwksClient, token));
 
