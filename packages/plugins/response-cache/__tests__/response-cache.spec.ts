@@ -1,4 +1,4 @@
-import { createSchema, createYoga } from 'graphql-yoga';
+import { createSchema, createYoga, Repeater } from 'graphql-yoga';
 import { cacheControlDirective } from '@envelop/response-cache';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createInMemoryCache, useResponseCache } from '@graphql-yoga/plugin-response-cache';
@@ -780,6 +780,61 @@ describe('should support async results', () => {
       },
     });
   });
+});
+
+it('should allow subscriptions and ignore it', async () => {
+  const source = (async function* foo() {
+    yield { hi: 'hi' };
+    yield { hi: 'hello' };
+    yield { hi: 'bonjour' };
+  })();
+
+  const schema = createSchema({
+    typeDefs: /* GraphQL */ `
+      type Subscription {
+        hi: String!
+      }
+      type Query {
+        hi: String!
+      }
+    `,
+    resolvers: {
+      Subscription: {
+        hi: {
+          subscribe: () => source,
+        },
+      },
+    },
+  });
+
+  const yoga = createYoga({
+    schema,
+    plugins: [
+      useResponseCache({
+        session: () => null,
+      }),
+    ],
+  });
+
+  const response = await yoga.fetch('http://yoga/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      accept: 'text/event-stream',
+    },
+    body: JSON.stringify({
+      query: /* GraphQL */ `
+        subscription {
+          hi
+        }
+      `,
+    }),
+  });
+
+  const result = await response.text();
+  expect(result).toContain(JSON.stringify({ data: { hi: 'hi' } }));
+  expect(result).toContain(JSON.stringify({ data: { hi: 'hello' } }));
+  expect(result).toContain(JSON.stringify({ data: { hi: 'bonjour' } }));
 });
 
 it('should allow to create the cache outside of the plugin', async () => {

@@ -81,7 +81,7 @@ interface Cache extends EnvelopCache {
 export function useResponseCache(options: UseResponseCacheParameter): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey;
-  const cache = options.cache ?? (createInMemoryCache() as Cache);
+  const cache = options.cache ?? createInMemoryCache();
   const enabled = options.enabled ?? (() => true);
   let logger: YogaLogger;
   return {
