@@ -5,7 +5,9 @@ import { CustomEvent } from '@whatwg-node/events';
 export type CreateRedisEventTargetArgs = {
   publishClient: Redis | Cluster;
   subscribeClient: Redis | Cluster;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serializeMessage?: (message: any) => string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deserializeMessage?: (message: string) => any;
 };
 
