@@ -5,12 +5,17 @@ import { CustomEvent } from '@whatwg-node/events';
 export type CreateRedisEventTargetArgs = {
   publishClient: Redis | Cluster;
   subscribeClient: Redis | Cluster;
+  serializeMessage?: (message: any) => string;
+  deserializeMessage?: (message: string) => any;
 };
 
 export function createRedisEventTarget<TEvent extends CustomEvent>(
   args: CreateRedisEventTargetArgs,
 ): TypedEventTarget<TEvent> {
   const { publishClient, subscribeClient } = args;
+
+  const serializeMessage = args.serializeMessage ?? JSON.stringify;
+  const deserializeMessage = args.deserializeMessage ?? JSON.parse;
 
   const callbacksForTopic = new Map<string, Set<(event: TEvent) => void>>();
 
@@ -21,7 +26,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     }
 
     const event = new CustomEvent(channel, {
-      detail: message === '' ? null : JSON.parse(message),
+      detail: message === '' ? null : deserializeMessage(message),
     }) as TEvent;
     for (const callback of callbacks) {
       callback(event);
@@ -65,7 +70,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     dispatchEvent(event: TEvent) {
       publishClient.publish(
         event.type,
-        event.detail === undefined ? '' : JSON.stringify(event.detail),
+        event.detail === undefined ? '' : serializeMessage(event.detail),
       );
       return true;
     },
