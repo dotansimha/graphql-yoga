@@ -5,10 +5,12 @@ import { CustomEvent } from '@whatwg-node/events';
 export type CreateRedisEventTargetArgs = {
   publishClient: Redis | Cluster;
   subscribeClient: Redis | Cluster;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  serializeMessage?: (message: any) => string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deserializeMessage?: (message: string) => any;
+  serializer?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    stringify: (message: any) => string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    parse: (message: string) => any;
+  };
 };
 
 export function createRedisEventTarget<TEvent extends CustomEvent>(
@@ -16,8 +18,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
 ): TypedEventTarget<TEvent> {
   const { publishClient, subscribeClient } = args;
 
-  const serializeMessage = args.serializeMessage ?? JSON.stringify;
-  const deserializeMessage = args.deserializeMessage ?? JSON.parse;
+  const serializer = args.serializer ?? JSON;
 
   const callbacksForTopic = new Map<string, Set<(event: TEvent) => void>>();
 
@@ -28,7 +29,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     }
 
     const event = new CustomEvent(channel, {
-      detail: message === '' ? null : deserializeMessage(message),
+      detail: message === '' ? null : serializer.parse(message),
     }) as TEvent;
     for (const callback of callbacks) {
       callback(event);
@@ -72,7 +73,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     dispatchEvent(event: TEvent) {
       publishClient.publish(
         event.type,
-        event.detail === undefined ? '' : serializeMessage(event.detail),
+        event.detail === undefined ? '' : serializer.stringify(event.detail),
       );
       return true;
     },
