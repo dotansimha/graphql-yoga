@@ -34,8 +34,7 @@ describe('createRedisEventTarget: serializer arg', () => {
       publishClient: new Redis({}),
       subscribeClient: new Redis({}),
       serializer: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        stringify: (message: any) => `__CUSTOM__${JSON.stringify(message)}`,
+        stringify: message => `__CUSTOM__${JSON.stringify(message)}`,
         parse: (message: string) => {
           const result = JSON.parse(message.replace(/^__CUSTOM__/, ''));
           for (const key in result) {

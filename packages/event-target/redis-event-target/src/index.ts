@@ -6,10 +6,8 @@ export type CreateRedisEventTargetArgs = {
   publishClient: Redis | Cluster;
   subscribeClient: Redis | Cluster;
   serializer?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    stringify: (message: any) => string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    parse: (message: string) => any;
+    stringify: (message: unknown) => string;
+    parse: (message: string) => unknown;
   };
 };
 
