@@ -1,6 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { remarkLinkRewrite } from 'nextra/mdx-plugins';
-import { buildDynamicMDX, buildDynamicMeta } from 'nextra/remote';
+import { buildDynamicMDX, buildDynamicMeta, remarkLinkRewrite } from '@theguild/components/compile';
 import { defaultRemarkPlugins } from '@theguild/components/next.config';
 import json from '../../remote-files/v3.json';
 

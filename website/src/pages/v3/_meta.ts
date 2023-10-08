@@ -1,4 +1,4 @@
-import { createCatchAllMeta } from 'nextra/catch-all';
+import { createCatchAllMeta } from '@theguild/components';
 import json from '../../../remote-files/v3.json';
 
 export default async () => {
