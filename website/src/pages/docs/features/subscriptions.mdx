@@ -472,6 +472,40 @@ suitable solution for serverless or edge function environments.
 data structures over the wire you can use tools such as
 [`superjson`](https://github.com/blitz-js/superjson).
 
+### Custom serializer
+
+By default, messages will be serialized to Redis using the native `JSON` available in your
+JavaScript environment. However, you can customize this by providing an alternative with the
+`serializer` option that expects a `stringify` and a `parse` methods similar to the native `JSON`.
+For example, you can install the [superjson](https://github.com/blitz-js/superjson) package and use
+it in the Redis event target instead:
+
+```ts
+import SuperJSON from 'superjson'
+
+const publishClient = new Redis()
+const subscribeClient = new Redis()
+
+const eventTarget = createRedisEventTarget({
+  publishClient,
+  subscribeClient,
+  serializer: SuperJSON
+})
+```
+
+You can also provide your own logic if you want:
+
+```ts
+const eventTarget = createRedisEventTarget({
+  publishClient,
+  subscribeClient,
+  serializer: {
+    stringify: data => 'some serialized data',
+    parse: message => ({ some: 'deserialized data' })
+  }
+})
+```
+
 ## Advanced
 
 ### Filter and Map Values
