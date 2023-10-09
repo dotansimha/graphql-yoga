@@ -18,7 +18,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 export const getStaticProps: GetStaticProps<
   {
     __nextra_dynamic_mdx: string;
-    __nextra_dynamic_opts: { frontMatter: any; title: any; };
+    __nextra_dynamic_opts: { frontMatter: any; title: any };
   },
   { slug?: string[] }
 > = async ({ params }) => {
