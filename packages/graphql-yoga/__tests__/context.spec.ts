@@ -181,7 +181,9 @@ describe('Context', () => {
       }),
       plugins: [plugin],
     });
-    const queryRes = await yoga.fetch('http://yoga/graphql?query={hello}');
+    const queryRes = await yoga.fetch('http://yoga/graphql?query={hello}', {
+      myExtraContext: 'myExtraContext',
+    });
     expect(queryRes.status).toBe(200);
     const queryResult = await queryRes.json();
     expect(queryResult.data.hello).toBe('world');
@@ -189,5 +191,8 @@ describe('Context', () => {
     for (const hook of Object.keys(plugin) as (keyof typeof plugin)[]) {
       expect(plugin[hook]).toHaveBeenCalledTimes(1);
     }
+    const contextObject = contextObjects.values().next().value;
+    expect(contextObject).toBeDefined();
+    expect(contextObject.myExtraContext).toBe('myExtraContext');
   });
 });

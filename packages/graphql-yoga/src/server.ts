@@ -446,11 +446,14 @@ export class YogaServer<
       }
 
       if (result == null) {
-        const initialContext = args[0];
-        Object.assign(initialContext, {
+        const additionalContext = {
           request,
           params,
-        });
+        };
+
+        const initialContext = args[0]
+          ? Object.assign(args[0], additionalContext)
+          : additionalContext;
 
         const enveloped = this.getEnveloped(initialContext);
 
