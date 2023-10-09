@@ -8,7 +8,6 @@ const schema = createSchema({
       greetings: String
     }
     type Subscription {
-      countdown(from: Int!): Int!
       dynamicLoading(loadTime: Int!): String!
     }
   `,
