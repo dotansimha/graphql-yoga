@@ -137,4 +137,57 @@ describe('Context', () => {
     expect(onContextBuildingFn.mock.lastCall?.[0].context.params).toEqual(params);
     expect(onContextBuildingFn.mock.lastCall?.[0].context.request).toBeDefined();
   });
+
+  it('share the same context object', async () => {
+    const contextObjects = new Set();
+    const plugin = {
+      onContextBuilding: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onEnveloped: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onParse: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onValidate: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onExecute: jest.fn(({ args }) => {
+        contextObjects.add(args.contextValue);
+      }),
+      onRequest: jest.fn(({ serverContext }) => {
+        contextObjects.add(serverContext);
+      }),
+      onRequestParse: jest.fn(({ serverContext }) => {
+        contextObjects.add(serverContext);
+      }),
+      onResponse: jest.fn(({ serverContext }) => {
+        contextObjects.add(serverContext);
+      }),
+    };
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hello: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            hello: () => 'world',
+          },
+        },
+      }),
+      plugins: [plugin],
+    });
+    const queryRes = await yoga.fetch('http://yoga/graphql?query={hello}');
+    expect(queryRes.status).toBe(200);
+    const queryResult = await queryRes.json();
+    expect(queryResult.data.hello).toBe('world');
+    expect(contextObjects.size).toBe(1);
+    for (const hook of Object.keys(plugin) as (keyof typeof plugin)[]) {
+      expect(plugin[hook]).toHaveBeenCalledTimes(1);
+    }
+  });
 });
