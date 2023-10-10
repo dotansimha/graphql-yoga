@@ -156,8 +156,8 @@ importers:
         specifier: 5.41.0
         version: 5.41.0
       '@pulumi/awsx':
-        specifier: 0.40.1
-        version: 0.40.1(@pulumi/aws@5.41.0)(@pulumi/pulumi@3.69.0)
+        specifier: 2.0.0
+        version: 2.0.0
       '@pulumi/azure-native':
         specifier: 2.0.0
         version: 2.0.0
@@ -12181,16 +12181,14 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx@0.40.1(@pulumi/aws@5.41.0)(@pulumi/pulumi@3.69.0):
-    resolution: {integrity: sha512-ws5pIxq4tghP6keXBHaSMhuEY0mcxD7kO31rJDjgRL10bqnRGTtblXssULEYMM0dQWTfxXhSeXGwWKSTkalLIw==}
-    peerDependencies:
-      '@pulumi/aws': ^5.0.0
-      '@pulumi/pulumi': ^3.0.0
+  /@pulumi/awsx@2.0.0:
+    resolution: {integrity: sha512-dDOlMi4WCz/wNTT4DLyKK1uHuBbV3LcfkME/RZYOmbSwB7BhCC9Exi48uo8sLaYELczHK2p91Kv6YKtWdUxHng==}
+    requiresBuild: true
     dependencies:
       '@pulumi/aws': 5.41.0
       '@pulumi/docker': 3.6.1
       '@pulumi/pulumi': 3.69.0
-      '@types/aws-lambda': 8.10.93
+      '@types/aws-lambda': 8.10.116
       mime: 2.6.0
     transitivePeerDependencies:
       - supports-color
@@ -13277,11 +13275,6 @@ packages:
 
   /@types/aws-lambda@8.10.116:
     resolution: {integrity: sha512-LSvIyxYCsIMOiBnb5D6HTf7JXLCh3KPiZWL6Pkn1MqV/v5OoP42GDqn5H4wHKGGKN0mJB+4y1r0oat1dLBAkuA==}
-    dev: true
-
-  /@types/aws-lambda@8.10.93:
-    resolution: {integrity: sha512-Vsyi9ogDAY3REZDjYnXMRJJa62SDvxHXxJI5nGDQdZW058dDE+av/anynN2rLKbCKXDRNw3D/sQmqxVflZFi4A==}
-    dev: false
 
   /@types/babel__core@7.1.19:
     resolution: {integrity: sha512-WEOTgRsbYkvA/KCsDwVEGkd7WAr1e3g31VHQ8zy5gul/V1qKullU/BU5I68X5v7V3GnB9eotmom4v5a5gjxorw==}
