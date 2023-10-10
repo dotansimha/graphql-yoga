@@ -1,6 +1,8 @@
+import { readFileSync } from 'node:fs';
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
-import { GatewayConfig, IntrospectAndCompose } from '@apollo/gateway';
+import { join } from 'node:path';
+import { buildHTTPExecutor } from '@graphql-tools/executor-http';
 import { fetch } from '@whatwg-node/fetch';
 import { gateway } from '../gateway/gateway';
 import { yoga as service1 } from '../service/yoga';
@@ -16,10 +18,9 @@ describe('apollo-federation example integration', () => {
     await new Promise<void>(resolve => serviceServer.listen(0, resolve));
     servicePort = (serviceServer.address() as AddressInfo).port;
 
-    const gatewayConfig: GatewayConfig = {
-      supergraphSdl: new IntrospectAndCompose({
-        subgraphs: [{ name: 'accounts', url: `http://localhost:${servicePort}/graphql` }],
-      }),
+    const gatewayConfig = {
+      supergraphSdl: readFileSync(join(__dirname, '../supergraph.graphql'), 'utf8'),
+      onExecutor: () => buildHTTPExecutor({ endpoint: `http://localhost:${servicePort}/graphql` }),
     };
 
     const gatewayService = await gateway(gatewayConfig);
@@ -54,10 +55,6 @@ describe('apollo-federation example integration', () => {
         },
         "errors": [
           {
-            "extensions": {
-              "code": "DOWNSTREAM_SERVICE_ERROR",
-              "serviceName": "accounts",
-            },
             "message": "This should throw.",
             "path": [
               "throw",

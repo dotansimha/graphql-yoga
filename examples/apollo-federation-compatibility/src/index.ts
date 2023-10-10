@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { gql } from 'graphql-tag';
 import { createYoga } from 'graphql-yoga';
-import { buildSubgraphSchema } from '@apollo/subgraph';
+import { buildSubgraphSchema } from '@graphql-tools/federation';
 import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace';
 import { Inventory, Product, ProductResearch, Resolvers, User } from './resolvers-types';
 
@@ -138,7 +138,7 @@ const resolvers: Resolvers = {
     name() {
       return 'Jane Smith';
     },
-    // @ts-expect-error
+    // @ts-expect-error (yearsOfEmployment is not in the type)
     __resolveReference(userRef) {
       const ref = userRef as User;
       if (ref.email) {
@@ -151,7 +151,7 @@ const resolvers: Resolvers = {
           user.totalProductsCreated = ref.totalProductsCreated;
         }
         if (ref.yearsOfEmployment) {
-          // @ts-expect-error
+          // @ts-expect-error (yearsOfEmployment is not in the type)
           user.yearsOfEmployment = ref.yearsOfEmployment;
         }
         return user;
@@ -170,7 +170,7 @@ const resolvers: Resolvers = {
 };
 
 const yoga = createYoga({
-  schema: buildSubgraphSchema([{ typeDefs: gql(typeDefs), resolvers }]),
+  schema: buildSubgraphSchema({ typeDefs: gql(typeDefs), resolvers }),
   plugins: [useApolloInlineTrace()],
 });
 

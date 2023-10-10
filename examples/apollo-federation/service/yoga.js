@@ -1,6 +1,6 @@
 /* eslint-disable */
 const { parse, GraphQLError } = require('graphql');
-const { buildSubgraphSchema } = require('@apollo/subgraph');
+const { buildSubgraphSchema } = require('@graphql-tools/federation');
 const { createYoga } = require('graphql-yoga');
 
 const typeDefs = parse(/* GraphQL */ `
@@ -32,5 +32,5 @@ const resolvers = {
 };
 
 module.exports.yoga = createYoga({
-  schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
+  schema: buildSubgraphSchema({ typeDefs, resolvers }),
 });

@@ -1,15 +1,12 @@
 /* eslint-disable */
 const { createServer } = require('http');
 const { gateway } = require('./gateway');
+const { readFileSync } = require('fs');
+const { join } = require('path');
 
 async function main() {
   const yoga = await gateway({
-    supergraphSdl: new IntrospectAndCompose({
-      subgraphs: [
-        { name: 'accounts', url: 'http://localhost:4001/graphql' },
-        // ...additional subgraphs...
-      ],
-    }),
+    supergraphSdl: readFileSync(join(__dirname, '../supergraph.graphql')).toString('utf-8'),
   });
 
   // Start the server and explore http://localhost:4000/graphql
