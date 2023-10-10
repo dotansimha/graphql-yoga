@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { gql } from 'graphql-tag';
 import { createYoga } from 'graphql-yoga';
 import { buildSubgraphSchema } from '@graphql-tools/federation';
 import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace';
@@ -59,7 +58,7 @@ const inventory: Inventory = {
 const resolvers: Resolvers = {
   Query: {
     product(_: unknown, args: { id: string }) {
-      return products.find(p => p.id === args.id)! as unknown as Product;
+      return products.find(p => p.id === args.id) as unknown as Product;
     },
     deprecatedProduct: (_, args) => {
       if (args.sku === deprecatedProduct.sku && args.package === deprecatedProduct.package) {
@@ -84,7 +83,9 @@ const resolvers: Resolvers = {
   },
   ProductResearch: {
     __resolveReference: reference => {
-      return productResearch.find(p => reference.study.caseNumber === p.study.caseNumber)!;
+      return productResearch.find(
+        p => reference.study.caseNumber === p.study.caseNumber,
+      ) as unknown as ProductResearch;
     },
   },
   Product: {
@@ -170,7 +171,7 @@ const resolvers: Resolvers = {
 };
 
 const yoga = createYoga({
-  schema: buildSubgraphSchema({ typeDefs: gql(typeDefs), resolvers }),
+  schema: buildSubgraphSchema({ typeDefs, resolvers }),
   plugins: [useApolloInlineTrace()],
 });
 

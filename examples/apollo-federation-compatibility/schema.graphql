@@ -62,13 +62,13 @@ type ProductDimension @shareable {
   unit: String @inaccessible
 }
 
-extend type Query {
+type Query @extends {
   product(id: ID!): Product
   deprecatedProduct(sku: String!, package: String!): DeprecatedProduct
     @deprecated(reason: "Use product query instead")
 }
 
-extend type User @key(fields: "email") {
+type User @key(fields: "email") @extends {
   averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
   email: ID! @external
   name: String @override(from: "users")
