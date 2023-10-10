@@ -57,7 +57,7 @@ export default defineConfig({
             <br />
             <Link
               href="/docs/migration/migration-from-yoga-v2"
-              className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+              className="_text-primary-600 _underline _decoration-from-font [text-underline-position:from-font]"
             >
               Get started with GraphQL Yoga v4
             </Link>
@@ -71,7 +71,7 @@ export default defineConfig({
             <br />
             <Link
               href="/docs/migration/migration-from-yoga-v3"
-              className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+              className="_text-primary-600 _underline _decoration-from-font [text-underline-position:from-font]"
             >
               Get started with GraphQL Yoga v4
             </Link>
