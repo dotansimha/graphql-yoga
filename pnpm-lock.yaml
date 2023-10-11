@@ -131,8 +131,8 @@ importers:
   benchmark:
     dependencies:
       '@envelop/graphql-jit':
-        specifier: 6.0.5
-        version: 6.0.5(@envelop/core@4.0.3)(graphql@16.6.0)
+        specifier: 7.0.0
+        version: 7.0.0(@envelop/core@4.0.3)(graphql@16.6.0)
       '@faker-js/faker':
         specifier: 8.0.2
         version: 8.0.2
@@ -1355,8 +1355,8 @@ importers:
   examples/sveltekit:
     dependencies:
       '@envelop/graphql-jit':
-        specifier: 6.0.5
-        version: 6.0.5(@envelop/core@4.0.3)(graphql@16.6.0)
+        specifier: 7.0.0
+        version: 7.0.0(@envelop/core@4.0.3)(graphql@16.6.0)
       '@graphql-yoga/render-graphiql':
         specifier: 4.0.5
         version: link:../../packages/render-graphiql/dist
@@ -1618,8 +1618,8 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@envelop/core@4.0.0)(graphql@16.6.0)
       '@envelop/graphql-jit':
-        specifier: 6.0.5
-        version: 6.0.5(@envelop/core@4.0.0)(graphql@16.6.0)
+        specifier: 7.0.0
+        version: 7.0.0(@envelop/core@4.0.0)(graphql@16.6.0)
       '@envelop/live-query':
         specifier: 6.0.3
         version: 6.0.3(@envelop/core@4.0.0)(graphql@16.6.0)
@@ -6584,8 +6584,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@envelop/graphql-jit@6.0.5(@envelop/core@4.0.0)(graphql@16.6.0):
-    resolution: {integrity: sha512-yrgZslAtOBPPfJlW4orT5Ge/k1gSy1gn/1QDNcPVv/6lprbHYaC/QXAo5WdHxSA0KYgzxqYOSX1jnSQjMDkOWA==}
+  /@envelop/graphql-jit@7.0.0(@envelop/core@4.0.0)(graphql@16.6.0):
+    resolution: {integrity: sha512-YDJx3W0QKFaKA0/oHpgV5aEubRtq5SuWqWEZZwpxt4fbHrQImA+H8sVj63QwaBKSvNTP+td/mi5aETq1hCBXpw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@envelop/core': ^4.0.3
@@ -6593,13 +6593,13 @@ packages:
     dependencies:
       '@envelop/core': 4.0.0
       graphql: 16.6.0
-      graphql-jit: 0.8.0(graphql@16.6.0)
-      lru-cache: 10.0.0
+      graphql-jit: 0.8.2(graphql@16.6.0)
       tslib: 2.6.2
+      value-or-promise: 1.0.12
     dev: true
 
-  /@envelop/graphql-jit@6.0.5(@envelop/core@4.0.3)(graphql@16.6.0):
-    resolution: {integrity: sha512-yrgZslAtOBPPfJlW4orT5Ge/k1gSy1gn/1QDNcPVv/6lprbHYaC/QXAo5WdHxSA0KYgzxqYOSX1jnSQjMDkOWA==}
+  /@envelop/graphql-jit@7.0.0(@envelop/core@4.0.3)(graphql@16.6.0):
+    resolution: {integrity: sha512-YDJx3W0QKFaKA0/oHpgV5aEubRtq5SuWqWEZZwpxt4fbHrQImA+H8sVj63QwaBKSvNTP+td/mi5aETq1hCBXpw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@envelop/core': ^4.0.3
@@ -6607,9 +6607,9 @@ packages:
     dependencies:
       '@envelop/core': 4.0.3
       graphql: 16.6.0
-      graphql-jit: 0.8.0(graphql@16.6.0)
-      lru-cache: 10.0.0
+      graphql-jit: 0.8.2(graphql@16.6.0)
       tslib: 2.6.2
+      value-or-promise: 1.0.12
     dev: false
 
   /@envelop/graphql-modules@5.0.3(@envelop/core@4.0.3)(graphql-modules@2.1.2)(graphql@16.6.0):
@@ -21862,8 +21862,8 @@ packages:
       graphql: 16.6.0
     dev: true
 
-  /graphql-jit@0.8.0(graphql@16.6.0):
-    resolution: {integrity: sha512-mxdV9ohO6jKt1o9erb+7RpmnDKQFQCcJlYVfGa3j4+ieP0ITDsAlm194+pfvdv5F4zgrgZfSe5xx5Rf98epJmg==}
+  /graphql-jit@0.8.2(graphql@16.6.0):
+    resolution: {integrity: sha512-P9KtM/UY4JTtHVRqRlZzFXPmDEtps1Bd27Mvj/naQIa5d0j83zPxAx4jewq1wueF3UEZu1JFZwX1XVBBkoo1Mg==}
     peerDependencies:
       graphql: '>=15'
     dependencies:
@@ -21946,7 +21946,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.6.0
-      tslib: 2.5.3
+      tslib: 2.6.2
 
   /graphql-ws@5.11.3(graphql@16.6.0):
     resolution: {integrity: sha512-fU8zwSgAX2noXAsuFiCZ8BtXeXZOzXyK5u1LloCdacsVth4skdBMPO74EG51lBoWSIZ8beUocdpV8+cQHBODnQ==}
