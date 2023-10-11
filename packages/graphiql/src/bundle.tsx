@@ -6,4 +6,4 @@ export function renderYogaGraphiQL(element: Element, opts?: YogaGraphiQLProps) {
   ReactDOM.render(<YogaGraphiQL {...opts} />, element);
 }
 
-window.React = React;
+globalThis.React = React;
