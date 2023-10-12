@@ -2,4 +2,4 @@
 'graphql-yoga': minor
 ---
 
-Export YogaSchemaDefinition
+Export YogaSchemaDefinition and mergeSchemas
