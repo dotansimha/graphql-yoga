@@ -5,9 +5,9 @@ contains the React component `GraphQLYoga`.
 
 ## Development
 
-You can run a local instance on `http://localhost:4001` with the following command".
+You can run a local instance on `http://localhost:4001` with the following command.
 
-```ts
+```sh
 pnpm --filter @graphiql/yoga start
 ```
 
