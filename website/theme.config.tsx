@@ -52,7 +52,7 @@ export default defineConfig({
         {route.startsWith('/v2') && (
           <Callout type="warning">
             This is the documentation for the <b>old</b> GraphQL Yoga version 2. We recommend
-            upgrading to the latest GraphQL Yoga version 4.
+            upgrading to the latest GraphQL Yoga version 5.
             <br />
             <br />
             <Link
@@ -66,7 +66,7 @@ export default defineConfig({
         {route.startsWith('/v3') && (
           <Callout type="warning">
             This is the documentation for the <b>old</b> GraphQL Yoga version 3. We recommend
-            upgrading to the latest GraphQL Yoga version 4.
+            upgrading to the latest GraphQL Yoga version 5.
             <br />
             <br />
             <Link
@@ -74,6 +74,20 @@ export default defineConfig({
               className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
             >
               Get started with GraphQL Yoga v4
+            </Link>
+          </Callout>
+        )}
+        {route.startsWith('/v4') && (
+          <Callout type="warning">
+            This is the documentation for the <b>old</b> GraphQL Yoga version 4. We recommend
+            upgrading to the latest GraphQL Yoga version 5.
+            <br />
+            <br />
+            <Link
+              href="/docs/migration/migration-from-yoga-v4"
+              className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
+            >
+              Get started with GraphQL Yoga v5
             </Link>
           </Callout>
         )}

@@ -19,6 +19,14 @@ export default withGuildDocs({
         route: '/v3',
         frontMatter: {},
       });
+    pageOpts.pageMap
+      .find(o => o.kind === 'Folder' && o.name === 'v4')
+      .children.push({
+        kind: 'MdxPage',
+        name: 'index',
+        route: '/v4',
+        frontMatter: {},
+      });
     return pageOpts;
   },
   redirects: () =>
