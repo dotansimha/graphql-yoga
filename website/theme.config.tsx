@@ -59,7 +59,7 @@ export default defineConfig({
               href="/docs/migration/migration-from-yoga-v2"
               className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
             >
-              Get started with GraphQL Yoga v4
+              Migrate to GraphQL Yoga v5
             </Link>
           </Callout>
         )}
@@ -73,7 +73,7 @@ export default defineConfig({
               href="/docs/migration/migration-from-yoga-v3"
               className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
             >
-              Get started with GraphQL Yoga v4
+              Migrate to GraphQL Yoga v5
             </Link>
           </Callout>
         )}
@@ -87,7 +87,7 @@ export default defineConfig({
               href="/docs/migration/migration-from-yoga-v4"
               className="nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]"
             >
-              Get started with GraphQL Yoga v5
+              Migrate to GraphQL Yoga v5
             </Link>
           </Callout>
         )}
