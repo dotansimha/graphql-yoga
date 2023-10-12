@@ -4,10 +4,8 @@ import { GraphQLSchema, printSchema } from 'graphql';
 import {
   createYoga,
   filter,
-  GraphQLSchemaWithContext,
   pipe,
-  PromiseOrValue,
-  YogaInitialContext,
+  YogaSchemaDefinition,
   YogaServerInstance,
   YogaServerOptions,
 } from 'graphql-yoga';
@@ -20,12 +18,6 @@ import {
   GqlSubscriptionService,
   SubscriptionConfig,
 } from '@nestjs/graphql';
-
-export type YogaSchemaDefinition<TContext> =
-  | PromiseOrValue<GraphQLSchemaWithContext<TContext>>
-  | ((
-      context: TContext & YogaInitialContext,
-    ) => PromiseOrValue<GraphQLSchemaWithContext<TContext>>);
 
 export type YogaDriverPlatform = 'express' | 'fastify';
 
@@ -44,7 +36,7 @@ export type YogaDriverServerOptions<Platform extends YogaDriverPlatform> = Omit<
   YogaServerOptions<YogaDriverServerContext<Platform>, never>,
   'context' | 'schema'
 > & {
-  conditionalSchema?: YogaSchemaDefinition<YogaDriverServerContext<Platform>> | undefined;
+  conditionalSchema?: YogaSchemaDefinition<YogaDriverServerContext<Platform>, never> | undefined;
 };
 
 export type YogaDriverServerInstance<Platform extends YogaDriverPlatform> = YogaServerInstance<

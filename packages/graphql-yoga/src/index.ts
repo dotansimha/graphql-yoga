@@ -4,7 +4,7 @@ export { type Plugin } from './plugins/types.js';
 export { type GraphiQLOptions } from './plugins/use-graphiql.js';
 export { renderGraphiQL, shouldRenderGraphiQL } from './plugins/use-graphiql.js';
 export { useReadinessCheck } from './plugins/use-readiness-check.js';
-export { useSchema } from './plugins/use-schema.js';
+export { YogaSchemaDefinition, useSchema } from './plugins/use-schema.js';
 export * from './schema.js';
 export * from './server.js';
 export * from './subscription.js';
