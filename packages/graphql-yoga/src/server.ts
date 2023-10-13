@@ -419,9 +419,11 @@ export class YogaServer<
     {
       params,
       request,
+      batched,
     }: {
       params: GraphQLParams;
       request: Request;
+      batched: boolean;
     },
     // eslint-disable-next-line @typescript-eslint/ban-types
     ...args: {} extends TServerContext
@@ -446,12 +448,20 @@ export class YogaServer<
       }
 
       if (result == null) {
-        const serverContext = args[0];
-        const initialContext = {
-          ...serverContext,
-          request,
-          params,
-        };
+        const additionalContext = args[0]?.request
+          ? {
+              params,
+            }
+          : {
+              request,
+              params,
+            };
+
+        const initialContext = args[0]
+          ? batched
+            ? Object.assign({}, args[0], additionalContext)
+            : Object.assign(args[0], additionalContext)
+          : additionalContext;
 
         const enveloped = this.getEnveloped(initialContext);
 
@@ -532,6 +542,7 @@ export class YogaServer<
               {
                 params,
                 request,
+                batched: true,
               },
               serverContext,
             ),
@@ -541,6 +552,7 @@ export class YogaServer<
           {
             params: requestParserResult,
             request,
+            batched: false,
           },
           serverContext,
         ))) as ResultProcessorInput;
