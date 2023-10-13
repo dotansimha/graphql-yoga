@@ -1,11 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
+import { parse } from 'graphql';
 import { createYoga } from 'graphql-yoga';
-import { buildSubgraphSchema } from '@graphql-tools/federation';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace';
 import { Inventory, Product, ProductResearch, Resolvers, User } from './resolvers-types';
 
-const typeDefs = readFileSync('./schema.graphql', 'utf8');
+const typeDefs = parse(readFileSync('./schema.graphql', 'utf8'));
 
 const productResearch: ProductResearch[] = [
   {
