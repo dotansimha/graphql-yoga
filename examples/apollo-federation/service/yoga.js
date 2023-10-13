@@ -3,7 +3,7 @@ const { GraphQLError } = require('graphql');
 const { buildSubgraphSchema } = require('@apollo/subgraph');
 const { createYoga } = require('graphql-yoga');
 
-const typeDefs = require('./typeDefs.js')
+const typeDefs = require('./typeDefs.js');
 
 const resolvers = {
   Query: {
