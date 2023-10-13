@@ -171,7 +171,7 @@ const resolvers: Resolvers = {
 };
 
 const yoga = createYoga({
-  schema: buildSubgraphSchema({ typeDefs, resolvers }),
+  schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
   plugins: [useApolloInlineTrace()],
 });
 

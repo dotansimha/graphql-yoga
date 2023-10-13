@@ -1,19 +1,9 @@
 /* eslint-disable */
-const { parse, GraphQLError } = require('graphql');
+const { GraphQLError } = require('graphql');
 const { buildSubgraphSchema } = require('@graphql-tools/federation');
 const { createYoga } = require('graphql-yoga');
 
-const typeDefs = parse(/* GraphQL */ `
-  type Query {
-    me: User
-    throw: String
-  }
-
-  type User @key(fields: "id") {
-    id: ID!
-    username: String
-  }
-`);
+const typeDefs = require('./typeDefs.js')
 
 const resolvers = {
   Query: {

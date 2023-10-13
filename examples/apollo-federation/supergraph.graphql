@@ -33,18 +33,14 @@ directive @join__type(
 
 directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
 
+scalar join__FieldSet
+
 directive @link(
   url: String
   as: String
   for: link__Purpose
   import: [link__Import]
 ) repeatable on SCHEMA
-
-scalar join__FieldSet
-
-enum join__Graph {
-  ACCOUNTS @join__graph(name: "accounts", url: "http://accounts:4001/graphql")
-}
 
 scalar link__Import
 
@@ -60,12 +56,16 @@ enum link__Purpose {
   EXECUTION
 }
 
+enum join__Graph {
+  ACCOUNTS @join__graph(name: "accounts", url: "http://localhost:4001/graphql")
+}
+
 type Query @join__type(graph: ACCOUNTS) {
-  me: User @join__field(graph: ACCOUNTS)
-  throw: String @join__field(graph: ACCOUNTS)
+  me: User
+  throw: String
 }
 
 type User @join__type(graph: ACCOUNTS, key: "id") {
-  id: ID! @join__field(graph: ACCOUNTS)
-  username: String @join__field(graph: ACCOUNTS)
+  id: ID!
+  username: String
 }

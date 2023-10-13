@@ -190,17 +190,17 @@ importers:
         specifier: 1.0.2
         version: 1.0.2(@types/node@18.16.16)(graphql@16.6.0)
       '@graphql-tools/federation':
-        specifier: 1.1.10
-        version: 1.1.10(@types/node@18.16.16)(graphql@16.6.0)
-      '@whatwg-node/fetch':
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: 1.1.11
+        version: 1.1.11(@types/node@18.16.16)(graphql@16.6.0)
+      '@theguild/federation-composition':
+        specifier: 0.1.3
+        version: 0.1.3(graphql@16.6.0)
 
   examples/apollo-federation-compatibility:
     dependencies:
       '@graphql-tools/federation':
-        specifier: 1.1.10
-        version: 1.1.10(@types/node@18.16.16)(graphql@16.6.0)
+        specifier: 1.1.11
+        version: 1.1.11(@types/node@18.16.16)(graphql@16.6.0)
       '@graphql-yoga/plugin-apollo-inline-trace':
         specifier: 2.0.5
         version: link:../../packages/plugins/apollo-inline-trace/dist
@@ -230,8 +230,8 @@ importers:
   examples/apollo-federation/gateway:
     dependencies:
       '@graphql-tools/federation':
-        specifier: 1.1.10
-        version: 1.1.10(@types/node@18.16.16)(graphql@16.6.0)
+        specifier: 1.1.11
+        version: 1.1.11(@types/node@18.16.16)(graphql@16.6.0)
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -243,7 +243,7 @@ importers:
     dependencies:
       '@graphql-tools/federation':
         specifier: 1.1.10
-        version: 1.1.10(@types/node@18.16.16)(graphql@16.6.0)
+        version: 1.1.10(graphql@16.6.0)
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -7965,8 +7965,34 @@ packages:
       tslib: 2.5.3
       value-or-promise: 1.0.12
 
-  /@graphql-tools/federation@1.1.10(@types/node@18.16.16)(graphql@16.6.0):
+  /@graphql-tools/federation@1.1.10(graphql@16.6.0):
     resolution: {integrity: sha512-H51qTYwbtfIYBO1uHXlImRWzo9tknSoIGBgJckDh+hdxJx43sZaMjJiLHc2DjRc/A8d2Bf0bi0HbH++HqOos/w==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/delegate': 10.0.3(graphql@16.6.0)
+      '@graphql-tools/executor-http': 1.0.2(@types/node@18.16.16)(graphql@16.6.0)
+      '@graphql-tools/merge': 9.0.0(graphql@16.6.0)
+      '@graphql-tools/schema': 10.0.0(graphql@16.6.0)
+      '@graphql-tools/stitch': 9.0.3(graphql@16.6.0)
+      '@graphql-tools/utils': 10.0.7(graphql@16.6.0)
+      '@graphql-tools/wrap': 10.0.0(graphql@16.6.0)
+      graphql: 16.6.0
+      tslib: 2.6.2
+      value-or-promise: 1.0.12
+    optionalDependencies:
+      '@apollo/client': 3.8.2(graphql@16.6.0)
+    transitivePeerDependencies:
+      - '@types/node'
+      - graphql-ws
+      - react
+      - react-dom
+      - subscriptions-transport-ws
+    dev: false
+
+  /@graphql-tools/federation@1.1.11(@types/node@18.16.16)(graphql@16.6.0):
+    resolution: {integrity: sha512-mCdG9mR6aG2rCCcypA56AFxDeukX0rxcBydhmKMYvcBBxDOpLb858ygXERw4+b3u+FlbtqYPKBUayg/c0zb4vw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -13137,6 +13163,17 @@ packages:
       - eslint-import-resolver-webpack
       - supports-color
       - typescript
+    dev: true
+
+  /@theguild/federation-composition@0.1.3(graphql@16.6.0):
+    resolution: {integrity: sha512-H3mtVhpI0CeX1Yyv2HfUM7qc3bxCS8oPxPzJXaDckt4nWUecKIZXCI5FaiUV3feu2UN4j6iMVCQOWPok8jwX7Q==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      graphql: ^16.0.0
+    dependencies:
+      constant-case: 3.0.4
+      graphql: 16.6.0
+      json5: 2.2.3
     dev: true
 
   /@theguild/prettier-config@2.0.1(prettier@3.0.0):
@@ -21961,7 +21998,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.6.0
-      tslib: 2.5.3
+      tslib: 2.6.2
 
   /graphql-ws@5.11.3(graphql@16.6.0):
     resolution: {integrity: sha512-fU8zwSgAX2noXAsuFiCZ8BtXeXZOzXyK5u1LloCdacsVth4skdBMPO74EG51lBoWSIZ8beUocdpV8+cQHBODnQ==}

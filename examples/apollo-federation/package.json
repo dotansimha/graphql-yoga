@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "check": "exit 0",
+    "generate-supergraph": "node scripts/generate-supergraph.js",
     "start": "concurrently \"pnpm start:service\" \"pnpm start:gateway\"",
     "start:gateway": "cd gateway && pnpm start",
     "start:service": "cd service && pnpm start"
@@ -17,7 +18,7 @@
   },
   "devDependencies": {
     "@graphql-tools/executor-http": "1.0.2",
-    "@graphql-tools/federation": "1.1.10",
-    "@whatwg-node/fetch": "^0.9.0"
+    "@graphql-tools/federation": "1.1.11",
+    "@theguild/federation-composition": "0.1.3"
   }
 }
