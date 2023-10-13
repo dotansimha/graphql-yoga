@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { gql } from 'graphql-tag';
+import { parse } from 'graphql';
 import { createYoga } from 'graphql-yoga';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace';
 import { Inventory, Product, ProductResearch, Resolvers, User } from './resolvers-types';
 
-const typeDefs = readFileSync('./schema.graphql', 'utf8');
+const typeDefs = parse(readFileSync('./schema.graphql', 'utf8'));
 
 const productResearch: ProductResearch[] = [
   {
@@ -59,7 +59,7 @@ const inventory: Inventory = {
 const resolvers: Resolvers = {
   Query: {
     product(_: unknown, args: { id: string }) {
-      return products.find(p => p.id === args.id)! as unknown as Product;
+      return products.find(p => p.id === args.id) as unknown as Product;
     },
     deprecatedProduct: (_, args) => {
       if (args.sku === deprecatedProduct.sku && args.package === deprecatedProduct.package) {
@@ -84,7 +84,9 @@ const resolvers: Resolvers = {
   },
   ProductResearch: {
     __resolveReference: reference => {
-      return productResearch.find(p => reference.study.caseNumber === p.study.caseNumber)!;
+      return productResearch.find(
+        p => reference.study.caseNumber === p.study.caseNumber,
+      ) as unknown as ProductResearch;
     },
   },
   Product: {
@@ -138,7 +140,7 @@ const resolvers: Resolvers = {
     name() {
       return 'Jane Smith';
     },
-    // @ts-expect-error
+    // @ts-expect-error (yearsOfEmployment is not in the type)
     __resolveReference(userRef) {
       const ref = userRef as User;
       if (ref.email) {
@@ -151,7 +153,7 @@ const resolvers: Resolvers = {
           user.totalProductsCreated = ref.totalProductsCreated;
         }
         if (ref.yearsOfEmployment) {
-          // @ts-expect-error
+          // @ts-expect-error (yearsOfEmployment is not in the type)
           user.yearsOfEmployment = ref.yearsOfEmployment;
         }
         return user;
@@ -170,7 +172,7 @@ const resolvers: Resolvers = {
 };
 
 const yoga = createYoga({
-  schema: buildSubgraphSchema([{ typeDefs: gql(typeDefs), resolvers }]),
+  schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
   plugins: [useApolloInlineTrace()],
 });
 
