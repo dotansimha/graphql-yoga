@@ -448,10 +448,14 @@ export class YogaServer<
       }
 
       if (result == null) {
-        const additionalContext = {
-          request,
-          params,
-        };
+        const additionalContext = args[0]?.request
+          ? {
+              params,
+            }
+          : {
+              request,
+              params,
+            };
 
         const initialContext = args[0]
           ? batched
@@ -548,6 +552,7 @@ export class YogaServer<
           {
             params: requestParserResult,
             request,
+            batched: false,
           },
           serverContext,
         ))) as ResultProcessorInput;
