@@ -195,4 +195,79 @@ describe('Context', () => {
     expect(contextObject).toBeDefined();
     expect(contextObject.myExtraContext).toBe('myExtraContext');
   });
+  it('share different context objects for batched requests', async () => {
+    const contextObjects = new Set();
+    const plugin = {
+      onContextBuilding: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onEnveloped: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onParse: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onValidate: jest.fn(({ context }) => {
+        contextObjects.add(context);
+      }),
+      onExecute: jest.fn(({ args }) => {
+        contextObjects.add(args.contextValue);
+      }),
+      onRequest: jest.fn(({ serverContext }) => {
+        contextObjects.add(serverContext);
+      }),
+      onRequestParse: jest.fn(({ serverContext }) => {
+        contextObjects.add(serverContext);
+      }),
+      onResponse: jest.fn(({ serverContext }) => {
+        contextObjects.add(serverContext);
+      }),
+    };
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hello: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            hello: () => 'world',
+          },
+        },
+      }),
+      plugins: [plugin],
+      batching: true,
+    });
+    const queryRes = await yoga.fetch(
+      'http://yoga/graphql',
+      {
+        method: 'POST',
+        body: JSON.stringify([
+          { query: '{hello}' },
+          { query: '{__typename hello}' },
+          { query: '{__typename}' },
+        ]),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      {
+        myExtraContext: 'myExtraContext',
+      },
+    );
+    expect(queryRes.status).toBe(200);
+    const queryResult = await queryRes.json();
+    expect(queryResult.length).toBe(3);
+    expect(queryResult[0].data.hello).toBe('world');
+    expect(queryResult[1].data.__typename).toBe('Query');
+    expect(queryResult[1].data.hello).toBe('world');
+    expect(queryResult[2].data.__typename).toBe('Query');
+    // One for server context, one for each request
+    expect(contextObjects.size).toBe(4);
+    for (const contextObject of contextObjects) {
+      expect(contextObject).toBeDefined();
+      expect((contextObject as { myExtraContext: string }).myExtraContext).toBe('myExtraContext');
+    }
+  });
 });
