@@ -1927,7 +1927,7 @@ importers:
     dependencies:
       '@envelop/prometheus':
         specifier: 8.0.3
-        version: 8.0.3(@envelop/core@4.0.3)(graphql@16.6.0)(prom-client@14.2.0)
+        version: 8.0.3(@envelop/core@4.0.3)(graphql@16.6.0)(prom-client@15.0.0)
       graphql:
         specifier: ^15.2.0 || ^16.0.0
         version: 16.6.0
@@ -1936,8 +1936,8 @@ importers:
         version: link:../../graphql-yoga/dist
     devDependencies:
       prom-client:
-        specifier: 14.2.0
-        version: 14.2.0
+        specifier: 15.0.0
+        version: 15.0.0
     publishDirectory: dist
 
   packages/plugins/response-cache:
@@ -6675,7 +6675,7 @@ packages:
       graphql: 16.6.0
     dev: false
 
-  /@envelop/prometheus@8.0.3(@envelop/core@4.0.3)(graphql@16.6.0)(prom-client@14.2.0):
+  /@envelop/prometheus@8.0.3(@envelop/core@4.0.3)(graphql@16.6.0)(prom-client@15.0.0):
     resolution: {integrity: sha512-ggAoy70JdoxIT279tkvN+P+5dHYgB6NeF2UqYbCuUmijUHD+xfLD7jbv+WUoshoot380Go9XGd9UTXChUtQ0Yw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -6686,7 +6686,7 @@ packages:
       '@envelop/core': 4.0.3
       '@envelop/on-resolve': 3.0.3(@envelop/core@4.0.3)(graphql@16.6.0)
       graphql: 16.6.0
-      prom-client: 14.2.0
+      prom-client: 15.0.0
       tslib: 2.6.2
     dev: false
 
@@ -29504,10 +29504,11 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: true
 
-  /prom-client@14.2.0:
-    resolution: {integrity: sha512-sF308EhTenb/pDRPakm+WgiN+VdM/T1RaHj1x+MvAuT8UiQP8JmOEbxVqtkbfR4LrvOg5n7ic01kRBDGXjYikA==}
-    engines: {node: '>=10'}
+  /prom-client@15.0.0:
+    resolution: {integrity: sha512-UocpgIrKyA2TKLVZDSfm8rGkL13C19YrQBAiG3xo3aDFWcHedxRxI3z+cIcucoxpSO0h5lff5iv/SXoxyeopeA==}
+    engines: {node: ^16 || ^18 || >=20}
     dependencies:
+      '@opentelemetry/api': 1.4.1
       tdigest: 0.1.2
 
   /promise-breaker@6.0.0:
