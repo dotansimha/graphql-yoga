@@ -1545,7 +1545,7 @@ importers:
         version: 0.8.4(graphql@16.6.0)
       '@graphql-tools/url-loader':
         specifier: 8.0.0
-        version: 8.0.0(graphql@16.6.0)
+        version: 8.0.0(@types/node@18.16.16)(graphql@16.6.0)
       graphiql:
         specifier: 2.0.7
         version: 2.0.7(@codemirror/language@0.20.2)(@types/react@18.2.8)(graphql@16.6.0)(react-dom@18.2.0)(react-is@17.0.2)(react@18.2.0)
@@ -8260,33 +8260,6 @@ packages:
       '@whatwg-node/fetch': 0.9.12
       graphql: 16.6.0
       isomorphic-ws: 5.0.0(ws@8.13.0)
-      tslib: 2.6.2
-      value-or-promise: 1.0.12
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - '@types/node'
-      - bufferutil
-      - encoding
-      - utf-8-validate
-    dev: true
-
-  /@graphql-tools/url-loader@8.0.0(graphql@16.6.0):
-    resolution: {integrity: sha512-rPc9oDzMnycvz+X+wrN3PLrhMBQkG4+sd8EzaFN6dypcssiefgWKToXtRKI8HHK68n2xEq1PyrOpkjHFJB+GwA==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-    dependencies:
-      '@ardatan/sync-fetch': 0.0.1
-      '@graphql-tools/delegate': 10.0.0(graphql@16.6.0)
-      '@graphql-tools/executor-graphql-ws': 1.0.0(graphql@16.6.0)
-      '@graphql-tools/executor-http': 1.0.0(@types/node@18.16.16)(graphql@16.6.0)
-      '@graphql-tools/executor-legacy-ws': 1.0.0(graphql@16.6.0)
-      '@graphql-tools/utils': 10.0.1(graphql@16.6.0)
-      '@graphql-tools/wrap': 10.0.0(graphql@16.6.0)
-      '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.9.12
-      graphql: 16.6.0
-      isomorphic-ws: 5.0.0(ws@8.13.0)
       tslib: 2.5.3
       value-or-promise: 1.0.12
       ws: 8.13.0
@@ -8295,7 +8268,6 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
-    dev: false
 
   /@graphql-tools/utils@10.0.0(graphql@16.6.0):
     resolution: {integrity: sha512-ndBPc6zgR+eGU/jHLpuojrs61kYN3Z89JyMLwK3GCRkPv4EQn9EOr1UWqF1JO0iM+/jAVHY0mvfUxyrFFN9DUQ==}
