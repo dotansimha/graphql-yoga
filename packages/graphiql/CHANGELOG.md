@@ -1,5 +1,13 @@
 # @graphql-yoga/graphiql
 
+## 4.2.0
+
+### Minor Changes
+
+- [#3057](https://github.com/dotansimha/graphql-yoga/pull/3057)
+  [`3d269070`](https://github.com/dotansimha/graphql-yoga/commit/3d269070f76d388f4d652d26e6ce8e650965de60)
+  Thanks [@saihaj](https://github.com/saihaj)! - make React available in the window object
+
 ## 4.1.1
 
 ### Patch Changes

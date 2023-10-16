@@ -1,5 +1,38 @@
 # @graphql-yoga/plugin-prometheus
 
+## 3.0.0
+
+### Major Changes
+
+- [#3050](https://github.com/dotansimha/graphql-yoga/pull/3050)
+  [`17343a1e`](https://github.com/dotansimha/graphql-yoga/commit/17343a1e6b6ed9f4879d49e0d73b32b3eea31ce9)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency
+    [`prom-client@^15.0.0` ↗︎](https://www.npmjs.com/package/prom-client/v/15.0.0) (from
+    `^13 || ^14.0.0`, in `peerDependencies`)
+
+- [#3070](https://github.com/dotansimha/graphql-yoga/pull/3070)
+  [`5b615478`](https://github.com/dotansimha/graphql-yoga/commit/5b6154783957874281bdf180575cdf57fadb75bf)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency
+    [`@envelop/prometheus@9.0.0` ↗︎](https://www.npmjs.com/package/@envelop/prometheus/v/9.0.0)
+    (from `8.0.3`, in `dependencies`)
+
+- [#3063](https://github.com/dotansimha/graphql-yoga/pull/3063)
+  [`01430e03`](https://github.com/dotansimha/graphql-yoga/commit/01430e03288f072a9cb09b0b898316b1f5b58a5f)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - **Breaking Change:** Drop support of
+  Node.js 16
+
+### Patch Changes
+
+- Updated dependencies
+  [[`01430e03`](https://github.com/dotansimha/graphql-yoga/commit/01430e03288f072a9cb09b0b898316b1f5b58a5f),
+  [`5b615478`](https://github.com/dotansimha/graphql-yoga/commit/5b6154783957874281bdf180575cdf57fadb75bf),
+  [`350bb851`](https://github.com/dotansimha/graphql-yoga/commit/350bb85195c01cc5b5721f7a90f6cfbe1af36aff)]:
+  - graphql-yoga@5.0.0
+
 ## 2.0.6
 
 ### Patch Changes

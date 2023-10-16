@@ -1,5 +1,14 @@
 # @graphql-yoga/urql-exchange
 
+## 3.0.0
+
+### Major Changes
+
+- [#3063](https://github.com/dotansimha/graphql-yoga/pull/3063)
+  [`01430e03`](https://github.com/dotansimha/graphql-yoga/commit/01430e03288f072a9cb09b0b898316b1f5b58a5f)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - **Breaking Change:** Drop support of
+  Node.js 16
+
 ## 2.0.5
 
 ## 2.0.4

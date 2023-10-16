@@ -1,5 +1,27 @@
 # @graphql-yoga/redis-event-target
 
+## 3.0.0
+
+### Major Changes
+
+- [#3063](https://github.com/dotansimha/graphql-yoga/pull/3063)
+  [`01430e03`](https://github.com/dotansimha/graphql-yoga/commit/01430e03288f072a9cb09b0b898316b1f5b58a5f)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - **Breaking Change:** Drop support of
+  Node.js 16
+
+### Minor Changes
+
+- [#3037](https://github.com/dotansimha/graphql-yoga/pull/3037)
+  [`8d143e4e`](https://github.com/dotansimha/graphql-yoga/commit/8d143e4ee18d24eec20dbdacc554e9ae336460aa)
+  Thanks [@Akryum](https://github.com/Akryum)! - Added `serializeMessage` and `deserializeMessage`
+  options to `createRedisEventTarget`
+
+### Patch Changes
+
+- Updated dependencies
+  [[`01430e03`](https://github.com/dotansimha/graphql-yoga/commit/01430e03288f072a9cb09b0b898316b1f5b58a5f)]:
+  - @graphql-yoga/typed-event-target@3.0.0
+
 ## 2.0.0
 
 ### Major Changes
