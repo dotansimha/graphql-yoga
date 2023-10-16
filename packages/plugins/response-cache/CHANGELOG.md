@@ -1,5 +1,30 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.0.0
+
+### Major Changes
+
+- [#3070](https://github.com/dotansimha/graphql-yoga/pull/3070)
+  [`5b615478`](https://github.com/dotansimha/graphql-yoga/commit/5b6154783957874281bdf180575cdf57fadb75bf)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency
+    [`@envelop/response-cache@^6.0.0` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/6.0.0)
+    (from `^5.3.2`, in `dependencies`)
+
+- [#3063](https://github.com/dotansimha/graphql-yoga/pull/3063)
+  [`01430e03`](https://github.com/dotansimha/graphql-yoga/commit/01430e03288f072a9cb09b0b898316b1f5b58a5f)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - **Breaking Change:** Drop support of
+  Node.js 16
+
+### Patch Changes
+
+- Updated dependencies
+  [[`01430e03`](https://github.com/dotansimha/graphql-yoga/commit/01430e03288f072a9cb09b0b898316b1f5b58a5f),
+  [`5b615478`](https://github.com/dotansimha/graphql-yoga/commit/5b6154783957874281bdf180575cdf57fadb75bf),
+  [`350bb851`](https://github.com/dotansimha/graphql-yoga/commit/350bb85195c01cc5b5721f7a90f6cfbe1af36aff)]:
+  - graphql-yoga@5.0.0
+
 ## 2.2.0
 
 ### Minor Changes
