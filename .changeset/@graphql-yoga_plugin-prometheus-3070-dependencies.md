@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/plugin-prometheus': patch
+'@graphql-yoga/plugin-prometheus': major
 ---
 dependencies updates:
   - Updated dependency [`@envelop/prometheus@9.0.0`

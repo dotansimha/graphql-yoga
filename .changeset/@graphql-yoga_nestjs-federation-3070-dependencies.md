@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/nestjs-federation': patch
+'@graphql-yoga/nestjs-federation': major
 ---
 dependencies updates:
   - Updated dependency [`@envelop/apollo-federation@^5.0.0`

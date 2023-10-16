@@ -1,5 +1,5 @@
 ---
-'graphql-yoga': patch
+'graphql-yoga': major
 ---
 dependencies updates:
   - Updated dependency [`@envelop/core@^5.0.0`
