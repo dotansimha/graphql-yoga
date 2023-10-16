@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/plugin-apollo-inline-trace': patch
+'@graphql-yoga/plugin-apollo-inline-trace': major
 ---
 dependencies updates:
   - Updated dependency [`@envelop/on-resolve@^4.0.0`

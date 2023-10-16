@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/plugin-prometheus': patch
+'@graphql-yoga/plugin-prometheus': major
 ---
 dependencies updates:
   - Updated dependency [`prom-client@^15.0.0`

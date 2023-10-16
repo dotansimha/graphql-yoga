@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/plugin-response-cache': patch
+'@graphql-yoga/plugin-response-cache': major
 ---
 dependencies updates:
   - Updated dependency [`@envelop/response-cache@^6.0.0`
