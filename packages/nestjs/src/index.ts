@@ -106,30 +106,11 @@ export abstract class AbstractYogaDriver<
       }
     }
 
+    const schema = this.mergeConditionalSchema<'express'>(conditionalSchema, options.schema);
+
     const yoga = createYoga<YogaDriverServerContext<'express'>>({
       ...options,
-      schema: async request => {
-        const schemas: GraphQLSchema[] = [];
-
-        if (options.schema) {
-          schemas.push(options.schema);
-        }
-
-        if (conditionalSchema) {
-          const conditionalSchemaResult =
-            typeof conditionalSchema === 'function'
-              ? await conditionalSchema(request)
-              : await conditionalSchema;
-
-          if (conditionalSchemaResult) {
-            schemas.push(conditionalSchemaResult);
-          }
-        }
-
-        return mergeSchemas({
-          schemas,
-        });
-      },
+      schema,
       graphqlEndpoint: options.path,
       // disable logging by default
       // however, if `true` use nest logger
@@ -154,30 +135,11 @@ export abstract class AbstractYogaDriver<
 
     preStartHook?.(app);
 
+    const schema = this.mergeConditionalSchema<'fastify'>(conditionalSchema, options.schema);
+
     const yoga = createYoga<YogaDriverServerContext<'fastify'>>({
       ...options,
-      schema: async request => {
-        const schemas: GraphQLSchema[] = [];
-
-        if (options.schema) {
-          schemas.push(options.schema);
-        }
-
-        if (conditionalSchema) {
-          const conditionalSchemaResult =
-            typeof conditionalSchema === 'function'
-              ? await conditionalSchema(request)
-              : await conditionalSchema;
-
-          if (conditionalSchemaResult) {
-            schemas.push(conditionalSchemaResult);
-          }
-        }
-
-        return mergeSchemas({
-          schemas,
-        });
-      },
+      schema,
       graphqlEndpoint: options.path,
       // disable logging by default
       // however, if `true` use fastify logger
@@ -196,6 +158,38 @@ export abstract class AbstractYogaDriver<
       reply.send(response.body);
       return reply;
     });
+  }
+
+  private mergeConditionalSchema<T extends YogaDriverPlatform>(
+    conditionalSchema: YogaSchemaDefinition<YogaDriverServerContext<T>, never> | undefined,
+    schema?: GraphQLSchema,
+  ) {
+    let mergedSchema: YogaSchemaDefinition<YogaDriverServerContext<T>, never> | undefined = schema;
+
+    if (conditionalSchema) {
+      mergedSchema = async request => {
+        const schemas: GraphQLSchema[] = [];
+
+        if (schema) {
+          schemas.push(schema);
+        }
+
+        const conditionalSchemaResult =
+          typeof conditionalSchema === 'function'
+            ? await conditionalSchema(request)
+            : await conditionalSchema;
+
+        if (conditionalSchemaResult) {
+          schemas.push(conditionalSchemaResult);
+        }
+
+        return mergeSchemas({
+          schemas,
+        });
+      };
+    }
+
+    return mergedSchema;
   }
 
   public subscriptionWithFilter<TPayload, TVariables, TContext>(
