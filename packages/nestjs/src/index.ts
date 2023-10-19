@@ -45,12 +45,25 @@ export type YogaDriverServerInstance<Platform extends YogaDriverPlatform> = Yoga
 >;
 
 export type YogaDriverConfig<Platform extends YogaDriverPlatform = 'express'> = GqlModuleOptions &
-  YogaDriverServerOptions<Platform> & {
-    /**
-     * Subscriptions configuration. Passing `true` will install only `graphql-ws`.
-     */
-    subscriptions?: boolean | YogaDriverSubscriptionConfig;
-  };
+  YogaDriverServerOptions<Platform> &
+  (
+    | {
+        /**
+         * Subscriptions configuration. Passing `true` will install only `graphql-ws`.
+         */
+        subscriptions?: boolean | YogaDriverSubscriptionConfig;
+        conditionalSchema?: never;
+      }
+    | {
+        /**
+         * TODO: Support conditional schema with subscriptions
+         */
+        subscriptions?: never;
+        conditionalSchema?:
+          | YogaSchemaDefinition<YogaDriverServerContext<Platform>, never>
+          | undefined;
+      }
+  );
 
 export type YogaDriverSubscriptionConfig = {
   'graphql-ws'?: Omit<SubscriptionConfig['graphql-ws'], 'onSubscribe'>;
@@ -246,6 +259,12 @@ export class YogaDriver<
       if (config['graphql-ws']) {
         config['graphql-ws'] = typeof config['graphql-ws'] === 'object' ? config['graphql-ws'] : {};
 
+        if (options.conditionalSchema) {
+          throw new Error(`
+            Conditional schema is not supported with graphql-ws.
+          `);
+        }
+
         config['graphql-ws'].onSubscribe = async (ctx, msg) => {
           const { schema, execute, subscribe, contextFactory, parse, validate } =
             this.yoga.getEnveloped({
@@ -276,6 +295,12 @@ export class YogaDriver<
           typeof config['subscriptions-transport-ws'] === 'object'
             ? config['subscriptions-transport-ws']
             : {};
+
+        if (options.conditionalSchema) {
+          throw new Error(`
+            Conditional schema is not supported with subscriptions-transport-ws.
+          `);
+        }
 
         config['subscriptions-transport-ws'].onOperation = async (
           _msg: unknown,
