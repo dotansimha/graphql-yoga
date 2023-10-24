@@ -38,7 +38,7 @@ export interface APQOptions {
   ) => PromiseOrValue<string>;
   responseConfig?: {
     /**
-     * If true, the status code of the response (if the query
+     * If set true, status code of the response (if the query
      * is not found or mismatched) will be 200.
      */
     forceStatusCodeOk?: boolean;
