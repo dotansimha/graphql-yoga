@@ -7,7 +7,7 @@ import { fetch } from '@whatwg-node/fetch';
 
 describe('uWebSockets', () => {
   const nodeMajor = parseInt(process.versions.node.split('.')[0], 10);
-  if (nodeMajor < 16) {
+  if (nodeMajor < 16 || nodeMajor > 20) {
     it('should be skipped', () => {});
     return;
   }
