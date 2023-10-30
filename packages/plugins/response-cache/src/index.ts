@@ -12,6 +12,8 @@ import {
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache';
 
+export { cacheControlDirective, hashSHA256 } from '@envelop/response-cache';
+
 export type BuildResponseCacheKeyFunction = (
   params: Omit<Parameters<EnvelopBuildResponseCacheKeyFunction>[0], 'context'> & {
     request: Request;
@@ -72,7 +74,7 @@ export interface ResponseCachePluginExtensions {
   [key: string]: unknown;
 }
 
-interface Cache extends EnvelopCache {
+export interface Cache extends EnvelopCache {
   get(
     key: string,
   ): Promise<ExecutionResult<Record<string, unknown>, ResponseCachePluginExtensions> | undefined>;
