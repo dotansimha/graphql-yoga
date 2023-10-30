@@ -144,4 +144,42 @@ describe('Automatic Persisted Queries', () => {
       ],
     });
   });
+  it('raises an error but use status code 200 when the hash does not match the operation and forceStatusCodeOk is true', async () => {
+    const store = createInMemoryAPQStore();
+    const yoga = createYoga({
+      plugins: [
+        useAPQ({
+          store,
+          responseConfig: {
+            forceStatusCodeOk: true,
+          },
+        }),
+      ],
+      schema,
+    });
+    const query = `{__typename}`;
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        accept: 'application/graphql-response+json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: 'leoeoel',
+          },
+        },
+      }),
+    });
+
+    expect(response.ok).toBe(true);
+    expect(await response.json()).toEqual({
+      errors: [
+        { message: 'PersistedQueryMismatch', extensions: { code: 'PERSISTED_QUERY_MISMATCH' } },
+      ],
+    });
+  });
 });
