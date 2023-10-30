@@ -1,5 +1,15 @@
 # hello-world-benchmark
 
+## 3.1.0
+
+### Patch Changes
+
+- Updated dependencies
+  [[`befaf3ce`](https://github.com/dotansimha/graphql-yoga/commit/befaf3cea171abcc963a062da8298f1b4f534e1d),
+  [`befaf3ce`](https://github.com/dotansimha/graphql-yoga/commit/befaf3cea171abcc963a062da8298f1b4f534e1d),
+  [`befaf3ce`](https://github.com/dotansimha/graphql-yoga/commit/befaf3cea171abcc963a062da8298f1b4f534e1d)]:
+  - @graphql-yoga/plugin-response-cache@3.1.0
+
 ## 3.0.0
 
 ### Patch Changes
