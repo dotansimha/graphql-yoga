@@ -12,7 +12,7 @@ import {
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache';
 
-export { cacheControlDirective } from '@envelop/response-cache';
+export { cacheControlDirective, hashSHA256 } from '@envelop/response-cache';
 
 export type BuildResponseCacheKeyFunction = (
   params: Omit<Parameters<EnvelopBuildResponseCacheKeyFunction>[0], 'context'> & {
