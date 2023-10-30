@@ -1,5 +1,29 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.1.0
+
+### Minor Changes
+
+- [#3092](https://github.com/dotansimha/graphql-yoga/pull/3092)
+  [`befaf3ce`](https://github.com/dotansimha/graphql-yoga/commit/befaf3cea171abcc963a062da8298f1b4f534e1d)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Expose `hashSHA256` sha256
+  implementation to ease cache key factory customisation.
+
+### Patch Changes
+
+- [#3092](https://github.com/dotansimha/graphql-yoga/pull/3092)
+  [`befaf3ce`](https://github.com/dotansimha/graphql-yoga/commit/befaf3cea171abcc963a062da8298f1b4f534e1d)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+
+  - Updated dependency
+    [`@envelop/response-cache@^6.1.0` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/6.1.0)
+    (from `^6.0.0`, in `dependencies`)
+
+- [#3092](https://github.com/dotansimha/graphql-yoga/pull/3092)
+  [`befaf3ce`](https://github.com/dotansimha/graphql-yoga/commit/befaf3cea171abcc963a062da8298f1b4f534e1d)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Fix missing export of `Cache` type and
+  `cacheControlDirective` exports
+
 ## 3.0.0
 
 ### Major Changes
