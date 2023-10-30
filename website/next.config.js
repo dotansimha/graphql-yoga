@@ -1,6 +1,7 @@
 import { withGuildDocs } from '@theguild/components/next.config';
 
 export default withGuildDocs({
+  output: 'export',
   transformPageOpts(pageOpts) {
     // TODO: temporal fix to show link for versioned folder in navbar (otherwise you can see only when navigated to it directly)
     pageOpts.pageMap
