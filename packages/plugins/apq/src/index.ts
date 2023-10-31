@@ -36,6 +36,13 @@ export interface APQOptions {
     str: string,
     api: { crypto: Crypto; TextEncoder: typeof TextEncoder },
   ) => PromiseOrValue<string>;
+  responseConfig?: {
+    /**
+     * If set true, status code of the response (if the query
+     * is not found or mismatched) will be 200.
+     */
+    forceStatusCodeOk?: boolean;
+  };
 }
 
 export interface APQStore {
@@ -70,7 +77,7 @@ function decodeAPQExtension(
 }
 
 export function useAPQ(options: APQOptions = {}): Plugin {
-  const { store = createInMemoryAPQStore(), hash = hashSHA256 } = options;
+  const { store = createInMemoryAPQStore(), hash = hashSHA256, responseConfig = {} } = options;
 
   return {
     async onParams({ params, setParams, fetchAPI }) {
@@ -86,7 +93,7 @@ export function useAPQ(options: APQOptions = {}): Plugin {
           throw createGraphQLError('PersistedQueryNotFound', {
             extensions: {
               http: {
-                status: 404,
+                status: responseConfig.forceStatusCodeOk ? 200 : 404,
               },
               code: 'PERSISTED_QUERY_NOT_FOUND',
             },
@@ -102,7 +109,7 @@ export function useAPQ(options: APQOptions = {}): Plugin {
           throw createGraphQLError('PersistedQueryMismatch', {
             extensions: {
               http: {
-                status: 400,
+                status: responseConfig.forceStatusCodeOk ? 200 : 400,
               },
               code: 'PERSISTED_QUERY_MISMATCH',
             },

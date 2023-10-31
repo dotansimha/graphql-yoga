@@ -118,3 +118,54 @@ server.listen(4000, () => {
 ```
 
 For external stores the `set` and `get` properties on the store can also return a `Promise`.
+
+## Configure Error responses
+
+By default, responses for missing or mismatching query will include `extensions` property with HTTP
+status code.
+
+For example:
+
+```ts {4}
+{
+  extensions: {
+    http: {
+      status: 404
+    },
+    code: 'PERSISTED_QUERY_NOT_FOUND'
+  }
+}
+```
+
+You can force the error responses to use 200 OK status code:
+
+```ts filename="Automatic Persisted Operations with a custom store" {18-20}
+import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { useAPQ } from '@graphql-yoga/plugin-apq'
+
+// Note: this store grows infinitely, so it is not a good idea to use it in production.
+const store: APQStore = new Map()
+
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `
+  }),
+  plugins: [
+    useAPQ({
+      responseConfig: {
+        forceStatusCodeOk: true
+      }
+    })
+  ]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
