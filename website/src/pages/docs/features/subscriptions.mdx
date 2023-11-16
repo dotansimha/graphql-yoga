@@ -727,7 +727,6 @@ const yoga = createYoga({
           subscribe: () =>
             pipe(
               Repeater.merge([
-                undefined,
                 pubSub.subscribe('userLoginChanged'),
                 pubSub.subscribe('userDeleted')
               ]),
