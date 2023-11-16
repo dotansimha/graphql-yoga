@@ -131,8 +131,8 @@ importers:
   benchmark:
     dependencies:
       '@envelop/graphql-jit':
-        specifier: 8.0.0
-        version: 8.0.0(@envelop/core@5.0.0)(graphql@16.6.0)
+        specifier: 8.0.1
+        version: 8.0.1(@envelop/core@5.0.0)(graphql@16.6.0)
       '@faker-js/faker':
         specifier: 8.0.2
         version: 8.0.2
@@ -1355,8 +1355,8 @@ importers:
   examples/sveltekit:
     dependencies:
       '@envelop/graphql-jit':
-        specifier: 8.0.0
-        version: 8.0.0(@envelop/core@5.0.0)(graphql@16.6.0)
+        specifier: 8.0.1
+        version: 8.0.1(@envelop/core@5.0.0)(graphql@16.6.0)
       '@graphql-yoga/render-graphiql':
         specifier: 5.0.0
         version: link:../../packages/render-graphiql/dist
@@ -1618,8 +1618,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0(@envelop/core@4.0.0)(graphql@16.6.0)
       '@envelop/graphql-jit':
-        specifier: 8.0.0
-        version: 8.0.0(@envelop/core@4.0.0)(graphql@16.6.0)
+        specifier: 8.0.1
+        version: 8.0.1(@envelop/core@4.0.0)(graphql@16.6.0)
       '@envelop/live-query':
         specifier: 7.0.0
         version: 7.0.0(@envelop/core@4.0.0)(graphql@16.6.0)
@@ -1926,8 +1926,8 @@ importers:
   packages/plugins/prometheus:
     dependencies:
       '@envelop/prometheus':
-        specifier: 9.0.0
-        version: 9.0.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0)
+        specifier: 9.1.0
+        version: 9.1.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0)
       graphql:
         specifier: ^15.2.0 || ^16.0.0
         version: 16.6.0
@@ -6579,8 +6579,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@envelop/graphql-jit@8.0.0(@envelop/core@4.0.0)(graphql@16.6.0):
-    resolution: {integrity: sha512-+Sfp5DON/krxr4fP1kT6GQeQYqphP2g69CybqAMLRTALCCKs/ZfATvK/Bx+ysPV5K8g/tRwVuDbub1JAuLDxSw==}
+  /@envelop/graphql-jit@8.0.1(@envelop/core@4.0.0)(graphql@16.6.0):
+    resolution: {integrity: sha512-91AcH3W9qGaY3B2ynCLdAbOzPBqLIcsTOzjFUfbKPBxe4d18qKpgjnBPrZ7s0XcN0DD5SDRq61bkvowg2E2BGQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@envelop/core': ^5.0.0
@@ -6588,13 +6588,13 @@ packages:
     dependencies:
       '@envelop/core': 4.0.0
       graphql: 16.6.0
-      graphql-jit: 0.8.4(graphql@16.6.0)
+      graphql-jit: 0.8.2(graphql@16.6.0)
       tslib: 2.6.2
       value-or-promise: 1.0.12
     dev: true
 
-  /@envelop/graphql-jit@8.0.0(@envelop/core@5.0.0)(graphql@16.6.0):
-    resolution: {integrity: sha512-+Sfp5DON/krxr4fP1kT6GQeQYqphP2g69CybqAMLRTALCCKs/ZfATvK/Bx+ysPV5K8g/tRwVuDbub1JAuLDxSw==}
+  /@envelop/graphql-jit@8.0.1(@envelop/core@5.0.0)(graphql@16.6.0):
+    resolution: {integrity: sha512-91AcH3W9qGaY3B2ynCLdAbOzPBqLIcsTOzjFUfbKPBxe4d18qKpgjnBPrZ7s0XcN0DD5SDRq61bkvowg2E2BGQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@envelop/core': ^5.0.0
@@ -6602,7 +6602,7 @@ packages:
     dependencies:
       '@envelop/core': 5.0.0
       graphql: 16.6.0
-      graphql-jit: 0.8.4(graphql@16.6.0)
+      graphql-jit: 0.8.2(graphql@16.6.0)
       tslib: 2.6.2
       value-or-promise: 1.0.12
     dev: false
@@ -6664,8 +6664,19 @@ packages:
       graphql: 16.6.0
     dev: false
 
-  /@envelop/prometheus@9.0.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0):
-    resolution: {integrity: sha512-K1LL4qh7fWMYNhsXDzIF33SVXHtxAhg8GdWjl0E/NhizRtdguW7tShPtcMIL3U6sWPsoJR982LnV8nqjqYzYlA==}
+  /@envelop/on-resolve@4.1.0(@envelop/core@5.0.0)(graphql@16.6.0):
+    resolution: {integrity: sha512-2AXxf8jbBIepBUiY0KQtyCO6gnT7LKBEYdaARZBJ7ujy1+iQHQPORKvAwl51kIdD6v5x38eldZnm7A19jFimOg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@envelop/core': ^5.0.0
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@envelop/core': 5.0.0
+      graphql: 16.6.0
+    dev: false
+
+  /@envelop/prometheus@9.1.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0):
+    resolution: {integrity: sha512-PdYS70afhAYfwqkByx1ya8UP210/RPLCUVmaCwicjJNMT5ES+H6dOzAaJNlATYahKC3pBNZlo7ljJ0pawWQwrA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@envelop/core': ^5.0.0
@@ -6673,7 +6684,7 @@ packages:
       prom-client: ^15.0.0
     dependencies:
       '@envelop/core': 5.0.0
-      '@envelop/on-resolve': 4.0.0(@envelop/core@5.0.0)(graphql@16.6.0)
+      '@envelop/on-resolve': 4.1.0(@envelop/core@5.0.0)(graphql@16.6.0)
       graphql: 16.6.0
       prom-client: 15.0.0
       tslib: 2.6.2
@@ -20297,6 +20308,13 @@ packages:
   /fast-json-stable-stringify@2.1.0:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==}
 
+  /fast-json-stringify@1.21.0:
+    resolution: {integrity: sha512-xY6gyjmHN3AK1Y15BCbMpeO9+dea5ePVsp3BouHCdukcx0hOHbXwFhRodhcI0NpZIgDChSeAKkHW9YjKvhwKBA==}
+    dependencies:
+      ajv: 6.12.6
+      deepmerge: 4.3.1
+      string-similarity: 4.0.4
+
   /fast-json-stringify@5.7.0:
     resolution: {integrity: sha512-sBVPTgnAZseLu1Qgj6lUbQ0HfjFhZWXAmpZ5AaSGkyLh5gAXBga/uPJjQPHpDFjC9adWIpdOcCLSDTgrZ7snoQ==}
     dependencies:
@@ -21849,15 +21867,16 @@ packages:
       graphql: 16.6.0
     dev: true
 
-  /graphql-jit@0.8.4(graphql@16.6.0):
-    resolution: {integrity: sha512-4KRrJ1ROy3Usgbl3eAoUMfdfZCRjkcw9cCGT7QwTUIHm9dPGaSaldxzGUttyjErU0rsYEb6WWyb6mMh5r6lEoQ==}
+  /graphql-jit@0.8.2(graphql@16.6.0):
+    resolution: {integrity: sha512-P9KtM/UY4JTtHVRqRlZzFXPmDEtps1Bd27Mvj/naQIa5d0j83zPxAx4jewq1wueF3UEZu1JFZwX1XVBBkoo1Mg==}
     peerDependencies:
       graphql: '>=15'
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.6.0)
-      fast-json-stringify: 5.7.0
+      fast-json-stringify: 1.21.0
       generate-function: 2.3.1
       graphql: 16.6.0
+      json-schema: 0.4.0
       lodash.memoize: 4.1.2
       lodash.merge: 4.6.2
       lodash.mergewith: 4.6.2
@@ -24610,7 +24629,6 @@ packages:
 
   /json-schema@0.4.0:
     resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
-    dev: true
 
   /json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
@@ -31800,6 +31818,10 @@ packages:
       char-regex: 1.0.2
       strip-ansi: 6.0.1
     dev: true
+
+  /string-similarity@4.0.4:
+    resolution: {integrity: sha512-/q/8Q4Bl4ZKAPjj8WerIBJWALKkaPRfrvhfF8k/B23i4nzrlRj2/go1m90In7nG/3XDSbOo0+pu6RvCTM9RGMQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   /string-template@0.2.1:
     resolution: {integrity: sha512-Yptehjogou2xm4UJbxJ4CxgZx12HBfeystp0y3x7s4Dj32ltVVG1Gg8YhKjHZkHicuKpZX/ffilA8505VbUbpw==}
