@@ -1,5 +1,14 @@
 # @graphql-yoga/plugin-apq
 
+## 3.0.1
+
+### Patch Changes
+
+- [#3086](https://github.com/dotansimha/graphql-yoga/pull/3086)
+  [`68e6c2cb`](https://github.com/dotansimha/graphql-yoga/commit/68e6c2cbae9fcc958a9f353d991a792e3e299465)
+  Thanks [@gilgardosh](https://github.com/gilgardosh)! - Enhance config: enable override error
+  status code with 200
+
 ## 3.0.0
 
 ### Major Changes
