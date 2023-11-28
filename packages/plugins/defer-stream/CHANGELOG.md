@@ -1,5 +1,14 @@
 # @graphql-yoga/plugin-defer-stream
 
+## 3.0.1
+
+### Patch Changes
+
+- [#3118](https://github.com/dotansimha/graphql-yoga/pull/3118)
+  [`694e78b9`](https://github.com/dotansimha/graphql-yoga/commit/694e78b9e12c6d6275b67e746dce1499046595cb)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - Bump @graphql-tools/executor-http for better
+  SSE stream chunks and messages handling
+
 ## 3.0.0
 
 ### Major Changes
