@@ -98,12 +98,12 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
   };
   return {
     async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
-      const requestedUrl = request.url.split('?')[0];
       if (
         shouldRenderGraphiQL(request) &&
-        (requestedUrl.endsWith(config.graphqlEndpoint) ||
-          requestedUrl.endsWith(`${config.graphqlEndpoint}/`) ||
+        (request.url.endsWith(config.graphqlEndpoint) ||
+          request.url.endsWith(`${config.graphqlEndpoint}/`) ||
           url.pathname === config.graphqlEndpoint ||
+          url.pathname === `${config.graphqlEndpoint}/` ||
           getUrlPattern(fetchAPI).test(url))
       ) {
         logger.debug(`Rendering GraphiQL`);
