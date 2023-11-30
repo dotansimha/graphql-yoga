@@ -1,5 +1,13 @@
 # @graphql-yoga/plugin-defer-stream
 
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies
+  [[`3fea19f2`](https://github.com/dotansimha/graphql-yoga/commit/3fea19f2a01c85b7d837163d763fae107e8f5a53)]:
+  - graphql-yoga@5.0.1
+
 ## 3.0.1
 
 ### Patch Changes
