@@ -15,11 +15,11 @@ export function useUnhandledRoute(args: {
   }
   return {
     onRequest({ request, fetchAPI, endResponse, url }) {
-      const requestedUrl = request.url.split('?')[0];
       if (
-        !requestedUrl.endsWith(args.graphqlEndpoint) &&
-        !requestedUrl.endsWith(`${args.graphqlEndpoint}/`) &&
+        !request.url.endsWith(args.graphqlEndpoint) &&
+        !request.url.endsWith(`${args.graphqlEndpoint}/`) &&
         url.pathname !== args.graphqlEndpoint &&
+        url.pathname !== `${args.graphqlEndpoint}/` &&
         !getUrlPattern(fetchAPI).test(url)
       ) {
         if (
