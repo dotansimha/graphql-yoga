@@ -55,6 +55,42 @@ describe('requests', () => {
     expect(body.data.requestUrl).toBe('http://yoga/v1/mypath');
   });
 
+  it('supports trailing slash in url', async () => {
+    const yoga = createYoga({
+      schema,
+      logging: false,
+      graphqlEndpoint: '/graphql',
+    });
+    const response = await yoga.fetch('http://yoga/graphql/', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ requestUrl }' }),
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.requestUrl).toBe('http://yoga/graphql/');
+  });
+
+  it('supports query params in url', async () => {
+    const yoga = createYoga({
+      schema,
+      logging: false,
+      graphqlEndpoint: '/graphql',
+    });
+    const response = await yoga.fetch('http://yoga/graphql?query=something+awesome', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query: '{ requestUrl }' }),
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.requestUrl).toBe('http://yoga/graphql?query=something+awesome');
+  });
+
   it('allows you to bypass endpoint check with wildcard', async () => {
     const yoga = createYoga({
       schema,
