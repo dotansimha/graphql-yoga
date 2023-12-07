@@ -37,6 +37,14 @@ export type GraphiQLOptions = {
    * Extra headers you always want to pass with users' headers input
    */
   additionalHeaders?: Record<string, string>;
+  /**
+   * HTTP method to use when querying the original schema.
+   */
+  method?: 'GET' | 'POST';
+  /**
+   * Whether to use the GET HTTP method for queries when querying the original schema
+   */
+  useGETForQueries?: boolean;
 };
 
 export type GraphiQLRendererOptions = {
