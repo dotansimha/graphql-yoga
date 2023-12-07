@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 5.0.2
+
+### Patch Changes
+
+- [#3133](https://github.com/dotansimha/graphql-yoga/pull/3133)
+  [`77d107fe`](https://github.com/dotansimha/graphql-yoga/commit/77d107fe1a01044f4ba017ca960bb1bd58407ed7)
+  Thanks [@ardatan](https://github.com/ardatan)! - Update HTTP Executor and add `method` and
+  `useGETForQueries` to GraphiQL options
+
 ## 5.0.1
 
 ### Patch Changes
