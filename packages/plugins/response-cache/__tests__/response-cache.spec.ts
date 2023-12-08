@@ -1006,8 +1006,8 @@ describe('shouldCacheResult', () => {
           ...expectedResponsePayload,
           ...cacheSkip,
         });
-        expect(logging.warn).toHaveBeenCalledWith(
-          '[useResponseCache] Failed to cache due to errors',
+        expect(logging.debug).toHaveBeenCalledWith(
+          '[useResponseCache] Decided not to cache the response because it contains errors',
         );
       });
     });
@@ -1034,7 +1034,9 @@ describe('shouldCacheResult', () => {
           // NOTE: This actually returns the unmasked error DUMMY instead of the original "Unexpected error."
           errors: expect.arrayContaining([expect.objectContaining({ message: 'DUMMY' })]),
         });
-        expect(logging.warn).not.toHaveBeenCalled();
+        expect(logging.debug).not.toHaveBeenCalledWith(
+          '[useResponseCache] Decided not to cache the response because it contains errors',
+        );
       });
     });
 
@@ -1058,9 +1060,8 @@ describe('shouldCacheResult', () => {
           ...expectedResponsePayload,
           ...cacheSkip,
         });
-        // NOTE: This should not be logged! Documenting current behavior.
-        expect(logging.warn).toHaveBeenCalledWith(
-          '[useResponseCache] Failed to cache due to errors',
+        expect(logging.debug).not.toHaveBeenCalledWith(
+          '[useResponseCache] Decided not to cache the response because it contains errors',
         );
       });
     });
@@ -1092,7 +1093,9 @@ describe('shouldCacheResult', () => {
           ...expectedResponsePayload,
           ...cacheHit,
         });
-        expect(logging.warn).not.toHaveBeenCalled();
+        expect(logging.debug).not.toHaveBeenCalledWith(
+          '[useResponseCache] Decided not to cache the response because it contains errors',
+        );
       });
     });
 
@@ -1116,7 +1119,9 @@ describe('shouldCacheResult', () => {
           ...expectedResponsePayload,
           ...cacheHit,
         });
-        expect(logging.warn).not.toHaveBeenCalled();
+        expect(logging.debug).not.toHaveBeenCalledWith(
+          '[useResponseCache] Decided not to cache the response because it contains errors',
+        );
       });
     });
 
@@ -1140,9 +1145,8 @@ describe('shouldCacheResult', () => {
           ...expectedResponsePayload,
           ...cacheSkip,
         });
-        // NOTE: This should not be logged! Documenting current behavior.
-        expect(logging.warn).toHaveBeenCalledWith(
-          '[useResponseCache] Failed to cache due to errors',
+        expect(logging.debug).not.toHaveBeenCalledWith(
+          '[useResponseCache] Decided not to cache the response because it contains errors',
         );
       });
     });
