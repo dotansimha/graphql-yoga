@@ -1,5 +1,22 @@
 # @graphql-yoga/graphiql
 
+## 4.2.1
+
+### Patch Changes
+
+- [#3133](https://github.com/dotansimha/graphql-yoga/pull/3133)
+  [`77d107fe`](https://github.com/dotansimha/graphql-yoga/commit/77d107fe1a01044f4ba017ca960bb1bd58407ed7)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency
+    [`@graphql-tools/url-loader@8.0.1` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/8.0.1)
+    (from `8.0.0`, in `dependencies`)
+
+- [#3133](https://github.com/dotansimha/graphql-yoga/pull/3133)
+  [`77d107fe`](https://github.com/dotansimha/graphql-yoga/commit/77d107fe1a01044f4ba017ca960bb1bd58407ed7)
+  Thanks [@ardatan](https://github.com/ardatan)! - Update HTTP Executor and add `method` and
+  `useGETForQueries` to GraphiQL options
+
 ## 4.2.0
 
 ### Minor Changes
