@@ -1,5 +1,5 @@
-import { createSchema, createYoga, Repeater } from 'graphql-yoga';
-import { cacheControlDirective } from '@envelop/response-cache';
+import { createSchema, createYoga, YogaServerInstance } from 'graphql-yoga';
+import { cacheControlDirective, ShouldCacheResultFunction } from '@envelop/response-cache';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createInMemoryCache, useResponseCache } from '@graphql-yoga/plugin-response-cache';
 
@@ -197,6 +197,7 @@ it('cache a query operation per session', async () => {
 
 it('should miss cache if query variables change', async () => {
   const yoga = createYoga({
+    logging: false,
     schema: createSchema({
       typeDefs: /* GraphQL */ `
         type Query {
@@ -893,4 +894,257 @@ it('should allow to create the cache outside of the plugin', async () => {
     },
   });
   expect(onEnveloped).toHaveBeenCalledTimes(1);
+});
+
+describe('shouldCacheResult', () => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  let yoga: YogaServerInstance<{}, {}>;
+  let shouldCacheResultFn: ShouldCacheResultFunction | undefined;
+  const logging = {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+
+  function fetch(query: string) {
+    return yoga.fetch('http://localhost:3000/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    });
+  }
+
+  function createYogaServer() {
+    return createYoga({
+      logging,
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          ${cacheControlDirective}
+
+          type Query {
+            hello: String
+            throws: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            hello: () => 'world',
+            throws: () => {
+              throw new Error('DUMMY');
+            },
+          },
+        },
+      }),
+      plugins: [
+        useResponseCache({
+          session: () => null,
+          shouldCacheResult: shouldCacheResultFn,
+          includeExtensionMetadata: true,
+        }),
+      ],
+    });
+  }
+
+  const cacheSkip = {
+    extensions: {
+      responseCache: {
+        didCache: false,
+        hit: false,
+      },
+    },
+  };
+
+  const cacheSet = {
+    extensions: {
+      responseCache: {
+        didCache: true,
+        hit: false,
+        ttl: null,
+      },
+    },
+  };
+
+  const cacheHit = {
+    extensions: {
+      responseCache: {
+        hit: true,
+      },
+    },
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('when server returns errors', () => {
+    const query = 'query FetchError { throws }';
+    const expectedResponsePayload = {
+      data: { throws: null },
+      errors: expect.arrayContaining([expect.objectContaining({ message: 'Unexpected error.' })]),
+    };
+
+    describe('and we have no custom shouldCacheResult function', () => {
+      beforeEach(() => {
+        shouldCacheResultFn = undefined;
+        yoga = createYogaServer();
+      });
+
+      it('does not cache the response (default behavior)', async () => {
+        const response = await fetch(query);
+        let body = await response.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSkip,
+        });
+
+        const cachedResponse = await fetch(query);
+        body = await cachedResponse.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSkip,
+        });
+        expect(logging.warn).toHaveBeenCalledWith(
+          '[useResponseCache] Failed to cache due to errors',
+        );
+      });
+    });
+
+    describe('and we want to cache it', () => {
+      beforeEach(() => {
+        shouldCacheResultFn = jest.fn(() => true);
+        yoga = createYogaServer();
+      });
+
+      it('caches the error response', async () => {
+        const response = await fetch(query);
+        let body = await response.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSet,
+        });
+
+        const cachedResponse = await fetch(query);
+        body = await cachedResponse.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheHit,
+          // NOTE: This actually returns the unmasked error DUMMY instead of the original "Unexpected error."
+          errors: expect.arrayContaining([expect.objectContaining({ message: 'DUMMY' })]),
+        });
+        expect(logging.warn).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('and we do not want to cache it', () => {
+      beforeEach(() => {
+        shouldCacheResultFn = jest.fn(() => false);
+        yoga = createYogaServer();
+      });
+
+      it('does not cache the error response', async () => {
+        const response = await fetch(query);
+        let body = await response.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSkip,
+        });
+
+        const cachedResponse = await fetch(query);
+        body = await cachedResponse.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSkip,
+        });
+        // NOTE: This should not be logged! Documenting current behavior.
+        expect(logging.warn).toHaveBeenCalledWith(
+          '[useResponseCache] Failed to cache due to errors',
+        );
+      });
+    });
+  });
+
+  describe('when server returns no error', () => {
+    const query = 'query FetchHello { hello }';
+    const expectedResponsePayload = {
+      data: { hello: 'world' },
+    };
+
+    describe('and we have no custom shouldCacheResult function', () => {
+      beforeEach(() => {
+        shouldCacheResultFn = undefined;
+        yoga = createYogaServer();
+      });
+
+      it('caches the response (default behavior)', async () => {
+        const response = await fetch(query);
+        let body = await response.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSet,
+        });
+
+        const cachedResponse = await fetch(query);
+        body = await cachedResponse.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheHit,
+        });
+        expect(logging.warn).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('and we want to cache it', () => {
+      beforeEach(() => {
+        shouldCacheResultFn = jest.fn(() => true);
+        yoga = createYogaServer();
+      });
+
+      it('caches the response', async () => {
+        const response = await fetch(query);
+        let body = await response.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSet,
+        });
+
+        const cachedResponse = await fetch(query);
+        body = await cachedResponse.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheHit,
+        });
+        expect(logging.warn).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('and we do not want to cache it', () => {
+      beforeEach(() => {
+        shouldCacheResultFn = jest.fn(() => false);
+        yoga = createYogaServer();
+      });
+
+      it('does not cache the response', async () => {
+        const response = await fetch(query);
+        let body = await response.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSkip,
+        });
+
+        const cachedResponse = await fetch(query);
+        body = await cachedResponse.json();
+        expect(body).toEqual({
+          ...expectedResponsePayload,
+          ...cacheSkip,
+        });
+        // NOTE: This should not be logged! Documenting current behavior.
+        expect(logging.warn).toHaveBeenCalledWith(
+          '[useResponseCache] Failed to cache due to errors',
+        );
+      });
+    });
+  });
 });
