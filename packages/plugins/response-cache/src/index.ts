@@ -102,19 +102,27 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
           session: sessionFactoryForEnvelop,
           buildResponseCacheKey: cacheKeyFactoryForEnvelop,
           shouldCacheResult({ cacheKey, result }) {
-            const shouldCached = options.shouldCacheResult
-              ? options.shouldCacheResult({ cacheKey, result })
-              : !result.errors?.length;
-            if (shouldCached) {
+            let shouldCache: boolean;
+            if (options.shouldCacheResult) {
+              shouldCache = options.shouldCacheResult({ cacheKey, result });
+            } else {
+              shouldCache = !result.errors?.length;
+              if (!shouldCache) {
+                logger.debug(
+                  '[useResponseCache] Decided not to cache the response because it contains errors',
+                );
+              }
+            }
+
+            if (shouldCache) {
               const extensions = (result.extensions ||= {}) as ResponseCachePluginExtensions;
               const httpExtensions = (extensions.http ||= {});
               const headers = (httpExtensions.headers ||= {});
               headers['ETag'] = cacheKey;
               headers['Last-Modified'] = new Date().toUTCString();
-            } else {
-              logger.warn('[useResponseCache] Failed to cache due to errors');
             }
-            return shouldCached;
+
+            return shouldCache;
           },
         }),
       );
