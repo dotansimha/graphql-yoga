@@ -1,5 +1,13 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.1.3
+
+### Patch Changes
+
+- [#3135](https://github.com/dotansimha/graphql-yoga/pull/3135)
+  [`5fc1cb08`](https://github.com/dotansimha/graphql-yoga/commit/5fc1cb0845b6534b8f3ddd65ed05fa2b971a8487)
+  Thanks [@klippx](https://github.com/klippx)! - Stop excessive/incorrect warn level log
+
 ## 3.1.2
 
 ### Patch Changes
