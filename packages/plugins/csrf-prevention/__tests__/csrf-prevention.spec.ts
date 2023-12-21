@@ -52,4 +52,18 @@ describe('csrf-prevention', () => {
     expect(res.status).toBe(200);
     await expect(res.text()).resolves.toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`);
   });
+
+  it('should allow all POST requests', async () => {
+    const res = await yoga.fetch('http://yoga/graphql?query={hello}', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    });
+    expect(res.status).toBe(200);
+    await expect(res.text()).resolves.toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`);
+  });
 });
