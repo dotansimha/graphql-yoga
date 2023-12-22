@@ -1,5 +1,15 @@
 # @graphql-yoga/plugin-jwt
 
+## 2.1.1
+
+### Patch Changes
+
+- [#3149](https://github.com/dotansimha/graphql-yoga/pull/3149)
+  [`b9d2afcc`](https://github.com/dotansimha/graphql-yoga/commit/b9d2afcc0ef65246f0a3c181daf00f886bac7404)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Fix unauthorized error resulting in an
+  response with 500 status or in a server crash (depending on actual HTTP server implementation
+  used).
+
 ## 2.1.0
 
 ### Patch Changes
