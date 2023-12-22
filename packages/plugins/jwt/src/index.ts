@@ -133,12 +133,7 @@ function verify(
       { ...options, algorithms: options?.algorithms ?? ['RS256'] },
       (err, result) => {
         if (err) {
-          // Should we expose the error message? Perhaps only in development mode?
-          reject(
-            unauthorizedError('Failed to decode authentication token', {
-              originalError: err,
-            }),
-          );
+          reject(unauthorizedError('Failed to decode authentication token. Verification failed.'));
         } else {
           resolve(result as JwtPayload);
         }

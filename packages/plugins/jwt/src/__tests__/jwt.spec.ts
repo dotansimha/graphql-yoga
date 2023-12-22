@@ -21,45 +21,70 @@ describe('jwt', () => {
   it('should throw on unsupported header type', async () => {
     const server = createTestServer();
 
-    await expect(server.queryWithAuth('Basic 123')).rejects.toMatchObject({
-      message: 'Unsupported token type provided: "Basic"',
-      extensions: { http: { status: 401 } },
+    const response = await server.queryWithAuth('Basic 123');
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Unsupported token type provided: "Basic"',
+        },
+      ],
     });
   });
 
   it('should throw on invalid token', async () => {
     const server = createTestServer();
 
-    await expect(server.queryWithAuth('Bearer abcd')).rejects.toMatchObject({
-      message: 'Failed to decode authentication token',
-      extensions: { http: { status: 401 } },
+    const response = await server.queryWithAuth('Bearer abcd');
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Failed to decode authentication token. Verification failed.',
+        },
+      ],
     });
   });
 
   it('should not accept token without algorithm', async () => {
     const server = createTestServer();
 
-    await expect(server.queryWithAuth(buildJWTWithoutAlg())).rejects.toMatchObject({
-      message: 'Failed to decode authentication token',
-      extensions: { http: { status: 401 } },
+    const response = await server.queryWithAuth(buildJWTWithoutAlg());
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Failed to decode authentication token. Verification failed.',
+        },
+      ],
     });
   });
 
   it('should not allow non matching issuer', async () => {
     const server = createTestServer();
 
-    await expect(server.queryWithAuth(buildJWT({ iss: 'test' }))).rejects.toMatchObject({
-      message: 'Failed to decode authentication token',
-      extensions: { http: { status: 401 } },
+    const response = await server.queryWithAuth(buildJWT({ iss: 'test' }));
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Failed to decode authentication token. Verification failed.',
+        },
+      ],
     });
   });
 
   it('should not allow non matching audience', async () => {
     const server = createTestServer({ audience: 'test' });
 
-    await expect(server.queryWithAuth(buildJWT({ aud: 'wrong' }))).rejects.toMatchObject({
-      message: 'Failed to decode authentication token',
-      extensions: { http: { status: 401 } },
+    const response = await server.queryWithAuth(buildJWT({ aud: 'wrong' }));
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Failed to decode authentication token. Verification failed.',
+        },
+      ],
     });
   });
 
@@ -74,9 +99,14 @@ describe('jwt', () => {
   it('should not allow unknown key id', async () => {
     const server = createTestServer({ signingKey: undefined, jwksUri: 'test' });
 
-    await expect(server.queryWithAuth(buildJWT({}, { keyid: 'unknown' }))).rejects.toMatchObject({
-      message: 'Failed to decode authentication token. Unknown key id.',
-      extensions: { http: { status: 401 } },
+    const response = await server.queryWithAuth(buildJWT({}, { keyid: 'unknown' }));
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'Failed to decode authentication token. Unknown key id.',
+        },
+      ],
     });
   });
 
