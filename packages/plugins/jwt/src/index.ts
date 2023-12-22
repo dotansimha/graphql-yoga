@@ -80,7 +80,7 @@ export function useJWT(options: JwtPluginOptions): Plugin {
   }
 
   return {
-    async onRequest({ request, serverContext, url }) {
+    async onRequestParse({ request, serverContext, url }) {
       const token = await getToken({ request, serverContext, url });
       if (token != null) {
         const signingKey = options.signingKey ?? (await fetchKey(jwksClient, token));
