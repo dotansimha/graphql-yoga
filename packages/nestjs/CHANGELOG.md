@@ -1,5 +1,20 @@
 # @graphql-yoga/nestjs
 
+## 3.1.0
+
+### Minor Changes
+
+- [#2992](https://github.com/dotansimha/graphql-yoga/pull/2992)
+  [`b1f0e3a2`](https://github.com/dotansimha/graphql-yoga/commit/b1f0e3a2986956c6791a251df908e3f8b50ec966)
+  Thanks [@magrinj](https://github.com/magrinj)! - Adding support of conditionalSchema option.
+  (Currently without support for WebSocket subscriptions)
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b1f0e3a2`](https://github.com/dotansimha/graphql-yoga/commit/b1f0e3a2986956c6791a251df908e3f8b50ec966)]:
+  - graphql-yoga@5.1.0
+
 ## 3.0.2
 
 ### Patch Changes
