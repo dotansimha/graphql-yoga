@@ -1,7 +1,15 @@
 import type { Express, Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { printSchema } from 'graphql';
-import { createYoga, filter, pipe, YogaServerInstance, YogaServerOptions } from 'graphql-yoga';
+import { GraphQLSchema, printSchema } from 'graphql';
+import {
+  createYoga,
+  filter,
+  mergeSchemas,
+  pipe,
+  YogaSchemaDefinition,
+  YogaServerInstance,
+  YogaServerOptions,
+} from 'graphql-yoga';
 import type { ExecutionParams } from 'subscriptions-transport-ws';
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -27,7 +35,9 @@ export type YogaDriverServerContext<Platform extends YogaDriverPlatform> =
 export type YogaDriverServerOptions<Platform extends YogaDriverPlatform> = Omit<
   YogaServerOptions<YogaDriverServerContext<Platform>, never>,
   'context' | 'schema'
->;
+> & {
+  conditionalSchema?: YogaSchemaDefinition<YogaDriverServerContext<Platform>, never> | undefined;
+};
 
 export type YogaDriverServerInstance<Platform extends YogaDriverPlatform> = YogaServerInstance<
   YogaDriverServerContext<Platform>,
@@ -35,12 +45,25 @@ export type YogaDriverServerInstance<Platform extends YogaDriverPlatform> = Yoga
 >;
 
 export type YogaDriverConfig<Platform extends YogaDriverPlatform = 'express'> = GqlModuleOptions &
-  YogaDriverServerOptions<Platform> & {
-    /**
-     * Subscriptions configuration. Passing `true` will install only `graphql-ws`.
-     */
-    subscriptions?: boolean | YogaDriverSubscriptionConfig;
-  };
+  YogaDriverServerOptions<Platform> &
+  (
+    | {
+        /**
+         * Subscriptions configuration. Passing `true` will install only `graphql-ws`.
+         */
+        subscriptions?: boolean | YogaDriverSubscriptionConfig;
+        conditionalSchema?: never;
+      }
+    | {
+        /**
+         * TODO: Support conditional schema with subscriptions
+         */
+        subscriptions?: never;
+        conditionalSchema?:
+          | YogaSchemaDefinition<YogaDriverServerContext<Platform>, never>
+          | undefined;
+      }
+  );
 
 export type YogaDriverSubscriptionConfig = {
   'graphql-ws'?: Omit<SubscriptionConfig['graphql-ws'], 'onSubscribe'>;
@@ -78,7 +101,7 @@ export abstract class AbstractYogaDriver<
   }
 
   protected registerExpress(
-    options: YogaDriverConfig<'express'>,
+    { conditionalSchema, ...options }: YogaDriverConfig<'express'>,
     { preStartHook }: { preStartHook?: (app: Express) => void } = {},
   ) {
     const app: Express = this.httpAdapterHost.httpAdapter.getInstance();
@@ -96,8 +119,11 @@ export abstract class AbstractYogaDriver<
       }
     }
 
+    const schema = this.mergeConditionalSchema<'express'>(conditionalSchema, options.schema);
+
     const yoga = createYoga<YogaDriverServerContext<'express'>>({
       ...options,
+      schema,
       graphqlEndpoint: options.path,
       // disable logging by default
       // however, if `true` use nest logger
@@ -115,15 +141,18 @@ export abstract class AbstractYogaDriver<
   }
 
   protected registerFastify(
-    options: YogaDriverConfig<'fastify'>,
+    { conditionalSchema, ...options }: YogaDriverConfig<'fastify'>,
     { preStartHook }: { preStartHook?: (app: FastifyInstance) => void } = {},
   ) {
     const app: FastifyInstance = this.httpAdapterHost.httpAdapter.getInstance();
 
     preStartHook?.(app);
 
+    const schema = this.mergeConditionalSchema<'fastify'>(conditionalSchema, options.schema);
+
     const yoga = createYoga<YogaDriverServerContext<'fastify'>>({
       ...options,
+      schema,
       graphqlEndpoint: options.path,
       // disable logging by default
       // however, if `true` use fastify logger
@@ -142,6 +171,38 @@ export abstract class AbstractYogaDriver<
       reply.send(response.body);
       return reply;
     });
+  }
+
+  private mergeConditionalSchema<T extends YogaDriverPlatform>(
+    conditionalSchema: YogaSchemaDefinition<YogaDriverServerContext<T>, never> | undefined,
+    schema?: GraphQLSchema,
+  ) {
+    let mergedSchema: YogaSchemaDefinition<YogaDriverServerContext<T>, never> | undefined = schema;
+
+    if (conditionalSchema) {
+      mergedSchema = async request => {
+        const schemas: GraphQLSchema[] = [];
+
+        if (schema) {
+          schemas.push(schema);
+        }
+
+        const conditionalSchemaResult =
+          typeof conditionalSchema === 'function'
+            ? await conditionalSchema(request)
+            : await conditionalSchema;
+
+        if (conditionalSchemaResult) {
+          schemas.push(conditionalSchemaResult);
+        }
+
+        return mergeSchemas({
+          schemas,
+        });
+      };
+    }
+
+    return mergedSchema;
   }
 
   public subscriptionWithFilter<TPayload, TVariables, TContext>(
@@ -198,6 +259,12 @@ export class YogaDriver<
       if (config['graphql-ws']) {
         config['graphql-ws'] = typeof config['graphql-ws'] === 'object' ? config['graphql-ws'] : {};
 
+        if (options.conditionalSchema) {
+          throw new Error(`
+            Conditional schema is not supported with graphql-ws.
+          `);
+        }
+
         config['graphql-ws'].onSubscribe = async (ctx, msg) => {
           const { schema, execute, subscribe, contextFactory, parse, validate } =
             this.yoga.getEnveloped({
@@ -228,6 +295,12 @@ export class YogaDriver<
           typeof config['subscriptions-transport-ws'] === 'object'
             ? config['subscriptions-transport-ws']
             : {};
+
+        if (options.conditionalSchema) {
+          throw new Error(`
+            Conditional schema is not supported with subscriptions-transport-ws.
+          `);
+        }
 
         config['subscriptions-transport-ws'].onOperation = async (
           _msg: unknown,

@@ -4,7 +4,7 @@ export { type Plugin } from './plugins/types.js';
 export { type GraphiQLOptions } from './plugins/use-graphiql.js';
 export { renderGraphiQL, shouldRenderGraphiQL } from './plugins/use-graphiql.js';
 export { useReadinessCheck } from './plugins/use-readiness-check.js';
-export { useSchema } from './plugins/use-schema.js';
+export { type YogaSchemaDefinition, useSchema } from './plugins/use-schema.js';
 export * from './schema.js';
 export * from './server.js';
 export * from './subscription.js';
@@ -12,6 +12,7 @@ export * from './types.js';
 export { maskError } from './utils/mask-error.js';
 export { type OnParamsEventPayload } from './plugins/types.js';
 export { createLRUCache } from './utils/create-lru-cache.js';
+export { mergeSchemas } from '@graphql-tools/schema';
 export {
   // Handy type utils
   type Maybe,
