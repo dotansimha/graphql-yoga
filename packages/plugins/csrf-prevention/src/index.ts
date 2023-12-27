@@ -1,5 +1,11 @@
 import { createGraphQLError, Plugin, YogaInitialContext } from 'graphql-yoga';
 
+const NON_PREFLIGHTED_CONTENT_TYPES = [
+  'application/x-www-form-urlencoded',
+  'multipart/form-data',
+  'text/plain',
+];
+
 export interface CSRFPreventionPluginOptions {
   /**
    * List of headers that are required to be set on every request.
@@ -26,18 +32,28 @@ export function useCSRFPrevention(
   const { requestHeaders = ['x-graphql-yoga-csrf'] } = options;
   return {
     async onRequestParse({ request }) {
-      if (
-        request.method === 'GET' &&
-        !requestHeaders.some(headerName => request.headers.has(headerName))
-      ) {
-        throw createGraphQLError('Required CSRF header(s) not present', {
-          extensions: {
-            http: {
-              status: 403,
-            },
-          },
-        });
+      if (wasTheRequestAlreadyPreflightChecked(request.headers?.get('content-type'))) {
+        return;
       }
+      if (requestHeaders.some(headerName => request.headers.has(headerName))) {
+        return;
+      }
+      throw createGraphQLError('Required CSRF header(s) not present', {
+        extensions: {
+          http: {
+            status: 403,
+          },
+        },
+      });
     },
   };
 }
+
+const wasTheRequestAlreadyPreflightChecked = (contentType?: string | null): boolean => {
+  if (!contentType) {
+    return false;
+  }
+  return !NON_PREFLIGHTED_CONTENT_TYPES.some(nonPreflightContentType =>
+    contentType.toLowerCase().startsWith(nonPreflightContentType),
+  );
+};
