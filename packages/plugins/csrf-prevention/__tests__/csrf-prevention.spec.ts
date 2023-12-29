@@ -52,4 +52,42 @@ describe('csrf-prevention', () => {
     expect(res.status).toBe(200);
     await expect(res.text()).resolves.toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`);
   });
+
+  it('should allow POST requests with application/json content type', async () => {
+    const res = await yoga.fetch('http://yoga/graphql?query={hello}', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ hello }',
+      }),
+    });
+    expect(res.status).toBe(200);
+    await expect(res.text()).resolves.toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`);
+  });
+
+  it('should allow POST requests with multipart/form-data content with required header', async () => {
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify({ query: '{ hello }' }));
+    const res = await yoga.fetch('http://yoga/graphql?query={hello}', {
+      method: 'POST',
+      headers: {
+        'x-graphql-yoga-csrf': 'whatevs',
+      },
+      body: formData,
+    });
+    expect(res.status).toBe(200);
+    await expect(res.text()).resolves.toMatchInlineSnapshot(`"{"data":{"hello":"world"}}"`);
+  });
+
+  it('should not allow requests with multipart/form-data content without required header', async () => {
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify({ query: '{ hello }' }));
+    const res = await yoga.fetch('http://yoga/graphql?query={hello}', {
+      method: 'POST',
+      body: formData,
+    });
+    expect(res.status).toBe(403);
+  });
 });
