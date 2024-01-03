@@ -1,5 +1,12 @@
 # graphql-yoga
 
+## 5.1.1
+
+### Patch Changes
+
+- [`3ef877a7`](https://github.com/dotansimha/graphql-yoga/commit/3ef877a75c5b19e082121ece08981183422618f0)
+  Thanks [@ardatan](https://github.com/ardatan)! - Support errors with extensions set undefined
+
 ## 5.1.0
 
 ### Minor Changes

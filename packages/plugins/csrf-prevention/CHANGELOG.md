@@ -1,5 +1,18 @@
 # @graphql-yoga/plugin-csrf-prevention
 
+## 3.1.1
+
+### Patch Changes
+
+- [#3146](https://github.com/dotansimha/graphql-yoga/pull/3146)
+  [`d94dd1a0`](https://github.com/dotansimha/graphql-yoga/commit/d94dd1a05d1e912f7f4774902d7ea671426e6ced)
+  Thanks [@holzerch](https://github.com/holzerch)! - fix: Apply CSRF prevention validation only to
+  GET requests
+
+- Updated dependencies
+  [[`3ef877a7`](https://github.com/dotansimha/graphql-yoga/commit/3ef877a75c5b19e082121ece08981183422618f0)]:
+  - graphql-yoga@5.1.1
+
 ## 3.1.0
 
 ### Patch Changes
