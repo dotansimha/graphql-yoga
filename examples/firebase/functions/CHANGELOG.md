@@ -5,6 +5,14 @@
 ### Patch Changes
 
 - Updated dependencies
+  [[`3ef877a7`](https://github.com/dotansimha/graphql-yoga/commit/3ef877a75c5b19e082121ece08981183422618f0)]:
+  - graphql-yoga@5.1.1
+
+## null
+
+### Patch Changes
+
+- Updated dependencies
   [[`b1f0e3a2`](https://github.com/dotansimha/graphql-yoga/commit/b1f0e3a2986956c6791a251df908e3f8b50ec966)]:
   - graphql-yoga@5.1.0
 
