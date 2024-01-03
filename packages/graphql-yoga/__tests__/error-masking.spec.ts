@@ -464,4 +464,41 @@ describe('error masking', () => {
       ],
     });
   });
+
+  it('support errors with undefined extensions', async () => {
+    const yoga = createYoga({
+      logging: false,
+      context: () => {
+        const error = createGraphQLError('I like turtles');
+        Object.defineProperty(error, 'extensions', {
+          get() {
+            return undefined;
+          },
+        });
+        throw error;
+      },
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String!
+          }
+        `,
+      }),
+    });
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ __typename }' }),
+    });
+    expect(await response.json()).toMatchObject({
+      errors: [
+        {
+          message: 'I like turtles',
+        },
+      ],
+    });
+  });
 });
