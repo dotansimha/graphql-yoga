@@ -90,13 +90,10 @@ export function useJWT(options: JwtPluginOptions): Plugin {
           throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
         }
 
-        let signingKey: string;
-        if (jwksCache.has(decodedToken.header.kid)) {
-          signingKey = jwksCache.get(decodedToken.header.kid)!;
-        } else {
-          signingKey = await fetchKey(jwksClient, decodedToken.header.kid);
-          jwksCache.set(decodedToken.header.kid, signingKey);
+        if (!jwksCache.has(decodedToken.header.kid)) {
+          jwksCache.set(decodedToken.header.kid, await fetchKey(jwksClient, decodedToken.header.kid));
         }
+        const signingKey = jwksCache.get(decodedToken.header.kid)!;
 
         const verified = await verify(token, signingKey, options);
 
