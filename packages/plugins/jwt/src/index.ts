@@ -4,19 +4,6 @@ import { JwksClient } from 'jwks-rsa';
 
 const { decode } = jsonwebtoken;
 
-async function getSigningKeyFromJWKS(token: string, jwksClient: JwksClient, jwksCache: Map<string, string>): Promise<string> {
-  const decodedToken = decode(token, { complete: true });
-  if (!decodedToken?.header?.kid) {
-    throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
-  }
-
-  if (!jwksCache.has(decodedToken.header.kid)) {
-    jwksCache.set(decodedToken.header.kid, await fetchKey(jwksClient, decodedToken.header.kid));
-  }
-
-  return jwksCache.get(decodedToken.header.kid)!;
-}
-
 export type JwtPluginOptions = JwtPluginOptionsWithJWKS | JwtPluginOptionsWithSigningKey;
 
 export interface JwtPluginOptionsBase {
@@ -164,6 +151,19 @@ async function fetchKey(jwksClient: JwksClient, kid: string): Promise<string> {
     throw unauthorizedError(`Failed to decode authentication token. Unknown key id.`);
   }
   return signingKey;
+}
+
+async function getSigningKeyFromJWKS(token: string, jwksClient: JwksClient, jwksCache: Map<string, string>): Promise<string> {
+  const decodedToken = decode(token, { complete: true });
+  if (!decodedToken?.header?.kid) {
+    throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
+  }
+
+  if (!jwksCache.has(decodedToken.header.kid)) {
+    jwksCache.set(decodedToken.header.kid, await fetchKey(jwksClient, decodedToken.header.kid));
+  }
+
+  return jwksCache.get(decodedToken.header.kid)!;
 }
 
 const defaultGetToken: NonNullable<JwtPluginOptions['getToken']> = ({ request }) => {
