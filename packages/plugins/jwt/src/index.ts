@@ -85,7 +85,7 @@ export function useJWT(options: JwtPluginOptions): Plugin {
     async onRequestParse({ request, serverContext, url }) {
       const token = await getToken({ request, serverContext, url });
       if (token != null) {
-        const signingKey = options.signingKey ?? (await fetchKey(token, jwksClient, jwksCache));
+        const signingKey = options.signingKey ?? (await fetchKey(jwksClient, jwksCache, token));
 
         const verified = await verify(token, signingKey, options);
 
@@ -144,7 +144,7 @@ function verify(
   });
 }
 
-async function fetchKey(token: string, jwksClient: JwksClient, jwksCache: Map<string, string>): Promise<string> {
+async function fetchKey(jwksClient: JwksClient, jwksCache: Map<string, string>, token: string): Promise<string> {
   const decodedToken = decode(token, { complete: true });
   if (decodedToken?.header?.kid == null) {
     throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
