@@ -86,8 +86,8 @@ export function useJWT(options: JwtPluginOptions): Plugin {
       const token = await getToken({ request, serverContext, url });
       if (token != null) {
         try {
-          let signingKey = options.signingKey ?? (await fetchKey({ jwksClient, jwksCache, token }));
-          let verified = await verify(token, signingKey, options);
+          const signingKey = options.signingKey ?? (await fetchKey({ jwksClient, jwksCache, token }));
+          const verified = await verify(token, signingKey, options);
 
           if (!verified) {
             throw new Error("Initial verification failed.");
