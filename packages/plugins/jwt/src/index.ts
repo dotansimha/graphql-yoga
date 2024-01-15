@@ -85,7 +85,7 @@ export function useJWT(options: JwtPluginOptions): Plugin {
     async onRequestParse({ request, serverContext, url }) {
       const token = await getToken({ request, serverContext, url });
       if (token != null) {
-        const signingKey = options.signingKey ?? await fetchKey(token, jwksClient, jwksCache);
+        const signingKey = options.signingKey ?? (await fetchKey(token, jwksClient, jwksCache));
 
         const verified = await verify(token, signingKey, options);
 
