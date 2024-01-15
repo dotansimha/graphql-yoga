@@ -95,6 +95,11 @@ export function useJWT(options: JwtPluginOptions): Plugin {
 
           payloadByRequest.set(request, verified);
         } catch (error) {
+          // If error is thrown and signing key was supplied, do not attempt cache refresh
+          if (options.signingKey) {
+            throw unauthorizedError(`Unauthenticated`);
+          }
+
           // If initial verification fails, attempt to refresh the key and retry verification
           const signingKey = await fetchKey({ jwksClient, jwksCache, token, shouldRefreshCache: true });
           const verified = await verify(token, signingKey, options);
