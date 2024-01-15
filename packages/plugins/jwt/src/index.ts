@@ -85,15 +85,25 @@ export function useJWT(options: JwtPluginOptions): Plugin {
     async onRequestParse({ request, serverContext, url }) {
       const token = await getToken({ request, serverContext, url });
       if (token != null) {
-        const signingKey = options.signingKey ?? (await fetchKey(jwksClient, jwksCache, token));
+        try {
+          let signingKey = options.signingKey ?? (await fetchKey({ jwksClient, jwksCache, token }));
+          let verified = await verify(token, signingKey, options);
 
-        const verified = await verify(token, signingKey, options);
+          if (!verified) {
+            throw new Error("Initial verification failed.");
+          }
 
-        if (!verified) {
-          throw unauthorizedError(`Unauthenticated`);
+          payloadByRequest.set(request, verified);
+        } catch (error) {
+          // If initial verification fails, attempt to refresh the key and retry verification
+          const signingKey = await fetchKey({ jwksClient, jwksCache, token, shouldRefreshCache: true });
+          const verified = await verify(token, signingKey, options);
+          if (!verified) {
+            throw unauthorizedError(`Unauthenticated`);
+          }
+
+          payloadByRequest.set(request, verified);
         }
-
-        payloadByRequest.set(request, verified);
       }
     },
     onContextBuilding({ context, extendContext }) {
@@ -144,10 +154,26 @@ function verify(
   });
 }
 
-async function fetchKey(jwksClient: JwksClient, jwksCache: Map<string, string>, token: string): Promise<string> {
+interface FetchKeyOptions {
+  jwksClient: JwksClient;
+  jwksCache: Map<string, string>;
+  token: string;
+  shouldRefreshCache?: boolean;
+}
+
+async function fetchKey({
+  jwksClient,
+  jwksCache,
+  token,
+  shouldRefreshCache = false
+}: FetchKeyOptions): Promise<string> {
   const decodedToken = decode(token, { complete: true });
   if (decodedToken?.header?.kid == null) {
     throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
+  }
+
+  if (shouldRefreshCache) {
+    jwksCache.delete(decodedToken.header.kid);
   }
 
   if (!jwksCache.has(decodedToken.header.kid)) {
