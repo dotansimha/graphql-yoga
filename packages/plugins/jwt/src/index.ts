@@ -144,14 +144,14 @@ function verify(
   });
 }
 
-async function fetchKey(token: string, jwksClient: JwksClient | undefined, jwksCache: Map<string, string>): Promise<string> {
+async function fetchKey(token: string, jwksClient: JwksClient, jwksCache: Map<string, string>): Promise<string> {
   const decodedToken = decode(token, { complete: true });
   if (decodedToken?.header?.kid == null) {
     throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
   }
 
   if (!jwksCache.has(decodedToken.header.kid)) {
-    const secret = await jwksClient?.getSigningKey(decodedToken.header.kid);
+    const secret = await jwksClient.getSigningKey(decodedToken.header.kid);
     const signingKey = secret?.getPublicKey();
     if (!signingKey) {
       throw unauthorizedError(`Failed to decode authentication token. Unknown key id.`);
