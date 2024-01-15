@@ -86,11 +86,12 @@ export function useJWT(options: JwtPluginOptions): Plugin {
       const token = await getToken({ request, serverContext, url });
       if (token != null) {
         try {
-          const signingKey = options.signingKey ?? (await fetchKey({ jwksClient, jwksCache, token }));
+          const signingKey =
+            options.signingKey ?? (await fetchKey({ jwksClient, jwksCache, token }));
           const verified = await verify(token, signingKey, options);
 
           if (!verified) {
-            throw new Error("Initial verification failed.");
+            throw new Error('Initial verification failed.');
           }
 
           payloadByRequest.set(request, verified);
@@ -101,7 +102,12 @@ export function useJWT(options: JwtPluginOptions): Plugin {
           }
 
           // If initial verification fails, attempt to refresh the key and retry verification
-          const signingKey = await fetchKey({ jwksClient, jwksCache, token, shouldRefreshCache: true });
+          const signingKey = await fetchKey({
+            jwksClient,
+            jwksCache,
+            token,
+            shouldRefreshCache: true,
+          });
           const verified = await verify(token, signingKey, options);
           if (!verified) {
             throw unauthorizedError(`Unauthenticated`);
@@ -150,7 +156,7 @@ function verify(
       { ...options, algorithms: options?.algorithms ?? ['RS256'] },
       (err, result) => {
         if (err) {
-          reject(unauthorizedError('Failed to decode authentication token. Verification failed.'));
+          reject(unauthorizedError('Unauthenticated'));
         } else {
           resolve(result as JwtPayload);
         }
@@ -170,11 +176,11 @@ async function fetchKey({
   jwksClient,
   jwksCache,
   token,
-  shouldRefreshCache = false
+  shouldRefreshCache = false,
 }: FetchKeyOptions): Promise<string> {
   const decodedToken = decode(token, { complete: true });
   if (decodedToken?.header?.kid == null) {
-    throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
+    throw unauthorizedError(`Unauthenticated`);
   }
 
   if (shouldRefreshCache) {
@@ -185,7 +191,7 @@ async function fetchKey({
     const secret = await jwksClient.getSigningKey(decodedToken.header.kid);
     const signingKey = secret?.getPublicKey();
     if (!signingKey) {
-      throw unauthorizedError(`Failed to decode authentication token. Unknown key id.`);
+      throw unauthorizedError(`Unauthenticated`);
     }
     jwksCache.set(decodedToken.header.kid, signingKey);
   }
