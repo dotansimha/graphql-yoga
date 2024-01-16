@@ -1152,3 +1152,66 @@ describe('shouldCacheResult', () => {
     });
   });
 });
+
+it('response has "servedFromResponseCache" symbol', async () => {
+  const results: Array<any> = [];
+  const yoga = createYoga({
+    plugins: [
+      useResponseCache({
+        session: () => null,
+        includeExtensionMetadata: true,
+      }),
+      {
+        onResultProcess(context) {
+          results.push(context.result);
+        },
+      },
+    ],
+    schema,
+  });
+  function fetch() {
+    return yoga.fetch('http://localhost:3000/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{__typename}' }),
+    });
+  }
+
+  let response = await fetch();
+
+  expect(response.status).toEqual(200);
+  let body = await response.json();
+  expect(body).toEqual({
+    data: {
+      __typename: 'Query',
+    },
+    extensions: {
+      responseCache: {
+        didCache: true,
+        hit: false,
+        ttl: null,
+      },
+    },
+  });
+
+  response = await fetch();
+  expect(response.status).toEqual(200);
+  body = await response.json();
+  expect(body).toMatchObject({
+    data: {
+      __typename: 'Query',
+    },
+    extensions: {
+      responseCache: {
+        hit: true,
+      },
+    },
+  });
+
+  const [result1, result2] = results;
+  expect(Symbol.for('servedFromResponseCache') in result1).toEqual(false);
+  expect(Symbol.for('servedFromResponseCache') in result2).toEqual(true);
+  expect(result2[Symbol.for('servedFromResponseCache')]).toEqual(true);
+});

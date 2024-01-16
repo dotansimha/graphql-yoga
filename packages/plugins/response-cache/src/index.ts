@@ -170,10 +170,14 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       if (enabled(request)) {
         const cachedResponse = await cache.get(operationId);
         if (cachedResponse) {
+          const responseWithSymbol = {
+            ...cachedResponse,
+            [Symbol.for('servedFromResponseCache')]: true,
+          };
           if (options.includeExtensionMetadata) {
-            setResult(resultWithMetadata(cachedResponse, { hit: true }));
+            setResult(resultWithMetadata(responseWithSymbol, { hit: true }));
           } else {
-            setResult(cachedResponse);
+            setResult(responseWithSymbol);
           }
           return;
         }
