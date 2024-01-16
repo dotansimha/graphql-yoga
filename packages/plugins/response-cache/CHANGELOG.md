@@ -1,5 +1,15 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.3.0
+
+### Minor Changes
+
+- [#3164](https://github.com/dotansimha/graphql-yoga/pull/3164)
+  [`353c0fed`](https://github.com/dotansimha/graphql-yoga/commit/353c0fed9435e8e81d854e2d9986270af8d424f4)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Add `servedFromResponseCache` symbol property to
+  responses served from the response cache in order to allow other plugins to determine, whether a
+  response was served from the cache and apply custom logic based on that.
+
 ## 3.2.1
 
 ### Patch Changes
