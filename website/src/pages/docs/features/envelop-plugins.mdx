@@ -25,6 +25,29 @@ You can both use Yoga or Envelop plugins with GraphQL Yoga.
   execution steps for serving cached results.
 </Callout>
 
+### Yoga Plugin Example
+
+Please refer to the corresponding feature documentation pages. E.g.
+[Response Cache](/docs/features/response-caching),
+[Persisted Operations](/docs/features/persisted-operations) or
+[Defer/Stream](/docs/features/defer-stream).
+
+```ts filename="Yoga Defer Stream Plugin Usage Example"
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
+import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
+
+const yoga = createYoga({
+  plugins: [useDeferStream()]
+})
+
+const server = createServer(yoga)
+
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
+
 ### Envelop Plugin Example
 
 <Callout>
@@ -66,29 +89,6 @@ server.listen(4000, () => {
 })
 ```
 
-### Yoga Plugin Example
-
-Please refer to the corresponding feature documentation pages. E.g.
-[Response Cache](/docs/features/response-caching),
-[Persisted Operations](/docs/features/persisted-operations) or
-[Defer/Stream](/docs/features/defer-stream).
-
-```ts filename="Yoga Defer Stream Plugin Usage Example"
-import { createServer } from 'node:http'
-import { createYoga } from 'graphql-yoga'
-import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
-
-const yoga = createYoga({
-  plugins: [useDeferStream()]
-})
-
-const server = createServer(yoga)
-
-server.listen(4000, () => {
-  console.info('Server is running on http://localhost:4000/graphql')
-})
-```
-
 ## Writing Plugins
 
 Sometimes you might want to build your own plugins. You can write your own Yoga plugin and even
@@ -101,19 +101,57 @@ share it with other people by publishing it to `npm`.
 
 The most hooks for Yoga origin from the envelop plugin system.
 [Please refer to the Envelop Plugin Lifecycle documentation for more information.](https://the-guild.dev/graphql/envelop/docs/plugins/lifecycle)
-
 In addition, Yoga adds more HTTP specific hooks.
 
-<Callout>
-  The HTTP hooks are still not 100% stable and we advise using them on your own risk. For the next
-  Yoga major version these hooks will be finalized and marked as stable.
-</Callout>
+### Plugin Lifecycle
+
+The following diagram shows the plugin lifecycle of GraphQL Yoga. For a detailed description of each
+hook, please refer to the detail sections of each hook.
+
+```mermaid
+stateDiagram-v2
+    [*] --> onRequest
+
+    state onRequest_if_state <<choice>>
+
+    onRequest --> onRequest_if_state
+
+    onRequest_if_state --> onResponse: Is not a GraphQL Request
+    onRequest_if_state --> GraphQLRequest: Is GraphQL Request
+
+    GraphQLRequest: GraphQL Request
+
+    state GraphQLRequest {
+      [*] --> onRequestParse
+      onRequestParse --> onParams
+      onParams --> onParse
+      onParse --> onValidate
+      onValidate --> onContext
+      onContext --> onExecute
+      onContext --> onSubscribe
+
+      onExecute --> onResultProcess
+      onSubscribe --> onResultProcess
+
+      onResultProcess --> [*]
+    }
+
+    GraphQLRequest --> onResponse
+    onResponse --> [*]
+
+```
 
 ### `onRequest`
 
-This hook is invoked for any incoming HTTP request. Here you can manipulate the request, create a
+This hook is invoked for ANY incoming HTTP request. Here you can manipulate the request, create a
 short circuit before Yoga handles the request or apply security measures such as checking for access
 tokens etc.
+
+**Example actions in this hook:**
+
+- Manipulate the request
+- Short circuit before Yoga handles the request
+- Apply security measures
 
 #### API
 
@@ -156,20 +194,28 @@ function useAuth(): Plugin {
 
 ### `onRequestParse`
 
-This hook is invoked for any incoming HTTP request. Here you can manipulate the request, set a
-custom request parser or apply security measures such as checking for access tokens etc.
+This hook is invoked for any incoming GraphQL HTTP request and is invoked Invoked before attempting
+to parse the GraphQL parameters. Here you can manipulate the request, set a custom request parser or
+apply security measures such as checking for access tokens etc.
+
+**Example actions in this hook:**
+
+- Manipulate the request
+- Set custom GraphQL request parser (use custom GraphQL protocol)
+- Apply security measures
 
 ### `onParams`
 
 This hook is invoked for an incoming GraphQL request after the GraphQL parameters (`query`,
-`variables`, `extensions` and `operationName`) have been ATTEMPTED to be parsed. Within this hook
-you can manipulate and customize the parameters or even implement a whole new way of parsing the
-parameters (if you wish to diverge from the GraphQL over HTTP specification).
+`variables`, `extensions` and `operationName`) have been ATTEMPTED to be parsed.
+
+Within this hook you can manipulate and customize the parameters or even implement a whole new way
+of parsing the parameters (if you wish to diverge from the GraphQL over HTTP specification).
 
 In addition to that you could also short-circuit and skip the GraphQL execution. E.g. you might want
 to serve a result from the cache instead.
 
-Example use cases:
+**Example actions in this hook:**
 
 - **[Response Cache](/docs/features/response-caching)**: Short-circuit GraphQL execution if response
   can be served from the cache.
@@ -178,17 +224,77 @@ Example use cases:
 - **[APQ](/docs/features/automatic-persisted-queries):** Load/persist the `query` document string on
   the persisted operations store.
 
+### `onParse`
+
+Called for parsing the GraphQL document. This hook has a before and after stage. You can hook into
+before the document is parsed and/or into after the document is parsed.
+
+**Example actions in this hook:**
+
+- Replace GraphQL parser and support future GraphQL syntax
+- Collect metrics about parsing success/failures
+
+### `onValidate`
+
+Called for validating the GraphQL document. This hook has a before and after stage. You can hook
+into before the document is parsed and/or into after the document is parsed.
+
+**Example actions in this hook:**
+
+- Register additional validation rules (e.g. [Disable Introspection](/docs/features/introspection))
+- Collect metrics about validation success/failures
+
+### `onContext`
+
+Called for building the GraphQL context. This hook has a before and after stage. You can hook into
+before and after the context is built.
+
+**Example actions in this hook:**
+
+- Authentication
+- Add data to context object (e.g. user data or dataloader instances)
+
+### `onExecute`
+
+Called for executing a GraphQL mutation or query operation. This hook has a before and after stage.
+You can hook into before and after the GraphQL request is executed.
+
+**Example actions in this hook:**
+
+- Collect metrics about execution time
+- Error logging/reporting
+
+### `onSubscribe`
+
+Called for subscribing to a GraphQL subscription operation. This hook has a before and after stage.
+You can hook into before and after the GraphQL subscription is executed.
+
+**Example actions in this hook:**
+
+- Collect metrics about execution time
+- Error logging/reporting
+
 ### `onResultProcess`
 
 This hook is invoked after a GraphQL request has been processed and before the response is forwarded
 to the client. Here you can customize what transport/response processor format should be used for
 sending the result over the wire.
 
+**Example actions in this hook:**
+
+- Specify custom response format
+- Logging/Metrics
+
 ### `onResponse`
 
-This hook is invoked after a GraphQL request has been processed and after the response has been
-forwarded to the client. Here you can perform any cleanup or logging operations, or you can
-manipulate the outgoing response object.
+This hook is invoked after a HTTP request (both GraphQL and NON GraphQL) has been processed and
+after the response has been forwarded to the client. Here you can perform any cleanup or logging
+operations, or you can manipulate the outgoing response object.
+
+**Example actions in this hook:**
+
+- Specify custom response format
+- Logging/Metrics
 
 #### API
 
