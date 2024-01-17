@@ -126,9 +126,9 @@ stateDiagram-v2
       onRequestParse --> onParams
       onParams --> onParse
       onParse --> onValidate
-      onValidate --> onContext
-      onContext --> onExecute
-      onContext --> onSubscribe
+      onValidate --> onContextBuilding
+      onContextBuilding --> onExecute
+      onContextBuilding --> onSubscribe
 
       onExecute --> onResultProcess
       onSubscribe --> onResultProcess
@@ -244,7 +244,7 @@ into before the document is parsed and/or into after the document is parsed.
 - Register additional validation rules (e.g. [Disable Introspection](/docs/features/introspection))
 - Collect metrics about validation success/failures
 
-### `onContext`
+### `onContextBuilding`
 
 Called for building the GraphQL context. This hook has a before and after stage. You can hook into
 before and after the context is built.
