@@ -20,7 +20,7 @@ export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingP
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
    */
-  endpoint?: string;
+  endpoint?: string | boolean;
 }
 
 export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
@@ -96,17 +96,20 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     onPluginInit({ addPlugin }) {
       addPlugin(useEnvelopPrometheus({ ...options, registry }) as Plugin);
     },
-    async onRequest({ request, url, fetchAPI, endResponse }) {
+    onRequest({ request, url, fetchAPI, endResponse }) {
       startByRequest.set(request, Date.now());
-      if (url.pathname === endpoint) {
-        const metrics = await registry.metrics();
-        const response = new fetchAPI.Response(metrics, {
-          headers: {
-            'Content-Type': registry.contentType,
-          },
+      if (endpoint && url.pathname === endpoint) {
+        return registry.metrics().then(metrics => {
+          endResponse(
+            new fetchAPI.Response(metrics, {
+              headers: {
+                'Content-Type': registry.contentType,
+              },
+            }),
+          );
         });
-        endResponse(response);
       }
+      return undefined;
     },
     onExecute({ args }) {
       const operationAST = getOperationAST(args.document, args.operationName);
