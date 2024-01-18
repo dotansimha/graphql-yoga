@@ -1926,8 +1926,8 @@ importers:
   packages/plugins/prometheus:
     dependencies:
       '@envelop/prometheus':
-        specifier: 9.0.0
-        version: 9.0.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0)
+        specifier: ^9.2.0
+        version: 9.2.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0)
       graphql:
         specifier: ^15.2.0 || ^16.0.0
         version: 16.6.0
@@ -6700,8 +6700,19 @@ packages:
       graphql: 16.6.0
     dev: false
 
-  /@envelop/prometheus@9.0.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0):
-    resolution: {integrity: sha512-K1LL4qh7fWMYNhsXDzIF33SVXHtxAhg8GdWjl0E/NhizRtdguW7tShPtcMIL3U6sWPsoJR982LnV8nqjqYzYlA==}
+  /@envelop/on-resolve@4.1.0(@envelop/core@5.0.0)(graphql@16.6.0):
+    resolution: {integrity: sha512-2AXxf8jbBIepBUiY0KQtyCO6gnT7LKBEYdaARZBJ7ujy1+iQHQPORKvAwl51kIdD6v5x38eldZnm7A19jFimOg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@envelop/core': ^5.0.0
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@envelop/core': 5.0.0
+      graphql: 16.6.0
+    dev: false
+
+  /@envelop/prometheus@9.2.0(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0):
+    resolution: {integrity: sha512-scRIN7r6VOxcdu8iV/UGCTE7NrfY7okXKsbmPH26DCV5j8ufxIUJgzGnn7gfsAxA/H92bqsWxs6kGxemeVBTtg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@envelop/core': ^5.0.0
@@ -6709,7 +6720,7 @@ packages:
       prom-client: ^15.0.0
     dependencies:
       '@envelop/core': 5.0.0
-      '@envelop/on-resolve': 4.0.0(@envelop/core@5.0.0)(graphql@16.6.0)
+      '@envelop/on-resolve': 4.1.0(@envelop/core@5.0.0)(graphql@16.6.0)
       graphql: 16.6.0
       prom-client: 15.0.0
       tslib: 2.6.2

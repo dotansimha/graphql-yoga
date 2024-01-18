@@ -29,15 +29,21 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
 
   let httpHistogram: ReturnType<typeof createHistogram> | undefined;
 
+  function labelExists(label: string) {
+    if ((options.labels as Record<string, boolean>)?.[label] == null) {
+      return true;
+    }
+    return (options.labels as Record<string, boolean>)[label];
+  }
+
   if (options.http) {
-    const labelNames = [
-      'url',
-      'method',
-      'statusCode',
-      'statusText',
-      'operationName',
-      'operationType',
-    ];
+    const labelNames = ['url', 'method', 'statusCode', 'statusText'];
+    if (labelExists('operationName')) {
+      labelNames.push('operationName');
+    }
+    if (labelExists('operationType')) {
+      labelNames.push('operationType');
+    }
     if (options.httpRequestHeaders) {
       labelNames.push('requestHeaders');
     }
@@ -62,8 +68,11 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
                 statusCode: response.status,
                 statusText: response.statusText,
               };
-              if (params?.operationType) {
+              if (labelExists('operationType') && params.operationType) {
                 labels.operationType = params.operationType;
+              }
+              if (labelExists('operationName')) {
+                labels.operationName = params.operationName || 'Anonymous';
               }
               if (options.httpRequestHeaders) {
                 labels.requestHeaders = JSON.stringify(
