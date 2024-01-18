@@ -1,5 +1,15 @@
 # @graphql-yoga/plugin-prometheus
 
+## 3.1.2
+
+### Patch Changes
+
+- [`41c87b6f`](https://github.com/dotansimha/graphql-yoga/commit/41c87b6f654843dc814447f3d9c190bd65c58459)
+  Thanks [@ardatan](https://github.com/ardatan)! - Ability to disable prometheus endpoint
+
+- [`0bf4661b`](https://github.com/dotansimha/graphql-yoga/commit/0bf4661b0efa45ec57318f6d750d7908a722b96f)
+  Thanks [@ardatan](https://github.com/ardatan)! - Update Envelop plugin
+
 ## 3.1.1
 
 ### Patch Changes
