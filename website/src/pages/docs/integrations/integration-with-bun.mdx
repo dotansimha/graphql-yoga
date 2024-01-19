@@ -38,7 +38,11 @@ const yoga = createYoga({
     }
   })
 })
-const server = Bun.serve(yoga)
+
+const server = Bun.serve({
+  fetch: yoga,
+});
+
 console.info(
   `Server is running on ${new URL(
     yoga.graphqlEndpoint,
