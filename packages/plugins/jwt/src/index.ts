@@ -180,7 +180,7 @@ async function fetchKey({
 }: FetchKeyOptions): Promise<string> {
   const decodedToken = decode(token, { complete: true });
   if (decodedToken?.header?.kid == null) {
-    throw unauthorizedError(`Unauthenticated`);
+    throw unauthorizedError(`Failed to decode authentication token. Missing key id.`);
   }
 
   if (shouldRefreshCache) {
