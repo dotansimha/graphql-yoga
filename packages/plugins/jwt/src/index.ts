@@ -156,7 +156,7 @@ function verify(
       { ...options, algorithms: options?.algorithms ?? ['RS256'] },
       (err, result) => {
         if (err) {
-          reject(unauthorizedError('Unauthenticated'));
+          reject(unauthorizedError('Failed to decode authentication token. Verification failed.'));
         } else {
           resolve(result as JwtPayload);
         }
