@@ -37,7 +37,14 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   }
 
   if (options.http) {
-    const labelNames = ['url', 'method', 'statusCode', 'statusText'];
+    const labelNames = ['method', 'statusCode'];
+
+    if (labelExists('url')) {
+      labelNames.push('url');
+    }
+    if (labelExists('statusText')) {
+      labelNames.push('statusText');
+    }
     if (labelExists('operationName')) {
       labelNames.push('operationName');
     }
@@ -62,12 +69,15 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
             }),
             fillLabelsFn(params, { request, response }) {
               const labels: Record<string, string> = {
-                operationName: params.operationName || 'Anonymous',
-                url: request.url,
                 method: request.method,
                 statusCode: response.status,
-                statusText: response.statusText,
               };
+              if (labelExists('url')) {
+                labels.url = request.url;
+              }
+              if (labelExists('statusText')) {
+                labels.statusText = request.statusText;
+              }
               if (labelExists('operationType') && params.operationType) {
                 labels.operationType = params.operationType;
               }
