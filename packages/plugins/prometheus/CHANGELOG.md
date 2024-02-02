@@ -1,5 +1,14 @@
 # @graphql-yoga/plugin-prometheus
 
+## 4.0.0
+
+### Major Changes
+
+- [#3179](https://github.com/dotansimha/graphql-yoga/pull/3179)
+  [`7dc37e62`](https://github.com/dotansimha/graphql-yoga/commit/7dc37e62d87ac92fa51d0fc4f82bca8d386c13cd)
+  Thanks [@darren-west](https://github.com/darren-west)! - Removed labels that cause high
+  cardinality
+
 ## 3.1.2
 
 ### Patch Changes
