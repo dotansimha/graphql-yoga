@@ -14,8 +14,7 @@ export { createCounter, createHistogram, createSummary, FillLabelsFnParams };
 
 export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
   http?: boolean | ReturnType<typeof createHistogram>;
-  httpRequestHeaders?: boolean;
-  httpResponseHeaders?: boolean;
+
   /**
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
@@ -26,7 +25,6 @@ export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingP
 export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics';
   const registry = options.registry || defaultRegistry;
-
   let httpHistogram: ReturnType<typeof createHistogram> | undefined;
 
   function labelExists(label: string) {
@@ -38,24 +36,11 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
 
   if (options.http) {
     const labelNames = ['method', 'statusCode'];
-
-    if (labelExists('url')) {
-      labelNames.push('url');
-    }
-    if (labelExists('statusText')) {
-      labelNames.push('statusText');
-    }
     if (labelExists('operationName')) {
       labelNames.push('operationName');
     }
     if (labelExists('operationType')) {
       labelNames.push('operationType');
-    }
-    if (options.httpRequestHeaders) {
-      labelNames.push('requestHeaders');
-    }
-    if (options.httpResponseHeaders) {
-      labelNames.push('responseHeaders');
     }
     httpHistogram =
       typeof options.http === 'object'
@@ -72,27 +57,11 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
                 method: request.method,
                 statusCode: response.status,
               };
-              if (labelExists('url')) {
-                labels.url = request.url;
-              }
-              if (labelExists('statusText')) {
-                labels.statusText = request.statusText;
-              }
               if (labelExists('operationType') && params.operationType) {
                 labels.operationType = params.operationType;
               }
               if (labelExists('operationName')) {
                 labels.operationName = params.operationName || 'Anonymous';
-              }
-              if (options.httpRequestHeaders) {
-                labels.requestHeaders = JSON.stringify(
-                  Object.fromEntries(request.headers.entries()),
-                );
-              }
-              if (options.httpResponseHeaders) {
-                labels.responseHeaders = JSON.stringify(
-                  Object.fromEntries(response.headers.entries()),
-                );
               }
               return labels;
             },
