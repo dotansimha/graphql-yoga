@@ -40,8 +40,8 @@ const yoga = createYoga({
 })
 
 const server = Bun.serve({
-  fetch: yoga,
-});
+  fetch: yoga
+})
 
 console.info(
   `Server is running on ${new URL(
