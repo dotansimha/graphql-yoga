@@ -391,4 +391,82 @@ describe('Persisted Operations', () => {
     expect(body.errors).toBeUndefined();
     expect(body.data.__typename).toBe('Query');
   });
+
+  it('extract key from request query parameter', async () => {
+    const store = new Map<string, string>();
+    const yoga = createYoga({
+      plugins: [
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null;
+          },
+          extractPersistedOperationId(_params, request) {
+            const url = new URL(request.url);
+            return url.searchParams.get('id');
+          },
+        }),
+      ],
+      schema,
+    });
+    const persistedOperationKey = 'my-persisted-operation';
+    store.set(persistedOperationKey, '{__typename}');
+    const response = await yoga.fetch(`http://yoga/graphql?id=${persistedOperationKey}`);
+
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.__typename).toBe('Query');
+  });
+
+  it('extract key from request header', async () => {
+    const store = new Map<string, string>();
+    const yoga = createYoga({
+      plugins: [
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null;
+          },
+          extractPersistedOperationId(_params, request) {
+            return request.headers.get('x-document-id');
+          },
+        }),
+      ],
+      schema,
+    });
+    const persistedOperationKey = 'my-persisted-operation';
+    store.set(persistedOperationKey, '{__typename}');
+    const response = await yoga.fetch(`http://yoga/graphql`, {
+      headers: {
+        'x-document-id': persistedOperationKey,
+      },
+    });
+
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.__typename).toBe('Query');
+  });
+
+  it('extract key from path', async () => {
+    const store = new Map<string, string>();
+    const yoga = createYoga({
+      graphqlEndpoint: '/graphql/:document_id?',
+      plugins: [
+        usePersistedOperations({
+          getPersistedOperation(key: string) {
+            return store.get(key) || null;
+          },
+          extractPersistedOperationId(_params, request) {
+            return request.url.split('/graphql/').pop();
+          },
+        }),
+      ],
+      schema,
+    });
+    const persistedOperationKey = 'my-persisted-operation';
+    store.set(persistedOperationKey, '{__typename}');
+    const response = await yoga.fetch(`http://yoga/graphql/${persistedOperationKey}`);
+
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.__typename).toBe('Query');
+  });
 });

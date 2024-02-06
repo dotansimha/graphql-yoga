@@ -18,7 +18,10 @@ export interface GraphQLErrorOptions {
   extensions?: Maybe<GraphQLErrorExtensions>;
 }
 
-export type ExtractPersistedOperationId = (params: GraphQLParams) => null | string;
+export type ExtractPersistedOperationId = (
+  params: GraphQLParams,
+  request: Request,
+) => null | string;
 
 export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
   params: GraphQLParams,
@@ -126,7 +129,7 @@ export function usePersistedOperations<
         return;
       }
 
-      const persistedOperationKey = extractPersistedOperationId(params);
+      const persistedOperationKey = extractPersistedOperationId(params, request);
 
       if (persistedOperationKey == null) {
         throw keyNotFoundErrorFactory(payload);
