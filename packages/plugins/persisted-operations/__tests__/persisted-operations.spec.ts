@@ -455,7 +455,7 @@ describe('Persisted Operations', () => {
             return store.get(key) || null;
           },
           extractPersistedOperationId(_params, request) {
-            return request.url.split('/graphql/').pop();
+            return request.url.split('/graphql/').pop() ?? null;
           },
         }),
       ],

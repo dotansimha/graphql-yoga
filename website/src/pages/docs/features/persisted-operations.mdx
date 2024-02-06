@@ -421,7 +421,7 @@ const yoga = createYoga({
         return store[sha256Hash]
       },
       extractPersistedOperationId(_params, request) {
-        return request.url.split('/graphql/').pop()
+        return request.url.split('/graphql/').pop() ?? null
       }
     })
   ]
