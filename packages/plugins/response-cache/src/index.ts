@@ -77,7 +77,9 @@ export interface ResponseCachePluginExtensions {
 export interface Cache extends EnvelopCache {
   get(
     key: string,
-  ): Promise<ExecutionResult<Record<string, unknown>, ResponseCachePluginExtensions> | undefined>;
+  ): PromiseOrValue<
+    ExecutionResult<Record<string, unknown>, ResponseCachePluginExtensions> | undefined
+  >;
 }
 
 export function useResponseCache(options: UseResponseCacheParameter): Plugin {
