@@ -23,7 +23,7 @@ jobs:
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     with:
       npmTag: rc
-      restoreDeletedChangesets: true
+      restoreDeletedChangesets: false
       buildScript: build
       nodeVersion: 20
       packageManager: pnpm
