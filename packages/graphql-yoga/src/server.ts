@@ -20,6 +20,7 @@ import {
   useErrorHandling,
 } from '@whatwg-node/server';
 import { handleError } from './error.js';
+import { useAllowedRequestHeaders, useAllowedResponseHeaders } from './plugins/allowed-headers.js';
 import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js';
 import {
   isPOSTFormUrlEncodedRequest,
@@ -280,6 +281,8 @@ export class YogaServer<
       }),
       // Use the schema provided by the user
       !!options?.schema && useSchema(options.schema),
+      options?.allowedHeaders?.request != null &&
+        useAllowedRequestHeaders(options.allowedHeaders.request),
       options?.context != null &&
         useExtendContext(initialContext => {
           if (options?.context) {
@@ -363,6 +366,8 @@ export class YogaServer<
       // We make sure that the user doesn't send a mutation with GET
       usePreventMutationViaGET(),
       maskedErrors !== null && useMaskedErrors(maskedErrors),
+      options?.allowedHeaders?.response != null &&
+        useAllowedResponseHeaders(options.allowedHeaders.response),
       // We handle validation errors at the end
       useHTTPValidationError(),
     ];
