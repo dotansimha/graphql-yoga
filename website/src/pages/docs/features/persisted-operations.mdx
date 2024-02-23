@@ -307,6 +307,132 @@ server.listen(4000, () => {
 })
 ```
 
+## Advanced persisted operation id Extraction from HTTP Request
+
+You can extract the persisted operation id from the request using the `extractPersistedOperationId`
+
+### Query Parameters Recipe
+
+```ts filename="Extract persisted operation id from query parameters" {22-25}
+import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+
+const store = {
+  ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38: '{__typename}'
+}
+
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `
+  }),
+  plugins: [
+    usePersistedOperations({
+      getPersistedOperation(sha256Hash: string) {
+        return store[sha256Hash]
+      },
+      extractPersistedOperationId(_params, request) {
+        const url = new URL(request.url)
+        return url.searchParams.get('id')
+      }
+    })
+  ]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
+
+### Header Recipe
+
+You can also use the request headers to extract the persisted operation id.
+
+```ts filename="Extract persisted operation id from headers" {22-24}
+import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+
+const store = {
+  ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38: '{__typename}'
+}
+
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `
+  }),
+  plugins: [
+    usePersistedOperations({
+      getPersistedOperation(sha256Hash: string) {
+        return store[sha256Hash]
+      },
+      extractPersistedOperationId(_params, request) {
+        return request.headers.get('x-document-id')
+      }
+    })
+  ]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
+
+### Path Recipe
+
+You can also the the request path to extract the persisted operation id. This requires you to also
+customize the GraphQL endpoint. The underlying implementation for the URL matching is powered by the
+[URL Pattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API).
+
+This combination is powerful as it allows you to use the persisted operation id as it can easily be
+combined with any type of HTTP proxy cache.
+
+```ts filename="Extract persisted operation id from path" {10,23-25}
+import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
+
+const store = {
+  ecf4edb46db40b5132295c0291d62fb65d6759a9eedfa4d5d612dd5ec54a6b38: '{__typename}'
+}
+
+const yoga = createYoga({
+  graphqlEndpoint: '/graphql/:document_id?',
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `
+  }),
+  plugins: [
+    usePersistedOperations({
+      getPersistedOperation(sha256Hash: string) {
+        return store[sha256Hash]
+      },
+      extractPersistedOperationId(_params, request) {
+        return request.url.split('/graphql/').pop() ?? null
+      }
+    })
+  ]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
+
 ## Using an external Persisted Operation Store
 
 As a project grows the amount of GraphQL Clients and GraphQL Operations can grow a lot. At some
