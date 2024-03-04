@@ -12,11 +12,11 @@ export default defineConfig({
   server: {
     port: 4001,
     proxy: {
-      '/graphql': 'http://localhost:4000',
+      '/graphql': 'http://localhost:8080/graphql',
     },
   },
   define: {
-    'process.env.NODE_ENV': '"production"',
+    // 'process.env.NODE_ENV': '"production"',
   },
   build: {
     lib: {

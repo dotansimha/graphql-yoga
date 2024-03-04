@@ -8,7 +8,13 @@ export function shouldRenderGraphiQL({ headers, method }: Request): boolean {
   return method === 'GET' && !!headers?.get('accept')?.includes('text/html');
 }
 
+type TabDefinition = { headers?: string | null; query: string | null; variables?: string | null };
+
 export type GraphiQLOptions = {
+  /**
+   * Headers to be set when opening a new tab
+   */
+  defaultHeaders?: string;
   /**
    * An optional GraphQL string to use when no query is provided and no stored
    * query exists from a previous session.  If undefined is provided, GraphiQL
@@ -16,11 +22,23 @@ export type GraphiQLOptions = {
    */
   defaultQuery?: string;
   /**
+   * This prop can be used to define the default set of tabs, with their
+   * queries, variables, and headers. It will be used as default only if there
+   * is no tab state persisted in storage.
+   */
+  defaultTabs?: TabDefinition[];
+  /**
    * The initial headers to render inside the header editor. Defaults to `"{}"`.
    * The value should be a JSON encoded string, for example:
    * `headers: JSON.stringify({Authorization: "Bearer your-auth-key"})`
    */
   headers?: string;
+  /**
+   * This prop toggles if the contents of the headers editor are persisted in
+   * storage.
+   */
+  shouldPersistHeaders?: undefined | false | true;
+
   /**
    * More info there: https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials
    */
