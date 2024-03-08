@@ -480,7 +480,7 @@ describe('subscription plugin hooks', () => {
                 onNextCallCounter++;
               },
               onEnd() {
-                expect(onNextCallCounter).toEqual(2);
+                expect(onNextCallCounter).toEqual(1);
                 didInvokeOnEnd = true;
               },
             };
@@ -519,7 +519,7 @@ describe('subscription plugin hooks', () => {
     }
 
     expect(counter).toBe(2);
-    expect(onNextCallCounter).toEqual(2);
+    expect(onNextCallCounter).toEqual(1);
     expect(didInvokeOnEnd).toBe(true);
     expect(didInvokeOnSubscribeError).toBe(true);
   });

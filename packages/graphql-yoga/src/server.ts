@@ -10,6 +10,7 @@ import {
 } from '@envelop/core';
 import { normalizedExecutor } from '@graphql-tools/executor';
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
+import { Repeater } from '@graphql-yoga/subscription';
 import * as defaultFetchAPI from '@whatwg-node/fetch';
 import {
   createServerAdapter,
@@ -473,6 +474,32 @@ export class YogaServer<
         });
 
         this.logger.debug(`Processing GraphQL Parameters done.`);
+      }
+
+      /** Ensure that error thrown from subscribe is sent to client */
+      if (result && Symbol.asyncIterator in result) {
+        const oldResult = result as AsyncIterableIterator<ExecutionResult>;
+        result = new Repeater(async (push, stop) => {
+          const iterator = oldResult[Symbol.asyncIterator]();
+          stop.then(() => iterator.return?.());
+          try {
+            // eslint-disable-next-line no-constant-condition
+            while (true) {
+              const { done, value } = await iterator.next();
+              if (value) {
+                await push(value);
+              }
+              if (done) {
+                break;
+              }
+            }
+          } catch (error) {
+            await push({
+              errors: [error],
+            });
+          }
+          stop();
+        }) as any;
       }
 
       return result;
