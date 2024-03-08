@@ -1,5 +1,6 @@
 import { inspect } from '@graphql-tools/utils';
 import { createGraphQLError, createSchema, createYoga } from '../src/index.js';
+import { eventStream } from './utilities.js';
 
 describe('error masking', () => {
   function createTestSchema() {
@@ -500,5 +501,196 @@ describe('error masking', () => {
         },
       ],
     });
+  });
+
+  it('subscription event source error is masked', async () => {
+    const eventSouce = (async function* source() {
+      yield { hi: 'hi' };
+      throw new Error('I like turtles');
+    })();
+
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            subscribe: () => eventSouce,
+          },
+        },
+      },
+    });
+
+    const yoga = createYoga({ schema, logging: false });
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    });
+
+    let counter = 0;
+
+    for await (const chunk of eventStream(response.body!)) {
+      if (counter === 0) {
+        expect(chunk).toEqual({ data: { hi: 'hi' } });
+        counter++;
+        continue;
+      } else if (counter === 1) {
+        expect(chunk).toMatchObject({ errors: [{ message: 'Unexpected error.' }] });
+        counter++;
+        continue;
+      }
+
+      throw new Error('Should not have received more than 2 chunks.');
+    }
+
+    expect(counter).toBe(2);
+  });
+
+  it('subscription event source creation error is masked', async () => {
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            subscribe: () => {
+              throw new Error('I like turtles');
+            },
+          },
+        },
+      },
+    });
+
+    const yoga = createYoga({ schema, logging: false });
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    });
+
+    let counter = 0;
+
+    for await (const chunk of eventStream(response.body!)) {
+      if (counter === 0) {
+        expect(chunk).toMatchObject({ errors: [{ message: 'Unexpected error.', path: ['hi'] }] });
+        counter++;
+        continue;
+      }
+
+      throw new Error('Should not have received more than 2 chunks.');
+    }
+
+    expect(counter).toBe(1);
+  });
+
+  it('subscription field resolve error is masked', async () => {
+    const eventSource = (async function* source() {
+      yield 1;
+      yield 2;
+      yield 3;
+    })();
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            subscribe: () => eventSource,
+            resolve: data => {
+              if (data === 1) {
+                return 'hee';
+              }
+              if (data === 2) {
+                throw new Error('I like turtles');
+              }
+              if (data === 3) {
+                return 'hoo';
+              }
+              throw new Error('This shall never be reached');
+            },
+          },
+        },
+      },
+    });
+
+    const yoga = createYoga({ schema, logging: false });
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    });
+
+    let counter = 0;
+
+    for await (const chunk of eventStream(response.body!)) {
+      if (counter === 0) {
+        expect(chunk).toMatchObject({ data: { hi: 'hee' } });
+        counter++;
+        continue;
+      }
+      if (counter === 1) {
+        expect(chunk).toMatchObject({ errors: [{ message: 'Unexpected error.', path: ['hi'] }] });
+        counter++;
+        continue;
+      }
+      if (counter === 2) {
+        expect(chunk).toMatchObject({ data: { hi: 'hoo' } });
+        counter++;
+        continue;
+      }
+
+      throw new Error('Should not have received more than 3 chunks.');
+    }
+
+    expect(counter).toBe(3);
   });
 });
