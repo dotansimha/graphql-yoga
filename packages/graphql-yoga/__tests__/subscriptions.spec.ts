@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { createSchema, createYoga, Repeater } from '../src/index.js';
+import { createSchema, createYoga, Plugin, Repeater } from '../src/index.js';
 
 function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
   return new Repeater<TType>(async (push, end) => {
@@ -384,6 +384,171 @@ event: complete
 `);
 
     expect(logging.error).toBeCalledTimes(0);
+  });
+});
+
+describe('subscription plugin hooks', () => {
+  test('onNext and onEnd is invoked for event source', async () => {
+    const source = (async function* foo() {
+      yield { hi: 'hi' };
+      yield { hi: 'hello' };
+    })();
+
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            subscribe: () => source,
+          },
+        },
+      },
+    });
+
+    const onNextCalls: unknown[] = [];
+    let didInvokeOnEnd = false;
+
+    const plugin: Plugin = {
+      onSubscribe() {
+        return {
+          onSubscribeResult() {
+            return {
+              onNext(ctx) {
+                onNextCalls.push(ctx.result);
+              },
+              onEnd() {
+                expect(onNextCalls).toHaveLength(2);
+                didInvokeOnEnd = true;
+              },
+            };
+          },
+        };
+      },
+    };
+
+    const yoga = createYoga({ schema, plugins: [plugin] });
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    });
+
+    let counter = 0;
+
+    for await (const chunk of eventStream(response.body!)) {
+      if (counter === 0) {
+        expect(chunk).toEqual({ data: { hi: 'hi' } });
+        counter++;
+      } else if (counter === 1) {
+        expect(chunk).toEqual({ data: { hi: 'hello' } });
+        counter++;
+      }
+    }
+
+    expect(counter).toBe(2);
+    expect(onNextCalls).toEqual([{ data: { hi: 'hi' } }, { data: { hi: 'hello' } }]);
+    expect(didInvokeOnEnd).toBe(true);
+  });
+
+  test('onSubscribeError and onEnd is invoked if error is thrown from event source', async () => {
+    const source = (async function* foo() {
+      yield { hi: 'hi' };
+      throw new GraphQLError('hi');
+    })();
+
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            subscribe: () => source,
+          },
+        },
+      },
+    });
+
+    let onNextCallCounter = 0;
+    let didInvokeOnEnd = false;
+    let didInvokeOnSubscribeError = false;
+
+    const plugin: Plugin = {
+      onSubscribe() {
+        return {
+          onSubscribeError() {
+            didInvokeOnSubscribeError = true;
+          },
+          onSubscribeResult() {
+            return {
+              onNext() {
+                onNextCallCounter++;
+              },
+              onEnd() {
+                expect(onNextCallCounter).toEqual(2);
+                didInvokeOnEnd = true;
+              },
+            };
+          },
+        };
+      },
+    };
+
+    const yoga = createYoga({ schema, plugins: [plugin] });
+
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    });
+
+    let counter = 0;
+
+    for await (const chunk of eventStream(response.body!)) {
+      if (counter === 0) {
+        expect(chunk).toEqual({ data: { hi: 'hi' } });
+        counter++;
+      } else if (counter === 1) {
+        expect(chunk).toMatchObject({ errors: [{ message: 'hi' }] });
+        counter++;
+      }
+    }
+
+    expect(counter).toBe(2);
+    expect(onNextCallCounter).toEqual(2);
+    expect(didInvokeOnEnd).toBe(true);
+    expect(didInvokeOnSubscribeError).toBe(true);
   });
 });
 
