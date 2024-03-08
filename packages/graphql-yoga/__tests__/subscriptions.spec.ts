@@ -14,7 +14,7 @@ function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
         break;
       }
 
-      const values = result.value.toString().split('\n\n').filter(Boolean);
+      const values = result.value.toString().split('\n').filter(Boolean);
       for (const value of values) {
         if (!value.startsWith('data: ')) {
           continue;
