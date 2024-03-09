@@ -1,5 +1,6 @@
-import { ExecutionArgs, getOperationAST } from 'graphql';
+import { getOperationAST } from 'graphql';
 import { GetEnvelopedFn } from '@envelop/core';
+import { ExecutionArgs } from '@graphql-tools/executor';
 import { OnResultProcess, ResultProcessor, ResultProcessorInput } from './plugins/types.js';
 import { FetchAPI, GraphQLParams } from './types.js';
 
@@ -71,13 +72,13 @@ export async function processRequest({
 
   // Build the context for the execution
   const contextValue = await enveloped.contextFactory();
-
   const executionArgs: ExecutionArgs = {
     schema: enveloped.schema,
     document,
     contextValue,
     variableValues: params.variables,
     operationName: params.operationName,
+    signal: contextValue?.request?.signal ?? undefined,
   };
 
   // Get the actual operation
