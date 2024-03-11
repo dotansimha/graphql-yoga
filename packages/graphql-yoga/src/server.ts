@@ -21,7 +21,7 @@ import {
   useCORS,
   useErrorHandling,
 } from '@whatwg-node/server';
-import { createGraphQLError, handleError } from './error.js';
+import { handleError } from './error.js';
 import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js';
 import {
   isPOSTFormUrlEncodedRequest,
@@ -499,14 +499,6 @@ export class YogaServer<
             if (error instanceof GraphQLError) {
               await push({
                 errors: [error],
-              });
-            } else if (error instanceof Error) {
-              await push({
-                errors: [
-                  createGraphQLError(error.message, {
-                    originalError: error,
-                  }),
-                ],
               });
             } else {
               throw error;
