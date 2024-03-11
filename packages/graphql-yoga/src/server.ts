@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ExecutionResult, GraphQLError, parse, specifiedRules, validate } from 'graphql';
+import { ExecutionResult, parse, specifiedRules, validate } from 'graphql';
 import {
   envelop,
   GetEnvelopedFn,
@@ -485,12 +485,10 @@ export class YogaServer<
           iterator,
           v => v,
           (err: Error) => {
-            if (err instanceof GraphQLError) {
-              return {
-                errors: [err],
-              };
-            }
-            throw err;
+            const errors = handleError(err, this.maskedErrorsOpts, this.logger);
+            return {
+              errors,
+            };
           },
         );
       }
