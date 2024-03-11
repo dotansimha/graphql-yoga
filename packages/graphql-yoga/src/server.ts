@@ -10,8 +10,8 @@ import {
   useMaskedErrors,
 } from '@envelop/core';
 import { normalizedExecutor } from '@graphql-tools/executor';
+import { mapAsyncIterator } from '@graphql-tools/utils';
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
-import { Repeater } from '@graphql-yoga/subscription';
 import * as defaultFetchAPI from '@whatwg-node/fetch';
 import {
   createServerAdapter,
@@ -480,32 +480,19 @@ export class YogaServer<
       /** Ensure that error thrown from subscribe is sent to client */
       // TODO: this should probably be something people can customize via a hook?
       if (isAsyncIterable(result)) {
-        const res = result;
-        result = new Repeater(async (push, stop) => {
-          const iterator = res[Symbol.asyncIterator]();
-          stop.then(() => iterator.return?.());
-          try {
-            // eslint-disable-next-line no-constant-condition
-            while (true) {
-              const { done, value } = await iterator.next();
-              if (value) {
-                await push(value);
-              }
-              if (done) {
-                break;
-              }
+        const iterator = result[Symbol.asyncIterator]();
+        result = mapAsyncIterator(
+          iterator,
+          v => v,
+          (err: Error) => {
+            if (err instanceof GraphQLError) {
+              return {
+                errors: [err],
+              };
             }
-          } catch (error) {
-            if (error instanceof GraphQLError) {
-              await push({
-                errors: [error],
-              });
-            } else {
-              throw error;
-            }
-          }
-          stop();
-        });
+            throw err;
+          },
+        );
       }
 
       return result;
