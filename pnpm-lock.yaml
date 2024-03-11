@@ -389,7 +389,7 @@ importers:
     dependencies:
       '@whatwg-node/server-plugin-cookies':
         specifier: ^1.0.0
-        version: 1.0.0(@whatwg-node/server@0.9.1)
+        version: 1.0.0(@whatwg-node/server@0.9.27)
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -1602,8 +1602,8 @@ importers:
         specifier: ^0.9.7
         version: 0.9.12
       '@whatwg-node/server':
-        specifier: ^0.9.1
-        version: 0.9.1
+        specifier: ^0.9.27
+        version: 0.9.27
       dset:
         specifier: ^3.1.1
         version: 3.1.2
@@ -7756,7 +7756,7 @@ packages:
     dependencies:
       '@ardatan/sync-fetch': 0.0.1
       '@graphql-tools/utils': 10.1.1(graphql@16.6.0)
-      '@whatwg-node/fetch': 0.9.12
+      '@whatwg-node/fetch': 0.9.17
       graphql: 16.6.0
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -7890,7 +7890,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 10.1.1(graphql@16.6.0)
       '@repeaterjs/repeater': 3.0.4
-      '@whatwg-node/fetch': 0.9.12
+      '@whatwg-node/fetch': 0.9.17
       extract-files: 11.0.0
       graphql: 16.6.0
       meros: 1.2.1(@types/node@18.16.16)
@@ -7984,7 +7984,7 @@ packages:
       '@graphql-tools/executor-http': 1.0.4(@types/node@18.16.16)(graphql@16.6.0)
       '@graphql-tools/graphql-tag-pluck': 8.0.0(@babel/core@7.22.1)(graphql@16.6.0)
       '@graphql-tools/utils': 10.1.1(graphql@16.6.0)
-      '@whatwg-node/fetch': 0.9.12
+      '@whatwg-node/fetch': 0.9.17
       graphql: 16.6.0
       tslib: 2.6.2
       value-or-promise: 1.0.12
@@ -8127,7 +8127,7 @@ packages:
       '@graphql-tools/utils': 10.1.1(graphql@16.6.0)
       '@types/js-yaml': 4.0.5
       '@types/json-stable-stringify': 1.0.34
-      '@whatwg-node/fetch': 0.9.12
+      '@whatwg-node/fetch': 0.9.17
       chalk: 4.1.2
       debug: 4.3.4(supports-color@9.2.3)
       dotenv: 16.3.1
@@ -8215,7 +8215,7 @@ packages:
       '@graphql-tools/utils': 10.1.1(graphql@16.6.0)
       '@graphql-tools/wrap': 10.0.0(graphql@16.6.0)
       '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.9.12
+      '@whatwg-node/fetch': 0.9.17
       graphql: 16.6.0
       isomorphic-ws: 5.0.0(ws@8.13.0)
       tslib: 2.6.2
@@ -9372,6 +9372,9 @@ packages:
     engines: {node: '>=v12.0.0'}
     dependencies:
       lodash: 4.17.21
+
+  /@kamilkisiela/fast-url-parser@1.1.4:
+    resolution: {integrity: sha512-gbkePEBupNydxCelHCESvFSFM8XPh1Zs/OAVRW/rKpEqPAl5PbOM90Si8mv9bvnR53uPD2s/FiRxdvSejpRJew==}
 
   /@lezer/common@1.1.1:
     resolution: {integrity: sha512-aAPB9YbvZHqAW+bIwiuuTDGB4DG0sYNRObGLxud8cW7osw1ZQxfDuTZ8KQiqfZ0QJGcR34CvpTMDXEyo/+Htgg==}
@@ -14706,6 +14709,13 @@ packages:
       '@whatwg-node/node-fetch': 0.4.18
       urlpattern-polyfill: 9.0.0
 
+  /@whatwg-node/fetch@0.9.17:
+    resolution: {integrity: sha512-TDYP3CpCrxwxpiNY0UMNf096H5Ihf67BK1iKGegQl5u9SlpEDYrvnV71gWBGJm+Xm31qOy8ATgma9rm8Pe7/5Q==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@whatwg-node/node-fetch': 0.5.8
+      urlpattern-polyfill: 10.0.0
+
   /@whatwg-node/node-fetch@0.3.6:
     resolution: {integrity: sha512-w9wKgDO4C95qnXZRwZTfCmLWqyRnooGjcIwG0wADWjw9/HN0p7dtvtgSvItZtUyNteEvgTrd8QojNEqV6DAGTA==}
     dependencies:
@@ -14737,14 +14747,24 @@ packages:
       fast-url-parser: 1.1.3
       tslib: 2.6.2
 
-  /@whatwg-node/server-plugin-cookies@1.0.0(@whatwg-node/server@0.9.1):
+  /@whatwg-node/node-fetch@0.5.8:
+    resolution: {integrity: sha512-rB+2P3oi9fD4TcsijkflJAQqOh4yZrPgOV4fGaDgCdOqqwTicJvL2nnVbr3comW8bxEuypOcyE1AtBtkpip0Gw==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@kamilkisiela/fast-url-parser': 1.1.4
+      '@whatwg-node/events': 0.1.0
+      busboy: 1.6.0
+      fast-querystring: 1.1.1
+      tslib: 2.6.2
+
+  /@whatwg-node/server-plugin-cookies@1.0.0(@whatwg-node/server@0.9.27):
     resolution: {integrity: sha512-o0MqK6H4Yhxht+J+cgZIpEhdb4SID1grFWfOiMdni3csNHBKZ+MKAFhxS+6wAJsarHN7BEZ0QMu4PG09Uwhr2g==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@whatwg-node/server': ^0.9.0
     dependencies:
       '@whatwg-node/cookie-store': 0.2.0
-      '@whatwg-node/server': 0.9.1
+      '@whatwg-node/server': 0.9.27
       tslib: 2.5.3
     dev: false
 
@@ -14752,16 +14772,16 @@ packages:
     resolution: {integrity: sha512-5nzOE61W5VA43rE4MeUVHLDPpZGDfGiQ5LnEwJNbVehUI6Ua8QD566C8dhBmXxFuT8pXTlxWZHe3sjjGZCc4ng==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@whatwg-node/fetch': 0.9.12
+      '@whatwg-node/fetch': 0.9.17
       tslib: 2.6.2
     dev: false
 
-  /@whatwg-node/server@0.9.1:
-    resolution: {integrity: sha512-Zq0FWafIlJzYyyAL7UwzsEhqSMzvKci/XqIFKpC4V031PxKKPBmZSP1mXCew5eZFW8Z5Sj6bZNi2CIsHd062ug==}
+  /@whatwg-node/server@0.9.27:
+    resolution: {integrity: sha512-6H+rbzWtr+PD4MLiEroDzunp+L0UcsPleXg0BjttuEgA9N5a8like3kvQaJsTKQd37IaUsdX5b/eUVbx4ZT/7A==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@whatwg-node/fetch': 0.9.12
-      tslib: 2.5.3
+      '@whatwg-node/fetch': 0.9.17
+      tslib: 2.6.2
     dev: false
 
   /@wry/context@0.7.0:
@@ -20735,7 +20755,7 @@ packages:
     dependencies:
       '@ardatan/fast-json-stringify': 0.0.6(ajv-formats@2.1.1)(ajv@8.12.0)
       '@whatwg-node/cookie-store': 0.1.0
-      '@whatwg-node/fetch': 0.9.12
+      '@whatwg-node/fetch': 0.9.17
       '@whatwg-node/server': 0.8.1
       ajv: 8.12.0
       ajv-formats: 2.1.1(ajv@8.12.0)
@@ -34517,6 +34537,9 @@ packages:
       punycode: 1.3.2
       querystring: 0.2.0
     dev: false
+
+  /urlpattern-polyfill@10.0.0:
+    resolution: {integrity: sha512-H/A06tKD7sS1O1X2SshBVeA5FLycRpjqiBeqGKmBwBDBy28EnRjORxTNe269KSSr5un5qyWi1iL61wLxpd+ZOg==}
 
   /urlpattern-polyfill@8.0.2:
     resolution: {integrity: sha512-Qp95D4TPJl1kC9SKigDcqgyM2VDVO4RiJc2d4qe5GrYm+zbIQCWWKAFaJNQ4BhdFeDGwBmAxqJBwWSJDb9T3BQ==}

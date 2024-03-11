@@ -56,10 +56,7 @@ describe('request cancellation', () => {
 
     requestGotCancelledD.resolve();
 
-    // The request was aborted, so the promise should raise instead
-    const result = await promise.then(res => res.text());
-    // why does this return a (invalid) GraphQL response?
-    expect(result).toMatchInlineSnapshot(`"{"data":{"root":{"a":null}}}"`);
+    await expect(promise).rejects.toThrow('Aborted');
 
     expect(rootResolverGotInvoked).toBe(true);
     expect(aResolverGotInvoked).toBe(false);
