@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { createSchema, createYoga, Plugin } from '../src/index.js';
+import { createSchema, createYoga, maskError, Plugin } from '../src/index.js';
 import { eventStream } from './utilities.js';
 
 describe('Subscription', () => {
@@ -552,7 +552,12 @@ describe('subscription plugin hooks', () => {
       },
     };
 
-    const yoga = createYoga({ schema, plugins: [plugin] });
+    const maskErrorFn = jest.fn(maskError);
+    const yoga = createYoga({
+      schema,
+      plugins: [plugin],
+      maskedErrors: { maskError: maskErrorFn },
+    });
 
     const response = await yoga.fetch('http://yoga/graphql', {
       method: 'POST',
@@ -585,6 +590,7 @@ describe('subscription plugin hooks', () => {
     expect(onNextCallCounter).toEqual(1);
     expect(didInvokeOnEnd).toBe(true);
     expect(didInvokeOnSubscribeError).toBe(true);
+    expect(maskErrorFn).toBeCalledTimes(1);
   });
 });
 
