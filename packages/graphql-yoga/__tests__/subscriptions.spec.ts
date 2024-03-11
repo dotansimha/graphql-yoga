@@ -296,6 +296,69 @@ event: complete
     `);
   });
 
+  test('erroring event stream should be handled (non GraphQL error; disabled error masking)', async () => {
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Subscription {
+          hi: String!
+        }
+        type Query {
+          hi: String!
+        }
+      `,
+      resolvers: {
+        Subscription: {
+          hi: {
+            async *subscribe() {
+              yield { hi: 'hi' };
+              throw new Error('hi');
+            },
+          },
+        },
+      },
+    });
+
+    const logging = {
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+    };
+
+    const yoga = createYoga({ schema, logging, maskedErrors: false });
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          subscription {
+            hi
+          }
+        `,
+      }),
+    });
+    const text = await response.text();
+
+    expect(text).toMatchInlineSnapshot(`
+":
+
+event: next
+data: {"data":{"hi":"hi"}}
+
+event: next
+data: {"errors":[{"message":"hi","locations":[{"line":2,"column":11}]}]}
+
+event: complete
+
+"
+`);
+    // errors are only logged when error masking is enabled
+    expect(logging.error).toBeCalledTimes(0);
+  });
+
   test('erroring event stream should be handled (GraphQL error)', async () => {
     const schema = createSchema({
       typeDefs: /* GraphQL */ `

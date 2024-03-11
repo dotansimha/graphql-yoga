@@ -112,7 +112,7 @@ export interface OnParamsEventPayload {
   params: GraphQLParams;
   request: Request;
   setParams: (params: GraphQLParams) => void;
-  setResult: (result: ExecutionResult) => void;
+  setResult: (result: ExecutionResult | AsyncIterable<ExecutionResult>) => void;
   fetchAPI: FetchAPI;
 }
 

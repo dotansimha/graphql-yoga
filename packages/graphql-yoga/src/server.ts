@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ExecutionResult, parse, specifiedRules, validate } from 'graphql';
+import { ExecutionResult, GraphQLError, parse, specifiedRules, validate } from 'graphql';
 import {
   envelop,
   GetEnvelopedFn,
+  isAsyncIterable,
   PromiseOrValue,
   useEngine,
   useExtendContext,
@@ -20,7 +21,7 @@ import {
   useCORS,
   useErrorHandling,
 } from '@whatwg-node/server';
-import { handleError } from './error.js';
+import { createGraphQLError, handleError } from './error.js';
 import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js';
 import {
   isPOSTFormUrlEncodedRequest,
@@ -432,7 +433,7 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) {
     try {
-      let result: ExecutionResult | undefined;
+      let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
 
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({
@@ -477,10 +478,11 @@ export class YogaServer<
       }
 
       /** Ensure that error thrown from subscribe is sent to client */
-      if (result && Symbol.asyncIterator in result) {
-        const oldResult = result as AsyncIterableIterator<ExecutionResult>;
+      // TODO: this should probably be something people can customize via a hook?
+      if (isAsyncIterable(result)) {
+        const res = result;
         result = new Repeater(async (push, stop) => {
-          const iterator = oldResult[Symbol.asyncIterator]();
+          const iterator = res[Symbol.asyncIterator]();
           stop.then(() => iterator.return?.());
           try {
             // eslint-disable-next-line no-constant-condition
@@ -494,12 +496,24 @@ export class YogaServer<
               }
             }
           } catch (error) {
-            await push({
-              errors: [error],
-            });
+            if (error instanceof GraphQLError) {
+              await push({
+                errors: [error],
+              });
+            } else if (error instanceof Error) {
+              await push({
+                errors: [
+                  createGraphQLError(error.message, {
+                    originalError: error,
+                  }),
+                ],
+              });
+            } else {
+              throw error;
+            }
           }
           stop();
-        }) as any;
+        });
       }
 
       return result;
