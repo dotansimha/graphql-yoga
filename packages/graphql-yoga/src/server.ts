@@ -3,12 +3,14 @@ import { ExecutionResult, parse, specifiedRules, validate } from 'graphql';
 import {
   envelop,
   GetEnvelopedFn,
+  isAsyncIterable,
   PromiseOrValue,
   useEngine,
   useExtendContext,
   useMaskedErrors,
 } from '@envelop/core';
 import { normalizedExecutor } from '@graphql-tools/executor';
+import { mapAsyncIterator } from '@graphql-tools/utils';
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
 import * as defaultFetchAPI from '@whatwg-node/fetch';
 import {
@@ -431,7 +433,7 @@ export class YogaServer<
       : [serverContext: TServerContext]
   ) {
     try {
-      let result: ExecutionResult | undefined;
+      let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
 
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({
@@ -473,6 +475,22 @@ export class YogaServer<
         });
 
         this.logger.debug(`Processing GraphQL Parameters done.`);
+      }
+
+      /** Ensure that error thrown from subscribe is sent to client */
+      // TODO: this should probably be something people can customize via a hook?
+      if (isAsyncIterable(result)) {
+        const iterator = result[Symbol.asyncIterator]();
+        result = mapAsyncIterator(
+          iterator,
+          v => v,
+          (err: Error) => {
+            const errors = handleError(err, this.maskedErrorsOpts, this.logger);
+            return {
+              errors,
+            };
+          },
+        );
       }
 
       return result;
