@@ -67,6 +67,7 @@ import {
   YogaMaskedErrorOpts,
 } from './types.js';
 import { maskError } from './utils/mask-error.js';
+import { processBatchedParams } from './utils/process-batched-params.js';
 
 /**
  * Configuration options for the server
@@ -534,6 +535,8 @@ export class YogaServer<
         },
       });
     }
+
+    requestParserResult = processBatchedParams(requestParserResult);
 
     const result = (await (Array.isArray(requestParserResult)
       ? Promise.all(
