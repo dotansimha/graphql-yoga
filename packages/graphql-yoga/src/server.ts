@@ -562,7 +562,7 @@ export class YogaServer<
                 request,
                 batched: true,
               },
-              serverContext,
+              { ...serverContext },
             ),
           ),
         )
