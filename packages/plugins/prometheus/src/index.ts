@@ -13,7 +13,7 @@ import {
 export { createCounter, createHistogram, createSummary, FillLabelsFnParams };
 
 export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
-  http?: boolean | ReturnType<typeof createHistogram>;
+  http?: boolean | string | ReturnType<typeof createHistogram>;
 
   /**
    * The endpoint to serve metrics exposed by this plugin.
@@ -47,7 +47,7 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
         ? options.http
         : createHistogram({
             histogram: new Histogram({
-              name: 'graphql_yoga_http_duration',
+              name: typeof options.http === 'string' ? options.http : 'graphql_yoga_http_duration',
               help: 'Time spent on HTTP connection',
               labelNames,
               registers: [registry],
