@@ -1,5 +1,19 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.4.0
+
+### Patch Changes
+
+- [#3181](https://github.com/dotansimha/graphql-yoga/pull/3181)
+  [`35387c04`](https://github.com/dotansimha/graphql-yoga/commit/35387c047a517a9a883eb096e009448b9406fae2)
+  Thanks [@gilgardosh](https://github.com/gilgardosh)! - Type fix to match
+  `@envelop/response-cache-redis`
+
+- Updated dependencies
+  [[`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf),
+  [`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf)]:
+  - graphql-yoga@5.2.0
+
 ## 3.3.0
 
 ### Minor Changes
