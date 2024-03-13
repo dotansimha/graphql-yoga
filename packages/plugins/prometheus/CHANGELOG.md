@@ -1,5 +1,20 @@
 # @graphql-yoga/plugin-prometheus
 
+## 4.1.0
+
+### Minor Changes
+
+- [`9047d76d`](https://github.com/dotansimha/graphql-yoga/commit/9047d76db2294d3ed16c6a869ff10435fb23a7b0)
+  Thanks [@ardatan](https://github.com/ardatan)! - Ability to rename the metrics without creating a
+  new histogram
+
+### Patch Changes
+
+- Updated dependencies
+  [[`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf),
+  [`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf)]:
+  - graphql-yoga@5.2.0
+
 ## 4.0.0
 
 ### Major Changes

@@ -1,5 +1,26 @@
 # graphql-yoga
 
+## 5.2.0
+
+### Minor Changes
+
+- [#3196](https://github.com/dotansimha/graphql-yoga/pull/3196)
+  [`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Allow setting async iterable within `onParams` hook
+  `setResult` function
+
+### Patch Changes
+
+- [#3196](https://github.com/dotansimha/graphql-yoga/pull/3196)
+  [`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/executor@^1.2.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/1.2.2)
+    (from `^1.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^10.1.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.1.0)
+    (from `^10.0.0`, in `dependencies`)
+
 ## 5.1.1
 
 ### Patch Changes

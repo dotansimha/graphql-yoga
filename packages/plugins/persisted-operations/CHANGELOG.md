@@ -1,5 +1,21 @@
 # @graphql-yoga/plugin-persisted-operations
 
+## 3.2.0
+
+### Minor Changes
+
+- [#3183](https://github.com/dotansimha/graphql-yoga/pull/3183)
+  [`6725f8e7`](https://github.com/dotansimha/graphql-yoga/commit/6725f8e736493f446a1556d7b429215020ea578e)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Inject request into `extractPersistedOperationId`
+  function for allowing to extract the ID based on request header, query parameters or request path.
+
+### Patch Changes
+
+- Updated dependencies
+  [[`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf),
+  [`71db7548`](https://github.com/dotansimha/graphql-yoga/commit/71db754876612bb9a1df496f478eaf1b94f342cf)]:
+  - graphql-yoga@5.2.0
+
 ## 3.1.1
 
 ### Patch Changes
