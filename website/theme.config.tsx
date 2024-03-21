@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Callout, defineConfig, Giscus, useTheme } from '@theguild/components';
+import { Callout, defineConfig, Giscus, PRODUCTS, useTheme } from '@theguild/components';
 
 const docsRepositoryBase = 'https://github.com/dotansimha/graphql-yoga/tree/main/website';
 
@@ -10,6 +10,7 @@ export default defineConfig({
   chat: {
     link: 'https://discord.gg/94CDTmgmbs',
   },
+  description: `A fully-featured JS/TS GraphQL server`,
   docsRepositoryBase,
   editLink: {
     component({ children, className, filePath }) {
@@ -30,6 +31,7 @@ export default defineConfig({
       );
     },
   },
+  logo: PRODUCTS.YOGA.logo({ className: 'w-8' }),
   main({ children }) {
     const { resolvedTheme } = useTheme();
     const { route } = useRouter();
@@ -96,5 +98,5 @@ export default defineConfig({
       </>
     );
   },
-  siteName: 'YOGA',
+  websiteName: 'Yoga',
 });

@@ -10,6 +10,12 @@ module.exports = {
       },
     },
     {
+      files: ['**/_meta.{ts,js,tsx}'],
+      rules: {
+        'import/no-default-export': 'off',
+      },
+    },
+    {
       files: ['examples/**/*'],
       rules: {
         'import/extensions': 'off',

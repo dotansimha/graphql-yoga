@@ -1,5 +1,5 @@
-import { RemoteContent } from 'nextra/data'
-import { Callout, LegacyPackageCmd, mdxComponents, Tab, Tabs } from '@theguild/components'
+import { RemoteContent } from 'nextra/components'
+import { Callout, LegacyPackageCmd, mdxComponents, Tabs } from '@theguild/components'
 
 export { getStaticPaths, getStaticProps } from '../../lib/v4-get-static-props'
 
@@ -10,9 +10,9 @@ import CodegenCallout from '../../components/codegen-callout.mdx'
     ...mdxComponents,
     Callout,
     PackageCmd: LegacyPackageCmd,
-    Tab,
+    Tab: Tabs.Tab,
     Tabs,
-    $Tab: Tab,
+    $Tab: Tabs.Tab,
     $Tabs: Tabs,
     CodegenCallout
   }}
