@@ -50,6 +50,11 @@ export function handleError(
         errors.add(handledError);
       }
     }
+  } else if (
+    error?.constructor?.name === 'DOMException' &&
+    (error as Record<string, unknown>).name === 'AbortError'
+  ) {
+    logger.debug('Request aborted');
   } else if (maskedErrorsOpts) {
     const maskedError = maskedErrorsOpts.maskError(
       error,
