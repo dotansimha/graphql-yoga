@@ -4,16 +4,13 @@ describe('request cancellation', () => {
   it('request cancellation stops invocation of subsequent resolvers', async () => {
     const rootResolverGotInvokedD = createDeferred();
     const requestGotCancelledD = createDeferred();
-
     let aResolverGotInvoked = false;
     let rootResolverGotInvoked = false;
-
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
         type Query {
           root: A!
         }
-
         type A {
           a: String!
         }
@@ -24,7 +21,6 @@ describe('request cancellation', () => {
             rootResolverGotInvoked = true;
             rootResolverGotInvokedD.resolve();
             await requestGotCancelledD.promise;
-
             return { a: 'a' };
           },
         },
@@ -36,9 +32,7 @@ describe('request cancellation', () => {
         },
       },
     });
-
     const yoga = createYoga({ schema });
-
     const abortController = new AbortController();
     const promise = Promise.resolve(
       yoga.fetch('http://yoga/graphql', {
@@ -50,16 +44,13 @@ describe('request cancellation', () => {
         signal: abortController.signal,
       }),
     );
-
     await rootResolverGotInvokedD.promise;
     abortController.abort();
-
     requestGotCancelledD.resolve();
-
-    await expect(promise).rejects.toThrow('Aborted');
-
+    await expect(promise).rejects.toThrow('This operation was aborted');
     expect(rootResolverGotInvoked).toBe(true);
     expect(aResolverGotInvoked).toBe(false);
+    await requestGotCancelledD.promise;
   });
 });
 
