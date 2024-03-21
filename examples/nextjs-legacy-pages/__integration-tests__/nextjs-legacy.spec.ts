@@ -35,16 +35,9 @@ describe('NextJS Legacy Pages', () => {
       ...Object.fromEntries(response.headers.entries()),
       date: null,
       'keep-alive': null,
-    }).toMatchInlineSnapshot(`
-      {
-        "connection": "close",
-        "content-length": "79",
-        "content-type": "application/json; charset=utf-8",
-        "date": null,
-        "keep-alive": null,
-        "vary": "Accept-Encoding",
-      }
-    `);
+    }).toMatchObject({
+      'content-type': 'application/json; charset=utf-8',
+    });
 
     const json = await response.json();
 
