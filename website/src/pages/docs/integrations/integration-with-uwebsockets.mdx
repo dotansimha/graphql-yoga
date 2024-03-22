@@ -45,7 +45,11 @@ const yoga = createYoga<ServerContext>({
   })
 })
 
-App().any('/*', yoga)
+App()
+  .any('/*', yoga)
+  .listen(() => {
+    console.log(`Server is running on http://localhost:4000`)
+  })
 ```
 
 ## Subscriptions with WebSockets
