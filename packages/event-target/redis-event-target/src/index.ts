@@ -41,10 +41,11 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     if (callbacks === undefined) {
       callbacks = new Set();
       callbacksForTopic.set(topic, callbacks);
-
-      subscribeClient.subscribe(topic);
+      callbacks.add(callback);
+      return subscribeClient.subscribe(topic).then(() => undefined);
     }
     callbacks.add(callback);
+    return;
   }
 
   function removeCallback(topic: string, callback: (event: TEvent) => void) {
@@ -65,7 +66,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
       if (callbackOrOptions != null) {
         const callback =
           'handleEvent' in callbackOrOptions ? callbackOrOptions.handleEvent : callbackOrOptions;
-        addCallback(topic, callback);
+        return addCallback(topic, callback);
       }
     },
     dispatchEvent(event: TEvent) {

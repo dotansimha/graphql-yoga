@@ -4,24 +4,27 @@ import { ExecutionArgs } from '@graphql-tools/executor';
 import { OnResultProcess, ResultProcessor, ResultProcessorInput } from './plugins/types.js';
 import { FetchAPI, GraphQLParams } from './types.js';
 
-export async function processResult({
+export async function processResult<TServerContext>({
   request,
   result,
   fetchAPI,
+  serverContext,
   onResultProcessHooks,
 }: {
   request: Request;
   result: ResultProcessorInput;
   fetchAPI: FetchAPI;
+  serverContext: TServerContext;
   /**
    * Response Hooks
    */
-  onResultProcessHooks: OnResultProcess[];
+  onResultProcessHooks: OnResultProcess<TServerContext>[];
 }) {
   let resultProcessor: ResultProcessor | undefined;
 
   const acceptableMediaTypes: string[] = [];
   let acceptedMediaType = '*/*';
+  let earlyResponse: Response | undefined;
 
   for (const onResultProcessHook of onResultProcessHooks) {
     await onResultProcessHook({
@@ -36,7 +39,16 @@ export async function processResult({
         resultProcessor = newResultProcessor;
         acceptedMediaType = newAcceptedMimeType;
       },
+      serverContext,
+      fetchAPI,
+      endResponse(response) {
+        earlyResponse = response;
+      },
     });
+
+    if (earlyResponse) {
+      return earlyResponse;
+    }
   }
 
   // If no result processor found for this result, return an error

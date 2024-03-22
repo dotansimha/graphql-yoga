@@ -54,7 +54,7 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onResultProcess?: OnResultProcess;
+    onResultProcess?: OnResultProcess<TServerContext>;
   };
 
 export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
@@ -73,7 +73,6 @@ export interface OnRequestEventPayload<TServerContext> {
   request: Request;
   serverContext: TServerContext | undefined;
   fetchAPI: FetchAPI;
-  endResponse(response: Response): void;
   url: URL;
 }
 
@@ -116,7 +115,9 @@ export interface OnParamsEventPayload {
   fetchAPI: FetchAPI;
 }
 
-export type OnResultProcess = (payload: OnResultProcessEventPayload) => PromiseOrValue<void>;
+export type OnResultProcess<TServerContext> = (
+  payload: OnResultProcessEventPayload<TServerContext>,
+) => PromiseOrValue<void>;
 
 export type ExecutionResultWithSerializer<TData = any, TExtensions = any> = ExecutionResult<
   TData,
@@ -135,13 +136,16 @@ export type ResultProcessor = (
   acceptedMediaType: string,
 ) => PromiseOrValue<Response>;
 
-export interface OnResultProcessEventPayload {
+export interface OnResultProcessEventPayload<TServerContext> {
   request: Request;
   result: ResultProcessorInput;
   setResult(result: ResultProcessorInput): void;
   resultProcessor?: ResultProcessor;
   acceptableMediaTypes: string[];
   setResultProcessor(resultProcessor: ResultProcessor, acceptedMediaType: string): void;
+  fetchAPI: FetchAPI;
+  serverContext: TServerContext;
+  endResponse(response: Response): void;
 }
 
 export type OnResponseHook<TServerContext> = (
