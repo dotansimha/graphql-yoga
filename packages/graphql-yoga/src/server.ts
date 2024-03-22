@@ -162,7 +162,6 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * @default false
    */
   batching?: BatchingOptions | undefined;
-  allowedResponseHeaders?: string[] | undefined;
 
   /**
    * Allowed headers. Headers not part of this list will be striped out.
