@@ -47,8 +47,8 @@ importers:
         specifier: 0.11.0
         version: 0.11.0(eslint@8.44.0)(typescript@5.1.6)
       '@theguild/prettier-config':
-        specifier: 2.0.1
-        version: 2.0.1(prettier@3.0.0)
+        specifier: 2.0.2
+        version: 2.0.2(prettier@3.0.0)
       '@types/babel__core':
         specifier: ^7
         version: 7.1.19
@@ -8788,11 +8788,11 @@ packages:
   /@humanwhocodes/object-schema@1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
 
-  /@ianvs/prettier-plugin-sort-imports@4.0.2(prettier@3.0.0):
-    resolution: {integrity: sha512-VnsTzyb9aSWpc3v6HvZKD6eolZRvofIYjhda+6IbW1GYwr2byWqK0KhLPbYNkit9MAgShad5bhZ1hgBn867A1A==}
+  /@ianvs/prettier-plugin-sort-imports@4.1.1(prettier@3.0.0):
+    resolution: {integrity: sha512-kJhXq63ngpTQ2dxgf5GasbPJWsJA3LgoOdd7WGhpUSzLgLgI4IsIzYkbJf9kmpOHe7Vdm/o3PcRA3jmizXUuAQ==}
     peerDependencies:
       '@vue/compiler-sfc': '>=3.0.0'
-      prettier: 2.x
+      prettier: 2 || 3
     peerDependenciesMeta:
       '@vue/compiler-sfc':
         optional: true
@@ -13259,12 +13259,12 @@ packages:
       - typescript
     dev: true
 
-  /@theguild/prettier-config@2.0.1(prettier@3.0.0):
-    resolution: {integrity: sha512-I2rwFhQv8/nuepfbPwpja5Ia+ONs6DIvV3W6DLzO4609sDiOG4FUaNBiryo7mYbWKN8XBLUNLwOUT2GaOBC2Iw==}
+  /@theguild/prettier-config@2.0.2(prettier@3.0.0):
+    resolution: {integrity: sha512-XByOO9Oash2mEXM2j9KcV/UUzkjzUrStyMNDkLBjHwLV9ir6auhFgo0UJZoYJildsMwO1FR8XpluocLPmNyI9w==}
     peerDependencies:
       prettier: ^3
     dependencies:
-      '@ianvs/prettier-plugin-sort-imports': 4.0.2(prettier@3.0.0)
+      '@ianvs/prettier-plugin-sort-imports': 4.1.1(prettier@3.0.0)
       prettier: 3.0.0
       prettier-plugin-pkg: 0.18.0(prettier@3.0.0)
       prettier-plugin-sh: 0.13.1(prettier@3.0.0)
