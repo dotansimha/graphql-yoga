@@ -1,9 +1,17 @@
-import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { pipeline, Writable } from 'node:stream';
+import { promisify } from 'node:util';
+import { APIGatewayEvent, Context } from 'aws-lambda';
 import { createSchema, createYoga } from 'graphql-yoga';
+
+declare const awslambda: any;
+
+const pipeline$ = promisify(pipeline);
 
 const yoga = createYoga<{
   event: APIGatewayEvent;
   lambdaContext: Context;
+  responseStream: Writable;
 }>({
   graphqlEndpoint: '/graphql',
   landingPage: false,
@@ -21,10 +29,11 @@ const yoga = createYoga<{
   }),
 });
 
-export async function handler(
+export const handler = awslambda.streamifyResponse(async function handler(
   event: APIGatewayEvent,
+  responseStream: Writable,
   lambdaContext: Context,
-): Promise<APIGatewayProxyResult> {
+) {
   const response = await yoga.fetch(
     event.path +
       '?' +
@@ -39,15 +48,18 @@ export async function handler(
     {
       event,
       lambdaContext,
+      responseStream,
     },
   );
 
-  const responseHeaders = Object.fromEntries(response.headers.entries());
-
-  return {
+  responseStream = awslambda.HttpResponseStream.from(responseStream, {
     statusCode: response.status,
-    headers: responseHeaders,
-    body: await response.text(),
-    isBase64Encoded: false,
-  };
-}
+    headers: Object.fromEntries(response.headers.entries()),
+  });
+
+  if (response.body) {
+    await pipeline$(response.body, responseStream);
+  } else {
+    responseStream.end();
+  }
+});
