@@ -46,4 +46,5 @@ export default withGuildDocs({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  output: 'export',
 });
