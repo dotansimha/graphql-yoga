@@ -4,7 +4,7 @@ description:
   experience
 ---
 
-import { Tab, Tabs } from '@theguild/components'
+import { Tabs } from '@theguild/components'
 import CodegenCallout from '../../components/codegen-callout.mdx'
 
 # Quick start
@@ -27,7 +27,7 @@ You will need to provide a schema to Yoga, there are many ways to assemble a Gra
 just a few:
 
 <Tabs items={['graphql-yoga', '@graphql-tools/schema', 'Pothos', 'GraphQL Nexus', 'gqtx', 'graphql-js']}>
-  <Tab>
+  <Tabs.Tab>
 Use the `createSchema` function included in Yoga. It actually reuses the [`makeExecutableSchema` from @graphql-tools/schema](https://www.graphql-tools.com/docs/generate-schema).
 
 ```js filename="schema.js"
@@ -49,9 +49,9 @@ export const schema = createSchema({
 
 <CodegenCallout />
 
-  </Tab>
+  </Tabs.Tab>
 
-  <Tab>
+  <Tabs.Tab>
 [`makeExecutableSchema` from @graphql-tools/schema](https://www.graphql-tools.com/docs/generate-schema) is very simple, but powerful. Install it and create a schema.
 
 ```sh npm2yarn
@@ -77,9 +77,9 @@ export const schema = makeExecutableSchema({
 
 <CodegenCallout />
 
-  </Tab>
+  </Tabs.Tab>
 
-  <Tab>
+  <Tabs.Tab>
 
 [Pothos](https://pothos-graphql.dev) is a plugin based GraphQL schema builder for TypeScript.
 Install it and create a schema.
@@ -104,9 +104,9 @@ builder.queryType({
 export const schema = builder.toSchema()
 ```
 
-  </Tab>
+  </Tabs.Tab>
 
-  <Tab>
+  <Tabs.Tab>
 Declarative, Code-First GraphQL Schemas for JavaScript/TypeScript through [Nexus GraphQL](https://nexusjs.org/). Install it and create schema.
 
 ```sh npm2yarn
@@ -124,9 +124,9 @@ const helloField = queryField('hello', {
 export const schema = makeSchema({ types: [helloField] })
 ```
 
-  </Tab>
+  </Tabs.Tab>
 
-  <Tab>
+  <Tabs.Tab>
 Code-first type-safe GraphQL schema without codegen or metaprogramming using [gqtx](https://github.com/sikanhe/gqtx). Install it and create schema.
 
 ```sh npm2yarn
@@ -151,9 +151,9 @@ const Query = t.queryType({
 export const schema = buildGraphQLSchema({ query: Query })
 ```
 
-  </Tab>
+  </Tabs.Tab>
 
-  <Tab>
+  <Tabs.Tab>
 [graphql-js](https://github.com/graphql/graphql-js) is a reference implementation of GraphQL for JavaScript. You should already have it installed, just create schema.
 
 ```js filename="schema.js"
@@ -172,7 +172,7 @@ export const schema = new GraphQLSchema({
 })
 ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## Server
