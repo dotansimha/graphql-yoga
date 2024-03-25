@@ -1,4 +1,3 @@
-import http from 'node:http';
 import { Readable } from 'node:stream';
 import { createSchema, createYoga } from 'graphql-yoga';
 import Hapi from '@hapi/hapi';
