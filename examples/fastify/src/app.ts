@@ -22,6 +22,7 @@ export function buildApp(logging = true) {
         type Query {
           hello: String
           isFastify: Boolean
+          slow: Nested
         }
         type Mutation {
           hello: String
@@ -30,15 +31,36 @@ export function buildApp(logging = true) {
         type Subscription {
           countdown(from: Int!, interval: Int!): Int!
         }
+
+        type Nested {
+          field: String
+        }
       `,
       resolvers: {
         Query: {
           hello: () => 'world',
           isFastify: (_, __, context) => !!context.req && !!context.reply,
+          async slow(_, __, context) {
+            context.req.log.info('Slow resolver invoked resolved');
+            await new Promise<void>((res, reject) => {
+              const timeout = setTimeout(() => {
+                context.req.log.info('Slow field resolved');
+                res();
+              }, 1000);
+
+              context.request.signal.addEventListener('abort', () => {
+                context.req.log.info('Slow field got cancelled');
+                clearTimeout(timeout);
+                reject(context.request.signal.reason);
+              });
+            });
+
+            return {};
+          },
         },
         Mutation: {
           hello: () => 'world',
-          getFileName: (root, { file }: { file: File }) => file.name,
+          getFileName: (_, { file }: { file: File }) => file.name,
         },
         Subscription: {
           countdown: {
@@ -48,6 +70,11 @@ export function buildApp(logging = true) {
                 yield { countdown: i };
               }
             },
+          },
+        },
+        Nested: {
+          field(_, __, context) {
+            context.req.log.info('Nested resolver called');
           },
         },
       },
@@ -69,7 +96,7 @@ export function buildApp(logging = true) {
     },
   });
 
-  app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) => done(null));
+  app.addContentTypeParser('multipart/form-data', {}, (_req, _payload, done) => done(null));
 
   app.route({
     url: graphQLServer.graphqlEndpoint,
