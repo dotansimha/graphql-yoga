@@ -102,7 +102,7 @@ export function buildApp(logging = true) {
     url: graphQLServer.graphqlEndpoint,
     method: ['GET', 'POST', 'OPTIONS'],
     handler: async (req, reply) => {
-      const response = await graphQLServer.handleNodeRequestFromResponse(reply, {
+      const response = await graphQLServer.handleNodeRequestAndResponse(req, reply, {
         req,
         reply,
       });
