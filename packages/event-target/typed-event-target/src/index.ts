@@ -11,11 +11,14 @@ export type TypedEventListenerOrEventListenerObject<TEvent extends CustomEvent> 
   | TypedEventListenerObject<TEvent>;
 
 export interface TypedEventTarget<TEvent extends CustomEvent> extends EventTarget {
+  /**
+   * If the return value is a promise, the promise will resolve once the event listener has been set up.
+   */
   addEventListener(
     type: string,
     callback: TypedEventListenerOrEventListenerObject<TEvent> | null,
     options?: AddEventListenerOptions | boolean,
-  ): void;
+  ): void | Promise<void>;
   dispatchEvent(event: TEvent): boolean;
   removeEventListener(
     type: string,
