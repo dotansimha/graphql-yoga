@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
@@ -180,6 +181,7 @@ event: complete
 data"
 `);
   });
+
   it('handles subscription operations via POST', async () => {
     const [app] = buildApp(false);
     await app.ready();
@@ -235,6 +237,7 @@ event: complete
 data"
 `);
   });
+
   it('should handle file uploads', async () => {
     const [app] = buildApp(false);
     await app.ready();
@@ -259,6 +262,7 @@ data"
       },
     });
   });
+
   it('request cancelation', async () => {
     const [app] = buildApp(false);
     await app.ready();
@@ -304,6 +308,55 @@ data"
       abortController.abort();
       await expect(response$).rejects.toMatchInlineSnapshot(`DOMException {}`);
       await slowFieldResolverCanceled.promise;
+    } finally {
+      app.log.info = info;
+    }
+  });
+
+  it('subscription cancelation', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
+    const cancelationIsLoggedPromise = createDeferred();
+    const address = await app.listen({
+      port: 0,
+    });
+
+    // we work with logger statements to detect when the subscription source is cleaned up.
+    const loggerOverwrite = (part: unknown) => {
+      if (part === 'countdown aborted') {
+        cancelationIsLoggedPromise.resolve();
+      }
+    };
+
+    const info = app.log.info;
+    app.log.info = loggerOverwrite;
+
+    try {
+      const abortController = new AbortController();
+      const url = new URL(`${address}/graphql`);
+      url.searchParams.set(
+        'query',
+        /* GraphQL */ `
+          subscription {
+            countdown(from: 10, interval: 5)
+          }
+        `,
+      );
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'text/event-stream',
+        },
+        signal: abortController.signal,
+      });
+
+      const iterator = eventStream(response.body!);
+      const next = await iterator.next();
+      expect(next.value).toEqual({ data: { countdown: 10 } });
+      abortController.abort();
+      await expect(iterator.next()).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await cancelationIsLoggedPromise.promise;
     } finally {
       app.log.info = info;
     }

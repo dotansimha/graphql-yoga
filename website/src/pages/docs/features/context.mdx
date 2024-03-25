@@ -239,7 +239,7 @@ const yoga = createYoga<{
 
 // somewhere within the request handler
 
-const response = await yoga.handleNodeRequest(req, {
+const response = await yoga.handleNodeRequestAndResponse(req, reply, {
   req,
   reply
 })

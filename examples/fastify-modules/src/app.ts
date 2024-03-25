@@ -23,7 +23,7 @@ export function createGraphQLHandler(): RouteHandlerMethod & {
   });
 
   const handler = async (req, reply) => {
-    const response = await graphQLServer.handleNodeRequest(req, {
+    const response = await graphQLServer.handleNodeRequestAndResponse(req, reply, {
       req,
       reply,
     });
