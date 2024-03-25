@@ -4,6 +4,11 @@ import { fetch } from '@whatwg-node/fetch';
 import { createGraphQLError, createSchema, createYoga, Plugin } from '../src/index.js';
 
 describe('node-http', () => {
+  let server: ReturnType<typeof createServer>;
+  afterEach(done => {
+    server.closeAllConnections();
+    server.close(done);
+  });
   it('should expose Node req and res objects in the context', async () => {
     const yoga = createYoga<{
       req: IncomingMessage;
@@ -22,19 +27,15 @@ describe('node-http', () => {
         },
       }),
     });
-    const server = createServer(yoga);
+    server = createServer(yoga);
     await new Promise<void>(resolve => server.listen(0, resolve));
     const port = (server.address() as AddressInfo).port;
 
-    try {
-      const response = await fetch(`http://localhost:${port}/graphql?query=query{isNode}`);
-      expect(response.status).toBe(200);
-      const body = await response.json();
-      expect(body.errors).toBeUndefined();
-      expect(body.data.isNode).toBe(true);
-    } finally {
-      await new Promise<void>(resolve => server.close(() => resolve()));
-    }
+    const response = await fetch(`http://localhost:${port}/graphql?query=query{isNode}`);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.isNode).toBe(true);
   });
 
   it('should set status text by status code', async () => {
@@ -64,7 +65,7 @@ describe('node-http', () => {
       }),
       logging: false,
     });
-    const server = createServer(yoga);
+    server = createServer(yoga);
     await new Promise<void>(resolve => server.listen(0, resolve));
     const port = (server.address() as AddressInfo).port;
 
@@ -119,32 +120,28 @@ describe('node-http', () => {
       }),
       plugins: [plugin],
     });
-    const server = createServer(yoga);
+    server = createServer(yoga);
     await new Promise<void>(resolve => server.listen(0, resolve));
     const port = (server.address() as AddressInfo).port;
-    try {
-      const controller = new AbortController();
-      const response$ = fetch(`http://localhost:${port}/graphql`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: /* GraphQL */ `
-            query {
-              hi
-            }
-          `,
-        }),
-        signal: controller.signal,
-      });
-      await d.promise;
-      controller.abort();
-      await expect(response$).rejects.toThrow('The operation was aborted');
-      await didAbortD.promise;
-    } finally {
-      await new Promise<void>(resolve => server.close(() => resolve()));
-    }
+    const controller = new AbortController();
+    const response$ = fetch(`http://localhost:${port}/graphql`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query {
+            hi
+          }
+        `,
+      }),
+      signal: controller.signal,
+    });
+    await d.promise;
+    controller.abort();
+    await expect(response$).rejects.toThrow('The operation was aborted');
+    await didAbortD.promise;
   });
 
   it('request cancellation causes no more resolvers being invoked', async () => {
@@ -181,40 +178,36 @@ describe('node-http', () => {
         },
       }),
     });
-    const server = createServer(yoga);
+    server = createServer(yoga);
     await new Promise<void>(resolve => server.listen(0, resolve));
     const port = (server.address() as AddressInfo).port;
-    try {
-      const controller = new AbortController();
-      const response$ = fetch(`http://localhost:${port}/graphql`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: /* GraphQL */ `
-            query {
-              slow {
-                field
-              }
+    const controller = new AbortController();
+    const response$ = fetch(`http://localhost:${port}/graphql`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query {
+            slow {
+              field
             }
-          `,
-        }),
-        signal: controller.signal,
-      });
+          }
+        `,
+      }),
+      signal: controller.signal,
+    });
 
-      await didInvokeSlowResolverD.promise;
-      controller.abort();
-      await expect(response$).rejects.toThrow('The operation was aborted');
-      // wait a few milliseconds to ensure server-side cancellation logic runs
-      await new Promise<void>(resolve => setTimeout(resolve, 10));
-      didCancelD.resolve();
-      // wait a few milliseconds to allow the nested field resolver to run (if cancellation logic is incorrect)
-      await new Promise<void>(resolve => setTimeout(resolve, 10));
-      expect(didInvokedNestedField).toBe(false);
-    } finally {
-      await new Promise<void>(resolve => server.close(() => resolve()));
-    }
+    await didInvokeSlowResolverD.promise;
+    controller.abort();
+    await expect(response$).rejects.toThrow('The operation was aborted');
+    // wait a few milliseconds to ensure server-side cancellation logic runs
+    await new Promise<void>(resolve => setTimeout(resolve, 10));
+    didCancelD.resolve();
+    // wait a few milliseconds to allow the nested field resolver to run (if cancellation logic is incorrect)
+    await new Promise<void>(resolve => setTimeout(resolve, 10));
+    expect(didInvokedNestedField).toBe(false);
   });
 });
 

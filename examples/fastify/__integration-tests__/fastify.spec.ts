@@ -1,11 +1,18 @@
+import { FastifyInstance } from 'fastify';
 import request from 'supertest';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
+  let app: FastifyInstance;
+  beforeEach(() => {
+    [app] = buildApp(false);
+    return app.ready();
+  });
+  afterEach(() => {
+    return app.close();
+  });
   it('sends GraphiQL', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server).get('/graphql').set({
       accept: 'text/html',
     });
@@ -15,8 +22,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles query operation via POST', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -39,8 +44,6 @@ describe('fastify example integration', () => {
   });
 
   it("exposes fastify's request and reply objects", async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -63,8 +66,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles query operation via GET', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .query({
@@ -84,8 +85,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles mutation operation via POST', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -108,8 +107,6 @@ describe('fastify example integration', () => {
   });
 
   it('rejects mutation operation via GET with an useful error message', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .query({
@@ -130,8 +127,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles subscription operations via GET', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .set({ accept: 'text/event-stream' })
@@ -184,8 +179,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles subscription operations via POST', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({
@@ -241,8 +234,6 @@ describe('fastify example integration', () => {
   });
 
   it('should handle file uploads', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .field(
@@ -266,8 +257,6 @@ describe('fastify example integration', () => {
   });
 
   it('request cancelation', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const slowFieldResolverInvoked = createDeferred();
     const slowFieldResolverCanceled = createDeferred();
     const address = await app.listen({
@@ -316,8 +305,6 @@ describe('fastify example integration', () => {
   });
 
   it('subscription cancelation', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const cancelationIsLoggedPromise = createDeferred();
     const address = await app.listen({
       port: 0,
