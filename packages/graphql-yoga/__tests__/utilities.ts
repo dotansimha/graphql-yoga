@@ -4,7 +4,10 @@ import { Repeater } from '@repeaterjs/repeater';
 /** Parse SSE event stream and yield data pieces. */
 export function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
   return new Repeater<TType>(async (push, end) => {
-    const cancel: Promise<{ done: true }> = end.then(() => ({ done: true }));
+    const cancel: Promise<{ done: true; value: undefined }> = end.then(() => ({
+      done: true,
+      value: undefined,
+    }));
     const iterable = source[Symbol.asyncIterator]();
 
     // eslint-disable-next-line no-constant-condition
