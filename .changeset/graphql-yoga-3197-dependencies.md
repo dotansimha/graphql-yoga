@@ -8,6 +8,6 @@ dependencies updates:
   - Updated dependency [`@whatwg-node/fetch@^0.9.17`
     ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.9.17) (from `^0.9.7`, in
     `dependencies`)
-  - Updated dependency [`@whatwg-node/server@^0.9.31`
-    ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.31) (from `^0.9.1`, in
+  - Updated dependency [`@whatwg-node/server@^0.9.32`
+    ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.32) (from `^0.9.1`, in
     `dependencies`)
