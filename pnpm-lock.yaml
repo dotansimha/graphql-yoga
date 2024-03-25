@@ -389,7 +389,7 @@ importers:
     dependencies:
       '@whatwg-node/server-plugin-cookies':
         specifier: ^1.0.0
-        version: 1.0.0(@whatwg-node/server@0.9.30)
+        version: 1.0.0(@whatwg-node/server@0.9.31)
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -1545,7 +1545,7 @@ importers:
         version: 0.8.4(graphql@16.6.0)
       '@graphql-tools/url-loader':
         specifier: 8.0.1
-        version: 8.0.1(graphql@16.6.0)
+        version: 8.0.1(@types/node@18.16.16)(graphql@16.6.0)
       graphiql:
         specifier: 2.0.7
         version: 2.0.7(@codemirror/language@6.0.0)(@types/react@18.2.8)(graphql@16.6.0)(react-dom@18.2.0)(react-is@17.0.2)(react@18.2.0)
@@ -1602,8 +1602,8 @@ importers:
         specifier: ^0.9.17
         version: 0.9.17
       '@whatwg-node/server':
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^0.9.31
+        version: 0.9.31
       dset:
         specifier: ^3.1.1
         version: 3.1.2
@@ -8239,33 +8239,6 @@ packages:
       '@graphql-tools/executor-graphql-ws': 1.0.0(graphql@16.6.0)
       '@graphql-tools/executor-http': 1.0.5(@types/node@18.16.16)(graphql@16.6.0)
       '@graphql-tools/executor-legacy-ws': 1.0.0(graphql@16.6.0)
-      '@graphql-tools/utils': 10.1.1(graphql@16.6.0)
-      '@graphql-tools/wrap': 10.0.0(graphql@16.6.0)
-      '@types/ws': 8.5.4
-      '@whatwg-node/fetch': 0.9.17
-      graphql: 16.6.0
-      isomorphic-ws: 5.0.0(ws@8.13.0)
-      tslib: 2.6.2
-      value-or-promise: 1.0.12
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - '@types/node'
-      - bufferutil
-      - encoding
-      - utf-8-validate
-    dev: true
-
-  /@graphql-tools/url-loader@8.0.1(graphql@16.6.0):
-    resolution: {integrity: sha512-B2k8KQEkEQmfV1zhurT5GLoXo8jbXP+YQHUayhCSxKYlRV7j/1Fhp1b21PDM8LXIDGlDRXaZ0FbWKOs7eYXDuQ==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-    dependencies:
-      '@ardatan/sync-fetch': 0.0.1
-      '@graphql-tools/delegate': 10.0.0(graphql@16.6.0)
-      '@graphql-tools/executor-graphql-ws': 1.0.0(graphql@16.6.0)
-      '@graphql-tools/executor-http': 1.0.5(@types/node@18.16.16)(graphql@16.6.0)
-      '@graphql-tools/executor-legacy-ws': 1.0.0(graphql@16.6.0)
       '@graphql-tools/utils': 10.0.1(graphql@16.6.0)
       '@graphql-tools/wrap': 10.0.0(graphql@16.6.0)
       '@types/ws': 8.5.4
@@ -8280,7 +8253,6 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
-    dev: false
 
   /@graphql-tools/utils@10.0.0(graphql@16.6.0):
     resolution: {integrity: sha512-ndBPc6zgR+eGU/jHLpuojrs61kYN3Z89JyMLwK3GCRkPv4EQn9EOr1UWqF1JO0iM+/jAVHY0mvfUxyrFFN9DUQ==}
@@ -14768,14 +14740,14 @@ packages:
       fast-querystring: 1.1.1
       tslib: 2.6.2
 
-  /@whatwg-node/server-plugin-cookies@1.0.0(@whatwg-node/server@0.9.30):
+  /@whatwg-node/server-plugin-cookies@1.0.0(@whatwg-node/server@0.9.31):
     resolution: {integrity: sha512-o0MqK6H4Yhxht+J+cgZIpEhdb4SID1grFWfOiMdni3csNHBKZ+MKAFhxS+6wAJsarHN7BEZ0QMu4PG09Uwhr2g==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@whatwg-node/server': ^0.9.0
     dependencies:
       '@whatwg-node/cookie-store': 0.2.0
-      '@whatwg-node/server': 0.9.30
+      '@whatwg-node/server': 0.9.31
       tslib: 2.5.3
     dev: false
 
@@ -14787,8 +14759,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@whatwg-node/server@0.9.30:
-    resolution: {integrity: sha512-SeL1vL0/uF2xBkpy/dW4sA3aS4IBQMPk097QQ15vW21EhO0ow3RqQu2FCRLCnU1Xgiu8SCpvt3iQUBx74o4ZjQ==}
+  /@whatwg-node/server@0.9.31:
+    resolution: {integrity: sha512-crd8CPnKX6UELsnoU8G4DjAjMYVgNykHsZiRZMaglwqICxY4s2J2QggU0Ism00wbtwJ43umEOGYnwE389BHGOg==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@whatwg-node/fetch': 0.9.17

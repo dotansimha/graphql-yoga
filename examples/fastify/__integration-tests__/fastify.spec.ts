@@ -251,4 +251,66 @@ data"
       },
     });
   });
+  it('request cancelation', async () => {
+    const slowFieldResolverInvoked = createDeferred();
+    const slowFieldResolverCanceled = createDeferred();
+    const address = await app.listen({
+      port: 0,
+    });
+
+    // we work with logger statements to detect when the slow field resolver is invoked and when it is canceled
+    const loggerOverwrite = (part: unknown) => {
+      if (part === 'Slow resolver invoked resolved') {
+        slowFieldResolverInvoked.resolve();
+      }
+      if (part === 'Slow field got cancelled') {
+        slowFieldResolverCanceled.resolve();
+      }
+    };
+
+    const info = app.log.info;
+    app.log.info = loggerOverwrite;
+
+    try {
+      const abortController = new AbortController();
+      const response$ = fetch(`${address}/graphql`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: /* GraphQL */ `
+            query {
+              slow {
+                field
+              }
+            }
+          `,
+        }),
+        signal: abortController.signal,
+      });
+
+      await slowFieldResolverInvoked.promise;
+      abortController.abort();
+      await expect(response$).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await slowFieldResolverCanceled.promise;
+    } finally {
+      app.log.info = info;
+    }
+  });
 });
+
+type Deferred<T = void> = {
+  resolve: (value: T) => void;
+  reject: (value: unknown) => void;
+  promise: Promise<T>;
+};
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>;
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve;
+    d.reject = reject;
+  });
+  return d;
+}
