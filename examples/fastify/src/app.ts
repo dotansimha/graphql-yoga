@@ -1,5 +1,5 @@
 import fastify, { FastifyReply, FastifyRequest } from 'fastify';
-import { createSchema, createYoga } from 'graphql-yoga';
+import { createSchema, createYoga, Repeater } from 'graphql-yoga';
 
 export function buildApp(logging = true) {
   const app = fastify({
@@ -64,11 +64,26 @@ export function buildApp(logging = true) {
         },
         Subscription: {
           countdown: {
-            async *subscribe(_, { from, interval }) {
-              for (let i = from; i >= 0; i--) {
-                await new Promise(resolve => setTimeout(resolve, interval ?? 1000));
-                yield { countdown: i };
-              }
+            async subscribe(_, { from, interval }, { request }) {
+              return new Repeater(async (push, stop) => {
+                const timeout = setInterval(() => {
+                  push({ countdown: from });
+                  from--;
+                  if (from < 0) {
+                    stop();
+                    return;
+                  }
+                }, interval);
+
+                stop.then(() => {
+                  clearInterval(timeout);
+                });
+
+                request.signal.addEventListener('abort', () => {
+                  app.log.info('countdown aborted');
+                  stop();
+                });
+              });
             },
           },
         },
@@ -102,7 +117,7 @@ export function buildApp(logging = true) {
     url: graphQLServer.graphqlEndpoint,
     method: ['GET', 'POST', 'OPTIONS'],
     handler: async (req, reply) => {
-      const response = await graphQLServer.handleNodeRequest(req, {
+      const response = await graphQLServer.handleNodeRequestAndResponse(req, reply, {
         req,
         reply,
       });
