@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import request from 'supertest';
+import { fetch } from '@whatwg-node/fetch';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
@@ -297,7 +298,9 @@ describe('fastify example integration', () => {
 
       await slowFieldResolverInvoked.promise;
       abortController.abort();
-      await expect(response$).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await expect(response$).rejects.toMatchInlineSnapshot(
+        `[AbortError: The operation was aborted]`,
+      );
       await slowFieldResolverCanceled.promise;
     } finally {
       app.log.info = info;
@@ -344,7 +347,9 @@ describe('fastify example integration', () => {
       const next = await iterator.next();
       expect(next.value).toEqual({ data: { countdown: 10 } });
       abortController.abort();
-      await expect(iterator.next()).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await expect(iterator.next()).rejects.toMatchInlineSnapshot(
+        `[AbortError: The operation was aborted]`,
+      );
       await cancelationIsLoggedPromise.promise;
     } finally {
       app.log.info = info;
