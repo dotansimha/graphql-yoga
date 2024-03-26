@@ -131,7 +131,7 @@ const store = new Keyv("redis://user:pass@localhost:6379");
 useAPQ({
   store: {
     async get(key) {
-      try{
+      try {
         return await store.get(key);
       } catch(e) {
         console.error(`Error while fetching the operation: ${key}`, e);
