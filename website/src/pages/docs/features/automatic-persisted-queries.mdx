@@ -138,7 +138,7 @@ useAPQ({
       }
     },
     async set(key, value) {
-      try{
+      try {
         return await store.set(key, value);
       } catch(e) {
         console.error(`Error while saving the operation: ${key}`, e);
