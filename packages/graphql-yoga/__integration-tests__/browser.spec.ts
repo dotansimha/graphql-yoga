@@ -119,8 +119,32 @@ export function createTestSchema() {
             }),
           resolve: value => value,
         },
+        countdown: {
+          type: new GraphQLNonNull(GraphQLInt),
+          args: {
+            from: {
+              type: new GraphQLNonNull(GraphQLInt),
+            },
+          },
+          subscribe: (_, { from }) =>
+            new Repeater((push, end) => {
+              let counter = from;
+              const send = () => {
+                push(counter);
+                if (counter === 0) {
+                  end();
+                }
+
+                counter--;
+              };
+              const interval = setInterval(() => send(), 1000);
+              end.then(() => clearInterval(interval));
+            }),
+          resolve: value => value,
+        },
         error: {
           type: GraphQLBoolean,
+          // eslint-disable-next-line require-yield
           async *subscribe() {
             throw new Error('This is not okay');
           },
@@ -650,7 +674,7 @@ describe('browser', () => {
           'query',
           /* GraphQL */ `
             subscription {
-              counter
+              countdown(from: 1)
             }
           `,
         );
@@ -662,10 +686,10 @@ describe('browser', () => {
           const values: Array<string> = [];
           source.addEventListener('next', event => {
             values.push(event.data);
-            if (values.length === 2) {
-              res({ data: values });
-              source.close();
-            }
+          });
+          source.addEventListener('complete', () => {
+            source.close();
+            res({ data: values });
           });
           source.onerror = err => {
             res({ error: String(err) });
@@ -679,8 +703,8 @@ describe('browser', () => {
 
       expect(result.data).toMatchInlineSnapshot(`
         [
-          "{"data":{"counter":0}}",
-          "{"data":{"counter":1}}",
+          "{"data":{"countdown":1}}",
+          "{"data":{"countdown":0}}",
         ]
       `);
     });

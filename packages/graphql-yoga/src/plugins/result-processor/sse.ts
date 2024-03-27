@@ -65,7 +65,8 @@ export function getSSEProcessor(): ResultProcessor {
           controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`));
         }
         if (done) {
-          controller.enqueue(textEncoder.encode(`event: complete\n\n`));
+          controller.enqueue(textEncoder.encode(`event: complete\n`));
+          controller.enqueue(textEncoder.encode(`data:\n\n`));
           clearInterval(pingInterval);
           controller.close();
         }
