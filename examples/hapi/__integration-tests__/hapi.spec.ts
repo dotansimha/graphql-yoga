@@ -76,6 +76,7 @@ event: next
 data: {"data":{"greetings":"Zdravo"}}
 
 event: complete
+data:
 
 "
 `);

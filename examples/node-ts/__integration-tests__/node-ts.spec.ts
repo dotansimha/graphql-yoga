@@ -25,6 +25,7 @@ event: next
 data: {"errors":[{"message":"Subscriptions have been disabled"}]}
 
 event: complete
+data:
 
 "
 `);

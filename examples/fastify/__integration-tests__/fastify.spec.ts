@@ -139,43 +139,42 @@ describe('fastify example integration', () => {
       });
     expect(response.statusCode).toEqual(200);
     expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
-      "event: next
-      data: {"data":{"countdown":10}}
+"event: next
+data: {"data":{"countdown":10}}
 
-      event: next
-      data: {"data":{"countdown":9}}
+event: next
+data: {"data":{"countdown":9}}
 
-      event: next
-      data: {"data":{"countdown":8}}
+event: next
+data: {"data":{"countdown":8}}
 
-      event: next
-      data: {"data":{"countdown":7}}
+event: next
+data: {"data":{"countdown":7}}
 
-      event: next
-      data: {"data":{"countdown":6}}
+event: next
+data: {"data":{"countdown":6}}
 
-      event: next
-      data: {"data":{"countdown":5}}
+event: next
+data: {"data":{"countdown":5}}
 
-      event: next
-      data: {"data":{"countdown":4}}
+event: next
+data: {"data":{"countdown":4}}
 
-      event: next
-      data: {"data":{"countdown":3}}
+event: next
+data: {"data":{"countdown":3}}
 
-      event: next
-      data: {"data":{"countdown":2}}
+event: next
+data: {"data":{"countdown":2}}
 
-      event: next
-      data: {"data":{"countdown":1}}
+event: next
+data: {"data":{"countdown":1}}
 
-      event: next
-      data: {"data":{"countdown":0}}
+event: next
+data: {"data":{"countdown":0}}
 
-      event: complete
-
-      "
-    `);
+event: complete
+data"
+`);
   });
   it('handles subscription operations via POST', async () => {
     const response = await request(app.server)
@@ -193,43 +192,42 @@ describe('fastify example integration', () => {
       });
     expect(response.statusCode).toEqual(200);
     expect(response.text.replace(/:\n\n/g, '')).toMatchInlineSnapshot(`
-      "event: next
-      data: {"data":{"countdown":10}}
+"event: next
+data: {"data":{"countdown":10}}
 
-      event: next
-      data: {"data":{"countdown":9}}
+event: next
+data: {"data":{"countdown":9}}
 
-      event: next
-      data: {"data":{"countdown":8}}
+event: next
+data: {"data":{"countdown":8}}
 
-      event: next
-      data: {"data":{"countdown":7}}
+event: next
+data: {"data":{"countdown":7}}
 
-      event: next
-      data: {"data":{"countdown":6}}
+event: next
+data: {"data":{"countdown":6}}
 
-      event: next
-      data: {"data":{"countdown":5}}
+event: next
+data: {"data":{"countdown":5}}
 
-      event: next
-      data: {"data":{"countdown":4}}
+event: next
+data: {"data":{"countdown":4}}
 
-      event: next
-      data: {"data":{"countdown":3}}
+event: next
+data: {"data":{"countdown":3}}
 
-      event: next
-      data: {"data":{"countdown":2}}
+event: next
+data: {"data":{"countdown":2}}
 
-      event: next
-      data: {"data":{"countdown":1}}
+event: next
+data: {"data":{"countdown":1}}
 
-      event: next
-      data: {"data":{"countdown":0}}
+event: next
+data: {"data":{"countdown":0}}
 
-      event: complete
-
-      "
-    `);
+event: complete
+data"
+`);
   });
   it('should handle file uploads', async () => {
     const response = await request(app.server)

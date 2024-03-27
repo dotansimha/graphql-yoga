@@ -374,10 +374,11 @@ describe('incremental delivery: node-fetch', () => {
 
     chunk = await reader.read();
     expect(Buffer.from(chunk.value!).toString('utf-8')).toMatchInlineSnapshot(`
-      "event: complete
+"event: complete
+data:
 
-      "
-    `);
+"
+`);
 
     chunk = await reader.read();
     expect(chunk.done).toBeTruthy();
