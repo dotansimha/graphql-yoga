@@ -61,6 +61,7 @@ describe('GraphQL over SSE', () => {
 :
 
 event: complete
+data:
 
 "
 `);
@@ -178,6 +179,7 @@ event: next
 data: {"errors":[{"message":"Cannot query field \\"nope\\" on type \\"Query\\".","locations":[{"line":1,"column":2}]}]}
 
 event: complete
+data:
 
 "
 `);

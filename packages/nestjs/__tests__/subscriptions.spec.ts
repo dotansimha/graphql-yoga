@@ -50,6 +50,7 @@ event: next
 data: {"data":{"greetings":"Zdravo"}}
 
 event: complete
+data:
 
 "
 `);
@@ -80,6 +81,7 @@ event: next
 data: {"data":{"filteredGreetings":"Hola"}}
 
 event: complete
+data:
 
 "
 `);
