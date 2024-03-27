@@ -119,34 +119,36 @@ server.listen(4000, () => {
 
 For external stores the `set` and `get` properties on the store can also return a `Promise`.
 
-In production, it's recommended to capture the errors from any store that could stop functioning.
-Instead of raising an error, returning undefined or null will allow the server to continue to
-respond to requests if the store goes down.
+<Callout>
+  In production, it's recommended to capture the errors from any store that could stop functioning.
+  Instead of raising an error, returning undefined or null will allow the server to continue to
+  respond to requests if the store goes down.
 
-```ts filename="Automatic Persisted Operations with a redis store" {16}
-import Keyv from "keyv";
+  ```ts filename="Automatic Persisted Operations with a redis store" {16}
+  import Keyv from "keyv";
 
-const store = new Keyv("redis://user:pass@localhost:6379");
+  const store = new Keyv("redis://user:pass@localhost:6379");
 
-useAPQ({
-  store: {
-    async get(key) {
-      try {
-        return await store.get(key);
-      } catch(e) {
-        console.error(`Error while fetching the operation: ${key}`, e);
-      }
-    },
-    async set(key, value) {
-      try {
-        return await store.set(key, value);
-      } catch(e) {
-        console.error(`Error while saving the operation: ${key}`, e);
+  useAPQ({
+    store: {
+      async get(key) {
+        try {
+          return await store.get(key);
+        } catch(e) {
+          console.error(`Error while fetching the operation: ${key}`, e);
+        }
+      },
+      async set(key, value) {
+        try {
+          return await store.set(key, value);
+        } catch(e) {
+          console.error(`Error while saving the operation: ${key}`, e);
+        }
       }
     }
-  }
-})
-```
+  })
+  ```
+</Callout>
 
 
 ## Configure Error responses
