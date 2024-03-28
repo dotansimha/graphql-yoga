@@ -1,5 +1,5 @@
 import fastify, { FastifyReply, FastifyRequest } from 'fastify';
-import { createSchema, createYoga } from 'graphql-yoga';
+import { createSchema, createYoga, Repeater } from 'graphql-yoga';
 
 export function buildApp(logging = true) {
   const app = fastify({
@@ -22,6 +22,7 @@ export function buildApp(logging = true) {
         type Query {
           hello: String
           isFastify: Boolean
+          slow: Nested
         }
         type Mutation {
           hello: String
@@ -30,24 +31,65 @@ export function buildApp(logging = true) {
         type Subscription {
           countdown(from: Int!, interval: Int!): Int!
         }
+
+        type Nested {
+          field: String
+        }
       `,
       resolvers: {
         Query: {
           hello: () => 'world',
           isFastify: (_, __, context) => !!context.req && !!context.reply,
+          async slow(_, __, context) {
+            context.req.log.info('Slow resolver invoked resolved');
+            await new Promise<void>((res, reject) => {
+              const timeout = setTimeout(() => {
+                context.req.log.info('Slow field resolved');
+                res();
+              }, 1000);
+
+              context.request.signal.addEventListener('abort', () => {
+                context.req.log.info('Slow field got cancelled');
+                clearTimeout(timeout);
+                reject(context.request.signal.reason);
+              });
+            });
+
+            return {};
+          },
         },
         Mutation: {
           hello: () => 'world',
-          getFileName: (root, { file }: { file: File }) => file.name,
+          getFileName: (_, { file }: { file: File }) => file.name,
         },
         Subscription: {
           countdown: {
-            async *subscribe(_, { from, interval }) {
-              for (let i = from; i >= 0; i--) {
-                await new Promise(resolve => setTimeout(resolve, interval ?? 1000));
-                yield { countdown: i };
-              }
+            async subscribe(_, { from, interval }, { request }) {
+              return new Repeater(async (push, stop) => {
+                const timeout = setInterval(() => {
+                  push({ countdown: from });
+                  from--;
+                  if (from < 0) {
+                    stop();
+                    return;
+                  }
+                }, interval);
+
+                stop.then(() => {
+                  clearInterval(timeout);
+                });
+
+                request.signal.addEventListener('abort', () => {
+                  app.log.info('countdown aborted');
+                  stop();
+                });
+              });
             },
+          },
+        },
+        Nested: {
+          field(_, __, context) {
+            context.req.log.info('Nested resolver called');
           },
         },
       },
@@ -69,13 +111,13 @@ export function buildApp(logging = true) {
     },
   });
 
-  app.addContentTypeParser('multipart/form-data', {}, (req, payload, done) => done(null));
+  app.addContentTypeParser('multipart/form-data', {}, (_req, _payload, done) => done(null));
 
   app.route({
     url: graphQLServer.graphqlEndpoint,
     method: ['GET', 'POST', 'OPTIONS'],
     handler: async (req, reply) => {
-      const response = await graphQLServer.handleNodeRequest(req, {
+      const response = await graphQLServer.handleNodeRequestAndResponse(req, reply, {
         req,
         reply,
       });

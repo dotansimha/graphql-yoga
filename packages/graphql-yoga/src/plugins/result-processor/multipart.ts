@@ -37,28 +37,33 @@ export function processMultipartResult(result: ResultProcessorInput, fetchAPI: F
       controller.enqueue(textEncoder.encode(`---`));
     },
     async pull(controller) {
-      const { done, value } = await iterator.next();
-      if (value != null) {
-        controller.enqueue(textEncoder.encode('\r\n'));
+      try {
+        const { done, value } = await iterator.next();
+        if (value != null) {
+          controller.enqueue(textEncoder.encode('\r\n'));
 
-        controller.enqueue(textEncoder.encode('Content-Type: application/json; charset=utf-8'));
-        controller.enqueue(textEncoder.encode('\r\n'));
+          controller.enqueue(textEncoder.encode('Content-Type: application/json; charset=utf-8'));
+          controller.enqueue(textEncoder.encode('\r\n'));
 
-        const chunk = jsonStringifyResultWithoutInternals(value);
-        const encodedChunk = textEncoder.encode(chunk);
+          const chunk = jsonStringifyResultWithoutInternals(value);
+          const encodedChunk = textEncoder.encode(chunk);
 
-        controller.enqueue(textEncoder.encode('Content-Length: ' + encodedChunk.byteLength));
-        controller.enqueue(textEncoder.encode('\r\n'));
+          controller.enqueue(textEncoder.encode('Content-Length: ' + encodedChunk.byteLength));
+          controller.enqueue(textEncoder.encode('\r\n'));
 
-        controller.enqueue(textEncoder.encode('\r\n'));
-        controller.enqueue(encodedChunk);
-        controller.enqueue(textEncoder.encode('\r\n'));
+          controller.enqueue(textEncoder.encode('\r\n'));
+          controller.enqueue(encodedChunk);
+          controller.enqueue(textEncoder.encode('\r\n'));
 
-        controller.enqueue(textEncoder.encode('---'));
-      }
-      if (done) {
-        controller.enqueue(textEncoder.encode('--\r\n'));
-        controller.close();
+          controller.enqueue(textEncoder.encode('---'));
+        }
+
+        if (done) {
+          controller.enqueue(textEncoder.encode('--\r\n'));
+          controller.close();
+        }
+      } catch (err) {
+        controller.error(err);
       }
     },
     async cancel(e) {

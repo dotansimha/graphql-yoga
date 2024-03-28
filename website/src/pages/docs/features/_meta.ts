@@ -3,6 +3,7 @@ export default {
   graphiql: 'GraphiQL',
   context: 'GraphQL Context',
   'error-masking': 'Error Masking',
+  'execution-cancelation': 'Execution Cancelation',
   introspection: 'Introspection',
   subscriptions: 'Subscriptions',
   'file-uploads': 'File Uploads',

@@ -30,7 +30,7 @@ const yoga = createYoga<Koa.ParameterizedContext>()
 // Bind GraphQL Yoga to `/graphql` endpoint
 app.use(async ctx => {
   // Second parameter adds Koa's context into GraphQL Context
-  const response = await yoga.handleNodeRequest(ctx.req, ctx)
+  const response = await yoga.handleNodeRequestAndResponse(ctx.req, ctx.res, ctx)
 
   // Set status code
   ctx.status = response.status

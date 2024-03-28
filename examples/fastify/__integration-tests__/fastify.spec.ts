@@ -1,18 +1,11 @@
 import request from 'supertest';
+import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
-  const [app] = buildApp(false);
-
-  beforeAll(async () => {
-    await app.ready();
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
-
   it('sends GraphiQL', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server).get('/graphql').set({
       accept: 'text/html',
     });
@@ -22,6 +15,8 @@ describe('fastify example integration', () => {
   });
 
   it('handles query operation via POST', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -44,6 +39,8 @@ describe('fastify example integration', () => {
   });
 
   it("exposes fastify's request and reply objects", async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -66,6 +63,8 @@ describe('fastify example integration', () => {
   });
 
   it('handles query operation via GET', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .query({
@@ -85,6 +84,8 @@ describe('fastify example integration', () => {
   });
 
   it('handles mutation operation via POST', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -107,6 +108,8 @@ describe('fastify example integration', () => {
   });
 
   it('rejects mutation operation via GET with an useful error message', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .query({
@@ -127,6 +130,8 @@ describe('fastify example integration', () => {
   });
 
   it('handles subscription operations via GET', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .set({ accept: 'text/event-stream' })
@@ -176,7 +181,10 @@ event: complete
 data"
 `);
   });
+
   it('handles subscription operations via POST', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({
@@ -229,7 +237,10 @@ event: complete
 data"
 `);
   });
+
   it('should handle file uploads', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .field(
@@ -251,4 +262,118 @@ data"
       },
     });
   });
+
+  it('request cancelation', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
+    const slowFieldResolverInvoked = createDeferred();
+    const slowFieldResolverCanceled = createDeferred();
+    const address = await app.listen({
+      port: 0,
+    });
+
+    // we work with logger statements to detect when the slow field resolver is invoked and when it is canceled
+    const loggerOverwrite = (part: unknown) => {
+      if (part === 'Slow resolver invoked resolved') {
+        slowFieldResolverInvoked.resolve();
+      }
+      if (part === 'Slow field got cancelled') {
+        slowFieldResolverCanceled.resolve();
+      }
+    };
+
+    const info = app.log.info;
+    app.log.info = loggerOverwrite;
+
+    try {
+      const abortController = new AbortController();
+      const response$ = fetch(`${address}/graphql`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: /* GraphQL */ `
+            query {
+              slow {
+                field
+              }
+            }
+          `,
+        }),
+        signal: abortController.signal,
+      });
+
+      await slowFieldResolverInvoked.promise;
+      abortController.abort();
+      await expect(response$).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await slowFieldResolverCanceled.promise;
+    } finally {
+      app.log.info = info;
+    }
+  });
+
+  it('subscription cancelation', async () => {
+    const [app] = buildApp(false);
+    await app.ready();
+    const cancelationIsLoggedPromise = createDeferred();
+    const address = await app.listen({
+      port: 0,
+    });
+
+    // we work with logger statements to detect when the subscription source is cleaned up.
+    const loggerOverwrite = (part: unknown) => {
+      if (part === 'countdown aborted') {
+        cancelationIsLoggedPromise.resolve();
+      }
+    };
+
+    const info = app.log.info;
+    app.log.info = loggerOverwrite;
+
+    try {
+      const abortController = new AbortController();
+      const url = new URL(`${address}/graphql`);
+      url.searchParams.set(
+        'query',
+        /* GraphQL */ `
+          subscription {
+            countdown(from: 10, interval: 5)
+          }
+        `,
+      );
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'text/event-stream',
+        },
+        signal: abortController.signal,
+      });
+
+      const iterator = eventStream(response.body!);
+      const next = await iterator.next();
+      expect(next.value).toEqual({ data: { countdown: 10 } });
+      abortController.abort();
+      await expect(iterator.next()).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await cancelationIsLoggedPromise.promise;
+    } finally {
+      app.log.info = info;
+    }
+  });
 });
+
+type Deferred<T = void> = {
+  resolve: (value: T) => void;
+  reject: (value: unknown) => void;
+  promise: Promise<T>;
+};
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>;
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve;
+    d.reject = reject;
+  });
+  return d;
+}

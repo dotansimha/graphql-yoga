@@ -1,5 +1,5 @@
 import { inspect } from '@graphql-tools/utils';
-import { createGraphQLError, createSchema, createYoga } from '../src/index.js';
+import { createGraphQLError, createLogger, createSchema, createYoga } from '../src/index.js';
 import { eventStream } from './utilities.js';
 
 describe('error masking', () => {
@@ -692,5 +692,68 @@ describe('error masking', () => {
     }
 
     expect(counter).toBe(3);
+  });
+
+  it('AbortSignal cancelation within resolver is not treated as a execution request cancelation by the yoga error handler', async () => {
+    const schema = createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          root: A!
+        }
+        type A {
+          a: String!
+        }
+      `,
+      resolvers: {
+        Query: {
+          async root() {
+            /** we just gonna throw a DOMException here to see what happens */
+            const abortController = new AbortController();
+            abortController.abort();
+            expect(abortController.signal.reason?.constructor.name).toBe('DOMException');
+            throw abortController.signal.reason;
+          },
+        },
+      },
+    });
+
+    const logger = createLogger('silent');
+    const error = jest.fn();
+    const debug = jest.fn();
+    logger.debug = debug;
+    logger.error = error;
+    const yoga = createYoga({ schema, logging: logger });
+
+    const result = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query: '{ root { a } }' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    expect(result.status).toEqual(200);
+    expect(await result.json()).toEqual({
+      data: null,
+      errors: [
+        {
+          locations: [
+            {
+              column: 3,
+              line: 1,
+            },
+          ],
+          message: 'Unexpected error.',
+          path: ['root'],
+        },
+      ],
+    });
+    // in the future this might change as we decide to within our graphql-tools/executor error handler treat DOMException similar to a normal Error
+    expect(error.mock.calls).toMatchObject([[{ message: 'Unexpected error value: {}' }]]);
+    expect(debug.mock.calls).toEqual([
+      ['Parsing request to extract GraphQL parameters'],
+      ['Processing GraphQL Parameters'],
+      ['Processing GraphQL Parameters done.'],
+    ]);
   });
 });
