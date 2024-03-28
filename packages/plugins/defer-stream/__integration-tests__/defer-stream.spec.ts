@@ -1,6 +1,6 @@
 import { createServer, get, IncomingMessage } from 'node:http';
 import { AddressInfo } from 'node:net';
-import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
+import { createLogger, createSchema, createYoga, useExecutionCancelation } from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js';
 
@@ -141,7 +141,7 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
         },
       },
     }),
-    plugins: [useDeferStream(), useExecutionCancellation()],
+    plugins: [useDeferStream(), useExecutionCancelation()],
     logging: logger,
   });
 

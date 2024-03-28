@@ -6,7 +6,7 @@ import {
   createSchema,
   createYoga,
   Plugin,
-  useExecutionCancellation,
+  useExecutionCancelation,
 } from '../src/index.js';
 
 describe('node-http', () => {
@@ -123,7 +123,7 @@ describe('node-http', () => {
           }
         `,
       }),
-      plugins: [plugin, useExecutionCancellation()],
+      plugins: [plugin, useExecutionCancelation()],
     });
     const server = createServer(yoga);
     await new Promise<void>(resolve => server.listen(0, resolve));
@@ -159,7 +159,7 @@ describe('node-http', () => {
 
     let didInvokedNestedField = false;
     const yoga = createYoga({
-      plugins: [useExecutionCancellation()],
+      plugins: [useExecutionCancelation()],
       schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {
