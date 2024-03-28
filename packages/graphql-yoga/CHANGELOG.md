@@ -1,5 +1,18 @@
 # graphql-yoga
 
+## 5.2.1
+
+### Patch Changes
+
+- [#3214](https://github.com/dotansimha/graphql-yoga/pull/3214)
+  [`f89a1aa2`](https://github.com/dotansimha/graphql-yoga/commit/f89a1aa2a0bd6efc145627a674370b1b22e231fa)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Always include empty data payload for final
+  `complete` event of SSE stream responses to ensure
+  [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) compatibility. See
+  the
+  [GraphQL over SSE protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#complete-event)
+  for more information.
+
 ## 5.2.0
 
 ### Minor Changes
