@@ -1,6 +1,6 @@
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
-import { useExecutionCancelation } from '../src/plugins/use-execution-cancelation';
+import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
 const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [
   ['Ponyfilled WhatWG Fetch', undefined],
@@ -75,7 +75,7 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
       schema,
       fetchAPI,
       logging: logger,
-      plugins: [useExecutionCancelation()],
+      plugins: [useExecutionCancellation()],
     });
     const abortController = new AbortController();
     const promise = Promise.resolve(
@@ -145,7 +145,7 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
       schema,
       fetchAPI,
       logging: logger,
-      plugins: [useExecutionCancelation()],
+      plugins: [useExecutionCancellation()],
     });
     const abortController = new AbortController();
     const response = await yoga.fetch('http://yoga/graphql', {
@@ -230,7 +230,7 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
     logger.debug = debugLogs;
     const yoga = createYoga({
       schema,
-      plugins: [useDeferStream(), useExecutionCancelation()],
+      plugins: [useDeferStream(), useExecutionCancellation()],
       fetchAPI,
       logging: logger,
     });

@@ -3,7 +3,7 @@ import type { Plugin } from './types';
 /**
  * Enables experimental support for request cancelation.
  */
-export function useExecutionCancelation(): Plugin {
+export function useExecutionCancellation(): Plugin {
   return {
     onExecute({ args }) {
       // @ts-expect-error we don't have this typing in envelop

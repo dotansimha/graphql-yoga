@@ -2,27 +2,27 @@
 description: Yoga has experimental support for canceling the GraphQL execution.
 ---
 
-# Execution Cancelation
+# Execution Cancellation
 
-In the real world a lot of HTTP requests are dropped or canceled. This can happen due to flakey
+In the real world, a lot of HTTP requests are dropped or canceled. This can happen due to a flakey
 internet connection, navigation to a new view or page within a web or native app or the user simply
-closing the app. In this case, the server can simply stop processing the request and save resources.
+closing the app. In this case, the server can stop processing the request and save resources.
 
 That is why Yoga comes with experimental support for canceling the GraphQL execution upon request
-cancelation.
+cancellation.
 
 ## Getting started
 
-To enable execution cancelation, you need to add the `useExecutionCancelation` plugin to your Yoga
+To enable execution cancellation, you need to add the `useExecutionCancellation` plugin to your Yoga
 instance.
 
-```ts filename="Execution Cancelation configuration" {1,6}
-import { createYoga, useExecutionCancelation } from 'graphql-yoga'
+```ts filename="Execution Cancellation configuration" {1,6}
+import { createYoga, useExecutionCancellation } from 'graphql-yoga'
 import { schema } from './schema'
 
 // Provide your schema
 const yoga = createYoga({
-  plugins: [useExecutionCancelation()],
+  plugins: [useExecutionCancellation()],
   schema
 })
 
@@ -33,16 +33,16 @@ server.listen(4000, () => {
 })
 ```
 
-That is all you need to do to enable execution cancelation in your Yoga server. Theoretically, you
+That is all you need to do to enable execution cancellation in your Yoga server. Theoretically, you
 can enable this and immediatly benefit from it without making any other adjustments within your
 GraphQL schema implementation.
 
 If you want to understand how it works and how you can adjust your resolvers to properly cancel
-pending promises (else.gc. database reads or HTTP requests), you can continue with the next section.
+pending promises (e.g. database reads or HTTP requests), you can continue with the next section.
 
 ## How it works
 
-The following example demonstrates how the execution cancelation works.
+The following example demonstrates how the execution cancellation works.
 
 ```graphql filename="Simple GraphQL schema"
 type Query {
@@ -61,7 +61,7 @@ read from a database.
 
 ```ts filename="Full Yoga Example"
 import { createServer } from 'node:http'
-import { createLogger, createSchema, createYoga, useExecutionCancelation } from 'graphql-yoga'
+import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga'
 
 const logger = createLogger('debug')
 
@@ -108,7 +108,7 @@ const schema = createSchema({
 })
 
 const yoga = createYoga({
-  plugins: [useExecutionCancelation()],
+  plugins: [useExecutionCancellation()],
   schema,
   logging: logger
 })
@@ -176,7 +176,7 @@ to avoid any further processing.
 
 ```ts filename="Altered server example with timer cleanup" {22-28}
 import { createServer } from 'node:http'
-import { createLogger, createSchema, createYoga, useExecutionCancelation } from 'graphql-yoga'
+import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga'
 
 const logger = createLogger('debug')
 
@@ -226,7 +226,7 @@ const schema = createSchema({
 
 // Provide your schema
 const yoga = createYoga({
-  plugins: [useExecutionCancelation()],
+  plugins: [useExecutionCancellation()],
   schema,
   logging: logger
 })
@@ -248,7 +248,7 @@ INFO resolving user
 DEBUG Request aborted
 ```
 
-## Propagate cancelation in resolvers
+## Propagate cancellation in resolvers
 
 As shown in the previous Selection, you can utilize the Yoga context object `request.signal` to
 cancel pending asynchronous operations in your resolvers.
@@ -258,7 +258,7 @@ cancel pending asynchronous operations in your resolvers.
 In this example we just pass `context.request.signal` to the fetch call. This will cancel the fetch
 request when the GraphQL request is canceled.
 
-```ts filename="Resolver fetch cancelation example" {15}
+```ts filename="Resolver fetch cancellation example" {15}
 import { createSchema, createYoga } from 'graphql-yoga'
 
 const yoga = createYoga({

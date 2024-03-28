@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { createLogger, createSchema, createYoga, useExecutionCancelation } from 'graphql-yoga';
+import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
 
 const logger = createLogger('debug');
 
@@ -49,7 +49,7 @@ const schema = createSchema({
 
 // Provide your schema
 const yoga = createYoga({
-  plugins: [useExecutionCancelation()],
+  plugins: [useExecutionCancellation()],
   schema,
   logging: logger,
 });

@@ -8,10 +8,10 @@ The execution of subsequent GraphQL resolvers is now aborted if the incoming HTT
 This reduces the load of your API in case incoming requests with deep GraphQL operation selection sets are canceled.
 
 ```ts
-import { createYoga, useExecutionCancelation } from 'graphql-yoga'
+import { createYoga, useExecutionCancellation } from 'graphql-yoga'
 
 const yoga = createYoga({
-  plugins: [useExecutionCancelation()]
+  plugins: [useExecutionCancellation()]
 })
 ```
 
