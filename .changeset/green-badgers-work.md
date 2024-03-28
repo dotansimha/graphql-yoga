@@ -8,12 +8,14 @@ The execution of subsequent GraphQL resolvers is now aborted if the incoming HTT
 This reduces the load of your API in case incoming requests with deep GraphQL operation selection sets are canceled.
 
 ```ts
-import { createYoga, useExecutionCancellation } from 'graphql-yoga'
+import { createYoga, useExecutionCancelation } from 'graphql-yoga'
 
 const yoga = createYoga({
-  plugins: [useExecutionCancellation()]
+  plugins: [useExecutionCancelation()]
 })
 ```
+
+[Learn more in our docs](https://graphql-yoga.com/docs/features/execution-cancelation)
 
 **Action Required** In order to benefit from this new feature, you need to update your integration setup for Fastify, Koa and Hapi.
 
