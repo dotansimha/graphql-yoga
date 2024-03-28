@@ -122,25 +122,26 @@ describe('Subscription', () => {
     }
 
     expect(results).toMatchInlineSnapshot(`
-      [
-        ":
+[
+  ":
 
-      ",
-        ":
+",
+  ":
 
-      ",
-        ":
+",
+  ":
 
-      ",
-        "event: next
-      data: {"data":{"hi":"hi"}}
+",
+  "event: next
+data: {"data":{"hi":"hi"}}
 
-      ",
-        "event: complete
+",
+  "event: complete
+data:
 
-      ",
-      ]
-    `);
+",
+]
+`);
   });
 
   test('should issue pings event if event source never publishes anything', async () => {
@@ -284,6 +285,7 @@ event: next
 data: {"errors":[{"message":"Unexpected error.","locations":[{"line":2,"column":11}]}]}
 
 event: complete
+data:
 
 "
 `);
@@ -352,6 +354,7 @@ event: next
 data: {"errors":[{"message":"hi","locations":[{"line":2,"column":11}]}]}
 
 event: complete
+data:
 
 "
 `);
@@ -415,6 +418,7 @@ event: next
 data: {"errors":[{"message":"hi","locations":[{"line":2,"column":11}]}]}
 
 event: complete
+data:
 
 "
 `);

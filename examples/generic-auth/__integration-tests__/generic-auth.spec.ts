@@ -82,6 +82,7 @@ event: next
 data: {"data":{"requiresAuth":"hi foo@foo.com"}}
 
 event: complete
+data:
 
 "
 `);
@@ -103,6 +104,7 @@ event: next
 data: {"data":null,"errors":[{"message":"Accessing 'Subscription.requiresAuth' requires authentication.","locations":[{"line":1,"column":14}]}]}
 
 event: complete
+data:
 
 "
 `);
