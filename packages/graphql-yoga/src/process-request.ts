@@ -78,7 +78,6 @@ export async function processRequest({
     contextValue,
     variableValues: params.variables,
     operationName: params.operationName,
-    signal: contextValue?.request?.signal ?? undefined,
   };
 
   // Get the actual operation

@@ -1,7 +1,13 @@
 import { createServer, IncomingMessage, ServerResponse, STATUS_CODES } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { fetch } from '@whatwg-node/fetch';
-import { createGraphQLError, createSchema, createYoga, Plugin } from '../src/index.js';
+import {
+  createGraphQLError,
+  createSchema,
+  createYoga,
+  Plugin,
+  useExecutionCancellation,
+} from '../src/index.js';
 
 describe('node-http', () => {
   it('should expose Node req and res objects in the context', async () => {
@@ -117,7 +123,7 @@ describe('node-http', () => {
           }
         `,
       }),
-      plugins: [plugin],
+      plugins: [plugin, useExecutionCancellation()],
     });
     const server = createServer(yoga);
     await new Promise<void>(resolve => server.listen(0, resolve));
@@ -149,11 +155,11 @@ describe('node-http', () => {
 
   it('request cancellation causes no more resolvers being invoked', async () => {
     const didInvokeSlowResolverD = createDeferred();
-
     const didCancelD = createDeferred();
 
     let didInvokedNestedField = false;
     const yoga = createYoga({
+      plugins: [useExecutionCancellation()],
       schema: createSchema({
         typeDefs: /* GraphQL */ `
           type Query {

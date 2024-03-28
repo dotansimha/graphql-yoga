@@ -38,3 +38,4 @@ export {
   usePayloadFormatter,
 } from '@envelop/core';
 export { getSSEProcessor } from './plugins/result-processor/sse.js';
+export { useExecutionCancellation } from './plugins/use-execution-cancellation.js';
