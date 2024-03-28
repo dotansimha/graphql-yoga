@@ -217,7 +217,12 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
     const logger = createLogger('silent');
     const debugLogs = jest.fn();
     logger.debug = debugLogs;
-    const yoga = createYoga({ schema, plugins: [useDeferStream()], fetchAPI, logging: logger });
+    const yoga = createYoga({
+      schema,
+      plugins: [useDeferStream()],
+      fetchAPI,
+      logging: logger,
+    });
 
     const abortController = new AbortController();
     const response = await yoga.fetch('http://yoga/graphql', {

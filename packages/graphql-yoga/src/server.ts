@@ -21,7 +21,7 @@ import {
   useCORS,
   useErrorHandling,
 } from '@whatwg-node/server';
-import { handleError } from './error.js';
+import { handleError, isAbortError } from './error.js';
 import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js';
 import {
   isPOSTFormUrlEncodedRequest,
@@ -380,7 +380,7 @@ export class YogaServer<
               onSubscribe() {
                 return {
                   onSubscribeError({ error }) {
-                    if ((error as any)?.name === 'AbortError') {
+                    if (isAbortError(error)) {
                       throw error;
                     }
                   },
