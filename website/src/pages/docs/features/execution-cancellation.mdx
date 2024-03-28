@@ -34,7 +34,7 @@ server.listen(4000, () => {
 ```
 
 That is all you need to do to enable execution cancellation in your Yoga server. Theoretically, you
-can enable this and immediatly benefit from it without making any other adjustments within your
+can enable this and immediately benefit from it without making any other adjustments within your
 GraphQL schema implementation.
 
 If you want to understand how it works and how you can adjust your resolvers to properly cancel
@@ -56,8 +56,8 @@ type User {
 }
 ```
 
-The `Query.user` resolver has a artifical delay of 10 seconds to simulate a long running e.g. a slow
-read from a database.
+The `Query.user` resolver has a artificial delay of 10 seconds to simulate a long-running operation
+e.g. a slow read from a database.
 
 ```ts filename="Full Yoga Example"
 import { createServer } from 'node:http'
@@ -134,7 +134,7 @@ query UserWithBestFriend {
 }
 ```
 
-For your convencience, you can copy the following `curl` command to execute the query.
+For your convenience, you can copy the following `curl` command to execute the query.
 
 ```bash filename="Curl Request for executing the operation"
 curl -g \
@@ -168,10 +168,12 @@ DEBUG Request aborted
 INFO resolved user
 ```
 
-The interesting part is that now `DEBUG Request aborted` is shown. At this point any further GraphQL
-execution will be stopped. However, the `INFO resolved user` log is still showing up.
+The interesting part is that now `DEBUG Request aborted` is shown. At this point, any further
+GraphQL execution will be stopped and no other GraphQL resolvers will be invoked.
 
-We can further adjust our server to cancel the artifical delay promise when the request is aborted
+However, the `INFO resolved user` log is still showing up.
+
+We can further adjust our server to cancel the artificial delay promise when the request is aborted
 to avoid any further processing.
 
 ```ts filename="Altered server example with timer cleanup" {22-28}
@@ -238,8 +240,8 @@ server.listen(4000, () => {
 })
 ```
 
-After these adjustments, timer will be cleaned up properly, and `INFO resolved user`, will no longer
-show up in the logs.
+After these adjustments, the timer will be cleaned up properly, and `INFO resolved user`, will no
+longer show up in the logs.
 
 ```bash filename="Server Logs after timer cleanup"
 DEBUG Parsing request to extract GraphQL parameters
@@ -288,3 +290,14 @@ server.listen(4000, () => {
   console.info('Server is running on http://localhost:4000/graphql')
 })
 ```
+
+## Further Resources
+
+The execution cancelation API is built on top of the `AbortController` and `AbortSignal` APIs.
+
+- [MDN AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) and
+- [MDN AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) APIs
+
+The execution cancelation is a feature of our GraphQL executor that is a fork of `graphql-js`.
+
+- [`@graphql-tools/executor`](https://github.com/ardatan/graphql-tools/tree/master/packages/executor)
