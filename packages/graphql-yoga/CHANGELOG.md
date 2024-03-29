@@ -1,5 +1,67 @@
 # graphql-yoga
 
+## 5.3.0
+
+### Minor Changes
+
+- [#3197](https://github.com/dotansimha/graphql-yoga/pull/3197)
+  [`f775b341`](https://github.com/dotansimha/graphql-yoga/commit/f775b341729145cee68747ab966aa9f4a9ea0389)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Experimental support for aborting GraphQL execution
+  when the HTTP request is canceled.
+
+  The execution of subsequent GraphQL resolvers is now aborted if the incoming HTTP request is
+  canceled from the client side. This reduces the load of your API in case incoming requests with
+  deep GraphQL operation selection sets are canceled.
+
+  ```ts
+  import { createYoga, useExecutionCancellation } from 'graphql-yoga'
+
+  const yoga = createYoga({
+    plugins: [useExecutionCancellation()]
+  })
+  ```
+
+  [Learn more in our docs](https://graphql-yoga.com/docs/features/execution-cancellation)
+
+  **Action Required** In order to benefit from this new feature, you need to update your integration
+  setup for Fastify, Koa and Hapi.
+
+  ```diff
+  - const response = await yoga.handleNodeRequest(req, { ... })
+  + const response = await yoga.handleNodeRequestAndResponse(req, res, { ... })
+  ```
+
+  Please refer to the corresponding integration guides for examples.
+
+  - [Fastify](https://graphql-yoga.com/docs/integrations/integration-with-fastify#example)
+  - [Koa](https://graphql-yoga.com/docs/integrations/integration-with-koa#example)
+  - [Hapi](https://graphql-yoga.com/docs/integrations/integration-with-hapi#example)
+
+### Patch Changes
+
+- [#3197](https://github.com/dotansimha/graphql-yoga/pull/3197)
+  [`f775b341`](https://github.com/dotansimha/graphql-yoga/commit/f775b341729145cee68747ab966aa9f4a9ea0389)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency
+    [`@graphql-tools/executor@^1.2.5` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/1.2.5)
+    (from `^1.2.2`, in `dependencies`)
+  - Updated dependency
+    [`@whatwg-node/fetch@^0.9.17` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.9.17)
+    (from `^0.9.7`, in `dependencies`)
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.32` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.32)
+    (from `^0.9.1`, in `dependencies`)
+
+- [#3214](https://github.com/dotansimha/graphql-yoga/pull/3214)
+  [`f89a1aa2`](https://github.com/dotansimha/graphql-yoga/commit/f89a1aa2a0bd6efc145627a674370b1b22e231fa)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Always include empty data payload for final
+  `complete` event of SSE stream responses to ensure
+  [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) compatibility. See
+  the
+  [GraphQL over SSE protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md#complete-event)
+  for more information.
+
 ## 5.2.0
 
 ### Minor Changes
