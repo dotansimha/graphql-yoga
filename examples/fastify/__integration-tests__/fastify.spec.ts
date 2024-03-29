@@ -274,7 +274,7 @@ data"
 
     // we work with logger statements to detect when the slow field resolver is invoked and when it is canceled
     const loggerOverwrite = (part: unknown) => {
-      if (part === 'Slow resolver invoked resolved') {
+      if (part === 'Slow resolver invoked') {
         slowFieldResolverInvoked.resolve();
       }
       if (part === 'Slow field got cancelled') {
@@ -310,6 +310,7 @@ data"
       await slowFieldResolverCanceled.promise;
     } finally {
       app.log.info = info;
+      await app.close();
     }
   });
 
@@ -359,6 +360,7 @@ data"
       await cancelationIsLoggedPromise.promise;
     } finally {
       app.log.info = info;
+      await app.close();
     }
   });
 });

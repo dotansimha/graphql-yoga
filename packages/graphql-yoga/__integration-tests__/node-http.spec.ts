@@ -94,6 +94,8 @@ describe('node-http', () => {
       expect(response.status).toBe(status);
       expect(response.statusText).toBe(STATUS_CODES[status]);
     }
+
+    await new Promise<void>(resolve => server.close(() => resolve()));
   });
 
   it('request cancellation causes signal passed to executor to be aborted', async () => {
