@@ -1,8 +1,7 @@
 import { createServer, get, IncomingMessage } from 'node:http';
 import { AddressInfo } from 'node:net';
-import { createSchema, createYoga } from 'graphql-yoga';
+import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
-import { fetch } from '@whatwg-node/fetch';
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js';
 
 it('correctly deals with the source upon aborted requests', async () => {
@@ -87,33 +86,48 @@ it('correctly deals with the source upon aborted requests', async () => {
   }
 });
 
+type Deferred<T = void> = {
+  resolve: (value: T) => void;
+  reject: (value: unknown) => void;
+  promise: Promise<T>;
+};
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>;
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve;
+    d.reject = reject;
+  });
+  return d;
+}
+
 it('memory/cleanup leak by source that never publishes a value', async () => {
   let sourceGotCleanedUp = false;
-  let i = 1;
-  let interval: NodeJS.Timer;
   const controller = new AbortController();
+  const d = createDeferred();
 
-  const noop = new Promise<{ done: true; value: undefined }>(() => undefined);
+  const noop = d.promise.then(() => ({ done: true, value: undefined }));
+
   const source = {
     [Symbol.asyncIterator]() {
       return this;
     },
     next() {
-      interval = setInterval(() => {
-        i++;
-        if (i === 3) {
-          controller.abort();
-        }
+      setTimeout(() => {
+        controller.abort();
       }, 10);
       return noop;
     },
     return() {
-      clearInterval(interval);
       sourceGotCleanedUp = true;
       return Promise.resolve({ done: true, value: undefined });
     },
   };
 
+  const logger = createLogger('silent');
+  const debugLogger = jest.fn();
+
+  logger.debug = debugLogger;
   const yoga = createYoga({
     schema: createSchema({
       typeDefs: /* GraphQL */ `
@@ -127,10 +141,12 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
         },
       },
     }),
-    plugins: [useDeferStream()],
+    plugins: [useDeferStream(), useExecutionCancellation()],
+    logging: logger,
   });
 
   const server = createServer(yoga);
+
   try {
     await new Promise<void>(resolve => {
       server.listen(() => {
@@ -144,46 +160,46 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
     }
 
     const response = await new Promise<IncomingMessage>(resolve => {
-      const request = get(
+      get(
         `http://localhost:${port}/graphql?query={hi @stream}`,
         {
           headers: {
             accept: 'multipart/mixed',
           },
+          signal: controller.signal,
         },
-        res => resolve(res),
-      );
-      controller.signal.addEventListener(
-        'abort',
-        () => {
-          request.destroy();
-        },
-        { once: true },
+        response => resolve(response),
       );
     });
 
-    try {
-      for await (const chunk of response) {
-        const chunkStr = Buffer.from(chunk).toString('utf-8');
-        expect(chunkStr).toMatchInlineSnapshot(`
-          "---
-          Content-Type: application/json; charset=utf-8
-          Content-Length: 33
+    const iterator = response![Symbol.asyncIterator]();
 
-          {"data":{"hi":[]},"hasNext":true}
-          ---"
-        `);
-      }
-    } catch (err: unknown) {
-      expect((err as Error).message).toContain('aborted');
-    }
+    const next = await iterator.next();
+
+    const chunkStr = Buffer.from(next.value).toString('utf-8');
+    expect(chunkStr).toMatchInlineSnapshot(`
+    "---
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 33
+
+    {"data":{"hi":[]},"hasNext":true}
+    ---"
+    `);
+
+    await expect(iterator.next()).rejects.toMatchInlineSnapshot(`[Error: aborted]`);
 
     // Wait a bit - just to make sure the time is cleaned up for sure...
     await new Promise(res => setTimeout(res, 50));
-
-    expect(i).toEqual(3);
     expect(sourceGotCleanedUp).toBe(true);
+
+    expect(debugLogger.mock.calls).toEqual([
+      ['Parsing request to extract GraphQL parameters'],
+      ['Processing GraphQL Parameters'],
+      ['Processing GraphQL Parameters done.'],
+      ['Request aborted'],
+    ]);
   } finally {
+    d.resolve();
     await new Promise<void>(res => {
       server.close(() => {
         res();

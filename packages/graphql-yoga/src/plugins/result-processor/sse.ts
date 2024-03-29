@@ -58,17 +58,22 @@ export function getSSEProcessor(): ResultProcessor {
         }
       },
       async pull(controller) {
-        const { done, value } = await iterator.next();
-        if (value != null) {
-          controller.enqueue(textEncoder.encode(`event: next\n`));
-          const chunk = jsonStringifyResultWithoutInternals(value);
-          controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`));
-        }
-        if (done) {
-          controller.enqueue(textEncoder.encode(`event: complete\n`));
-          controller.enqueue(textEncoder.encode(`data:\n\n`));
-          clearInterval(pingInterval);
-          controller.close();
+        try {
+          const result = await iterator.next();
+
+          if (result.value != null) {
+            controller.enqueue(textEncoder.encode(`event: next\n`));
+            const chunk = jsonStringifyResultWithoutInternals(result.value);
+            controller.enqueue(textEncoder.encode(`data: ${chunk}\n\n`));
+          }
+          if (result.done) {
+            controller.enqueue(textEncoder.encode(`event: complete\n`));
+            controller.enqueue(textEncoder.encode(`data:\n\n`));
+            clearInterval(pingInterval);
+            controller.close();
+          }
+        } catch (err) {
+          controller.error(err);
         }
       },
       async cancel(e) {

@@ -37,6 +37,14 @@ export function isOriginalGraphQLError(
   return false;
 }
 
+export function isAbortError(error: unknown): error is DOMException {
+  return (
+    typeof error === 'object' &&
+    error?.constructor?.name === 'DOMException' &&
+    (error as Record<string, unknown>).name === 'AbortError'
+  );
+}
+
 export function handleError(
   error: unknown,
   maskedErrorsOpts: YogaMaskedErrorOpts | null,
@@ -50,6 +58,8 @@ export function handleError(
         errors.add(handledError);
       }
     }
+  } else if (isAbortError(error)) {
+    logger.debug('Request aborted');
   } else if (maskedErrorsOpts) {
     const maskedError = maskedErrorsOpts.maskError(
       error,

@@ -1,14 +1,17 @@
 import request from 'supertest';
+import { fetch } from '@whatwg-node/fetch';
+import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
-  const [app] = buildApp(false);
+  let app: ReturnType<typeof buildApp>[0];
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    [app] = buildApp(false);
     await app.ready();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
@@ -176,6 +179,7 @@ event: complete
 data"
 `);
   });
+
   it('handles subscription operations via POST', async () => {
     const response = await request(app.server)
       .post('/graphql')
@@ -229,6 +233,7 @@ event: complete
 data"
 `);
   });
+
   it('should handle file uploads', async () => {
     const response = await request(app.server)
       .post('/graphql')
@@ -251,4 +256,119 @@ data"
       },
     });
   });
+
+  it('request cancelation', async () => {
+    const slowFieldResolverInvoked = createDeferred();
+    const slowFieldResolverCanceled = createDeferred();
+    const address = await app.listen({
+      port: 0,
+    });
+
+    // we work with logger statements to detect when the slow field resolver is invoked and when it is canceled
+    const loggerOverwrite = (part: unknown) => {
+      if (part === 'Slow resolver invoked') {
+        slowFieldResolverInvoked.resolve();
+      }
+      if (part === 'Slow field got cancelled') {
+        slowFieldResolverCanceled.resolve();
+      }
+    };
+
+    const info = app.log.info;
+    app.log.info = loggerOverwrite;
+    app.log.debug = loggerOverwrite;
+
+    try {
+      const abortController = new AbortController();
+      const response$ = fetch(`${address}/graphql`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: /* GraphQL */ `
+            query {
+              slow {
+                field
+              }
+            }
+          `,
+        }),
+        signal: abortController.signal,
+      });
+
+      await slowFieldResolverInvoked.promise;
+      abortController.abort();
+      await expect(response$).rejects.toMatchInlineSnapshot(
+        `[AbortError: The operation was aborted]`,
+      );
+      await slowFieldResolverCanceled.promise;
+    } finally {
+      app.log.info = info;
+    }
+  });
+
+  it('subscription cancelation', async () => {
+    const cancelationIsLoggedPromise = createDeferred();
+    const address = await app.listen({
+      port: 0,
+    });
+
+    // we work with logger statements to detect when the subscription source is cleaned up.
+    const loggerOverwrite = (part: unknown) => {
+      if (part === 'countdown aborted') {
+        cancelationIsLoggedPromise.resolve();
+      }
+    };
+
+    const info = app.log.info;
+    app.log.info = loggerOverwrite;
+
+    try {
+      const abortController = new AbortController();
+      const url = new URL(`${address}/graphql`);
+      url.searchParams.set(
+        'query',
+        /* GraphQL */ `
+          subscription {
+            countdown(from: 10, interval: 5)
+          }
+        `,
+      );
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'text/event-stream',
+        },
+        signal: abortController.signal,
+      });
+
+      const iterator = eventStream(response.body!);
+      const next = await iterator.next();
+      expect(next.value).toEqual({ data: { countdown: 10 } });
+      abortController.abort();
+      await expect(iterator.next()).rejects.toMatchInlineSnapshot(
+        `[AbortError: The operation was aborted]`,
+      );
+      await cancelationIsLoggedPromise.promise;
+    } finally {
+      app.log.info = info;
+    }
+  });
 });
+
+type Deferred<T = void> = {
+  resolve: (value: T) => void;
+  reject: (value: unknown) => void;
+  promise: Promise<T>;
+};
+
+function createDeferred<T = void>(): Deferred<T> {
+  const d = {} as Deferred<T>;
+  d.promise = new Promise<T>((resolve, reject) => {
+    d.resolve = resolve;
+    d.reject = reject;
+  });
+  return d;
+}

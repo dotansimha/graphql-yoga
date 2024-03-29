@@ -21,7 +21,7 @@ import {
   useCORS,
   useErrorHandling,
 } from '@whatwg-node/server';
-import { handleError } from './error.js';
+import { handleError, isAbortError } from './error.js';
 import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js';
 import {
   isPOSTFormUrlEncodedRequest,
@@ -373,7 +373,20 @@ export class YogaServer<
           // We make sure that the user doesn't send a mutation with GET
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(usePreventMutationViaGET());
+
           if (maskedErrors) {
+            // Make sure we always throw AbortError instead of masking it!
+            addPlugin({
+              onSubscribe() {
+                return {
+                  onSubscribeError({ error }) {
+                    if (isAbortError(error)) {
+                      throw error;
+                    }
+                  },
+                };
+              },
+            });
             addPlugin(useMaskedErrors(maskedErrors));
           }
           addPlugin(
@@ -468,7 +481,6 @@ export class YogaServer<
         const enveloped = this.getEnveloped(initialContext);
 
         this.logger.debug(`Processing GraphQL Parameters`);
-
         result = await processGraphQLParams({
           params,
           enveloped,
@@ -485,6 +497,11 @@ export class YogaServer<
           iterator,
           v => v,
           (err: Error) => {
+            if (err.name === 'AbortError') {
+              this.logger.debug(`Request aborted`);
+              throw err;
+            }
+
             const errors = handleError(err, this.maskedErrorsOpts, this.logger);
             return {
               errors,

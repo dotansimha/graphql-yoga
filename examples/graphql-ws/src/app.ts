@@ -6,6 +6,9 @@ import { WebSocketServer } from 'ws';
 
 export function buildApp() {
   const yoga = createYoga({
+    graphiql: {
+      subscriptionsProtocol: 'WS',
+    },
     schema: createSchema({
       typeDefs: /* GraphQL */ `
         type Query {

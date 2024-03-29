@@ -162,7 +162,7 @@ export abstract class AbstractYogaDriver<
     this.yoga = yoga as YogaDriverServerInstance<Platform>;
 
     app.all(yoga.graphqlEndpoint, async (req, reply) => {
-      const response = await yoga.handleNodeRequest(req, {
+      const response = await yoga.handleNodeRequestAndResponse(req, reply, {
         req,
         reply,
       });

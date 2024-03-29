@@ -1,4 +1,3 @@
-import http from 'node:http';
 import { Readable } from 'node:stream';
 import { createSchema, createYoga } from 'graphql-yoga';
 import Hapi from '@hapi/hapi';
@@ -53,7 +52,11 @@ export async function startApp(port: number) {
       },
     },
     handler: async (req, h) => {
-      const { status, headers, body } = await yoga.handleNodeRequest(req.raw.req, { req, h });
+      const { status, headers, body } = await yoga.handleNodeRequestAndResponse(
+        req.raw.req,
+        req.raw.res,
+        { req, h },
+      );
 
       const res = h.response(
         Readable.from(body, {
