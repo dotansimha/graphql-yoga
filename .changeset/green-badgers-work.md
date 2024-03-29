@@ -15,7 +15,7 @@ const yoga = createYoga({
 })
 ```
 
-[Learn more in our docs](https://graphql-yoga.com/docs/features/execution-cancelation)
+[Learn more in our docs](https://graphql-yoga.com/docs/features/execution-cancellation)
 
 **Action Required** In order to benefit from this new feature, you need to update your integration setup for Fastify, Koa and Hapi.
 
