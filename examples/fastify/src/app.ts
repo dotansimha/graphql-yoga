@@ -1,5 +1,5 @@
 import fastify, { FastifyReply, FastifyRequest } from 'fastify';
-import { createSchema, createYoga, Repeater } from 'graphql-yoga';
+import { createSchema, createYoga, Repeater, useExecutionCancellation } from 'graphql-yoga';
 
 export function buildApp(logging = true) {
   const app = fastify({
@@ -15,6 +15,7 @@ export function buildApp(logging = true) {
     req: FastifyRequest;
     reply: FastifyReply;
   }>({
+    plugins: [useExecutionCancellation()],
     schema: createSchema({
       typeDefs: /* GraphQL */ `
         scalar File
@@ -41,8 +42,9 @@ export function buildApp(logging = true) {
           hello: () => 'world',
           isFastify: (_, __, context) => !!context.req && !!context.reply,
           async slow(_, __, context) {
-            context.req.log.info('Slow resolver invoked resolved');
-            await new Promise<void>((res, reject) => {
+            await new Promise<void>((res, rej) => {
+              context.req.log.info('Slow resolver invoked');
+
               const timeout = setTimeout(() => {
                 context.req.log.info('Slow field resolved');
                 res();
@@ -51,7 +53,7 @@ export function buildApp(logging = true) {
               context.request.signal.addEventListener('abort', () => {
                 context.req.log.info('Slow field got cancelled');
                 clearTimeout(timeout);
-                reject(context.request.signal.reason);
+                rej(context.request.signal.reason);
               });
             });
 

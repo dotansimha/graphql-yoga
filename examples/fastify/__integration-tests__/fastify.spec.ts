@@ -1,11 +1,21 @@
 import request from 'supertest';
+import { fetch } from '@whatwg-node/fetch';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
-  it('sends GraphiQL', async () => {
-    const [app] = buildApp(false);
+  let app: ReturnType<typeof buildApp>[0];
+
+  beforeEach(async () => {
+    [app] = buildApp(false);
     await app.ready();
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  it('sends GraphiQL', async () => {
     const response = await request(app.server).get('/graphql').set({
       accept: 'text/html',
     });
@@ -15,8 +25,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles query operation via POST', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -39,8 +47,6 @@ describe('fastify example integration', () => {
   });
 
   it("exposes fastify's request and reply objects", async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -63,8 +69,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles query operation via GET', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .query({
@@ -84,8 +88,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles mutation operation via POST', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({ 'content-type': 'application/json' })
@@ -108,8 +110,6 @@ describe('fastify example integration', () => {
   });
 
   it('rejects mutation operation via GET with an useful error message', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .query({
@@ -130,8 +130,6 @@ describe('fastify example integration', () => {
   });
 
   it('handles subscription operations via GET', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .get('/graphql')
       .set({ accept: 'text/event-stream' })
@@ -183,8 +181,6 @@ data"
   });
 
   it('handles subscription operations via POST', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .set({
@@ -239,8 +235,6 @@ data"
   });
 
   it('should handle file uploads', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const response = await request(app.server)
       .post('/graphql')
       .field(
@@ -264,8 +258,6 @@ data"
   });
 
   it('request cancelation', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const slowFieldResolverInvoked = createDeferred();
     const slowFieldResolverCanceled = createDeferred();
     const address = await app.listen({
@@ -284,6 +276,7 @@ data"
 
     const info = app.log.info;
     app.log.info = loggerOverwrite;
+    app.log.debug = loggerOverwrite;
 
     try {
       const abortController = new AbortController();
@@ -306,17 +299,16 @@ data"
 
       await slowFieldResolverInvoked.promise;
       abortController.abort();
-      await expect(response$).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await expect(response$).rejects.toMatchInlineSnapshot(
+        `[AbortError: The operation was aborted]`,
+      );
       await slowFieldResolverCanceled.promise;
     } finally {
       app.log.info = info;
-      await app.close();
     }
   });
 
   it('subscription cancelation', async () => {
-    const [app] = buildApp(false);
-    await app.ready();
     const cancelationIsLoggedPromise = createDeferred();
     const address = await app.listen({
       port: 0,
@@ -356,11 +348,12 @@ data"
       const next = await iterator.next();
       expect(next.value).toEqual({ data: { countdown: 10 } });
       abortController.abort();
-      await expect(iterator.next()).rejects.toMatchInlineSnapshot(`DOMException {}`);
+      await expect(iterator.next()).rejects.toMatchInlineSnapshot(
+        `[AbortError: The operation was aborted]`,
+      );
       await cancelationIsLoggedPromise.promise;
     } finally {
       app.log.info = info;
-      await app.close();
     }
   });
 });

@@ -496,6 +496,9 @@ importers:
 
   examples/fastify:
     dependencies:
+      '@whatwg-node/fetch':
+        specifier: ^0.9.17
+        version: 0.9.17
       fastify:
         specifier: 4.17.0
         version: 4.17.0
@@ -2422,7 +2425,7 @@ packages:
       loglevel: 1.8.0
       make-fetch-happen: 11.0.3
       node-abort-controller: 3.0.1
-      node-fetch: 2.6.9
+      node-fetch: 2.6.12
     transitivePeerDependencies:
       - bluebird
       - encoding
@@ -21045,7 +21048,7 @@ packages:
       cors: 2.8.5
       express: 4.18.2
       firebase-admin: 11.5.0
-      node-fetch: 2.6.9
+      node-fetch: 2.6.12
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -21090,7 +21093,7 @@ packages:
       mime: 2.6.0
       minimatch: 3.1.2
       morgan: 1.10.0
-      node-fetch: 2.6.9
+      node-fetch: 2.6.12
       open: 6.4.0
       ora: 5.4.1
       p-limit: 3.1.0
@@ -28098,17 +28101,6 @@ packages:
     dependencies:
       whatwg-url: 5.0.0
     dev: true
-
-  /node-fetch@2.6.9:
-    resolution: {integrity: sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==}
-    engines: {node: 4.x || >=6.0.0}
-    peerDependencies:
-      encoding: ^0.1.0
-    peerDependenciesMeta:
-      encoding:
-        optional: true
-    dependencies:
-      whatwg-url: 5.0.0
 
   /node-fetch@3.3.2:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
