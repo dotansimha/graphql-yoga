@@ -3,7 +3,6 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { buildDynamicMDX, buildDynamicMeta } from 'nextra/remote'
 import { defaultRemarkPlugins } from '@theguild/components/next.config'
 import json from '../../remote-files/v2.json' assert { type: 'json' }
-// @ts-expect-error
 import { remarkLinkRewrite } from '@theguild/components/compile';
 
 const { user, repo, branch, docsPath, filePaths } = json
