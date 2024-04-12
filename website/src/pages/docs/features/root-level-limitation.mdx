@@ -1,0 +1,60 @@
+---
+description:
+  This plugin enforces a limit on the number of root fields allowed in a GraphQL query, similar to
+  the `maxRootFields` option in Apollo Router. This can help to improve the performance and
+  stability of your GraphQL server by preventing overly complex queries.
+---
+
+# Root Fields
+
+This plugin enforces a limit on the number of root fields allowed in a GraphQL query, similar to the
+`maxRootFields` option in Apollo Router. This can help to improve the performance and stability of
+your GraphQL server by preventing overly complex queries.
+
+Here's an example query that fetches two root fields, `field1`, `field2` and `field3`:
+
+```
+query GetAllFields {
+  field { # 1
+    id
+  }
+  field2 { # 2
+    id
+  }
+  field3 { # 3
+    id
+  }
+}
+```
+
+# Limit Root Fields
+
+## Installation
+
+```sh npm2yarn
+npm i @graphql-yoga/root-level-limitation
+```
+
+## Quick Start
+
+```ts
+import { createServer } from 'node:http'
+import { createSchema, createYoga } from 'graphql-yoga'
+import { rootLevelQueryLimit } from '@graphql-yoga/root-level-limitation'
+
+export const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String!
+      }
+    `
+  }),
+  plugins: [rootLevelQueryLimit({ maxRootLevelFields: 1 })]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
