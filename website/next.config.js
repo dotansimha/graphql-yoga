@@ -37,6 +37,13 @@ export default withGuildDocs({
       '/docs/testing': '/docs/features/testing',
       '/docs/integrations': '/docs',
       '/docs/features': '/docs',
+      '/v2/features/health-check': '/v2',
+      '/v2/features/defer-stream': '/v2',
+      '/v2/features/automatic-persisted-queries': '/v2',
+      '/v2/features/response-caching': '/v2',
+      '/v2/features/introspection': '/v2',
+      '/v2/features/persisted-operations': '/v2',
+      '/features/graphiql': '/docs/features/graphiql',
       '/examples/graphql-ws': '/docs/features/subscriptions',
     }).map(([from, to]) => ({
       source: from,
