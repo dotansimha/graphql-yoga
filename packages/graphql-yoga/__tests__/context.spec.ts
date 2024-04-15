@@ -35,7 +35,7 @@ describe('Context', () => {
     },
   });
 
-  it('should provide intial and user context to onExecute', async () => {
+  it('should provide initial and user context to onExecute', async () => {
     const onExecuteFn = jest.fn((() => {}) as Plugin<{}, {}, UserContext>['onExecute']);
 
     const yoga = createYoga({
@@ -63,7 +63,7 @@ describe('Context', () => {
     expect(onExecuteFn.mock.lastCall?.[0].args.contextValue.request).toBeDefined();
   });
 
-  it('should provide intial and user context to onSubscribe', async () => {
+  it('should provide initial and user context to onSubscribe', async () => {
     const onSubscribeFn = jest.fn((() => {}) as Plugin<{}, {}, UserContext>['onSubscribe']);
 
     const yoga = createYoga({
@@ -96,7 +96,7 @@ describe('Context', () => {
     expect(onSubscribeFn.mock.lastCall?.[0].args.contextValue.request).toBeDefined();
   });
 
-  it('should provide intial context to rest of envelop hooks', async () => {
+  it('should provide initial context to rest of envelop hooks', async () => {
     const onEnvelopedFn = jest.fn((() => {}) as Plugin['onEnveloped']);
     const onParseFn = jest.fn((() => {}) as Plugin['onParse']);
     const onValidateFn = jest.fn((() => {}) as Plugin['onValidate']);
@@ -269,5 +269,58 @@ describe('Context', () => {
       expect(contextObject).toBeDefined();
       expect((contextObject as { myExtraContext: string }).myExtraContext).toBe('myExtraContext');
     }
+  });
+
+  test.only('hmm', async () => {
+    let requestCount = 0;
+
+    function writeCountValue(req: Request) {
+      const value = requestCount++;
+      (req as any)[Symbol.for('requestCount')] = value;
+
+      return value;
+    }
+
+    function getCountValue(req: Request) {
+      return (req as any)[Symbol.for('requestCount')];
+    }
+
+    let onExecuteDoneCalls = 0;
+
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hello: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            hello: () => 'world',
+          },
+        },
+      }),
+      plugins: [
+        {
+          onExecute() {
+            return {
+              onExecuteDone({ args }) {
+                const reqId = getCountValue(args.contextValue.request);
+                const graphqlCallId = onExecuteDoneCalls++;
+                expect(reqId).toBe(graphqlCallId);
+              },
+            };
+          },
+        } as Plugin,
+      ],
+    });
+    const env = {};
+    const req1 = new Request('http://yoga/graphql?query={hello}');
+    writeCountValue(req1);
+    const req2 = new Request('http://yoga/graphql?query={hello}');
+    writeCountValue(req2);
+
+    await yoga.fetch(req1, env, {});
+    await yoga.fetch(req2, env, {});
   });
 });
