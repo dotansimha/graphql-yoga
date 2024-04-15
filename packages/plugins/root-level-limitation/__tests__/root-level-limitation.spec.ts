@@ -1,5 +1,5 @@
 import { createSchema, createYoga } from 'graphql-yoga';
-import { rootLevelQueryLimit } from '../src/index.js';
+import { rootLevelQueryLimit } from '../src/index';
 
 describe('root-level-limitation', () => {
   const schema = createSchema({
@@ -87,7 +87,9 @@ describe('root-level-limitation', () => {
         'Content-Type': 'application/json',
       },
     });
-  })
+
+    expect(res.status).toBe(400);
+  });
 
   it('should allow requests with max root level query in comments', async () => {
     const res = await yoga.fetch('http://yoga/graphql', {
@@ -110,5 +112,5 @@ describe('root-level-limitation', () => {
     });
 
     expect(res.status).toBe(200);
-  })
+  });
 });
