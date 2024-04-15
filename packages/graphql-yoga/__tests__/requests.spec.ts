@@ -1,6 +1,6 @@
-import { Request } from '@whatwg-node/fetch';
-import { YogaInitialContext, createSchema, createYoga } from '../src';
 import { OnExecuteHook } from '@envelop/core';
+import { Request } from '@whatwg-node/fetch';
+import { createSchema, createYoga, YogaInitialContext } from '../src';
 
 describe('requests', () => {
   const schema = createSchema({
@@ -457,7 +457,7 @@ describe('requests', () => {
   });
 
   it('contains the correct request object in the unique execution context', async () => {
-    const onExecuteFn = jest.fn((() => { }) as OnExecuteHook<YogaInitialContext>);
+    const onExecuteFn = jest.fn((() => {}) as OnExecuteHook<YogaInitialContext>);
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
@@ -471,13 +471,13 @@ describe('requests', () => {
               return `Hello world!`;
             },
           },
-        }
+        },
       }),
       plugins: [
         {
           onExecute: onExecuteFn,
-        }
-      ]
+        },
+      ],
     });
     const env = {};
     const extraCtx = {};
@@ -507,6 +507,8 @@ describe('requests', () => {
     expect(secondResBody.data.greetings).toBe('Hello world!');
     expect(onExecuteFn).toHaveBeenCalledTimes(2);
     expect(onExecuteFn.mock.calls[1][0].args.contextValue.request).toBe(secondReq);
-    expect(onExecuteFn.mock.calls[1][0].args.contextValue).not.toBe(onExecuteFn.mock.calls[0][0].args.contextValue);
-  })
+    expect(onExecuteFn.mock.calls[1][0].args.contextValue).not.toBe(
+      onExecuteFn.mock.calls[0][0].args.contextValue,
+    );
+  });
 });

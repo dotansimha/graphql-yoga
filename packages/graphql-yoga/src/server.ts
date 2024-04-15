@@ -463,14 +463,15 @@ export class YogaServer<
       }
 
       if (result == null) {
-        const additionalContext = args[0]?.request === request
-          ? {
-              params,
-            }
-          : {
-              request,
-              params,
-            };
+        const additionalContext =
+          args[0]?.request === request
+            ? {
+                params,
+              }
+            : {
+                request,
+                params,
+              };
 
         const initialContext = args[0]
           ? batched
