@@ -64,4 +64,51 @@ describe('root-level-limitation', () => {
     });
     expect(res.status).toBe(200);
   });
+
+  it('should not allow requests with max root level query and nested fragments', async () => {
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          fragment QueryFragment on Query {
+            topBooks {
+              id
+            }
+            topProducts {
+              id
+            }
+          }
+          {
+            ...QueryFragment
+          }
+        `,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  })
+
+  it('should allow requests with max root level query in comments', async () => {
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          {
+            # topBooks {
+            #   id
+            # }
+            topProducts {
+              id
+            }
+          }
+        `,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    expect(res.status).toBe(200);
+  })
 });
