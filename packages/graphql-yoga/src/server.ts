@@ -463,7 +463,7 @@ export class YogaServer<
       }
 
       if (result == null) {
-        const additionalContext = args[0]?.request
+        const additionalContext = args[0]?.request === request
           ? {
               params,
             }

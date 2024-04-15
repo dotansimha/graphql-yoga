@@ -1,4 +1,6 @@
-import { createSchema, createYoga } from '../src';
+import { Request } from '@whatwg-node/fetch';
+import { YogaInitialContext, createSchema, createYoga } from '../src';
+import { OnExecuteHook } from '@envelop/core';
 
 describe('requests', () => {
   const schema = createSchema({
@@ -453,4 +455,58 @@ describe('requests', () => {
     const body = await response.text();
     expect(body).toBeFalsy();
   });
+
+  it('contains the correct request object in the unique execution context', async () => {
+    const onExecuteFn = jest.fn((() => { }) as OnExecuteHook<YogaInitialContext>);
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            greetings: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            greetings: (_, __, ctx) => {
+              return `Hello world!`;
+            },
+          },
+        }
+      }),
+      plugins: [
+        {
+          onExecute: onExecuteFn,
+        }
+      ]
+    });
+    const env = {};
+    const extraCtx = {};
+    const firstReq = new Request('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ greetings }' }),
+    });
+    const firstRes = await yoga.fetch(firstReq, env, extraCtx);
+    expect(firstRes.status).toBe(200);
+    const firstResBody = await firstRes.json();
+    expect(firstResBody.data.greetings).toBe('Hello world!');
+    expect(onExecuteFn).toHaveBeenCalledTimes(1);
+    expect(onExecuteFn.mock.calls[0][0].args.contextValue.request).toBe(firstReq);
+    const secondReq = new Request('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ query: '{ greetings }' }),
+    });
+    const secondRes = await yoga.fetch(secondReq, env, extraCtx);
+    expect(secondRes.status).toBe(200);
+    const secondResBody = await secondRes.json();
+    expect(secondResBody.data.greetings).toBe('Hello world!');
+    expect(onExecuteFn).toHaveBeenCalledTimes(2);
+    expect(onExecuteFn.mock.calls[1][0].args.contextValue.request).toBe(secondReq);
+    expect(onExecuteFn.mock.calls[1][0].args.contextValue).not.toBe(onExecuteFn.mock.calls[0][0].args.contextValue);
+  })
 });
