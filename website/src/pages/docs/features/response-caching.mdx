@@ -216,7 +216,7 @@ mutation UpdateUser {
 }
 ```
 
-For the given GraphQL operation and execution result all cached query results that contain the type
+For the given GraphQL operation and execution result, all cached query results that contain the type
 `User` with the id `1` will be invalidated.
 
 This behavior can be disabled by setting the `invalidateViaMutation` option to `false`.
@@ -232,7 +232,7 @@ useResponseCache({
 
 You can invalidate a type or specific instances of a type using the cache invalidation API.
 
-In order to use the API, you need to manually instantiate the cache an pass it to the
+In order to use the API, you need to manually instantiate the cache and pass it to the
 `useResponseCache` plugin.
 
 ```ts filename="Manual cache construction" {3,6}
@@ -251,21 +251,21 @@ Then in your business logic you can call the `invalidate` method on the cache in
 Invalidate all GraphQL query results that reference a specific type:
 
 ```ts filename="Invalidating a type"
-cache.invalidate([{ type: 'User' }])
+cache.invalidate([{ typename: 'User' }])
 ```
 
 Invalidate all GraphQL query results that reference a specific entity of a type:
 
 ```ts filename="Invalidate a specific entity of a type"
-cache.invalidate([{ type: 'User', id: '1' }])
+cache.invalidate([{ typename: 'User', id: '1' }])
 ```
 
 Invalidate all GraphQL query results multiple entities in a single call.
 
 ```ts filename="Invalidate multiple entities"
 cache.invalidate([
-  { type: 'Post', id: '1' },
-  { type: 'User', id: '2' }
+  { typename: 'Post', id: '1' },
+  { typename: 'User', id: '2' }
 ])
 ```
 
