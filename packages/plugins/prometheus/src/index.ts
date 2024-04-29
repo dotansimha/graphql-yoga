@@ -2,15 +2,26 @@ import { getOperationAST } from 'graphql';
 import { Plugin } from 'graphql-yoga';
 import { register as defaultRegistry } from 'prom-client';
 import {
+  CounterAndLabels,
   createCounter,
   createHistogram,
   createSummary,
   PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
   FillLabelsFnParams,
+  HistogramAndLabels,
+  SummaryAndLabels,
   usePrometheus as useEnvelopPrometheus,
 } from '@envelop/prometheus';
 
-export { createCounter, createHistogram, createSummary, FillLabelsFnParams };
+export {
+  CounterAndLabels,
+  FillLabelsFnParams,
+  HistogramAndLabels,
+  SummaryAndLabels,
+  createCounter,
+  createHistogram,
+  createSummary,
+};
 
 export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
   http?: boolean | string | ReturnType<typeof createHistogram>;
