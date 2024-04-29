@@ -61,6 +61,7 @@ export async function processRequest({
   enveloped: ReturnType<GetEnvelopedFn<unknown>>;
 }) {
   // Parse GraphQLParams
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const document = enveloped.parse(params.query!);
 
   // Validate parsed Document Node

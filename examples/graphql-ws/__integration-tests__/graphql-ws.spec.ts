@@ -102,7 +102,9 @@ describe('graphql-ws example integration', () => {
 
     const wsServer = useServer(
       {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         execute: (args: any) => args.execute(args),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         subscribe: (args: any) => args.subscribe(args),
         onSubscribe: async (_ctx, msg) => {
           const { schema, execute, subscribe, contextFactory, parse, validate } =

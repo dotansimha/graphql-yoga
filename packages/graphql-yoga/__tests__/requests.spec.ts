@@ -457,7 +457,7 @@ describe('requests', () => {
   });
 
   it('contains the correct request object in the unique execution context', async () => {
-    const onExecuteFn = jest.fn((() => {}) as OnExecuteHook<YogaInitialContext>);
+    const onExecuteFn = jest.fn((() => undefined) as OnExecuteHook<YogaInitialContext>);
     const yoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
@@ -467,7 +467,7 @@ describe('requests', () => {
         `,
         resolvers: {
           Query: {
-            greetings: (_, __, ctx) => {
+            greetings: () => {
               return `Hello world!`;
             },
           },

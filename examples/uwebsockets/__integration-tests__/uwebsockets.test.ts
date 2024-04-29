@@ -8,7 +8,7 @@ import { fetch } from '@whatwg-node/fetch';
 describe('uWebSockets', () => {
   const nodeMajor = parseInt(process.versions.node.split('.')[0], 10);
   if (nodeMajor < 16 || nodeMajor > 20) {
-    it('should be skipped', () => {});
+    it('should be skipped', () => undefined);
     return;
   }
   let listenSocket: us_listen_socket;
@@ -16,6 +16,7 @@ describe('uWebSockets', () => {
   let client: Client;
   beforeAll(async () => {
     port = await getPortFree();
+    // eslint-disable-next-line no-async-promise-executor
     await new Promise<void>(async (resolve, reject) => {
       const { app } = await import('../src/app');
       app.listen(port, newListenSocket => {
@@ -35,7 +36,7 @@ describe('uWebSockets', () => {
        * Reference: https://gist.github.com/jed/982883
        */
       generateID: () =>
-        // @ts-expect-error
+        // @ts-expect-error I have no idea for the reason of this error. I am just the guy that has to fix the broken eslint setup.
         ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
           (c ^ (Crypto.randomBytes(1)[0] & (15 >> (c / 4)))).toString(16),
         ),

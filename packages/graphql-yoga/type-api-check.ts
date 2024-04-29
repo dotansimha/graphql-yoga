@@ -53,6 +53,7 @@ const request: Request = null as any;
       resolvers: {
         Query: {
           foo: (_: unknown, __: unknown, context) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             context.iAmHere;
           },
         },
@@ -70,6 +71,7 @@ const request: Request = null as any;
         Query: {
           foo: (_: unknown, __: unknown, context) => {
             // @ts-expect-error Property 'iAmHere' does not exist on type 'YogaInitialContext'.ts(2339)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             context.iAmHere;
           },
         },
@@ -87,6 +89,7 @@ const request: Request = null as any;
   const resolvers: IResolvers<unknown, YogaInitialContext & Context> = {
     Query: {
       foo: (_: unknown, __: unknown, context) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         context.brrt;
       },
     },

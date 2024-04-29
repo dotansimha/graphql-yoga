@@ -134,19 +134,19 @@ npm i gqtx
 ```
 
 ```js filename="schema.js"
-import { buildGraphQLSchema, Gql } from "gqtx";
+import { buildGraphQLSchema, Gql } from 'gqtx'
 
 const Query = Gql.Query({
   fields: () => [
     Gql.Field({
-      name: "hello",
+      name: 'hello',
       type: Gql.String,
-      resolve: () => "world",
-    }),
-  ],
-});
+      resolve: () => 'world'
+    })
+  ]
+})
 
-export const schema = buildGraphQLSchema({ query: Query });
+export const schema = buildGraphQLSchema({ query: Query })
 ```
 
   </Tabs.Tab>

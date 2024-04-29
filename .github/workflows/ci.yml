@@ -210,6 +210,9 @@ jobs:
       - name: Prettier
         run: pnpm prettier:check
 
+      - name: eslint
+        run: pnpm lint
+
   apollo-federation-compatibility:
     runs-on: ubuntu-latest
     steps:
