@@ -60,12 +60,19 @@ Federation Gateways and Services through the `YogaGatewayDriver` and `YogaFedera
 npm i @nestjs/graphql @graphql-yoga/nestjs-federation graphql-yoga graphql
 ```
 
-### Create Application Module
+#### Subgraph
+
+For the subgraph we use the `YogaFederationDriver` and `YogaFederationDriverConfig`.
 
 ```typescript
 import { YogaFederationDriver, YogaFederationDriverConfig } from '@graphql-yoga/nestjs-federation'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
+import { DeprecatedProductsResolver } from './deprecated-products.resolver'
+import { InventoryResolver } from './inventory.resolver'
+import { ProductResearchResolver } from './product-research.resolver'
+import { ProductsResolver } from './products.resolver'
+import { UsersResolver } from './users.resolver'
 
 @Module({
   imports: [
@@ -73,17 +80,46 @@ import { GraphQLModule } from '@nestjs/graphql'
       driver: YogaFederationDriver,
       typePaths: ['**/*.graphql']
     })
+  ],
+  providers: [
+    UsersResolver,
+    ProductsResolver,
+    ProductResearchResolver,
+    DeprecatedProductsResolver,
+    InventoryResolver
   ]
 })
 export class AppModule {}
 ```
 
-### Develop GraphQL
+#### Gateway
 
-This is just a federation and gateway driver; meaning, everything else should work as
+For the gateway we use the `YogaGatewayDriver` and `YogaGatewayDriverConfig`.
+
+```typescript
+import { YogaGatewayDriver, YogaGatewayDriverConfig } from '@graphql-yoga/nestjs-federation'
+import { Module } from '@nestjs/common'
+import { GraphQLModule } from '@nestjs/graphql'
+
+@Module({
+  imports: [
+    GraphQLModule.forRoot<YogaGatewayDriverConfig>({
+      driver: YogaGatewayDriver,
+      gateway: {
+        services: [{ name: 'subgraph', url: 'http://subgraph/graphql' }]
+      }
+    })
+  ]
+})
+export class AppModule {}
+```
+
+### Further development
+
+Yoga offers just a federation and gateway driver; meaning, everything else works as
 [showcased in NestJS federation documentation](https://docs.nestjs.com/graphql/federation).
 
 <Callout>
-  A complete example, with full Apollo Federation Subgraph Compatibility, [is available in the
+  A complete example of a Apollo Federation Subgraph, [is available in the
   repository](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nestjs-apollo-federation-compatibility).
 </Callout>
