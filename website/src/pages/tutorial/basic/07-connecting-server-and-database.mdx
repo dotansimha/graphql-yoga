@@ -115,7 +115,7 @@ database instead of local dummy data.
 In `src/schema.ts`, update the `resolvers` object and change imports to look as follows:
 
 ```ts filename="src/schema.ts"
-import { makeExecutableSchema } from '@graphql-tools/schema'
+import { createSchema } from 'graphql-yoga'
 import { type Link } from '@prisma/client'
 import type { GraphQLContext } from './context'
 
@@ -146,7 +146,7 @@ const resolvers = {
   }
 }
 
-export const schema = makeExecutableSchema({
+export const schema = createSchema({
   resolvers: [resolvers],
   typeDefs: [typeDefinitions]
 })
