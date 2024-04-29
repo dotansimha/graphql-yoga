@@ -92,6 +92,11 @@ import { UsersResolver } from './users.resolver'
 export class AppModule {}
 ```
 
+<Callout>
+  A complete example of the subgraph implementation [is available in the
+  repository](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nestjs-apollo-federation-compatibility).
+</Callout>
+
 #### Gateway
 
 For the gateway we use the `YogaGatewayDriver` and `YogaGatewayDriverConfig`.
@@ -118,8 +123,3 @@ export class AppModule {}
 
 Yoga offers just a federation and gateway driver; meaning, everything else works as
 [showcased in NestJS federation documentation](https://docs.nestjs.com/graphql/federation).
-
-<Callout>
-  A complete example of a Apollo Federation Subgraph, [is available in the
-  repository](https://github.com/dotansimha/graphql-yoga/tree/main/examples/nestjs-apollo-federation-compatibility).
-</Callout>
