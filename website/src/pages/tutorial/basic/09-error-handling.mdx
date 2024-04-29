@@ -132,63 +132,6 @@ implementation.
 Let's change the implementation to expose the much more helpful message
 `Cannot post comment on non-existing link with id 'X'.` instead of `Unexpected error.`.
 
-<details>
-  <summary>v2</summary>
-
-For doing so you will use the `GraphQLYogaError` class that is exported from the
-`@graphql-yoga/node` package.
-
-Add the following catch handler for mapping a foreign key error into a `GraphQLYogaError`:
-
-```ts filename="src/schema.ts"
-// ... other imports ...
-import { GraphQLYogaError } from '@graphql-yoga/node'
-
-// ... other imports ...
-
-const resolvers = {
-  // ... other resolver maps ...
-  Mutation: {
-    // ... other Mutation object type field resolver functions ...
-    async postCommentOnLink(
-      parent: unknown,
-      args: { linkId: string; body: string },
-      context: GraphQLContext
-    ) {
-      const comment = await context.prisma.comment
-        .create({
-          data: {
-            body: args.body,
-            linkId: parseInt(args.linkId)
-          }
-        })
-        .catch((err: unknown) => {
-          if (err instanceof PrismaClientKnownRequestError && err.code === 'P2003') {
-            return Promise.reject(
-              new GraphQLYogaError(
-                `Cannot post comment on non-existing link with id '${args.linkId}'.`
-              )
-            )
-          }
-          return Promise.reject(err)
-        })
-
-      return comment
-    }
-  }
-}
-```
-
-The error code `P2003` indicates a foreign key constraint error. You can learn more about it in
-[the Prisma documentation](https://prisma.io/docs/reference/api-reference/error-reference#p2003).
-You use that code for identifying this edge case of a missing link and then throw a
-`GraphQLYogaError` with a useful error message instead.
-
-</details>
-
-<details open>
-  <summary>v3</summary>
-
 For doing so you will use the `GraphQLError` class that is exported from the `graphql` package.
 
 Add the following catch handler for mapping a foreign key error into a `GraphQLError`:
@@ -196,6 +139,7 @@ Add the following catch handler for mapping a foreign key error into a `GraphQLE
 ```ts filename="src/schema.ts"
 // ... other imports ...
 import { GraphQLError } from 'graphql'
+import { Prisma } from '@prisma/client'
 
 // ... other imports ...
 
@@ -216,7 +160,7 @@ const resolvers = {
           }
         })
         .catch((err: unknown) => {
-          if (err instanceof PrismaClientKnownRequestError && err.code === 'P2003') {
+          if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
             return Promise.reject(
               new GraphQLError(`Cannot post comment on non-existing link with id '${args.linkId}'.`)
             )
@@ -234,8 +178,6 @@ The error code `P2003` indicates a foreign key constraint error. You can learn m
 [the Prisma documentation](https://prisma.io/docs/reference/api-reference/error-reference#p2003).
 You use that code for identifying this edge case of a missing link and then throw a `GraphQLError`
 with a useful error message instead.
-
-</details>
 
 Restart the server using `npm run dev` and again execute the mutation operation using GraphiQL.
 
@@ -385,69 +327,10 @@ string contents using a regex.
 
 Add the following code to the `src/schema.ts` file.
 
-<details>
-  <summary>v2</summary>
-
-```ts filename="src/schema.ts"
-// ... other code ...
-import { GraphQLYogaError } from '@graphql-yoga/node'
-
-const parseIntSafe = (value: string): number | null => {
-  if (/^(\d+)$/.test(value)) {
-    return parseInt(value, 10)
-  }
-  return null
-}
-
-const resolvers = {
-  // ... other resolver maps ...
-  Mutation: {
-    // ... other field resolver functions
-    async postCommentOnLink(
-      parent: unknown,
-      args: { linkId: string; body: string },
-      context: GraphQLContext
-    ) {
-      const linkId = parseIntSafe(args.linkId)
-      if (linkId === null) {
-        return Promise.reject(
-          new GraphQLYogaError(`Cannot post comment on non-existing link with id '${args.linkId}'.`)
-        )
-      }
-
-      const comment = await context.prisma.comment
-        .create({
-          data: {
-            body: args.body,
-            linkId
-          }
-        })
-        .catch((err: unknown) => {
-          if (err instanceof PrismaClientKnownRequestError) {
-            if (err.code === 'P2003') {
-              return Promise.reject(
-                new GraphQLYogaError(
-                  `Cannot post comment on non-existing link with id '${args.linkId}'.`
-                )
-              )
-            }
-          }
-          return Promise.reject(err)
-        })
-      return comment
-    }
-  }
-}
-```
-
-</details>
-
-<details open>
-  <summary>v3</summary>
-
 ```ts filename="src/schema.ts"
 // ... other code ...
 import { GraphQLError } from 'graphql'
+import { Prisma } from '@prisma/client'
 
 const parseIntSafe = (value: string): number | null => {
   if (/^(\d+)$/.test(value)) {
@@ -480,7 +363,7 @@ const resolvers = {
           }
         })
         .catch((err: unknown) => {
-          if (err instanceof PrismaClientKnownRequestError) {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
             if (err.code === 'P2003') {
               return Promise.reject(
                 new GraphQLError(
@@ -496,8 +379,6 @@ const resolvers = {
   }
 }
 ```
-
-</details>
 
 The regex `/^(\d+)$/` simply verifies that every character within the `value` is a digit. In case
 the value includes a non-digit character, you simply return `null` and then reject the resolver with
