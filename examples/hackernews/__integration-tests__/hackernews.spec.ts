@@ -6,7 +6,7 @@ import type { GraphQLContext } from '../src/context';
 import { schema } from '../src/schema';
 
 describe('hackernews example integration', () => {
-  let yoga: YogaServerInstance<Record<string, any>, GraphQLContext>;
+  let yoga: YogaServerInstance<Record<string, unknown>, GraphQLContext>;
   beforeAll(async () => {
     const { createContext } = await import('../src/context');
     yoga = createYoga({ schema, context: createContext });

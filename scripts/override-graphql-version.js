@@ -1,5 +1,7 @@
 /* eslint-env node */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require('node:fs');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('node:path');
 
 // supply the wished graphql version as first argument of script

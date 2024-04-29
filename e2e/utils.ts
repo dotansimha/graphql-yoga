@@ -93,7 +93,7 @@ const DUMMY_VARIABLES = {};
 export async function assertQuery(
   endpoint: string,
   query: string = DUMMY_QUERY,
-  variables: Record<string, any> = DUMMY_VARIABLES,
+  variables: Record<string, string> = DUMMY_VARIABLES,
 ) {
   console.log(`ℹ️ Trying to run a GraphQL operation against ${endpoint}:`);
   console.log(`\t operation: ${query}`);

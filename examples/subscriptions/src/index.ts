@@ -67,7 +67,7 @@ const resolvers: Resolvers<Context> = {
             console.log('stop');
           });
         }),
-      resolve: (payload: any) => payload,
+      resolve: (payload: number) => payload,
     },
     globalCounter: {
       // Merge initial value with source stream of new values
@@ -83,7 +83,7 @@ const resolvers: Resolvers<Context> = {
           // map all events to the latest globalCounter
           map(() => globalCounter),
         ),
-      resolve: (payload: any) => payload,
+      resolve: (payload: number) => payload,
     },
   },
   Mutation: {
@@ -95,7 +95,7 @@ const resolvers: Resolvers<Context> = {
   },
 };
 
-const yoga = createYoga<Context, any>({
+const yoga = createYoga<Context>({
   schema: createSchema({
     resolvers,
     typeDefs,

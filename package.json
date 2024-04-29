@@ -34,7 +34,7 @@
     "build-website": "pnpm build && cd website && pnpm build",
     "changeset": "changeset",
     "check": "pnpm -r run check",
-    "lint": "eslint --ignore-path .gitignore --ext ts,js,tsx,jsx .",
+    "lint": "eslint --ignore-path .eslintignore --ext ts,js,tsx,jsx .",
     "postchangeset": "pnpm install --no-frozen-lockfile",
     "postinstall": "husky install",
     "prebuild": "rimraf packages/*/dist",

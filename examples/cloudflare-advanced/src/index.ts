@@ -45,11 +45,11 @@ const yoga = createYoga({
             limit,
             cursor,
           }),
-        readFileAsText: (root, args) => EXAMPLE_KV.get(args.name, 'text'),
-        readFileAsJson: (root, args) => EXAMPLE_KV.get(args.name, 'json'),
+        readFileAsText: (_, args) => EXAMPLE_KV.get(args.name, 'text'),
+        readFileAsJson: (_, args) => EXAMPLE_KV.get(args.name, 'json'),
       },
       TodoKeyInfo: {
-        value: ({ name }: any) => EXAMPLE_KV.get(name, 'text'),
+        value: ({ name }: { name: string }) => EXAMPLE_KV.get(name, 'text'),
       },
       Mutation: {
         addTodo: async (_, { content }) => {

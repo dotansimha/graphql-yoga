@@ -9,6 +9,7 @@ const liveQueryStore = new InMemoryLiveQueryStore();
 
 setInterval(() => {
   const firstElement = greetings.pop();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   greetings.unshift(firstElement!);
   liveQueryStore.invalidate('Query.greetings');
 }, 1000).unref();

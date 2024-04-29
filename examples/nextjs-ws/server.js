@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-env node */
 const { createServer } = require('node:http');
 const { WebSocketServer } = require('ws');

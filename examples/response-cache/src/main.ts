@@ -41,7 +41,7 @@ export const create = (config?: Omit<UseResponseCacheParameter, 'session'>, port
   return new Promise<[number, () => Promise<void>]>(resolve => {
     server.listen(port, () => {
       resolve([
-        (server.address() as any).port as number,
+        (server.address() as { port: number }).port,
         () =>
           new Promise<void>(resolve => {
             server.close(() => {

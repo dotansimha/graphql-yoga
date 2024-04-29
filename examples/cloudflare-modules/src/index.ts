@@ -15,7 +15,7 @@ const schema = createSchema({
 });
 
 export default {
-  fetch(request: Request, env: Record<string, any>, ...rest: any[]) {
+  fetch(request: Request, env: Record<string, string>, ...rest: unknown[]) {
     const yoga = createYoga({
       graphqlEndpoint: env.GRAPHQL_ROUTE || '/graphql',
       landingPage: false,

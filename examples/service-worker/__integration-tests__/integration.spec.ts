@@ -19,10 +19,10 @@ globalThis.self = {
       listeners.delete(listener);
     }
   },
-} as any;
+} as unknown as typeof globalThis.self;
 
 function trigger(eventName: string, data) {
-  // eslint-disable-next-line unicorn/no-array-for-each -- is Set
+  // eslint-disable-next-line unicorn/no-array-for-each, @typescript-eslint/no-explicit-any -- is Set
   listenerMap.get(eventName)?.forEach((listener: any) => {
     const listenerFn = listener.handleEvent ?? listener;
     listenerFn(data);
@@ -158,7 +158,7 @@ describe('Service worker', () => {
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('text/event-stream');
     let counter = 0;
-    for await (const chunk of response.body as any) {
+    for await (const chunk of response.body as unknown as AsyncIterable<Uint8Array>) {
       const data = Buffer.from(chunk).toString('utf-8');
       if (data === ':\n\n') {
         continue;

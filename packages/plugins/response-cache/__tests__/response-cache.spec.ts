@@ -1154,6 +1154,7 @@ describe('shouldCacheResult', () => {
 });
 
 it('response has "servedFromResponseCache" symbol', async () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results: Array<any> = [];
   const yoga = createYoga({
     plugins: [

@@ -148,20 +148,20 @@ const schema = createSchema({
       me() {
         return UsersCollection.get(1);
       },
-      user(_: any, { id }: any) {
+      user(_: unknown, { id }: { id: string }) {
         return UsersCollection.get(id);
       },
       users() {
         return UsersCollection.all();
       },
-      usersLimit(_: any, { limit }: any) {
+      usersLimit(_: unknown, { limit }: { limit: number }) {
         return UsersCollection.all().slice(0, limit);
       },
-      usersSort(_: any, { sort }: any) {
+      usersSort(_: unknown, { sort }: { sort: number }) {
         const users = UsersCollection.all();
         return sort ? users.sort((a, b) => b.id - a.id) : users;
       },
-      book(_: any, { id }: any) {
+      book(_: unknown, { id }: { id: string }) {
         return BooksCollection.get(id);
       },
       books() {
@@ -175,7 +175,7 @@ const schema = createSchema({
       },
     },
     Mutation: {
-      addBook(_: any, { title }: any) {
+      addBook(_: unknown, { title }: { title: string }) {
         const book = BooksCollection.add(title);
 
         pubsub.publish(BOOK_ADDED, { onBook: book });
@@ -189,7 +189,7 @@ const schema = createSchema({
       },
     },
     Food: {
-      __resolveType(obj: any) {
+      __resolveType(obj: { ingredients?: string[]; toppings?: string[] }) {
         if (obj.ingredients) {
           return 'Salad';
         }

@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
-// @ts-expect-error
+// @ts-expect-error I have no idea for the reason of this error. I am just the guy that has to fix the broken eslint setup.
 import { buildDynamicMDX, buildDynamicMeta } from 'nextra/remote'
 import { defaultRemarkPlugins } from '@theguild/components/next.config'
 import json from '../../remote-files/v4.json' assert { type: 'json' }

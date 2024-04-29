@@ -59,6 +59,7 @@ const inventory: Inventory = {
 const resolvers: Resolvers = {
   Query: {
     product(_: unknown, args: { id: string }) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return products.find(p => p.id === args.id)! as unknown as Product;
     },
     deprecatedProduct: (_, args) => {
@@ -84,6 +85,7 @@ const resolvers: Resolvers = {
   },
   ProductResearch: {
     __resolveReference: reference => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return productResearch.find(p => reference.study.caseNumber === p.study.caseNumber)!;
     },
   },
@@ -138,7 +140,7 @@ const resolvers: Resolvers = {
     name() {
       return 'Jane Smith';
     },
-    // @ts-expect-error
+    // @ts-expect-error I have no idea for the reason of this error. I am just the guy that has to fix the broken eslint setup.
     __resolveReference(userRef) {
       const ref = userRef as User;
       if (ref.email) {
@@ -151,7 +153,7 @@ const resolvers: Resolvers = {
           user.totalProductsCreated = ref.totalProductsCreated;
         }
         if (ref.yearsOfEmployment) {
-          // @ts-expect-error
+          // @ts-expect-error I have no idea for the reason of this error. I am just the guy that has to fix the broken eslint setup.
           user.yearsOfEmployment = ref.yearsOfEmployment;
         }
         return user;
