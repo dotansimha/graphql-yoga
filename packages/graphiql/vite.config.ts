@@ -15,9 +15,13 @@ export default defineConfig({
       '/graphql': 'http://localhost:4000',
     },
   },
-  define: {
-    'process.env.NODE_ENV': '"production"',
-  },
+  define:
+    // Having this environment variable set in development will break the dev server
+    process.env.BUILD === 'true'
+      ? {
+          'process.env.NODE_ENV': '"production"',
+        }
+      : undefined,
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src', 'bundle.tsx'),

@@ -38,20 +38,19 @@ you'll add developer tools that will make it super simple to query and access.
 ## Creating your First GraphQL Schema
 
 There are many ways to create a GraphQL schema - in this tutorial, you are going to use the
-schema-first approach, and build the schema with the `@graphql-tools/schema` library (take a look at
-the end of this chapter for different solutions for creating your GraphQL schema).
+schema-first approach, which is included by default when installing yoga (take a look at the end of
+this chapter for different solutions for creating your GraphQL schema).
 
-Start by installing `graphql` and `@graphql-tools/schema` library in your project, using the
-following command:
+Start by installing `graphql` library in your project, using the following command:
 
 ```sh npm2yarn
-npm i @graphql-tools/schema graphql
+npm i graphql@16.6.0 graphql-yoga@5.x.x
 ```
 
 The command above will get you the following libraries installed in the project:
 
 - `graphql` is the GraphQL engine implementation.
-- `@graphql-tools/schema` is a library for creating GraphQL executable schemas.
+- `graphql-yoga` is the GraphQL Yoga package, for now we will use it to construct out GraphQL schema
 
 A GraphQL schema can be written with GraphQL SDL (*S*chema *D*efinition *L*anguage), which is the
 GraphQL language for defining your API/contract. The actual code and business logic of each field is
@@ -97,7 +96,7 @@ corresponding data of that field.
 Now you still need to glue together the type definitions and the resolver map.
 
 ```ts filename="src/schema.ts"
-import { makeExecutableSchema } from '@graphql-tools/schema'
+import { createSchema } from 'graphql-yoga'
 
 const typeDefinitions = /* GraphQL */ `
   type Query {
@@ -111,7 +110,7 @@ const resolvers = {
   }
 }
 
-export const schema = makeExecutableSchema({
+export const schema = createSchema({
   resolvers: [resolvers],
   typeDefs: [typeDefinitions]
 })
@@ -123,8 +122,8 @@ In the code snippet above, you've created or used the following variables:
   exposes a field called `hello`, of type `String`
 - `resolvers` - the resolver functions are part of the GraphQL schema, and they are the actual
   implementation (code/logic) of the GraphQL schema
-- `schema` - a combination of the GraphQL SDL and the resolvers. `makeExecutableSchema` function is
-  in charge of gluing them together into an executable schema we can later use
+- `schema` - a combination of the GraphQL SDL and the resolvers. `createSchema` function is in
+  charge of gluing them together into an executable schema we can later use
 
 Now that you have a GraphQL schema, you can use that to fetch data using a GraphQL `query`
 operation!
@@ -372,7 +371,9 @@ Here are a few popular open-source libraries:
 - [`graphql`](https://graphql.org/graphql-js/type) - you can use raw `graphql` using object classes
   to create your schema
 - [`@graphql-tools/schema`](https://graphql-tools.com/docs/generate-schema) - schema-first library
-  for creating executable schemas
+  for creating executable schemas (it is re-exported from `graphql-yoga` for convenience) =
+  [`grats`](https://github.com/captbaritone/grats) - library for creating GraphQL schemas from
+  TypeScript code annotated with comments.
 - [`pothos`](https://github.com/hayes/pothos) - library for creating GraphQL schemas in typescript
   using a strongly typed code first approach and a built-in plugin system
 - [`gqtx`](https://github.com/sikanhe/gqtx) - library for creating GraphQL schemas in typescript

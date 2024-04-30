@@ -1,7 +1,5 @@
-import { createGraphQLError } from 'graphql-yoga';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import type { Link } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { createGraphQLError, createSchema } from 'graphql-yoga';
+import { Prisma, type Link } from '@prisma/client';
 import type { GraphQLContext } from './context';
 
 const typeDefinitions = /* GraphQL */ `
@@ -126,7 +124,7 @@ const resolvers = {
           },
         })
         .catch((err: unknown) => {
-          if (err instanceof PrismaClientKnownRequestError && err.code === 'P2003') {
+          if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
             return Promise.reject(
               createGraphQLError(
                 `Cannot post common on non-existing link with id '${args.linkId}'.`,
@@ -140,7 +138,7 @@ const resolvers = {
   },
 };
 
-export const schema = makeExecutableSchema({
+export const schema = createSchema({
   resolvers: [resolvers],
   typeDefs: [typeDefinitions],
 });

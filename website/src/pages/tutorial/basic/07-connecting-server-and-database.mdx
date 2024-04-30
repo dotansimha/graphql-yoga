@@ -46,27 +46,6 @@ export async function createContext(): Promise<GraphQLContext> {
 Now, you'll need to import the `createContext` function and make sure you add it as part of the
 GraphQL execution process:
 
-<details>
-  <summary>v2</summary>
-
-```typescript filename="src/main.ts"
-import { createServer } from '@graphql-yoga/node'
-import { createContext } from './context'
-import { schema } from './schema'
-
-async function main() {
-  const server = createServer({ schema, context: createContext })
-  await server.start()
-}
-
-main()
-```
-
-</details>
-
-<details open>
-  <summary>v3</summary>
-
 ```typescript filename="src/main.ts"
 import { createServer } from 'http'
 import { createYoga } from 'graphql-yoga'
@@ -83,8 +62,6 @@ function main() {
 
 main()
 ```
-
-</details>
 
 In the next step, you'll connect the Prisma client and your GraphQL server!
 
@@ -138,8 +115,8 @@ database instead of local dummy data.
 In `src/schema.ts`, update the `resolvers` object and change imports to look as follows:
 
 ```ts filename="src/schema.ts"
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import type { Link } from '@prisma/client'
+import { createSchema } from 'graphql-yoga'
+import { type Link } from '@prisma/client'
 import type { GraphQLContext } from './context'
 
 const resolvers = {
@@ -169,7 +146,7 @@ const resolvers = {
   }
 }
 
-export const schema = makeExecutableSchema({
+export const schema = createSchema({
   resolvers: [resolvers],
   typeDefs: [typeDefinitions]
 })

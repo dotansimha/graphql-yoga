@@ -21,62 +21,23 @@ end of this page)
 In this tutorial, we will be using GraphQL Yoga for building our Node.js GraphQL HTTP server.
 
 <Callout>
-  Yoga can also run on other platforms, such as Cloudflare Workers or Deno. We recommend checking
-  out [the integrations section](/docs/integrations/integration-with-cloudflare-workers) in our
-  documentation after finishing the tutorial.
+  Yoga can also run on other platforms, such as Cloudflare Workers, AWS Lambda, or Deno. We
+  recommend checking out [the integrations
+  section](/docs/integrations/integration-with-cloudflare-workers) in our documentation after
+  finishing the tutorial.
 </Callout>
 
-<details>
-  <summary>v2</summary>
-
-You'll need the `@graphql-yoga/node` package available in your project, so install it using the
-following command:
+You'll need the `graphql-yoga` package available in your project (if you have not yet installed in
+the last step), so install it using the following command:
 
 ```sh npm2yarn
-npm i --save-exact @graphql-yoga/node
+npm i --save-exact graphql-yoga@5.x.x
 ```
 
 Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:
 
 ```ts filename="src/main.ts"
-import { createServer } from '@graphql-yoga/node'
-import { schema } from './schema'
-
-async function main() {
-  const server = createServer({ schema })
-  await server.start()
-}
-
-main()
-```
-
-Now, try to run your server again with `npm run dev` (or, `npm run start`).
-
-The output should look similar to the following:
-
-```text
-$ cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts
-[INFO] 15:40:14 ts-node-dev ver. 1.1.8 (using ts-node ver. 9.1.1, typescript ver. 4.5.5)
-[2022-02-25 14:40:17.810 +0000] DEBUG (13296 on DESKTOP-U72CGKK): Setting up server.
-[2022-02-25 14:40:17.818 +0000] INFO (13296 on DESKTOP-U72CGKK): GraphQL Server running at http://127.0.0.1:4000/graphql.
-```
-
-</details>
-
-<details open>
-  <summary>v3</summary>
-
-You'll need the `graphql-yoga` package available in your project, so install it using the following
-command:
-
-```sh npm2yarn
-npm i --save-exact graphql-yoga
-```
-
-Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:
-
-```ts filename="src/main.ts"
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { createYoga } from 'graphql-yoga'
 import { schema } from './schema'
 
@@ -93,8 +54,6 @@ main()
 
 Now, try to run your server again with `npm run dev` (or, `npm run start`), open your browser and
 navigate to `http://localhost:4000/graphql`.
-
-</details>
 
 Type in the following operation in the left editor section and press the `Play` button for executing
 the operation against the GraphQL server.
