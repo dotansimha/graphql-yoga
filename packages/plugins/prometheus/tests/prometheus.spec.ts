@@ -122,4 +122,15 @@ describe('Prometheus', () => {
     expect(metrics).toContain('method="POST"');
     expect(metrics).toContain('statusCode="200"');
   });
+
+  it('should be able to register the same histogram for multiple different registries', async () => {
+    usePrometheus({
+      http: true,
+      registry,
+    });
+    usePrometheus({
+      http: true,
+      registry,
+    });
+  });
 });
