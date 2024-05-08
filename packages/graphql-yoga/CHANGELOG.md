@@ -1,5 +1,24 @@
 # graphql-yoga
 
+## 5.3.1
+
+### Patch Changes
+
+- [#3237](https://github.com/dotansimha/graphql-yoga/pull/3237)
+  [`3324bbab`](https://github.com/dotansimha/graphql-yoga/commit/3324bbabf1f32e8b4ee95ea8700acfb06f87f8ca)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.33` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.33)
+    (from `^0.9.32`, in `dependencies`)
+
+- [#3237](https://github.com/dotansimha/graphql-yoga/pull/3237)
+  [`3324bbab`](https://github.com/dotansimha/graphql-yoga/commit/3324bbabf1f32e8b4ee95ea8700acfb06f87f8ca)
+  Thanks [@ardatan](https://github.com/ardatan)! - In such environments like CloudFlare Workers, the
+  `request` object in the context always has the initial request object, so it was impossible to
+  access the actual `Request` object from the execution context. Now Yoga ensures that the `request`
+  in the context is the same with the actual `Request`.
+
 ## 5.3.0
 
 ### Minor Changes
