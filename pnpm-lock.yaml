@@ -1390,7 +1390,7 @@ importers:
     dependencies:
       '@envelop/graphql-jit':
         specifier: 8.0.0
-        version: 8.0.0(@envelop/core@5.0.0)(graphql@16.6.0)
+        version: 8.0.0(@envelop/core@5.0.1)(graphql@16.6.0)
       '@graphql-yoga/render-graphiql':
         specifier: 5.3.0
         version: link:../../packages/render-graphiql/dist
@@ -1960,8 +1960,8 @@ importers:
   packages/plugins/prometheus:
     dependencies:
       '@envelop/prometheus':
-        specifier: 10.0.0-alpha-20240507125432-5841b485
-        version: 10.0.0-alpha-20240507125432-5841b485(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0)
+        specifier: ^10.0.0
+        version: 10.0.0(@envelop/core@5.0.1)(graphql@16.6.0)(prom-client@15.0.0)
       graphql:
         specifier: ^15.2.0 || ^16.0.0
         version: 16.6.0
@@ -5432,6 +5432,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@envelop/core@5.0.1:
+    resolution: {integrity: sha512-wxA8EyE1fPnlbP0nC/SFI7uU8wSNf4YjxZhAPu0P63QbgIvqHtHsH4L3/u+rsTruzhk3OvNRgQyLsMfaR9uzAQ==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@envelop/types': 5.0.0
+      tslib: 2.6.2
+    dev: false
+
   /@envelop/disable-introspection@6.0.0(@envelop/core@4.0.0)(graphql@16.6.0):
     resolution: {integrity: sha512-+DxCvKdzsHat/aWr6dqDsebbGk6ZGiM7VZlnpwKS8g4+PDHg7AfMBnDP8CtUODgifU+kgZME4TFzU288MNpNDg==}
     engines: {node: '>=18.0.0'}
@@ -5499,6 +5507,20 @@ packages:
       value-or-promise: 1.0.12
     dev: false
 
+  /@envelop/graphql-jit@8.0.0(@envelop/core@5.0.1)(graphql@16.6.0):
+    resolution: {integrity: sha512-+Sfp5DON/krxr4fP1kT6GQeQYqphP2g69CybqAMLRTALCCKs/ZfATvK/Bx+ysPV5K8g/tRwVuDbub1JAuLDxSw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@envelop/core': ^5.0.0
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@envelop/core': 5.0.1
+      graphql: 16.6.0
+      graphql-jit: 0.8.4(graphql@16.6.0)
+      tslib: 2.6.2
+      value-or-promise: 1.0.12
+    dev: false
+
   /@envelop/graphql-modules@6.0.0(@envelop/core@5.0.0)(graphql-modules@2.1.2)(graphql@16.6.0):
     resolution: {integrity: sha512-U6LoSMFd/eVt/vcI+6cj3OWciPnCTCIz+7Frc+oJ3Bg2utDIba3ngepzQPYb9t2da+AjCw+O2NmBwoUHWH0mAQ==}
     engines: {node: '>=18.0.0'}
@@ -5556,27 +5578,27 @@ packages:
       graphql: 16.6.0
     dev: false
 
-  /@envelop/on-resolve@4.1.0(@envelop/core@5.0.0)(graphql@16.6.0):
+  /@envelop/on-resolve@4.1.0(@envelop/core@5.0.1)(graphql@16.6.0):
     resolution: {integrity: sha512-2AXxf8jbBIepBUiY0KQtyCO6gnT7LKBEYdaARZBJ7ujy1+iQHQPORKvAwl51kIdD6v5x38eldZnm7A19jFimOg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@envelop/core': ^5.0.0
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@envelop/core': 5.0.0
+      '@envelop/core': 5.0.1
       graphql: 16.6.0
     dev: false
 
-  /@envelop/prometheus@10.0.0-alpha-20240507125432-5841b485(@envelop/core@5.0.0)(graphql@16.6.0)(prom-client@15.0.0):
-    resolution: {integrity: sha512-CkgExIu5bV0DewsvaWYc6xysc8DltgwW+0rhFzWmbvYDkNWiV48bjBdTXEAxwqWOcLN5z09Zyapq11Do6K0EWA==}
+  /@envelop/prometheus@10.0.0(@envelop/core@5.0.1)(graphql@16.6.0)(prom-client@15.0.0):
+    resolution: {integrity: sha512-DkdDENCeTaY6AWVY0OcSZ3bDOMP3PuEBP15nC3IDRC1ZowR+MKU5N/JEMb7p5fm2ZmoNEcDv4E9qVKUJSJm8cA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@envelop/core': ^5.0.0
+      '@envelop/core': ^5.0.1
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
       prom-client: ^15.0.0
     dependencies:
-      '@envelop/core': 5.0.0
-      '@envelop/on-resolve': 4.1.0(@envelop/core@5.0.0)(graphql@16.6.0)
+      '@envelop/core': 5.0.1
+      '@envelop/on-resolve': 4.1.0(@envelop/core@5.0.1)(graphql@16.6.0)
       graphql: 16.6.0
       prom-client: 15.0.0
       tslib: 2.6.2
