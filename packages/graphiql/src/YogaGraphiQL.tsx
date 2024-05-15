@@ -148,6 +148,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         headers={props.headers}
         schemaDescription={true}
         fetcher={fetcher}
+        shouldPersistHeaders={props.shouldPersistHeaders}
       >
         <GraphiQLInterface
           isHeadersEditorEnabled

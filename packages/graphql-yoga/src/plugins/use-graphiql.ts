@@ -22,6 +22,11 @@ export type GraphiQLOptions = {
    */
   headers?: string;
   /**
+   * This prop toggles if the contents of the headers editor are persisted in
+   * storage.
+   */
+  shouldPersistHeaders?: boolean;
+  /**
    * More info there: https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials
    */
   credentials?: RequestCredentials;
