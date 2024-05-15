@@ -474,9 +474,7 @@ export class YogaServer<
               };
 
         const initialContext = args[0]
-          ? batched
-            ? Object.assign({}, args[0], additionalContext)
-            : Object.assign(args[0], additionalContext)
+          ? Object.assign(batched ? Object.create(args[0]) : args[0], additionalContext)
           : additionalContext;
 
         const enveloped = this.getEnveloped(initialContext);
