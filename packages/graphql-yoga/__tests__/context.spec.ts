@@ -270,4 +270,81 @@ describe('Context', () => {
       expect((contextObject as { myExtraContext: string }).myExtraContext).toBe('myExtraContext');
     }
   });
+
+  it('retains server context prototype', async () => {
+    class ServerContext {}
+
+    let contextObject: ServerContext | undefined;
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hello: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            hello: () => 'world',
+          },
+        },
+      }),
+      plugins: [
+        {
+          onExecute: jest.fn(({ args }) => {
+            contextObject = args.contextValue;
+          }),
+        },
+      ],
+    });
+    const queryRes = await yoga.fetch('http://yoga/graphql?query={hello}', new ServerContext());
+    await queryRes.arrayBuffer();
+
+    expect(contextObject).toBeInstanceOf(ServerContext);
+  });
+
+  it('retains server context prototype for batched requests', async () => {
+    class ServerContext {}
+
+    let contextObject: ServerContext | undefined;
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            hello: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            hello: () => 'world',
+          },
+        },
+      }),
+      plugins: [
+        {
+          onExecute: jest.fn(({ args }) => {
+            contextObject = args.contextValue;
+          }),
+        },
+      ],
+      batching: true,
+    });
+    const queryRes = await yoga.fetch(
+      'http://yoga/graphql',
+      {
+        method: 'POST',
+        body: JSON.stringify([
+          { query: '{hello}' },
+          { query: '{__typename hello}' },
+          { query: '{__typename}' },
+        ]),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      new ServerContext(),
+    );
+    await queryRes.arrayBuffer();
+
+    expect(contextObject).toBeInstanceOf(ServerContext);
+  });
 });
