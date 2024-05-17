@@ -1,6 +1,6 @@
 import { createGraphQLError, Plugin } from 'graphql-yoga';
 import jsonwebtoken, { Algorithm, JwtPayload, VerifyOptions } from 'jsonwebtoken';
-import { JwksClient } from 'jwks-rsa';
+import { JwksClient, Options as JwksClientOptions } from 'jwks-rsa';
 
 const { decode } = jsonwebtoken;
 
@@ -40,6 +40,10 @@ export interface JwtPluginOptionsBase extends VerifyOptions {
 
 export interface JwtPluginOptionsWithJWKS extends JwtPluginOptionsBase {
   /**
+   * Options to be passed to the jwks-rsa client.
+   */
+  jwksOpts?: JwksClientOptions;
+  /**
    * The endpoint to fetch keys from.
    *
    * For example: https://example.com/.well-known/jwks.json
@@ -54,6 +58,7 @@ export interface JwtPluginOptionsWithSigningKey extends JwtPluginOptionsBase {
    * You can also use the jwks option to fetch the key from a JWKS endpoint
    */
   signingKey: string;
+  jwksOpts?: never;
   jwksUri?: never;
 }
 
@@ -77,6 +82,7 @@ export function useJWT(options: JwtPluginOptions): Plugin {
       rateLimit: true,
       jwksRequestsPerMinute: 5,
       jwksUri: options.jwksUri,
+      ...options.jwksOpts,
     });
   }
 
