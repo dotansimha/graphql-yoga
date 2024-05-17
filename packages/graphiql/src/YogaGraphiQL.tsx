@@ -1,14 +1,14 @@
-import 'json-bigint-patch';
-import React, { useMemo, useState } from 'react';
+import { explorerPlugin } from '@graphiql/plugin-explorer';
+import '@graphiql/plugin-explorer/dist/style.css';
 import { GraphiQL, GraphiQLInterface, GraphiQLProps, GraphiQLProvider } from 'graphiql';
-import { DocumentNode, Kind, parse } from 'graphql';
-import { useUrlSearchParams } from 'use-url-search-params';
-import { useExplorerPlugin } from '@graphiql/plugin-explorer';
 import { Fetcher, FetcherOpts, FetcherParams } from '@graphiql/toolkit';
 import { LoadFromUrlOptions, SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader';
-import { YogaLogo } from './YogaLogo';
 import 'graphiql/graphiql.css';
-import '@graphiql/plugin-explorer/dist/style.css';
+import { DocumentNode, Kind, parse } from 'graphql';
+import 'json-bigint-patch';
+import React, { useMemo, useState } from 'react';
+import { useUrlSearchParams } from 'use-url-search-params';
+import { YogaLogo } from './YogaLogo';
 import './styles.css';
 
 const getOperationWithFragments = (
@@ -134,30 +134,30 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   );
 
   const [query, setQuery] = useState(params.query?.toString());
-  const explorerPlugin = useExplorerPlugin({
-    query: query as string,
-    onEdit: setQuery,
+  const explorer = explorerPlugin({
     showAttribution: true,
   });
 
   return (
     <div className="graphiql-container">
       <GraphiQLProvider
-        plugins={[explorerPlugin]}
-        query={query}
-        headers={props.headers}
-        schemaDescription={true}
+        defaultHeaders={props.defaultHeaders}
         fetcher={fetcher}
-        shouldPersistHeaders={props.shouldPersistHeaders}
+        headers={props.headers}
+        plugins={[explorer]}
+        query={query}
+        schemaDescription={true}
+        shouldPersistHeaders={props.shouldPersistHeaders ?? true}
       >
         <GraphiQLInterface
           isHeadersEditorEnabled
           defaultEditorToolsVisibility
-          onEditQuery={query =>
+          onEditQuery={query => {
             setParams({
               query,
-            })
-          }
+            });
+            setQuery(query);
+          }}
         >
           <GraphiQL.Logo>
             <div style={{ display: 'flex', alignItems: 'center' }}>
