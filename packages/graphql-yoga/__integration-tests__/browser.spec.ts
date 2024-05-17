@@ -1,6 +1,3 @@
-import 'json-bigint-patch';
-import { createServer, Server } from 'node:http';
-import { AddressInfo } from 'node:net';
 import {
   GraphQLBoolean,
   GraphQLFloat,
@@ -12,11 +9,14 @@ import {
   GraphQLString,
 } from 'graphql';
 import { GraphQLBigInt } from 'graphql-scalars';
-import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
 import { GraphQLLiveDirective, useLiveQuery } from '@envelop/live-query';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { renderGraphiQL } from '@graphql-yoga/render-graphiql';
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store';
+import 'json-bigint-patch';
+import { createServer, Server } from 'node:http';
+import { AddressInfo } from 'node:net';
+import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
 import { CORSOptions, createYoga, Repeater } from '../src/index.js';
 
 let resolveOnReturn: VoidFunction;
@@ -238,19 +238,19 @@ describe('browser', () => {
     await new Promise(res => setTimeout(res, 100));
   };
 
-  const waitForResult = async () => {
+  const waitForResult = async (): Promise<object> => {
     await page.waitForFunction(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      () => !!window.g.resultComponent.viewer.getValue(),
+      () =>
+        !!window.document.querySelector('.graphiql-response .CodeMirror-code')?.textContent?.trim(),
     );
     const resultContents = await page.evaluate(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return window.g.resultComponent.viewer.getValue();
+      return window.document
+        .querySelector('.graphiql-response .CodeMirror-code')
+        ?.textContent?.trim()
+        .replaceAll('\u00A0', ' ');
     });
 
-    return resultContents;
+    return JSON.parse(resultContents!);
   };
 
   const showGraphiQLSidebar = async () => {
@@ -291,34 +291,26 @@ describe('browser', () => {
       const buttonHideEditor = await page.$('button[aria-label="Hide editor tools"]');
 
       const editorTabs = await page.evaluate(() =>
-        Array.from(
-          document.querySelectorAll('.graphiql-editor-tools-tabs button'),
-          e => e.textContent,
-        ),
+        Array.from(document.querySelectorAll('.graphiql-editor-tools button'), e => e.textContent),
       );
 
       expect(buttonHideEditor).not.toBeNull();
-      expect(editorTabs).toEqual(['Variables', 'Headers']);
+      expect(editorTabs).toContain('Variables');
+      expect(editorTabs).toContain('Headers');
     });
 
     it('execute simple query operation', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`);
       await typeOperationText('{ alwaysTrue }');
 
-      await page.click('.graphiql-execute-button');
+      await page.click(playButtonSelector);
       const resultContents = await waitForResult();
 
-      expect(resultContents).toEqual(
-        JSON.stringify(
-          {
-            data: {
-              alwaysTrue: true,
-            },
-          },
-          null,
-          2,
-        ),
-      );
+      expect(resultContents).toEqual({
+        data: {
+          alwaysTrue: true,
+        },
+      });
     });
 
     it('execute mutation operation', async () => {
@@ -328,17 +320,11 @@ describe('browser', () => {
       await page.click('.graphiql-execute-button');
       const resultContents = await waitForResult();
 
-      expect(resultContents).toEqual(
-        JSON.stringify(
-          {
-            data: {
-              setFavoriteNumber: 3,
-            },
-          },
-          null,
-          2,
-        ),
-      );
+      expect(resultContents).toEqual({
+        data: {
+          setFavoriteNumber: 3,
+        },
+      });
     });
 
     test('execute @stream operation', async () => {
@@ -348,16 +334,12 @@ describe('browser', () => {
       });
       await page.click('.graphiql-execute-button');
       await sleep(900);
-      const [resultContents1, isShowingStopButton] = await page.evaluate(stopButtonSelector => {
-        return [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(stopButtonSelector),
-        ];
+      const resultContents = await waitForResult();
+      const isShowingStopButton = await page.evaluate(stopButtonSelector => {
+        return !!window.document.querySelector(stopButtonSelector);
       }, stopButtonSelector);
       expect(isShowingStopButton).toEqual(true);
-      expect(JSON.parse(resultContents1)).toEqual({
+      expect(resultContents).toEqual({
         data: {
           stream: ['A', 'B', 'C'],
         },
@@ -374,30 +356,24 @@ describe('browser', () => {
 
       await new Promise(res => setTimeout(res, 50));
 
-      const [resultContents, isShowingStopButton] = await page.evaluate(stopButtonSelector => {
-        return [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(stopButtonSelector),
-        ];
+      const resultContents = await waitForResult();
+      const isShowingStopButton = await page.evaluate(stopButtonSelector => {
+        return !!window.document.querySelector(stopButtonSelector);
       }, stopButtonSelector);
-      expect(JSON.parse(resultContents)).toEqual({
+      expect(resultContents).toEqual({
         data: {
           count: 1,
         },
       });
       expect(isShowingStopButton).toEqual(true);
+
       await new Promise(resolve => setTimeout(resolve, 300));
-      const [resultContents1, isShowingPlayButton] = await page.evaluate(playButtonSelector => {
-        return [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(playButtonSelector),
-        ];
+
+      const resultContents1 = await waitForResult();
+      const isShowingPlayButton = await page.evaluate(playButtonSelector => {
+        return !!window.document.querySelector(playButtonSelector);
       }, playButtonSelector);
-      expect(JSON.parse(resultContents1)).toEqual({
+      expect(resultContents1).toEqual({
         data: {
           count: 2,
         },
@@ -411,17 +387,11 @@ describe('browser', () => {
       await page.click('.graphiql-execute-button');
       const resultContents = await waitForResult();
 
-      expect(resultContents).toEqual(
-        JSON.stringify(
-          {
-            data: {
-              alwaysTrue: true,
-            },
-          },
-          null,
-          2,
-        ),
-      );
+      expect(resultContents).toEqual({
+        data: {
+          alwaysTrue: true,
+        },
+      });
     });
 
     test('should show BigInt correctly', async () => {
@@ -430,11 +400,11 @@ describe('browser', () => {
       await page.click('.graphiql-execute-button');
       const resultContents = await waitForResult();
 
-      expect(resultContents).toEqual(`{
-  "data": {
-    "bigint": ${BigInt('112345667891012345').toString()}
-  }
-}`);
+      expect(resultContents).toMatchObject({
+        data: {
+          bigint: BigInt('112345667891012345'),
+        },
+      });
     });
     test('should show live queries correctly', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`);
@@ -443,15 +413,7 @@ describe('browser', () => {
 
       await new Promise(res => setTimeout(res, 50));
 
-      const [resultContents] = await page.evaluate(stopButtonSelector => {
-        return [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(stopButtonSelector),
-        ];
-      }, stopButtonSelector);
-      const resultJson = JSON.parse(resultContents);
+      const resultJson = await waitForResult();
 
       expect(resultJson).toEqual({
         data: {
@@ -461,25 +423,16 @@ describe('browser', () => {
       });
       liveQueryStore.invalidate('Query.liveCounter');
 
-      const watchDog = await page.waitForFunction(() => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const value = window.g.resultComponent.viewer.getValue();
+      await page.waitForFunction(() => {
+        const value = window.document
+          .querySelector('.graphiql-response .CodeMirror-code')
+          ?.textContent?.trim()
+          .replaceAll('\u00A0', ' ');
 
-        return value.includes('2');
+        return value?.includes('2');
       });
 
-      await watchDog;
-
-      const [resultContents1] = await page.evaluate(playButtonSelector => {
-        return [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          window.g.resultComponent.viewer.getValue(),
-          !!window.document.querySelector(playButtonSelector),
-        ];
-      }, playButtonSelector);
-      const resultJson1 = JSON.parse(resultContents1);
+      const resultJson1 = await waitForResult();
       expect(resultJson1).toEqual({
         data: {
           liveCounter: 2,
@@ -544,7 +497,7 @@ describe('browser', () => {
 
       await page.evaluate(() => {
         const tabs = Array.from(
-          document.querySelectorAll('.graphiql-editor-tools-tabs button'),
+          document.querySelectorAll('.graphiql-editor-tools button'),
         ) as HTMLButtonElement[];
         tabs.find(tab => tab.textContent === 'Headers')!.click();
       });
