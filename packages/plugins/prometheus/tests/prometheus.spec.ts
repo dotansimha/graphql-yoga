@@ -148,6 +148,7 @@ describe('Prometheus', () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/graphql+json',
+        Accept: 'application/graphql-response+json',
       },
       body: JSON.stringify({
         query: /* GraphQL */ `
@@ -158,10 +159,12 @@ describe('Prometheus', () => {
       }),
     });
     await result.text();
+    expect(result.status).toBe(400);
     const metrics = await registry.metrics();
     expect(metrics).toContain('graphql_yoga_http_duration_bucket');
     expect(metrics).toContain('operationType="query"');
     expect(metrics).toContain('method="POST"');
+    expect(metrics).toContain('statusCode="400"');
     expect(metrics).toContain('operationName="TestProm"');
   });
 });
