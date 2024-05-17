@@ -1,12 +1,12 @@
 import { createGraphQLError, Plugin } from 'graphql-yoga';
-import jsonwebtoken, { Algorithm, JwtPayload } from 'jsonwebtoken';
+import jsonwebtoken, { Algorithm, JwtPayload, VerifyOptions } from 'jsonwebtoken';
 import { JwksClient } from 'jwks-rsa';
 
 const { decode } = jsonwebtoken;
 
 export type JwtPluginOptions = JwtPluginOptionsWithJWKS | JwtPluginOptionsWithSigningKey;
 
-export interface JwtPluginOptionsBase {
+export interface JwtPluginOptionsBase extends VerifyOptions {
   /**
    * List of the algorithms used to verify the token
    *
@@ -16,11 +16,12 @@ export interface JwtPluginOptionsBase {
   /**
    * The audience is the identifier of the API and is forwarded to your Auth API in order to specify for which API we are trying to authenticate our user for. E.g. if our API is hosted on `http://localhost:3000/graphql`, we would pass that value.
    */
-  audience?: string;
+  audience?: VerifyOptions['audience'];
   /**
    * For example: `https://myapp.auth0.com/`
    */
-  issuer: string;
+  issuer: VerifyOptions['issuer'];
+
   /**
    * Once a user got successfully authenticated the authentication information is added on the context object under this field. In our resolvers we can then access the authentication information via `context._jwt.sub`.
    */
@@ -121,11 +122,7 @@ function unauthorizedError(message: string, options?: Parameters<typeof createGr
   });
 }
 
-function verify(
-  token: string,
-  signingKey: string,
-  options: Parameters<typeof jsonwebtoken.verify>[2],
-) {
+function verify(token: string, signingKey: string, options: VerifyOptions | undefined) {
   return new Promise((resolve, reject) => {
     jsonwebtoken.verify(
       token,
