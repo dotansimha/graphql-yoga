@@ -47,10 +47,10 @@ const yogaApp = createYoga<RequestEvent>({
   graphqlEndpoint: '/api/graphql',
 
   // Needed to let Yoga use sveltekit's Response object
-  fetchAPI: globalThis
+  fetchAPI: {  Response  },
 })
 
-export { yogaApp as GET, yogaApp as POST }
+export { yogaApp as GET, yogaApp as POST, handler as OPTIONS }
 ```
 
 > **Simple example** on our GitHub repository
