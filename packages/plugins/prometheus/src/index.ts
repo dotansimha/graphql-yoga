@@ -15,12 +15,12 @@ import {
 
 export {
   CounterAndLabels,
-  FillLabelsFnParams,
-  HistogramAndLabels,
-  SummaryAndLabels,
   createCounter,
   createHistogram,
   createSummary,
+  FillLabelsFnParams,
+  HistogramAndLabels,
+  SummaryAndLabels,
 };
 
 export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
@@ -101,15 +101,15 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
       }
       return undefined;
     },
-    onExecute({ args }) {
-      const operationAST = getOperationAST(args.document, args.operationName);
-      const operationType = operationAST?.operation;
-      const operationName = operationAST?.name?.value;
-      paramsByRequest.set(args.contextValue.request, {
-        document: args.document,
-        operationName,
-        operationType,
-      });
+    onParse() {
+      return ({ result: document, context: { params, request } }) => {
+        const operationAST = getOperationAST(document, params.operationName);
+        paramsByRequest.set(request, {
+          document,
+          operationName: operationAST?.name?.value,
+          operationType: operationAST?.operation,
+        });
+      };
     },
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request);
