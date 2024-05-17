@@ -133,4 +133,38 @@ describe('Prometheus', () => {
       registry,
     });
   });
+
+  it('should emit metric with all labels on invalid operations', async () => {
+    const yoga = createYoga({
+      schema,
+      plugins: [
+        usePrometheus({
+          http: true,
+          registry,
+        }),
+      ],
+    });
+    const result = await yoga.fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/graphql+json',
+        Accept: 'application/graphql-response+json',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query TestProm {
+            hello_DOES_NOT_EXIST
+          }
+        `,
+      }),
+    });
+    await result.text();
+    expect(result.status).toBe(400);
+    const metrics = await registry.metrics();
+    expect(metrics).toContain('graphql_yoga_http_duration_bucket');
+    expect(metrics).toContain('operationType="query"');
+    expect(metrics).toContain('method="POST"');
+    expect(metrics).toContain('statusCode="400"');
+    expect(metrics).toContain('operationName="TestProm"');
+  });
 });
