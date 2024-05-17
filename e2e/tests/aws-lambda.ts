@@ -71,7 +71,7 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
       { dependsOn: lambdaRolePolicy },
     );
 
-    const lambdaGw = new awsx.apigateway.API('api', {
+    const lambdaGw = new awsx.classic.apigateway.API('api', {
       routes: [
         {
           path: '/graphql',

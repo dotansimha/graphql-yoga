@@ -18,6 +18,7 @@ export function createCFDeployment(
 ): DeploymentConfiguration<{
   workerUrl: string;
 }> {
+  const accountId = env('CLOUDFLARE_ACCOUNT_ID');
   return {
     prerequisites: async (stack: Stack) => {
       console.info('\t\tℹ️ Installing Pulumi CF plugin...');
@@ -38,7 +39,7 @@ export function createCFDeployment(
         value: env('CLOUDFLARE_API_TOKEN'),
       });
       await stack.setConfig('cloudflare:accountId', {
-        value: env('CLOUDFLARE_ACCOUNT_ID'),
+        value: accountId,
       });
     },
     program: async () => {
@@ -60,6 +61,7 @@ export function createCFDeployment(
           },
         ],
         name: stackName,
+        accountId,
       });
 
       // Create a nice route for easy testing
