@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/plugin-jwt': major
+'@graphql-yoga/plugin-jwt': minor
 ---
 
 Add the possibility to customize JwksClient options
