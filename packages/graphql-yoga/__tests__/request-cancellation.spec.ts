@@ -1,5 +1,11 @@
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
-import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
+import {
+  castToYogaReadableStream,
+  createLogger,
+  createSchema,
+  createYoga,
+  FetchAPI,
+} from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
 const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [
@@ -158,7 +164,7 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
       signal: abortController.signal,
     });
     expect(response.status).toBe(200);
-    const iterator = response.body![Symbol.asyncIterator]();
+    const iterator = castToYogaReadableStream(response.body!)[Symbol.asyncIterator]();
     // first we will always get a ping/keep alive for flushed headers
     const next = await iterator.next();
     expect(Buffer.from(next.value).toString('utf-8')).toMatchInlineSnapshot(`
@@ -258,7 +264,7 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
       signal: abortController.signal,
     });
     expect(response.status).toEqual(200);
-    const iterator = response.body![Symbol.asyncIterator]();
+    const iterator = castToYogaReadableStream(response.body!)[Symbol.asyncIterator]();
     let payload = '';
 
     // Shitty wait condition, but it works lol

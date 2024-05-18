@@ -39,10 +39,19 @@ export type CORSOptions =
     }
   | false;
 
-declare global {
-  interface ReadableStream<R = any> {
-    [Symbol.asyncIterator]: () => AsyncIterator<R>;
-  }
+/**
+ * Overrides the standard library definition to include AsyncIterator support.
+ *
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncIterator
+ */
+export interface YogaReadableStreamOverride<R = any> extends ReadableStream<R> {
+  [Symbol.asyncIterator]: () => AsyncIterator<R>;
+}
+
+export function castToYogaReadableStream<T extends ReadableStream<R>, R = any>(
+  value: T,
+): YogaReadableStreamOverride<R> {
+  return value as unknown as YogaReadableStreamOverride;
 }
 
 export type FetchAPI = ReturnType<typeof createFetch>;

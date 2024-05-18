@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Repeater } from '@repeaterjs/repeater';
+import { castToYogaReadableStream } from '../src';
 
 /** Parse SSE event stream and yield data pieces. */
 export function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
@@ -8,7 +9,7 @@ export function eventStream<TType = unknown>(source: ReadableStream<Uint8Array>)
       done: true,
       value: undefined,
     }));
-    const iterable = source[Symbol.asyncIterator]();
+    const iterable = castToYogaReadableStream(source)[Symbol.asyncIterator]();
 
     // eslint-disable-next-line no-constant-condition
     while (true) {

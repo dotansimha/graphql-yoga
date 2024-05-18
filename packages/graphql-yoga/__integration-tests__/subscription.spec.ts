@@ -2,7 +2,7 @@ import { createServer } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { ExecutionResult } from 'graphql';
 import { fetch } from '@whatwg-node/fetch';
-import { createSchema, createYoga } from '../src';
+import { castToYogaReadableStream, createSchema, createYoga } from '../src';
 
 describe('subscription', () => {
   test('Subscription is closed properly', async () => {
@@ -61,7 +61,7 @@ describe('subscription', () => {
         expect(response.status).toBe(200);
         expect(response.headers.get('content-type')).toBe('text/event-stream');
 
-        for await (const chunk of response.body!) {
+        for await (const chunk of castToYogaReadableStream(response.body!)) {
           const str = Buffer.from(chunk).toString('utf-8');
           if (str) {
             break;

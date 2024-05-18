@@ -1,5 +1,11 @@
 import { ExecutionResult } from 'graphql';
-import { createSchema, createYoga, Plugin, Repeater } from '../src/index.js';
+import {
+  castToYogaReadableStream,
+  createSchema,
+  createYoga,
+  Plugin,
+  Repeater,
+} from '../src/index.js';
 
 describe('accept header', () => {
   it('instruct server to return an event-stream with GET parameters', async () => {
@@ -73,7 +79,7 @@ describe('accept header', () => {
       `Content-Length: 24`,
       JSON.stringify({ data: { ping: 'pong' } }),
     ];
-    for await (const chunk of response.body!) {
+    for await (const chunk of castToYogaReadableStream(response.body!)) {
       const valueStr = Buffer.from(chunk).toString('utf-8');
       if (expectedStrs.includes(valueStr)) {
         expectedStrs.splice(expectedStrs.indexOf(valueStr), 1);
@@ -112,7 +118,7 @@ describe('accept header', () => {
       `Content-Length: 24`,
       JSON.stringify({ data: { ping: 'pong' } }),
     ]);
-    for await (const chunk of response.body!) {
+    for await (const chunk of castToYogaReadableStream(response.body!)) {
       const valueStr = Buffer.from(chunk).toString('utf-8');
       for (const expectedStr of expectedStrs) {
         if (valueStr.includes(expectedStr)) {

@@ -1,6 +1,12 @@
 import { createServer, get, IncomingMessage } from 'node:http';
 import { AddressInfo } from 'node:net';
-import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
+import {
+  castToYogaReadableStream,
+  createLogger,
+  createSchema,
+  createYoga,
+  useExecutionCancellation,
+} from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js';
 
@@ -50,7 +56,7 @@ it('correctly deals with the source upon aborted requests', async () => {
     });
     let counter = 0;
     const toStr = (arr: Uint8Array) => Buffer.from(arr).toString('utf-8');
-    for await (const chunk of response.body!) {
+    for await (const chunk of castToYogaReadableStream(response.body!)) {
       const parts = toStr(chunk)
         .split('\r\n')
         .filter(p => p.startsWith('{'));

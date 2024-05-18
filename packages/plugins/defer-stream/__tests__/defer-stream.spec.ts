@@ -1,5 +1,5 @@
 import { GraphQLList, GraphQLObjectType, GraphQLSchema, GraphQLString, parse } from 'graphql';
-import { createSchema, createYoga, Repeater } from 'graphql-yoga';
+import { castToYogaReadableStream, createSchema, createYoga, Repeater } from 'graphql-yoga';
 import { buildHTTPExecutor } from '@graphql-tools/executor-http';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createPushPullAsyncIterable } from './push-pull-async-iterable.js';
@@ -7,7 +7,7 @@ import { createPushPullAsyncIterable } from './push-pull-async-iterable.js';
 function multipartStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
   return new Repeater<TType>(async (push, end) => {
     const cancel: Promise<{ done: true }> = end.then(() => ({ done: true }));
-    const iterable = source[Symbol.asyncIterator]();
+    const iterable = castToYogaReadableStream(source)[Symbol.asyncIterator]();
     // eslint-disable-next-line no-constant-condition
     while (true) {
       const result = await Promise.race([cancel, iterable.next()]);
@@ -191,7 +191,7 @@ Content-Length: 69
     let counter = 0;
     const toStr = (arr: Uint8Array) => Buffer.from(arr).toString('utf-8');
 
-    for await (const chunk of response.body!) {
+    for await (const chunk of castToYogaReadableStream(response.body!)) {
       const parts = toStr(chunk)
         .split('\r\n')
         .filter(p => p.startsWith('{'));

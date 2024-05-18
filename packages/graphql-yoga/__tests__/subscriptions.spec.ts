@@ -1,5 +1,11 @@
 import { GraphQLError } from 'graphql';
-import { createSchema, createYoga, maskError, Plugin } from '../src/index.js';
+import {
+  castToYogaReadableStream,
+  createSchema,
+  createYoga,
+  maskError,
+  Plugin,
+} from '../src/index.js';
 import { eventStream } from './utilities.js';
 
 describe('Subscription', () => {
@@ -106,7 +112,7 @@ describe('Subscription', () => {
       }),
     });
 
-    const iterator = response.body![Symbol.asyncIterator]();
+    const iterator = castToYogaReadableStream(response.body!)[Symbol.asyncIterator]();
 
     const results = [];
     let value: Uint8Array;
@@ -195,7 +201,7 @@ data:
       }),
     });
 
-    const iterator = response.body![Symbol.asyncIterator]();
+    const iterator = castToYogaReadableStream(response.body!)[Symbol.asyncIterator]();
 
     const results = [];
     let value: Uint8Array;

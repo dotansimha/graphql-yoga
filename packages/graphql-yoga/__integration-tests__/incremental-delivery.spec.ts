@@ -8,6 +8,7 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql';
+import { castToYogaReadableStream } from 'graphql-yoga';
 import { Push } from '@repeaterjs/repeater';
 import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch';
 import { createSchema, createYoga, Plugin, Repeater } from '../src';
@@ -74,7 +75,7 @@ describe('incremental delivery', () => {
       });
 
       // Start and Close a HTTP Request
-      for await (const chunk of res.body!) {
+      for await (const chunk of castToYogaReadableStream(res.body!)) {
         if (chunk === undefined) {
           break;
         }
