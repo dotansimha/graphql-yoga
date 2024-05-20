@@ -106,11 +106,11 @@ export interface OnRequestParseDoneEventPayload {
   setRequestParserResult: (params: GraphQLParams | GraphQLParams[]) => void;
 }
 
-export type OnParamsHook<TServerContext> = (
+export type OnParamsHook<TServerContext = unknown> = (
   payload: OnParamsEventPayload<TServerContext>,
 ) => PromiseOrValue<void>;
 
-export interface OnParamsEventPayload<TServerContext> {
+export interface OnParamsEventPayload<TServerContext = unknown> {
   params: GraphQLParams;
   request: Request;
   serverContext?: TServerContext;
