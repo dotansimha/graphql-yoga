@@ -20,13 +20,13 @@ export type BuildResponseCacheKeyFunction = (
   },
 ) => ReturnType<EnvelopBuildResponseCacheKeyFunction>;
 
-export type UseResponseCacheParameter = Omit<
+export type UseResponseCacheParameter<TServerContext> = Omit<
   UseEnvelopResponseCacheParameter,
   'getDocumentString' | 'session' | 'cache' | 'enabled' | 'buildResponseCacheKey'
 > & {
   cache?: Cache;
-  session: (request: Request) => PromiseOrValue<Maybe<string>>;
-  enabled?: (request: Request) => boolean;
+  session: (request: Request, serverContext?: TServerContext) => PromiseOrValue<Maybe<string>>;
+  enabled?: (request: Request, serverContext?: TServerContext) => boolean;
   buildResponseCacheKey?: BuildResponseCacheKeyFunction;
 };
 
@@ -82,7 +82,9 @@ export interface Cache extends EnvelopCache {
   >;
 }
 
-export function useResponseCache(options: UseResponseCacheParameter): Plugin {
+export function useResponseCache<TServerContext extends Record<string, unknown>>(
+  options: UseResponseCacheParameter<TServerContext>,
+): Plugin<TServerContext, TServerContext> {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey;
   const cache = options.cache ?? createInMemoryCache();
@@ -94,10 +96,10 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
     },
     onPluginInit({ addPlugin }) {
       addPlugin(
-        useEnvelopResponseCache({
+        useEnvelopResponseCache<YogaInitialContext & TServerContext>({
           ...options,
-          enabled({ request }) {
-            return enabled(request);
+          enabled(ctx: YogaInitialContext & TServerContext) {
+            return enabled(ctx.request, ctx);
           },
           cache,
           getDocumentString: getDocumentStringForEnvelop,
@@ -129,8 +131,8 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }),
       );
     },
-    async onRequest({ request, fetchAPI, endResponse }) {
-      if (enabled(request)) {
+    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
+      if (enabled(request, serverContext)) {
         const operationId = request.headers.get('If-None-Match');
         if (operationId) {
           const cachedResponse = await cache.get(operationId);
@@ -158,8 +160,8 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }
       }
     },
-    async onParams({ params, request, setResult }) {
-      const sessionId = await options.session(request);
+    async onParams({ params, request, serverContext, setResult }) {
+      const sessionId = await options.session(request, serverContext);
       const operationId = await buildResponseCacheKey({
         documentString: params.query || '',
         variableValues: params.variables,
@@ -169,7 +171,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       });
       operationIdByRequest.set(request, operationId);
       sessionByRequest.set(request, sessionId);
-      if (enabled(request)) {
+      if (enabled(request, serverContext)) {
         const cachedResponse = await cache.get(operationId);
         if (cachedResponse) {
           const responseWithSymbol = {
