@@ -116,7 +116,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [18, 22]
         graphql-version: ['15.8.0', '16.6.0']
     steps:
       - name: Checkout Repository
