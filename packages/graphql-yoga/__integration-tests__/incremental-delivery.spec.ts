@@ -16,10 +16,16 @@ describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
     let counter = 0;
 
+    let onIteratorDone: () => void;
+    const waitIteratorDone = new Promise<void>(resolve => {
+      onIteratorDone = resolve;
+    });
+
     const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
       async next() {
         counter++;
+        await new Promise(resolve => setImmediate(resolve));
         return {
           done: false,
           value: {
@@ -29,7 +35,10 @@ describe('incremental delivery', () => {
           },
         };
       },
-      return: jest.fn(() => Promise.resolve({ done: true, value: undefined })),
+      return: jest.fn(() => {
+        onIteratorDone();
+        return Promise.resolve({ done: true, value: undefined });
+      }),
     };
     const plugin: Plugin = {
       onExecute(ctx) {
@@ -83,7 +92,7 @@ describe('incremental delivery', () => {
           break;
         }
       }
-      await new Promise(res => setTimeout(res, 300));
+      await waitIteratorDone;
       expect(fakeIterator.return).toBeCalled();
     } finally {
       await new Promise(resolve => server.close(resolve));
