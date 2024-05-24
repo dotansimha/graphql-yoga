@@ -65,6 +65,11 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
       },
     });
 
+    console.log('ℹ️ Cheking the bundled file: ', {
+      cwd: process.cwd(),
+      existsAbsolute: existsSync('/tmp/examples/aws-lambda/dist/index.js'),
+      existsRelative: existsSync('../examples/aws-lambda/dist/index.js'),
+    });
     const func = new aws.lambda.Function(
       'func',
       {
