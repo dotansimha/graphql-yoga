@@ -38,9 +38,6 @@ export function createCFDeployment(
       await stack.setConfig('cloudflare:apiToken', {
         value: env('CLOUDFLARE_API_TOKEN'),
       });
-      await stack.setConfig('cloudflare:accountId', {
-        value: accountId,
-      });
     },
     program: async () => {
       const stackName = pulumi.getStack();
