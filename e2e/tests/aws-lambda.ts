@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import * as aws from '@pulumi/aws';
 import { version } from '@pulumi/aws/package.json';
 import * as awsx from '@pulumi/awsx';
@@ -16,9 +17,15 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
 
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the AWS Lambda Function....');
-    await execPromise('pnpm bundle', {
+    const { stdout, stderr } = await execPromise('pnpm bundle', {
       cwd: '../examples/aws-lambda',
     });
+    console.log('\t\t✅ Bundled the AWS Lambda Function:', stdout, stderr);
+    if (existsSync('../examples/aws-lambda/dist/index.js')) {
+      console.log('\t\t✅ Found the bundled file');
+    } else {
+      throw new Error('Failed to bundle the AWS Lambda Function, bundle file not found.');
+    }
   },
   config: async (stack: Stack) => {
     // Configure the Pulumi environment with the AWS credentials
