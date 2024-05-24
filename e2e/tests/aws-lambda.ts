@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import * as aws from '@pulumi/aws';
 import { version } from '@pulumi/aws/package.json';
 import * as awsx from '@pulumi/awsx';
@@ -17,10 +18,9 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
 
     // Build and bundle the worker
     console.info('\t\tℹ️ Bundling the AWS Lambda Function....');
-    const { stdout, stderr } = await execPromise('pnpm bundle', {
+    await execPromise('pnpm bundle', {
       cwd: '../examples/aws-lambda',
     });
-    console.log('\t\t✅ Bundled the AWS Lambda Function:', stdout, stderr);
     if (existsSync('../examples/aws-lambda/dist/index.js')) {
       console.log('\t\t✅ Found the bundled file');
     } else {
@@ -65,11 +65,6 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
       },
     });
 
-    console.log('ℹ️ Cheking the bundled file: ', {
-      cwd: process.cwd(),
-      existsAbsolute: existsSync('/tmp/examples/aws-lambda/dist/index.js'),
-      existsRelative: existsSync('../examples/aws-lambda/dist/index.js'),
-    });
     const func = new aws.lambda.Function(
       'func',
       {
@@ -77,7 +72,9 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
         runtime: 'nodejs18.x',
         handler: 'index.handler',
         code: new pulumi.asset.AssetArchive({
-          'index.js': new pulumi.asset.FileAsset('../examples/aws-lambda/dist/index.js'),
+          'index.js': new pulumi.asset.FileAsset(
+            join(process.cwd(), '../examples/aws-lambda/dist/index.js'),
+          ),
         }),
       },
       { dependsOn: lambdaRolePolicy },
