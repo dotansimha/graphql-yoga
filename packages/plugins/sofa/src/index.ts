@@ -65,7 +65,9 @@ export function useSofa(config: SofaPluginConfig): Plugin {
                   fieldResolver: args[6],
                   typeResolver: args[7],
                 };
-          const enveloped = envelopedByContext.get(executionArgs.contextValue);
+          const enveloped = envelopedByContext.get(
+            executionArgs.contextValue as YogaInitialContext,
+          );
           if (!enveloped) {
             throw new TypeError('Illegal invocation.');
           }
@@ -73,7 +75,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
         },
         subscribe(
           ...args:
-            | [SubscriptionArgs]
+            | [SubscriptionArgs | ExecutionArgs]
             | [
                 schema: SubscriptionArgs['schema'],
                 document: SubscriptionArgs['document'],
@@ -84,7 +86,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
                 fieldResolver?: SubscriptionArgs['fieldResolver'],
                 subscribeFieldResolver?: SubscriptionArgs['subscribeFieldResolver'],
               ]
-        ): Promise<AsyncIterableIterator<ExecutionResult>> {
+        ) {
           const subscriptionArgs =
             args.length === 1
               ? args[0]
