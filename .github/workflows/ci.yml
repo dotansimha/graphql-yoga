@@ -54,7 +54,7 @@ jobs:
         run: pnpm build
 
       - name: Run Tests
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 3
@@ -104,7 +104,7 @@ jobs:
         run: pnpm build
 
       - name: Run Tests
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 3
@@ -154,7 +154,7 @@ jobs:
         run: pnpm build
 
       - name: Run Tests
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 3
