@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import * as aws from '@pulumi/aws';
 import { version } from '@pulumi/aws/package.json';
 import * as awsx from '@pulumi/awsx';
@@ -19,6 +21,11 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
     await execPromise('pnpm bundle', {
       cwd: '../examples/aws-lambda',
     });
+    if (existsSync('../examples/aws-lambda/dist/index.js')) {
+      console.log('\t\t✅ Found the bundled file');
+    } else {
+      throw new Error('Failed to bundle the AWS Lambda Function, bundle file not found.');
+    }
   },
   config: async (stack: Stack) => {
     // Configure the Pulumi environment with the AWS credentials
@@ -65,13 +72,15 @@ export const awsLambdaDeployment: DeploymentConfiguration<{
         runtime: 'nodejs18.x',
         handler: 'index.handler',
         code: new pulumi.asset.AssetArchive({
-          'index.js': new pulumi.asset.FileAsset('../examples/aws-lambda/dist/index.js'),
+          'index.js': new pulumi.asset.FileAsset(
+            join(process.cwd(), '../examples/aws-lambda/dist/index.js'),
+          ),
         }),
       },
       { dependsOn: lambdaRolePolicy },
     );
 
-    const lambdaGw = new awsx.apigateway.API('api', {
+    const lambdaGw = new awsx.classic.apigateway.API('api', {
       routes: [
         {
           path: '/graphql',

@@ -1,4 +1,4 @@
-name: test
+name: E2E Deployments tests
 on:
   pull_request:
     paths-ignore:
@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        plan: ['cf-worker', 'cf-modules', 'aws-lambda']
+        plan: ['cf-worker', 'cf-modules', 'aws-lambda', 'azure-function']
     name: e2e / ${{ matrix.plan }}
 
     runs-on: ubuntu-latest
