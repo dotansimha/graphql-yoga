@@ -9,7 +9,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        plan: ['cf-worker', 'cf-modules', 'aws-lambda', 'azure-function']
+        plan:
+          - 'cf-worker'
+          - 'cf-modules'
+          - 'azure-function'
+          - 'aws-lambda'
+          # - 'vercel-function' # Disabled because vercel API is not actually documented
+          - 'docker-node'
     name: e2e / ${{ matrix.plan }}
 
     runs-on: ubuntu-latest
