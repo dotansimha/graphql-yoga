@@ -1,0 +1,59 @@
+{
+  "name": "@graphql-yoga/plugin-root-level-limitation",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Apollo's federated check max root values plugin for GraphQL Yoga.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dotansimha/graphql-yoga.git",
+    "directory": "packages/plugins/root-level-limitation"
+  },
+  "author": "Saeed Akasteh <srcgrp@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typings": "dist/typings/index.d.ts",
+  "scripts": {
+    "check": "tsc --pretty --noEmit"
+  },
+  "peerDependencies": {
+    "@graphql-tools/utils": "^10.1.0",
+    "@envelop/core": "^5.0.0",
+    "graphql": "^15.2.0 || ^16.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.5.2"
+  },
+  "devDependencies": {
+    "@envelop/core": "^5.0.0",
+    "graphql": "^16.6.0",
+    "graphql-yoga": "5.3.0"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  }
+}

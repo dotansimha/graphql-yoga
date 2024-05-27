@@ -9,6 +9,7 @@ export default {
   'file-uploads': 'File Uploads',
   'defer-stream': 'Defer and Stream',
   'request-batching': 'Request Batching',
+  'root-level-limitation': 'Root Level Limitation',
   cors: 'CORS',
   'csrf-prevention': 'CSRF Prevention',
   'parsing-and-validation-caching': 'Parsing and Validation Caching',
