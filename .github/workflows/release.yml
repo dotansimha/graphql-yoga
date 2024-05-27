@@ -10,7 +10,7 @@ jobs:
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     with:
       releaseScript: release
-      nodeVersion: 20
+      nodeVersion: 22
       packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GUILD_BOT_TOKEN }}

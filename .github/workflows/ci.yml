@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 21]
+        node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
     steps:
       - name: Checkout Repository
@@ -66,7 +66,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 21]
+        node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
     steps:
       - name: Checkout Repository
@@ -116,7 +116,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 21]
+        node-version: [18, 22]
         graphql-version: ['15.8.0', '16.6.0']
     steps:
       - name: Checkout Repository
@@ -169,7 +169,7 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 20
+          nodeVersion: 22
           packageManager: pnpm
 
       - name: Build Packages
@@ -187,7 +187,7 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@main
         with:
-          nodeVersion: 20
+          nodeVersion: 22
           packageManager: pnpm
 
       - name: Setup Bun Runtime
@@ -214,6 +214,11 @@ jobs:
         run: pnpm lint
 
   apollo-federation-compatibility:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        graphql-version: ['15.8.0', '16.6.0']
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
