@@ -5,14 +5,15 @@
   "scripts": {
     "build": "node ./build.js",
     "check": "tsc --pretty --noEmit",
-    "start": "ts-node src/index.ts"
+    "start": "tsx src/index.ts"
   },
   "dependencies": {
     "graphql": "16.6.0",
     "graphql-yoga": "5.3.1"
   },
   "devDependencies": {
-    "ts-node": "10.9.1",
+    "esbuild": "0.21.4",
+    "tsx": "^3.12.7",
     "typescript": "5.1.6"
   }
 }
