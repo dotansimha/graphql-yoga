@@ -39,8 +39,8 @@ jobs:
       - name: Set outputs
         id: vars
         run: |
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-          echo "::set-output name=docker_host::$(docker context inspect --format '{{.Endpoints.docker.Host}}')"
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "docker_host=$(docker context inspect --format '{{.Endpoints.docker.Host}}')" >> $GITHUB_OUTPUT
 
       - name: Provision & Test
         run: pnpm start
