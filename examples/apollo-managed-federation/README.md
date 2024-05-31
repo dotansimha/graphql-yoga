@@ -1,6 +1,6 @@
 # Apollo Managed Federation Example
 
-Run Apollo Managed Federation Subgraphs using GraphQL Yoga.
+Run Apollo Managed Federation supergraph using GraphQL Yoga.
 
 Start Gateway:
 
