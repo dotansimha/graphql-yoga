@@ -20,7 +20,7 @@ jobs:
 
   release-candidate:
     uses: the-guild-org/shared-config/.github/workflows/release-snapshot.yml@main
-    if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
+    if: ${{ github.event.pull_request.title == 'Upcoming Release Changes' }}
     with:
       npmTag: rc
       restoreDeletedChangesets: false
