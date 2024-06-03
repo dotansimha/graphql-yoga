@@ -14,15 +14,26 @@ export function useManagedFederation(options: ManagedFederationPluginOptions = {
   // Start as soon as possible to minimize the wait time of the first schema loading
   supergraphManager.start();
 
-  return {
+  // Wait for the first schema to be loaded before before allowing requests to be parsing
+  // We can then remove the onRequestParse hook to avoid async cost on every request
+  const waitForInitialization = new Promise(resolve => {
+    supergraphManager.on('schema', () => {
+      plugin.onRequestParse = undefined;
+      resolve(null);
+    });
+  });
+
+  const plugin: Plugin = {
     onPluginInit({ setSchema }) {
       if (supergraphManager.schema) {
         setSchema(supergraphManager.schema);
       }
-      supergraphManager.onSchemaChange = setSchema;
+      supergraphManager.on('schema', setSchema);
     },
-    onRequestParse() {
-      return supergraphManager.waitForInitialization();
+    async onRequestParse() {
+      await waitForInitialization;
     },
   };
+
+  return plugin;
 }
