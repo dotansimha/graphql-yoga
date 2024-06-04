@@ -32,7 +32,7 @@ const getOperationWithFragments = (
   };
 };
 
-export type YogaGraphiQLProps = GraphiQLProps &
+export type YogaGraphiQLProps = Partial<GraphiQLProps> &
   Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
     title?: string;
     /**
