@@ -32,17 +32,7 @@ const getOperationWithFragments = (
   };
 };
 
-export type YogaGraphiQLProps = Omit<
-  GraphiQLProps,
-  | 'fetcher'
-  | 'isHeadersEditorEnabled'
-  | 'defaultEditorToolsVisibility'
-  | 'onToggleDocs'
-  | 'toolbar'
-  | 'onSchemaChange'
-  | 'query'
-  | 'onEditQuery'
-> &
+export type YogaGraphiQLProps = Partial<GraphiQLProps> &
   Partial<Omit<LoadFromUrlOptions, 'headers'>> & {
     title?: string;
     /**
@@ -98,6 +88,15 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
   const urlLoader = useMemo(() => new UrlLoader(), []);
 
   const fetcher = useMemo(() => {
+    if (props.fetcher) {
+      if (props.endpoint) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          'You are using a custom fetcher and an endpoint. The endpoint will be ignored.',
+        );
+      }
+      return props.fetcher;
+    }
     const executor = urlLoader.getExecutorAsync(endpoint, {
       subscriptionsProtocol: SubscriptionProtocol.GRAPHQL_SSE,
       subscriptionsEndpoint: endpoint, // necessary because graphql-sse in graphql-tools url-loader defaults to endpoint+'/stream'
@@ -123,7 +122,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         },
       });
     };
-  }, [urlLoader, endpoint]) as Fetcher;
+  }, [urlLoader, endpoint, props.fetcher]) as Fetcher;
 
   const [params, setParams] = useUrlSearchParams(
     {
@@ -138,25 +137,34 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     showAttribution: true,
   });
 
+  if (props.query && !props.onEditQuery) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      'If you provide `query` prop, you should also provide `onEditQuery` prop to handle query changes.',
+    );
+  }
+
   return (
     <div className="graphiql-container">
       <GraphiQLProvider
-        defaultHeaders={props.defaultHeaders}
-        fetcher={fetcher}
-        headers={props.headers}
+        // default values that can be override by props
+        shouldPersistHeaders
         plugins={[explorer]}
-        query={query}
         schemaDescription={true}
-        shouldPersistHeaders={props.shouldPersistHeaders ?? true}
+        query={query}
+        {...props}
+        fetcher={fetcher}
       >
         <GraphiQLInterface
           isHeadersEditorEnabled
           defaultEditorToolsVisibility
-          onEditQuery={query => {
+          {...props}
+          onEditQuery={(query, ast) => {
             setParams({
               query,
             });
             setQuery(query);
+            props.onEditQuery?.(query, ast);
           }}
         >
           <GraphiQL.Logo>

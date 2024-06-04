@@ -62,6 +62,62 @@ export type GraphiQLOptions = {
    * Whether to use the GET HTTP method for queries when querying the original schema
    */
   useGETForQueries?: boolean;
+  /**
+   * "external" fragments that will be included in the query document (depending on usage)
+   */
+  externalFragments?: string;
+  /**
+   * The maximum number of executed operations to store.
+   * @default 20
+   */
+  maxHistoryLength?: number;
+  /**
+   * Whether target GraphQL server support deprecation of input values.
+   * @default false
+   */
+  inputValueDeprecation?: boolean;
+  /**
+   * Custom operation name for the introspection query.
+   */
+  introspectionQueryName?: string;
+  /**
+   * Whether to include schema description in introspection query.
+   * @default false
+   */
+  schemaDescription?: boolean;
+  /**
+   * Editor theme
+   * @default "graphiql"
+   */
+  editorTheme?: string;
+  /**
+   *  Sets the key map to use when using the editor.
+   * @default 'sublime'
+   */
+  keyMap?: 'sublime' | 'emacs' | 'vim';
+  defaultEditorToolsVisibility?: boolean | 'variables' | 'headers';
+  isHeadersEditorEnabled?: boolean;
+  disableTabs?: boolean;
+  /**
+   * Whether to include `isRepeatable` flag on directives.
+   * @default false
+   */
+  directiveIsRepeatable?: boolean;
+  experimentalFragmentVariables?: boolean;
+  /**
+   * Set to `true` in order to convert all GraphQL comments (marked with # sign) to descriptions (""")
+   * GraphQL has built-in support for transforming descriptions to comments (with `print`), but not while
+   * parsing. Turning the flag on will support the other way as well (`parse`)
+   */
+  commentDescriptions?: boolean;
+  /**
+   * Timeout in milliseconds
+   */
+  timeout?: number;
+  /**
+   * Retry attempts
+   */
+  retry?: number;
 };
 
 export type GraphiQLRendererOptions = {
