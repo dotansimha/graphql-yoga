@@ -22,7 +22,7 @@ export function useManagedFederation(options: ManagedFederationPluginOptions = {
         // Wait for the first schema to be loaded before before allowing requests to be parsed
         // We can then remove the onRequestParse hook to avoid async cost on every request
         const waitForInitialization = new Promise<void>(resolve => {
-          supergraphManager.on('schema', () => {
+          supergraphManager.once('schema', () => {
             plugin.onRequestParse = undefined;
             resolve();
           });

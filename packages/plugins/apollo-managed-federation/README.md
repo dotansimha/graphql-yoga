@@ -1,4 +1,4 @@
-## `@envelop/apollo-managed-federation`
+## `@graphql-yoga/apollo-managed-federation`
 
 This plugin integrates Apollo Managed Federation into Yoga.
 

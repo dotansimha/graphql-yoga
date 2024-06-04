@@ -77,7 +77,7 @@ server.listen(4000, () => {
 > [Hive plugin documentation](https://the-guild.dev/graphql/hive/docs/integrations/graphql-yoga) for
 > more information
 
-#### Condfiuration
+#### Configuration
 
 A full configuration guide can be found in
 [Hive's “Configuration”](https://the-guild.dev/graphql/hive/docs/api-reference/client#configuration)
@@ -158,8 +158,8 @@ information.
 
 ### Using the file system
 
-To create a gateway server withtout using Apollo GraphOS, you can use the
-`@graphql-tools/federation` which can generate an executable schema from a supergraph SDL.
+To create a gateway server without using Apollo GraphOS, you can use the `@graphql-tools/federation`
+which can generate an executable schema from a supergraph SDL.
 
 #### Installation
 
@@ -201,10 +201,13 @@ import { createServer } from 'node:http'
 import { createYoga } from 'graphql-yoga'
 import { getStitchedSchemaFromSupergraphSdl } from '@graphql-tools/federation'
 
-// This doesn't have to be from a file system, it can be fetched via HTTP from a schema registry
-const supergraphSdl = readFileSync('./supergraph.graphql').toString()
-const schema = await getStitchedSchemaFromSupergraphSdl({ supergraphSdl })
-const yoga = createYoga({ schema })
+const yoga = createYoga({
+  schema: getStitchedSchemaFromSupergraphSdl({
+    // This doesn't have to be from a file system, it can be fetched via HTTP from a schema registry
+    supergraphSdl: readFileSync('./supergraph.graphql', 'utf-8')
+  })
+})
+
 const server = createServer(yoga)
 
 server.listen(4000, () => {
