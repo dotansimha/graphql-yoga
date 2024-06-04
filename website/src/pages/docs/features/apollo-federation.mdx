@@ -69,6 +69,75 @@ server.listen(4000, () => {
 })
 ```
 
+### Managed Federation Gateway
+
+Apollo GraphOS can be used as a schema registry when using Managed Federation.
+
+You can use GraphQL Yoga to implement a Gateway exposing the Managed Federation supergraph stored in
+GraphOS.
+
+#### Installation
+
+```sh npm2yarn
+npm i graphql-yoga graphql @graphql-yoga/apollo-managed-federation
+```
+
+#### Example
+
+```js filename="src/index.mjs"
+import { createServer } from 'node:http'
+import { createYoga } from 'graphql-yoga'
+import { useManagedFederation } from '@graphql-yoga/apollo-managed-federation'
+
+const yoga = createYoga({
+  plugins: [useManagedFederation()]
+})
+
+const server = createServer(yoga)
+
+server.listen(4000, () => {
+  console.log('Server is running on http://localhost:4000')
+})
+
+process.on('SIGINT', () => {
+  server.close()
+})
+```
+
+> You can also check a full example on our GitHub repository
+> [here](https://github.com/dotansimha/graphql-yoga/tree/main/examples/apollo-managed-federation)
+
+#### Configuration
+
+By default, the plugin will use standard Apollo GraphOS environment variables.
+
+```bash
+APOLLO_KEY='<YOU_APOLL_API_KEY>' APOLLO_GRAPH_REF='<YOUR_GRAPH_ID>[@<VARIANT>]' node src/index.mjs
+```
+
+If you don't know where to find these values, please refer to the
+[Apollo GraphOS documentation](https://www.apollographql.com/docs/federation/managed-federation/setup#4-connect-your-router-to-graphos).
+
+You can also provide this configuration programaitically by providing a configurtion object to the
+plugin, along with other options to customize the polling/retry behavior.
+
+```js
+const yoga = createYoga({
+  plugins: [
+    useManagedFederation({
+      apiKey: '<YOU_APOLL_API_KEY>',
+      graphRef: '<YOUR_GRAPH_ID>[@<VARIANT>]',
+      maxRetries: 5, // max retries in case of loading failure
+      retryDelaySeconds: 0, // delay between retries
+      minDelaySeconds: 1 // minimum delay between polling requests
+    })
+  ]
+})
+```
+
+Other more advanced options are available, please refer to the type definitions for more
+information.
+
 ### Handling Subgraph Errors
 
 By default, GraphQL Yoga masks any unexpected GraphQL Errors. This is done to prevent leaking
