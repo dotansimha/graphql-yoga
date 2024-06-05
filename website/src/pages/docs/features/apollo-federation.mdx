@@ -53,17 +53,16 @@ npm i graphql-yoga graphql @graphql-yoga/hive
 ```js filename="src/index.mjs"
 import { createServer } from 'node:http'
 import { createYoga } from 'graphql-yoga'
-import { useHive } from '@graphql-hive/yoga'
-import { schema } from './schema'
+import { createSupergraphSDLFetcher } from '@graphql-hive/client'
+
+const supergraphFetcher = createSupergraphSDLFetcher({
+  key: env.HIVE_CDN_KEY,
+  endpoint: env.HIVE_CDN_URL
+})
+const { supergraphSdl } = await supergraphFetcher()
 
 const yoga = createYoga({
-  schema,
-  plugins: [
-    useHive({
-      enabled: true, // Enable/Disable Hive Client
-      token: 'YOUR-TOKEN'
-    })
-  ]
+  schema: getStitchedSchemaFromSupergraphSdl({ supergraphSdl })
 })
 
 const server = createServer(yoga)
