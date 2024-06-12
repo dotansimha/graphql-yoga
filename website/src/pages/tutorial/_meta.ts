@@ -1,5 +1,8 @@
 export default {
-  basic: 'Basic',
+  basic: {
+    title: 'Basic',
+    display: 'children',
+  },
   advanced: {
     title: 'Advanced',
     display: 'hidden',
