@@ -1,5 +1,5 @@
-import { GraphQLError } from 'graphql';
 import type { Plugin } from 'graphql-yoga';
+import { createGraphQLError } from 'graphql-yoga';
 import {
   FetchError,
   SupergraphSchemaManager,
@@ -75,7 +75,7 @@ export function useManagedFederation(options: ManagedFederationPluginOptions = {
         const waitForInitialization = new Promise<void>((resolve, reject) => {
           const onFailure = (err: unknown) => {
             reject(
-              new GraphQLError('Supergraph failed to load', {
+              createGraphQLError('Supergraph failed to load', {
                 originalError: err instanceof Error ? err : null,
               }),
             );
