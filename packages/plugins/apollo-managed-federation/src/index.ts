@@ -1,4 +1,4 @@
-import type { Plugin, YogaLogger } from 'graphql-yoga';
+import type { Plugin } from 'graphql-yoga';
 import { createGraphQLError } from 'graphql-yoga';
 import {
   FetchError,
@@ -31,35 +31,32 @@ export function useManagedFederation(options: ManagedFederationPluginOptions = {
     supergraphManager = new SupergraphSchemaManager(options as SupergraphSchemaManagerOptions),
   } = options;
 
-  let logger: YogaLogger = console;
-
-  supergraphManager.on('log', ({ level, message, source }) => {
-    logger[level](`[ManagedFederation]${source === 'uplink' ? ' <UPLINK>' : ''} ${message}`);
-  });
-
-  supergraphManager.on(
-    'failure',
-    options.onFailure ??
-      ((error, delayInSeconds) => {
-        const message = (error as { message: string })?.message ?? error;
-        logger.error(
-          `[ManagedFederation] Failed to load supergraph schema.${
-            message ? ` Last error: ${message}` : ''
-          }`,
-        );
-        logger.info(
-          `[ManagedFederation] No failure handler provided. Retrying in ${delayInSeconds}s.`,
-        );
-        supergraphManager.start(delayInSeconds);
-      }),
-  );
-
-  // Start as soon as possible to minimize the wait time of the first schema loading
-  supergraphManager.start();
-
   const plugin: Plugin = {
     onYogaInit({ yoga }) {
-      logger = yoga.logger;
+      supergraphManager.on('log', ({ level, message, source }) => {
+        yoga.logger[level](
+          `[ManagedFederation]${source === 'uplink' ? ' <UPLINK>' : ''} ${message}`,
+        );
+      });
+
+      supergraphManager.on(
+        'failure',
+        options.onFailure ??
+          ((error, delayInSeconds) => {
+            const message = (error as { message: string })?.message ?? error;
+            yoga.logger.error(
+              `[ManagedFederation] Failed to load supergraph schema.${
+                message ? ` Last error: ${message}` : ''
+              }`,
+            );
+            yoga.logger.info(
+              `[ManagedFederation] No failure handler provided. Retrying in ${delayInSeconds}s.`,
+            );
+            supergraphManager.start(delayInSeconds);
+          }),
+      );
+
+      supergraphManager.start();
     },
     onPluginInit({ setSchema }) {
       if (supergraphManager.schema) {
