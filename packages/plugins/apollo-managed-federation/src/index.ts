@@ -1,4 +1,4 @@
-import type { Plugin } from 'graphql-yoga';
+import type { Plugin, YogaLogger } from 'graphql-yoga';
 import { createGraphQLError } from 'graphql-yoga';
 import {
   FetchError,
@@ -16,15 +16,6 @@ export type ManagedFederationPluginOptions = (
    */
   supergraphManager?: SupergraphSchemaManager | never;
   /**
-   * The logger to be used by this plugin
-   * Defaults to the `console` object
-   */
-  logger?: {
-    info: (message: string) => void;
-    error: (message: string) => void;
-    warn: (message: string) => void;
-  };
-  /**
    * Allow to customize how a schema loading failure is handled.
    * A failure happens when the manager failed to load the schema more than the provided max retries
    * count.
@@ -37,9 +28,10 @@ export type ManagedFederationPluginOptions = (
 
 export function useManagedFederation(options: ManagedFederationPluginOptions = {}): Plugin {
   const {
-    logger = console,
     supergraphManager = new SupergraphSchemaManager(options as SupergraphSchemaManagerOptions),
   } = options;
+
+  let logger: YogaLogger = console;
 
   supergraphManager.on('log', ({ level, message, source }) => {
     logger[level](`[ManagedFederation]${source === 'uplink' ? ' <UPLINK>' : ''} ${message}`);
@@ -66,6 +58,9 @@ export function useManagedFederation(options: ManagedFederationPluginOptions = {
   supergraphManager.start();
 
   const plugin: Plugin = {
+    onYogaInit({ yoga }) {
+      logger = yoga.logger;
+    },
     onPluginInit({ setSchema }) {
       if (supergraphManager.schema) {
         setSchema(supergraphManager.schema);
