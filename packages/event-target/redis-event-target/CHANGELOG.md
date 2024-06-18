@@ -1,5 +1,16 @@
 # @graphql-yoga/redis-event-target
 
+## 3.0.1
+
+### Patch Changes
+
+- [#3300](https://github.com/dotansimha/graphql-yoga/pull/3300)
+  [`fdd902c`](https://github.com/dotansimha/graphql-yoga/commit/fdd902c2a713c6bd951e1b1e6570164b6ff2d546)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-yoga/typed-event-target@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-yoga/typed-event-target/v/workspace:^)
+    (from `^3.0.0`, in `dependencies`)
+
 ## 3.0.0
 
 ### Major Changes
