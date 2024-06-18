@@ -1,5 +1,43 @@
 # @graphql-yoga/graphiql
 
+## 4.3.0
+
+### Minor Changes
+
+- [#3314](https://github.com/dotansimha/graphql-yoga/pull/3314)
+  [`d5dfe99`](https://github.com/dotansimha/graphql-yoga/commit/d5dfe99af030a5afac26968ba8dd81dee6df0dc2)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Allow for full customization of the
+  GraphiQL page.
+
+  Props from the `YogaGraphiQL` are now forwarded to the underlying GraphiQL components.
+
+  The `graphiql` option field type of the Yoga server as also been updated to document which options
+  are configurable from the server side. Only serializable options are available.
+
+- [#3255](https://github.com/dotansimha/graphql-yoga/pull/3255)
+  [`7335a82`](https://github.com/dotansimha/graphql-yoga/commit/7335a82a4b0696c464311a5027a43b16c7f68156)
+  Thanks [@nissy-dev](https://github.com/nissy-dev)! - support shouldPersistHeaders option in
+  GraphiQL plugin
+
+### Patch Changes
+
+- [#3279](https://github.com/dotansimha/graphql-yoga/pull/3279)
+  [`5a40b2b`](https://github.com/dotansimha/graphql-yoga/commit/5a40b2b9d6ed0f9883426e24d1c37f43bcfc6e48)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+  - Updated dependency
+    [`@graphiql/plugin-explorer@^1.0.3` ↗︎](https://www.npmjs.com/package/@graphiql/plugin-explorer/v/1.0.3)
+    (from `^0.1.4`, in `dependencies`)
+  - Updated dependency
+    [`@graphiql/toolkit@0.9.1` ↗︎](https://www.npmjs.com/package/@graphiql/toolkit/v/0.9.1) (from
+    `0.8.4`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/url-loader@8.0.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/url-loader/v/8.0.2)
+    (from `8.0.1`, in `dependencies`)
+  - Updated dependency [`graphiql@3.1.1` ↗︎](https://www.npmjs.com/package/graphiql/v/3.1.1) (from
+    `2.0.7`, in `dependencies`)
+  - Updated dependency [`graphql@16.8.1` ↗︎](https://www.npmjs.com/package/graphql/v/16.8.1) (from
+    `16.6.0`, in `dependencies`)
+
 ## 4.2.1
 
 ### Patch Changes

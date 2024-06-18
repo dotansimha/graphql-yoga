@@ -1,5 +1,50 @@
 # graphql-yoga
 
+## 5.4.0
+
+### Minor Changes
+
+- [#3314](https://github.com/dotansimha/graphql-yoga/pull/3314)
+  [`d5dfe99`](https://github.com/dotansimha/graphql-yoga/commit/d5dfe99af030a5afac26968ba8dd81dee6df0dc2)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Allow for full customization of the
+  GraphiQL page.
+
+  Props from the `YogaGraphiQL` are now forwarded to the underlying GraphiQL components.
+
+  The `graphiql` option field type of the Yoga server as also been updated to document which options
+  are configurable from the server side. Only serializable options are available.
+
+- [#3255](https://github.com/dotansimha/graphql-yoga/pull/3255)
+  [`7335a82`](https://github.com/dotansimha/graphql-yoga/commit/7335a82a4b0696c464311a5027a43b16c7f68156)
+  Thanks [@nissy-dev](https://github.com/nissy-dev)! - support shouldPersistHeaders option in
+  GraphiQL plugin
+
+### Patch Changes
+
+- [#3325](https://github.com/dotansimha/graphql-yoga/pull/3325)
+  [`4cd43b9`](https://github.com/dotansimha/graphql-yoga/commit/4cd43b9ff56ad9358dc897f4bb87a6a94f953047)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix TypeScript compatibility with `type: "module"`.
+
+- [#3300](https://github.com/dotansimha/graphql-yoga/pull/3300)
+  [`fdd902c`](https://github.com/dotansimha/graphql-yoga/commit/fdd902c2a713c6bd951e1b1e6570164b6ff2d546)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+
+  - Updated dependency
+    [`@graphql-yoga/logger@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-yoga/logger/v/workspace:^)
+    (from `^2.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-yoga/subscription@workspace:^` ↗︎](https://www.npmjs.com/package/@graphql-yoga/subscription/v/workspace:^)
+    (from `^5.0.0`, in `dependencies`)
+
+- [#3270](https://github.com/dotansimha/graphql-yoga/pull/3270)
+  [`f9aa1cd`](https://github.com/dotansimha/graphql-yoga/commit/f9aa1cdc968816a9f83f054dbd24799c85f71a2c)
+  Thanks [@andrew0](https://github.com/andrew0)! - Retain server context prototype for batched
+  requests
+
+- Updated dependencies
+  [[`fdd902c`](https://github.com/dotansimha/graphql-yoga/commit/fdd902c2a713c6bd951e1b1e6570164b6ff2d546)]:
+  - @graphql-yoga/subscription@5.0.1
+
 ## 5.3.1
 
 ### Patch Changes

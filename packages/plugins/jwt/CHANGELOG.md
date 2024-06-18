@@ -1,5 +1,35 @@
 # @graphql-yoga/plugin-jwt
 
+## 2.4.0
+
+### Minor Changes
+
+- [#3182](https://github.com/dotansimha/graphql-yoga/pull/3182)
+  [`8663e78`](https://github.com/dotansimha/graphql-yoga/commit/8663e78a4a0129d084e5a81b043f278e4b7fa84e)
+  Thanks [@bgentry](https://github.com/bgentry)! - Add the possibility to customize JwksClient
+  options
+
+- [#3275](https://github.com/dotansimha/graphql-yoga/pull/3275)
+  [`25886fa`](https://github.com/dotansimha/graphql-yoga/commit/25886fa194b38d195fbec5c2989a6063398c9583)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Update type to allow passing every
+  jsonwebtoken.verify options
+
+### Patch Changes
+
+- [#3300](https://github.com/dotansimha/graphql-yoga/pull/3300)
+  [`fdd902c`](https://github.com/dotansimha/graphql-yoga/commit/fdd902c2a713c6bd951e1b1e6570164b6ff2d546)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+  - Updated dependency
+    [`graphql-yoga@workspace:^` ↗︎](https://www.npmjs.com/package/graphql-yoga/v/workspace:^) (from
+    `^5.3.1`, in `peerDependencies`)
+- Updated dependencies
+  [[`4cd43b9`](https://github.com/dotansimha/graphql-yoga/commit/4cd43b9ff56ad9358dc897f4bb87a6a94f953047),
+  [`fdd902c`](https://github.com/dotansimha/graphql-yoga/commit/fdd902c2a713c6bd951e1b1e6570164b6ff2d546),
+  [`d5dfe99`](https://github.com/dotansimha/graphql-yoga/commit/d5dfe99af030a5afac26968ba8dd81dee6df0dc2),
+  [`7335a82`](https://github.com/dotansimha/graphql-yoga/commit/7335a82a4b0696c464311a5027a43b16c7f68156),
+  [`f9aa1cd`](https://github.com/dotansimha/graphql-yoga/commit/f9aa1cdc968816a9f83f054dbd24799c85f71a2c)]:
+  - graphql-yoga@5.4.0
+
 ## 2.3.1
 
 ### Patch Changes
