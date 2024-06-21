@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db:
+  postgres:
     image: postgres:14.12-alpine
     networks:
       - 'stack'
@@ -18,6 +18,25 @@ services:
       - ./.pg-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+
+  api:
+    image: ${DOCKER_REGISTRY}yoga-hackernews${DOCKER_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - 'stack'
+    depends_on:
+      - postgres
+    environment:
+      PG_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/postgres
+    ports:
+      - '4000:4000'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   stack: {}
