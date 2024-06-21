@@ -10,9 +10,8 @@ import { schema } from '../src/schema.js';
 const connectionString =
   process.env['PG_CONNECTION_STRING'] ??
   'postgres://postgres:postgres@localhost:5432/postgres?currentSchema=integrationTests';
-console.log(connectionString);
-export async function resetDatabase(db: NodePgDatabase, schema: string) {
-  console.log(schema);
+
+async function resetDatabase(db: NodePgDatabase, schema: string) {
   // sql query for resetting the database
   const query = sql`
     DROP SCHEMA IF EXISTS ${sql.raw(schema)} CASCADE;

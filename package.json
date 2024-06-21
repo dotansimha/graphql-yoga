@@ -43,7 +43,7 @@
     "release": "pnpm build && changeset publish",
     "start:docs": "pnpm --filter=website dev",
     "test": "jest --detectOpenHandles",
-    "test:integration": "cross-env INTEGRATION_TEST=true jest --forceExit",
+    "test:integration": "cross-env INTEGRATION_TEST=true jest --forceExit sveltekit",
     "test:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks --logHeapUsage && cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks --logHeapUsage"
   },
   "devDependencies": {
