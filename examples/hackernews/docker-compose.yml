@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.12-alpine
+    networks:
+      - 'stack'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./.pg-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+networks:
+  stack: {}

@@ -3,7 +3,7 @@
 ## Stack
 
 - GraphQL Yoga
-- Prisma
+- Drizzle
 
 ## Tutorial
 

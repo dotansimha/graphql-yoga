@@ -1,6 +1,14 @@
+import { eq, ilike, or } from 'drizzle-orm';
 import { createGraphQLError, createSchema } from 'graphql-yoga';
-import { Prisma, type Link } from '@prisma/client';
-import type { GraphQLContext } from './context';
+import pg from 'pg';
+import type { GraphQLContext } from './context.js';
+import { comments, links } from './drizzle/schema.js';
+
+function isUUIDV4(uuid: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(uuid);
+}
+
+type Link = typeof links.$inferSelect;
 
 const typeDefinitions = /* GraphQL */ `
   type Link {
@@ -27,13 +35,6 @@ const typeDefinitions = /* GraphQL */ `
   }
 `;
 
-const parseIntSafe = (value: string): number | null => {
-  if (/^(\d+)$/.test(value)) {
-    return parseInt(value, 10);
-  }
-  return null;
-};
-
 const applyTakeConstraints = (params: { min: number; max: number; value: number }) => {
   if (params.value < params.min || params.value > params.max) {
     throw createGraphQLError(
@@ -47,35 +48,28 @@ const resolvers = {
   Query: {
     hello: () => `Hello World!`,
     feed: async (
-      parent: unknown,
+      _parent: unknown,
       args: { filterNeedle?: string; skip?: number; take?: number },
       context: GraphQLContext,
     ) => {
-      const where = args.filterNeedle
-        ? {
-            OR: [
-              { description: { contains: args.filterNeedle } },
-              { url: { contains: args.filterNeedle } },
-            ],
-          }
-        : {};
-
       const take = applyTakeConstraints({
         min: 1,
         max: 50,
         value: args.take ?? 30,
       });
 
-      return context.prisma.link.findMany({
-        where,
-        skip: args.skip,
-        take,
-      });
+      return context.db
+        .select()
+        .from(links)
+        .where(
+          args.filterNeedle
+            ? or(ilike(links.description, args.filterNeedle), ilike(links.url, args.filterNeedle))
+            : undefined,
+        )
+        .limit(take);
     },
     comment: async (parent: unknown, args: { id: string }, context: GraphQLContext) => {
-      return context.prisma.comment.findUnique({
-        where: { id: parseInt(args.id) },
-      });
+      return context.db.select().from(comments).where(eq(comments.id, args.id));
     },
   },
   Link: {
@@ -83,48 +77,48 @@ const resolvers = {
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
     comments: (parent: Link, _: unknown, context: GraphQLContext) => {
-      return context.prisma.comment.findMany({
-        where: {
-          linkId: parent.id,
-        },
-      });
+      return context.db.select().from(comments).where(eq(links.id, parent.id));
     },
   },
   Mutation: {
     postLink: async (
-      parent: unknown,
+      _parent: unknown,
       args: { description: string; url: string },
       context: GraphQLContext,
     ) => {
-      const newLink = await context.prisma.link.create({
-        data: {
-          url: args.url,
+      const newLink = await context.db
+        .insert(links)
+        .values({
           description: args.description,
-        },
-      });
-      return newLink;
+          url: args.url,
+        })
+        .returning();
+
+      return newLink[0];
     },
     postCommentOnLink: async (
-      parent: unknown,
+      _parent: unknown,
       args: { linkId: string; body: string },
       context: GraphQLContext,
     ) => {
-      const linkId = parseIntSafe(args.linkId);
-      if (linkId === null) {
+      if (isUUIDV4(args.linkId) === false) {
         return Promise.reject(
           createGraphQLError(`Cannot post common on non-existing link with id '${args.linkId}'.`),
         );
       }
 
-      const comment = await context.prisma.comment
-        .create({
-          data: {
-            body: args.body,
-            linkId,
-          },
+      const comment = await context.db
+        .insert(comments)
+        .values({
+          body: args.body,
+          linkId: args.linkId,
         })
+        .returning()
         .catch((err: unknown) => {
-          if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
+          if (
+            err instanceof pg.DatabaseError &&
+            err.constraint === 'comments_link_id_links_id_fk'
+          ) {
             return Promise.reject(
               createGraphQLError(
                 `Cannot post common on non-existing link with id '${args.linkId}'.`,
@@ -133,7 +127,7 @@ const resolvers = {
           }
           return Promise.reject(err);
         });
-      return comment;
+      return comment[0];
     },
   },
 };
