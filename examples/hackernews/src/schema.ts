@@ -77,7 +77,7 @@ const resolvers = {
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
     comments: (parent: Link, _: unknown, context: GraphQLContext) => {
-      return context.db.select().from(comments).where(eq(links.id, parent.id));
+      return context.db.select().from(comments).where(eq(comments.id, parent.id));
     },
   },
   Mutation: {
