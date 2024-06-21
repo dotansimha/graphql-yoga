@@ -273,6 +273,9 @@ jobs:
 
   hackernews-docker-container:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_REGISTRY: ghcr.io/${{ github.repository }}/
+      DOCKER_TAG: :${{ github.event.workflow_run.head_sha }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4
