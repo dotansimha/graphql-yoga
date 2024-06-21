@@ -1,14 +1,14 @@
 import { createServer } from 'node:http';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { createYoga } from 'graphql-yoga';
 import pg from 'pg';
+import { migrateDatabase } from './migrate-database.js';
 import { schema } from './schema.js';
 
 async function main() {
   const client = new pg.Client(process.env['PG_CONNECTION_STRING']);
   await client.connect();
-  await migrate(drizzle(client), { migrationsFolder: './src/drizzle' });
+  await migrateDatabase(client);
   const db = drizzle(client);
   const yoga = createYoga({ schema, context: { db } });
   const server = createServer(yoga);

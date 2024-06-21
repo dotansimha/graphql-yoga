@@ -103,6 +103,9 @@ jobs:
       - name: Build Packages
         run: pnpm build
 
+      - name: Start Docker
+        run: docker compose -f examples/hackernews/docker-compose.yml up -d --wait
+
       - name: Run Tests
         uses: nick-fields/retry@v3
         with:
