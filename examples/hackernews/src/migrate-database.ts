@@ -7,5 +7,5 @@ import type pg from 'pg';
 const __dirname = new URL('.', import.meta.url).pathname;
 
 export async function migrateDatabase(client: pg.Client) {
-  await migrate(drizzle(client), { migrationsFolder: resolve(__dirname, '/drizzle') });
+  await migrate(drizzle(client), { migrationsFolder: resolve(__dirname, 'drizzle') });
 }
