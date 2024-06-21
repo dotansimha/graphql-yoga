@@ -298,6 +298,16 @@ jobs:
       - name: Build Hackernews Docker Image
         run: docker compose -f .hackernews-deploy/docker-compose.yml build api
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker Image
+        run: docker compose -f .hackernews-deploy/docker-compose.yml push api
+
   # TODO: have the example and packages use singleton nestjs dependencies
   #       but without using .pnpmfile.cjs because it causes issues with renovate: https://github.com/dotansimha/graphql-yoga/pull/2622
   # nestjs-apollo-federation-compatibility:
