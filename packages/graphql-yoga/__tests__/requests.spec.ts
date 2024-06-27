@@ -402,6 +402,26 @@ describe('requests', () => {
     expect(body.errors?.[0].message).toBe('Unexpected parameter "test" in the request body.');
   });
 
+  it('does not error if there is a specified invalid parameter in the request body', async () => {
+    const yoga = createYoga({
+      schema,
+      logging: false,
+      extraParamNames: ['test'],
+    });
+    const response = await yoga.fetch(`http://yoga/graphql`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/graphql+json',
+      },
+      body: JSON.stringify({ query: '{ ping }', test: 'a' }),
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.errors).toBeUndefined();
+    expect(body.data.ping).toBe('pong');
+  });
+
   it('should use supported accept header when multiple are provided', async () => {
     const response = await yoga.fetch('http://yoga/test-graphql', {
       method: 'POST',
