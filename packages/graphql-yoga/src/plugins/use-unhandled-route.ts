@@ -9,7 +9,7 @@ export interface LandingPageRendererOpts {
   fetchAPI: FetchAPI;
   url: URL;
   graphqlEndpoint: string;
-  urlPattern: URLPattern;
+  urlPattern: InstanceType<FetchAPI['URLPattern']>;
 }
 
 export type LandingPageRenderer = (opts: LandingPageRendererOpts) => PromiseOrValue<Response>;
@@ -46,7 +46,7 @@ export function useUnhandledRoute(args: {
   const landingPageRenderer: LandingPageRenderer =
     args.landingPageRenderer || defaultRenderLandingPage;
   return {
-    onRequest({ request, fetchAPI, endResponse, url }) {
+    onRequest({ request, fetchAPI, endResponse, url }): PromiseOrValue<void> {
       if (
         !request.url.endsWith(args.graphqlEndpoint) &&
         !request.url.endsWith(`${args.graphqlEndpoint}/`) &&
@@ -69,10 +69,9 @@ export function useUnhandledRoute(args: {
             },
           });
           if (isPromise(landingPage$)) {
-            landingPage$.then(res => endResponse(res));
-          } else {
-            endResponse(landingPage$);
+            return landingPage$.then(endResponse);
           }
+          endResponse(landingPage$);
           return;
         }
 
