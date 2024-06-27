@@ -59,7 +59,7 @@ import {
 import { useRequestParser } from './plugins/use-request-parser.js';
 import { useResultProcessors } from './plugins/use-result-processor.js';
 import { useSchema, YogaSchemaDefinition } from './plugins/use-schema.js';
-import { useUnhandledRoute } from './plugins/use-unhandled-route.js';
+import { LandingPageRenderer, useUnhandledRoute } from './plugins/use-unhandled-route.js';
 import { processRequest as processGraphQLParams, processResult } from './process-request.js';
 import {
   FetchAPI,
@@ -120,7 +120,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
   /**
    * Whether the landing page should be shown.
    */
-  landingPage?: boolean | undefined;
+  landingPage?: boolean | LandingPageRenderer | undefined;
 
   /**
    * GraphiQL options
@@ -360,11 +360,14 @@ export class YogaServer<
           addPlugin(useLimitBatching(batchingLimit));
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(useCheckGraphQLQueryParams());
+          const showLandingPage = !!(options?.landingPage ?? true);
           addPlugin(
             // @ts-expect-error Add plugins has context but this hook doesn't care
             useUnhandledRoute({
               graphqlEndpoint,
-              showLandingPage: options?.landingPage ?? true,
+              showLandingPage,
+              landingPageRenderer:
+                typeof options?.landingPage === 'function' ? options.landingPage : undefined,
             }),
           );
           // We check the method after user-land plugins because the plugin might support more methods (like graphql-sse).

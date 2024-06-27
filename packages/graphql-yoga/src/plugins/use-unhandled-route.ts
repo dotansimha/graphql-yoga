@@ -1,9 +1,39 @@
+import { PromiseOrValue } from '@envelop/core';
+import { isPromise } from '@graphql-tools/utils';
 import landingPageBody from '../landing-page-html.js';
 import { FetchAPI } from '../types.js';
 import type { Plugin } from './types.js';
 
+export interface LandingPageRendererOpts {
+  request: Request;
+  fetchAPI: FetchAPI;
+  url: URL;
+  graphqlEndpoint: string;
+  urlPattern: URLPattern;
+}
+
+export type LandingPageRenderer = (opts: LandingPageRendererOpts) => PromiseOrValue<Response>;
+
+export const defaultRenderLandingPage: LandingPageRenderer = function defaultRenderLandingPage(
+  opts: LandingPageRendererOpts,
+) {
+  return new opts.fetchAPI.Response(
+    landingPageBody
+      .replace(/__GRAPHIQL_LINK__/g, opts.graphqlEndpoint)
+      .replace(/__REQUEST_PATH__/g, opts.url.pathname),
+    {
+      status: 200,
+      statusText: 'OK',
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    },
+  );
+};
+
 export function useUnhandledRoute(args: {
   graphqlEndpoint: string;
+  landingPageRenderer?: LandingPageRenderer;
   showLandingPage: boolean;
 }): Plugin {
   let urlPattern: URLPattern;
@@ -13,6 +43,8 @@ export function useUnhandledRoute(args: {
     });
     return urlPattern;
   }
+  const landingPageRenderer: LandingPageRenderer =
+    args.landingPageRenderer || defaultRenderLandingPage;
   return {
     onRequest({ request, fetchAPI, endResponse, url }) {
       if (
@@ -27,20 +59,20 @@ export function useUnhandledRoute(args: {
           request.method === 'GET' &&
           !!request.headers?.get('accept')?.includes('text/html')
         ) {
-          endResponse(
-            new fetchAPI.Response(
-              landingPageBody
-                .replace(/__GRAPHIQL_LINK__/g, args.graphqlEndpoint)
-                .replace(/__REQUEST_PATH__/g, url.pathname),
-              {
-                status: 200,
-                statusText: 'OK',
-                headers: {
-                  'Content-Type': 'text/html',
-                },
-              },
-            ),
-          );
+          const landingPage$ = landingPageRenderer({
+            request,
+            fetchAPI,
+            url,
+            graphqlEndpoint: args.graphqlEndpoint,
+            get urlPattern() {
+              return getUrlPattern(fetchAPI);
+            },
+          });
+          if (isPromise(landingPage$)) {
+            landingPage$.then(res => endResponse(res));
+          } else {
+            endResponse(landingPage$);
+          }
           return;
         }
 
