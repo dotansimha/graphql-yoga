@@ -9,6 +9,8 @@ export interface LandingPageRendererOpts {
   fetchAPI: FetchAPI;
   url: URL;
   graphqlEndpoint: string;
+  // Not sure why the global `URLPattern` causes errors with the ponyfill typings
+  // So instead we use this which points to the same type
   urlPattern: InstanceType<FetchAPI['URLPattern']>;
 }
 
