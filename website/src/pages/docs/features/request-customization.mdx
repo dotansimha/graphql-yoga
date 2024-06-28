@@ -4,10 +4,10 @@ description: You can customize the request handling in GraphQL Yoga
 
 # Request Customization
 
-For each type of request, GraphQL Yoga uses a specific parser to parse the incoming request and extract the GraphQL operation
-from it. Then it applies some validation logic to the extracted object, then it passes it to the
-GraphQL execution engine. Yoga mostly follows GraphQL-over-HTTP standards for this validation and parsing
-logic.
+For each type of request, GraphQL Yoga uses a specific parser to parse the incoming request and
+extract the GraphQL operation from it. Then it applies some validation logic to the extracted
+object, then it passes it to the GraphQL execution engine. Yoga mostly follows GraphQL-over-HTTP
+standards for this validation and parsing logic.
 [See the GraphQL-over-HTTP compliance test results of GraphQL Yoga](https://github.com/graphql/graphql-http/blob/main/implementations/graphql-yoga/README.md)
 
 The parsers are expected to return `GraphQLParams` object that contains the following properties:
@@ -165,8 +165,9 @@ const useMyParser: Plugin = () => {
 ## Request Validation
 
 Request validation is the process of validating the incoming request to ensure that it follows the
-GraphQL-over-HTTP spec. Besides the required validation rules, Yoga applies some extra rules to ensure the
-security and the performance of the server such as disallowing extra paramters in the request body. However, you can customize this kind of behaviors on your own risk.
+GraphQL-over-HTTP spec. Besides the required validation rules, Yoga applies some extra rules to
+ensure the security and the performance of the server such as disallowing extra paramters in the
+request body. However, you can customize this kind of behaviors on your own risk.
 
 ### Extra Parameters in `GraphQLParams`
 
