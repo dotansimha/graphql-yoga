@@ -23,4 +23,5 @@ export default {
   'envelop-plugins': 'Plugins',
   testing: 'Testing',
   jwt: 'JWT',
+  'landing-page': 'Landing Page',
 };
