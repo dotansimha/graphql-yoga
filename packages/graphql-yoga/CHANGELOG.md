@@ -1,5 +1,43 @@
 # graphql-yoga
 
+## 5.5.0
+
+### Minor Changes
+
+- [#3332](https://github.com/dotansimha/graphql-yoga/pull/3332)
+  [`0208024`](https://github.com/dotansimha/graphql-yoga/commit/02080249adb8b120d44a89126571145dc3be8e4e)
+  Thanks [@ardatan](https://github.com/ardatan)! - Customize the landing page by passing a custom
+  renderer that returns `Response` to the `landingPage` option
+
+  ```ts
+  import { createYoga } from 'graphql-yoga'
+
+  const yoga = createYoga({
+    landingPage: ({ url, fetchAPI }) => {
+      return new fetchAPI.Response(
+        /* HTML */ `
+          <!doctype html>
+          <html>
+            <head>
+              <title>404 Not Found</title>
+            </head>
+            <body>
+              <h1>404 Not Found</h1>
+              <p>Sorry, the page (${url.pathname}) you are looking for could not be found.</p>
+            </body>
+          </html>
+        `,
+        {
+          status: 404,
+          headers: {
+            'Content-Type': 'text/html'
+          }
+        }
+      )
+    }
+  })
+  ```
+
 ## 5.4.0
 
 ### Minor Changes
