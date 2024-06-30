@@ -1,5 +1,13 @@
 # apollo-subgraph-with-yoga
 
+## 3.5.0
+
+### Patch Changes
+
+- Updated dependencies
+  [[`0208024`](https://github.com/dotansimha/graphql-yoga/commit/02080249adb8b120d44a89126571145dc3be8e4e)]:
+  - graphql-yoga@5.5.0
+
 ## 3.4.0
 
 ### Patch Changes
