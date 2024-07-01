@@ -1,10 +1,16 @@
 import { createServer } from 'node:http';
+import { drizzle } from 'drizzle-orm/node-postgres';
 import { createYoga } from 'graphql-yoga';
-import { createContext } from './context';
-import { schema } from './schema';
+import pg from 'pg';
+import { migrateDatabase } from './migrate-database.js';
+import { schema } from './schema.js';
 
-function main() {
-  const yoga = createYoga({ schema, context: createContext });
+async function main() {
+  const client = new pg.Client(process.env['PG_CONNECTION_STRING']);
+  await client.connect();
+  await migrateDatabase(client);
+  const db = drizzle(client);
+  const yoga = createYoga({ schema, context: { db } });
   const server = createServer(yoga);
   server.listen(4000, () => {
     console.info(`Server is running on http://localhost:4000${yoga.graphqlEndpoint}`);

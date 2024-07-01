@@ -1,13 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 export type GraphQLContext = {
-  prisma: PrismaClient;
+  db: NodePgDatabase;
 };
-
-export async function createContext(): Promise<GraphQLContext> {
-  return {
-    prisma,
-  };
-}

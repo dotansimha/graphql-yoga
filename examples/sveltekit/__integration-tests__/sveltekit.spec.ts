@@ -76,7 +76,8 @@ describe('SvelteKit integration', () => {
 			} catch (error) {}
 
 			// Build svelteKit
-			execSync('pnpm --filter example-sveltekit build');
+			console.log('run "pnpm --filter example-sveltekit build" (output is piped into process)');
+			execSync('pnpm --filter example-sveltekit build', { stdio: 'inherit' });
 
 			// Start sveltekit
 			sveltekitProcess = spawn('pnpm', ['--filter', 'example-sveltekit', 'preview']);

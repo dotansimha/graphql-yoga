@@ -103,6 +103,14 @@ jobs:
       - name: Build Packages
         run: pnpm build
 
+      - name: patch compose file volumes
+        uses: mikefarah/yq@v4.44.1
+        with:
+          cmd: yq -i 'del(.services.*.volumes)' examples/hackernews/docker-compose.yml
+
+      - name: Start Docker
+        run: docker compose -f examples/hackernews/docker-compose.yml up -d --wait postgres
+
       - name: Run Tests
         uses: nick-fields/retry@v3
         with:
@@ -262,6 +270,43 @@ jobs:
           failOnWarning: true
           failOnRequired: true
           debug: true
+
+  hackernews-docker-container:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_REGISTRY: ghcr.io/${{ github.repository }}/
+      DOCKER_TAG: :${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4
+
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
+        with:
+          nodeVersion: 22
+          packageManager: pnpm
+
+      - name: Build Packages
+        run: pnpm build
+
+      - name: Build Hackernews App
+        run: pnpm --filter=example-hackernews build
+
+      - name: Isolate Docker Image Build Context
+        run: pnpm build:hackernews:docker
+
+      - name: Build Hackernews Docker Image
+        run: docker compose -f .hackernews-deploy/docker-compose.yml build api
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker Image
+        run: docker compose -f .hackernews-deploy/docker-compose.yml push api
 
   # TODO: have the example and packages use singleton nestjs dependencies
   #       but without using .pnpmfile.cjs because it causes issues with renovate: https://github.com/dotansimha/graphql-yoga/pull/2622

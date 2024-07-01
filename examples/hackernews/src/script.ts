@@ -1,24 +1,31 @@
 // 1
-import { PrismaClient } from '@prisma/client';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import pg from 'pg';
+import { links } from './drizzle/schema.js';
 
 // 2
-const prisma = new PrismaClient();
+const client = new pg.Client(process.env['PG_CONNECTION_STRING']);
 
-// 3
 async function main() {
-  await prisma.link.create({
-    data: {
-      description: 'Fullstack tutorial for GraphQL',
-      url: 'www.howtographql.com',
-    },
+  // 3
+  await client.connect();
+  const db = drizzle(client);
+  await migrate(db, { migrationsFolder: './drizzle' });
+
+  // 4
+  await db.insert(links).values({
+    description: 'Fullstack tutorial for GraphQL',
+    url: 'www.howtographql.com',
   });
-  const allLinks = await prisma.link.findMany();
+
+  const allLinks = await db.select().from(links);
   console.log(allLinks);
 }
 
-// 4
+// 5
 main()
-  // 5
+  // 6
   .finally(async () => {
-    await prisma.$disconnect();
+    await client.end();
   });
