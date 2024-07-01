@@ -49,6 +49,8 @@ describe('Automatic Persisted Queries', () => {
 
   it('works', async () => {
     const query = '{\n  foo\n}';
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore: Fails with GraphQL v15
     const { data } = await client.query({ query: parse(query) });
 
     expect(data).toEqual({ foo: 'bar' });
