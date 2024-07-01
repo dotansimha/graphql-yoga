@@ -1,6 +1,6 @@
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
-import { createDeferred } from '../../testing/utils';
+import { createDeferred } from '../../testing-utils/create-deferred';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
@@ -23,13 +23,14 @@ if (major === '21' && process.env.LEAKS_TEST !== 'true') {
       crypto: globalThis.crypto,
       File: globalThis.File,
       ReadableStream: globalThis.ReadableStream,
-      // @ts-expect-error json function signature
       Response: globalThis.Response,
       TextDecoder: globalThis.TextDecoder,
       TextEncoder: globalThis.TextEncoder,
       URL: globalThis.URL,
       TransformStream: globalThis.TransformStream,
-      // URLPattern: globalThis.URLPattern,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: URLPattern is not available in some environments
+      URLPattern: globalThis.URLPattern,
       URLSearchParams: globalThis.URLSearchParams,
       WritableStream: globalThis.WritableStream,
     },

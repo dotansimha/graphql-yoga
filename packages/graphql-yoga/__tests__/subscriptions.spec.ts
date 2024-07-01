@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { createDeferred } from '../../testing/utils.js';
+import { createDeferred } from '../../testing-utils/create-deferred.js';
 import { createSchema, createYoga, maskError, Plugin } from '../src/index.js';
 import { eventStream } from './utilities.js';
 

@@ -2,7 +2,7 @@ import { createServer, IncomingMessage, ServerResponse, STATUS_CODES } from 'nod
 import { AddressInfo } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
-import { createDeferred } from '../../testing/utils.js';
+import { createDeferred } from '../../testing-utils/create-deferred.js';
 import {
   createGraphQLError,
   createSchema,

@@ -1,5 +1,5 @@
 import { Repeater } from 'graphql-yoga';
-import { createDeferred } from '../../../testing/utils';
+import { createDeferred } from '../../../testing-utils/create-deferred';
 
 export const createPushPullAsyncIterable = <T>(): {
   source: AsyncGenerator<T>;

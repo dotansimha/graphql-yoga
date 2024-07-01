@@ -4,7 +4,7 @@ import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js';
-import { createDeferred } from '../../../testing/utils.js';
+import { createDeferred } from '../../../testing-utils/create-deferred.js';
 
 it('correctly deals with the source upon aborted requests', async () => {
   const { source, push, terminate } = createPushPullAsyncIterable<string>();
