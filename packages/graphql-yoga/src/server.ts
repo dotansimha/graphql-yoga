@@ -163,6 +163,17 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    * @default false
    */
   batching?: BatchingOptions | undefined;
+
+  /**
+   * By default, GraphQL Yoga does not allow parameters in the request body except `query`, `variables`, `extensions`, and `operationName`.
+   *
+   * This option allows you to specify additional parameters that are allowed in the request body.
+   *
+   * @default []
+   *
+   * @example ['doc_id', 'id']
+   */
+  extraParamNames?: string[] | undefined;
 };
 
 export type BatchingOptions =
@@ -359,7 +370,7 @@ export class YogaServer<
           // @ts-expect-error Add plugins has context but this hook doesn't care
           addPlugin(useLimitBatching(batchingLimit));
           // @ts-expect-error Add plugins has context but this hook doesn't care
-          addPlugin(useCheckGraphQLQueryParams());
+          addPlugin(useCheckGraphQLQueryParams(options?.extraParamNames));
           const showLandingPage = !!(options?.landingPage ?? true);
           addPlugin(
             // @ts-expect-error Add plugins has context but this hook doesn't care

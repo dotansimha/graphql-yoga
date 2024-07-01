@@ -24,4 +24,5 @@ export default {
   testing: 'Testing',
   jwt: 'JWT',
   'landing-page': 'Landing Page',
+  'request-customization': 'Request Customization',
 };
