@@ -31,6 +31,7 @@ Subscriptions can be added by extending your GraphQL schema with a `Subscription
 
 ```ts filename="Subscription countdown implementation"
 import { createServer } from 'node:http'
+import { setTimeout as setTimeout$ } from 'node:timers/promises'
 import { createSchema, createYoga } from 'graphql-yoga'
 
 // Provide your schema
@@ -54,7 +55,7 @@ const yoga = createYoga({
           // This will return the value on every 1 sec until it reaches 0
           subscribe: async function* (_, { from }) {
             for (let i = from; i >= 0; i--) {
-              await new Promise(resolve => setTimeout(resolve, 1000))
+              await setTimeout$(1000)
               yield { countdown: i }
             }
           }

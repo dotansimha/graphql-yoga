@@ -1,6 +1,8 @@
 import { createServer, IncomingMessage, ServerResponse, STATUS_CODES } from 'node:http';
 import { AddressInfo } from 'node:net';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
+import { createDeferred } from '../../testing-utils/create-deferred.js';
 import {
   createGraphQLError,
   createSchema,
@@ -215,28 +217,13 @@ describe('node-http', () => {
       controller.abort();
       await expect(response$).rejects.toThrow('The operation was aborted');
       // wait a few milliseconds to ensure server-side cancellation logic runs
-      await new Promise<void>(resolve => setTimeout(resolve, 10));
+      await setTimeout$(10);
       didCancelD.resolve();
       // wait a few milliseconds to allow the nested field resolver to run (if cancellation logic is incorrect)
-      await new Promise<void>(resolve => setTimeout(resolve, 10));
+      await setTimeout$(10);
       expect(didInvokedNestedField).toBe(false);
     } finally {
       await new Promise<void>(resolve => server.close(() => resolve()));
     }
   });
 });
-
-type Deferred<T = void> = {
-  resolve: (value: T) => void;
-  reject: (value: unknown) => void;
-  promise: Promise<T>;
-};
-
-function createDeferred<T = void>(): Deferred<T> {
-  const d = {} as Deferred<T>;
-  d.promise = new Promise<T>((resolve, reject) => {
-    d.resolve = resolve;
-    d.reject = reject;
-  });
-  return d;
-}

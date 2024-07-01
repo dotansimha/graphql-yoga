@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql';
+import { createDeferred } from '../../testing-utils/create-deferred.js';
 import { createSchema, createYoga, maskError, Plugin } from '../src/index.js';
 import { eventStream } from './utilities.js';
 
@@ -597,18 +598,3 @@ describe('subscription plugin hooks', () => {
     expect(maskErrorFn).toBeCalledTimes(1);
   });
 });
-
-type Deferred<T = void> = {
-  resolve: (value: T) => void;
-  reject: (value: unknown) => void;
-  promise: Promise<T>;
-};
-
-function createDeferred<T = void>(): Deferred<T> {
-  const d = {} as Deferred<T>;
-  d.promise = new Promise<T>((resolve, reject) => {
-    d.resolve = resolve;
-    d.reject = reject;
-  });
-  return d;
-}

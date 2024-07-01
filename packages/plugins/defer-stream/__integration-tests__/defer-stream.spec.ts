@@ -1,8 +1,10 @@
 import { createServer, get, IncomingMessage } from 'node:http';
 import { AddressInfo } from 'node:net';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js';
+import { createDeferred } from '../../../testing-utils/create-deferred.js';
 
 it('correctly deals with the source upon aborted requests', async () => {
   const { source, push, terminate } = createPushPullAsyncIterable<string>();
@@ -85,21 +87,6 @@ it('correctly deals with the source upon aborted requests', async () => {
     });
   }
 });
-
-type Deferred<T = void> = {
-  resolve: (value: T) => void;
-  reject: (value: unknown) => void;
-  promise: Promise<T>;
-};
-
-function createDeferred<T = void>(): Deferred<T> {
-  const d = {} as Deferred<T>;
-  d.promise = new Promise<T>((resolve, reject) => {
-    d.resolve = resolve;
-    d.reject = reject;
-  });
-  return d;
-}
 
 it('memory/cleanup leak by source that never publishes a value', async () => {
   let sourceGotCleanedUp = false;
@@ -189,7 +176,7 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
     await expect(iterator.next()).rejects.toMatchInlineSnapshot(`[Error: aborted]`);
 
     // Wait a bit - just to make sure the time is cleaned up for sure...
-    await new Promise(res => setTimeout(res, 50));
+    await setTimeout$(50);
     expect(sourceGotCleanedUp).toBe(true);
 
     expect(debugLogger.mock.calls).toEqual([

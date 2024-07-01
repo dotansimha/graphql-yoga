@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { fetch } from '@whatwg-node/fetch';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
+import { createDeferred } from '../../../packages/testing-utils/create-deferred.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
@@ -357,18 +358,3 @@ data"
     }
   });
 });
-
-type Deferred<T = void> = {
-  resolve: (value: T) => void;
-  reject: (value: unknown) => void;
-  promise: Promise<T>;
-};
-
-function createDeferred<T = void>(): Deferred<T> {
-  const d = {} as Deferred<T>;
-  d.promise = new Promise<T>((resolve, reject) => {
-    d.resolve = resolve;
-    d.reject = reject;
-  });
-  return d;
-}

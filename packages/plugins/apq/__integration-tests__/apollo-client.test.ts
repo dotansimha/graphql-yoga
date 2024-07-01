@@ -34,12 +34,8 @@ describe('Automatic Persisted Queries', () => {
     plugins: [useAPQ()],
   });
 
-  const fetchSpy = jest.fn(async (info: RequestInfo | URL, init: RequestInit) =>
-    server.fetch(info as URL, init),
-  );
-
   const linkChain = createPersistedQueryLink({ sha256 }).concat(
-    new HttpLink({ uri: 'http://localhost:4000/graphql', fetch: fetchSpy }),
+    new HttpLink({ uri: 'http://localhost:4000/graphql', fetch: (...args) => fetchSpy(...args) }),
   );
 
   const client = new ApolloClient({
@@ -47,8 +43,18 @@ describe('Automatic Persisted Queries', () => {
     link: linkChain,
   });
 
+  let fetchSpy: jest.Mock;
+
+  beforeEach(() => {
+    fetchSpy = jest.fn(async (info: RequestInfo | URL, init: RequestInit) =>
+      server.fetch(info as URL, init),
+    );
+  });
+
   it('works', async () => {
     const query = '{\n  foo\n}';
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore: Fails with GraphQL v15
     const { data } = await client.query({ query: parse(query) });
 
     expect(data).toEqual({ foo: 'bar' });

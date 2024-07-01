@@ -1,4 +1,6 @@
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
+import { createDeferred } from '../../testing-utils/create-deferred';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
@@ -21,13 +23,14 @@ if (major === '21' && process.env.LEAKS_TEST !== 'true') {
       crypto: globalThis.crypto,
       File: globalThis.File,
       ReadableStream: globalThis.ReadableStream,
-      // @ts-expect-error json function signature
       Response: globalThis.Response,
       TextDecoder: globalThis.TextDecoder,
       TextEncoder: globalThis.TextEncoder,
       URL: globalThis.URL,
       TransformStream: globalThis.TransformStream,
-      // URLPattern: globalThis.URLPattern,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: URLPattern is not available in some environments
+      URLPattern: globalThis.URLPattern,
       URLSearchParams: globalThis.URLSearchParams,
       WritableStream: globalThis.WritableStream,
     },
@@ -35,7 +38,7 @@ if (major === '21' && process.env.LEAKS_TEST !== 'true') {
 }
 
 function waitAFewMillisecondsToMakeSureGraphQLExecutionIsNotResumingInBackground() {
-  return new Promise(res => setTimeout(res, 5));
+  return setTimeout$(5);
 }
 
 describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
@@ -286,18 +289,3 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
     ]);
   });
 });
-
-type Deferred<T = void> = {
-  resolve: (value: T) => void;
-  reject: (value: unknown) => void;
-  promise: Promise<T>;
-};
-
-function createDeferred<T = void>(): Deferred<T> {
-  const d = {} as Deferred<T>;
-  d.promise = new Promise<T>((resolve, reject) => {
-    d.resolve = resolve;
-    d.reject = reject;
-  });
-  return d;
-}

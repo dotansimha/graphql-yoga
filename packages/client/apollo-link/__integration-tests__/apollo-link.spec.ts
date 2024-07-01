@@ -1,5 +1,6 @@
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { parse } from 'graphql';
 import { createSchema, createYoga } from 'graphql-yoga';
 import { ApolloClient, FetchResult, InMemoryCache } from '@apollo/client/core';
@@ -36,7 +37,7 @@ describe('Yoga Apollo Link', () => {
           time: {
             async *subscribe() {
               while (true) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await setTimeout$(1000);
                 yield new Date().toISOString();
               }
             },
