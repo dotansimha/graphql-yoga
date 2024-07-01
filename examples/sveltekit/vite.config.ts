@@ -1,6 +1,6 @@
 import type { UserConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { join } from 'path';
+import { join } from 'node:path';
 const config: UserConfig = {
 	plugins: [sveltekit()],
 	resolve: {

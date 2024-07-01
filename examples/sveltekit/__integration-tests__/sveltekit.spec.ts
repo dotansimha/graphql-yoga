@@ -1,7 +1,7 @@
-import { execSync, spawn } from 'child_process';
+import { execSync, spawn } from 'node:child_process';
 import puppeteer, { Browser, Page } from 'puppeteer';
-import { promises as fsPromises } from 'fs';
-import { join } from 'path';
+import { promises as fsPromises } from 'node:fs';
+import { join } from 'node:path';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
 
@@ -12,7 +12,7 @@ let sveltekitProcess: ReturnType<typeof spawn>;
 const timings = {
 	setup: {
 		waitAfterPreview: 5000,
-		total: 20000 // build + preview + {waitAfterPreview} is expected to be less than 20sec
+		total: 20_000 // build + preview + {waitAfterPreview} is expected to be less than 20sec
 	},
 	waitForSelector: 999,
 	waitForResponse: 1999
@@ -20,7 +20,9 @@ const timings = {
 
 describe('SvelteKit integration', () => {
 	if (process.env.LEAKS_TEST) {
-		it('dummy', () => {});
+		it('dummy', () => {
+			return;
+		});
 		return;
 	}
 	beforeAll(async () => {

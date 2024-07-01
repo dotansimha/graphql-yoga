@@ -23,6 +23,6 @@ export const URLSearchParams = globalThis.URLSearchParams;
 export class CustomEvent extends Event {
 	constructor(type, options) {
 		super(type, options);
-		this.detail = options && options.detail;
+		this.detail = options?.detail;
 	}
 }
