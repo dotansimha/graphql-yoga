@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { fetch } from '@whatwg-node/fetch';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
-import { createDeferred } from '../../../packages/testing/utils.js';
+import { createDeferred } from '../../../packages/testing-utils/create-deferred.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {

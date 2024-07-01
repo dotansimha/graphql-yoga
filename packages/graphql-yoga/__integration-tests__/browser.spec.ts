@@ -171,7 +171,7 @@ export function createTestSchema() {
           async *subscribe(_root, args) {
             for (let count = 1; count <= args.to; count++) {
               yield { count };
-              await setTimeout$(100);
+              await new Promise(resolve => setTimeout(resolve, 100));
             }
           },
         },
@@ -234,14 +234,14 @@ describe('browser', () => {
     await page.type('.graphiql-query-editor .CodeMirror textarea', text);
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await setTimeout$(100);
+    await new Promise(resolve => setTimeout(resolve, 100));
   };
 
   const typeVariablesText = async (text: string) => {
     await page.type('[aria-label="Variables"] .CodeMirror textarea', text);
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await setTimeout$(100);
+    await new Promise(resolve => setTimeout(resolve, 100));
   };
 
   const waitForResult = async (): Promise<object> => {
@@ -564,7 +564,7 @@ describe('browser', () => {
     test('allow other origins by default', async () => {
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await setTimeout$(100);
+        await new Promise(resolve => setTimeout(resolve, 100));
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toEqual(
@@ -581,7 +581,7 @@ describe('browser', () => {
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await setTimeout$(100);
+        await new Promise(resolve => setTimeout(resolve, 100));
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toEqual(
@@ -598,7 +598,7 @@ describe('browser', () => {
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await setTimeout$(100);
+        await new Promise(resolve => setTimeout(resolve, 100));
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toContain('Failed to fetch');
@@ -610,7 +610,7 @@ describe('browser', () => {
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await setTimeout$(100);
+        await new Promise(resolve => setTimeout(resolve, 100));
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toEqual(
