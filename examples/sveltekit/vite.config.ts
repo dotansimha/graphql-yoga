@@ -7,9 +7,9 @@ const config: UserConfig = {
 		alias: {
 			tslib: 'tslib/tslib.es6.js',
 			'@whatwg-node/fetch': join(__dirname, 'ponyfill.js'),
-			'@whatwg-node/events': join(__dirname, 'ponyfill.js'),
+			'@whatwg-node/events': join(__dirname, 'ponyfill.js')
 		}
-	},
+	}
 };
 
 export default config;

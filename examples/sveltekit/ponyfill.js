@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 export function createFetch() {
-    return globalThis;
+	return globalThis;
 }
 
 export const fetch = globalThis.fetch;
