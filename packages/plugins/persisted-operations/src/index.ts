@@ -143,6 +143,7 @@ export function usePersistedOperations<
       if (typeof persistedQuery === 'object') {
         setParams({
           query: `__PERSISTED_OPERATION_${persistedOperationKey}__`,
+          operationName: params.operationName,
           variables: params.variables,
           extensions: params.extensions,
         });
@@ -150,6 +151,7 @@ export function usePersistedOperations<
       } else {
         setParams({
           query: persistedQuery,
+          operationName: params.operationName,
           variables: params.variables,
           extensions: params.extensions,
         });
