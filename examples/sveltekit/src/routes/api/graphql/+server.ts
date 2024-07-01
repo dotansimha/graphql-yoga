@@ -28,8 +28,7 @@ const yogaApp = createYoga<RequestEvent>({
 			query Hello {
 				hello
 			}
-		`,
-		useGETForQueries: true
+		`
 	}
 });
 
