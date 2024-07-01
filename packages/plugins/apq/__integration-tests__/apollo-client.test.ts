@@ -34,17 +34,21 @@ describe('Automatic Persisted Queries', () => {
     plugins: [useAPQ()],
   });
 
-  const fetchSpy = jest.fn(async (info: RequestInfo | URL, init: RequestInit) =>
-    server.fetch(info as URL, init),
-  );
-
   const linkChain = createPersistedQueryLink({ sha256 }).concat(
-    new HttpLink({ uri: 'http://localhost:4000/graphql', fetch: fetchSpy }),
+    new HttpLink({ uri: 'http://localhost:4000/graphql', fetch: (...args) => fetchSpy(...args) }),
   );
 
   const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: linkChain,
+  });
+
+  let fetchSpy: jest.Mock;
+
+  beforeEach(() => {
+    fetchSpy = jest.fn(async (info: RequestInfo | URL, init: RequestInit) =>
+      server.fetch(info as URL, init),
+    );
   });
 
   it('works', async () => {
