@@ -195,7 +195,7 @@ const schema = createSchema({
   `,
   resolvers: {
     Query: {
-      ctx: (_, __, ctx) => ctx,
+      ctx: (_: never, __: never, ctx: unknown) => ctx,
     },
   },
 });
@@ -230,12 +230,14 @@ function buildJWTWithoutAlg(payload: object = {}, key = 'very secret key') {
 }
 
 jest.mock('jwks-rsa', () => ({
-  JwksClient: jest.fn(() => ({
-    getSigningKey: jest.fn((kid: string) => {
-      if (kid !== 'yoga') {
-        return null;
-      }
-      return { getPublicKey: () => 'very secret key' };
-    }),
-  })),
+  JwksClient: function JwksClientMockCtr() {
+    return {
+      getSigningKey: jest.fn((kid: string) => {
+        if (kid !== 'yoga') {
+          return null;
+        }
+        return { getPublicKey: () => 'very secret key' };
+      }),
+    };
+  },
 }));

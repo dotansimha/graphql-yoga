@@ -7,7 +7,22 @@ import { supergraphSdl } from './fixtures/supergraph';
 
 describe('Apollo Managed Federation', () => {
   let manager: SupergraphSchemaManager;
+  let mockFetchError: jest.Mock<Response>;
 
+  beforeEach(() => {
+    mockFetchError = jest.fn(() =>
+      Response.json({
+        data: {
+          routerConfig: {
+            __typename: 'FetchError',
+            code: 'FETCH_ERROR',
+            message: 'Test error message',
+            minDelaySeconds: 0.1,
+          },
+        },
+      }),
+    );
+  });
   afterEach(() => {
     manager?.stop();
     jest.clearAllMocks();
@@ -134,32 +149,20 @@ describe('Apollo Managed Federation', () => {
     expect(failure).toBeCalledTimes(2);
   });
 
-  const mockSDL = jest.fn(async () =>
-    Response.json({
-      data: {
-        routerConfig: {
-          __typename: 'RouterConfigResult',
-          minDelaySeconds: 0.1,
-          id: 'test-id-1',
-          supergraphSdl,
-          messages: [],
+  const mockSDL = () =>
+    Promise.resolve(
+      Response.json({
+        data: {
+          routerConfig: {
+            __typename: 'RouterConfigResult',
+            minDelaySeconds: 0.1,
+            id: 'test-id-1',
+            supergraphSdl,
+            messages: [],
+          },
         },
-      },
-    }),
-  );
-
-  const mockFetchError = jest.fn(async () =>
-    Response.json({
-      data: {
-        routerConfig: {
-          __typename: 'FetchError',
-          code: 'FETCH_ERROR',
-          message: 'Test error message',
-          minDelaySeconds: 0.1,
-        },
-      },
-    }),
-  );
+      }),
+    );
 
   function makeManager(options: SupergraphSchemaManagerOptions) {
     manager = new SupergraphSchemaManager({
