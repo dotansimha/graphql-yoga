@@ -1,19 +1,5 @@
 import { Repeater } from 'graphql-yoga';
-
-type Deferred<T = void> = {
-  resolve: (value: T) => void;
-  reject: (value: unknown) => void;
-  promise: Promise<T>;
-};
-
-function createDeferred<T = void>(): Deferred<T> {
-  const d = {} as Deferred<T>;
-  d.promise = new Promise<T>((resolve, reject) => {
-    d.resolve = resolve;
-    d.reject = reject;
-  });
-  return d;
-}
+import { createDeferred } from '../../../testing/utils';
 
 export const createPushPullAsyncIterable = <T>(): {
   source: AsyncGenerator<T>;

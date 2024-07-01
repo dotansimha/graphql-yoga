@@ -6,6 +6,7 @@ const { createYoga, createSchema } = require('graphql-yoga');
 const { useServer } = require('graphql-ws/lib/use/ws');
 const { parse } = require('node:url');
 const next = require('next');
+const { setTimeout: setTimeout$ } = require('node:timers/promises');
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -44,7 +45,7 @@ const yoga = createYoga({
           async *subscribe() {
             for (let i = 0; i < 5; i++) {
               yield { clock: new Date().toString() };
-              await new Promise(resolve => setTimeout(resolve, 1000));
+              await setTimeout$(1000);
             }
           },
         },

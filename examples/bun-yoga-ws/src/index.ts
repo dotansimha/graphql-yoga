@@ -1,3 +1,4 @@
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import Bun from 'bun';
 import { makeHandler } from 'graphql-ws/lib/use/bun';
 import { createSchema, createYoga } from 'graphql-yoga';
@@ -21,7 +22,7 @@ const schema = createSchema({
           let counter = 0;
           const spinnerFrames = ['\u25D4', '\u25D1', '\u25D5', '\u25D0'];
           while (counter < loadTime) {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for a second
+            await setTimeout$(1000); // Wait for a second
             yield { dynamicLoading: `Loading ${spinnerFrames[counter % spinnerFrames.length]}` };
             counter++;
           }

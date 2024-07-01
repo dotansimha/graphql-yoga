@@ -24,6 +24,7 @@ The following sample setup show as slow field resolver (`Query.slow`).
 
 ```ts filename="Response cache example" {14-17,22-25}
 import { createServer } from 'node:http'
+import { setTimeout as setTimeout$ } from 'node:timers/promises'
 import { createSchema, createYoga } from 'graphql-yoga'
 import { useResponseCache } from '@graphql-yoga/plugin-response-cache'
 
@@ -37,7 +38,7 @@ const yoga = createYoga({
     resolvers: {
       Query: {
         slow: async () => {
-          await new Promise(resolve => setTimeout(resolve, 5000))
+          await setTimeout$(5000)
           return 'I am slow.'
         }
       }

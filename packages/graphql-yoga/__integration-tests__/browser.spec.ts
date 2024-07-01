@@ -16,11 +16,12 @@ import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store';
 import 'json-bigint-patch';
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
 import { CORSOptions, createYoga, Repeater } from '../src/index.js';
 
 let resolveOnReturn: VoidFunction;
-const timeouts = new Set<NodeJS.Timeout>();
+const timeoutsSignal = new AbortController();
 
 let charCode = 'A'.charCodeAt(0);
 const fakeAsyncIterable = {
@@ -28,14 +29,19 @@ const fakeAsyncIterable = {
     return this;
   },
   next: () =>
-    sleep(300, timeout => timeouts.add(timeout)).then(() => ({
-      value: String.fromCharCode(charCode++),
-      done: false,
-    })),
+    setTimeout$(
+      300,
+      {
+        value: String.fromCharCode(charCode++),
+        done: false,
+      },
+      {
+        signal: timeoutsSignal.signal,
+      },
+    ),
   return: () => {
     resolveOnReturn();
-    // eslint-disable-next-line unicorn/no-array-for-each -- is Set
-    timeouts.forEach(clearTimeout);
+    timeoutsSignal.abort();
     return Promise.resolve({ done: true });
   },
 };
@@ -70,7 +76,7 @@ export function createTestSchema() {
         },
         goodbye: {
           type: GraphQLString,
-          resolve: () => new Promise(resolve => setTimeout(() => resolve('goodbye'), 1000)),
+          resolve: () => setTimeout$(1000, 'goodbye'),
         },
         stream: {
           type: new GraphQLList(GraphQLString),
@@ -165,7 +171,7 @@ export function createTestSchema() {
           async *subscribe(_root, args) {
             for (let count = 1; count <= args.to; count++) {
               yield { count };
-              await new Promise(resolve => setTimeout(resolve, 100));
+              await setTimeout$(100);
             }
           },
         },
@@ -228,14 +234,14 @@ describe('browser', () => {
     await page.type('.graphiql-query-editor .CodeMirror textarea', text);
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await new Promise(res => setTimeout(res, 100));
+    await setTimeout$(100);
   };
 
   const typeVariablesText = async (text: string) => {
     await page.type('[aria-label="Variables"] .CodeMirror textarea', text);
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await new Promise(res => setTimeout(res, 100));
+    await setTimeout$(100);
   };
 
   const waitForResult = async (): Promise<object> => {
@@ -333,7 +339,7 @@ describe('browser', () => {
         resolveOnReturn = resolve;
       });
       await page.click('.graphiql-execute-button');
-      await sleep(900);
+      await setTimeout$(900);
       const resultContents = await waitForResult();
       const isShowingStopButton = await page.evaluate(stopButtonSelector => {
         return !!window.document.querySelector(stopButtonSelector);
@@ -354,7 +360,7 @@ describe('browser', () => {
       await typeOperationText(`subscription { count(to: 2) }`);
       await page.click('.graphiql-execute-button');
 
-      await new Promise(res => setTimeout(res, 50));
+      await setTimeout$(50);
 
       const resultContents = await waitForResult();
       const isShowingStopButton = await page.evaluate(stopButtonSelector => {
@@ -367,7 +373,7 @@ describe('browser', () => {
       });
       expect(isShowingStopButton).toEqual(true);
 
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await setTimeout$(300);
 
       const resultContents1 = await waitForResult();
       const isShowingPlayButton = await page.evaluate(playButtonSelector => {
@@ -411,7 +417,7 @@ describe('browser', () => {
       await typeOperationText(`query @live { liveCounter }`);
       await page.click('.graphiql-execute-button');
 
-      await new Promise(res => setTimeout(res, 50));
+      await setTimeout$(50);
 
       const resultJson = await waitForResult();
 
@@ -558,7 +564,7 @@ describe('browser', () => {
     test('allow other origins by default', async () => {
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await setTimeout$(100);
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toEqual(
@@ -575,7 +581,7 @@ describe('browser', () => {
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await setTimeout$(100);
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toEqual(
@@ -592,7 +598,7 @@ describe('browser', () => {
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await setTimeout$(100);
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toContain('Failed to fetch');
@@ -604,7 +610,7 @@ describe('browser', () => {
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
       const result = await page.evaluate(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await setTimeout$(100);
         return document.getElementById('result')?.innerHTML;
       });
       expect(result).toEqual(
@@ -663,12 +669,3 @@ describe('browser', () => {
     });
   });
 });
-
-function sleep<T = void>(
-  ms: number,
-  onTimeout: (timeout: NodeJS.Timeout) => T = () => {
-    return undefined as T;
-  },
-) {
-  return new Promise(resolve => onTimeout(setTimeout(resolve, ms)));
-}

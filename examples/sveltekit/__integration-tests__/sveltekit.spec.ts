@@ -2,6 +2,7 @@ import { execSync, spawn } from 'child_process';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 
 let browser: Browser;
 let page: Page;
@@ -82,7 +83,7 @@ describe('SvelteKit integration', () => {
 			sveltekitProcess = spawn('pnpm', ['--filter', 'example-sveltekit', 'preview']);
 
 			// Wait for sveltekit to start
-			await new Promise((resolve) => setTimeout(resolve, timings.setup.waitAfterPreview));
+			await setTimeout$(timings.setup.waitAfterPreview);
 
 			// Launch puppeteer
 			browser = await puppeteer.launch({

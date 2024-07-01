@@ -1,6 +1,7 @@
 import { exec } from 'node:child_process';
 import { join } from 'node:path';
 import { Readable } from 'node:stream';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
 
 const PORT = 3333;
@@ -127,7 +128,7 @@ export async function waitForEndpoint(
         (e as Error).message,
       );
 
-      await new Promise(resolve => setTimeout(resolve, timeout));
+      await setTimeout$(timeout);
     }
   }
 

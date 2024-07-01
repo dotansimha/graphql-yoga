@@ -1,5 +1,6 @@
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { ExecutionResult } from 'graphql';
 import { createSchema, createYoga } from 'graphql-yoga';
 import { pipe, toObservable } from 'wonka';
@@ -37,7 +38,7 @@ describe('URQL Yoga Exchange', () => {
           time: {
             async *subscribe() {
               while (true) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await setTimeout$(1000);
                 yield new Date().toISOString();
               }
             },

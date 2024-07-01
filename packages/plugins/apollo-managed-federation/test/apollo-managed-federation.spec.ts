@@ -1,3 +1,4 @@
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { createYoga } from 'graphql-yoga';
 import { SupergraphSchemaManager, SupergraphSchemaManagerOptions } from '@graphql-tools/federation';
 import { useManagedFederation } from '@graphql-yoga/plugin-apollo-managed-federation';
@@ -21,6 +22,7 @@ describe('Apollo Managed Federation', () => {
           }),
         }),
       ],
+      logging: false,
     });
 
     const response = await yoga.fetch('/graphql', {
@@ -46,12 +48,13 @@ describe('Apollo Managed Federation', () => {
         useManagedFederation({
           supergraphManager: makeManager({
             fetch: async () => {
-              await new Promise(resolve => setTimeout(resolve, 100));
+              await setTimeout$(100);
               return mockSDL();
             },
           }),
         }),
       ],
+      logging: false,
     });
 
     const response = await yoga.fetch('/graphql', {
@@ -80,6 +83,7 @@ describe('Apollo Managed Federation', () => {
           }),
         }),
       ],
+      logging: false,
     });
 
     const response = await yoga.fetch('/graphql', {
@@ -103,6 +107,7 @@ describe('Apollo Managed Federation', () => {
           }),
         }),
       ],
+      logging: false,
     });
 
     const failure = jest.fn();
@@ -123,7 +128,7 @@ describe('Apollo Managed Federation', () => {
     expect(failure).toBeCalledTimes(1);
 
     // It should respect the backoff returned by the GraphOS API before restarting the polling
-    await delay(0.35);
+    await setTimeout$(0.35 * 1000);
 
     expect(mockFetchError).toBeCalledTimes(6);
     expect(failure).toBeCalledTimes(2);
@@ -183,9 +188,5 @@ describe('Apollo Managed Federation', () => {
       ...options,
     });
     return manager;
-  }
-
-  function delay(seconds: number) {
-    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
   }
 });

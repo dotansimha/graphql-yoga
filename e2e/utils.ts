@@ -1,4 +1,5 @@
 import { exec } from 'node:child_process';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { promisify } from 'node:util';
 
 export const execPromise = promisify(exec);
@@ -41,7 +42,7 @@ export async function waitForEndpoint(
         e.message,
       );
 
-      await new Promise(resolve => setTimeout(resolve, timeout));
+      await setTimeout$(timeout);
     }
   }
 

@@ -61,6 +61,7 @@ e.g. a slow read from a database.
 
 ```ts filename="Full Yoga Example"
 import { createServer } from 'node:http'
+import { setTimeout as setTimeout$ } from 'node:timers/promises'
 import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga'
 
 const logger = createLogger('debug')
@@ -82,9 +83,7 @@ const schema = createSchema({
       async user(_, __, { request }) {
         logger.info('resolving user')
 
-        await new Promise(resolve => {
-          setTimeout(resolve, 5000)
-        })
+        await setTimeout$(5000)
 
         logger.info('resolved user')
 
