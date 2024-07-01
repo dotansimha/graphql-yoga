@@ -4,6 +4,8 @@ import {
   OnExecuteHook,
   OnSubscribeHook,
   PromiseOrValue,
+  RegisterContextErrorHandler,
+  SetSchemaFn,
 } from '@envelop/core';
 import { ExecutionResult } from '@graphql-tools/utils';
 import { ServerAdapterPlugin } from '@whatwg-node/server';
@@ -34,6 +36,10 @@ export type Plugin<
      * Return a OnSubscribeHookResult for hooking into phase after the subscribe function has been called.
      */
     onSubscribe?: OnSubscribeHook<YogaInitialContext & PluginContext & TUserContext>;
+    /**
+     * Invoked when a plugin is initialized.
+     */
+    onPluginInit?: OnPluginInitHook<YogaInitialContext & PluginContext & TUserContext>;
   } & {
     /**
      * Use this hook with your own risk. It is still experimental and may change in the future.
@@ -153,3 +159,32 @@ export interface OnResponseEventPayload<TServerContext> {
   serverContext: TServerContext | undefined;
   response: Response;
 }
+
+/**
+ * Payload forwarded to the onPluginInit hook.
+ */
+export type OnPluginInitEventPayload<PluginContext extends Record<string, any>> = {
+  /**
+   * Register a new plugin.
+   */
+  addPlugin: (newPlugin: Plugin<PluginContext>) => void;
+  /**
+   * A list of all currently active plugins.
+   */
+  plugins: Plugin<PluginContext>[];
+  /**
+   * Set the GraphQL schema.
+   */
+  setSchema: SetSchemaFn;
+  /**
+   * Register an error handler used for context creation.
+   */
+  registerContextErrorHandler: RegisterContextErrorHandler;
+};
+
+/**
+ * Invoked when a plugin is initialized.
+ */
+export type OnPluginInitHook<ContextType extends Record<string, any>> = (
+  options: OnPluginInitEventPayload<ContextType>,
+) => void;
