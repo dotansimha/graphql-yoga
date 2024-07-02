@@ -1,5 +1,16 @@
 # graphql-yoga
 
+## 5.6.1
+
+### Patch Changes
+
+- [#3338](https://github.com/dotansimha/graphql-yoga/pull/3338)
+  [`4252e3d`](https://github.com/dotansimha/graphql-yoga/commit/4252e3d0e664e3c247c709cd47a0645c68dc527a)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.36` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.36)
+    (from `^0.9.33`, in `dependencies`)
+
 ## 5.6.0
 
 ### Minor Changes
