@@ -1,6 +1,7 @@
 import { createServer, IncomingMessage, ServerResponse, STATUS_CODES } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
+import { ExecutionResult } from 'graphql';
 import { fetch } from '@whatwg-node/fetch';
 import { createDeferred } from '../../testing-utils/create-deferred.js';
 import {
@@ -222,6 +223,52 @@ describe('node-http', () => {
       // wait a few milliseconds to allow the nested field resolver to run (if cancellation logic is incorrect)
       await setTimeout$(10);
       expect(didInvokedNestedField).toBe(false);
+    } finally {
+      await new Promise<void>(resolve => server.close(() => resolve()));
+    }
+  });
+
+  it('`req: IncomingMessage` is available in batched requests', async () => {
+    expect.assertions(8);
+    const yoga = createYoga<{
+      req: IncomingMessage;
+    }>({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            isNode: Boolean!
+          }
+        `,
+        resolvers: {
+          Query: {
+            isNode: (_, __, { req }) => req instanceof IncomingMessage,
+          },
+        },
+      }),
+      context: ({ req }) => ({ req }),
+      batching: {
+        limit: 3,
+      },
+    });
+    const server = createServer(yoga);
+    await new Promise<void>(resolve => server.listen(0, resolve));
+    const port = (server.address() as AddressInfo).port;
+
+    try {
+      const response = await fetch(`http://localhost:${port}/graphql`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify([{ query: '{isNode}' }, { query: '{isNode}' }, { query: '{isNode}' }]),
+      });
+      expect(response.status).toBe(200);
+      const body: ExecutionResult[] = await response.json();
+      expect(body).toHaveLength(3);
+      for (const result of body) {
+        expect(result.errors).toBeUndefined();
+        expect(result.data?.isNode).toBe(true);
+      }
     } finally {
       await new Promise<void>(resolve => server.close(() => resolve()));
     }
