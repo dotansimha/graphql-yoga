@@ -1,4 +1,5 @@
-import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import { pipeline } from 'stream/promises';
+import { APIGatewayEvent, Context } from 'aws-lambda';
 import { createSchema, createYoga } from 'graphql-yoga';
 
 const yoga = createYoga<{
@@ -21,33 +22,45 @@ const yoga = createYoga<{
   }),
 });
 
-export async function handler(
-  event: APIGatewayEvent,
-  lambdaContext: Context,
-): Promise<APIGatewayProxyResult> {
-  const response = await yoga.fetch(
-    event.path +
-      '?' +
-      new URLSearchParams((event.queryStringParameters as Record<string, string>) || {}).toString(),
-    {
-      method: event.httpMethod,
-      headers: event.headers as HeadersInit,
-      body: event.body
-        ? Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
-        : undefined,
-    },
-    {
-      event,
-      lambdaContext,
-    },
-  );
+export const handler = awslambda.streamifyResponse(
+  async function handler(event, res, lambdaContext) {
+    const response = await yoga.fetch(
+      // Construct the URL
+      event.path +
+        '?' +
+        // Parse query string parameters
+        new URLSearchParams(
+          (event.queryStringParameters as Record<string, string>) || {},
+        ).toString(),
+      {
+        method: event.httpMethod,
+        headers: event.headers as HeadersInit,
+        // Parse the body
+        body: event.body
+          ? Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
+          : undefined,
+      },
+      {
+        event,
+        lambdaContext,
+        res,
+      },
+    );
 
-  const responseHeaders = Object.fromEntries(response.headers.entries());
+    // Create the metadata object for the response
+    const metadata = {
+      statusCode: response.status,
+      headers: Object.fromEntries(response.headers.entries()),
+    };
 
-  return {
-    statusCode: response.status,
-    headers: responseHeaders,
-    body: await response.text(),
-    isBase64Encoded: false,
-  };
-}
+    // Attach the metadata to the response stream
+    const resWithMetadata = awslambda.HttpResponseStream.from(res, metadata);
+
+    // Pipe the response body to the response stream
+    if (response.body) {
+      await pipeline(response.body, resWithMetadata);
+    } else {
+      resWithMetadata.end();
+    }
+  },
+);
