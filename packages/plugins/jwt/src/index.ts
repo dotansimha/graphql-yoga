@@ -5,4 +5,4 @@ export {
   createInlineSigningKeyProvider,
   createRemoteJwksSigningKeyProvider,
 } from './utils.js';
-export { useJWT } from './plugin.js';
+export { useJWT, JWTExtendContextFields } from './plugin.js';
