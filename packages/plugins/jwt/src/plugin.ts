@@ -68,6 +68,7 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
       if (!lookupResult) {
         // If token is missing, we can reject the request based on the configuration.
         if (normalizedOptions.reject.missingToken) {
+          logger.debug(`Token is missing in incoming HTTP request, JWT plugin failed to locate.`);
           throw unauthorizedError(`Unauthenticated`);
         }
 
@@ -112,6 +113,7 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
         );
 
         if (!verified) {
+          logger.debug(`Token failed to verify, JWT plugin failed to authenticate.`);
           throw unauthorizedError(`Unauthenticated`);
         }
 
