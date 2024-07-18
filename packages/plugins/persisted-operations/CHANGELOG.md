@@ -1,5 +1,18 @@
 # @graphql-yoga/plugin-persisted-operations
 
+## 3.6.1
+
+### Patch Changes
+
+- [#3339](https://github.com/dotansimha/graphql-yoga/pull/3339)
+  [`f245472`](https://github.com/dotansimha/graphql-yoga/commit/f245472556771d80cb19676e71395291063eea81)
+  Thanks [@ziolekjj](https://github.com/ziolekjj)! - Include `operationName` in context params for
+  persisted operations
+
+- Updated dependencies
+  [[`4252e3d`](https://github.com/dotansimha/graphql-yoga/commit/4252e3d0e664e3c247c709cd47a0645c68dc527a)]:
+  - graphql-yoga@5.6.1
+
 ## 3.6.0
 
 ### Patch Changes
