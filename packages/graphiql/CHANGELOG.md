@@ -1,5 +1,23 @@
 # @graphql-yoga/graphiql
 
+## 4.3.1
+
+### Patch Changes
+
+- [#3338](https://github.com/dotansimha/graphql-yoga/pull/3338)
+  [`4252e3d`](https://github.com/dotansimha/graphql-yoga/commit/4252e3d0e664e3c247c709cd47a0645c68dc527a)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Added dependency [`tslib@2.6.3` ↗︎](https://www.npmjs.com/package/tslib/v/2.6.3) (to
+    `dependencies`)
+
+- [#3346](https://github.com/dotansimha/graphql-yoga/pull/3346)
+  [`e98970a`](https://github.com/dotansimha/graphql-yoga/commit/e98970a3829b194dbca7dbbef0654dbb421b324d)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency
+    [`@graphiql/plugin-explorer@^3.0.0` ↗︎](https://www.npmjs.com/package/@graphiql/plugin-explorer/v/3.0.0)
+    (from `^1.0.3`, in `dependencies`)
+
 ## 4.3.0
 
 ### Minor Changes
