@@ -8,7 +8,7 @@ import {
   SetSchemaFn,
 } from '@envelop/core';
 import { ExecutionResult } from '@graphql-tools/utils';
-import { ServerAdapterInitialContext, ServerAdapterPlugin } from '@whatwg-node/server';
+import { ServerAdapterPlugin, type ServerAdapterInitialContext } from '@whatwg-node/server';
 import { YogaServer } from '../server.js';
 import {
   FetchAPI,
@@ -24,7 +24,7 @@ export type Plugin<
   // eslint-disable-next-line @typescript-eslint/ban-types
   TServerContext extends Record<string, any> = {},
   // eslint-disable-next-line @typescript-eslint/ban-types
-  TUserContext = {},
+  TUserContext extends Record<string, any> = {},
 > = EnvelopPlugin<YogaInitialContext & PluginContext> &
   ServerAdapterPlugin<TServerContext> & {
     /**
@@ -45,12 +45,12 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onYogaInit?: OnYogaInitHook<TServerContext>;
+    onYogaInit?: OnYogaInitHook<TServerContext, TUserContext>;
     /**
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onRequestParse?: OnRequestParseHook<TServerContext>;
+    onRequestParse?: OnRequestParseHook<TServerContext & ServerAdapterInitialContext>;
     /**
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
@@ -60,15 +60,19 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onResultProcess?: OnResultProcess;
+    onResultProcess?: OnResultProcess<TServerContext & ServerAdapterInitialContext>;
   };
 
-export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
-  payload: OnYogaInitEventPayload<TServerContext>,
-) => void;
+export type OnYogaInitHook<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+> = (payload: OnYogaInitEventPayload<TServerContext, TUserContext>) => void;
 
-export type OnYogaInitEventPayload<TServerContext extends Record<string, any>> = {
-  yoga: YogaServer<TServerContext, any>;
+export type OnYogaInitEventPayload<
+  TServerContext extends Record<string, any>,
+  TUserContext extends Record<string, any>,
+> = {
+  yoga: YogaServer<TServerContext, TUserContext>;
 };
 
 export type OnRequestHook<TServerContext> = (
@@ -122,7 +126,9 @@ export interface OnParamsEventPayload {
   fetchAPI: FetchAPI;
 }
 
-export type OnResultProcess = (payload: OnResultProcessEventPayload) => PromiseOrValue<void>;
+export type OnResultProcess<TServerContext> = (
+  payload: OnResultProcessEventPayload<TServerContext>,
+) => PromiseOrValue<void>;
 
 export type ExecutionResultWithSerializer<TData = any, TExtensions = any> = ExecutionResult<
   TData,
@@ -141,13 +147,14 @@ export type ResultProcessor = (
   acceptedMediaType: string,
 ) => PromiseOrValue<Response>;
 
-export interface OnResultProcessEventPayload {
+export interface OnResultProcessEventPayload<TServerContext> {
   request: Request;
   result: ResultProcessorInput;
   setResult(result: ResultProcessorInput): void;
   resultProcessor?: ResultProcessor;
   acceptableMediaTypes: string[];
   setResultProcessor(resultProcessor: ResultProcessor, acceptedMediaType: string): void;
+  serverContext: TServerContext;
 }
 
 export type OnResponseHook<TServerContext> = (

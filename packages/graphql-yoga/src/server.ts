@@ -95,7 +95,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    */
   context?:
     | ((
-        initialContext: YogaInitialContext & TServerContext,
+        initialContext: YogaInitialContext & TServerContext & ServerAdapterInitialContext,
       ) => Promise<TUserContext> | TUserContext)
     | Promise<TUserContext>
     | TUserContext
@@ -128,11 +128,13 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    *
    * @default true
    */
-  graphiql?: GraphiQLOptionsOrFactory<TServerContext> | undefined;
+  graphiql?: GraphiQLOptionsOrFactory<TServerContext & ServerAdapterInitialContext> | undefined;
 
   renderGraphiQL?: ((options?: GraphiQLOptions) => PromiseOrValue<BodyInit>) | undefined;
 
-  schema?: YogaSchemaDefinition<TServerContext, TUserContext> | undefined;
+  schema?:
+    | YogaSchemaDefinition<TServerContext & ServerAdapterInitialContext, TUserContext>
+    | undefined;
 
   /**
    * Envelop Plugins
@@ -140,8 +142,10 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    */
   plugins?:
     | Array<
+        | Plugin<TUserContext & TServerContext & YogaInitialContext & ServerAdapterInitialContext>
+        | Plugin
         // eslint-disable-next-line @typescript-eslint/ban-types
-        Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
+        | {}
       >
     | undefined;
 
@@ -196,21 +200,27 @@ export type BatchingOptions =
 export class YogaServer<
   TServerContext extends Record<string, any>,
   TUserContext extends Record<string, any>,
-> implements ServerAdapterBaseObject<TServerContext>
+> implements ServerAdapterBaseObject<TServerContext & ServerAdapterInitialContext>
 {
   /**
    * Instance of envelop
    */
-  public readonly getEnveloped: GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>;
+  public readonly getEnveloped: GetEnvelopedFn<
+    TUserContext & TServerContext & YogaInitialContext & ServerAdapterInitialContext
+  >;
   public logger: YogaLogger;
   public readonly graphqlEndpoint: string;
   public fetchAPI: FetchAPI;
   protected plugins: Array<
-    Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
+    Plugin<
+      TUserContext & TServerContext & YogaInitialContext & ServerAdapterInitialContext,
+      TServerContext & ServerAdapterInitialContext,
+      TUserContext
+    >
   >;
-  private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
+  private onRequestParseHooks: OnRequestParseHook<TServerContext & ServerAdapterInitialContext>[];
   private onParamsHooks: OnParamsHook[];
-  private onResultProcessHooks: OnResultProcess[];
+  private onResultProcessHooks: OnResultProcess<TServerContext & ServerAdapterInitialContext>[];
   private maskedErrorsOpts: YogaMaskedErrorOpts | null;
   private id: string;
 
@@ -339,7 +349,8 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessors(),
-      useErrorHandling((error, request) => {
+      useErrorHandling<TServerContext & YogaInitialContext & ServerAdapterInitialContext>(
+        (error, request) => {
         const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
         const result = {
@@ -414,11 +425,13 @@ export class YogaServer<
 
     this.getEnveloped = envelop({
       plugins: this.plugins,
-    }) as unknown as GetEnvelopedFn<TUserContext & TServerContext & YogaInitialContext>;
+    }) as unknown as GetEnvelopedFn<
+      TUserContext & TServerContext & YogaInitialContext & ServerAdapterInitialContext
+    >;
 
     this.plugins = this.getEnveloped._plugins as Plugin<
-      TUserContext & TServerContext & YogaInitialContext,
-      TServerContext,
+      TUserContext & TServerContext & YogaInitialContext & ServerAdapterInitialContext,
+      TServerContext & ServerAdapterInitialContext,
       TUserContext
     >[];
 
@@ -455,7 +468,7 @@ export class YogaServer<
       request: Request;
       batched: boolean;
     },
-    serverContext: TServerContext,
+    serverContext: TServerContext & ServerAdapterInitialContext,
   ) {
     try {
       let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
@@ -476,7 +489,7 @@ export class YogaServer<
 
       if (result == null) {
         const additionalContext =
-          serverContext.request === request
+          serverContext?.request === request
             ? {
                 params,
               }
@@ -504,9 +517,8 @@ export class YogaServer<
       /** Ensure that error thrown from subscribe is sent to client */
       // TODO: this should probably be something people can customize via a hook?
       if (isAsyncIterable(result)) {
-        const iterator = result[Symbol.asyncIterator]();
         result = mapAsyncIterator(
-          iterator,
+          result,
           v => v,
           (err: Error) => {
             if (err.name === 'AbortError') {

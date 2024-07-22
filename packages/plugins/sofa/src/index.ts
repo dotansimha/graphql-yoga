@@ -1,5 +1,5 @@
 import { ExecutionArgs, ExecutionResult, SubscriptionArgs } from 'graphql';
-import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
+import { Plugin, YogaServerInstance, type ServerAdapterInitialContext } from 'graphql-yoga';
 import { useSofa as createSofaHandler } from 'sofa-api';
 import { isPromise } from '@graphql-tools/utils';
 import { SofaHandler } from './types.js';
@@ -19,7 +19,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
   >['getEnveloped'];
 
   const envelopedByContext = new WeakMap<
-    YogaInitialContext,
+    Record<string, unknown>,
     ReturnType<YogaServerInstance<Record<string, unknown>, Record<string, unknown>>['getEnveloped']>
   >();
 
@@ -71,7 +71,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
                   typeResolver: args[7],
                 };
           const enveloped = envelopedByContext.get(
-            executionArgs.contextValue as YogaInitialContext,
+            executionArgs.contextValue as Record<string, unknown>,
           );
           if (!enveloped) {
             throw new TypeError('Illegal invocation.');
@@ -106,7 +106,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
                   subscribeFieldResolver: args[7],
                 };
           const enveloped = envelopedByContext.get(
-            subscriptionArgs.contextValue as YogaInitialContext,
+            subscriptionArgs.contextValue as Record<string, unknown>,
           );
           if (!enveloped) {
             throw new TypeError('Illegal invocation.');
