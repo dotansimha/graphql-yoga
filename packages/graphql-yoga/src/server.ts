@@ -21,6 +21,7 @@ import {
   ServerAdapterRequestHandler,
   useCORS,
   useErrorHandling,
+  type ServerAdapterInitialContext,
 } from '@whatwg-node/server';
 import { handleError, isAbortError } from './error.js';
 import { isGETRequest, parseGETRequest } from './plugins/request-parser/get.js';
@@ -350,20 +351,22 @@ export class YogaServer<
       // Middlewares after the GraphQL execution
       useResultProcessors(),
       useErrorHandling<TServerContext & YogaInitialContext & ServerAdapterInitialContext>(
-        (error, request) => {
-        const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+        (error, request, serverContext) => {
+          const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
-        const result = {
-          errors,
-        };
+          const result = {
+            errors,
+          };
 
-        return processResult({
-          request,
-          result,
-          fetchAPI: this.fetchAPI,
-          onResultProcessHooks: this.onResultProcessHooks,
-        });
-      }),
+          return processResult({
+            request,
+            result,
+            fetchAPI: this.fetchAPI,
+            onResultProcessHooks: this.onResultProcessHooks,
+            serverContext,
+          });
+        },
+      ),
 
       ...(options?.plugins ?? []),
       // To make sure those are called at the end
@@ -621,6 +624,7 @@ export class YogaServer<
       result,
       fetchAPI: this.fetchAPI,
       onResultProcessHooks: this.onResultProcessHooks,
+      serverContext,
     });
   };
 }
