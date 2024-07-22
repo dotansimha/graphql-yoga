@@ -3,6 +3,8 @@ import type { GraphQLSchema } from 'graphql';
 import type { PromiseOrValue } from '@envelop/core';
 import type { createFetch } from '@whatwg-node/fetch';
 
+export type { ServerAdapterInitialContext } from '@whatwg-node/server';
+
 export type GraphQLSchemaWithContext<TContext> = GraphQLSchema & {
   _context?: TContext;
 };
