@@ -4,7 +4,7 @@ import { createGraphQLError, isAsyncIterable, Plugin, YogaInitialContext } from 
 import { useOnResolve } from '@envelop/on-resolve';
 import { btoa } from '@whatwg-node/fetch';
 
-interface ApolloInlineTraceContext {
+export interface ApolloInlineTraceContext {
   startHrTime: [number, number];
   rootNode: ApolloReportingProtobuf.Trace.Node;
   trace: ApolloReportingProtobuf.Trace;
@@ -27,6 +27,13 @@ export interface ApolloInlineTracePluginOptions {
    * Return `null` to skip reporting error.
    */
   rewriteError?: (err: GraphQLError) => GraphQLError | null;
+  /**
+   * Allows to entirely disable tracing based on the HTTP request
+   * @param request HTTP request from the execution context
+   * @returns If true is returned (either as is or wrapped in Promise), traces for this request will
+   *          not be generated.
+   */
+  ignoreRequest?: (request: Request) => Promise<boolean> | boolean;
 }
 
 const asArray = <T>(x: T | T[]): T[] => (Array.isArray(x) ? x : [x]);
@@ -43,9 +50,54 @@ const asArray = <T>(x: T | T[]): T[] => (Array.isArray(x) ? x : [x]);
 export function useApolloInlineTrace(
   options: ApolloInlineTracePluginOptions = {},
 ): Plugin<YogaInitialContext> {
-  const ctxForReq = new WeakMap<Request, ApolloInlineTraceContext>();
+  const [instrumentation, ctxForReq] = useApolloInstrumentation({
+    ignoreRequest: request => request.headers.get('apollo-federation-include-trace') !== 'ftv1',
+    ...options,
+  });
 
   return {
+    onPluginInit({ addPlugin }) {
+      addPlugin(instrumentation);
+      addPlugin({
+        onResultProcess({ request, result }) {
+          const ctx = ctxForReq.get(request);
+          if (!ctx) return;
+
+          // TODO: should handle streaming results? how?
+          if (isAsyncIterable(result)) return;
+
+          for (const singleResult of asArray(result)) {
+            // TODO: Probably broken in batched queries
+
+            if (singleResult.extensions?.ftv1 !== undefined) {
+              throw new Error('The `ftv1` extension is already present');
+            }
+
+            const encodedUint8Array = ApolloReportingProtobuf.Trace.encode(ctx.trace).finish();
+            const base64 = btoa(String.fromCharCode(...encodedUint8Array));
+
+            singleResult.extensions = {
+              ...singleResult.extensions,
+              ftv1: base64,
+            };
+          }
+        },
+      });
+    },
+  };
+}
+
+/**
+ * Instrument GraphQL request processing pipeline and creates Apollo compatible tracing data.
+ *
+ * This is meant as a helper, do not use it directly. Use `useApolloInlineTrace` or `useApolloUsageReport` instead.
+ * @param options
+ * @returns A tuple with the instrumentation plugin and a WeakMap containing the tracing data
+ */
+export function useApolloInstrumentation(options: ApolloInlineTracePluginOptions) {
+  const ctxForReq = new WeakMap<Request, ApolloInlineTraceContext>();
+
+  const plugin: Plugin = {
     onPluginInit: ({ addPlugin }) => {
       addPlugin(
         useOnResolve(({ context: { request }, info }) => {
@@ -74,9 +126,9 @@ export function useApolloInlineTrace(
         }),
       );
     },
-    onRequest({ request }) {
+    async onRequest({ request }) {
       // must be ftv1 tracing protocol
-      if (request.headers.get('apollo-federation-include-trace') !== 'ftv1') {
+      if (await options.ignoreRequest?.(request)) {
         return;
       }
 
@@ -147,28 +199,15 @@ export function useApolloInlineTrace(
       // TODO: should handle streaming results? how?
       if (isAsyncIterable(result)) return;
 
-      for (const singleResult of asArray(result)) {
-        if (singleResult.extensions?.ftv1 !== undefined) {
-          throw new Error('The `ftv1` extension is already present');
-        }
-
-        // onResultProcess will be called only once since we disallow async iterables
-        if (ctx.stopped) throw new Error('Trace stopped multiple times');
-
-        ctx.stopped = true;
-        ctx.trace.durationNs = hrTimeToDurationInNanos(process.hrtime(ctx.startHrTime));
-        ctx.trace.endTime = nowTimestamp();
-
-        const encodedUint8Array = ApolloReportingProtobuf.Trace.encode(ctx.trace).finish();
-        const base64 = btoa(String.fromCharCode(...encodedUint8Array));
-
-        singleResult.extensions = {
-          ...singleResult.extensions,
-          ftv1: base64,
-        };
-      }
+      // onResultProcess will be called only once since we disallow async iterables
+      if (ctx.stopped) throw new Error('Trace stopped multiple times');
+      ctx.stopped = true;
+      ctx.trace.durationNs = hrTimeToDurationInNanos(process.hrtime(ctx.startHrTime));
+      ctx.trace.endTime = nowTimestamp();
     },
   };
+
+  return [plugin, ctxForReq] as const;
 }
 
 /**
