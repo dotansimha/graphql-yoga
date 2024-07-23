@@ -6,6 +6,9 @@ on:
 
 jobs:
   stable:
+    permissions:
+      contents: read
+      id-token: write
     uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@main
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     with:
