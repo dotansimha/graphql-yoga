@@ -1,6 +1,7 @@
 import { ExecutionArgs, ExecutionResult, SubscriptionArgs } from 'graphql';
 import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
 import { useSofa as createSofaHandler } from 'sofa-api';
+import { isPromise } from '@graphql-tools/utils';
 import { SofaHandler } from './types.js';
 
 type SofaHandlerConfig = Parameters<typeof createSofaHandler>[0];
@@ -22,7 +23,6 @@ export function useSofa(config: SofaPluginConfig): Plugin {
     ReturnType<YogaServerInstance<Record<string, unknown>, Record<string, unknown>>['getEnveloped']>
   >();
 
-  const requestByContext = new WeakMap<YogaInitialContext, Request>();
   return {
     onYogaInit({ yoga }) {
       getEnveloped = yoga.getEnveloped;
@@ -31,12 +31,17 @@ export function useSofa(config: SofaPluginConfig): Plugin {
       sofaHandler = createSofaHandler({
         ...config,
         schema: onSchemaChangeEventPayload.schema,
-        async context(serverContext: YogaInitialContext) {
+        context(serverContext: YogaInitialContext) {
           const enveloped = getEnveloped(serverContext);
-          const request = requestByContext.get(serverContext);
-          const contextValue = await enveloped.contextFactory({ request });
-          envelopedByContext.set(contextValue as YogaInitialContext, enveloped);
-          return contextValue;
+          const contextValue$ = enveloped.contextFactory(serverContext);
+          if (isPromise(contextValue$)) {
+            return contextValue$.then(contextValue => {
+              envelopedByContext.set(contextValue, enveloped);
+              return contextValue;
+            });
+          }
+          envelopedByContext.set(contextValue$, enveloped);
+          return contextValue$;
         },
         execute(
           ...args:
@@ -111,8 +116,7 @@ export function useSofa(config: SofaPluginConfig): Plugin {
       });
     },
     async onRequest({ request, serverContext, endResponse }) {
-      requestByContext.set(serverContext as YogaInitialContext, request);
-      const response = await sofaHandler.handle(request, serverContext as Record<string, unknown>);
+      const response = await sofaHandler(request, serverContext as Record<string, unknown>);
       if (response != null && response.status !== 404) {
         endResponse(response);
       }
