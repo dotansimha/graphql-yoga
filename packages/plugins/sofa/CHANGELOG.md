@@ -1,5 +1,22 @@
 # @graphql-yoga/plugin-sofa
 
+## 3.6.2
+
+### Patch Changes
+
+- [#3381](https://github.com/dotansimha/graphql-yoga/pull/3381)
+  [`a0e24fe`](https://github.com/dotansimha/graphql-yoga/commit/a0e24fe1029dd2d5d0d5c98f0796d815aae6134f)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Added dependency
+    [`@graphql-tools/utils@^10.3.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.3.2)
+    (to `dependencies`)
+
+- [#3381](https://github.com/dotansimha/graphql-yoga/pull/3381)
+  [`a0e24fe`](https://github.com/dotansimha/graphql-yoga/commit/a0e24fe1029dd2d5d0d5c98f0796d815aae6134f)
+  Thanks [@ardatan](https://github.com/ardatan)! - Do not manipulate the server context to have
+  \`request\` in the context
+
 ## 3.6.1
 
 ### Patch Changes
