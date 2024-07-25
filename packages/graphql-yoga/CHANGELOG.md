@@ -1,5 +1,39 @@
 # graphql-yoga
 
+## 5.6.2
+
+### Patch Changes
+
+- [#3357](https://github.com/dotansimha/graphql-yoga/pull/3357)
+  [`b7bf47b`](https://github.com/dotansimha/graphql-yoga/commit/b7bf47bf72f3c04de6de7866aa68cdd5eac90566)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.41` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.41)
+    (from `^0.9.40`, in `dependencies`)
+
+- [#3384](https://github.com/dotansimha/graphql-yoga/pull/3384)
+  [`81a736b`](https://github.com/dotansimha/graphql-yoga/commit/81a736be76cb91049fc9ef54f536ce79e0c90e16)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@envelop/core@^5.0.1` ↗︎](https://www.npmjs.com/package/@envelop/core/v/5.0.1) (from
+    `^5.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/executor@^1.3.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/1.3.0)
+    (from `^1.2.5`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/schema@^10.0.4` ↗︎](https://www.npmjs.com/package/@graphql-tools/schema/v/10.0.4)
+    (from `^10.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^10.3.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.3.2)
+    (from `^10.1.0`, in `dependencies`)
+  - Updated dependency
+    [`@whatwg-node/fetch@^0.9.18` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.9.18)
+    (from `^0.9.17`, in `dependencies`)
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.40` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.40)
+    (from `^0.9.36`, in `dependencies`)
+
 ## 5.6.1
 
 ### Patch Changes

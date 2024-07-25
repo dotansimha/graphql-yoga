@@ -1,5 +1,7 @@
 # @graphql-yoga/urql-exchange
 
+## 3.6.2
+
 ## 3.6.1
 
 ### Patch Changes
