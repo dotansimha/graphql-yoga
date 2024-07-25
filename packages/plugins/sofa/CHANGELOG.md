@@ -1,5 +1,19 @@
 # @graphql-yoga/plugin-sofa
 
+## 3.6.3
+
+### Patch Changes
+
+- [#3357](https://github.com/dotansimha/graphql-yoga/pull/3357)
+  [`b7bf47b`](https://github.com/dotansimha/graphql-yoga/commit/b7bf47bf72f3c04de6de7866aa68cdd5eac90566)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`sofa-api@^0.18.6` ↗︎](https://www.npmjs.com/package/sofa-api/v/0.18.6)
+    (from `^0.18.0`, in `dependencies`)
+- Updated dependencies
+  [[`b7bf47b`](https://github.com/dotansimha/graphql-yoga/commit/b7bf47bf72f3c04de6de7866aa68cdd5eac90566),
+  [`81a736b`](https://github.com/dotansimha/graphql-yoga/commit/81a736be76cb91049fc9ef54f536ce79e0c90e16)]:
+  - graphql-yoga@5.6.2
+
 ## 3.6.2
 
 ### Patch Changes
