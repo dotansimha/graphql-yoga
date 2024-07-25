@@ -39,6 +39,7 @@ describe('nextjs 13 App Router', () => {
     }).toMatchInlineSnapshot(`
       {
         "connection": "close",
+        "content-encoding": "gzip",
         "content-type": "application/json; charset=utf-8",
         "date": null,
         "keep-alive": null,

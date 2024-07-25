@@ -2,7 +2,7 @@
 import { createHmac } from 'node:crypto';
 import { createServer } from 'node:http';
 import { createSchema, createYoga, Plugin } from 'graphql-yoga';
-import jwt from 'jsonwebtoken';
+import jwt, { Algorithm, SignOptions } from 'jsonwebtoken';
 import { useCookies } from '@whatwg-node/server-plugin-cookies';
 import { JwtPluginOptions } from '../config';
 import { useJWT } from '../plugin';
@@ -633,7 +633,7 @@ const body = JSON.stringify({
 
 const buildJWT = (
   payload: object,
-  options: Parameters<typeof jwt.sign>[2] & { key?: string } = {},
+  options: SignOptions & { key?: string; algorithm?: Algorithm | 'none' } = {},
   prefix = 'Bearer ',
 ) => {
   const { key = 'very secret key', ...signOptions } = options;
