@@ -749,7 +749,7 @@ describe('error masking', () => {
       ],
     });
     // in the future this might change as we decide to within our graphql-tools/executor error handler treat DOMException similar to a normal Error
-    expect(error.mock.calls).toMatchObject([[{ message: 'Unexpected error value: {}' }]]);
+    expect(error.mock.calls).toMatchObject([[{ message: 'This operation was aborted' }]]);
     expect(debug.mock.calls).toEqual([
       ['Parsing request to extract GraphQL parameters'],
       ['Processing GraphQL Parameters'],

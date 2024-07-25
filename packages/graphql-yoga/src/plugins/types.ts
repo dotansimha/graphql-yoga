@@ -6,7 +6,7 @@ import {
   PromiseOrValue,
 } from '@envelop/core';
 import { ExecutionResult } from '@graphql-tools/utils';
-import { ServerAdapterPlugin } from '@whatwg-node/server';
+import { ServerAdapterInitialContext, ServerAdapterPlugin } from '@whatwg-node/server';
 import { YogaServer } from '../server.js';
 import {
   FetchAPI,
@@ -71,7 +71,7 @@ export type OnRequestHook<TServerContext> = (
 
 export interface OnRequestEventPayload<TServerContext> {
   request: Request;
-  serverContext: TServerContext | undefined;
+  serverContext: TServerContext & ServerAdapterInitialContext;
   fetchAPI: FetchAPI;
   endResponse(response: Response): void;
   url: URL;
@@ -89,7 +89,7 @@ export interface OnRequestParseEventPayload<TServerContext> {
   request: Request;
   url: URL;
   requestParser: RequestParser | undefined;
-  serverContext: TServerContext;
+  serverContext: TServerContext & ServerAdapterInitialContext;
   setRequestParser: (parser: RequestParser) => void;
 }
 
@@ -142,14 +142,4 @@ export interface OnResultProcessEventPayload {
   resultProcessor?: ResultProcessor;
   acceptableMediaTypes: string[];
   setResultProcessor(resultProcessor: ResultProcessor, acceptedMediaType: string): void;
-}
-
-export type OnResponseHook<TServerContext> = (
-  payload: OnResponseEventPayload<TServerContext>,
-) => PromiseOrValue<void>;
-
-export interface OnResponseEventPayload<TServerContext> {
-  request: Request;
-  serverContext: TServerContext | undefined;
-  response: Response;
 }
