@@ -17,6 +17,7 @@ import {
   createServerAdapter,
   ServerAdapter,
   ServerAdapterBaseObject,
+  ServerAdapterInitialContext,
   ServerAdapterRequestHandler,
   useCORS,
   useErrorHandling,
@@ -454,10 +455,7 @@ export class YogaServer<
       request: Request;
       batched: boolean;
     },
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    ...args: {} extends TServerContext
-      ? [serverContext?: TServerContext | undefined]
-      : [serverContext: TServerContext]
+    serverContext: TServerContext,
   ) {
     try {
       let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
@@ -478,7 +476,7 @@ export class YogaServer<
 
       if (result == null) {
         const additionalContext =
-          args[0]?.request === request
+          serverContext.request === request
             ? {
                 params,
               }
@@ -487,9 +485,10 @@ export class YogaServer<
                 params,
               };
 
-        const initialContext = args[0]
-          ? Object.assign(batched ? Object.create(args[0]) : args[0], additionalContext)
-          : additionalContext;
+        const initialContext = Object.assign(
+          batched ? Object.create(serverContext) : serverContext,
+          additionalContext,
+        );
 
         const enveloped = this.getEnveloped(initialContext);
 
@@ -537,7 +536,7 @@ export class YogaServer<
 
   handle: ServerAdapterRequestHandler<TServerContext> = async (
     request: Request,
-    serverContext: TServerContext,
+    serverContext: TServerContext & ServerAdapterInitialContext,
   ) => {
     let url = new Proxy({} as URL, {
       get: (_target, prop, _receiver) => {
@@ -623,11 +622,12 @@ export type YogaServerInstance<
 export function createYoga<
   TServerContext extends Record<string, any> = {},
   TUserContext extends Record<string, any> = {},
->(options: YogaServerOptions<TServerContext, TUserContext>) {
+>(
+  options: YogaServerOptions<TServerContext, TUserContext>,
+): YogaServerInstance<TServerContext, TUserContext> {
   const server = new YogaServer<TServerContext, TUserContext>(options);
   return createServerAdapter<TServerContext, YogaServer<TServerContext, TUserContext>>(server, {
     fetchAPI: server.fetchAPI,
     plugins: server['plugins'],
-  }) as unknown as YogaServerInstance<TServerContext, TUserContext>;
-  // TODO: Fix in @whatwg-node/server later
+  });
 }

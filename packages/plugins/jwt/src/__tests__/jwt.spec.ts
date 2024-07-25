@@ -498,7 +498,7 @@ describe('jwt plugin', () => {
         singingKeyProviders: [createInlineSigningKeyProvider(secret)],
         tokenLookupLocations: [extractFromCookie({ name: 'auth' })],
       },
-      [useCookies()],
+      [useCookies<any>()],
     );
     const token = buildJWT({ sub: '123' }, { key: secret }, '');
     const response = await test.queryWithCookieAuth(token);
@@ -550,7 +550,7 @@ describe('jwt plugin', () => {
           }),
         ],
       },
-      [useCookies()],
+      [useCookies<any>()],
     );
     const token = buildJWT({ sub: '123' }, { key: secret }, '');
 
@@ -571,7 +571,7 @@ describe('jwt plugin', () => {
 const createTestServer = (options: JwtPluginOptions, initPlugins: Plugin[] = []) => {
   const yoga = createYoga({
     schema,
-    logging: console,
+    logging: !!process.env.DEBUG,
     plugins: [...initPlugins, useJWT(options)],
   });
 
