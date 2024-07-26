@@ -154,38 +154,43 @@ export function useCheckGraphQLQueryParams(extraParamNames?: string[]): Plugin {
           return;
         }
 
-        let message: string | undefined;
+        let numberOfOperations = 0;
 
-        const operations = result.definitions.filter(
-          definition => definition.kind === Kind.OPERATION_DEFINITION,
-        );
+        for (const definition of result.definitions) {
+          if (definition.kind === Kind.OPERATION_DEFINITION) {
+            if (definition.name?.value === operationName) {
+              return;
+            }
 
-        if (operationName) {
-          const operationExists = operations.some(
-            operation => operation.name?.value === operationName,
-          );
+            numberOfOperations++;
 
-          if (!operationExists) {
-            if (operations.length === 1) {
-              message = `Operation name "${operationName}" doesn't match the name defined in the query.`;
-            } else {
-              message = `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`;
+            if (operationName == null && numberOfOperations > 1) {
+              throw createGraphQLError(
+                'Could not determine what operation to execute. The query contains multiple operations, an operation name must be provided',
+                {
+                  extensions: {
+                    http: {
+                      status: 400,
+                    },
+                  },
+                },
+              );
             }
           }
-        } else if (operations.length > 1) {
-          message =
-            'Could not determine what operation to execute. The query contains multiple operations, an operation name must be provided';
         }
 
-        if (message) {
-          throw createGraphQLError(message, {
+        throw createGraphQLError(
+          numberOfOperations === 1
+            ? `Operation name "${operationName}" doesn't match the name defined in the query.`
+            : `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`,
+          {
             extensions: {
               http: {
                 status: 400,
               },
             },
-          });
-        }
+          },
+        );
       };
     },
   };
