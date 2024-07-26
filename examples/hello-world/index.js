@@ -3,6 +3,7 @@
 const { createServer } = require('node:http');
 const { createYoga, createSchema } = require('graphql-yoga');
 const { renderGraphiQL } = require('@graphql-yoga/render-graphiql');
+const { useApolloUsageReport } = require('@graphql-yoga/plugin-apollo-usage-report');
 
 const yoga = createYoga({
   schema: createSchema({
@@ -26,6 +27,8 @@ const yoga = createYoga({
     `,
   },
   renderGraphiQL,
+  logging: 'debug',
+  plugins: [useApolloUsageReport()],
 });
 
 const server = createServer(yoga);
