@@ -27,7 +27,7 @@ jobs:
       - name: Setup env
         uses: the-guild-org/shared-config/setup@v1
         with:
-          node-version: 22
+          node-version-file: .node-version
 
       - name: Build Packages
         run: pnpm build
