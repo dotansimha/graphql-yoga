@@ -25,10 +25,9 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: the-guild-org/shared-config/setup@v1
         with:
-          nodeVersion: 22
-          packageManager: pnpm
+          node-version-file: .node-version
 
       - name: Build Packages
         run: pnpm build
