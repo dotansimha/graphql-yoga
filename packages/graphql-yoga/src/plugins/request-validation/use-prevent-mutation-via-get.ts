@@ -1,29 +1,15 @@
-import { DocumentNode, getOperationAST, GraphQLError, OperationDefinitionNode } from 'graphql';
+import { DocumentNode, GraphQLError, Kind } from 'graphql';
 import { Maybe } from '@envelop/core';
-import { createGraphQLError } from '@graphql-tools/utils';
+import { createGraphQLError, isDocumentNode } from '@graphql-tools/utils';
 import type { YogaInitialContext } from '../../types.js';
 import type { Plugin } from '../types.js';
 
-export function assertMutationViaGet(
-  method: string,
-  document: Maybe<DocumentNode>,
-  operationName?: string,
-) {
-  const operation: OperationDefinitionNode | undefined = document
-    ? getOperationAST(document, operationName) ?? undefined
-    : undefined;
+export function assertMutationViaGet(method: string, document: Maybe<DocumentNode>) {
+  const isMutation =
+    document?.definitions.find(def => def.kind === Kind.OPERATION_DEFINITION)?.operation ===
+    'mutation';
 
-  if (!operation) {
-    throw createGraphQLError('Could not determine what operation to execute.', {
-      extensions: {
-        http: {
-          status: 400,
-        },
-      },
-    });
-  }
-
-  if (operation.operation === 'mutation' && method === 'GET') {
+  if (isMutation && method === 'GET') {
     throw createGraphQLError('Can only perform a mutation operation from a POST request.', {
       extensions: {
         http: {
@@ -41,15 +27,7 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
   return {
     onParse() {
       // We should improve this by getting Yoga stuff from the hook params directly instead of the context
-      return ({
-        result,
-        context: {
-          request,
-          // the `params` might be missing in cases where the user provided
-          // malformed context to getEnveloped (like `yoga.getEnveloped({})`)
-          params: { operationName } = {},
-        },
-      }) => {
+      return ({ result, context: { request } }) => {
         // Run only if this is a Yoga request
         // the `request` might be missing when using graphql-ws for example
         // in which case throwing an error would abruptly close the socket
@@ -67,7 +45,9 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
           throw result;
         }
 
-        assertMutationViaGet(request.method, result, operationName);
+        if (isDocumentNode(result)) {
+          assertMutationViaGet(request.method, result);
+        }
       };
     },
   };

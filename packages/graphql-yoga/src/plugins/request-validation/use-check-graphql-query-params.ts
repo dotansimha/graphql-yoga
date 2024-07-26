@@ -1,4 +1,5 @@
-import { createGraphQLError } from '@graphql-tools/utils';
+import { Kind } from 'graphql';
+import { createGraphQLError, isDocumentNode } from '@graphql-tools/utils';
 import type { GraphQLParams } from '../../types.js';
 import type { Plugin } from '../types.js';
 
@@ -137,6 +138,55 @@ export function useCheckGraphQLQueryParams(extraParamNames?: string[]): Plugin {
   return {
     onParams({ params }) {
       checkGraphQLQueryParams(params, extraParamNames);
+    },
+    onParse() {
+      return ({
+        result,
+        context: {
+          request,
+          params: { operationName },
+        },
+      }) => {
+        // Run only if this is a Yoga request
+        // the `request` might be missing when using graphql-ws for example
+        // in which case throwing an error would abruptly close the socket
+        if (!request || !isDocumentNode(result)) {
+          return;
+        }
+
+        let message: string | undefined;
+
+        const operations = result.definitions.filter(
+          definition => definition.kind === Kind.OPERATION_DEFINITION,
+        );
+
+        if (operationName) {
+          const operationExists = operations.some(
+            operation => operation.name?.value === operationName,
+          );
+
+          if (!operationExists) {
+            if (operations.length === 1) {
+              message = `Operation name "${operationName}" doesn't match the name defined in the query.`;
+            } else {
+              message = `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`;
+            }
+          }
+        } else if (operations.length > 1) {
+          message =
+            'Could not determine what operation to execute. The query contains multiple operations, an operation name must be provided';
+        }
+
+        if (message) {
+          throw createGraphQLError(message, {
+            extensions: {
+              http: {
+                status: 400,
+              },
+            },
+          });
+        }
+      };
     },
   };
 }
