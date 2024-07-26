@@ -1,9 +1,11 @@
 import { createServer } from 'node:http';
 import { createYoga } from 'graphql-yoga';
 import { useManagedFederation } from '@graphql-yoga/apollo-managed-federation';
+import { useApolloUsageReport } from '@graphql-yoga/plugin-apollo-usage-report';
 
 const yoga = createYoga({
-  plugins: [useManagedFederation()],
+  plugins: [useManagedFederation(), useApolloUsageReport()],
+  logging: 'debug',
 });
 
 const server = createServer(yoga);

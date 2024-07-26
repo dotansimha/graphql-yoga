@@ -33,6 +33,8 @@ if (major === '21' && process.env.LEAKS_TEST !== 'true') {
       URLPattern: globalThis.URLPattern,
       URLSearchParams: globalThis.URLSearchParams,
       WritableStream: globalThis.WritableStream,
+      CompressionStream: globalThis.CompressionStream,
+      DecompressionStream: globalThis.DecompressionStream,
     },
   ]);
 }

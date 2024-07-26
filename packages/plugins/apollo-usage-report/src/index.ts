@@ -1,13 +1,19 @@
 import { defaultUsageReportingSignature } from 'apollo-graphql';
 import { Report } from 'apollo-reporting-protobuf';
 import { printSchema } from 'graphql';
-import { isAsyncIterable, Plugin, YogaLogger } from 'graphql-yoga';
 import {
-  ApolloInlineTraceContext,
+  isAsyncIterable,
+  Plugin,
+  YogaInitialContext,
+  YogaLogger,
+  type FetchAPI,
+} from 'graphql-yoga';
+import {
+  ApolloInlineGraphqlTraceContext,
+  ApolloInlineRequestTraceContext,
   ApolloInlineTracePluginOptions,
   useApolloInstrumentation,
 } from '@graphql-yoga/plugin-apollo-inline-trace';
-import { fetch } from '@whatwg-node/fetch';
 
 type ApolloUsageReportOptions = ApolloInlineTracePluginOptions & {
   /**
@@ -36,55 +42,53 @@ type ApolloUsageReportOptions = ApolloInlineTracePluginOptions & {
   endpoint?: string;
 };
 
+export interface ApolloUsageReportRequestContext extends ApolloInlineRequestTraceContext {
+  traces: Map<YogaInitialContext, ApolloUsageReportGraphqlContext>;
+}
+
+export interface ApolloUsageReportGraphqlContext extends ApolloInlineGraphqlTraceContext {
+  operationKey?: string;
+  schemaId?: string;
+}
+
 const DEFAULT_REPORTING_ENDPOINT =
   'https://usage-reporting.api.apollographql.com/api/ingress/traces';
 
 export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Plugin {
   const [instrumentation, ctxForReq] = useApolloInstrumentation(options) as [
     Plugin,
-    WeakMap<
-      Request,
-      ApolloInlineTraceContext & {
-        schemaId?: string;
-        operationKey?: string;
-      }
-    >,
+    WeakMap<Request, ApolloUsageReportRequestContext>,
   ];
 
-  const {
-    graphRef = process.env['APOLLO_GRAPH_REF'],
-    apiKey = process.env['APOLLO_KEY'],
-    endpoint = DEFAULT_REPORTING_ENDPOINT,
-  } = options;
-
   let logger: YogaLogger;
+  let fetchAPI: FetchAPI;
   let schemaId: string;
 
   return {
     onPluginInit({ addPlugin }) {
       addPlugin(instrumentation);
       addPlugin({
-        async onYogaInit(args) {
+        onYogaInit(args) {
+          fetchAPI = args.yoga.fetchAPI;
           logger = Object.fromEntries(
-            Object.entries(args.yoga.logger).map(([level, log]) => [
+            (['error', 'warn', 'info', 'debug'] as const).map(level => [
               level,
-              (...args: unknown[]) => log('[ApolloUsageReport]', ...args),
+              (...messages: unknown[]) =>
+                args.yoga.logger[level]('[ApolloUsageReport]', ...messages),
             ]),
           ) as YogaLogger;
 
-          if (!apiKey) {
+          if (!options.apiKey && !process.env['APOLLO_KEY']) {
             throw new Error(
               `[ApolloUsageReport] Missing API key. Please provide one in plugin options or with 'APOLLO_KEY' environment variable.`,
             );
           }
 
-          if (!graphRef) {
+          if (!options.graphRef && !process.env['APOLLO_GRAPH_REF']) {
             throw new Error(
               `[ApolloUsageReport] Missing Graph Ref. Please provide one in plugin options or with 'APOLLO_GRAPH_REF' environment variable.`,
             );
           }
-
-          logger.debug('using', { apiKey, graphRef });
         },
         async onSchemaChange({ schema }) {
           if (schema) {
@@ -92,61 +96,52 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           }
         },
         onParse() {
-          return ({ result, context: { request, params } }) => {
-            const ctx = ctxForReq.get(request);
+          return ({ result, context }) => {
+            const ctx = ctxForReq.get(context.request)?.traces.get(context);
             if (!ctx) {
-              logger.debug('ctx not found during parsing');
+              logger.debug(
+                'operation tracing context not found, this operation will not be traced.',
+              );
               return;
             }
 
-            const { operationName } = params;
+            const { operationName } = context.params;
             const signature = defaultUsageReportingSignature(result, operationName || '');
             ctx.operationKey = `# ${operationName || '-'}\n${signature}`;
             ctx.schemaId = schemaId;
           };
         },
 
-        async onResultProcess(args) {
-          const ctx = ctxForReq.get(args.request);
-          if (!ctx?.operationKey || !ctx?.schemaId) {
-            logger.debug('ctx not found during result processing:', ctx);
-            return;
-          }
-
+        onResultProcess(args) {
           // TODO: Handle async iterables ?
           if (isAsyncIterable(args.result)) {
             logger.debug('async iterable results not implemented for now');
             return;
           }
 
-          fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'content-type': 'application/protobuf',
-              // The presence of the api key is already checked at Yoga initialization time
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              'x-api-key': apiKey!,
-              accept: 'application/json',
-            },
-            body: Report.encode({
-              header: {
-                graphRef,
-                executableSchemaId: ctx.schemaId,
-              },
-              operationCount: 1,
-              tracesPerQuery: {
-                [ctx.operationKey]: {
-                  trace: [ctx.trace],
-                },
-              },
-            }).finish(),
-          }).then(async response => {
-            if (response.ok) {
-              logger.debug('Traces sent:', await response.text());
-            } else {
-              logger.error('Failed to send trace:', await response.text());
+          const reqCtx = ctxForReq.get(args.request);
+          if (!reqCtx) {
+            logger.debug('operation tracing context not found, this operation will not be traced.');
+            return;
+          }
+
+          // Each operation in a batched request can belongs to a different schema.
+          // Apollo doesn't allow to send batch queries for multiple schemas in the same batch
+          const tracesPerSchema: Record<string, Report['tracesPerQuery']> = {};
+          for (const trace of reqCtx.traces.values()) {
+            if (!trace.schemaId || !trace.operationKey) {
+              throw new TypeError('Misformed trace, missing operation key or schema id');
             }
-          });
+            tracesPerSchema[trace.schemaId] ||= {};
+            tracesPerSchema[trace.schemaId][trace.operationKey] ||= { trace: [] };
+            tracesPerSchema[trace.schemaId][trace.operationKey].trace?.push(trace.trace);
+          }
+
+          const tracesPromises = Object.entries(tracesPerSchema).map(([schemaId, tracesPerQuery]) =>
+            sendTrace(options, logger, fetchAPI, schemaId, tracesPerQuery),
+          );
+
+          args.serverContext.waitUntil(Promise.all(tracesPromises));
         },
       });
     },
@@ -169,4 +164,47 @@ export async function hashSHA256(
     hashHex += bytes.toString(16).padStart(2, '0');
   }
   return hashHex;
+}
+
+async function sendTrace(
+  options: ApolloUsageReportOptions,
+  logger: YogaLogger,
+  { fetch }: FetchAPI,
+  schemaId: string,
+  tracesPerQuery: Report['tracesPerQuery'],
+) {
+  const {
+    graphRef = process.env['APOLLO_GRAPH_REF'],
+    apiKey = process.env['APOLLO_KEY'],
+    endpoint = DEFAULT_REPORTING_ENDPOINT,
+  } = options;
+
+  return fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/protobuf',
+      // The presence of the api key is already checked at Yoga initialization time
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      'x-api-key': apiKey!,
+      accept: 'application/json',
+    },
+    body: Report.encode({
+      header: {
+        graphRef,
+        executableSchemaId: schemaId,
+      },
+      operationCount: 1,
+      tracesPerQuery,
+    }).finish(),
+  })
+    .then(async response => {
+      if (response.ok) {
+        logger.debug('Traces sent:', await response.text());
+      } else {
+        logger.error('Failed to send trace:', await response.text());
+      }
+    })
+    .catch(err => {
+      logger.error('Failed to send trace:', err);
+    });
 }
