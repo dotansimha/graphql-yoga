@@ -8,7 +8,9 @@ import {
   createSummary,
   PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
   FillLabelsFnParams,
+  getCounterFromConfig,
   getHistogramFromConfig,
+  getSummaryFromConfig,
   HistogramAndLabels,
   SummaryAndLabels,
   usePrometheus as useEnvelopPrometheus,
@@ -22,6 +24,9 @@ export {
   FillLabelsFnParams,
   HistogramAndLabels,
   SummaryAndLabels,
+  getHistogramFromConfig,
+  getCounterFromConfig,
+  getSummaryFromConfig,
 };
 
 export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
