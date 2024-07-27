@@ -23,7 +23,9 @@ describe('Prometheus', () => {
       schema,
       plugins: [
         usePrometheus({
-          http: true,
+          metrics: {
+            graphql_yoga_http_duration: true,
+          },
           registry,
         }),
       ],
@@ -55,7 +57,9 @@ describe('Prometheus', () => {
       schema,
       plugins: [
         usePrometheus({
-          http: true,
+          metrics: {
+            graphql_yoga_http_duration: true,
+          },
           registry,
           labels: {
             operationName: false,
@@ -93,8 +97,10 @@ describe('Prometheus', () => {
       plugins: [
         usePrometheus({
           endpoint: '/metrics',
-          http: true,
-          execute: true,
+          metrics: {
+            graphql_yoga_http_duration: true,
+            graphql_envelop_phase_execute: true,
+          },
           registry,
         }),
       ],
@@ -125,11 +131,15 @@ describe('Prometheus', () => {
 
   it('should be able to register the same histogram for multiple different registries', async () => {
     usePrometheus({
-      http: true,
+      metrics: {
+        graphql_yoga_http_duration: true,
+      },
       registry,
     });
     usePrometheus({
-      http: true,
+      metrics: {
+        graphql_yoga_http_duration: true,
+      },
       registry,
     });
   });
@@ -139,7 +149,9 @@ describe('Prometheus', () => {
       schema,
       plugins: [
         usePrometheus({
-          http: true,
+          metrics: {
+            graphql_yoga_http_duration: true,
+          },
           registry,
         }),
       ],
