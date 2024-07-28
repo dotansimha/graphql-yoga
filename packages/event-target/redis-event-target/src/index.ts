@@ -1,6 +1,5 @@
 import type { Cluster, Redis } from 'ioredis';
 import type { TypedEventTarget } from '@graphql-yoga/typed-event-target';
-import { CustomEvent } from '@whatwg-node/events';
 
 export type CreateRedisEventTargetArgs = {
   publishClient: Redis | Cluster;

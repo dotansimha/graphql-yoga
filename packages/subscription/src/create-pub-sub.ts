@@ -1,6 +1,5 @@
 import type { TypedEventTarget } from '@graphql-yoga/typed-event-target';
 import { Repeater } from '@repeaterjs/repeater';
-import { CustomEvent } from '@whatwg-node/events';
 
 type PubSubPublishArgsByKey = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

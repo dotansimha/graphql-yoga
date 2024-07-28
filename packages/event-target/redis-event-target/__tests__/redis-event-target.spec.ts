@@ -1,5 +1,4 @@
 import Redis from 'ioredis-mock';
-import { CustomEvent } from '@whatwg-node/events';
 import { createRedisEventTarget } from '../src';
 
 describe('createRedisEventTarget', () => {
