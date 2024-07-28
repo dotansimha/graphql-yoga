@@ -33,6 +33,8 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore - ioredis types are not correct
   subscribeClient.on('message', onMessage);
 
   function addCallback(topic: string, callback: (event: TEvent) => void) {
