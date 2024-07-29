@@ -4,36 +4,14 @@ import { createDeferred } from '../../testing-utils/create-deferred';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
-const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [
-  ['Ponyfilled WhatWG Fetch', undefined],
-];
+const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [['Ponyfill', undefined]];
 
-const [major] = globalThis?.process?.versions?.node.split('.') ?? [];
-
-if (major === '21' && process.env.LEAKS_TEST !== 'true') {
+if (!process.env.LEAK_TESTS) {
   variants.push([
-    'Node.js 21',
-    {
-      fetch: globalThis.fetch,
-      Blob: globalThis.Blob,
-      btoa: globalThis.btoa,
-      FormData: globalThis.FormData,
-      Headers: globalThis.Headers,
-      Request: globalThis.Request,
-      crypto: globalThis.crypto,
-      File: globalThis.File,
-      ReadableStream: globalThis.ReadableStream,
-      Response: globalThis.Response,
-      TextDecoder: globalThis.TextDecoder,
-      TextEncoder: globalThis.TextEncoder,
-      URL: globalThis.URL,
-      TransformStream: globalThis.TransformStream,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore: URLPattern is not available in some environments
-      URLPattern: globalThis.URLPattern,
-      URLSearchParams: globalThis.URLSearchParams,
-      WritableStream: globalThis.WritableStream,
-    },
+    'Native',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - URLPattern is not available in types
+    globalThis,
   ]);
 }
 
