@@ -19,6 +19,21 @@ export function assertInvalidParams(
       },
     });
   }
+
+  if (
+    'operationName' in params &&
+    typeof params.operationName !== 'string' &&
+    params.operationName != null
+  ) {
+    throw createGraphQLError(`Invalid operation name in the request body.`, {
+      extensions: {
+        http: {
+          status: 400,
+        },
+      },
+    });
+  }
+
   for (const paramKey in params) {
     if ((params as Record<string, unknown>)[paramKey] == null) {
       continue;
@@ -134,6 +149,61 @@ export function isValidGraphQLParams(params: unknown): params is GraphQLParams {
   }
 }
 
+export function checkOperationName(
+  operationName: string | undefined,
+  document: DocumentNode,
+): void {
+  const operations = listOperations(document);
+
+  if (operationName != null) {
+    for (const operation of operations) {
+      if (operation.name?.value === operationName) {
+        return;
+      }
+    }
+
+    throw createGraphQLError(
+      `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`,
+      {
+        extensions: {
+          http: {
+            spec: true,
+            status: 400,
+          },
+        },
+      },
+    );
+  }
+
+  operations.next();
+  // If there is no operation name, we should have only one operation
+  if (!operations.next().done) {
+    throw createGraphQLError(
+      `Could not determine what operation to execute. The query contains multiple operation, an operation name should be provided.`,
+      {
+        extensions: {
+          http: {
+            spec: true,
+            status: 400,
+          },
+        },
+      },
+    );
+  }
+}
+
+export function isValidOperationName(
+  operationName: string | undefined,
+  document: DocumentNode,
+): boolean {
+  try {
+    checkOperationName(operationName, document);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function useCheckGraphQLQueryParams(extraParamNames?: string[]): Plugin {
   return {
     onParams({ params }) {
@@ -148,44 +218,7 @@ export function useCheckGraphQLQueryParams(extraParamNames?: string[]): Plugin {
           return;
         }
 
-        const { params: { operationName } = {} } = context;
-        const operations = listOperations(result);
-
-        if (operationName != null) {
-          for (const operation of operations) {
-            if (operation.name?.value === operationName) {
-              return;
-            }
-          }
-
-          throw createGraphQLError(
-            `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`,
-            {
-              extensions: {
-                http: {
-                  spec: true,
-                  status: 400,
-                },
-              },
-            },
-          );
-        }
-
-        operations.next();
-        // If there is no operation name, we should have only one operation
-        if (!operations.next().done) {
-          throw createGraphQLError(
-            `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`,
-            {
-              extensions: {
-                http: {
-                  spec: true,
-                  status: 400,
-                },
-              },
-            },
-          );
-        }
+        checkOperationName(context.params.operationName, result);
       };
     },
   };
