@@ -29,8 +29,8 @@ export {
   getSummaryFromConfig,
 };
 
-export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
-  metrics: EnvelopPrometheusTracingPluginConfig['metrics'] & {
+export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig & {
+  metrics: {
     graphql_yoga_http_duration?: boolean | string | ReturnType<typeof createHistogram>;
   };
 
@@ -39,14 +39,26 @@ export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingP
    * Defaults to "/metrics".
    */
   endpoint?: string | boolean;
-}
+};
 
 export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics';
   const registry = options.registry || defaultRegistry;
-  const httpHistogram = getHistogramFromConfig(options, 'graphql_yoga_http_duration', {
-    help: 'Time spent on HTTP connection',
-  });
+
+  const httpHistogram = getHistogramFromConfig<PrometheusTracingPluginConfig['metrics']>(
+    options,
+    'graphql_yoga_http_duration',
+    {
+      help: 'Time spent on HTTP connection',
+      labelNames: ['operationName', 'operationType', 'method', 'statusCode'],
+    },
+    (params, { request, response }) => ({
+      method: request.method,
+      statusCode: response.status,
+      operationType: params.operationType || 'unknown',
+      operationName: params.operationName || 'Anonymous',
+    }),
+  );
 
   const startByRequest = new WeakMap<Request, number>();
   const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>();
