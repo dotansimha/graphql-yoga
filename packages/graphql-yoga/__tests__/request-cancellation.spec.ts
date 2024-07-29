@@ -4,9 +4,7 @@ import { createDeferred } from '../../testing-utils/create-deferred';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
-const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [
-  ['Ponyfill', undefined],
-];
+const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [['Ponyfill', undefined]];
 
 if (!process.env.LEAK_TESTS) {
   variants.push([
