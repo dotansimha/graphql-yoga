@@ -34,7 +34,7 @@ export function createRedisEventTarget<TEvent extends CustomEvent>(
     }
   }
 
-  subscribeClient.on('message', onMessage);
+  (subscribeClient as Redis).on('message', onMessage);
 
   function addCallback(topic: string, callback: (event: TEvent) => void) {
     let callbacks = callbacksForTopic.get(topic);
