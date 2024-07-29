@@ -1,4 +1,4 @@
-import { Kind } from 'graphql';
+import { Kind, type DocumentNode } from 'graphql';
 import { createGraphQLError, isDocumentNode } from '@graphql-tools/utils';
 import type { GraphQLParams } from '../../types.js';
 import type { Plugin } from '../types.js';
@@ -140,57 +140,52 @@ export function useCheckGraphQLQueryParams(extraParamNames?: string[]): Plugin {
       checkGraphQLQueryParams(params, extraParamNames);
     },
     onParse() {
-      return ({
-        result,
-        context: {
-          request,
-          params: { operationName },
-        },
-      }) => {
+      return ({ result, context }) => {
         // Run only if this is a Yoga request
         // the `request` might be missing when using graphql-ws for example
         // in which case throwing an error would abruptly close the socket
-        if (!request || !isDocumentNode(result)) {
+        if (!context.request || !context.params || !isDocumentNode(result)) {
           return;
         }
 
-        let numberOfOperations = 0;
+        const { params: { operationName } = {} } = context;
+        const operations = listOperations(result);
 
-        for (const definition of result.definitions) {
-          if (definition.kind === Kind.OPERATION_DEFINITION) {
-            if (definition.name?.value === operationName) {
+        if (operationName != null) {
+          for (const operation of operations) {
+            if (operation.name?.value === operationName) {
               return;
             }
-
-            numberOfOperations++;
-
-            if (operationName == null && numberOfOperations > 1) {
-              throw createGraphQLError(
-                'Could not determine what operation to execute. The query contains multiple operations, an operation name must be provided',
-                {
-                  extensions: {
-                    http: {
-                      status: 400,
-                    },
-                  },
-                },
-              );
-            }
           }
-        }
 
-        throw createGraphQLError(
-          numberOfOperations === 1
-            ? `Operation name "${operationName}" doesn't match the name defined in the query.`
-            : `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`,
-          {
-            extensions: {
-              http: {
-                status: 400,
+          throw createGraphQLError(
+            `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`,
+            {
+              extensions: {
+                http: {
+                  spec: true,
+                  status: 400,
+                },
               },
             },
-          },
-        );
+          );
+        }
+
+        operations.next();
+        // If there is no operation name, we should have only one operation
+        if (!operations.next().done) {
+          throw createGraphQLError(
+            `Could not determine what operation to execute. There is no operation "${operationName}" in the query.`,
+            {
+              extensions: {
+                http: {
+                  spec: true,
+                  status: 400,
+                },
+              },
+            },
+          );
+        }
       };
     },
   };
@@ -220,4 +215,12 @@ function extendedTypeof(
 
 function isObject(val: unknown): val is Record<PropertyKey, unknown> {
   return extendedTypeof(val) === 'object';
+}
+
+function* listOperations(document: DocumentNode) {
+  for (const definition of document.definitions) {
+    if (definition.kind === Kind.OPERATION_DEFINITION) {
+      yield definition;
+    }
+  }
 }
