@@ -34,6 +34,11 @@ export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig
     graphql_yoga_http_duration?: boolean | string | ReturnType<typeof createHistogram>;
   };
 
+  labels?: {
+    method?: boolean;
+    statusCode?: boolean;
+  };
+
   /**
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
