@@ -31,11 +31,21 @@ export {
 
 export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig & {
   metrics: {
+    /**
+     * Tracks the duration of HTTP requests. It reports the time spent to
+     * process each incoming request as an histogram
+     */
     graphql_yoga_http_duration?: boolean | string | ReturnType<typeof createHistogram>;
   };
 
   labels?: {
+    /**
+     * The HTTP method of the request
+     */
     method?: boolean;
+    /**
+     * The status code of the response
+     */
     statusCode?: boolean;
   };
 
