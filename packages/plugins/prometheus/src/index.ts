@@ -53,6 +53,10 @@ export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig
      * The status code of the response
      */
     statusCode?: boolean;
+    /**
+     * The url of the HTTP request
+     */
+    url?: boolean;
   };
 
   /**
@@ -71,13 +75,14 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     'graphql_yoga_http_duration',
     {
       help: 'Time spent on HTTP connection',
-      labelNames: ['operationName', 'operationType', 'method', 'statusCode'],
+      labelNames: ['operationName', 'operationType', 'method', 'statusCode', 'url'],
     },
     (params, { request, response }) => ({
       method: request.method,
       statusCode: response.status,
       operationType: params.operationType || 'unknown',
       operationName: params.operationName || 'Anonymous',
+      url: request.url,
     }),
   );
 
