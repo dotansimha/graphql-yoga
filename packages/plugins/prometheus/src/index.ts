@@ -110,7 +110,7 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request);
       if (start) {
-        const duration = Date.now() - start;
+        const duration = (Date.now() - start) / 1000;
         const params = paramsByRequest.get(request);
         httpHistogram?.histogram.observe(
           httpHistogram.fillLabelsFn(params || {}, {
