@@ -33,9 +33,15 @@ export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig
   metrics: {
     /**
      * Tracks the duration of HTTP requests. It reports the time spent to
-     * process each incoming request as an histogram
+     * process each incoming request as an histogram.
+     *
+     * You can pass multiple type of values:
+     *  - boolean: Disable or Enable the metric with default configuration
+     *  - string: Enable the metric with custom name
+     *  - number[]: Enable the metric with custom buckets
+     *  - ReturnType<typeof createHistogram>: Enable the metric with custom configuration
      */
-    graphql_yoga_http_duration?: boolean | string | ReturnType<typeof createHistogram>;
+    graphql_yoga_http_duration?: boolean | string | number[] | ReturnType<typeof createHistogram>;
   };
 
   labels?: {
