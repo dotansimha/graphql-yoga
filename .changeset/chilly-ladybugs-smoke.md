@@ -16,7 +16,7 @@ export const serveConfig = defineConfig({
       ...pluginCtx,
 
       // Enable all available metrics
-
+-     http: true
 -     requestSummary: true,
 -     parse: true,
 -     validate: true,
@@ -31,6 +31,7 @@ export const serveConfig = defineConfig({
       // Warning: enabling resolvers level metrics will introduce significant overhead
 -     resolvers: true,
 +     metrics: {
++       graphql_yoga_http_duration: true,
 +       graphql_envelop_request_time_summary: true,
 +       graphql_envelop_phase_parse: true,
 +       graphql_envelop_phase_validate: true,
