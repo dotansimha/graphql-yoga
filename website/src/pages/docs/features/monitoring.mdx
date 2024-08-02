@@ -77,6 +77,7 @@ corresponding key in the `metric` option object to `true`. You can also provide 
 customize the metric name, or an object to provide more options by using `createHistogram`,
 `createCounter` and `createSummary` (see
 [`siimon/prom-client` documentation](https://github.com/siimon/prom-client#custom-metrics)).
+Histogram metrics can be passed an array of numbers to configure buckets.
 
 Each metric also expose a set of labels. All labels are exposed by default but can be separately
 disabled by setting the corresponding key in `labels` option object to `false`.
