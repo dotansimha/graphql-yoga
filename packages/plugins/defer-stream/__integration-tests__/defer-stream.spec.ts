@@ -252,25 +252,23 @@ describe('fetch-multipart-graphql', () => {
             `,
           }),
           onNext(next) {
-            expect(next).toMatchInlineSnapshot(`
-[
-  {
-    "data": {},
-    "hasNext": true,
-  },
-  {
-    "hasNext": false,
-    "incremental": [
-      {
-        "data": {
-          "a": "a",
-        },
-        "path": [],
-      },
-    ],
-  },
-]
-`);
+            expect(next).toEqual([
+              {
+                data: {},
+                hasNext: true,
+              },
+              {
+                hasNext: false,
+                incremental: [
+                  {
+                    data: {
+                      a: 'a',
+                    },
+                    path: [],
+                  },
+                ],
+              },
+            ]);
           },
           onError(err) {
             reject(err);
