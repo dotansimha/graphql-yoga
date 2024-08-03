@@ -105,19 +105,20 @@ describe('Defer/Stream', () => {
     const finalText = await response.text();
 
     expect(finalText).toMatchInlineSnapshot(`
-      "---
-      Content-Type: application/json; charset=utf-8
-      Content-Length: 26
+"
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 26
 
-      {"data":{},"hasNext":true}
-      ---
-      Content-Type: application/json; charset=utf-8
-      Content-Length: 74
+{"data":{},"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 74
 
-      {"incremental":[{"data":{"goodbye":"goodbye"},"path":[]}],"hasNext":false}
-      -----
-      "
-    `);
+{"incremental":[{"data":{"goodbye":"goodbye"},"path":[]}],"hasNext":false}
+-----
+"
+`);
   });
 
   it('should execute on stream directive', async () => {
@@ -140,7 +141,8 @@ describe('Defer/Stream', () => {
     const finalText = await response.text();
 
     expect(finalText).toMatchInlineSnapshot(`
-"---
+"
+---
 Content-Type: application/json; charset=utf-8
 Content-Length: 44
 

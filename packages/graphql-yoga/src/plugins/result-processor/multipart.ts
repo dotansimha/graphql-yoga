@@ -34,6 +34,7 @@ export function processMultipartResult(result: ResultProcessorInput, fetchAPI: F
           },
         };
       }
+      controller.enqueue(textEncoder.encode('\r\n'));
       controller.enqueue(textEncoder.encode(`---`));
     },
     async pull(controller) {

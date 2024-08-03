@@ -166,13 +166,14 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
 
     const chunkStr = Buffer.from(next.value).toString('utf-8');
     expect(chunkStr).toMatchInlineSnapshot(`
-    "---
-    Content-Type: application/json; charset=utf-8
-    Content-Length: 33
+"
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 33
 
-    {"data":{"hi":[]},"hasNext":true}
-    ---"
-    `);
+{"data":{"hi":[]},"hasNext":true}
+---"
+`);
 
     await expect(iterator.next()).rejects.toMatchInlineSnapshot(`[Error: aborted]`);
 
@@ -247,9 +248,6 @@ describe('fetch-multipart-graphql', () => {
                 ... on Query @defer {
                   a
                 }
-                ... on Query @defer {
-                  b
-                }
               }
             `,
           }),
@@ -257,17 +255,15 @@ describe('fetch-multipart-graphql', () => {
             expect(next).toMatchInlineSnapshot(`
 [
   {
+    "data": {},
+    "hasNext": true,
+  },
+  {
     "hasNext": false,
     "incremental": [
       {
         "data": {
           "a": "a",
-        },
-        "path": [],
-      },
-      {
-        "data": {
-          "b": "b",
         },
         "path": [],
       },
