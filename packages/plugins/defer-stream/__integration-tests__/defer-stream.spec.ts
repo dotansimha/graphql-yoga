@@ -1,6 +1,7 @@
 import { createServer, get, IncomingMessage } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
+import fetchMultipart from 'fetch-multipart-graphql';
 import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js';
@@ -193,4 +194,102 @@ it('memory/cleanup leak by source that never publishes a value', async () => {
       });
     });
   }
+});
+
+describe('fetch-multipart-graphql', () => {
+  it('execute defer operation', async () => {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            a: String
+            b: String
+          }
+        `,
+        resolvers: {
+          Query: {
+            a: async () => {
+              return 'a';
+            },
+            b: async () => {
+              return 'b';
+            },
+          },
+        },
+      }),
+      plugins: [useDeferStream()],
+    });
+
+    const server = createServer(yoga);
+
+    try {
+      await new Promise<void>(resolve => {
+        server.listen(() => {
+          resolve();
+        });
+      });
+
+      const port = (server.address() as AddressInfo)?.port ?? null;
+      if (port === null) {
+        throw new Error('Missing port...');
+      }
+
+      await new Promise<void>((resolve, reject) => {
+        fetchMultipart(`http://localhost:${port}/graphql`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            accept: 'multipart/mixed',
+          },
+          body: JSON.stringify({
+            query: /* GraphQL */ `
+              query {
+                ... on Query @defer {
+                  a
+                }
+                ... on Query @defer {
+                  b
+                }
+              }
+            `,
+          }),
+          onNext(next) {
+            expect(next).toMatchInlineSnapshot(`
+[
+  {
+    "hasNext": false,
+    "incremental": [
+      {
+        "data": {
+          "a": "a",
+        },
+        "path": [],
+      },
+      {
+        "data": {
+          "b": "b",
+        },
+        "path": [],
+      },
+    ],
+  },
+]
+`);
+          },
+          onError(err) {
+            reject(err);
+          },
+          onComplete() {
+            resolve();
+          },
+        });
+      });
+    } finally {
+      await new Promise<void>(res => {
+        server.close(() => {
+          res();
+        });
+      });
+    }
+  });
 });
