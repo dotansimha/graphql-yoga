@@ -1,5 +1,19 @@
 # graphql-yoga
 
+## 5.6.3
+
+### Patch Changes
+
+- [#3400](https://github.com/dotansimha/graphql-yoga/pull/3400)
+  [`0866c1b`](https://github.com/dotansimha/graphql-yoga/commit/0866c1be8868eb891a0a62e36c9270d87f205330)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Restores compatibility with
+  [RFC1341: The Multipart Content-Type](https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html) by
+  including preceding `\r\n` for initial boundary delimiter when using the multipart response
+  protocol.
+
+  This makes Yoga compatible with libraries that strictly follow the response protocol, such as
+  [fetch-multipart-graphql](https://github.com/relay-tools/fetch-multipart-graphql).
+
 ## 5.6.2
 
 ### Patch Changes

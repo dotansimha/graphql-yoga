@@ -1,5 +1,7 @@
 # @graphql-yoga/apollo-link
 
+## 3.6.3
+
 ## 3.6.2
 
 ## 3.6.1
