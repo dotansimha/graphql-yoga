@@ -55,5 +55,15 @@ export function useDeferStream<
       addValidationRule(DeferStreamDirectiveOnRootFieldRule);
       addValidationRule(StreamDirectiveOnListFieldRule);
     },
+    onExecute({ args }) {
+      // @ts-expect-error we don't have this typing in envelop
+      args.deduplicateDefers = false;
+      // @ts-expect-error we don't have this typing in envelop
+      args.sendIncrementalErrorsAsNull = true;
+      // @ts-expect-error we don't have this typing in envelop
+      args.sendPathAndLabelOnIncremental = true;
+      // @ts-expect-error we don't have this typing in envelop
+      args.errorWithIncrementalSubscription = false;
+    },
   };
 }
