@@ -8,6 +8,9 @@ import {
   createSummary,
   PrometheusTracingPluginConfig as EnvelopPrometheusTracingPluginConfig,
   FillLabelsFnParams,
+  getCounterFromConfig,
+  getHistogramFromConfig,
+  getSummaryFromConfig,
   HistogramAndLabels,
   SummaryAndLabels,
   usePrometheus as useEnvelopPrometheus,
@@ -21,63 +24,67 @@ export {
   FillLabelsFnParams,
   HistogramAndLabels,
   SummaryAndLabels,
+  getHistogramFromConfig,
+  getCounterFromConfig,
+  getSummaryFromConfig,
 };
 
-export interface PrometheusTracingPluginConfig extends EnvelopPrometheusTracingPluginConfig {
-  http?: boolean | string | ReturnType<typeof createHistogram>;
+export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig & {
+  metrics: {
+    /**
+     * Tracks the duration of HTTP requests. It reports the time spent to
+     * process each incoming request as an histogram.
+     *
+     * You can pass multiple type of values:
+     *  - boolean: Disable or Enable the metric with default configuration
+     *  - string: Enable the metric with custom name
+     *  - number[]: Enable the metric with custom buckets
+     *  - ReturnType<typeof createHistogram>: Enable the metric with custom configuration
+     */
+    graphql_yoga_http_duration?: boolean | string | number[] | ReturnType<typeof createHistogram>;
+  };
+
+  labels?: {
+    /**
+     * The HTTP method of the request
+     */
+    method?: boolean;
+    /**
+     * The status code of the response
+     */
+    statusCode?: boolean;
+    /**
+     * The url of the HTTP request
+     */
+    url?: boolean;
+  };
 
   /**
    * The endpoint to serve metrics exposed by this plugin.
    * Defaults to "/metrics".
    */
   endpoint?: string | boolean;
-}
+};
 
 export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics';
   const registry = options.registry || defaultRegistry;
-  let httpHistogram: ReturnType<typeof createHistogram> | undefined;
 
-  function labelExists(label: string) {
-    if ((options.labels as Record<string, boolean>)?.[label] == null) {
-      return true;
-    }
-    return (options.labels as Record<string, boolean>)[label];
-  }
-
-  if (options.http) {
-    const labelNames = ['method', 'statusCode'];
-    if (labelExists('operationName')) {
-      labelNames.push('operationName');
-    }
-    if (labelExists('operationType')) {
-      labelNames.push('operationType');
-    }
-    httpHistogram =
-      typeof options.http === 'object'
-        ? options.http
-        : createHistogram({
-            registry,
-            histogram: {
-              name: typeof options.http === 'string' ? options.http : 'graphql_yoga_http_duration',
-              help: 'Time spent on HTTP connection',
-              labelNames,
-            },
-            fillLabelsFn(params, { request, response }) {
-              const labels: Record<string, string> = {
-                method: request.method,
-                statusCode: response.status,
-              };
-              if (labelExists('operationType') && params.operationType) {
-                labels.operationType = params.operationType;
-              }
-              if (labelExists('operationName')) {
-                labels.operationName = params.operationName || 'Anonymous';
-              }
-              return labels;
-            },
-          });
-  }
+  const httpHistogram = getHistogramFromConfig<PrometheusTracingPluginConfig['metrics']>(
+    options,
+    'graphql_yoga_http_duration',
+    {
+      help: 'Time spent on HTTP connection',
+      labelNames: ['operationName', 'operationType', 'method', 'statusCode', 'url'],
+    },
+    (params, { request, response }) => ({
+      method: request.method,
+      statusCode: response.status,
+      operationType: params.operationType || 'unknown',
+      operationName: params.operationName || 'Anonymous',
+      url: request.url,
+    }),
+  );
 
   const startByRequest = new WeakMap<Request, number>();
   const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>();
@@ -114,7 +121,7 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request);
       if (start) {
-        const duration = Date.now() - start;
+        const duration = (Date.now() - start) / 1000;
         const params = paramsByRequest.get(request);
         httpHistogram?.histogram.observe(
           httpHistogram.fillLabelsFn(params || {}, {
