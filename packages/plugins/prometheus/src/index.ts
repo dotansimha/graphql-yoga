@@ -29,8 +29,30 @@ export {
   getSummaryFromConfig,
 };
 
-export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig & {
-  metrics: {
+export type PrometheusTracingPluginConfig = Omit<
+  EnvelopPrometheusTracingPluginConfig,
+  'metrics'
+> & {
+  /**
+   * The Prometheus metrics to report.
+   *
+   * By default, the following metrics are enabled:
+   *
+   * - `graphql_envelop_deprecated_field`
+   * - `graphql_envelop_request`
+   * - `graphql_envelop_request_duration`
+   * - `graphql_envelop_request_time_summary`
+   * - `graphql_envelop_phase_parse`
+   * - `graphql_envelop_phase_validate`
+   * - `graphql_envelop_phase_context`
+   * - `graphql_envelop_error_result`
+   * - `graphql_envelop_phase_execute`
+   * - `graphql_envelop_phase_subscribe`
+   * - `graphql_envelop_schema_change`
+   * - `graphql_yoga_http_duration`
+   *
+   */
+  metrics?: EnvelopPrometheusTracingPluginConfig['metrics'] & {
     /**
      * Tracks the duration of HTTP requests. It reports the time spent to
      * process each incoming request as an histogram.
@@ -66,12 +88,37 @@ export type PrometheusTracingPluginConfig = EnvelopPrometheusTracingPluginConfig
   endpoint?: string | boolean;
 };
 
+const DEFAULT_METRICS_CONFIG: PrometheusTracingPluginConfig['metrics'] = {
+  graphql_envelop_deprecated_field: true,
+  graphql_envelop_request: true,
+  graphql_envelop_request_duration: true,
+  graphql_envelop_request_time_summary: true,
+  graphql_envelop_phase_parse: true,
+  graphql_envelop_phase_validate: true,
+  graphql_envelop_phase_context: true,
+  graphql_envelop_error_result: true,
+  graphql_envelop_execute_resolver: false,
+  graphql_envelop_phase_execute: true,
+  graphql_envelop_phase_subscribe: true,
+  graphql_envelop_schema_change: true,
+  graphql_yoga_http_duration: true,
+};
+
 export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   const endpoint = options.endpoint || '/metrics';
   const registry = options.registry || defaultRegistry;
+  const resolvedOptions: EnvelopPrometheusTracingPluginConfig = {
+    ...options,
+    metrics: {
+      ...DEFAULT_METRICS_CONFIG,
+      ...options.metrics,
+    },
+  };
 
-  const httpHistogram = getHistogramFromConfig<PrometheusTracingPluginConfig['metrics']>(
-    options,
+  const httpHistogram = getHistogramFromConfig<
+    NonNullable<PrometheusTracingPluginConfig['metrics']>
+  >(
+    resolvedOptions,
     'graphql_yoga_http_duration',
     {
       help: 'Time spent on HTTP connection',
@@ -91,7 +138,7 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
 
   return {
     onPluginInit({ addPlugin }) {
-      addPlugin(useEnvelopPrometheus({ ...options, registry }) as Plugin);
+      addPlugin(useEnvelopPrometheus({ ...resolvedOptions, registry }) as Plugin);
     },
     onRequest({ request, url, fetchAPI, endResponse }) {
       startByRequest.set(request, Date.now());

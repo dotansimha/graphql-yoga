@@ -18,6 +18,51 @@ describe('Prometheus', () => {
   afterEach(() => {
     registry.clear();
   });
+
+  it('should have default configs for the plugin metrics', async () => {
+    const yoga = createYoga({
+      schema,
+      plugins: [
+        usePrometheus({
+          registry,
+        }),
+      ],
+    });
+    const result = await yoga.fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-test': 'test',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query TestProm {
+            hello
+          }
+        `,
+      }),
+    });
+    await result.text();
+    const metrics = await registry.metrics();
+
+    // enabled by default
+    expect(metrics).toContain('# TYPE graphql_yoga_http_duration histogram');
+    expect(metrics).toContain('# TYPE graphql_envelop_phase_parse histogram');
+    expect(metrics).toContain('# TYPE graphql_envelop_phase_validate histogram');
+    expect(metrics).toContain('# TYPE graphql_envelop_phase_context histogram');
+    expect(metrics).toContain('# TYPE graphql_envelop_phase_execute histogram');
+    expect(metrics).toContain('# TYPE graphql_envelop_phase_subscribe histogram');
+    expect(metrics).toContain('# TYPE graphql_envelop_request_duration histogram');
+    expect(metrics).toContain('# TYPE graphql_envelop_request_time_summary summary');
+    expect(metrics).toContain('# TYPE graphql_envelop_error_result counter');
+    expect(metrics).toContain('# TYPE graphql_envelop_request counter');
+    expect(metrics).toContain('# TYPE graphql_envelop_deprecated_field counter');
+    expect(metrics).toContain('# TYPE graphql_envelop_schema_change counter');
+
+    // disabled by default
+    expect(metrics).not.toContain('graphql_envelop_execute_resolver');
+  });
+
   it('http flag should work', async () => {
     const yoga = createYoga({
       schema,
