@@ -35,27 +35,26 @@ const getEnveloped = envelop({
     // ... other plugins ...
     usePrometheus({
       endpoint: '/metrics', // optional, default is `/metrics`, you can disable it by setting it to `false` if registry is configured in "push" mode
-        usePrometheus({
-        // all metrics are disabled by default, please opt-in to the metrics you wish to get
-        metrics: {
-          graphql_envelop_request_time_summary: true,
-          graphql_envelop_phase_parse: true,
-          graphql_envelop_phase_validate: true,
-          graphql_envelop_phase_context: true,
-          graphql_envelop_phase_execute: true,
-          graphql_envelop_phase_subscribe: true,
-          graphql_envelop_error_result: true,
-          graphql_envelop_deprecated_field: true,
-          graphql_envelop_request_duration: true,
-          graphql_envelop_schema_change: true,
-          graphql_envelop_request: true,
+      // Optional, see default values below
+      metrics: {
+        // By default, these are the metrics that are enabled:
+        graphql_envelop_request_time_summary: true,
+        graphql_envelop_phase_parse: true,
+        graphql_envelop_phase_validate: true,
+        graphql_envelop_phase_context: true,
+        graphql_envelop_phase_execute: true,
+        graphql_envelop_phase_subscribe: true,
+        graphql_envelop_error_result: true,
+        graphql_envelop_deprecated_field: true,
+        graphql_envelop_request_duration: true,
+        graphql_envelop_schema_change: true,
+        graphql_envelop_request: true,
+        graphql_yoga_http_duration: true,
 
-          // Warning: enabling resolvers level metrics will introduce significant overhead
-          graphql_envelop_execute_resolver: true
-        },
-
-        resolversWhitelist: ['Mutation.*', 'Query.user'] // reports metrics for these resolvers, leave `undefined` to report all fields
-      }),
+        // This metric is disabled by default.
+        // Warning: enabling resolvers level metrics will introduce significant overhead
+        graphql_envelop_execute_resolver: false
+      }
     })
   ]
 })
@@ -84,6 +83,8 @@ disabled by setting the corresponding key in `labels` option object to `false`.
 
 ### `graphql_yoga_http_duration`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the duration of incoming (downstream) HTTP requests. It reports the time spent to
 process each incoming request as a
 [histogram](https://prometheus.io/docs/concepts/metric_types/#histogram).
@@ -97,8 +98,6 @@ You can use labels to have a better understanding of the requests and group them
 filter is to include only `statusCode` with `200` value and `method` with `POST` (the default method
 for GraphQL requests, but it can also be `GET` depending on your client setup) value to get
 execution time of successful GraphQL requests only.
-
-To enable this metric, set the `http` option to `true`.
 
 #### Labels
 
@@ -134,6 +133,8 @@ graphql_yoga_http_duration_count{method="GET",statusCode="200",operationName="An
 ```
 
 ### `graphql_envelop_phase_parse`
+
+> ✅ This metric is enabled by default.
 
 This metric tracks the duration of the `parse` phase of the GraphQL execution. It reports the time
 spent parsing the incoming GraphQL operation.
@@ -174,6 +175,8 @@ graphql_envelop_phase_parse_count{operationName="Anonymous",operationType="query
 
 ### `graphql_envelop_phase_validate`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the duration of the `validate` phase of the GraphQL execution. It reports the
 time spent validating the incoming GraphQL operation.
 
@@ -209,6 +212,8 @@ graphql_envelop_phase_validate_count{operationName="Anonymous",operationType="qu
 
 ### `graphql_envelop_phase_context`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the duration of the `context` phase of the GraphQL execution. It reports the time
 spent building the context object that will be passed to the executors.
 
@@ -243,6 +248,8 @@ graphql_envelop_phase_context_count{operationName="Anonymous",operationType="que
 ```
 
 ### `graphql_envelop_phase_execute`
+
+> ✅ This metric is enabled by default.
 
 This metric tracks the duration of the `execute` phase of the GraphQL execution. It reports the time
 spent actually resolving the response of the incoming operation. This includes the gathering of all
@@ -282,6 +289,8 @@ graphql_envelop_phase_execute_count{operationName="Anonymous",operationType="que
 
 ### `graphql_envelop_phase_subscribe`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the duration of the `subscribe` phase of the GraphQL execution. It reports the
 time spent initiating a subscription (which doesn't include actually sending the first response).
 
@@ -317,6 +326,8 @@ graphql_envelop_phase_subscribe_count{operationName="Anonymous",operationType="s
 
 ### `graphql_envelop_request_duration`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the duration of the complete GraphQL operation execution.
 
 It is reported as a [histogram](https://prometheus.io/docs/concepts/metric_types/#histogram).
@@ -351,6 +362,8 @@ graphql_envelop_request_duration_count{operationName="Anonymous",operationType="
 
 ### `graphql_envelop_request_time_summary`
 
+> ✅ This metric is enabled by default.
+
 This metric provides a summary of the time spent on the GraphQL operation execution.
 
 It reports the same timing than
@@ -382,6 +395,8 @@ graphql_envelop_request_time_summary_count{operationName="Anonymous",operationTy
 
 ### `graphql_envelop_error_result`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the number of errors that occurred returned by the GraphQL execution. It counts
 all errors found in the final response, but it also includes errors from other GraphQL processing
 phases (parsing, validation and context building).
@@ -410,6 +425,8 @@ graphql_envelop_error_result{operationName="Anonymous",operationType="query",pat
 
 ### `graphql_envelop_request`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the number of GraphQL operations executed. It counts all operations, either
 failed or successful, including subscriptions.
 
@@ -432,6 +449,8 @@ graphql_envelop_request{operationName="Anonymous",operationType="query"} 1
 
 ### `graphql_envelop_deprecated_field`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the number of deprecated fields used in the GraphQL operation.
 
 #### Labels
@@ -453,6 +472,8 @@ graphql_envelop_deprecated_field{operationName="Anonymous",operationType="query"
 
 ### `graphql_envelop_schema_change`
 
+> ✅ This metric is enabled by default.
+
 This metric tracks the number of schema changes that have occurred since the gateway started.
 
 If you are using a plugin that modifies the schema on the fly, be aware that this metric will also
@@ -472,6 +493,8 @@ graphql_envelop_schema_change 1
 ```
 
 ### `graphql_envelop_execute_resolver`
+
+> ❌ This metric is disabled by default.
 
 > **Caution**: Enabling resolvers level metrics will introduce significant overhead.
 >
@@ -573,21 +596,22 @@ const getEnveloped = envelop({
     useEngine({ parse, validate, specifiedRules, execute, subscribe }),
     // ... other plugins ...
     usePrometheus({
-      // all optional, and by default, all set to false, please opt-in to the metrics you wish to get
-      parse: createHistogram({
-        registry: registry // make sure to add your custom registry, if you are not using the default one
-        histogram: new Histogram({
-          name: 'my_custom_name',
-          help: 'HELP ME',
-          labelNames: ['opText'] as const,
-        }),
-        fillLabelsFn: params => {
-          // if you wish to fill your `labels` with metadata, you can use the params in order to get access to things like DocumentNode, operationName, operationType, `error` (for error metrics) and `info` (for resolvers metrics)
-          return {
-            opText: print(params.document)
+      metrics: {
+        graphql_envelop_phase_parse: createHistogram({
+          registry: registry // make sure to add your custom registry, if you are not using the default one
+          histogram: new Histogram({
+            name: 'my_custom_name',
+            help: 'HELP ME',
+            labelNames: ['opText'] as const,
+          }),
+          fillLabelsFn: params => {
+            // if you wish to fill your `labels` with metadata, you can use the params in order to get access to things like DocumentNode, operationName, operationType, `error` (for error metrics) and `info` (for resolvers metrics)
+            return {
+              opText: print(params.document)
+            }
           }
-        }
-      })
+        })
+      }
     })
   ]
 })
@@ -610,8 +634,8 @@ function usePrometheusWithRegistry() {
   registry.clear()
 
   return usePrometheus({
-    registry,
-    ...
+    registry
+    // ...
   })
 }
 ```
