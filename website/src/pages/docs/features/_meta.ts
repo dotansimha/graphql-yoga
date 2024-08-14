@@ -20,9 +20,9 @@ export default {
   'sofa-api': 'REST API',
   cookies: 'Cookies',
   'apollo-federation': 'Apollo Federation',
-  'envelop-plugins': 'Plugins',
   testing: 'Testing',
   jwt: 'JWT',
   'landing-page': 'Landing Page',
   'request-customization': 'Request Customization',
+  'envelop-plugins': 'Custom Plugins',
 };
