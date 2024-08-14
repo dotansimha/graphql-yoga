@@ -1,5 +1,98 @@
 # @graphql-yoga/plugin-prometheus
 
+## 6.0.0
+
+### Major Changes
+
+- [#3391](https://github.com/dotansimha/graphql-yoga/pull/3391)
+  [`0788d8a`](https://github.com/dotansimha/graphql-yoga/commit/0788d8ab90642a87af0623cfacfdb85aa9f38500)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - **Breaking Change:** Rename all metrics
+  options to their actual metric name to avoid confusion.
+
+  All metric options have been moved under a mandatory `metrics` key, and the name of each options
+  have been renamed to match the default metric name.
+
+  The plugin option argument is also now mandatory.
+
+  ```diff
+  export const serveConfig = defineConfig({
+    plugins: pluginCtx => [
+      usePrometheus({
+        ...pluginCtx,
+
+        // Enable all available metrics
+  -     http: true
+  -     requestSummary: true,
+  -     parse: true,
+  -     validate: true,
+  -     contextBuilding: true,
+  -     execute: true,
+  -     subscribe: true,
+  -     errors: true,
+  -     deprecatedFields: true,
+  -     requestTotalDuration: true,
+  -     schemaChangeCount: true,
+
+        // Warning: enabling resolvers level metrics will introduce significant overhead
+  -     resolvers: true,
+  +     metrics: {
+  +       graphql_yoga_http_duration: true,
+  +       graphql_envelop_request_time_summary: true,
+  +       graphql_envelop_phase_parse: true,
+  +       graphql_envelop_phase_validate: true,
+  +       graphql_envelop_phase_context: true,
+  +       graphql_envelop_phase_execute: true,
+  +       graphql_envelop_phase_subscribe: true,
+  +       graphql_envelop_error_result: true,
+  +       graphql_envelop_deprecated_field: true,
+  +       graphql_envelop_request_duration: true,
+  +       graphql_envelop_schema_change: true,
+
+          // Warning: enabling resolvers level metrics will introduce significant overhead
+  +       graphql_envelop_execute_resolver: true,
+  +     }
+      })
+    ]
+  })
+  ```
+
+- [#3408](https://github.com/dotansimha/graphql-yoga/pull/3408)
+  [`88393b3`](https://github.com/dotansimha/graphql-yoga/commit/88393b3fae602c969ce99a0075439e1322c896d3)
+  Thanks [@dotansimha](https://github.com/dotansimha)! - By default, the following metrics are now
+  enabled:
+
+  - `graphql_envelop_deprecated_field`
+  - `graphql_envelop_request`
+  - `graphql_envelop_request_duration`
+  - `graphql_envelop_request_time_summary`
+  - `graphql_envelop_phase_parse`
+  - `graphql_envelop_phase_validate`
+  - `graphql_envelop_phase_context`
+  - `graphql_envelop_error_result`
+  - `graphql_envelop_phase_execute`
+  - `graphql_envelop_phase_subscribe`
+  - `graphql_envelop_schema_change`
+  - `graphql_yoga_http_duration`
+
+### Minor Changes
+
+- [#3391](https://github.com/dotansimha/graphql-yoga/pull/3391)
+  [`0788d8a`](https://github.com/dotansimha/graphql-yoga/commit/0788d8ab90642a87af0623cfacfdb85aa9f38500)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Add missing labels `path` and `phase`
+  of `graphql_envelop_error_result` metric to the configuration.
+
+  Add missing labels `method` and `statusCode` of `graphql_yoga_http_duration` metric to the
+  configuration.
+
+### Patch Changes
+
+- [#3391](https://github.com/dotansimha/graphql-yoga/pull/3391)
+  [`0788d8a`](https://github.com/dotansimha/graphql-yoga/commit/0788d8ab90642a87af0623cfacfdb85aa9f38500)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+  - Updated dependency
+    [`@envelop/prometheus@11.0.0` ↗︎](https://www.npmjs.com/package/@envelop/prometheus/v/11.0.0)
+    (from `^10.0.0`, in `dependencies`)
+
 ## 5.3.3
 
 ### Patch Changes
