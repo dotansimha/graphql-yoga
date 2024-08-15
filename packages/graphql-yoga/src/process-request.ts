@@ -1,14 +1,16 @@
 import { getOperationAST } from 'graphql';
 import { GetEnvelopedFn } from '@envelop/core';
 import { ExecutionArgs } from '@graphql-tools/executor';
+import { ServerAdapterInitialContext } from '@whatwg-node/server';
 import { OnResultProcess, ResultProcessor, ResultProcessorInput } from './plugins/types.js';
 import { FetchAPI, GraphQLParams } from './types.js';
 
-export async function processResult({
+export async function processResult<TServerContext>({
   request,
   result,
   fetchAPI,
   onResultProcessHooks,
+  serverContext,
 }: {
   request: Request;
   result: ResultProcessorInput;
@@ -16,7 +18,8 @@ export async function processResult({
   /**
    * Response Hooks
    */
-  onResultProcessHooks: OnResultProcess[];
+  onResultProcessHooks: OnResultProcess<TServerContext>[];
+  serverContext: TServerContext & ServerAdapterInitialContext;
 }) {
   let resultProcessor: ResultProcessor | undefined;
 
@@ -36,6 +39,7 @@ export async function processResult({
         resultProcessor = newResultProcessor;
         acceptedMediaType = newAcceptedMimeType;
       },
+      serverContext,
     });
   }
 

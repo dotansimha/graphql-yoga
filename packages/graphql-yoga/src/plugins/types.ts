@@ -4,9 +4,11 @@ import {
   OnExecuteHook,
   OnSubscribeHook,
   PromiseOrValue,
+  RegisterContextErrorHandler,
+  SetSchemaFn,
 } from '@envelop/core';
 import { ExecutionResult } from '@graphql-tools/utils';
-import { ServerAdapterInitialContext, ServerAdapterPlugin } from '@whatwg-node/server';
+import { ServerAdapterPlugin, type ServerAdapterInitialContext } from '@whatwg-node/server';
 import { YogaServer } from '../server.js';
 import {
   FetchAPI,
@@ -34,6 +36,10 @@ export type Plugin<
      * Return a OnSubscribeHookResult for hooking into phase after the subscribe function has been called.
      */
     onSubscribe?: OnSubscribeHook<YogaInitialContext & PluginContext & TUserContext>;
+    /**
+     * Invoked when a plugin is initialized.
+     */
+    onPluginInit?: OnPluginInitHook<YogaInitialContext & PluginContext & TUserContext>;
   } & {
     /**
      * Use this hook with your own risk. It is still experimental and may change in the future.
@@ -54,7 +60,12 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onResultProcess?: OnResultProcess;
+    onExecutionResult?: OnExecutionResultHook<TServerContext>;
+    /**
+     * Use this hook with your own risk. It is still experimental and may change in the future.
+     * @internal
+     */
+    onResultProcess?: OnResultProcess<TServerContext>;
   };
 
 export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
@@ -64,18 +75,6 @@ export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
 export type OnYogaInitEventPayload<TServerContext extends Record<string, any>> = {
   yoga: YogaServer<TServerContext, any>;
 };
-
-export type OnRequestHook<TServerContext> = (
-  payload: OnRequestEventPayload<TServerContext>,
-) => PromiseOrValue<void>;
-
-export interface OnRequestEventPayload<TServerContext> {
-  request: Request;
-  serverContext: TServerContext & ServerAdapterInitialContext;
-  fetchAPI: FetchAPI;
-  endResponse(response: Response): void;
-  url: URL;
-}
 
 export type OnRequestParseHook<TServerContext> = (
   payload: OnRequestParseEventPayload<TServerContext>,
@@ -116,7 +115,9 @@ export interface OnParamsEventPayload {
   fetchAPI: FetchAPI;
 }
 
-export type OnResultProcess = (payload: OnResultProcessEventPayload) => PromiseOrValue<void>;
+export type OnResultProcess<TServerContext> = (
+  payload: OnResultProcessEventPayload<TServerContext>,
+) => PromiseOrValue<void>;
 
 export type ExecutionResultWithSerializer<TData = any, TExtensions = any> = ExecutionResult<
   TData,
@@ -124,6 +125,19 @@ export type ExecutionResultWithSerializer<TData = any, TExtensions = any> = Exec
 > & {
   stringify?: (result: ExecutionResult<TData, TExtensions>) => string;
 };
+
+export type OnExecutionResultHook<TServerContext> = (
+  payload: OnExecutionResultEventPayload<TServerContext>,
+) => PromiseOrValue<void>;
+
+export interface OnExecutionResultEventPayload<TServerContext> {
+  request: Request;
+  result: ExecutionResultWithSerializer | AsyncIterable<ExecutionResultWithSerializer> | undefined;
+  setResult(
+    result: ExecutionResultWithSerializer | AsyncIterable<ExecutionResultWithSerializer>,
+  ): void;
+  context: TServerContext & ServerAdapterInitialContext & YogaInitialContext;
+}
 
 export type ResultProcessorInput =
   | MaybeArray<ExecutionResultWithSerializer>
@@ -135,11 +149,41 @@ export type ResultProcessor = (
   acceptedMediaType: string,
 ) => PromiseOrValue<Response>;
 
-export interface OnResultProcessEventPayload {
+export interface OnResultProcessEventPayload<TServerContext> {
   request: Request;
   result: ResultProcessorInput;
   setResult(result: ResultProcessorInput): void;
   resultProcessor?: ResultProcessor;
   acceptableMediaTypes: string[];
   setResultProcessor(resultProcessor: ResultProcessor, acceptedMediaType: string): void;
+  serverContext: TServerContext & ServerAdapterInitialContext;
 }
+
+/**
+ * Payload forwarded to the onPluginInit hook.
+ */
+export type OnPluginInitEventPayload<PluginContext extends Record<string, any>> = {
+  /**
+   * Register a new plugin.
+   */
+  addPlugin: (newPlugin: Plugin<PluginContext>) => void;
+  /**
+   * A list of all currently active plugins.
+   */
+  plugins: Plugin<PluginContext>[];
+  /**
+   * Set the GraphQL schema.
+   */
+  setSchema: SetSchemaFn;
+  /**
+   * Register an error handler used for context creation.
+   */
+  registerContextErrorHandler: RegisterContextErrorHandler;
+};
+
+/**
+ * Invoked when a plugin is initialized.
+ */
+export type OnPluginInitHook<ContextType extends Record<string, any>> = (
+  options: OnPluginInitEventPayload<ContextType>,
+) => void;

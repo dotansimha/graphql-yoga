@@ -43,6 +43,7 @@ import { useHTTPValidationError } from './plugins/request-validation/use-http-va
 import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js';
 import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js';
 import {
+  OnExecutionResultHook,
   OnParamsHook,
   OnRequestParseDoneHook,
   OnRequestParseHook,
@@ -140,8 +141,10 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
    */
   plugins?:
     | Array<
+        | Plugin<TUserContext & TServerContext & YogaInitialContext>
+        | Plugin
         // eslint-disable-next-line @typescript-eslint/ban-types
-        Plugin<TUserContext & TServerContext & YogaInitialContext> | Plugin | {}
+        | {}
       >
     | undefined;
 
@@ -206,11 +209,12 @@ export class YogaServer<
   public readonly graphqlEndpoint: string;
   public fetchAPI: FetchAPI;
   protected plugins: Array<
-    Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext>
+    Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext, TUserContext>
   >;
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
   private onParamsHooks: OnParamsHook[];
-  private onResultProcessHooks: OnResultProcess[];
+  private onExecutionResultHooks: OnExecutionResultHook<TServerContext>[];
+  private onResultProcessHooks: OnResultProcess<TServerContext>[];
   private maskedErrorsOpts: YogaMaskedErrorOpts | null;
   private id: string;
 
@@ -339,20 +343,23 @@ export class YogaServer<
       }),
       // Middlewares after the GraphQL execution
       useResultProcessors(),
-      useErrorHandling((error, request) => {
-        const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+      useErrorHandling(
+        (error, request, serverContext: TServerContext & ServerAdapterInitialContext) => {
+          const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
-        const result = {
-          errors,
-        };
+          const result = {
+            errors,
+          };
 
-        return processResult({
-          request,
-          result,
-          fetchAPI: this.fetchAPI,
-          onResultProcessHooks: this.onResultProcessHooks,
-        });
-      }),
+          return processResult({
+            request,
+            result,
+            fetchAPI: this.fetchAPI,
+            onResultProcessHooks: this.onResultProcessHooks,
+            serverContext,
+          });
+        },
+      ),
 
       ...(options?.plugins ?? []),
       // To make sure those are called at the end
@@ -424,6 +431,7 @@ export class YogaServer<
 
     this.onRequestParseHooks = [];
     this.onParamsHooks = [];
+    this.onExecutionResultHooks = [];
     this.onResultProcessHooks = [];
     for (const plugin of this.plugins) {
       if (plugin) {
@@ -437,6 +445,9 @@ export class YogaServer<
         }
         if (plugin.onParams) {
           this.onParamsHooks.push(plugin.onParams);
+        }
+        if (plugin.onExecutionResult) {
+          this.onExecutionResultHooks.push(plugin.onExecutionResult);
         }
         if (plugin.onResultProcess) {
           this.onResultProcessHooks.push(plugin.onResultProcess);
@@ -457,9 +468,9 @@ export class YogaServer<
     },
     serverContext: TServerContext,
   ) {
+    let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
+    let context = serverContext as TServerContext & YogaInitialContext;
     try {
-      let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
-
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({
           params,
@@ -485,12 +496,12 @@ export class YogaServer<
                 params,
               };
 
-        const initialContext = Object.assign(
+        context = Object.assign(
           batched ? Object.create(serverContext) : serverContext,
           additionalContext,
         );
 
-        const enveloped = this.getEnveloped(initialContext);
+        const enveloped = this.getEnveloped(context);
 
         this.logger.debug(`Processing GraphQL Parameters`);
         result = await processGraphQLParams({
@@ -521,17 +532,25 @@ export class YogaServer<
           },
         );
       }
-
-      return result;
     } catch (error) {
       const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
-      const result: ExecutionResult = {
+      result = {
         errors,
       };
-
-      return result;
     }
+
+    for (const onExecutionResult of this.onExecutionResultHooks) {
+      await onExecutionResult({
+        result,
+        setResult(newResult) {
+          result = newResult;
+        },
+        request,
+        context,
+      });
+    }
+    return result;
   }
 
   handle: ServerAdapterRequestHandler<TServerContext> = async (
@@ -609,6 +628,7 @@ export class YogaServer<
       result,
       fetchAPI: this.fetchAPI,
       onResultProcessHooks: this.onResultProcessHooks,
+      serverContext,
     });
   };
 }
