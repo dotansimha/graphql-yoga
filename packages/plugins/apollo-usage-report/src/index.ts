@@ -1,4 +1,3 @@
-import type { Report as ReportType } from 'apollo-reporting-protobuf';
 import { printSchema, stripIgnoredCharacters } from 'graphql';
 import {
   isAsyncIterable,
@@ -7,6 +6,7 @@ import {
   YogaLogger,
   type FetchAPI,
 } from 'graphql-yoga';
+import { Report } from '@apollo/usage-reporting-protobuf';
 import {
   ApolloInlineGraphqlTraceContext,
   ApolloInlineRequestTraceContext,
@@ -101,9 +101,10 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           }
         },
 
-        onEnveloped({ context: contextMaybe }) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const context = contextMaybe!;
+        onEnveloped({ context }) {
+          if (!context) {
+            return;
+          }
           const ctx = ctxForReq.get(context.request)?.traces.get(context);
           if (!ctx) {
             logger.debug('operation tracing context not found, this operation will not be traced.');
@@ -132,7 +133,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
 
           // Each operation in a batched request can belongs to a different schema.
           // Apollo doesn't allow to send batch queries for multiple schemas in the same batch
-          const tracesPerSchema: Record<string, ReportType['tracesPerQuery']> = {};
+          const tracesPerSchema: Record<string, Report['tracesPerQuery']> = {};
           for (const trace of reqCtx.traces.values()) {
             if (!trace.schemaId || !trace.operationKey) {
               throw new TypeError('Misformed trace, missing operation key or schema id');
@@ -177,7 +178,7 @@ async function sendTrace(
   logger: YogaLogger,
   { fetch }: FetchAPI,
   schemaId: string,
-  tracesPerQuery: ReportType['tracesPerQuery'],
+  tracesPerQuery: Report['tracesPerQuery'],
 ) {
   const {
     graphRef = getEnvVar('APOLLO_GRAPH_REF'),
@@ -186,11 +187,6 @@ async function sendTrace(
   } = options;
 
   try {
-    const ApolloReportingProtobuf = await import('apollo-reporting-protobuf');
-    let Report = ApolloReportingProtobuf.Report;
-    if (!Report && ApolloReportingProtobuf.default.Report) {
-      Report = ApolloReportingProtobuf.default.Report;
-    }
     const body = Report.encode({
       header: {
         graphRef,

@@ -43,6 +43,7 @@ import { useHTTPValidationError } from './plugins/request-validation/use-http-va
 import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js';
 import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js';
 import {
+  OnExecutionResultHook,
   OnParamsHook,
   OnRequestParseDoneHook,
   OnRequestParseHook,
@@ -212,6 +213,7 @@ export class YogaServer<
   >;
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
   private onParamsHooks: OnParamsHook[];
+  private onExecutionResultHooks: OnExecutionResultHook<TServerContext>[];
   private onResultProcessHooks: OnResultProcess<TServerContext>[];
   private maskedErrorsOpts: YogaMaskedErrorOpts | null;
   private id: string;
@@ -429,6 +431,7 @@ export class YogaServer<
 
     this.onRequestParseHooks = [];
     this.onParamsHooks = [];
+    this.onExecutionResultHooks = [];
     this.onResultProcessHooks = [];
     for (const plugin of this.plugins) {
       if (plugin) {
@@ -442,6 +445,9 @@ export class YogaServer<
         }
         if (plugin.onParams) {
           this.onParamsHooks.push(plugin.onParams);
+        }
+        if (plugin.onExecutionResult) {
+          this.onExecutionResultHooks.push(plugin.onExecutionResult);
         }
         if (plugin.onResultProcess) {
           this.onResultProcessHooks.push(plugin.onResultProcess);
@@ -462,9 +468,9 @@ export class YogaServer<
     },
     serverContext: TServerContext,
   ) {
+    let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
+    let context = serverContext as TServerContext & YogaInitialContext;
     try {
-      let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
-
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({
           params,
@@ -490,12 +496,12 @@ export class YogaServer<
                 params,
               };
 
-        const initialContext = Object.assign(
+        context = Object.assign(
           batched ? Object.create(serverContext) : serverContext,
           additionalContext,
         );
 
-        const enveloped = this.getEnveloped(initialContext);
+        const enveloped = this.getEnveloped(context);
 
         this.logger.debug(`Processing GraphQL Parameters`);
         result = await processGraphQLParams({
@@ -526,17 +532,25 @@ export class YogaServer<
           },
         );
       }
-
-      return result;
     } catch (error) {
       const errors = handleError(error, this.maskedErrorsOpts, this.logger);
 
-      const result: ExecutionResult = {
+      result = {
         errors,
       };
-
-      return result;
     }
+
+    for (const onExecutionResult of this.onExecutionResultHooks) {
+      await onExecutionResult({
+        result,
+        setResult(newResult) {
+          result = newResult;
+        },
+        request,
+        context,
+      });
+    }
+    return result;
   }
 
   handle: ServerAdapterRequestHandler<TServerContext> = async (

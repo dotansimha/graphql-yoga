@@ -1,5 +1,5 @@
-import { Trace } from 'apollo-reporting-protobuf';
 import { createGraphQLError, createSchema, createYoga } from 'graphql-yoga';
+import { Trace } from '@apollo/usage-reporting-protobuf';
 import { useApolloInlineTrace } from '../src/index.js';
 
 describe('Inline Trace', () => {
@@ -138,7 +138,6 @@ describe('Inline Trace', () => {
 
     const ftv1 = result?.extensions?.ftv1;
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
-
     expectTrace(trace);
     expect(trace.root?.error?.length).toBe(0);
 
@@ -300,8 +299,8 @@ describe('Inline Trace', () => {
     //
 
     const ftv1 = result?.extensions?.ftv1;
+    expect(ftv1).toBeDefined();
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
-
     expectTrace(trace);
     expectTraceNodeError(trace.root);
   });
@@ -329,6 +328,7 @@ describe('Inline Trace', () => {
     //
 
     const ftv1 = result?.extensions?.ftv1;
+    expect(ftv1).toBeDefined();
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);
@@ -358,6 +358,7 @@ describe('Inline Trace', () => {
     //
 
     const ftv1 = result?.extensions?.ftv1;
+    expect(ftv1).toBeDefined();
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);
@@ -396,6 +397,7 @@ describe('Inline Trace', () => {
     //
 
     const ftv1 = result?.extensions?.ftv1;
+    expect(ftv1).toBeDefined();
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);
@@ -435,6 +437,7 @@ describe('Inline Trace', () => {
     //
 
     const ftv1 = result?.extensions?.ftv1;
+    expect(ftv1).toBeDefined();
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);

@@ -60,6 +60,11 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
+    onExecutionResult?: OnExecutionResultHook<TServerContext>;
+    /**
+     * Use this hook with your own risk. It is still experimental and may change in the future.
+     * @internal
+     */
     onResultProcess?: OnResultProcess<TServerContext>;
   };
 
@@ -120,6 +125,19 @@ export type ExecutionResultWithSerializer<TData = any, TExtensions = any> = Exec
 > & {
   stringify?: (result: ExecutionResult<TData, TExtensions>) => string;
 };
+
+export type OnExecutionResultHook<TServerContext> = (
+  payload: OnExecutionResultEventPayload<TServerContext>,
+) => PromiseOrValue<void>;
+
+export interface OnExecutionResultEventPayload<TServerContext> {
+  request: Request;
+  result: ExecutionResultWithSerializer | AsyncIterable<ExecutionResultWithSerializer> | undefined;
+  setResult(
+    result: ExecutionResultWithSerializer | AsyncIterable<ExecutionResultWithSerializer>,
+  ): void;
+  context: TServerContext & ServerAdapterInitialContext & YogaInitialContext;
+}
 
 export type ResultProcessorInput =
   | MaybeArray<ExecutionResultWithSerializer>
