@@ -69,20 +69,13 @@ export function useApolloInlineTrace(
     onPluginInit({ addPlugin }) {
       addPlugin(instrumentation);
       addPlugin({
-        onExecutionResult({ request, result, setResult }) {
+        onExecutionResult({ request, result, context, setResult }) {
           // TODO: should handle streaming results? how?
           if (!result || isAsyncIterable(result)) {
             return;
           }
-          if (!result.extensions) {
-            return;
-          }
-          const { ftv1_context, ...extensions } = result.extensions;
-          if (!ftv1_context) {
-            return;
-          }
 
-          if (extensions?.ftv1 !== undefined) {
+          if (result.extensions?.ftv1 !== undefined) {
             throw new Error('The `ftv1` extension is already present');
           }
 
@@ -91,7 +84,7 @@ export function useApolloInlineTrace(
             return;
           }
 
-          const ctx = reqCtx.traces.get(ftv1_context as YogaInitialContext);
+          const ctx = reqCtx.traces.get(context);
           if (!ctx) {
             return;
           }
@@ -101,7 +94,7 @@ export function useApolloInlineTrace(
           setResult({
             ...result,
             extensions: {
-              ...extensions,
+              ...result.extensions,
               ftv1: base64,
             },
           });
@@ -209,7 +202,7 @@ export function useApolloInstrumentation(options: ApolloInlineTracePluginOptions
       };
       reqCtx.traces.set(context, ctx);
     },
-    onExecutionResult({ context, request, result, setResult }) {
+    onExecutionResult({ context, request, result }) {
       // TODO: should handle streaming results? how?
       if (result == null || isAsyncIterable(result)) {
         return;
@@ -226,13 +219,6 @@ export function useApolloInstrumentation(options: ApolloInlineTracePluginOptions
       }
       ctx.trace.durationNs = hrTimeToDurationInNanos(process.hrtime(reqCtx.startHrTime));
       ctx.trace.endTime = nowTimestamp();
-      setResult({
-        ...result,
-        extensions: {
-          ...result.extensions,
-          ftv1_context: context,
-        },
-      });
     },
     onResultProcess({ request, result }) {
       // TODO: should handle streaming results? how?
