@@ -4,5 +4,8 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "deno.enablePaths": ["examples/deno", "examples/netlify-edge/netlify/edge-functions"],
-  "deno.importMap": "examples/netlify-edge/.netlify/edge-functions-import-map.json"
+  "deno.importMap": "examples/netlify-edge/.netlify/edge-functions-import-map.json",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

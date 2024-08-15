@@ -1,6 +1,5 @@
 import { PromiseOrValue } from '@envelop/core';
 import { YogaLogger } from '@graphql-yoga/logger';
-import type { ServerAdapterInitialContext } from '@whatwg-node/server';
 import graphiqlHTML from '../graphiql-html.js';
 import { FetchAPI } from '../types.js';
 import { Plugin } from './types.js';
@@ -155,11 +154,11 @@ export interface GraphiQLPluginConfig<TServerContext> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useGraphiQL<TServerContext extends Record<string, any>>(
-  config: GraphiQLPluginConfig<TServerContext & ServerAdapterInitialContext>,
+  config: GraphiQLPluginConfig<TServerContext>,
   // eslint-disable-next-line @typescript-eslint/ban-types
-): Plugin<{}, TServerContext & ServerAdapterInitialContext> {
+): Plugin<{}, TServerContext> {
   const logger = config.logger ?? console;
-  let graphiqlOptionsFactory: GraphiQLOptionsFactory<TServerContext & ServerAdapterInitialContext>;
+  let graphiqlOptionsFactory: GraphiQLOptionsFactory<TServerContext>;
   if (typeof config?.options === 'function') {
     graphiqlOptionsFactory = config?.options;
   } else if (typeof config?.options === 'object') {
@@ -191,7 +190,7 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
         logger.debug(`Rendering GraphiQL`);
         const graphiqlOptions = await graphiqlOptionsFactory(
           request,
-          serverContext as TServerContext & ServerAdapterInitialContext,
+          serverContext as TServerContext,
         );
 
         if (graphiqlOptions) {

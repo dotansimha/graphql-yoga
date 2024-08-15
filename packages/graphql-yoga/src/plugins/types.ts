@@ -24,7 +24,7 @@ export type Plugin<
   // eslint-disable-next-line @typescript-eslint/ban-types
   TServerContext extends Record<string, any> = {},
   // eslint-disable-next-line @typescript-eslint/ban-types
-  TUserContext extends Record<string, any> = {},
+  TUserContext = {},
 > = EnvelopPlugin<YogaInitialContext & PluginContext> &
   ServerAdapterPlugin<TServerContext> & {
     /**
@@ -45,12 +45,12 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onYogaInit?: OnYogaInitHook<TServerContext, TUserContext>;
+    onYogaInit?: OnYogaInitHook<TServerContext>;
     /**
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onRequestParse?: OnRequestParseHook<TServerContext & ServerAdapterInitialContext>;
+    onRequestParse?: OnRequestParseHook<TServerContext>;
     /**
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
@@ -60,32 +60,16 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onResultProcess?: OnResultProcess<TServerContext & ServerAdapterInitialContext>;
+    onResultProcess?: OnResultProcess<TServerContext>;
   };
 
-export type OnYogaInitHook<
-  TServerContext extends Record<string, any>,
-  TUserContext extends Record<string, any>,
-> = (payload: OnYogaInitEventPayload<TServerContext, TUserContext>) => void;
+export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
+  payload: OnYogaInitEventPayload<TServerContext>,
+) => void;
 
-export type OnYogaInitEventPayload<
-  TServerContext extends Record<string, any>,
-  TUserContext extends Record<string, any>,
-> = {
-  yoga: YogaServer<TServerContext, TUserContext>;
+export type OnYogaInitEventPayload<TServerContext extends Record<string, any>> = {
+  yoga: YogaServer<TServerContext, any>;
 };
-
-export type OnRequestHook<TServerContext> = (
-  payload: OnRequestEventPayload<TServerContext>,
-) => PromiseOrValue<void>;
-
-export interface OnRequestEventPayload<TServerContext> {
-  request: Request;
-  serverContext: TServerContext & ServerAdapterInitialContext;
-  fetchAPI: FetchAPI;
-  endResponse(response: Response): void;
-  url: URL;
-}
 
 export type OnRequestParseHook<TServerContext> = (
   payload: OnRequestParseEventPayload<TServerContext>,
@@ -154,17 +138,7 @@ export interface OnResultProcessEventPayload<TServerContext> {
   resultProcessor?: ResultProcessor;
   acceptableMediaTypes: string[];
   setResultProcessor(resultProcessor: ResultProcessor, acceptedMediaType: string): void;
-  serverContext: TServerContext;
-}
-
-export type OnResponseHook<TServerContext> = (
-  payload: OnResponseEventPayload<TServerContext>,
-) => PromiseOrValue<void>;
-
-export interface OnResponseEventPayload<TServerContext> {
-  request: Request;
-  serverContext: TServerContext | undefined;
-  response: Response;
+  serverContext: TServerContext & ServerAdapterInitialContext;
 }
 
 /**

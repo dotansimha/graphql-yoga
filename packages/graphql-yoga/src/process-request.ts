@@ -1,6 +1,7 @@
 import { getOperationAST } from 'graphql';
 import { GetEnvelopedFn } from '@envelop/core';
 import { ExecutionArgs } from '@graphql-tools/executor';
+import { ServerAdapterInitialContext } from '@whatwg-node/server';
 import { OnResultProcess, ResultProcessor, ResultProcessorInput } from './plugins/types.js';
 import { FetchAPI, GraphQLParams } from './types.js';
 
@@ -18,7 +19,7 @@ export async function processResult<TServerContext>({
    * Response Hooks
    */
   onResultProcessHooks: OnResultProcess<TServerContext>[];
-  serverContext: TServerContext;
+  serverContext: TServerContext & ServerAdapterInitialContext;
 }) {
   let resultProcessor: ResultProcessor | undefined;
 

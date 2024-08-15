@@ -121,7 +121,7 @@ export abstract class AbstractYogaDriver<
 
     const schema = this.mergeConditionalSchema<'express'>(conditionalSchema, options.schema);
 
-    const yoga = createYoga<YogaDriverServerContext<'express'>, never>({
+    const yoga = createYoga<YogaDriverServerContext<'express'>>({
       ...options,
       schema,
       graphqlEndpoint: options.path,
@@ -152,7 +152,7 @@ export abstract class AbstractYogaDriver<
 
     const schema = this.mergeConditionalSchema<'fastify'>(conditionalSchema, options.schema);
 
-    const yoga = createYoga<YogaDriverServerContext<'fastify'>, never>({
+    const yoga = createYoga<YogaDriverServerContext<'fastify'>>({
       ...options,
       schema,
       graphqlEndpoint: options.path,
