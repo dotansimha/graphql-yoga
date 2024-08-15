@@ -1,5 +1,35 @@
 # graphql-yoga
 
+## 5.7.0
+
+### Minor Changes
+
+- [#3331](https://github.com/dotansimha/graphql-yoga/pull/3331)
+  [`5dae4ab`](https://github.com/dotansimha/graphql-yoga/commit/5dae4abeb6a4aa82f396a19d31d0155fe10bc752)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Expose server context in
+  `onResultProcessHook`. In particular, this gives access to the `waitUntil` method to cleanly
+  handle hanging promises.
+
+- [#3331](https://github.com/dotansimha/graphql-yoga/pull/3331)
+  [`5dae4ab`](https://github.com/dotansimha/graphql-yoga/commit/5dae4abeb6a4aa82f396a19d31d0155fe10bc752)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - New hook: onExecutionResult which is
+  triggered when an execution is done on the pipeline. If it is a batched operation, this is called
+  per each operation in the batch
+
+- [#3331](https://github.com/dotansimha/graphql-yoga/pull/3331)
+  [`5dae4ab`](https://github.com/dotansimha/graphql-yoga/commit/5dae4abeb6a4aa82f396a19d31d0155fe10bc752)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Expose the already existing `waitUntil`
+  method from the server context.
+
+### Patch Changes
+
+- [#3331](https://github.com/dotansimha/graphql-yoga/pull/3331)
+  [`5dae4ab`](https://github.com/dotansimha/graphql-yoga/commit/5dae4abeb6a4aa82f396a19d31d0155fe10bc752)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.44` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.44)
+    (from `^0.9.41`, in `dependencies`)
+
 ## 5.6.3
 
 ### Patch Changes
