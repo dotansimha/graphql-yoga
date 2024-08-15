@@ -1,23 +1,16 @@
 import { GraphQLSchema, isSchema } from 'graphql';
 import { PromiseOrValue } from '@envelop/core';
-import type { ServerAdapterInitialContext } from '@whatwg-node/server';
 import type { GraphQLSchemaWithContext, YogaInitialContext } from '../types.js';
 import type { Plugin } from './types.js';
 
 export type YogaSchemaDefinition<TServerContext, TUserContext> =
-  | PromiseOrValue<
-      GraphQLSchemaWithContext<
-        TServerContext & YogaInitialContext & ServerAdapterInitialContext & TUserContext
-      >
-    >
+  | PromiseOrValue<GraphQLSchemaWithContext<TServerContext & YogaInitialContext & TUserContext>>
   | ((
       context: TServerContext & {
         request: YogaInitialContext['request'];
-      } & ServerAdapterInitialContext,
+      },
     ) => PromiseOrValue<
-      GraphQLSchemaWithContext<
-        TServerContext & YogaInitialContext & TUserContext & ServerAdapterInitialContext
-      >
+      GraphQLSchemaWithContext<TServerContext & YogaInitialContext & TUserContext>
     >);
 
 export const useSchema = <
@@ -27,7 +20,7 @@ export const useSchema = <
   TUserContext = {},
 >(
   schemaDef?: YogaSchemaDefinition<TServerContext, TUserContext>,
-): Plugin<YogaInitialContext & TServerContext & ServerAdapterInitialContext> => {
+): Plugin<YogaInitialContext & TServerContext> => {
   if (schemaDef == null) {
     return {};
   }
@@ -64,7 +57,7 @@ export const useSchema = <
       return {
         async onRequestParseDone() {
           const schema = await schemaDef({
-            ...(serverContext as TServerContext & ServerAdapterInitialContext),
+            ...(serverContext as TServerContext),
             request,
           });
           schemaByRequest.set(request, schema);

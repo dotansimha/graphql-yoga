@@ -118,14 +118,14 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           ctx.schemaId = schemaId;
         },
 
-        onResultProcess(args) {
+        onResultProcess({ request, result, serverContext }) {
           // TODO: Handle async iterables ?
-          if (isAsyncIterable(args.result)) {
+          if (isAsyncIterable(result)) {
             logger.debug('async iterable results not implemented for now');
             return;
           }
 
-          const reqCtx = ctxForReq.get(args.request);
+          const reqCtx = ctxForReq.get(request);
           if (!reqCtx) {
             logger.debug('operation tracing context not found, this operation will not be traced.');
             return;
@@ -145,9 +145,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
 
           for (const schemaId in tracesPerSchema) {
             const tracesPerQuery = tracesPerSchema[schemaId];
-            args.serverContext.waitUntil(
-              sendTrace(options, logger, fetchAPI, schemaId, tracesPerQuery),
-            );
+            serverContext.waitUntil(sendTrace(options, logger, fetchAPI, schemaId, tracesPerQuery));
           }
         },
       });
