@@ -6,9 +6,7 @@ import type { Plugin } from './types.js';
 export type YogaSchemaDefinition<TServerContext, TUserContext> =
   | PromiseOrValue<GraphQLSchemaWithContext<TServerContext & YogaInitialContext & TUserContext>>
   | ((
-      context: TServerContext & {
-        request: YogaInitialContext['request'];
-      },
+      context: TServerContext & { request: YogaInitialContext['request'] },
     ) => PromiseOrValue<
       GraphQLSchemaWithContext<TServerContext & YogaInitialContext & TUserContext>
     >);
