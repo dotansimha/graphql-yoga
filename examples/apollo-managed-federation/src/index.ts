@@ -5,7 +5,6 @@ import { useApolloUsageReport } from '@graphql-yoga/plugin-apollo-usage-report';
 
 const yoga = createYoga({
   plugins: [useManagedFederation(), useApolloUsageReport()],
-  logging: 'debug',
 });
 
 const server = createServer(yoga);
