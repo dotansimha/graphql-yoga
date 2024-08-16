@@ -40,7 +40,7 @@ const yoga = createYoga({
 })
 
 const server = Bun.serve({
-  fetch: yoga
+  fetch: (request) => yoga(request)
 })
 
 console.info(
