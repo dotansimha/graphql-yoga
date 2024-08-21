@@ -66,7 +66,7 @@ const yoga = createYoga({
       ]
       // Configure where to look for the JWT token: in the headers, or cookies.
       // By default, the plugin will look for the token in the 'authorization' header only.
-      lookupLocations: [
+      tokenLookupLocations: [
         extractFromHeader({ name: 'authorization', prefix: 'Bearer' }),
       ],
       // Configure your token issuers/audience/algorithms verification options.
@@ -79,7 +79,7 @@ const yoga = createYoga({
       },
       // Configure context injection after the token is verified.
       // By default, the plugin will inject the token's payload into the context into the `jwt` field.
-      // You can pass an object: `{ fieldName: "myJwt" }` to change the field name.
+      // You can pass a string: `"myJwt"` to change the field name.
       extendContext: true,
       // The plugin can reject the request if the token is missing or invalid (doesn't pass JWT `verify` flow).
       // By default, the plugin will reject the request if the token is missing or invalid.
