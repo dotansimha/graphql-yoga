@@ -30,7 +30,7 @@ For a full step by step setup getting started, please follow this
 #### Installation
 
 ```sh npm2yarn
-npm i graphql-yoga graphql @graphql-yoga/hive
+npm i graphql-yoga graphql @graphql-hive/yoga
 ```
 
 #### Example
@@ -38,7 +38,7 @@ npm i graphql-yoga graphql @graphql-yoga/hive
 ```js filename="src/index.mjs"
 import { createServer } from 'node:http'
 import { createYoga } from 'graphql-yoga'
-import { createSupergraphSDLFetcher } from '@graphql-hive/client'
+import { createSupergraphSDLFetcher } from '@graphql-hive/yoga'
 
 const supergraphFetcher = createSupergraphSDLFetcher({
   key: env.HIVE_CDN_KEY,
