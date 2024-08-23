@@ -1,14 +1,14 @@
-import { explorerPlugin } from '@graphiql/plugin-explorer';
-import '@graphiql/plugin-explorer/dist/style.css';
+import React, { useMemo, useState } from 'react';
 import { GraphiQL, GraphiQLInterface, GraphiQLProps, GraphiQLProvider } from 'graphiql';
+import { DocumentNode, Kind, parse } from 'graphql';
+import { explorerPlugin } from '@graphiql/plugin-explorer';
 import { Fetcher, FetcherOpts, FetcherParams } from '@graphiql/toolkit';
 import { LoadFromUrlOptions, SubscriptionProtocol, UrlLoader } from '@graphql-tools/url-loader';
-import 'graphiql/graphiql.css';
-import { DocumentNode, Kind, parse } from 'graphql';
 import 'json-bigint-patch';
-import React, { useMemo, useState } from 'react';
 import { useUrlSearchParams } from 'use-url-search-params';
 import { YogaLogo } from './YogaLogo';
+import 'graphiql/graphiql.css';
+import '@graphiql/plugin-explorer/dist/style.css';
 import './styles.css';
 
 const getOperationWithFragments = (
