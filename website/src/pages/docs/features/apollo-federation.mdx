@@ -39,6 +39,7 @@ npm i graphql-yoga graphql @graphql-hive/yoga
 import { createServer } from 'node:http'
 import { createYoga } from 'graphql-yoga'
 import { createSupergraphSDLFetcher } from '@graphql-hive/yoga'
+import { getStitchedSchemaFromSupergraphSdl } from '@graphql-tools/federation'
 
 const supergraphFetcher = createSupergraphSDLFetcher({
   key: env.HIVE_CDN_KEY,
