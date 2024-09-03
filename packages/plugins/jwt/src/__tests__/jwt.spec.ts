@@ -45,7 +45,7 @@ I3OrgFkoqk03cpX4AL2GYC2ejytAqboL6pFTfmTgg2UtvKIeaTyF
 describe('jwt plugin', () => {
   test('incoming http request is reject when auth token is not present', async () => {
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
+      signingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
     });
     const response = await test.queryWithoutAuth();
     expect(response.status).toBe(401);
@@ -62,7 +62,7 @@ describe('jwt plugin', () => {
 
   test('should allow to continue if reject.missingToken is set to false', async () => {
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
+      signingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
       reject: {
         missingToken: false,
         invalidToken: true,
@@ -75,7 +75,7 @@ describe('jwt plugin', () => {
   test('any prefix is supported when strict prefix validation is not configured', async () => {
     const secret = 'topsecret';
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       tokenLookupLocations: [
         extractFromHeader({
           name: 'Authorization',
@@ -89,7 +89,7 @@ describe('jwt plugin', () => {
 
   test('incoming http has a token but prefix does not match or missing', async () => {
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
+      signingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
     });
     // does not match prefix
     let response = await test.queryWithAuth('Basic 123');
@@ -120,7 +120,7 @@ describe('jwt plugin', () => {
 
   test('token provided but jwt token is not valid for decoding', async () => {
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
+      signingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
     });
     const response = await test.queryWithAuth('Bearer BadJwt');
     expect(response.status).toBe(400);
@@ -137,7 +137,7 @@ describe('jwt plugin', () => {
 
   test('invalid token can be accepted when reject.invalidToken=false is set', async () => {
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
+      signingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
       reject: {
         invalidToken: false,
       },
@@ -149,7 +149,7 @@ describe('jwt plugin', () => {
   it('should not allow non matching issuer', async () => {
     const secret = 'topsecret';
     const server = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       tokenVerification: {
         issuer: ['http://yoga'],
       },
@@ -168,7 +168,7 @@ describe('jwt plugin', () => {
   it('should allow matching issuer', async () => {
     const secret = 'topsecret';
     const server = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       tokenVerification: {
         issuer: ['http://yoga'],
       },
@@ -182,7 +182,7 @@ describe('jwt plugin', () => {
   it('should not allow non matching audience', async () => {
     const secret = 'topsecret';
     const server = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       tokenVerification: {
         audience: 'my.app',
       },
@@ -203,7 +203,7 @@ describe('jwt plugin', () => {
   it('should allow matching audience', async () => {
     const secret = 'topsecret';
     const server = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       tokenVerification: {
         audience: 'my.app',
       },
@@ -234,7 +234,7 @@ describe('jwt plugin', () => {
 
     try {
       const server = createTestServer({
-        singingKeyProviders: [
+        signingKeyProviders: [
           createRemoteJwksSigningKeyProvider({
             jwksUri: `http://localhost:${(jwksServer.address() as any).port}`,
           }),
@@ -259,7 +259,7 @@ describe('jwt plugin', () => {
   it('should not accept token without algorithm', async () => {
     const secret = 'topsecret';
     const server = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
     });
 
     const response = await server.queryWithAuth(buildJWTWithoutAlg());
@@ -276,7 +276,7 @@ describe('jwt plugin', () => {
   test('valid token is injected to the GraphQL context', async () => {
     const secret = 'topsecret';
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
     });
     const token = buildJWT({ sub: '123', scopes: ['users.read'] }, { key: secret });
     const response = await test.queryWithAuth(token);
@@ -302,7 +302,7 @@ describe('jwt plugin', () => {
   test('valid token is injected to the GraphQL context (custom field)', async () => {
     const secret = 'topsecret';
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       extendContext: 'my_jwt',
     });
     const token = buildJWT({ sub: '123', scopes: ['users.read'] }, { key: secret });
@@ -329,7 +329,7 @@ describe('jwt plugin', () => {
   test('auth is passing when token is valid (HS256)', async () => {
     const secret = 'topsecret';
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
     });
     const token = buildJWT({ sub: '123' }, { key: secret });
     const response = await test.queryWithAuth(token);
@@ -353,7 +353,7 @@ describe('jwt plugin', () => {
 
   test('auth is passing when token is valid (RS256)', async () => {
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(JWKS_RSA512_PRIVATE_PEM)],
+      signingKeyProviders: [createInlineSigningKeyProvider(JWKS_RSA512_PRIVATE_PEM)],
     });
     const token = buildJWT({ sub: '123' }, { key: JWKS_RSA512_PRIVATE_PEM, algorithm: 'RS256' });
     const response = await test.queryWithAuth(token);
@@ -397,7 +397,7 @@ describe('jwt plugin', () => {
 
     try {
       const test = createTestServer({
-        singingKeyProviders: [
+        signingKeyProviders: [
           createRemoteJwksSigningKeyProvider({
             jwksUri: `http://localhost:${(jwksServer.address() as any).port}`,
           }),
@@ -438,7 +438,7 @@ describe('jwt plugin', () => {
 
     try {
       const test = createTestServer({
-        singingKeyProviders: [
+        signingKeyProviders: [
           // Remote, invalid
           createRemoteJwksSigningKeyProvider({
             jwksUri: `http://localhost:${(jwksServer.address() as any).port}`,
@@ -476,7 +476,7 @@ describe('jwt plugin', () => {
   test('should throw when lookup is configured for cookie but no cookie store available', async () => {
     const secret = 'topsecret';
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       tokenLookupLocations: [extractFromCookie({ name: 'auth' })],
     });
     const token = buildJWT({ sub: '123' }, { key: secret });
@@ -495,7 +495,7 @@ describe('jwt plugin', () => {
     const secret = 'topsecret';
     const test = createTestServer(
       {
-        singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+        signingKeyProviders: [createInlineSigningKeyProvider(secret)],
         tokenLookupLocations: [extractFromCookie({ name: 'auth' })],
       },
       [useCookies<any>()],
@@ -508,7 +508,7 @@ describe('jwt plugin', () => {
   test('custom getToken functiFailed to verify authentication token. Verifon', async () => {
     const secret = 'topsecret';
     const test = createTestServer({
-      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
       tokenLookupLocations: [
         async payload => {
           expect(payload.request).toBeDefined();
@@ -539,7 +539,7 @@ describe('jwt plugin', () => {
     const secret = 'topsecret';
     const test = createTestServer(
       {
-        singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+        signingKeyProviders: [createInlineSigningKeyProvider(secret)],
         tokenLookupLocations: [
           extractFromHeader({
             name: 'Authorization',

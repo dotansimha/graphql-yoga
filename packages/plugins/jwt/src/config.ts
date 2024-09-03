@@ -23,6 +23,10 @@ export type JwtPluginOptions = {
    * If the first provider fails to fetch the keys, the plugin will try the next provider in the list.
    *
    */
+  signingKeyProviders: AtleastOneItem<GetSigningKeyFunction>;
+  /**
+   * @deprecated: please use `signingKeyProviders` instead.
+   */
   singingKeyProviders: AtleastOneItem<GetSigningKeyFunction>;
   /**
    * List of locations to look for the token in the incoming request.
@@ -77,7 +81,12 @@ export type JwtPluginOptions = {
 };
 
 export function normalizeConfig(input: JwtPluginOptions) {
-  if (input.singingKeyProviders.length === 0) {
+  // TODO: remove this on next major version.
+  if (input.singingKeyProviders) {
+    input.signingKeyProviders = input.singingKeyProviders;
+  }
+
+  if (input.signingKeyProviders.length === 0) {
     throw new TypeError(
       'You must provide at least one signing key provider. Please verify your `singingKeyProviders` configuration.',
     );
@@ -102,7 +111,7 @@ export function normalizeConfig(input: JwtPluginOptions) {
   }
 
   return {
-    singingKeyProviders: input.singingKeyProviders,
+    singingKeyProviders: input.signingKeyProviders,
     tokenLookupLocations,
     tokenVerification: input.tokenVerification ?? {
       algorithms: ['RS256', 'HS256'],
