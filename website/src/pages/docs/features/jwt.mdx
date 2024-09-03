@@ -60,7 +60,7 @@ const yoga = createYoga({
   plugins: [
     useJWT({
       // Configure your signing providers: either a local signing-key or a remote JWKS are supported.
-      singingKeyProviders: [
+      signingKeyProviders: [
         createInlineSigningKeyProvider(signingKey),
         createRemoteJwksSigningKeyProvider({ jwksUri: 'https://example.com/.well-known/jwks.json' })
       ]
@@ -230,7 +230,7 @@ const yoga = createYoga({
   // ...
   plugins: [
     useJWT({
-      singingKeyProviders: [createInlineSigningKeyProvider(process.env.MY_JWT_SECRET)]
+      signingKeyProviders: [createInlineSigningKeyProvider(process.env.MY_JWT_SECRET)]
     })
   ]
 })
@@ -253,7 +253,7 @@ const yoga = createYoga({
   // ...
   plugins: [
     useJWT({
-      singingKeyProviders: [
+      signingKeyProviders: [
         createRemoteJwksSigningKeyProvider({
           jwksUri: 'https://example.com/.well-known/jwks.json'
         })
@@ -278,7 +278,7 @@ const yoga = createYoga({
   // ...
   plugins: [
     useJWT({
-      singingKeyProviders: [
+      signingKeyProviders: [
         // In case your remote provider is not available, the plugin will try use the inline provider.
         createRemoteJwksSigningKeyProvider({
           jwksUri: 'https://example.com/.well-known/jwks.json'
