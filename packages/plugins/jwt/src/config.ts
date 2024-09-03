@@ -27,7 +27,7 @@ export type JwtPluginOptions = {
   /**
    * @deprecated: please use `signingKeyProviders` instead.
    */
-  singingKeyProviders: AtleastOneItem<GetSigningKeyFunction>;
+  singingKeyProviders?: AtleastOneItem<GetSigningKeyFunction>;
   /**
    * List of locations to look for the token in the incoming request.
    *
