@@ -88,7 +88,7 @@ export function normalizeConfig(input: JwtPluginOptions) {
 
   if (input.signingKeyProviders.length === 0) {
     throw new TypeError(
-      'You must provide at least one signing key provider. Please verify your `singingKeyProviders` configuration.',
+      'You must provide at least one signing key provider. Please verify your `signingKeyProviders` configuration.',
     );
   }
 
@@ -111,7 +111,7 @@ export function normalizeConfig(input: JwtPluginOptions) {
   }
 
   return {
-    singingKeyProviders: input.signingKeyProviders,
+    signingKeyProviders: input.signingKeyProviders,
     tokenLookupLocations,
     tokenVerification: input.tokenVerification ?? {
       algorithms: ['RS256', 'HS256'],
