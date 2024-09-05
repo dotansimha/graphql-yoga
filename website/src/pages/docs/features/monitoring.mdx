@@ -25,14 +25,12 @@ npm i prom-client @graphql-yoga/plugin-prometheus
 You can then add the plugin to your GraphQL server:
 
 ```ts
-import { execute, parse, specifiedRules, subscribe, validate } from 'graphql'
-import { envelop, useEngine } from '@envelop/core'
-import { usePrometheus } from '@envelop/prometheus'
+import { createYoga } from 'graphql-yoga'
+import { usePrometheus } from '@graphql-yoga/plugin-prometheus'
 
-const getEnveloped = envelop({
+const yoga = createYoga({
   plugins: [
-    useEngine({ parse, validate, specifiedRules, execute, subscribe }),
-    // ... other plugins ...
+    schema: mySchema, // Provide your GraphQL schema
     usePrometheus({
       endpoint: '/metrics', // optional, default is `/metrics`, you can disable it by setting it to `false` if registry is configured in "push" mode
       // Optional, see default values below
@@ -57,6 +55,11 @@ const getEnveloped = envelop({
       }
     })
   ]
+})
+
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.log(`Server is running on http://localhost:4000/${server.graphqlEndpoint}`)
 })
 ```
 
