@@ -1,5 +1,103 @@
 ---
-description: 
+description: Set up GraphQL Code Generator and Server Preset in your project to enforce type-safety and runtime safety.
 ---
 
-# Set up GraphQL Code Generator
+# Set up GraphQL Code Generator and Server Preset
+
+In this section, you are going to set up [GraphQL Code Generator](https://the-guild.dev/graphql/codegen) with Server Preset in your project.
+This adds strong typing automatically, and reduces runtime error for your application.
+
+## Preparation
+
+First, let's install the required packages:
+
+```sh npm2yarn
+npm i -D --save-exact @graphql-codegen/cli@5.0.2 @eddeee888/gcg-typescript-resolver-files@0.10.4
+```
+
+- `@graphql-codegen/cli` is the main package for GraphQL Code Generator. It provides a CLI to generate code from your GraphQL schema.
+- `@eddeee888/gcg-typescript-resolver-files` is a GraphQL Code Generator preset, written specifically for GraphQL servers. It automatically generates TypeScript types and resolver files. It also runs statical analysis to ensure type-safety.
+
+So far, you've been keeping a lot of code together for simplicity. This new setup requires your project to be structured in a way that it is still maintainable at scale.
+Most noticable, schema type definitions and resolvers are separated into different files.
+
+Let's start by creating a new folder `src/graphql` and move the type definitions to a file called `schema.ts` under this folder:
+
+```ts filename="src/graphql/schema.ts"
+export const typeDefinitions = /* GraphQL */ `
+  type Query {
+    info: String!
+    feed: [Link!]!
+    comment(id: ID!): Comment
+  }
+
+  type Mutation {
+    postLink(url: String!, description: String!): Link!
+    postCommentOnLink(linkId: ID!, body: String!): Comment!
+  }
+
+  type Link {
+    id: ID!
+    description: String!
+    url: String!
+    comments: [Comment!]!
+  }
+
+  type Comment {
+    id: ID!
+    body: String!
+  }
+`;
+```
+
+Next, create a `codegen.ts` at the root of your project:
+
+```ts filename="codegen.ts"
+import type { CodegenConfig } from "@graphql-codegen/cli";
+import { defineConfig } from "@eddeee888/gcg-typescript-resolver-files";
+
+// 1.
+const config: CodegenConfig = {
+  schema: "src/graphql/schema.ts", // 2.
+  generates: {
+    "src/graphql": defineConfig({ // 3.
+      resolverGeneration: "minimal", // 4.
+    }),
+  },
+};
+export default config;
+```
+
+This file contains the configuration for GraphQL Code Generator. Let's break it down:
+
+1. The `config` variable tells GraphQL Code Generator what to generate.
+2. The `schema` field points to the schema file you just created.
+3. The `generates` field tells GraphQL Code Generator where to put the generated files. In this case, Server Preset will generate files under `src/graphql` (more on this later)
+4. The `resolverGeneration: "minimal"` config tells Server Preset to generate just the root-level resolvers, unless there are mappers (more on this later).
+
+Now, run the following command to generate the files:
+
+```sh npm2yarn
+npx graphql-codegen
+```
+
+You will see a new folder `src/graphql` created with the following files:
+
+```
+src/
+  graphql/
+    resolvers/
+      Mutation/
+        postCommentOnLink.ts
+        postLink.ts
+      Query/
+        comment.ts
+        feed.ts
+        info.ts
+    resolvers.generated.ts
+    schema.generated.graphqls
+    typeDefs.generated.ts
+    types.generated.ts
+```
+
+## Workflow
