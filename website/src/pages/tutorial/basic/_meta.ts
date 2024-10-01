@@ -8,8 +8,8 @@ export default {
   '06-adding-a-database': 'Adding a Database',
   '07-connecting-server-and-database': 'Connecting Server and Database',
   '08-graph-relations': 'Graph Relations',
-  '09-set-up-graphql-code-generator': 'Set up GraphQL Code Generator',
-  '10-error-handling': 'Error Handling',
-  '11-filtering-and-pagination': 'Filtering and Pagination',
+  '09-error-handling': 'Error Handling',
+  '10-filtering-and-pagination': 'Filtering and Pagination',
+  '11-setting-up-graphql-code-generator': 'Setting up GraphQL Code Generator',
   '12-summary': 'Summary',
 };
