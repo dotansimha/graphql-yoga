@@ -42,7 +42,7 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
   };
 
   const getSigningKey = async (kid?: string) => {
-    for (const provider of normalizedOptions.singingKeyProviders) {
+    for (const provider of normalizedOptions.signingKeyProviders) {
       try {
         const key = await provider(kid);
 
