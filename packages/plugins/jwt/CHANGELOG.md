@@ -1,5 +1,13 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.1.1
+
+### Patch Changes
+
+- [`367f266`](https://github.com/dotansimha/graphql-yoga/commit/367f266fd790bb173f91d234b0d702112be82333)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Fix typo of the option
+  `singingKeyProviders` => `signingKeyProviders`.
+
 ## 3.1.0
 
 ### Patch Changes
