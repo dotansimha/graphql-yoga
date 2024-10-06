@@ -14,10 +14,10 @@
     <div id="root"></div>
 
     <script type="module">
-      import * as yogaGraphiQL from './src/bundle.tsx';
+      import { renderYogaGraphiQL } from './src/bundle.tsx';
 
-      const container = window.document.querySelector('#root');
-      yogaGraphiQL.renderYogaGraphiQL(container, {
+      const container = document.getElementById('root');
+      renderYogaGraphiQL(container, {
         endpoint: '/graphql',
       });
     </script>
