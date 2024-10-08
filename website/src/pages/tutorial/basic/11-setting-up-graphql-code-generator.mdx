@@ -4,7 +4,7 @@ description:
   safety.
 ---
 
-import { Callout } from '@theguild/components'
+import { Callout, FileTree } from '@theguild/components'
 
 # Setting up GraphQL Code Generator and Server Preset
 
@@ -98,28 +98,34 @@ npx graphql-codegen
 
 You will see a new folder `src/schema` created with the following files:
 
-```
-src/
-  schema/
-    base/
-      resolvers/
-        Mutation/
-          postCommentOnLink.ts (1)
-          postLink.ts (1)
-        Query/
-          comment.ts (1)
-          feed.ts (1)
-          info.ts (1)
-      schema.graphql
-    resolvers.generated.ts (2)
-    schema.generated.graphqls (3)
-    typeDefs.generated.ts (4)
-    types.generated.ts (5)
-```
+<FileTree>
+  <FileTree.Folder defaultOpen name="src">
+    <FileTree.Folder defaultOpen name="schema">
+      <FileTree.Folder defaultOpen name="base">
+        <FileTree.Folder defaultOpen name="resolvers">
+          <FileTree.Folder defaultOpen name="Mutation">
+            <FileTree.File name="postCommentOnLink.ts" />
+            <FileTree.File name="postLink.ts" />
+          </FileTree.Folder>
+          <FileTree.Folder defaultOpen name="Query">
+            <FileTree.File name="comment.ts" />
+            <FileTree.File name="feed.ts" />
+            <FileTree.File name="info.ts" />
+          </FileTree.Folder>
+        </FileTree.Folder>
+        <FileTree.File name="schema.graphql" />
+      </FileTree.Folder>
+      <FileTree.File name="resolvers.generated.ts" />
+      <FileTree.File name="resolvers.generated.graphqls" />
+      <FileTree.File name="typeDefs.generated.ts" />
+      <FileTree.File name="types.generated.ts" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
 
 1. `Mutation/postCommentOnLink.ts`, `Mutation/postLink.ts`, `Query/comment.ts`, `Query/feed.ts` and
    `Query/info.ts` are the generated root-level resolvers.
-2. `resolvers.generated.ts` contains the resolvers map. All the generated resolvers (e.g.
+2. `resolvers.generated.ts` contains the resolvers map. All generated resolvers (e.g.
    `Query.comment`, `Mutation.postCommentOnLink`, etc.) are automatically imported into this file.
 3. `schema.generated.graphqls` contains the merged schema of your application. In this example,
    there is only one `schema.graphql` file. However, as the server grows, you can choose to break it
