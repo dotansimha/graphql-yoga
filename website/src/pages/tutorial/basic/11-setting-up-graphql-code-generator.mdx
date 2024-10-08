@@ -187,8 +187,18 @@ automatically inferred by the `NonNullable<QueryResolvers['feed']>` type!
 
 You may notice TypeScript may report an error that looks like this:
 
-```
-Property 'comments' is missing in type '{ id: number; createdAt: Date; description: string; url: string; }' but required in type 'Link'.
+```ts twoslash
+type Link = { id: number; createdAt: Date; description: string; url: string; comments: string[] }
+type QueryResolvers = {
+  feed: () => Promise<Link[]>
+}
+// ---cut---
+// @error: Property 'comments' is missing in type '{ id: number; createdAt: Date; description: string; url: string; }' but required in type 'Link'.
+export const feed: NonNullable<QueryResolvers['feed']> = async () => {
+  // ---cut-start---
+  return []
+  // ---cut-end---
+}
 ```
 
 This is because the generated types forces you to return objects that match schema types to avoid
