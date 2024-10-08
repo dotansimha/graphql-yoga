@@ -350,6 +350,28 @@ export const schema = createSchema({
   Preset](https://the-guild.dev/blog/scalable-apis-with-graphql-server-codegen-preset)
 </Callout>
 
+### Maintaining generated files
+
+The files with `.generated.` section are completely generated, and require no manual update or
+intervention. Every time you run codegen, these files change based on your schema or mappers
+changes. In other words, your schema and mappers are the source of truth, and the generated files
+are the derived output.
+
+For the reason above, it is recommended to _not_ commit these files to your version control, nor run
+your development tools (such as linting and formatting) on them to avoid noise and unncessary work.
+As long as you keep the generated files up-to-date with your schema and mappers, you can be sure
+typechecks work as expected.
+
+To ignore these generated files, add them to your tools' ignore file:
+
+```
+# .gitignore
+*.generated.*
+
+# .eslintignore
+*.generated.*
+```
+
 ## Summary
 
 In this section, you have set up GraphQL Code Generator with Server Preset in your project. This
