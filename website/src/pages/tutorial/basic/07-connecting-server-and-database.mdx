@@ -116,13 +116,15 @@ In `src/schema.ts`, update the `resolvers` object and change imports to look as 
 
 ```ts filename="src/schema.ts"
 import { createSchema } from 'graphql-yoga'
-import { type Link } from '@prisma/client'
+import type { Link } from '@prisma/client'
 import type { GraphQLContext } from './context'
 
 const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
-    feed: (parent: unknown, args: {}, context: GraphQLContext) => context.prisma.link.findMany()
+    feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
+      return context.prisma.link.findMany()
+    }
   },
   Link: {
     id: (parent: Link) => parent.id,

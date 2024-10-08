@@ -10,5 +10,6 @@ export default {
   '08-graph-relations': 'Graph Relations',
   '09-error-handling': 'Error Handling',
   '10-filtering-and-pagination': 'Filtering and Pagination',
-  '11-summary': 'Summary',
+  '11-setting-up-graphql-code-generator': 'Setting up GraphQL Code Generator',
+  '12-summary': 'Summary',
 };
