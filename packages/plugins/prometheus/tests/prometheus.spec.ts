@@ -1,6 +1,6 @@
 import { createSchema, createYoga } from 'graphql-yoga';
 import { register as registry } from 'prom-client';
-import { usePrometheus } from '@graphql-yoga/plugin-prometheus';
+import { createHistogram, usePrometheus } from '@graphql-yoga/plugin-prometheus';
 
 describe('Prometheus', () => {
   const schema = createSchema({
@@ -15,6 +15,7 @@ describe('Prometheus', () => {
       },
     },
   });
+
   afterEach(() => {
     registry.clear();
   });
@@ -97,6 +98,7 @@ describe('Prometheus', () => {
     expect(metrics).toContain('method="POST"');
     expect(metrics).toContain('statusCode="200"');
   });
+
   it('labels should be excluded', async () => {
     const yoga = createYoga({
       schema,
@@ -223,5 +225,97 @@ describe('Prometheus', () => {
     expect(metrics).toContain('method="POST"');
     expect(metrics).toContain('statusCode="400"');
     expect(metrics).toContain('operationName="TestProm"');
+  });
+
+  describe('when using a custom histogram', () => {
+    const request = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-test': 'test',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query TestProm {
+            hello
+          }
+        `,
+      }),
+    };
+
+    let config: ReturnType<typeof createConfig>;
+    const createConfig = () => ({
+      metrics: {
+        graphql_envelop_deprecated_field: false,
+        graphql_envelop_request: false,
+        graphql_envelop_request_duration: false,
+        graphql_envelop_request_time_summary: false,
+        graphql_envelop_phase_parse: false,
+        graphql_envelop_phase_validate: false,
+        graphql_envelop_phase_context: false,
+        graphql_envelop_error_result: false,
+        graphql_envelop_execute_resolver: false,
+        graphql_envelop_phase_execute: false,
+        graphql_envelop_phase_subscribe: false,
+        graphql_envelop_schema_change: false,
+        graphql_yoga_http_duration: createHistogram({
+          registry,
+          histogram: {
+            name: 'graphql_yoga_http_duration',
+            help: 'Time spent on HTTP connection',
+            labelNames: ['operation_name'],
+          },
+          fillLabelsFn: ({ operationName }, _rawContext) => ({
+            operation_name: operationName ?? 'Anonymous',
+          }),
+          shouldRecordFn: () => {
+            throw new Error('jest should be used to mock implementation');
+          },
+        }),
+      },
+      registry,
+    });
+
+    describe('and shouldRecordFn returns true', () => {
+      beforeEach(() => {
+        config = createConfig();
+        jest
+          .spyOn(config.metrics.graphql_yoga_http_duration, 'shouldRecordFn')
+          .mockReturnValue(true);
+      });
+
+      it('makes a metric observation', async () => {
+        const yoga = createYoga({
+          schema,
+          plugins: [usePrometheus(config)],
+        });
+        const result = await yoga.fetch('http://localhost:4000/graphql', request);
+        await result.text();
+        const metrics = await registry.metrics();
+        expect(metrics).toContain('graphql_yoga_http_duration_bucket');
+        expect(metrics).toContain('operation_name="TestProm"');
+      });
+    });
+
+    describe('and shouldRecordFn returns false', () => {
+      beforeEach(() => {
+        config = createConfig();
+        jest
+          .spyOn(config.metrics.graphql_yoga_http_duration, 'shouldRecordFn')
+          .mockReturnValue(false);
+      });
+
+      it('does not make a metric observation', async () => {
+        const yoga = createYoga({
+          schema,
+          plugins: [usePrometheus(config)],
+        });
+        const result = await yoga.fetch('http://localhost:4000/graphql', request);
+        await result.text();
+        const metrics = await registry.metrics();
+        expect(metrics).not.toContain('graphql_yoga_http_duration_bucket');
+        expect(metrics).not.toContain('operation_name="TestProm"');
+      });
+    });
   });
 });
