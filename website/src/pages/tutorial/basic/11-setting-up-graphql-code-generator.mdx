@@ -83,7 +83,7 @@ export default config
 This file contains the configuration for GraphQL Code Generator. Let's break it down:
 
 1. The `config` variable tells GraphQL Code Generator what to generate.
-2. The `schema` field points to the schema file you just created.
+2. The `schema` field points to the schema file you created.
 3. The `generates` field tells GraphQL Code Generator where to put the generated files. In this
    case, Server Preset will generate files under `src/schema`
 4. The `resolverGeneration: "minimal"` config tells Server Preset to generate just the root-level
@@ -129,8 +129,8 @@ You will see a new folder `src/schema` created with the following files:
    `Query.comment`, `Mutation.postCommentOnLink`, etc.) are automatically imported into this file.
 3. `schema.generated.graphqls` contains the merged schema of your application. In this example,
    there is only one `schema.graphql` file. However, as the server grows, you can choose to break it
-   up into multiple smaller modules, each with its own schema file e.g.
-   `src/schema/comment/schema.graphql`, `src/schema/link/schema.graphql`, etc.
+   up into smaller modules, each with its own schema file e.g. `src/schema/comment/schema.graphql`,
+   `src/schema/link/schema.graphql`, etc.
 4. `typeDefs.generated.ts` contains the generated type definitions. This is the AST representation
    of the schema that can be provided to the GraphQL server.
 5. `types.generated.ts` file contains the generated types.
@@ -359,16 +359,19 @@ are the derived output.
 
 For the reason above, it is recommended to _not_ commit these files to your version control, nor run
 your development tools (such as linting and formatting) on them to avoid noise and unncessary work.
-As long as you keep the generated files up-to-date with your schema and mappers, you can be sure
-typechecks work as expected.
+As long as you keep the generated files up-to-date with your schema and mappers, typecheck should
+work correctly.
 
 To ignore these generated files, add them to your tools' ignore file:
 
-```
+```sh
 # .gitignore
 *.generated.*
 
 # .eslintignore
+*.generated.*
+
+# .prettierignore
 *.generated.*
 ```
 
