@@ -400,10 +400,10 @@ query {
 
 ## Customize error masking
 
-For advanced use-cases e.g. when using GraphQL Yoga as a Gateway, you might want to automatically expose
-errors that are resolved from the subgraphs as you asume these already take care of hiding sensitive
-information. In this case, you can customize the error masking behavior by providing a custom
-`maskError` function.
+For advanced use-cases e.g. when using GraphQL Yoga as a Gateway, you might want to automatically
+expose errors that are resolved from the subgraphs as you asume these already take care of hiding
+sensitive information. In this case, you can customize the error masking behavior by providing a
+custom `maskError` function.
 
 Use the default `maskError` function as a fallback for all other errors.
 

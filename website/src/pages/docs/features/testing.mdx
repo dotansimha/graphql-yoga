@@ -85,7 +85,7 @@ const yoga = createYoga({ schema })
 
 const executor = buildHTTPExecutor({
   fetch: yoga.fetch,
-  endpoint: `http://yoga/graphql`,
+  endpoint: `http://yoga/graphql`
 })
 
 const result = await executor({
@@ -102,7 +102,6 @@ console.assert(
   result.data?.greetings === 'Hello World!',
   `Expected 'Hello World!' but got ${result.data.greetings}`
 )
-
 ```
 
 ### Subscription Operations
