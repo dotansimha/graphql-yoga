@@ -215,7 +215,7 @@ describe('browser', () => {
       // If you wanna run tests with open browser
       // set your PUPPETEER_HEADLESS env to "false"
       headless: process.env.PUPPETEER_HEADLESS !== 'false',
-      args: ['--incognito'],
+      args: ['--incognito', '--no-sandbox', '--disable-setuid-sandbox'],
     });
   });
   beforeEach(async () => {
