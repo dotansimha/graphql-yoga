@@ -134,10 +134,16 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           // Each operation in a batched request can belongs to a different schema.
           // Apollo doesn't allow to send batch queries for multiple schemas in the same batch
           const tracesPerSchema: Record<string, Report['tracesPerQuery']> = {};
+          const { clientName, clientVersion } = getClientInfo(request);
+
           for (const trace of reqCtx.traces.values()) {
             if (!trace.schemaId || !trace.operationKey) {
               throw new TypeError('Misformed trace, missing operation key or schema id');
             }
+
+            trace.trace.clientName = clientName;
+            trace.trace.clientVersion = clientVersion;
+
             tracesPerSchema[trace.schemaId] ||= {};
             tracesPerSchema[trace.schemaId][trace.operationKey] ||= { trace: [] };
             tracesPerSchema[trace.schemaId][trace.operationKey].trace?.push(trace.trace);
@@ -187,6 +193,7 @@ async function sendTrace(
   try {
     const body = Report.encode({
       header: {
+        agentVersion: 'graphql-yoga',
         graphRef,
         executableSchemaId: schemaId,
       },
@@ -212,4 +219,14 @@ async function sendTrace(
   } catch (err) {
     logger.error('Failed to send trace:', err);
   }
+}
+
+function getClientInfo(request: Request): {
+  clientName: string;
+  clientVersion: string;
+} {
+  return {
+    clientName: request.headers.get('apollographql-client-name') ?? '',
+    clientVersion: request.headers.get('apollographql-client-version') ?? '',
+  };
 }
