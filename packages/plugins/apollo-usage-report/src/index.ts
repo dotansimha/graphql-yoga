@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { printSchema, stripIgnoredCharacters } from 'graphql';
 import {
   isAsyncIterable,
@@ -6,13 +7,15 @@ import {
   YogaLogger,
   type FetchAPI,
 } from 'graphql-yoga';
-import { Report } from '@apollo/usage-reporting-protobuf';
+import { IReportHeader, Report } from '@apollo/usage-reporting-protobuf';
 import {
   ApolloInlineGraphqlTraceContext,
   ApolloInlineRequestTraceContext,
   ApolloInlineTracePluginOptions,
   useApolloInstrumentation,
 } from '@graphql-yoga/plugin-apollo-inline-trace';
+
+const packageJson = JSON.parse(readFileSync('../package.json', 'utf-8'));
 
 type ApolloUsageReportOptions = ApolloInlineTracePluginOptions & {
   /**
@@ -53,6 +56,11 @@ export interface ApolloUsageReportGraphqlContext extends ApolloInlineGraphqlTrac
 function getEnvVar<T>(name: string, defaultValue?: T) {
   return globalThis.process?.env?.[name] || defaultValue || undefined;
 }
+
+const reportHeaderDefaults: IReportHeader = {
+  agentVersion: `${packageJson.name}@${packageJson.version}`,
+  runtimeVersion: `node ${process.version}`,
+};
 
 const DEFAULT_REPORTING_ENDPOINT =
   'https://usage-reporting.api.apollographql.com/api/ingress/traces';
@@ -134,10 +142,16 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           // Each operation in a batched request can belongs to a different schema.
           // Apollo doesn't allow to send batch queries for multiple schemas in the same batch
           const tracesPerSchema: Record<string, Report['tracesPerQuery']> = {};
+          const { clientName, clientVersion } = getClientInfo(request);
+
           for (const trace of reqCtx.traces.values()) {
             if (!trace.schemaId || !trace.operationKey) {
               throw new TypeError('Misformed trace, missing operation key or schema id');
             }
+
+            trace.trace.clientName = clientName;
+            trace.trace.clientVersion = clientVersion;
+
             tracesPerSchema[trace.schemaId] ||= {};
             tracesPerSchema[trace.schemaId][trace.operationKey] ||= { trace: [] };
             tracesPerSchema[trace.schemaId][trace.operationKey].trace?.push(trace.trace);
@@ -187,6 +201,7 @@ async function sendTrace(
   try {
     const body = Report.encode({
       header: {
+        ...reportHeaderDefaults,
         graphRef,
         executableSchemaId: schemaId,
       },
@@ -212,4 +227,17 @@ async function sendTrace(
   } catch (err) {
     logger.error('Failed to send trace:', err);
   }
+}
+
+function getClientInfo(request: Request): {
+  clientName: string;
+  clientVersion: string;
+} {
+  const clientNameHeaderKey = 'apollographql-client-name';
+  const clientVersionHeaderKey = 'apollographql-client-version';
+
+  return {
+    clientName: request.headers.get(clientNameHeaderKey) ?? '',
+    clientVersion: request.headers.get(clientVersionHeaderKey) ?? '',
+  };
 }
