@@ -13,7 +13,7 @@ Like before, you need to start by adding the new operation to your GraphQL schem
 
 In `src/schema.ts`, extend the schema definition as follows:
 
-```ts filename="src/schema.ts"
+```ts filename="src/schema.ts" {7-9}
 const typeDefinitions = /* GraphQL */ `
   type Query {
     info: String!
@@ -39,7 +39,7 @@ function for the new field.
 
 Next, update the `resolvers` functions to look as follows:
 
-```ts
+```ts {25-41}
 type Link = {
   id: string
   url: string
@@ -58,6 +58,11 @@ const resolvers = {
   Query: {
     info: () => `This is the API of a Hackernews Clone`,
     feed: () => links
+  },
+  Link: {
+    id: (parent: Link) => parent.id,
+    description: (parent: Link) => parent.description,
+    url: (parent: Link) => parent.url
   },
   Mutation: {
     postLink: (parent: unknown, args: { description: string; url: string }) => {

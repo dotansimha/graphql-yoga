@@ -26,7 +26,7 @@ that `Comments`s are _posted_ on `Links`s.
 Open `prisma/schema.prisma` and add the following code, making sure to also update your existing
 `Link` model accordingly:
 
-```prisma filename="prisma/schema.prisma"
+```prisma filename="prisma/schema.prisma" {6,9-14}
 model Link {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
