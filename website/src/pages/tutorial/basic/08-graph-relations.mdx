@@ -95,18 +95,7 @@ In this case, you first want a way of creating a comment using a mutation field
 (`Mutation.postCommentOnLink`) and also fetching a comment via its id using a query field
 (`Query.comment`).
 
-```graphql
-type Link {
-  id: ID!
-  description: String!
-  url: String!
-}
-
-type Comment {
-  id: ID!
-  body: String!
-}
-
+```graphql {4,9,18-21}
 type Query {
   info: String!
   feed: [Link!]!
@@ -116,6 +105,17 @@ type Query {
 type Mutation {
   postLink(url: String!, description: String!): Link!
   postCommentOnLink(linkId: ID!, body: String!): Comment!
+}
+
+type Link {
+  id: ID!
+  description: String!
+  url: String!
+}
+
+type Comment {
+  id: ID!
+  body: String!
 }
 ```
 
@@ -371,7 +371,7 @@ schema.
 
 Add the `Link.comments` field to the GraphQL schema definition.
 
-```graphql
+```graphql {5}
 type Link {
   id: ID!
   description: String!
