@@ -70,10 +70,10 @@ const config: CodegenConfig = {
   generates: {
     'src/schema': defineConfig({
       // (3)
-      resolverGeneration: 'minimal' // (4)
+      resolverGeneration: 'minimal', // (4)
       typesPluginsConfig: {
-        contextType: "../context#GraphQLContext", // (5)
-      },
+        contextType: '../context#GraphQLContext' // (5)
+      }
     })
   }
 }
@@ -156,7 +156,7 @@ export const feed: NonNullable<QueryResolvers['feed']> = async (_parent, _arg, _
 It should be trivial to bring the existing logic over:
 
 ```ts filename="src/schema/base/resolvers/Query/feed.ts"
-export const feed: NonNullable<QueryResolvers['feed']> = async (_parent, _arg, context) => {
+export const feed: NonNullable<QueryResolvers['feed']> = async (_parent, args, context) => {
   const where = args.filterNeedle
     ? {
         OR: [
