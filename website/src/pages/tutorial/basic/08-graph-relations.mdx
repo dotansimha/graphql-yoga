@@ -26,7 +26,7 @@ that `Comments`s are _posted_ on `Links`s.
 Open `prisma/schema.prisma` and add the following code, making sure to also update your existing
 `Link` model accordingly:
 
-```prisma filename="prisma/schema.prisma"
+```prisma filename="prisma/schema.prisma" {6,9-14}
 model Link {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
@@ -38,8 +38,8 @@ model Link {
 model Comment {
   id        Int      @id @default(autoincrement())
   body      String
-  link      Link?    @relation(fields: [linkId], references: [id])
-  linkId    Int?
+  link      Link     @relation(fields: [linkId], references: [id])
+  linkId    Int
 }
 ```
 
@@ -95,18 +95,7 @@ In this case, you first want a way of creating a comment using a mutation field
 (`Mutation.postCommentOnLink`) and also fetching a comment via its id using a query field
 (`Query.comment`).
 
-```graphql
-type Link {
-  id: ID!
-  description: String!
-  url: String!
-}
-
-type Comment {
-  id: ID!
-  body: String!
-}
-
+```graphql {4,9,18-21}
 type Query {
   info: String!
   feed: [Link!]!
@@ -116,6 +105,17 @@ type Query {
 type Mutation {
   postLink(url: String!, description: String!): Link!
   postCommentOnLink(linkId: ID!, body: String!): Comment!
+}
+
+type Link {
+  id: ID!
+  description: String!
+  url: String!
+}
+
+type Comment {
+  id: ID!
+  body: String!
 }
 ```
 
@@ -371,7 +371,7 @@ schema.
 
 Add the `Link.comments` field to the GraphQL schema definition.
 
-```graphql
+```graphql {5}
 type Link {
   id: ID!
   description: String!
@@ -460,7 +460,7 @@ type Comment {
 }
 
 type Query {
-  link(id: ID): Link
+  link(id: ID!): Link
 }
 ```
 

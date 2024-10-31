@@ -77,15 +77,11 @@ query {
     id
     description
     url
-    postedBy {
-      id
-      name
-    }
   }
 }
 ```
 
-![sample query](https://i.imgur.com/tICYe2e.png)
+![sample query](https://i.imgur.com/qODhFPW.png)
 
 ## Pagination
 
@@ -131,7 +127,7 @@ Now, adjust the field resolver function implementation:
 
 And now adjust the implementation of the `Query.feed` resolver function:
 
-```ts filename="src/schema.ts"
+```ts filename="src/schema.ts" {7,20-21}
 const resolvers = {
   // ... other resolvers maps ...
   Query: {
@@ -177,7 +173,7 @@ query {
 }
 ```
 
-![test the pagination API ](https://i.imgur.com/XeZgSJo.png)
+![test the pagination API ](https://i.imgur.com/VZzIeyJ.png)
 
 ## Pagination Field Argument Sanitization
 
@@ -200,7 +196,7 @@ Fetching 0 records does not make sense.
 
 Adjust the current schema resolver implementation according to the following.
 
-```ts filename="src/schema.ts"
+```ts filename="src/schema.ts" {4-11,31-35,40}
 // ... other code ...
 import { GraphQLError } from 'graphql'
 

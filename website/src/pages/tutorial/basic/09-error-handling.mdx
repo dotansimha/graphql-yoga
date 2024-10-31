@@ -23,14 +23,14 @@ const resolvers = {
       args: { linkId: string; body: string },
       context: GraphQLContext
     ) {
-      const comment = await context.prisma.comment.create({
+      const newComment = await context.prisma.comment.create({
         data: {
-          body: args.body,
           linkId: parseInt(args.linkId)
+          body: args.body,
         }
       })
 
-      return comment
+      return newComment
     }
   }
 }
@@ -152,7 +152,7 @@ const resolvers = {
       args: { linkId: string; body: string },
       context: GraphQLContext
     ) {
-      const comment = await context.prisma.comment
+      const newComment = await context.prisma.comment
         .create({
           data: {
             body: args.body,
@@ -168,7 +168,7 @@ const resolvers = {
           return Promise.reject(err)
         })
 
-      return comment
+      return newComment
     }
   }
 }
@@ -327,7 +327,7 @@ string contents using a regex.
 
 Add the following code to the `src/schema.ts` file.
 
-```ts filename="src/schema.ts"
+```ts filename="src/schema.ts" {5-10,21-26}
 // ... other code ...
 import { GraphQLError } from 'graphql'
 import { Prisma } from '@prisma/client'
@@ -355,11 +355,11 @@ const resolvers = {
         )
       }
 
-      const comment = await context.prisma.comment
+      const newComment = await context.prisma.comment
         .create({
           data: {
-            body: args.body,
-            linkId
+            linkId,
+            body: args.body
           }
         })
         .catch((err: unknown) => {
@@ -374,7 +374,7 @@ const resolvers = {
           }
           return Promise.reject(err)
         })
-      return comment
+      return newComment
     }
   }
 }

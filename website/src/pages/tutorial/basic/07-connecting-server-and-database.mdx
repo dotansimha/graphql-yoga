@@ -46,7 +46,7 @@ export async function createContext(): Promise<GraphQLContext> {
 Now, you'll need to import the `createContext` function and make sure you add it as part of the
 GraphQL execution process:
 
-```typescript filename="src/main.ts"
+```typescript filename="src/main.ts" {3,7}
 import { createServer } from 'http'
 import { createYoga } from 'graphql-yoga'
 import { createContext } from './context'
@@ -73,7 +73,7 @@ global connection, and making it available as part of your GraphQL `context`.
 Also, modify the GraphQL execution and add our `prisma` connection to the GraphQL execution
 `context`:
 
-```ts filename="src/context.ts"
+```ts filename="src/context.ts" {1-3,6,10}
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -114,10 +114,14 @@ database instead of local dummy data.
 
 In `src/schema.ts`, update the `resolvers` object and change imports to look as follows:
 
-```ts filename="src/schema.ts"
+```ts filename="src/schema.ts" {2-3,12-14,22-34}
 import { createSchema } from 'graphql-yoga'
 import type { Link } from '@prisma/client'
 import type { GraphQLContext } from './context'
+
+const typeDefs = /* GraphQL */ `
+  ...
+`
 
 const resolvers = {
   Query: {
