@@ -1,5 +1,14 @@
 # @graphql-yoga/plugin-disable-introspection
 
+## 2.8.0
+
+### Patch Changes
+
+- Updated dependencies
+  [[`18fe916`](https://github.com/dotansimha/graphql-yoga/commit/18fe916853fc6192b8b2a607f91b67f3a7cae7bc),
+  [`6bb19ed`](https://github.com/dotansimha/graphql-yoga/commit/6bb19edf5b103d6d9b6088e2e22cfa71a85f26f7)]:
+  - graphql-yoga@5.8.0
+
 ## 2.7.0
 
 ### Patch Changes
