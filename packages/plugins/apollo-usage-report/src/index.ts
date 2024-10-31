@@ -5,6 +5,7 @@ import {
   Plugin,
   YogaInitialContext,
   YogaLogger,
+  YogaServer,
   type FetchAPI,
 } from 'graphql-yoga';
 import { Report } from '@apollo/usage-reporting-protobuf';
@@ -78,12 +79,14 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
     WeakMap<Request, ApolloUsageReportRequestContext>,
   ];
 
-  let logger: YogaLogger;
-  let fetchAPI: FetchAPI;
   let schemaId: string;
-
-  let yogaVersion: string;
-  let agentVersion = '0.0.0';
+  let yoga: YogaServer<Record<string, unknown>, Record<string, unknown>>;
+  const logger = Object.fromEntries(
+    (['error', 'warn', 'info', 'debug'] as const).map(level => [
+      level,
+      (...messages: unknown[]) => yoga.logger[level]('[ApolloUsageReport]', ...messages),
+    ]),
+  ) as YogaLogger;
 
   let clientNameFactory: StringFromRequestFn = req =>
     req.headers.get('apollographql-client-name') || 'graphql-yoga';
@@ -96,7 +99,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
   }
 
   let clientVersionFactory: StringFromRequestFn = req =>
-    req.headers.get('apollographql-client-version') || yogaVersion;
+    req.headers.get('apollographql-client-version') || yoga.version;
 
   if (typeof options.clientVersion === 'string') {
     const clientVersion = options.clientVersion;
@@ -110,16 +113,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
       addPlugin(instrumentation);
       addPlugin({
         onYogaInit(args) {
-          yogaVersion = args.yoga.version;
-          agentVersion = options.agentVersion || `graphql-yoga@${yogaVersion}`;
-          fetchAPI = args.yoga.fetchAPI;
-          logger = Object.fromEntries(
-            (['error', 'warn', 'info', 'debug'] as const).map(level => [
-              level,
-              (...messages: unknown[]) =>
-                args.yoga.logger[level]('[ApolloUsageReport]', ...messages),
-            ]),
-          ) as YogaLogger;
+          yoga = args.yoga;
 
           if (!getEnvVar('APOLLO_KEY', options.apiKey)) {
             throw new Error(
@@ -197,8 +191,16 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
 
           for (const schemaId in tracesPerSchema) {
             const tracesPerQuery = tracesPerSchema[schemaId];
+            const agentVersion = options.agentVersion || `graphql-yoga@${yoga.version}`;
             serverContext.waitUntil(
-              sendTrace(options, logger, fetchAPI.fetch, schemaId, tracesPerQuery, agentVersion),
+              sendTrace(
+                options,
+                logger,
+                yoga.fetchAPI.fetch,
+                schemaId,
+                tracesPerQuery,
+                agentVersion,
+              ),
             );
           }
         },
