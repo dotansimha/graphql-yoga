@@ -1,5 +1,24 @@
 # graphql-yoga
 
+## 5.8.0
+
+### Minor Changes
+
+- [`18fe916`](https://github.com/dotansimha/graphql-yoga/commit/18fe916853fc6192b8b2a607f91b67f3a7cae7bc)
+  Thanks [@kroupacz](https://github.com/kroupacz)! - Add `version` property to get version of Yoga
+
+### Patch Changes
+
+- [#3445](https://github.com/dotansimha/graphql-yoga/pull/3445)
+  [`6bb19ed`](https://github.com/dotansimha/graphql-yoga/commit/6bb19edf5b103d6d9b6088e2e22cfa71a85f26f7)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@whatwg-node/fetch@^0.9.22` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.9.22)
+    (from `^0.9.18`, in `dependencies`)
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.50` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.50)
+    (from `^0.9.44`, in `dependencies`)
+
 ## 5.7.0
 
 ### Minor Changes
