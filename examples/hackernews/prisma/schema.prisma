@@ -22,6 +22,6 @@ model Comment {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   body      String
-  link      Link?    @relation(fields: [linkId], references: [id])
-  linkId    Int?
+  link      Link    @relation(fields: [linkId], references: [id])
+  linkId    Int
 }
