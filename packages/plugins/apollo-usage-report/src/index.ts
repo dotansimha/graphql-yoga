@@ -88,8 +88,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
     ]),
   ) as YogaLogger;
 
-  let clientNameFactory: StringFromRequestFn = req =>
-    req.headers.get('apollographql-client-name') || 'graphql-yoga';
+  let clientNameFactory: StringFromRequestFn = req => req.headers.get('apollographql-client-name');
 
   if (typeof options.clientName === 'string') {
     const clientName = options.clientName;
@@ -99,7 +98,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
   }
 
   let clientVersionFactory: StringFromRequestFn = req =>
-    req.headers.get('apollographql-client-version') || yoga.version;
+    req.headers.get('apollographql-client-version');
 
   if (typeof options.clientVersion === 'string') {
     const clientVersion = options.clientVersion;
