@@ -351,6 +351,46 @@ describe('jwt plugin', () => {
     });
   });
 
+  test('should allow to use deprecated `singingKeyProviders` option', async () => {
+    const secret = 'topsecret';
+    const test = createTestServer({
+      singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+    });
+    const token = buildJWT({ sub: '123' }, { key: secret });
+    const response = await test.queryWithAuth(token);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      data: {
+        ctx: {
+          jwt: {
+            payload: {
+              sub: '123',
+            },
+            token: {
+              prefix: 'Bearer',
+              value: expect.any(String),
+            },
+          },
+        },
+      },
+    });
+  });
+
+  test('should not allow to use both deprecated `singingKeyProviders` option and its replacement', async () => {
+    const secret = 'topsecret';
+    try {
+      // @ts-expect-error This should not be allowed by TS
+      createTestServer({
+        singingKeyProviders: [createInlineSigningKeyProvider(secret)],
+        signingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      });
+    } catch (err) {
+      expect((err as Error).message).toBe(
+        'You are using both deprecated `singingKeyProviders` and its new replacement `signingKeyProviders` configuration. Please use only `signingKeyProviders`',
+      );
+    }
+  });
+
   test('auth is passing when token is valid (RS256)', async () => {
     const test = createTestServer({
       signingKeyProviders: [createInlineSigningKeyProvider(JWKS_RSA512_PRIVATE_PEM)],

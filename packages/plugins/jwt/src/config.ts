@@ -12,22 +12,30 @@ export type ExtractTokenFunction = (params: {
 
 export type GetSigningKeyFunction = (kid?: string) => Promise<string> | string;
 
-export type JwtPluginOptions = {
-  /**
-   * List of configurations for the signin-key providers. You can configure multiple signin-key providers to allow for key rotation, fallbacks, etc.
-   *
-   * In addition, you can use the `remote` variant and configure [`jwks-rsa`'s JWKS client](https://github.com/auth0/node-jwks-rsa/tree/master).
-   *
-   * The plugin will try to fetch the keys from the providers in the order they are defined in this array.
-   *
-   * If the first provider fails to fetch the keys, the plugin will try the next provider in the list.
-   *
-   */
-  signingKeyProviders: AtleastOneItem<GetSigningKeyFunction>;
-  /**
-   * @deprecated: please use `signingKeyProviders` instead.
-   */
-  singingKeyProviders?: AtleastOneItem<GetSigningKeyFunction>;
+export type JwtPluginOptions = (
+  | {
+      /**
+       * List of configurations for the signin-key providers. You can configure multiple signin-key providers to allow for key rotation, fallbacks, etc.
+       *
+       * In addition, you can use the `remote` variant and configure [`jwks-rsa`'s JWKS client](https://github.com/auth0/node-jwks-rsa/tree/master).
+       *
+       * The plugin will try to fetch the keys from the providers in the order they are defined in this array.
+       *
+       * If the first provider fails to fetch the keys, the plugin will try the next provider in the list.
+       *
+       */
+      signingKeyProviders: AtleastOneItem<GetSigningKeyFunction>;
+      singingKeyProviders?: never;
+    }
+  | {
+      /**
+       * @deprecated: please use `signingKeyProviders` instead.
+       */
+
+      singingKeyProviders: AtleastOneItem<GetSigningKeyFunction>;
+      signingKeyProviders?: never;
+    }
+) & {
   /**
    * List of locations to look for the token in the incoming request.
    *
@@ -83,10 +91,15 @@ export type JwtPluginOptions = {
 export function normalizeConfig(input: JwtPluginOptions) {
   // TODO: remove this on next major version.
   if (input.singingKeyProviders) {
-    input.signingKeyProviders = input.singingKeyProviders;
+    if (input.signingKeyProviders) {
+      throw new TypeError(
+        'You are using both deprecated `singingKeyProviders` and its new replacement `signingKeyProviders` configuration. Please use only `signingKeyProviders`',
+      );
+    }
+    (input.signingKeyProviders as unknown) = input.singingKeyProviders;
   }
 
-  if (input.signingKeyProviders.length === 0) {
+  if (!input.signingKeyProviders) {
     throw new TypeError(
       'You must provide at least one signing key provider. Please verify your `signingKeyProviders` configuration.',
     );
