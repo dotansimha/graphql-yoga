@@ -23,7 +23,7 @@ export type YogaLogger = {
   info: (...args: any[]) => void;
   warn: (...args: any[]) => void;
   error: (...args: any[]) => void;
-  createChild: (prefix: string) => YogaLogger;
+  createChild?: (prefix: string) => YogaLogger;
 };
 
 const logLevelScores: Record<LogLevel | 'silent', number> = {
