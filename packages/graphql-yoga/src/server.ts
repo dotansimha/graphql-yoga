@@ -212,7 +212,7 @@ export class YogaServer<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext, TUserContext>
   >;
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
-  private onParamsHooks: OnParamsHook[];
+  private onParamsHooks: OnParamsHook<TServerContext>[];
   private onExecutionResultHooks: OnExecutionResultHook<TServerContext>[];
   private onResultProcessHooks: OnResultProcess<TServerContext>[];
   private maskedErrorsOpts: YogaMaskedErrorOpts | null;
@@ -471,7 +471,9 @@ export class YogaServer<
     serverContext: TServerContext,
   ) {
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
-    let context = serverContext as TServerContext & YogaInitialContext;
+    const context: TServerContext & YogaInitialContext =
+      batched === true ? Object.create(serverContext) : serverContext;
+
     try {
       for (const onParamsHook of this.onParamsHooks) {
         await onParamsHook({
@@ -484,6 +486,7 @@ export class YogaServer<
             result = newResult;
           },
           fetchAPI: this.fetchAPI,
+          context,
         });
       }
 
@@ -498,10 +501,7 @@ export class YogaServer<
                 params,
               };
 
-        context = Object.assign(
-          batched ? Object.create(serverContext) : serverContext,
-          additionalContext,
-        );
+        Object.assign(context, additionalContext);
 
         const enveloped = this.getEnveloped(context);
 
