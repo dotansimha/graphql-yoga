@@ -1,4 +1,4 @@
-import { createSchema, createYoga, Plugin } from '../src';
+import { createSchema, createYoga, getBatchRequestIndexFromContext, Plugin } from '../src/index.js';
 
 describe('Batching', () => {
   const schema = createSchema({
@@ -296,16 +296,13 @@ describe('Batching', () => {
             expect(params.batchedRequestIndex).toEqual(0);
           },
           onParse(context) {
-            // @ts-expect-error not in types
-            expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+            expect(getBatchRequestIndexFromContext(context.context)).toEqual(0);
           },
           onValidate(context) {
-            // @ts-expect-error not in types
-            expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+            expect(getBatchRequestIndexFromContext(context.context)).toEqual(0);
           },
           onExecute(context) {
-            // @ts-expect-error not in types
-            expect(context.args.contextValue[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+            expect(getBatchRequestIndexFromContext(context.args.contextValue)).toEqual(0);
           },
         } satisfies Plugin,
       ],
@@ -338,31 +335,25 @@ describe('Batching', () => {
           onParse(context) {
             const params = JSON.stringify(context.params);
             if (params === '{"source":"{hello}"}') {
-              // @ts-expect-error not in types
-              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+              expect(getBatchRequestIndexFromContext(context.context)).toEqual(0);
             } else if (params === '{"source":"{bye}"}') {
-              // @ts-expect-error not in types
-              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(1);
+              expect(getBatchRequestIndexFromContext(context.context)).toEqual(1);
             }
           },
           onValidate(context) {
             const params = JSON.stringify(context.params);
             if (params === '{"source":"{hello}"}') {
-              // @ts-expect-error not in types
-              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+              expect(getBatchRequestIndexFromContext(context.context)).toEqual(0);
             } else if (params === '{"source":"{bye}"}') {
-              // @ts-expect-error not in types
-              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(1);
+              expect(getBatchRequestIndexFromContext(context.context)).toEqual(1);
             }
           },
           onExecute(context) {
             const params = JSON.stringify(context.args.contextValue.params);
             if (params === '{"source":"{hello}"}') {
-              // @ts-expect-error not in types
-              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+              expect(getBatchRequestIndexFromContext(context.args.contextValue)).toEqual(0);
             } else if (params === '{"source":"{bye}"}') {
-              // @ts-expect-error not in types
-              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(1);
+              expect(getBatchRequestIndexFromContext(context.args.contextValue)).toEqual(1);
             }
           },
         } satisfies Plugin,

@@ -70,6 +70,7 @@ import {
   YogaInitialContext,
   YogaMaskedErrorOpts,
 } from './types.js';
+import { batchRequestIndexMap } from './utils/batch-request-index.js';
 import { maskError } from './utils/mask-error.js';
 
 /**
@@ -498,17 +499,14 @@ export class YogaServer<
                 params,
               };
 
-        let batchIndexPartial: object = {};
-
-        if (batchedRequestIndex !== undefined) {
-          batchIndexPartial = { [Symbol.for('yogaBatchedRequestIndex')]: batchedRequestIndex };
-        }
-
         context = Object.assign(
           batchedRequestIndex === undefined ? serverContext : Object.create(serverContext),
           additionalContext,
-          batchIndexPartial,
         );
+
+        if (batchedRequestIndex !== undefined) {
+          batchRequestIndexMap.set(context, batchedRequestIndex);
+        }
 
         const enveloped = this.getEnveloped(context);
 
