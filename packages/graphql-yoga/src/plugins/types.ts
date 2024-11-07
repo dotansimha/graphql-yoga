@@ -113,6 +113,8 @@ export interface OnParamsEventPayload {
   setParams: (params: GraphQLParams) => void;
   setResult: (result: ExecutionResult | AsyncIterable<ExecutionResult>) => void;
   fetchAPI: FetchAPI;
+  /** Index of the batched request if it is a batched request */
+  batchedRequestIndex?: number;
 }
 
 export type OnResultProcess<TServerContext> = (

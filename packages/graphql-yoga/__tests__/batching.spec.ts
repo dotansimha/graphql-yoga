@@ -1,5 +1,4 @@
-import { createSchema } from '../src/schema';
-import { createYoga } from '../src/server';
+import { createSchema, createYoga, Plugin } from '../src';
 
 describe('Batching', () => {
   const schema = createSchema({
@@ -286,5 +285,98 @@ describe('Batching', () => {
         },
       ],
     });
+  });
+  it('batching index is forwarded into hooks (single batch)', async () => {
+    const yoga = createYoga({
+      schema,
+      batching: true,
+      plugins: [
+        {
+          onParams(params) {
+            expect(params.batchedRequestIndex).toEqual(0);
+          },
+          onParse(context) {
+            // @ts-expect-error not in types
+            expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+          },
+          onValidate(context) {
+            // @ts-expect-error not in types
+            expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+          },
+          onExecute(context) {
+            // @ts-expect-error not in types
+            expect(context.args.contextValue[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+          },
+        } satisfies Plugin,
+      ],
+    });
+
+    const response = await yoga.fetch('http://yoga.com/graphql', {
+      method: 'POST',
+      headers: {
+        accept: 'application/graphql-response+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([{ query: '{hello}' }]),
+    });
+    expect(await response.text()).toEqual(`[{"data":{"hello":"hello"}}]`);
+  });
+  it('batching index is forwarded into hooks (multiple batches)', async () => {
+    const yoga = createYoga({
+      schema,
+      batching: true,
+      plugins: [
+        {
+          onParams(context) {
+            const params = JSON.stringify(context.params);
+            if (params === '{"source":"{hello}"}') {
+              expect(context.batchedRequestIndex).toEqual(0);
+            } else if (params === '{"source":"{bye}"}') {
+              expect(context.batchedRequestIndex).toEqual(1);
+            }
+          },
+          onParse(context) {
+            const params = JSON.stringify(context.params);
+            if (params === '{"source":"{hello}"}') {
+              // @ts-expect-error not in types
+              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+            } else if (params === '{"source":"{bye}"}') {
+              // @ts-expect-error not in types
+              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(1);
+            }
+          },
+          onValidate(context) {
+            const params = JSON.stringify(context.params);
+            if (params === '{"source":"{hello}"}') {
+              // @ts-expect-error not in types
+              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+            } else if (params === '{"source":"{bye}"}') {
+              // @ts-expect-error not in types
+              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(1);
+            }
+          },
+          onExecute(context) {
+            const params = JSON.stringify(context.args.contextValue.params);
+            if (params === '{"source":"{hello}"}') {
+              // @ts-expect-error not in types
+              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(0);
+            } else if (params === '{"source":"{bye}"}') {
+              // @ts-expect-error not in types
+              expect(context.context[Symbol.for('yogaBatchedRequestIndex')]).toEqual(1);
+            }
+          },
+        } satisfies Plugin,
+      ],
+    });
+
+    const response = await yoga.fetch('http://yoga.com/graphql', {
+      method: 'POST',
+      headers: {
+        accept: 'application/graphql-response+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([{ query: '{hello}' }, { query: '{bye}' }]),
+    });
+    expect(await response.text()).toEqual(`[{"data":{"hello":"hello"}},{"data":{"bye":"bye"}}]`);
   });
 });
