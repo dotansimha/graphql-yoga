@@ -55,7 +55,7 @@ export type Plugin<
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
      */
-    onParams?: OnParamsHook;
+    onParams?: OnParamsHook<TServerContext>;
     /**
      * Use this hook with your own risk. It is still experimental and may change in the future.
      * @internal
@@ -105,14 +105,17 @@ export interface OnRequestParseDoneEventPayload {
   setRequestParserResult: (params: GraphQLParams | GraphQLParams[]) => void;
 }
 
-export type OnParamsHook = (payload: OnParamsEventPayload) => PromiseOrValue<void>;
+export type OnParamsHook<TServerContext> = (
+  payload: OnParamsEventPayload<TServerContext>,
+) => PromiseOrValue<void>;
 
-export interface OnParamsEventPayload {
+export interface OnParamsEventPayload<TServerContext = Record<string, unknown>> {
   params: GraphQLParams;
   request: Request;
   setParams: (params: GraphQLParams) => void;
   setResult: (result: ExecutionResult | AsyncIterable<ExecutionResult>) => void;
   fetchAPI: FetchAPI;
+  context: TServerContext;
 }
 
 export type OnResultProcess<TServerContext> = (
