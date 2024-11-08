@@ -18,9 +18,10 @@ export interface GraphQLErrorOptions {
   extensions?: Maybe<GraphQLErrorExtensions>;
 }
 
-export type ExtractPersistedOperationId = (
+export type ExtractPersistedOperationId<TPluginContext = Record<string, unknown>> = (
   params: GraphQLParams,
   request: Request,
+  context: TPluginContext,
 ) => null | string;
 
 export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
@@ -41,13 +42,14 @@ export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
 
 type AllowArbitraryOperationsHandler = (request: Request) => PromiseOrValue<boolean>;
 
-export type UsePersistedOperationsOptions = {
+export type UsePersistedOperationsOptions<TPluginContext = Record<string, unknown>> = {
   /**
    * A function that fetches the persisted operation
    */
   getPersistedOperation(
     key: string,
     request: Request,
+    context: TPluginContext,
   ): PromiseOrValue<DocumentNode | string | null>;
   /**
    * Whether to allow execution of arbitrary GraphQL operations aside from persisted operations.
@@ -100,7 +102,7 @@ export function usePersistedOperations<
   getPersistedOperation,
   skipDocumentValidation = false,
   customErrors,
-}: UsePersistedOperationsOptions): Plugin<TPluginContext> {
+}: UsePersistedOperationsOptions<TPluginContext>): Plugin<TPluginContext> {
   const operationASTByRequest = new WeakMap<Request, DocumentNode>();
   const persistedOperationRequest = new WeakSet<Request>();
 
@@ -129,13 +131,18 @@ export function usePersistedOperations<
         return;
       }
 
-      const persistedOperationKey = extractPersistedOperationId(params, request);
+      const persistedOperationKey = extractPersistedOperationId(params, request, payload.context);
 
       if (persistedOperationKey == null) {
         throw keyNotFoundErrorFactory(payload);
       }
 
-      const persistedQuery = await getPersistedOperation(persistedOperationKey, request);
+      const persistedQuery = await getPersistedOperation(
+        persistedOperationKey,
+        request,
+        payload.context as TPluginContext,
+      );
+
       if (persistedQuery == null) {
         throw notFoundErrorFactory(payload);
       }

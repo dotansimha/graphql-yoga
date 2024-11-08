@@ -109,7 +109,7 @@ export type OnParamsHook<TServerContext> = (
   payload: OnParamsEventPayload<TServerContext>,
 ) => PromiseOrValue<void>;
 
-export interface OnParamsEventPayload<TServerContext = object> {
+export interface OnParamsEventPayload<TServerContext = Record<string, unknown>> {
   params: GraphQLParams;
   request: Request;
   setParams: (params: GraphQLParams) => void;
