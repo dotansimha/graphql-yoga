@@ -357,7 +357,7 @@ function handleErrors(
     let node = ctx.rootNode;
 
     if (Array.isArray(errToReport.path)) {
-      const specificNode = ctx.nodes.get(errToReport.path.join('.'));
+      const specificNode = getSpecificOrNearestNode(ctx.nodes, errToReport.path);
       if (specificNode) {
         node = specificNode;
       } else {
@@ -375,4 +375,24 @@ function handleErrors(
       }),
     );
   }
+}
+
+/**
+ * If something fails at "non-nullable" GraphQL field in case of federated query, the error path might not be in trace nodes
+ * but the error should be assigned to the nearest possible trace node.
+ */
+function getSpecificOrNearestNode(
+  nodes: Map<string, Trace.Node>,
+  path: (string | number)[],
+): Trace.Node | undefined {
+  // iterates through "path" backwards
+  for (let i = path.length; i > 0; i--) {
+    const pathString = path.slice(0, i).join('.');
+    const node = nodes.get(pathString);
+    if (node) {
+      return node;
+    }
+  }
+
+  return;
 }
