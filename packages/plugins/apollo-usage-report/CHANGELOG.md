@@ -1,5 +1,19 @@
 # @graphql-yoga/plugin-apollo-usage-report
 
+## 0.3.0
+
+### Patch Changes
+
+- [#3457](https://github.com/dotansimha/graphql-yoga/pull/3457)
+  [`2523d9f`](https://github.com/dotansimha/graphql-yoga/commit/2523d9fa954b82e11412918aab2ae6fe7e7611d6)
+  Thanks [@kroupacz](https://github.com/kroupacz)! - ### Fixed
+  - do not set default values for `clientName` and `clientVersion`
+- Updated dependencies
+  [[`2523d9f`](https://github.com/dotansimha/graphql-yoga/commit/2523d9fa954b82e11412918aab2ae6fe7e7611d6),
+  [`87ee333`](https://github.com/dotansimha/graphql-yoga/commit/87ee333724c0c6e0b9f72aa50e38a0a8a080593f)]:
+  - graphql-yoga@5.9.0
+  - @graphql-yoga/plugin-apollo-inline-trace@3.9.0
+
 ## 0.2.0
 
 ### Patch Changes
