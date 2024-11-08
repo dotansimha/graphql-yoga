@@ -1,5 +1,20 @@
 # graphql-yoga
 
+## 5.9.0
+
+### Minor Changes
+
+- [#3464](https://github.com/dotansimha/graphql-yoga/pull/3464)
+  [`87ee333`](https://github.com/dotansimha/graphql-yoga/commit/87ee333724c0c6e0b9f72aa50e38a0a8a080593f)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Inject initial context into `onParams` hook.
+
+### Patch Changes
+
+- [#3457](https://github.com/dotansimha/graphql-yoga/pull/3457)
+  [`2523d9f`](https://github.com/dotansimha/graphql-yoga/commit/2523d9fa954b82e11412918aab2ae6fe7e7611d6)
+  Thanks [@kroupacz](https://github.com/kroupacz)! - ### Fixed
+  - propagation of Yoga `version`
+
 ## 5.8.0
 
 ### Minor Changes

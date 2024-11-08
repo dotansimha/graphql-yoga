@@ -1,5 +1,21 @@
 # @graphql-yoga/plugin-persisted-operations
 
+## 3.9.0
+
+### Minor Changes
+
+- [#3464](https://github.com/dotansimha/graphql-yoga/pull/3464)
+  [`87ee333`](https://github.com/dotansimha/graphql-yoga/commit/87ee333724c0c6e0b9f72aa50e38a0a8a080593f)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Forward server context into
+  `extractPersistedOperationId` and `getPersistedOperation` handlers.
+
+### Patch Changes
+
+- Updated dependencies
+  [[`2523d9f`](https://github.com/dotansimha/graphql-yoga/commit/2523d9fa954b82e11412918aab2ae6fe7e7611d6),
+  [`87ee333`](https://github.com/dotansimha/graphql-yoga/commit/87ee333724c0c6e0b9f72aa50e38a0a8a080593f)]:
+  - graphql-yoga@5.9.0
+
 ## 3.8.0
 
 ### Patch Changes
