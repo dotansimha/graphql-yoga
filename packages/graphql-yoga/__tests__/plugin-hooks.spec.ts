@@ -102,6 +102,6 @@ test('context value identity stays the same in all hooks', async () => {
   expect(await response.json()).toEqual({ data: { __typename: 'Query' } });
   expect(contextValues).toHaveLength(7);
   for (const value of contextValues) {
-    expect(value).toEqual(contextValues[0]);
+    expect(value).toBe(contextValues[0]);
   }
 });
