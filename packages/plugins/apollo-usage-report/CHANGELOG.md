@@ -1,5 +1,20 @@
 # @graphql-yoga/plugin-apollo-usage-report
 
+## 0.4.0
+
+### Patch Changes
+
+- [#3455](https://github.com/dotansimha/graphql-yoga/pull/3455)
+  [`6e2ab86`](https://github.com/dotansimha/graphql-yoga/commit/6e2ab86060b4e88f8ab80b8b8c7c844c866bb5a0)
+  Thanks [@kroupacz](https://github.com/kroupacz)! - - fixed: get specific or the nearest possible
+  trace node if something fails at `non-nullable` GraphQL query field
+
+- Updated dependencies
+  [[`6e2ab86`](https://github.com/dotansimha/graphql-yoga/commit/6e2ab86060b4e88f8ab80b8b8c7c844c866bb5a0),
+  [`f81501c`](https://github.com/dotansimha/graphql-yoga/commit/f81501c70213330323a1d6ee9d45b3206af3675f)]:
+  - @graphql-yoga/plugin-apollo-inline-trace@3.10.0
+  - graphql-yoga@5.10.0
+
 ## 0.3.0
 
 ### Patch Changes

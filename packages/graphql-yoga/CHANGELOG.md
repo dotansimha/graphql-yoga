@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 5.10.0
+
+### Minor Changes
+
+- [#3462](https://github.com/dotansimha/graphql-yoga/pull/3462)
+  [`f81501c`](https://github.com/dotansimha/graphql-yoga/commit/f81501c70213330323a1d6ee9d45b3206af3675f)
+  Thanks [@maeldur](https://github.com/maeldur)! - Correctly handle HTTP GET requests with `?`
+  characters in the query search string.
+
 ## 5.9.0
 
 ### Minor Changes
