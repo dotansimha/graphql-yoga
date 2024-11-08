@@ -2,4 +2,4 @@
 'graphql-yoga': minor
 ---
 
-fix valid http get requests with more than one ? character
+Correctly handle HTTP GET requests with `?` characters in the query search string.
