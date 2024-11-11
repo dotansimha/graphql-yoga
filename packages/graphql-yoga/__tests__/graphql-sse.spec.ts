@@ -2,6 +2,7 @@ import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { createClient } from 'graphql-sse';
 import { createSchema, createYoga, Repeater } from '../src/index.js';
 
+
 describe('GraphQL over SSE', () => {
   const schema = createSchema({
     typeDefs: /* GraphQL */ `
