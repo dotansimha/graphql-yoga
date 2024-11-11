@@ -164,7 +164,7 @@ straight-forward using the `@urql/exchange-persisted` package.
 import { cacheExchange, createClient } from '@urql/core'
 import { persistedExchange } from '@urql/exchange-persisted'
 
-const client = createClient({
+const client = new createClient({
   url: 'YOUR_GRAPHQL_ENDPOINT',
   exchanges: [
     cacheExchange,

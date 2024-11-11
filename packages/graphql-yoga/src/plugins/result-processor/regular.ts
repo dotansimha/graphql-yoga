@@ -6,7 +6,7 @@ import {
 } from '../../error.js';
 import { FetchAPI } from '../../types.js';
 import { ResultProcessorInput } from '../types.js';
-import { jsonStringifyResultWithoutInternals, omitInternalsFromResultErrors } from './stringify.js';
+import { jsonStringifyResultWithoutInternals } from './stringify.js';
 
 export function processRegularResult(
   executionResult: ResultProcessorInput,
@@ -39,20 +39,7 @@ export function processRegularResult(
       ),
   );
 
-  const isArrayResult = Array.isArray(executionResult);
-  const hasCustomSerializer = isArrayResult
-    ? executionResult.some(r => r.stringify)
-    : executionResult.stringify;
+  const responseBody = jsonStringifyResultWithoutInternals(executionResult);
 
-  if (hasCustomSerializer) {
-    const responseBody = jsonStringifyResultWithoutInternals(executionResult);
-    return new fetchAPI.Response(responseBody, responseInit);
-  }
-
-  return fetchAPI.Response.json(
-    isArrayResult
-      ? executionResult.map(omitInternalsFromResultErrors)
-      : omitInternalsFromResultErrors(executionResult),
-    responseInit,
-  );
+  return new fetchAPI.Response(responseBody, responseInit);
 }
