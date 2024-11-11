@@ -1,5 +1,6 @@
 import { ExecutionResult } from 'graphql';
 import { isAsyncIterable } from '@envelop/core';
+import { fakePromise } from '@whatwg-node/server';
 import { getResponseInitByRespectingErrors } from '../../error.js';
 import { FetchAPI, MaybeArray } from '../../types.js';
 import { ResultProcessorInput } from '../types.js';
@@ -15,8 +16,7 @@ export function processMultipartResult(result: ResultProcessorInput, fetchAPI: F
   const responseInit = getResponseInitByRespectingErrors(result, headersInit);
 
   let iterator: AsyncIterator<MaybeArray<ExecutionResult>>;
-
-  const textEncoder = new fetchAPI.TextEncoder();
+  const textEncoderStream = new fetchAPI.TextEncoderStream();
 
   const readableStream = new fetchAPI.ReadableStream({
     start(controller) {
@@ -27,50 +27,65 @@ export function processMultipartResult(result: ResultProcessorInput, fetchAPI: F
         iterator = {
           next: () => {
             if (finished) {
-              return Promise.resolve({ done: true, value: null });
+              return fakePromise({ done: true, value: null });
             }
             finished = true;
-            return Promise.resolve({ done: false, value: result });
+            return fakePromise({ done: false, value: result });
           },
         };
       }
-      controller.enqueue(textEncoder.encode('\r\n'));
-      controller.enqueue(textEncoder.encode(`---`));
+      controller.enqueue('\r\n');
+      controller.enqueue(`---`);
     },
-    async pull(controller) {
+    pull(controller): void | Promise<void> {
       try {
-        const { done, value } = await iterator.next();
-        if (value != null) {
-          controller.enqueue(textEncoder.encode('\r\n'));
+        return iterator.next().then(
+          ({ value, done }) => {
+            if (value != null) {
+              controller.enqueue('\r\n');
 
-          controller.enqueue(textEncoder.encode('Content-Type: application/json; charset=utf-8'));
-          controller.enqueue(textEncoder.encode('\r\n'));
+              controller.enqueue('Content-Type: application/json; charset=utf-8');
+              controller.enqueue('\r\n');
 
-          const chunk = jsonStringifyResultWithoutInternals(value);
-          const encodedChunk = textEncoder.encode(chunk);
+              const chunk = jsonStringifyResultWithoutInternals(value);
 
-          controller.enqueue(textEncoder.encode('Content-Length: ' + encodedChunk.byteLength));
-          controller.enqueue(textEncoder.encode('\r\n'));
+              controller.enqueue('Content-Length: ' + chunk.length);
+              controller.enqueue('\r\n');
 
-          controller.enqueue(textEncoder.encode('\r\n'));
-          controller.enqueue(encodedChunk);
-          controller.enqueue(textEncoder.encode('\r\n'));
+              controller.enqueue('\r\n');
+              controller.enqueue(chunk);
+              controller.enqueue('\r\n');
 
-          controller.enqueue(textEncoder.encode('---'));
-        }
+              controller.enqueue('---');
+            }
 
-        if (done) {
-          controller.enqueue(textEncoder.encode('--\r\n'));
-          controller.close();
-        }
+            if (done) {
+              controller.enqueue('--\r\n');
+              controller.close();
+            }
+          },
+          err => controller.error(err),
+        );
       } catch (err) {
         controller.error(err);
       }
     },
-    async cancel(e) {
-      await iterator.return?.(e);
+    cancel(e) {
+      return iterator
+        ?.return?.(e)
+        ?.finally?.(() =>
+          Promise.all([textEncoderStream.writable.abort(e), textEncoderStream.readable.cancel(e)]),
+        )
+        ?.then?.(
+          () => {
+            // ignore
+          },
+          () => {
+            // ignore
+          },
+        );
     },
   });
 
-  return new fetchAPI.Response(readableStream, responseInit);
+  return new fetchAPI.Response(readableStream.pipeThrough(textEncoderStream), responseInit);
 }
