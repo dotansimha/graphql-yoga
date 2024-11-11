@@ -1,7 +1,6 @@
 import { ExecutionResult } from 'graphql';
 import { createSchema, createYoga, Plugin, Repeater } from '../src/index.js';
 
-
 describe('accept header', () => {
   it('instruct server to return an event-stream with GET parameters', async () => {
     const yoga = createYoga({
