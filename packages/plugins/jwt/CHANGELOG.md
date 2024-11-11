@@ -1,5 +1,19 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.4.1
+
+### Patch Changes
+
+- [#3479](https://github.com/dotansimha/graphql-yoga/pull/3479)
+  [`20cd9b6`](https://github.com/dotansimha/graphql-yoga/commit/20cd9b6cd58b507580e3d39621eb3dbc2ca4e781)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@whatwg-node/server-plugin-cookies@^1.0.3` ↗︎](https://www.npmjs.com/package/@whatwg-node/server-plugin-cookies/v/1.0.3)
+    (from `1.0.2`, in `dependencies`)
+- Updated dependencies
+  [[`20cd9b6`](https://github.com/dotansimha/graphql-yoga/commit/20cd9b6cd58b507580e3d39621eb3dbc2ca4e781)]:
+  - graphql-yoga@5.10.1
+
 ## 3.4.0
 
 ### Patch Changes

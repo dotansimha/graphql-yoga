@@ -1,5 +1,13 @@
 # @graphql-yoga/plugin-persisted-operations
 
+## 3.10.1
+
+### Patch Changes
+
+- Updated dependencies
+  [[`20cd9b6`](https://github.com/dotansimha/graphql-yoga/commit/20cd9b6cd58b507580e3d39621eb3dbc2ca4e781)]:
+  - graphql-yoga@5.10.1
+
 ## 3.10.0
 
 ### Patch Changes
