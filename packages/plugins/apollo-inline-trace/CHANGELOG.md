@@ -1,5 +1,19 @@
 # @graphql-yoga/plugin-apollo-inline-trace
 
+## 3.10.0
+
+### Patch Changes
+
+- [#3455](https://github.com/dotansimha/graphql-yoga/pull/3455)
+  [`6e2ab86`](https://github.com/dotansimha/graphql-yoga/commit/6e2ab86060b4e88f8ab80b8b8c7c844c866bb5a0)
+  Thanks [@kroupacz](https://github.com/kroupacz)! - - updated: `@envelop/on-resolve@^4.1.1`
+  dependency
+  - fixed: package `@envelop/core@^5.0.2` was added to devDependencies and `@envelop/on-resolve` was
+    removed
+- Updated dependencies
+  [[`f81501c`](https://github.com/dotansimha/graphql-yoga/commit/f81501c70213330323a1d6ee9d45b3206af3675f)]:
+  - graphql-yoga@5.10.0
+
 ## 3.9.0
 
 ### Patch Changes
