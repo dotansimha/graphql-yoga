@@ -37,7 +37,7 @@ export function processMultipartResult(result: ResultProcessorInput, fetchAPI: F
       controller.enqueue('\r\n');
       controller.enqueue(`---`);
     },
-    pull(controller) {
+    pull(controller): void | Promise<void> {
       try {
         return iterator.next().then(
           ({ value, done }) => {

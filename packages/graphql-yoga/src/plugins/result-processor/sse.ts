@@ -57,7 +57,7 @@ export function getSSEProcessor(): ResultProcessor {
           };
         }
       },
-      pull(controller) {
+      pull(controller): void | Promise<void> {
         try {
           return iterator.next().then(
             result => {
@@ -81,16 +81,14 @@ export function getSSEProcessor(): ResultProcessor {
       },
       cancel(e) {
         clearInterval(pingInterval);
-        return iterator
-          ?.return?.(e)
-          ?.then?.(
-            () => {
-              // ignore
-            },
-            () => {
-              // ignore
-            },
-          );
+        return iterator?.return?.(e)?.then?.(
+          () => {
+            // ignore
+          },
+          () => {
+            // ignore
+          },
+        );
       },
     });
     return new fetchAPI.Response(readableStream, responseInit);
