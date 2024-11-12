@@ -15,6 +15,7 @@ import {
   SummaryAndLabels,
   usePrometheus as useEnvelopPrometheus,
 } from '@envelop/prometheus';
+import type { HistogramMetricOption } from '@envelop/prometheus/typings/config';
 
 export {
   CounterAndLabels,
@@ -62,8 +63,10 @@ export type PrometheusTracingPluginConfig = Omit<
      *  - string: Enable the metric with custom name
      *  - number[]: Enable the metric with custom buckets
      *  - ReturnType<typeof createHistogram>: Enable the metric with custom configuration
+     *
+     * Note: This metric don't have configurable phases, all of them are required if enabled.
      */
-    graphql_yoga_http_duration?: boolean | string | number[] | ReturnType<typeof createHistogram>;
+    graphql_yoga_http_duration?: HistogramMetricOption<[]>;
   };
 
   labels?: {
@@ -115,11 +118,35 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     },
   };
 
+  const basePlugin: Plugin = {
+    onPluginInit({ addPlugin }) {
+      addPlugin(useEnvelopPrometheus({ ...resolvedOptions, registry }) as Plugin);
+      addPlugin({
+        onRequest({ url, fetchAPI, endResponse }) {
+          if (endpoint && url.pathname === endpoint) {
+            return registry.metrics().then(metrics => {
+              endResponse(
+                new fetchAPI.Response(metrics, {
+                  headers: {
+                    'Content-Type': registry.contentType,
+                  },
+                }),
+              );
+            });
+          }
+          return undefined;
+        },
+      });
+    },
+  };
+
   const httpHistogram = getHistogramFromConfig<
+    [],
     NonNullable<PrometheusTracingPluginConfig['metrics']>
   >(
     resolvedOptions,
     'graphql_yoga_http_duration',
+    [],
     {
       help: 'Time spent on HTTP connection',
       labelNames: ['operationName', 'operationType', 'method', 'statusCode', 'url'],
@@ -133,44 +160,40 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     }),
   );
 
+  // We don't need to register any hooks if the metric is not enabled
+  if (!httpHistogram) {
+    return basePlugin;
+  }
+
   const startByRequest = new WeakMap<Request, number>();
   const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>();
 
   return {
-    onPluginInit({ addPlugin }) {
-      addPlugin(useEnvelopPrometheus({ ...resolvedOptions, registry }) as Plugin);
-    },
-    onRequest({ request, url, fetchAPI, endResponse }) {
+    ...basePlugin,
+    onRequest({ request }) {
       startByRequest.set(request, Date.now());
-      if (endpoint && url.pathname === endpoint) {
-        return registry.metrics().then(metrics => {
-          endResponse(
-            new fetchAPI.Response(metrics, {
-              headers: {
-                'Content-Type': registry.contentType,
-              },
-            }),
-          );
-        });
-      }
-      return undefined;
     },
     onParse() {
-      return ({ result: document, context: { params, request } }) => {
-        const operationAST = getOperationAST(document, params.operationName);
-        paramsByRequest.set(request, {
+      return ({ result: document, context }) => {
+        const operationAST = getOperationAST(document, context.params.operationName);
+        const params = {
           document,
           operationName: operationAST?.name?.value,
           operationType: operationAST?.operation,
-        });
+        };
+
+        if (httpHistogram.shouldObserve(params, context)) {
+          paramsByRequest.set(context.request, params);
+        }
       };
     },
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request);
-      if (start) {
+      const params = paramsByRequest.get(request);
+      if (start && params) {
         const duration = (Date.now() - start) / 1000;
         const params = paramsByRequest.get(request);
-        httpHistogram?.histogram.observe(
+        httpHistogram.histogram.observe(
           httpHistogram.fillLabelsFn(params || {}, {
             ...serverContext,
             request,
