@@ -3,6 +3,6 @@
 ---
 dependencies updates:
   - Updated dependency
-    [`@envelop/prometheus@12.0.0-alpha-20241108094650-27b09e2884dc86dc36c03c988f3291db439e49ca`
+    [`@envelop/prometheus@12.0.0-alpha-20241112124749-b05f813adacaed7f3a2132da52552b4511ccbc15`
     ↗︎](https://www.npmjs.com/package/@envelop/prometheus/v/12.0.0) (from `11.0.0`, in
     `dependencies`)
