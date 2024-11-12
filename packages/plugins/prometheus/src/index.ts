@@ -3,6 +3,7 @@ import { Plugin } from 'graphql-yoga';
 import { register as defaultRegistry } from 'prom-client';
 import {
   CounterAndLabels,
+  CounterMetricOption,
   createCounter,
   createHistogram,
   createSummary,
@@ -12,10 +13,11 @@ import {
   getHistogramFromConfig,
   getSummaryFromConfig,
   HistogramAndLabels,
+  HistogramMetricOption,
   SummaryAndLabels,
+  SummaryMetricOption,
   usePrometheus as useEnvelopPrometheus,
 } from '@envelop/prometheus';
-import type { HistogramMetricOption } from '@envelop/prometheus/typings/config';
 
 export {
   CounterAndLabels,
@@ -28,6 +30,9 @@ export {
   getHistogramFromConfig,
   getCounterFromConfig,
   getSummaryFromConfig,
+  HistogramMetricOption,
+  CounterMetricOption,
+  SummaryMetricOption,
 };
 
 export type PrometheusTracingPluginConfig = Omit<
