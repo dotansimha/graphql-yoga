@@ -471,8 +471,7 @@ export class YogaServer<
     serverContext: TServerContext,
   ) {
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
-    const context: TServerContext & YogaInitialContext =
-      batched === true ? Object.create(serverContext) : serverContext;
+    const context: TServerContext = batched === true ? Object.create(serverContext) : serverContext;
 
     try {
       for (const onParamsHook of this.onParamsHooks) {
@@ -492,7 +491,7 @@ export class YogaServer<
 
       if (result == null) {
         const additionalContext =
-          serverContext.request === request
+          context.request === request
             ? {
                 params,
               }
@@ -549,7 +548,7 @@ export class YogaServer<
           result = newResult;
         },
         request,
-        context,
+        context: context as TServerContext & YogaInitialContext,
       });
     }
     return result;
