@@ -50,7 +50,12 @@ For the setup mentioned above, you can use the following configuration for your 
 ```ts filename="server.ts"
 import { createYoga } from 'graphql-yoga'
 import jwt from 'jsonwebtoken'
-import { useJWT, createInlineSigningKeyProvider, createRemoteJwksSigningKeyProvider, extractFromHeader } from '@graphql-yoga/plugin-jwt'
+import {
+  createInlineSigningKeyProvider,
+  createRemoteJwksSigningKeyProvider,
+  extractFromHeader,
+  useJWT
+} from '@graphql-yoga/plugin-jwt'
 import { getUserById, getUserByLogin } from './db'
 
 const signingKey = process.env.JWT_SECRET
@@ -66,16 +71,14 @@ const yoga = createYoga({
       ],
       // Configure where to look for the JWT token: in the headers, or cookies.
       // By default, the plugin will look for the token in the 'authorization' header only.
-      tokenLookupLocations: [
-        extractFromHeader({ name: 'authorization', prefix: 'Bearer' }),
-      ],
+      tokenLookupLocations: [extractFromHeader({ name: 'authorization', prefix: 'Bearer' })],
       // Configure your token issuers/audience/algorithms verification options.
       // By default, the plugin will only verify the HS256/RS256 algorithms.
       // Please note that this should match the JWT signer issuer/audience/algorithms.
       tokenVerification: {
         issuer: 'http://my-issuer.com',
         audience: 'my-audience',
-        algorithms: ['HS256', 'RS256'],
+        algorithms: ['HS256', 'RS256']
       },
       // Configure context injection after the token is verified.
       // By default, the plugin will inject the token's payload into the context into the `jwt` field.
@@ -85,7 +88,7 @@ const yoga = createYoga({
       // By default, the plugin will reject the request if the token is missing or invalid.
       reject: {
         missingToken: true,
-        invalidToken: true,
+        invalidToken: true
       }
     })
   ]

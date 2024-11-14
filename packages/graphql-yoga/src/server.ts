@@ -462,17 +462,13 @@ export class YogaServer<
     {
       params,
       request,
-      batched,
     }: {
       params: GraphQLParams;
       request: Request;
-      batched: boolean;
     },
-    serverContext: TServerContext,
+    context: TServerContext,
   ) {
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
-    const context: TServerContext & YogaInitialContext =
-      batched === true ? Object.create(serverContext) : serverContext;
 
     try {
       for (const onParamsHook of this.onParamsHooks) {
@@ -492,7 +488,7 @@ export class YogaServer<
 
       if (result == null) {
         const additionalContext =
-          serverContext.request === request
+          context.request === request
             ? {
                 params,
               }
@@ -549,7 +545,7 @@ export class YogaServer<
           result = newResult;
         },
         request,
-        context,
+        context: context as TServerContext & YogaInitialContext,
       });
     }
     return result;
@@ -610,9 +606,8 @@ export class YogaServer<
               {
                 params,
                 request,
-                batched: true,
               },
-              serverContext,
+              Object.create(serverContext),
             ),
           ),
         )
@@ -620,7 +615,6 @@ export class YogaServer<
           {
             params: requestParserResult,
             request,
-            batched: false,
           },
           serverContext,
         ))) as ResultProcessorInput;
