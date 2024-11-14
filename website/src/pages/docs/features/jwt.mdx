@@ -63,7 +63,7 @@ const yoga = createYoga({
       signingKeyProviders: [
         createInlineSigningKeyProvider(signingKey),
         createRemoteJwksSigningKeyProvider({ jwksUri: 'https://example.com/.well-known/jwks.json' })
-      ]
+      ],
       // Configure where to look for the JWT token: in the headers, or cookies.
       // By default, the plugin will look for the token in the 'authorization' header only.
       tokenLookupLocations: [
