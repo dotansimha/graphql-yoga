@@ -1,5 +1,26 @@
 # graphql-yoga
 
+## 5.10.2
+
+### Patch Changes
+
+- [#3491](https://github.com/dotansimha/graphql-yoga/pull/3491)
+  [`7a413bc`](https://github.com/dotansimha/graphql-yoga/commit/7a413bc4fac839fbdc4fbb3cd5241c7828b2f6da)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - dependencies updates:
+
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.55` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.55)
+    (from `^0.9.54`, in `dependencies`)
+
+- [#3491](https://github.com/dotansimha/graphql-yoga/pull/3491)
+  [`7a413bc`](https://github.com/dotansimha/graphql-yoga/commit/7a413bc4fac839fbdc4fbb3cd5241c7828b2f6da)
+  Thanks [@n1ru4l](https://github.com/n1ru4l)! - Fix issue where context values being shared between
+  batched requests.
+
+  A bug within `@whatwg-node/server` caused properties assigned to a batched requests context to be
+  propagated to all other batched requests contexts. It is resolved by updating the dependency of
+  `@whatwg-node/server` to `0.9.55`.
+
 ## 5.10.1
 
 ### Patch Changes
