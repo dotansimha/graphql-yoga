@@ -172,23 +172,20 @@ tokens etc.
 import { Plugin } from 'graphql-yoga'
 
 function useAuth(): Plugin {
- return {
-  onRequest({ request, fetchAPI, endResponse }) {
-    if (!request.headers.get('authorization')) {
-      endResponse(
-        new fetchAPI.Response(
-          null,
-          {
+  return {
+    onRequest({ request, fetchAPI, endResponse }) {
+      if (!request.headers.get('authorization')) {
+        endResponse(
+          new fetchAPI.Response(null, {
             status: 401,
             headers: {
               'Content-Type': 'application/json'
             }
-          }
+          })
         )
-      )
+      }
     }
   }
- }
 }
 ```
 
