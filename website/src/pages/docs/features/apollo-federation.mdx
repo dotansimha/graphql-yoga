@@ -11,6 +11,8 @@ import { Callout } from '@theguild/components'
 [Apollo Federation](https://apollographql.com/docs/federation) is a specification that applies
 microservice architecture through GraphQL APIs.
 
+> If you're new to GraphQL Federation, [learn how it combines your GraphQL APIs into a unified supergraph](https://the-guild.dev/graphql/hive/federation).
+
 ## Gateway
 
 You can use GraphQL Yoga to implement a Gateway exposing an Apollo Federation supergraph. For this,
@@ -18,6 +20,8 @@ the gateway needs to have access to the supergraph SDL.
 
 You have the choice between loading it from a schema registry (like Hive or Apollo GraphOS) or
 locally from the file system.
+
+> Instead of using GraphQL Yoga to implement the gateway, we recommend to use [Hive Gateway](https://the-guild.dev/graphql/hive/docs/gateway), our open-source MIT-licensed GraphQL gateway for Apollo Federation.
 
 ### Using Hive
 
