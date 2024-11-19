@@ -8,9 +8,12 @@
   "keywords": [],
   "scripts": {
     "check": "tsc --pretty --noEmit",
+    "codegen": "graphql-codegen",
     "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
     "migrate": "prisma migrate dev",
-    "postinstall": "prisma generate",
+    "postinstall": "pnpm run prisma:generate && pnpm run codegen",
+    "precheck": "pnpm run codegen",
+    "prisma:generate": "prisma generate",
     "start": "ts-node src/main.ts"
   },
   "dependencies": {
@@ -18,8 +21,9 @@
     "graphql-yoga": "workspace:*"
   },
   "devDependencies": {
+    "@eddeee888/gcg-typescript-resolver-files": "0.10.4",
+    "@graphql-codegen/cli": "5.0.2",
     "@prisma/client": "5.13.0",
-    "@prisma/internals": "5.13.0",
     "@prisma/migrate": "5.13.0",
     "@types/node": "22.9.0",
     "cross-env": "7.0.3",
