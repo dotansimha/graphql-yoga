@@ -2,6 +2,26 @@
 
 ## 3.10.2
 
+### Patch Changes
+
+- [#3501](https://github.com/dotansimha/graphql-yoga/pull/3501)
+  [`c93366d`](https://github.com/dotansimha/graphql-yoga/commit/c93366df8b4a2edd209d1eb94d989eaba3b7031b)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - dependencies updates:
+
+  - Updated dependency
+    [`@graphql-tools/executor-apollo-link@^1.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor-apollo-link/v/1.0.3)
+    (from `^1.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/executor-http@^1.1.9` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor-http/v/1.1.9)
+    (from `^1.0.4`, in `dependencies`)
+
+- [#3501](https://github.com/dotansimha/graphql-yoga/pull/3501)
+  [`c93366d`](https://github.com/dotansimha/graphql-yoga/commit/c93366df8b4a2edd209d1eb94d989eaba3b7031b)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - Update transport executors containing
+  improvements and fixes
+
+## 3.10.2
+
 ## 3.10.1
 
 ## 3.10.0
