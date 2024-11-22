@@ -100,4 +100,4 @@ usePrometheus({
 The `fillLabelFn` function was provided the `response` and `request` through the `context` argument.
 
 This is now deprecated, `request` and `response` are now available in the first `params` argument.
-This change allows to provide better typing, since `context` is not typed
+This change allows to provide better typing, since `context` is not typed.
