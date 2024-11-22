@@ -5,9 +5,11 @@ import { fetch } from '@whatwg-node/fetch';
 
 const PORT = 3333;
 
+jest.setTimeout(63_000);
+
 let serverProcess: Proc;
 beforeAll(async () => {
-  const signal = AbortSignal.timeout(30_000);
+  const signal = AbortSignal.timeout(60_000);
   serverProcess = await spawn('pnpm', ['dev'], {
     signal,
     env: { PORT: String(PORT) },
