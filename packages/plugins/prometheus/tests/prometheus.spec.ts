@@ -116,7 +116,7 @@ describe('Prometheus', () => {
                 help: 'test',
                 name: 'graphql_yoga_http_duration',
               },
-              phases: [],
+              phases: ['request'],
               registry,
               shouldObserve: () => false,
             }),
