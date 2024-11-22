@@ -1,4 +1,4 @@
-import { getOperationAST } from 'graphql';
+import { getOperationAST, type DocumentNode } from 'graphql';
 import { Plugin } from 'graphql-yoga';
 import { register as defaultRegistry } from 'prom-client';
 import {
@@ -68,10 +68,8 @@ export type PrometheusTracingPluginConfig = Omit<
      *  - string: Enable the metric with custom name
      *  - number[]: Enable the metric with custom buckets
      *  - ReturnType<typeof createHistogram>: Enable the metric with custom configuration
-     *
-     * Note: This metric don't have configurable phases, all of them are required if enabled.
      */
-    graphql_yoga_http_duration?: HistogramMetricOption<[]>;
+    graphql_yoga_http_duration?: HistogramMetricOption<'request', string, HTTPFillLabelParams>;
   };
 
   labels?: {
@@ -94,6 +92,12 @@ export type PrometheusTracingPluginConfig = Omit<
    * Defaults to "/metrics".
    */
   endpoint?: string | boolean;
+};
+
+type HTTPFillLabelParams = FillLabelsFnParams & {
+  document: DocumentNode;
+  request: Request;
+  response: Response;
 };
 
 const DEFAULT_METRICS_CONFIG: PrometheusTracingPluginConfig['metrics'] = {
@@ -146,12 +150,13 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   };
 
   const httpHistogram = getHistogramFromConfig<
-    [],
-    NonNullable<PrometheusTracingPluginConfig['metrics']>
+    'request',
+    NonNullable<PrometheusTracingPluginConfig['metrics']>,
+    HTTPFillLabelParams
   >(
     resolvedOptions,
     'graphql_yoga_http_duration',
-    [],
+    ['request'],
     {
       help: 'Time spent on HTTP connection',
       labelNames: ['operationName', 'operationType', 'method', 'statusCode', 'url'],
@@ -171,7 +176,7 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
   }
 
   const startByRequest = new WeakMap<Request, number>();
-  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>();
+  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams & { document: DocumentNode }>();
 
   return {
     ...basePlugin,
@@ -187,25 +192,22 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
           operationType: operationAST?.operation,
         };
 
-        if (httpHistogram.shouldObserve(params, context)) {
-          paramsByRequest.set(context.request, params);
-        }
+        paramsByRequest.set(context.request, params);
       };
     },
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request);
       const params = paramsByRequest.get(request);
       if (start && params) {
-        const duration = (Date.now() - start) / 1000;
-        const params = paramsByRequest.get(request);
-        httpHistogram.histogram.observe(
-          httpHistogram.fillLabelsFn(params || {}, {
-            ...serverContext,
-            request,
-            response,
-          }),
-          duration,
-        );
+        const context = { ...serverContext, request, response };
+        const completeParams: HTTPFillLabelParams = { ...params, request, response };
+
+        if (httpHistogram.shouldObserve(completeParams, context)) {
+          httpHistogram.histogram.observe(
+            httpHistogram.fillLabelsFn(completeParams, context),
+            (Date.now() - start) / 1000,
+          );
+        }
       }
     },
   };
