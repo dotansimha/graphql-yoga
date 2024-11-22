@@ -1,10 +1,28 @@
-import { exec } from 'node:child_process';
+import cp from 'node:child_process';
 import { join } from 'node:path';
-import { Readable } from 'node:stream';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
 
 const PORT = 3333;
+
+let serverProcess: Proc;
+beforeAll(async () => {
+  const signal = AbortSignal.timeout(30_000);
+  serverProcess = await spawn('pnpm', ['dev'], {
+    signal,
+    env: { PORT: String(PORT) },
+  });
+
+  while (!signal.aborted) {
+    try {
+      await fetch(`http://127.0.0.1:${PORT}`, { signal });
+      break;
+    } catch {}
+    signal.throwIfAborted();
+    await setTimeout$(1_000);
+  }
+});
+afterAll(() => serverProcess.kill());
 
 describe('nextjs 13 App Router', () => {
   it('should show GraphiQL', async () => {
@@ -53,85 +71,62 @@ describe('nextjs 13 App Router', () => {
     expect(json.errors).toBeFalsy();
     expect(json.data?.greetings).toBe('This is the `greetings` field of the root `Query` type');
   });
-
-  jest.setTimeout(1000 * 60 * 5);
-  let serverProcess: ReturnType<typeof cmd>;
-
-  beforeAll(async () => {
-    serverProcess = cmd(`PORT=${PORT} pnpm dev`);
-    await waitForEndpoint(`http://127.0.0.1:${PORT}`, 5, 1000);
-  });
-
-  afterAll(async () => {
-    await serverProcess?.stop().catch(err => {
-      console.error('Failed to stop server process', err);
-    });
-  });
 });
 
-function cmd(cmd: string) {
-  const cp = exec(cmd, {
+interface Proc {
+  waitForExit: Promise<void>;
+  kill(): Promise<void>;
+}
+
+function spawn(
+  cmd: string,
+  args: string[],
+  { signal, env }: { signal: AbortSignal; env: Record<string, string> },
+): Promise<Proc> {
+  const proc = cp.spawn(cmd, args, {
+    // ignore stdin because we're not feeding the process anything, pipe stdout and stderr
+    stdio: ['ignore', 'pipe', 'pipe'],
     cwd: join(module.path, '..'),
-    timeout: 1000 * 60 * 1,
-  });
-
-  const getStdout = saveOut(cp.stdout!);
-  const getStderr = saveOut(cp.stderr!);
-
-  const exited = new Promise<string>((resolve, reject) => {
-    cp.on('close', async (code: number) => {
-      const out = getStdout();
-      const err = getStderr();
-      if (out) console.log(out);
-      if (err) console.error(err);
-
-      return code === 0 ? resolve(out) : reject(new Error(err));
-    });
-    cp.on('error', error => {
-      console.error(error);
-      reject(error);
-    });
-  });
-
-  return {
-    exited,
-    stop: () => {
-      cp.kill('SIGKILL');
-      return exited;
+    signal,
+    env: {
+      ...process.env,
+      ...env,
     },
-  };
-}
+  });
 
-export function saveOut(stream: Readable) {
-  const out: Buffer[] = [];
-  stream.on('data', (data: string) => out.push(Buffer.from(data)));
-  return () => Buffer.concat(out).toString('utf-8');
-}
+  let stdboth = '';
+  proc.stdout.on('data', x => {
+    stdboth += x.toString();
+  });
+  proc.stderr.on('data', x => {
+    stdboth += x.toString();
+  });
 
-export async function waitForEndpoint(
-  endpoint: string,
-  retries: number,
-  timeout = 1000,
-): Promise<boolean> {
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    console.info(`Trying to connect to ${endpoint} (attempt ${attempt}/${retries})...`);
-    try {
-      const r = await fetch(endpoint);
-
-      if (!r.ok) {
-        throw new Error(`Endpoint not ready yet, status code is ${r.status}`);
+  const waitForExit = new Promise<void>((resolve, reject) => {
+    proc.once('exit', () => {
+      proc.stdout.destroy();
+      proc.stderr.destroy();
+    });
+    proc.once('close', code => {
+      // process ended _and_ the stdio streams have been closed
+      if (code) {
+        reject(new Error(`Exit code ${code}\n${stdboth}`));
+      } else {
+        resolve();
       }
+    });
+  });
 
-      return true;
-    } catch (e) {
-      console.warn(
-        `Failed to connect to endpoint: ${endpoint}, waiting ${timeout}ms...`,
-        (e as Error).message,
-      );
-
-      await setTimeout$(timeout);
-    }
-  }
-
-  throw new Error(`Failed to connect to endpoint: ${endpoint} (attempts: ${retries})`);
+  return new Promise((resolve, reject) => {
+    waitForExit.catch(reject);
+    proc.once('spawn', () =>
+      resolve({
+        waitForExit,
+        async kill() {
+          proc.kill();
+          await waitForExit;
+        },
+      }),
+    );
+  });
 }
