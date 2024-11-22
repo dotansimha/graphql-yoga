@@ -1,5 +1,5 @@
 ---
-'@graphql-yoga/plugin-prometheus': major
+'@graphql-yoga/plugin-prometheus': minor
 ---
 
 Allow to explicitly control which events and timing should be observe.
