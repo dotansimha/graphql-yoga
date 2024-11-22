@@ -171,7 +171,7 @@ export function createTestSchema() {
           async *subscribe(_root, args) {
             for (let count = 1; count <= args.to; count++) {
               yield { count };
-              await new Promise(resolve => setTimeout(resolve, 100));
+              await new Promise(resolve => setTimeout(resolve, 200));
             }
           },
         },
