@@ -12,13 +12,12 @@ beforeAll(async () => {
     signal,
     env: { PORT: String(PORT) },
   });
-
-  while (!signal.aborted) {
+  for (;;) {
+    signal.throwIfAborted();
     try {
       await fetch(`http://127.0.0.1:${PORT}`, { signal });
       break;
     } catch {}
-    signal.throwIfAborted();
     await setTimeout$(1_000);
   }
 });
