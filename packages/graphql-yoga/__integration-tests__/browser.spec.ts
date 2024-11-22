@@ -46,6 +46,10 @@ const fakeAsyncIterable = {
   },
 };
 
+// will be registered inside `emitter` resolver
+let emitToEmitter: ((val: string) => Promise<unknown>) | null;
+let stopEmitter: (() => void) | null;
+
 export function createTestSchema() {
   let liveQueryCounter = 0;
 
@@ -161,6 +165,18 @@ export function createTestSchema() {
             yield { eventEmitted: Date.now() };
           },
         },
+        emitter: {
+          type: new GraphQLNonNull(GraphQLString),
+          subscribe() {
+            return new Repeater(async (push, stop) => {
+              emitToEmitter = val => push({ emitter: val });
+              stopEmitter = stop;
+              await stop;
+              emitToEmitter = null;
+              stopEmitter = null;
+            });
+          },
+        },
         count: {
           type: GraphQLInt,
           args: {
@@ -171,7 +187,7 @@ export function createTestSchema() {
           async *subscribe(_root, args) {
             for (let count = 1; count <= args.to; count++) {
               yield { count };
-              await new Promise(resolve => setTimeout(resolve, 100));
+              await new Promise(resolve => setTimeout(resolve, 200));
             }
           },
         },
@@ -357,34 +373,32 @@ describe('browser', () => {
 
     test('execute SSE (subscription) operation', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`);
-      await typeOperationText(`subscription { count(to: 2) }`);
+      await typeOperationText(`subscription { emitter }`);
       await page.click('.graphiql-execute-button');
 
-      await setTimeout$(50);
+      // showing stop selector means subscription has started
+      await page.waitForSelector(stopButtonSelector);
 
-      const resultContents = await waitForResult();
-      const isShowingStopButton = await page.evaluate(stopButtonSelector => {
-        return !!window.document.querySelector(stopButtonSelector);
-      }, stopButtonSelector);
-      expect(resultContents).toEqual({
+      await emitToEmitter!('one');
+
+      await expect(waitForResult()).resolves.toEqual({
         data: {
-          count: 1,
+          emitter: 'one',
         },
       });
-      expect(isShowingStopButton).toEqual(true);
 
-      await setTimeout$(300);
+      await emitToEmitter!('two');
 
-      const resultContents1 = await waitForResult();
-      const isShowingPlayButton = await page.evaluate(playButtonSelector => {
-        return !!window.document.querySelector(playButtonSelector);
-      }, playButtonSelector);
-      expect(resultContents1).toEqual({
+      await expect(waitForResult()).resolves.toEqual({
         data: {
-          count: 2,
+          emitter: 'two',
         },
       });
-      expect(isShowingPlayButton).toEqual(true);
+
+      stopEmitter!();
+
+      // wait for subscription to end
+      await page.waitForSelector(playButtonSelector);
     });
 
     test('show the query provided in the search param', async () => {
