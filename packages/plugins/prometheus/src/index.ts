@@ -169,15 +169,15 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
       const start = startByRequest.get(request);
       if (start) {
         const duration = (Date.now() - start) / 1000;
-        const params = paramsByRequest.get(request);
-        httpHistogram?.histogram.observe(
-          httpHistogram.fillLabelsFn(params || {}, {
-            ...serverContext,
-            request,
-            response,
-          }),
-          duration,
-        );
+        const params = paramsByRequest.get(request) || {};
+        const context = {
+          ...serverContext,
+          request,
+          response,
+        };
+        if (httpHistogram?.shouldRecordFn(params, context)) {
+          httpHistogram?.histogram.observe(httpHistogram.fillLabelsFn(params, context), duration);
+        }
       }
     },
   };
