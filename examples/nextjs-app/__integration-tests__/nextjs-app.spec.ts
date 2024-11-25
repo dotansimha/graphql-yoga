@@ -60,9 +60,10 @@ describe('nextjs 13 App Router', () => {
       ...Object.fromEntries(response.headers.entries()),
       date: null,
       'keep-alive': null,
+      connection: null,
     }).toMatchInlineSnapshot(`
 {
-  "connection": "keep-alive",
+  "connection": null,
   "content-type": "application/json; charset=utf-8",
   "date": null,
   "keep-alive": null,
