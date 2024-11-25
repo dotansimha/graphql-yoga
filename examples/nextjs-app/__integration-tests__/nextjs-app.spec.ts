@@ -10,7 +10,12 @@ jest.setTimeout(63_000);
 let serverProcess: Proc;
 beforeAll(async () => {
   const signal = AbortSignal.timeout(60_000);
-  serverProcess = await spawn('pnpm', ['dev'], {
+  const buildProcess = await spawn('pnpm', ['build'], {
+    signal,
+    env: {},
+  });
+  await buildProcess.waitForExit;
+  serverProcess = await spawn('pnpm', ['start'], {
     signal,
     env: { PORT: String(PORT) },
   });
@@ -56,16 +61,15 @@ describe('nextjs 13 App Router', () => {
       date: null,
       'keep-alive': null,
     }).toMatchInlineSnapshot(`
-      {
-        "connection": "close",
-        "content-encoding": "gzip",
-        "content-type": "application/json; charset=utf-8",
-        "date": null,
-        "keep-alive": null,
-        "transfer-encoding": "chunked",
-        "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept-Encoding",
-      }
-    `);
+{
+  "connection": "keep-alive",
+  "content-type": "application/json; charset=utf-8",
+  "date": null,
+  "keep-alive": null,
+  "transfer-encoding": "chunked",
+  "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+}
+`);
 
     const json = await response.json();
 
