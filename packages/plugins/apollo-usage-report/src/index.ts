@@ -1,4 +1,4 @@
-import { printSchema, stripIgnoredCharacters } from 'graphql';
+import { DocumentNode, getOperationAST, Kind, printSchema, stripIgnoredCharacters } from 'graphql';
 import {
   isAsyncIterable,
   Maybe,
@@ -134,21 +134,26 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           }
         },
 
-        onEnveloped({ context }) {
-          if (!context) {
-            return;
-          }
-          const ctx = ctxForReq.get(context.request)?.traces.get(context);
-          if (!ctx) {
-            logger.debug('operation tracing context not found, this operation will not be traced.');
-            return;
-          }
+        onParse() {
+          return function onParseEnd({ result, context }) {
+            const ctx = ctxForReq.get(context.request)?.traces.get(context);
+            if (!ctx) {
+              logger.debug(
+                'operation tracing context not found, this operation will not be traced.',
+              );
+              return;
+            }
 
-          const signature = context.params.query
-            ? stripIgnoredCharacters(context.params.query)
-            : '';
-          ctx.operationKey = `# ${context.params.operationName || '-'}\n${signature}`;
-          ctx.schemaId = schemaId;
+            const operationName =
+              context.params.operationName ??
+              (isDocumentNode(result) ? getOperationAST(result)?.name?.value : undefined);
+            const signature = context.params.query
+              ? stripIgnoredCharacters(context.params.query)
+              : '';
+
+            ctx.operationKey = `# ${operationName || '-'}\n${signature}`;
+            ctx.schemaId = schemaId;
+          };
         },
 
         onResultProcess({ request, result, serverContext }) {
@@ -270,4 +275,11 @@ async function sendTrace(
   } catch (err) {
     logger.error('Failed to send trace:', err);
   }
+}
+
+function isDocumentNode(data: unknown): data is DocumentNode {
+  const isObject = (data: unknown): data is Record<string, unknown> =>
+    !!data && typeof data === 'object';
+
+  return isObject(data) && data.kind === Kind.DOCUMENT;
 }
