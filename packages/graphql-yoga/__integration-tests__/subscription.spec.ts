@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { ExecutionResult } from 'graphql';
 import { fetch } from '@whatwg-node/fetch';
+import { fakePromise } from '@whatwg-node/server';
 import { createSchema, createYoga } from '../src';
 
 describe('subscription', () => {
@@ -29,7 +30,7 @@ describe('subscription', () => {
       },
       return: jest.fn(() => {
         onIteratorDone();
-        return Promise.resolve({ done: true, value: undefined });
+        return fakePromise({ done: true, value: undefined });
       }),
     };
     const yoga = createYoga({

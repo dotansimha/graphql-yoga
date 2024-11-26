@@ -3,6 +3,7 @@ import { createYoga } from 'graphql-yoga';
 import { SupergraphSchemaManager, SupergraphSchemaManagerOptions } from '@graphql-tools/federation';
 import { useManagedFederation } from '@graphql-yoga/plugin-apollo-managed-federation';
 import { Response } from '@whatwg-node/fetch';
+import { fakePromise } from '@whatwg-node/server';
 import { supergraphSdl } from './fixtures/supergraph';
 
 describe('Apollo Managed Federation', () => {
@@ -150,7 +151,7 @@ describe('Apollo Managed Federation', () => {
   });
 
   const mockSDL = () =>
-    Promise.resolve(
+    fakePromise(
       Response.json({
         data: {
           routerConfig: {

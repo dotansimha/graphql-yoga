@@ -3,7 +3,7 @@ import { AddressInfo } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { ExecutionResult } from 'graphql';
 import { fetch } from '@whatwg-node/fetch';
-import { createDeferred } from '../../testing-utils/create-deferred.js';
+import { createDeferredPromise } from '@whatwg-node/server';
 import {
   createGraphQLError,
   createSchema,
@@ -102,8 +102,8 @@ describe('node-http', () => {
   });
 
   it('request cancellation causes signal passed to executor to be aborted', async () => {
-    const d = createDeferred();
-    const didAbortD = createDeferred();
+    const d = createDeferredPromise();
+    const didAbortD = createDeferredPromise();
 
     const plugin: Plugin = {
       onExecute(ctx) {
@@ -159,8 +159,8 @@ describe('node-http', () => {
   });
 
   it('request cancellation causes no more resolvers being invoked', async () => {
-    const didInvokeSlowResolverD = createDeferred();
-    const didCancelD = createDeferred();
+    const didInvokeSlowResolverD = createDeferredPromise();
+    const didCancelD = createDeferredPromise();
 
     let didInvokedNestedField = false;
     const yoga = createYoga({

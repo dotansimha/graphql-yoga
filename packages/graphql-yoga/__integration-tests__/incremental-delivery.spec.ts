@@ -10,16 +10,14 @@ import {
 } from 'graphql';
 import { Push } from '@repeaterjs/repeater';
 import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch';
+import { createDeferredPromise, fakePromise } from '@whatwg-node/server';
 import { createSchema, createYoga, Plugin, Repeater } from '../src';
 
 describe('incremental delivery', () => {
   it('incremental delivery source is closed properly', async () => {
     let counter = 0;
 
-    let onIteratorDone: () => void;
-    const waitIteratorDone = new Promise<void>(resolve => {
-      onIteratorDone = resolve;
-    });
+    const onIteratorDone$ = createDeferredPromise<void>();
 
     const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
@@ -36,13 +34,13 @@ describe('incremental delivery', () => {
         };
       },
       return: jest.fn(() => {
-        onIteratorDone();
-        return Promise.resolve({ done: true, value: undefined });
+        onIteratorDone$.resolve();
+        return fakePromise({ done: true, value: undefined });
       }),
     };
     const plugin: Plugin = {
       onExecute(ctx) {
-        ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as unknown);
+        ctx.setExecuteFn(() => fakePromise(fakeIterator));
       },
       /* skip validation :) */
       onValidate(ctx) {
@@ -92,9 +90,10 @@ describe('incremental delivery', () => {
           break;
         }
       }
-      await waitIteratorDone;
+      await onIteratorDone$.promise;
       expect(fakeIterator.return).toBeCalled();
     } finally {
+      server.closeAllConnections();
       await new Promise(resolve => server.close(resolve));
     }
   });
@@ -215,6 +214,7 @@ describe('incremental delivery: node-fetch', () => {
     url = `http://localhost:${port}/graphql`;
   });
   afterEach(async () => {
+    server.closeAllConnections();
     await new Promise(resolve => server.close(resolve));
     stop?.();
     stop = undefined;

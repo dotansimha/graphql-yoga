@@ -1,36 +1,35 @@
 import { Repeater } from 'graphql-yoga';
-import { createDeferred } from '../../../testing-utils/create-deferred';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { createDeferredPromise } from '@whatwg-node/server';
 
 export const createPushPullAsyncIterable = <T>(): {
-  source: AsyncGenerator<T>;
+  source: Repeater<T>;
   push: (item: T) => void;
   terminate: () => void;
 } => {
   const queue: Array<T> = [];
-  let d = createDeferred();
+  let d = createDeferredPromise();
   let terminated = false;
 
-  const source = new Repeater<T>(async (push, stop) => {
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      if (terminated) {
-        stop();
-        return;
-      }
-      let item: T | undefined;
-      while ((item = queue.shift())) {
-        push(item);
-      }
-      await d.promise;
-    }
-  });
-
   return {
-    source,
+    source: new Repeater<T>(async (push, stop) => {
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        if (terminated) {
+          stop();
+          return;
+        }
+        let item: T | undefined;
+        while ((item = queue.shift())) {
+          push(item);
+        }
+        await d.promise;
+      }
+    }),
     push: item => {
       queue.push(item);
       d.resolve();
-      d = createDeferred();
+      d = createDeferredPromise();
     },
     terminate: () => {
       terminated = true;

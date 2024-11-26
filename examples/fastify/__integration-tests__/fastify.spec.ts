@@ -1,7 +1,7 @@
 import request from 'supertest';
+import { createDeferred } from '@graphql-tools/utils';
 import { fetch } from '@whatwg-node/fetch';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
-import { createDeferred } from '../../../packages/testing-utils/create-deferred.js';
 import { buildApp } from '../src/app.js';
 
 describe('fastify example integration', () => {
@@ -259,8 +259,8 @@ data"
   });
 
   it('request cancelation', async () => {
-    const slowFieldResolverInvoked = createDeferred();
-    const slowFieldResolverCanceled = createDeferred();
+    const slowFieldResolverInvoked = createDeferred<void>();
+    const slowFieldResolverCanceled = createDeferred<void>();
     const address = await app.listen({
       port: 0,
     });
@@ -310,7 +310,7 @@ data"
   });
 
   it('subscription cancelation', async () => {
-    const cancelationIsLoggedPromise = createDeferred();
+    const cancelationIsLoggedPromise = createDeferred<void>();
     const address = await app.listen({
       port: 0,
     });

@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { createDeferred } from '../../testing-utils/create-deferred.js';
+import { createDeferredPromise, fakePromise } from '@whatwg-node/server';
 import { createSchema, createYoga, maskError, Plugin } from '../src/index.js';
 import { eventStream } from './utilities.js';
 
@@ -67,7 +67,7 @@ describe('Subscription', () => {
   });
 
   test('should issue pings while connected', async () => {
-    const d = createDeferred();
+    const d = createDeferredPromise();
 
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
@@ -146,12 +146,12 @@ data:
   });
 
   test('should issue pings event if event source never publishes anything', async () => {
-    const d = createDeferred();
+    const d = createDeferredPromise();
     const source: AsyncIterableIterator<unknown> = {
       next: () => d.promise.then(() => ({ done: true, value: undefined })),
       return: () => {
         d.resolve();
-        return Promise.resolve({ done: true, value: undefined });
+        return fakePromise({ done: true, value: undefined });
       },
       throw: () => {
         throw new Error('Method not implemented. (throw)');
