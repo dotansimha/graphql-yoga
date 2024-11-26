@@ -1,6 +1,5 @@
-import { setTimeout } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
-import { getAvailablePort, Proc, spawn } from './utils';
+import { getAvailablePort, Proc, spawn, waitForAvailable } from './utils';
 
 jest.setTimeout(33_000);
 
@@ -8,25 +7,13 @@ describe('nextjs 13 App Router', () => {
   let port: number;
   let serverProcess: Proc;
   beforeAll(async () => {
-    port = await getAvailablePort();
     const signal = AbortSignal.timeout(30_000);
-    const buildProcess = await spawn('pnpm', ['build'], {
-      signal,
-      env: {},
-    });
-    await buildProcess.waitForExit;
-    serverProcess = await spawn('pnpm', ['start'], {
+    port = await getAvailablePort();
+    serverProcess = await spawn('pnpm', ['dev'], {
       signal,
       env: { PORT: String(port) },
     });
-    for (;;) {
-      signal.throwIfAborted();
-      try {
-        await fetch(`http://127.0.0.1:${port}`, { signal });
-        break;
-      } catch {}
-      await setTimeout(1_000);
-    }
+    await waitForAvailable(port, { signal });
   });
   afterAll(() => serverProcess?.kill());
 

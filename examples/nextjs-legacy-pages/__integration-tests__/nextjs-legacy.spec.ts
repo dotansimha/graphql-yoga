@@ -1,6 +1,10 @@
-import { setTimeout } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
-import { getAvailablePort, Proc, spawn } from '../../nextjs-app/__integration-tests__/utils';
+import {
+  getAvailablePort,
+  Proc,
+  spawn,
+  waitForAvailable,
+} from '../../nextjs-app/__integration-tests__/utils';
 
 jest.setTimeout(33_000);
 
@@ -8,20 +12,13 @@ describe('NextJS Legacy Pages', () => {
   let port: number;
   let serverProcess: Proc;
   beforeAll(async () => {
-    port = await getAvailablePort();
     const signal = AbortSignal.timeout(30_000);
+    port = await getAvailablePort();
     serverProcess = await spawn('pnpm', ['dev'], {
       signal,
       env: { PORT: String(port) },
     });
-    for (;;) {
-      signal.throwIfAborted();
-      try {
-        await fetch(`http://127.0.0.1:${port}`, { signal });
-        break;
-      } catch {}
-      await setTimeout(1_000);
-    }
+    await waitForAvailable(port, { signal });
   });
   afterAll(() => serverProcess.kill());
 
