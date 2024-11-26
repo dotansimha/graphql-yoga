@@ -18,6 +18,7 @@ import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
+import { fakePromise } from '@whatwg-node/server';
 import { CORSOptions, createYoga, Repeater } from '../src/index.js';
 
 let resolveOnReturn: VoidFunction;
@@ -42,7 +43,7 @@ const fakeAsyncIterable = {
   return: () => {
     resolveOnReturn();
     timeoutsSignal.abort();
-    return Promise.resolve({ done: true });
+    return fakePromise({ done: true });
   },
 };
 

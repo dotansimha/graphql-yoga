@@ -1,6 +1,6 @@
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
-import { createDeferredPromise } from '@whatwg-node/server';
+import { createDeferredPromise, fakePromise } from '@whatwg-node/server';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
@@ -59,7 +59,7 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
       plugins: [useExecutionCancellation()],
     });
     const abortController = new AbortController();
-    const promise = Promise.resolve(
+    const promise = fakePromise(
       yoga.fetch('http://yoga/graphql', {
         method: 'POST',
         body: JSON.stringify({ query: '{ root { a } }' }),

@@ -10,6 +10,7 @@ import {
 } from 'graphql';
 import { Push } from '@repeaterjs/repeater';
 import { createFetch, fetch, File, FormData } from '@whatwg-node/fetch';
+import { fakePromise } from '@whatwg-node/server';
 import { createSchema, createYoga, Plugin, Repeater } from '../src';
 
 describe('incremental delivery', () => {
@@ -23,26 +24,25 @@ describe('incremental delivery', () => {
 
     const fakeIterator: AsyncIterableIterator<ExecutionResult> = {
       [Symbol.asyncIterator]: () => fakeIterator,
-      async next() {
+      next() {
         counter++;
-        await new Promise(resolve => setImmediate(resolve));
-        return {
+        return fakePromise({
           done: false,
           value: {
             data: {
               counter,
             },
           },
-        };
+        });
       },
       return: jest.fn(() => {
         onIteratorDone();
-        return Promise.resolve({ done: true, value: undefined });
+        return fakePromise({ done: true, value: undefined });
       }),
     };
     const plugin: Plugin = {
       onExecute(ctx) {
-        ctx.setExecuteFn(() => Promise.resolve(fakeIterator) as unknown);
+        ctx.setExecuteFn(() => fakeIterator);
       },
       /* skip validation :) */
       onValidate(ctx) {

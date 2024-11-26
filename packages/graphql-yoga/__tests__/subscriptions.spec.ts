@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { createDeferredPromise } from '@whatwg-node/server';
+import { createDeferredPromise, fakePromise } from '@whatwg-node/server';
 import { createSchema, createYoga, maskError, Plugin } from '../src/index.js';
 import { eventStream } from './utilities.js';
 
@@ -151,7 +151,7 @@ data:
       next: () => d.promise.then(() => ({ done: true, value: undefined })),
       return: () => {
         d.resolve();
-        return Promise.resolve({ done: true, value: undefined });
+        return fakePromise({ done: true, value: undefined });
       },
       throw: () => {
         throw new Error('Method not implemented. (throw)');

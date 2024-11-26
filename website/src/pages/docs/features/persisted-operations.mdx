@@ -171,7 +171,7 @@ const client = new createClient({
     persistedExchange({
       enforcePersistedQueries: true,
       enableForMutation: true,
-      generateHash: (_, document) => Promise.resolve(document['__meta__']['hash'])
+      generateHash: async (_, document) => document['__meta__']['hash']
     })
   ]
 })
