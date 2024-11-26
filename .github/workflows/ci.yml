@@ -45,11 +45,9 @@ jobs:
         run: pnpm lint
 
   unit:
-    needs: [typecheck]
     name: unit / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
@@ -96,11 +94,9 @@ jobs:
           command: pnpm run test --ci
 
   integration:
-    needs: [typecheck, unit]
     name: integration / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
@@ -147,11 +143,9 @@ jobs:
           command: pnpm test:integration --ci
 
   leaks:
-    needs: [typecheck, unit, integration]
     name: leaks / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         node-version: [18, 22]
         graphql-version: ['15.8.0', '16.6.0']
@@ -198,7 +192,6 @@ jobs:
           command: pnpm test:leaks --ci
 
   esm:
-    needs: [typecheck]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -216,9 +209,7 @@ jobs:
         run: pnpm --filter example-node-esm run test
 
   apollo-federation-compatibility:
-    needs: [typecheck]
     strategy:
-      fail-fast: false
       matrix:
         node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
@@ -313,9 +304,7 @@ jobs:
   #         debug: true
 
   e2e:
-    needs: [unit, integration, leaks, esm]
     strategy:
-      fail-fast: false
       matrix:
         plan:
           - 'cf-worker'
