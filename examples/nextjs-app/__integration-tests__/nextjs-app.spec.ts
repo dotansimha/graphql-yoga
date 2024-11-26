@@ -1,33 +1,51 @@
 import cp from 'node:child_process';
+import { createServer } from 'node:http';
+import { AddressInfo } from 'node:net';
 import { join } from 'node:path';
-import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
-
-const PORT = 3333;
 
 jest.setTimeout(63_000);
 
-let serverProcess: Proc;
-beforeAll(async () => {
-  const signal = AbortSignal.timeout(60_000);
-  serverProcess = await spawn('pnpm', ['dev'], {
-    signal,
-    env: { PORT: String(PORT) },
+function getAvailablePort() {
+  return new Promise<number>((resolve, reject) => {
+    const server = createServer();
+    server.once('error', reject);
+    server.listen(0, () => {
+      const { port } = server.address() as AddressInfo;
+      server.close(err => {
+        if (err) reject(err);
+        else resolve(port);
+      });
+    });
   });
-  for (;;) {
-    signal.throwIfAborted();
-    try {
-      await fetch(`http://127.0.0.1:${PORT}`, { signal });
-      break;
-    } catch {}
-    await setTimeout$(1_000);
-  }
-});
-afterAll(() => serverProcess.kill());
+}
 
 describe('nextjs 13 App Router', () => {
+  let port: number;
+  let serverProcess: Proc;
+  beforeAll(async () => {
+    port = await getAvailablePort();
+    const signal = AbortSignal.timeout(60_000);
+    const buildProcess = await spawn('pnpm', ['build'], {
+      signal,
+      env: {},
+    });
+    await buildProcess.waitForExit;
+    serverProcess = await spawn('pnpm', ['start'], {
+      signal,
+      env: { PORT: String(port) },
+    });
+    for (;;) {
+      signal.throwIfAborted();
+      try {
+        await fetch(`http://127.0.0.1:${port}`, { signal }).then(res => res.text());
+        break;
+      } catch {}
+    }
+  });
+  afterAll(() => serverProcess.kill());
   it('should show GraphiQL', async () => {
-    const response = await fetch(`http://127.0.0.1:${PORT}/api/graphql`, {
+    const response = await fetch(`http://127.0.0.1:${port}/api/graphql`, {
       headers: {
         accept: 'text/html',
       },
@@ -38,11 +56,12 @@ describe('nextjs 13 App Router', () => {
   });
 
   it('should run basic query', async () => {
-    const response = await fetch(`http://127.0.0.1:${PORT}/api/graphql`, {
+    const response = await fetch(`http://127.0.0.1:${port}/api/graphql`, {
       method: 'POST',
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
+        connection: 'close',
       },
       body: JSON.stringify({
         query: 'query { greetings }',
@@ -55,17 +74,17 @@ describe('nextjs 13 App Router', () => {
       ...Object.fromEntries(response.headers.entries()),
       date: null,
       'keep-alive': null,
+      connection: null,
     }).toMatchInlineSnapshot(`
-      {
-        "connection": "close",
-        "content-encoding": "gzip",
-        "content-type": "application/json; charset=utf-8",
-        "date": null,
-        "keep-alive": null,
-        "transfer-encoding": "chunked",
-        "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept-Encoding",
-      }
-    `);
+{
+  "connection": null,
+  "content-type": "application/json; charset=utf-8",
+  "date": null,
+  "keep-alive": null,
+  "transfer-encoding": "chunked",
+  "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+}
+`);
 
     const json = await response.json();
 
@@ -123,9 +142,9 @@ function spawn(
     proc.once('spawn', () =>
       resolve({
         waitForExit,
-        async kill() {
+        kill() {
           proc.kill();
-          await waitForExit;
+          return waitForExit;
         },
       }),
     );

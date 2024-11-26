@@ -1,12 +1,13 @@
 import { exec } from 'node:child_process';
+import { createServer } from 'node:http';
+import { AddressInfo } from 'node:net';
 import { join } from 'node:path';
 import { Readable } from 'node:stream';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
 
-const PORT = 3334;
-
 describe('NextJS Legacy Pages', () => {
+  let PORT: number;
   it('should show GraphiQL', async () => {
     const response = await fetch(`http://127.0.0.1:${PORT}/api/graphql`, {
       headers: {
@@ -24,6 +25,7 @@ describe('NextJS Legacy Pages', () => {
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
+        connection: 'close',
       },
       body: JSON.stringify({
         query: 'query { greetings }',
@@ -49,16 +51,32 @@ describe('NextJS Legacy Pages', () => {
   jest.setTimeout(1000 * 60 * 5);
   let serverProcess: ReturnType<typeof cmd>;
 
+  function getAvailablePort() {
+    return new Promise<number>((resolve, reject) => {
+      const server = createServer();
+      server.once('error', reject);
+      server.listen(0, () => {
+        const port = (server.address() as AddressInfo).port;
+        server.close(err => {
+          if (err) reject(err);
+          else resolve(port);
+        });
+      });
+    });
+  }
+
   beforeAll(async () => {
+    PORT = await getAvailablePort();
     serverProcess = cmd(`PORT=${PORT} pnpm dev`);
-    await waitForEndpoint(`http://127.0.0.1:${PORT}`, 5, 1000);
+    return waitForEndpoint(`http://127.0.0.1:${PORT}`, 5, 1000);
   });
 
-  afterAll(async () => {
-    await serverProcess?.stop().catch(err => {
-      console.error('Failed to stop server process', err);
-    });
-  });
+  afterAll(
+    () =>
+      serverProcess?.stop().catch(err => {
+        console.error('Failed to stop server process', err);
+      }),
+  );
 });
 
 function cmd(cmd: string) {
@@ -71,15 +89,15 @@ function cmd(cmd: string) {
   const getStderr = saveOut(cp.stderr!);
 
   const exited = new Promise<string>((resolve, reject) => {
-    cp.on('close', async (code: number) => {
+    cp.once('close', async (code: number) => {
       const out = getStdout();
       const err = getStderr();
       if (out) console.log(out);
       if (err) console.error(err);
 
-      return code === 0 ? resolve(out) : reject(new Error(err));
+      return code ? resolve(out) : reject(new Error(`Process exited with code ${code}; \n ${err}`));
     });
-    cp.on('error', error => {
+    cp.once('error', error => {
       console.error(error);
       reject(error);
     });
@@ -114,6 +132,9 @@ export async function waitForEndpoint(
         throw new Error(`Endpoint not ready yet, status code is ${r.status}`);
       }
 
+      await r.text();
+
+      console.info(`Connected to endpoint: ${endpoint}`);
       return true;
     } catch (e) {
       console.warn(
