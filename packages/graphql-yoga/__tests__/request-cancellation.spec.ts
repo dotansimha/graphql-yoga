@@ -1,6 +1,6 @@
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
-import { createDeferred } from '../../testing-utils/create-deferred';
+import { createDeferredPromise } from '@whatwg-node/server';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
@@ -21,8 +21,8 @@ function waitAFewMillisecondsToMakeSureGraphQLExecutionIsNotResumingInBackground
 
 describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
   it('request cancellation stops invocation of subsequent resolvers (GraphQL over HTTP)', async () => {
-    const rootResolverGotInvokedD = createDeferred();
-    const requestGotCancelledD = createDeferred();
+    const rootResolverGotInvokedD = createDeferredPromise();
+    const requestGotCancelledD = createDeferredPromise();
     let aResolverGotInvoked = false;
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
@@ -83,8 +83,8 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
   });
 
   it('request cancellation stops invocation of subsequent resolvers (GraphQL over SSE with Subscription)', async () => {
-    const rootResolverGotInvokedD = createDeferred();
-    const requestGotCancelledD = createDeferred();
+    const rootResolverGotInvokedD = createDeferredPromise();
+    const requestGotCancelledD = createDeferredPromise();
     let aResolverGotInvoked = false;
     const schema = createSchema({
       typeDefs: /* GraphQL */ `
@@ -170,8 +170,8 @@ describe.each(variants)('request cancellation (%s)', (_, fetchAPI) => {
   });
 
   it('request cancellation stops invocation of subsequent resolvers (GraphQL over Multipart with defer/stream)', async () => {
-    const aResolverGotInvokedD = createDeferred();
-    const requestGotCancelledD = createDeferred();
+    const aResolverGotInvokedD = createDeferredPromise();
+    const requestGotCancelledD = createDeferredPromise();
     let bResolverGotInvoked = false;
     const schema = createSchema({
       typeDefs: /* GraphQL */ `

@@ -192,8 +192,9 @@ describe('Context', () => {
       expect(plugin[hook]).toHaveBeenCalledTimes(1);
     }
     const contextObject = contextObjects.values().next().value;
-    expect(contextObject).toBeDefined();
-    expect(contextObject.myExtraContext).toBe('myExtraContext');
+    expect(contextObject).toMatchObject({
+      myExtraContext: 'myExtraContext',
+    });
   });
   it('share different context objects for batched requests', async () => {
     const contextObjects = new Set();

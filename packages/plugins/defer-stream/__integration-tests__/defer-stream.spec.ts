@@ -4,8 +4,8 @@ import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import fetchMultipart from 'fetch-multipart-graphql';
 import { createLogger, createSchema, createYoga, useExecutionCancellation } from 'graphql-yoga';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
+import { createDeferredPromise } from '@whatwg-node/server';
 import { createPushPullAsyncIterable } from '../__tests__/push-pull-async-iterable.js';
-import { createDeferred } from '../../../testing-utils/create-deferred.js';
 
 it('correctly deals with the source upon aborted requests', async () => {
   const { source, push, terminate } = createPushPullAsyncIterable<string>();
@@ -92,7 +92,7 @@ it('correctly deals with the source upon aborted requests', async () => {
 it('memory/cleanup leak by source that never publishes a value', async () => {
   let sourceGotCleanedUp = false;
   const controller = new AbortController();
-  const d = createDeferred();
+  const d = createDeferredPromise();
 
   const noop = d.promise.then(() => ({ done: true, value: undefined }));
 
