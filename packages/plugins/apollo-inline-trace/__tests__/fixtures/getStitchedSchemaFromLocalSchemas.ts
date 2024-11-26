@@ -12,7 +12,7 @@ export async function getStitchedSchemaFromLocalSchemas(
   const introspectAndCompose = await new IntrospectAndCompose({
     subgraphs: Object.keys(localSchemas).map(name => ({ name, url: `http://localhost/${name}` })),
   }).initialize({
-    healthCheck: () => fakePromise<void>(),
+    healthCheck: () => fakePromise<void>(undefined),
     update: () => undefined,
     getDataSource: ({ name }) => {
       const [_name, schema] = Object.entries(localSchemas).find(([key]) => key === name) ?? [];
