@@ -25,6 +25,7 @@ export function spawn(
     cwd: path.join(module.path, '..'),
     signal,
     env: {
+      // @ts-ignore this runs inside jest so process is always available
       ...process.env,
       ...env,
     },
