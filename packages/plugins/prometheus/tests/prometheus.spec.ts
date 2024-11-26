@@ -1,6 +1,6 @@
 import { createSchema, createYoga } from 'graphql-yoga';
 import { register as registry } from 'prom-client';
-import { usePrometheus } from '@graphql-yoga/plugin-prometheus';
+import { createHistogram, usePrometheus } from '@graphql-yoga/plugin-prometheus';
 
 describe('Prometheus', () => {
   const schema = createSchema({
@@ -97,6 +97,53 @@ describe('Prometheus', () => {
     expect(metrics).toContain('method="POST"');
     expect(metrics).toContain('statusCode="200"');
   });
+
+  it('should allow to skip a request', async () => {
+    const yoga = createYoga({
+      schema,
+      plugins: [
+        usePrometheus({
+          metrics: {
+            graphql_yoga_http_duration: createHistogram({
+              fillLabelsFn: (params, { request, response }) => ({
+                method: request.method,
+                statusCode: response.status,
+                operationType: params.operationType || 'unknown',
+                operationName: params.operationName || 'Anonymous',
+                url: request.url,
+              }),
+              histogram: {
+                help: 'test',
+                name: 'graphql_yoga_http_duration',
+              },
+              phases: ['request'],
+              registry,
+              shouldObserve: () => false,
+            }),
+          },
+          registry,
+        }),
+      ],
+    });
+    const result = await yoga.fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-test': 'test',
+      },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          query TestProm {
+            hello
+          }
+        `,
+      }),
+    });
+    await result.text();
+    const metrics = await registry.metrics();
+    expect(metrics).toContain('graphql_yoga_http_duration_count 0');
+  });
+
   it('labels should be excluded', async () => {
     const yoga = createYoga({
       schema,

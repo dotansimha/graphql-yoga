@@ -1,8 +1,9 @@
-import { getOperationAST } from 'graphql';
+import { getOperationAST, type DocumentNode } from 'graphql';
 import { Plugin } from 'graphql-yoga';
 import { register as defaultRegistry } from 'prom-client';
 import {
   CounterAndLabels,
+  CounterMetricOption,
   createCounter,
   createHistogram,
   createSummary,
@@ -12,7 +13,9 @@ import {
   getHistogramFromConfig,
   getSummaryFromConfig,
   HistogramAndLabels,
+  HistogramMetricOption,
   SummaryAndLabels,
+  SummaryMetricOption,
   usePrometheus as useEnvelopPrometheus,
 } from '@envelop/prometheus';
 
@@ -27,6 +30,9 @@ export {
   getHistogramFromConfig,
   getCounterFromConfig,
   getSummaryFromConfig,
+  HistogramMetricOption,
+  CounterMetricOption,
+  SummaryMetricOption,
 };
 
 export type PrometheusTracingPluginConfig = Omit<
@@ -63,7 +69,7 @@ export type PrometheusTracingPluginConfig = Omit<
      *  - number[]: Enable the metric with custom buckets
      *  - ReturnType<typeof createHistogram>: Enable the metric with custom configuration
      */
-    graphql_yoga_http_duration?: boolean | string | number[] | ReturnType<typeof createHistogram>;
+    graphql_yoga_http_duration?: HistogramMetricOption<'request', string, HTTPFillLabelParams>;
   };
 
   labels?: {
@@ -86,6 +92,12 @@ export type PrometheusTracingPluginConfig = Omit<
    * Defaults to "/metrics".
    */
   endpoint?: string | boolean;
+};
+
+type HTTPFillLabelParams = FillLabelsFnParams & {
+  document: DocumentNode;
+  request: Request;
+  response: Response;
 };
 
 const DEFAULT_METRICS_CONFIG: PrometheusTracingPluginConfig['metrics'] = {
@@ -115,11 +127,36 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     },
   };
 
+  const basePlugin: Plugin = {
+    onPluginInit({ addPlugin }) {
+      addPlugin(useEnvelopPrometheus({ ...resolvedOptions, registry }) as Plugin);
+      addPlugin({
+        onRequest({ url, fetchAPI, endResponse }) {
+          if (endpoint && url.pathname === endpoint) {
+            return registry.metrics().then(metrics => {
+              endResponse(
+                new fetchAPI.Response(metrics, {
+                  headers: {
+                    'Content-Type': registry.contentType,
+                  },
+                }),
+              );
+            });
+          }
+          return undefined;
+        },
+      });
+    },
+  };
+
   const httpHistogram = getHistogramFromConfig<
-    NonNullable<PrometheusTracingPluginConfig['metrics']>
+    'request',
+    NonNullable<PrometheusTracingPluginConfig['metrics']>,
+    HTTPFillLabelParams
   >(
     resolvedOptions,
     'graphql_yoga_http_duration',
+    ['request'],
     {
       help: 'Time spent on HTTP connection',
       labelNames: ['operationName', 'operationType', 'method', 'statusCode', 'url'],
@@ -133,51 +170,44 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     }),
   );
 
+  // We don't need to register any hooks if the metric is not enabled
+  if (!httpHistogram) {
+    return basePlugin;
+  }
+
   const startByRequest = new WeakMap<Request, number>();
-  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams>();
+  const paramsByRequest = new WeakMap<Request, FillLabelsFnParams & { document: DocumentNode }>();
 
   return {
-    onPluginInit({ addPlugin }) {
-      addPlugin(useEnvelopPrometheus({ ...resolvedOptions, registry }) as Plugin);
-    },
-    onRequest({ request, url, fetchAPI, endResponse }) {
+    ...basePlugin,
+    onRequest({ request }) {
       startByRequest.set(request, Date.now());
-      if (endpoint && url.pathname === endpoint) {
-        return registry.metrics().then(metrics => {
-          endResponse(
-            new fetchAPI.Response(metrics, {
-              headers: {
-                'Content-Type': registry.contentType,
-              },
-            }),
-          );
-        });
-      }
-      return undefined;
     },
     onParse() {
-      return ({ result: document, context: { params, request } }) => {
-        const operationAST = getOperationAST(document, params.operationName);
-        paramsByRequest.set(request, {
+      return ({ result: document, context }) => {
+        const operationAST = getOperationAST(document, context.params.operationName);
+        const params = {
           document,
           operationName: operationAST?.name?.value,
           operationType: operationAST?.operation,
-        });
+        };
+
+        paramsByRequest.set(context.request, params);
       };
     },
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request);
-      if (start) {
-        const duration = (Date.now() - start) / 1000;
-        const params = paramsByRequest.get(request);
-        httpHistogram?.histogram.observe(
-          httpHistogram.fillLabelsFn(params || {}, {
-            ...serverContext,
-            request,
-            response,
-          }),
-          duration,
-        );
+      const params = paramsByRequest.get(request);
+      if (start && params) {
+        const context = { ...serverContext, request, response };
+        const completeParams: HTTPFillLabelParams = { ...params, request, response };
+
+        if (httpHistogram.shouldObserve(completeParams, context)) {
+          httpHistogram.histogram.observe(
+            httpHistogram.fillLabelsFn(completeParams, context),
+            (Date.now() - start) / 1000,
+          );
+        }
       }
     },
   };

@@ -620,6 +620,81 @@ const getEnveloped = envelop({
 })
 ```
 
+### Mitigate hight volume of exported metrics
+
+In some cases, the large variety of label values can lead to a huge amount of metrics being
+exported. To save bandwidth or storage, you can reduce the amount of reported metrics by multiple
+ways.
+
+#### Monitor only some phases
+
+Some metrics observe events in multiple phases of the graphql pipeline. The metric with the highest
+chance causing large amount of metrics is `graphql_envelop_error_result`, because it can contain
+information specific to the error reported.
+
+You can lower the amount of reported errors by changing the phases monitored by this metric.
+
+```ts
+import { execute, parse, specifiedRules, subscribe, validate } from 'graphql'
+import { Registry } from 'prom-client'
+import { envelop, useEngine } from '@envelop/core'
+
+const myRegistry = new Registry()
+
+const getEnveloped = envelop({
+  plugins: [
+    useEngine({ parse, validate, specifiedRules, execute, subscribe }),
+    usePrometheus({
+      metrics: {
+        // To ignore parsing and validation error, and only monitor errors happening during
+        // resolvers executions, you can enable only the `execute` and `subscribe` phases
+        graphql_envelop_error_result: ['execute', 'subscribe']
+      }
+    })
+  ]
+})
+```
+
+#### Skip observation based on request context
+
+To save bandwidth or storage, you can reduce the amount of reported values by filtering which events
+are observed based on the request context.
+
+For example, you can only monitor a subset of operations, because they are critical or that you want
+to debug it's performance:
+
+```ts
+import { execute, parse, specifiedRules, subscribe, validate } from 'graphql'
+import { envelop, useEngine } from '@envelop/core'
+import { usePrometheus } from '@envelop/prometheus'
+
+const TRACKED_OPERATION_NAMES = [
+  // make a list of operation that you want to monitor
+]
+
+const getEnveloped = envelop({
+  plugins: [
+    useEngine({ parse, validate, specifiedRules, execute, subscribe }),
+    usePrometheus({
+      metrics: {
+        graphql_yoga_http_duration: createHistogram({
+          registry,
+          histogram: {
+            name: 'graphql_yoga_http_duration',
+            help: 'Time spent on HTTP connection',
+            labelNames: ['operation_name']
+          },
+          fillLabelsFn: ({ operationName }, _rawContext) => ({
+            operation_name: operationName
+          }),
+          shouldObserve: context => TRACKED_OPERATIONS.includes(context?.params?.operationName)
+        })
+      }
+    })
+  ]
+})
+```
+
 ## Caveats
 
 Due to Prometheus client API limitations, if this plugin is initialized multiple times, only the
