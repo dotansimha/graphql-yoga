@@ -12,12 +12,7 @@ export interface Proc {
 export function spawn(
   cmd: string,
   args: string[],
-  {
-    signal,
-    env,
-    pipeLogs,
-    shell,
-  }: { signal: AbortSignal; env?: Record<string, string>; pipeLogs?: true; shell?: true },
+  { signal, env }: { signal: AbortSignal; env?: Record<string, string> },
 ): Promise<Proc> {
   const proc = cp.spawn(cmd, args, {
     // ignore stdin because we're not feeding the process anything, pipe stdout and stderr
@@ -29,19 +24,14 @@ export function spawn(
       ...process.env,
       ...env,
     },
-    shell,
   });
 
   let stdboth = '';
   proc.stdout.on('data', x => {
-    const data = x.toString();
-    stdboth += data;
-    if (pipeLogs) process.stderr.write(data);
+    stdboth += x.toString();
   });
   proc.stderr.on('data', x => {
-    const data = x.toString();
-    stdboth += data;
-    if (pipeLogs) process.stderr.write(data);
+    stdboth += x.toString();
   });
 
   const waitForExit = new Promise<void>((resolve, reject) => {
