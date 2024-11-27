@@ -1,5 +1,6 @@
-import { ExecutionResult } from 'graphql';
+import { ExecutionResult, print } from 'graphql';
 import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
+import { getDocumentString } from '@envelop/core';
 import {
   defaultBuildResponseCacheKey,
   BuildResponseCacheKeyFunction as EnvelopBuildResponseCacheKeyFunction,
@@ -11,22 +12,23 @@ import {
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache';
+import { mapMaybePromise } from '@graphql-tools/utils';
 
 export { cacheControlDirective, hashSHA256 } from '@envelop/response-cache';
 
 export type BuildResponseCacheKeyFunction = (
-  params: Omit<Parameters<EnvelopBuildResponseCacheKeyFunction>[0], 'context'> & {
+  params: Parameters<EnvelopBuildResponseCacheKeyFunction>[0] & {
     request: Request;
   },
 ) => ReturnType<EnvelopBuildResponseCacheKeyFunction>;
 
-export type UseResponseCacheParameter = Omit<
+export type UseResponseCacheParameter<TContext> = Omit<
   UseEnvelopResponseCacheParameter,
   'getDocumentString' | 'session' | 'cache' | 'enabled' | 'buildResponseCacheKey'
 > & {
   cache?: Cache;
-  session: (request: Request) => PromiseOrValue<Maybe<string>>;
-  enabled?: (request: Request) => boolean;
+  session: (request: Request, context: TContext) => PromiseOrValue<Maybe<string>>;
+  enabled?: (request: Request, context: TContext) => boolean;
   buildResponseCacheKey?: BuildResponseCacheKeyFunction;
 };
 
@@ -58,12 +60,7 @@ const cacheKeyFactoryForEnvelop: EnvelopBuildResponseCacheKeyFunction =
 
 const getDocumentStringForEnvelop: GetDocumentStringFunction = executionArgs => {
   const context = executionArgs.contextValue as YogaInitialContext;
-  if (context.params?.query == null) {
-    throw new Error(
-      '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
-    );
-  }
-  return context.params.query as string;
+  return context.params.query || getDocumentString(executionArgs.document, print);
 };
 
 export interface ResponseCachePluginExtensions {
@@ -82,7 +79,9 @@ export interface Cache extends EnvelopCache {
   >;
 }
 
-export function useResponseCache(options: UseResponseCacheParameter): Plugin {
+export function useResponseCache<TContext = YogaInitialContext>(
+  options: UseResponseCacheParameter<TContext>,
+): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey;
   const cache = options.cache ?? createInMemoryCache();
@@ -96,9 +95,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       addPlugin(
         useEnvelopResponseCache({
           ...options,
-          enabled({ request }) {
-            return enabled(request);
-          },
+          enabled: (context: YogaInitialContext) => enabled(context.request, context as TContext),
           cache,
           getDocumentString: getDocumentStringForEnvelop,
           session: sessionFactoryForEnvelop,
@@ -129,61 +126,69 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }),
       );
     },
-    async onRequest({ request, fetchAPI, endResponse }) {
-      if (enabled(request)) {
+    onRequest({ request, serverContext, fetchAPI, endResponse }): PromiseOrValue<void> {
+      if (enabled(request, serverContext as TContext)) {
         const operationId = request.headers.get('If-None-Match');
         if (operationId) {
-          const cachedResponse = await cache.get(operationId);
-          if (cachedResponse) {
-            const lastModifiedFromClient = request.headers.get('If-Modified-Since');
-            const lastModifiedFromCache =
-              cachedResponse.extensions?.http?.headers?.['Last-Modified'];
-            if (
-              // This should be in the extensions already but we check it here to make sure
-              lastModifiedFromCache != null &&
-              // If the client doesn't send If-Modified-Since header, we assume the cache is valid
-              (lastModifiedFromClient == null ||
-                new Date(lastModifiedFromClient).getTime() >=
-                  new Date(lastModifiedFromCache).getTime())
-            ) {
-              const okResponse = new fetchAPI.Response(null, {
-                status: 304,
-                headers: {
-                  ETag: operationId,
-                },
-              });
-              endResponse(okResponse);
+          return mapMaybePromise(cache.get(operationId), cachedResponse => {
+            if (cachedResponse) {
+              const lastModifiedFromClient = request.headers.get('If-Modified-Since');
+              const lastModifiedFromCache =
+                cachedResponse.extensions?.http?.headers?.['Last-Modified'];
+              if (
+                // This should be in the extensions already but we check it here to make sure
+                lastModifiedFromCache != null &&
+                // If the client doesn't send If-Modified-Since header, we assume the cache is valid
+                (lastModifiedFromClient == null ||
+                  new Date(lastModifiedFromClient).getTime() >=
+                    new Date(lastModifiedFromCache).getTime())
+              ) {
+                const okResponse = new fetchAPI.Response(null, {
+                  status: 304,
+                  headers: {
+                    ETag: operationId,
+                  },
+                });
+                endResponse(okResponse);
+              }
             }
-          }
+          }) as Promise<void>;
         }
       }
     },
-    async onParams({ params, request, setResult }) {
-      const sessionId = await options.session(request);
-      const operationId = await buildResponseCacheKey({
-        documentString: params.query || '',
-        variableValues: params.variables,
-        operationName: params.operationName,
-        sessionId,
-        request,
-      });
-      operationIdByRequest.set(request, operationId);
-      sessionByRequest.set(request, sessionId);
-      if (enabled(request)) {
-        const cachedResponse = await cache.get(operationId);
-        if (cachedResponse) {
-          const responseWithSymbol = {
-            ...cachedResponse,
-            [Symbol.for('servedFromResponseCache')]: true,
-          };
-          if (options.includeExtensionMetadata) {
-            setResult(resultWithMetadata(responseWithSymbol, { hit: true }));
-          } else {
-            setResult(responseWithSymbol);
-          }
-          return;
-        }
-      }
+    onParams({ params, request, setResult, context }) {
+      return mapMaybePromise(options.session(request, context as TContext), sessionId =>
+        mapMaybePromise(
+          buildResponseCacheKey({
+            documentString: params.query || '',
+            variableValues: params.variables,
+            operationName: params.operationName,
+            sessionId,
+            request,
+            context,
+          }),
+          operationId => {
+            operationIdByRequest.set(request, operationId);
+            sessionByRequest.set(request, sessionId);
+            if (enabled(request, context as TContext)) {
+              return mapMaybePromise(cache.get(operationId), cachedResponse => {
+                if (cachedResponse) {
+                  const responseWithSymbol = {
+                    ...cachedResponse,
+                    [Symbol.for('servedFromResponseCache')]: true,
+                  };
+                  if (options.includeExtensionMetadata) {
+                    setResult(resultWithMetadata(responseWithSymbol, { hit: true }));
+                  } else {
+                    setResult(responseWithSymbol);
+                  }
+                  return;
+                }
+              });
+            }
+          },
+        ),
+      );
     },
   };
 }
