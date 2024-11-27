@@ -15,7 +15,7 @@ projects, and how to setup the development scripts.
 
 - Have NodeJS installed on your operation system
   ([instructions](https://nodejs.org/en/download/package-manager)). You can use any recent version
-  (14/16/17), but, we highly recommend using the stable Node.js 20 LTS release.
+  (18/20/22/23), but, we highly recommend using the stable Node.js 22 LTS release.
 - Your favorite terminal configured (you are going to use it a lot!)
 - Run `node -v`, `npm -v`, `npx -v` in your terminal and make sure these commands are available for
   use.
@@ -44,7 +44,7 @@ To add TypeScript supports for your NodeJS project, do the following:
 In your project directory, install the packages required to run a TypeScript project:
 
 ```sh npm2yarn
-npm i -D --save-exact typescript@5.1.6 @types/node@18.16.16 ts-node@10.9.1 ts-node-dev@2.0.0 cross-env@7.0.3
+npm i -D --save-exact typescript@5.7.2 @types/node@22.10.0 ts-node@10.9.2 ts-node-dev@2.0.0 cross-env@7.0.3
 ```
 
 This will add the dependencies to your project under the `node_modules` folder, and update the
@@ -83,11 +83,11 @@ with the following:
     "start": "ts-node src/main.ts"
   },
   "devDependencies": {
+    "@types/node": "22.10.0",
     "cross-env": "7.0.3",
-    "@types/node": "18.16.16",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "ts-node-dev": "2.0.0",
-    "typescript": "5.5.2"
+    "typescript": "5.7.2"
   }
 }
 ```
