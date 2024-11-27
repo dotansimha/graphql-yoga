@@ -48,11 +48,11 @@ type ApolloUsageReportOptions = ApolloInlineTracePluginOptions & {
   /**
    * Client name to report to the usage reporting API
    */
-  clientName?: StringFromRequestFn | string;
+  clientName?: StringFromRequestFn;
   /**
    * Client version to report to the usage reporting API
    */
-  clientVersion?: StringFromRequestFn | string;
+  clientVersion?: StringFromRequestFn;
 };
 
 export interface ApolloUsageReportRequestContext extends ApolloInlineRequestTraceContext {
@@ -89,21 +89,13 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
   ) as YogaLogger;
 
   let clientNameFactory: StringFromRequestFn = req => req.headers.get('apollographql-client-name');
-
-  if (typeof options.clientName === 'string') {
-    const clientName = options.clientName;
-    clientNameFactory = () => clientName;
-  } else if (typeof options.clientName === 'function') {
+  if (typeof options.clientName === 'function') {
     clientNameFactory = options.clientName;
   }
 
   let clientVersionFactory: StringFromRequestFn = req =>
     req.headers.get('apollographql-client-version');
-
-  if (typeof options.clientVersion === 'string') {
-    const clientVersion = options.clientVersion;
-    clientVersionFactory = () => clientVersion;
-  } else if (typeof options.clientVersion === 'function') {
+  if (typeof options.clientVersion === 'function') {
     clientVersionFactory = options.clientVersion;
   }
 
