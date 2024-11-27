@@ -1,5 +1,22 @@
 # @graphql-yoga/plugin-apollo-usage-report
 
+## 0.5.0
+
+### Minor Changes
+
+- [#3458](https://github.com/dotansimha/graphql-yoga/pull/3458)
+  [`cb29c6c`](https://github.com/dotansimha/graphql-yoga/commit/cb29c6c03c83b552a39c3d5a4d2c1de2a9df4bee)
+  Thanks [@kroupacz](https://github.com/kroupacz)! - ### Removed
+  - **Breaking change** remove option to set `clientName` and `clientVersion` as a static `string`
+    in `ApolloUsageReportOptions`
+
+### Patch Changes
+
+- [#3488](https://github.com/dotansimha/graphql-yoga/pull/3488)
+  [`a4bc07f`](https://github.com/dotansimha/graphql-yoga/commit/a4bc07ff0120e8f817dd0efec575c1f35021e264)
+  Thanks [@kroupacz](https://github.com/kroupacz)! - fixed: move logic from `onEnveloped` hook to
+  `onParse` hook (`onParseEnd`) which prevents the `operationName` could be missing.
+
 ## 0.4.3
 
 ### Patch Changes
