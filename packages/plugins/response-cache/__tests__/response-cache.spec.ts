@@ -1,5 +1,10 @@
-import { createSchema, createYoga, YogaServerInstance } from 'graphql-yoga';
-import { cacheControlDirective, ShouldCacheResultFunction } from '@envelop/response-cache';
+import { parse } from 'graphql';
+import { createSchema, createYoga, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
+import {
+  cacheControlDirective,
+  defaultBuildResponseCacheKey,
+  ShouldCacheResultFunction,
+} from '@envelop/response-cache';
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream';
 import { createInMemoryCache, useResponseCache } from '@graphql-yoga/plugin-response-cache';
 
@@ -1215,4 +1220,45 @@ it('response has "servedFromResponseCache" symbol', async () => {
   expect(Symbol.for('servedFromResponseCache') in result1).toEqual(false);
   expect(Symbol.for('servedFromResponseCache') in result2).toEqual(true);
   expect(result2[Symbol.for('servedFromResponseCache')]).toEqual(true);
+});
+
+it('gets the context in "session" and "buildResponseCacheKey"', async () => {
+  const session = jest.fn(() => null);
+  const buildResponseCacheKey = jest.fn(defaultBuildResponseCacheKey);
+  let context: YogaInitialContext | undefined;
+  let request: Request | undefined;
+  const yoga = createYoga({
+    plugins: [
+      useResponseCache({
+        session,
+        buildResponseCacheKey,
+      }),
+    ],
+    schema,
+    context(initialContext) {
+      request = initialContext.request;
+      context = initialContext;
+      return initialContext;
+    },
+  });
+  const res = await yoga.fetch('http://localhost:3000/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ query: '{__typename}' }),
+  });
+
+  expect(res.status).toEqual(200);
+  expect(session).toHaveBeenCalledTimes(1);
+  expect(buildResponseCacheKey).toHaveBeenCalledTimes(1);
+  expect(context).toBeDefined();
+  expect(session).toHaveBeenCalledWith(request, context);
+  expect(buildResponseCacheKey.mock.calls[0][0]).toMatchObject({
+    documentString: '{__typename}',
+    variableValues: {},
+    sessionId: null,
+    request,
+    context,
+  });
 });
