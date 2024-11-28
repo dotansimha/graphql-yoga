@@ -1,4 +1,3 @@
-import { parse } from 'graphql';
 import { createSchema, createYoga, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
 import {
   cacheControlDirective,
