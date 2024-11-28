@@ -12,7 +12,4 @@ export const Comment: CommentResolvers = {
       },
     });
   },
-  body: async (_parent, _arg, _ctx) => {
-    /* Comment.body resolver is required because Comment.body exists but CommentMapper.body does not */
-  },
 };
