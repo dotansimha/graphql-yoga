@@ -22,7 +22,7 @@ export type BuildResponseCacheKeyFunction = (
   },
 ) => ReturnType<EnvelopBuildResponseCacheKeyFunction>;
 
-export type UseResponseCacheParameter<TContext> = Omit<
+export type UseResponseCacheParameter<TContext = YogaInitialContext> = Omit<
   UseEnvelopResponseCacheParameter,
   'getDocumentString' | 'session' | 'cache' | 'enabled' | 'buildResponseCacheKey'
 > & {
