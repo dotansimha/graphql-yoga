@@ -1,5 +1,19 @@
 # @graphql-yoga/apollo-link
 
+## 3.10.3
+
+### Patch Changes
+
+- [#3520](https://github.com/dotansimha/graphql-yoga/pull/3520)
+  [`944ecd5`](https://github.com/dotansimha/graphql-yoga/commit/944ecd55abb1b77e88950eb3396919939915feb7)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/executor-apollo-link@^1.0.5` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor-apollo-link/v/1.0.5)
+    (from `^1.0.3`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/executor-http@^1.1.10` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor-http/v/1.1.10)
+    (from `^1.1.9`, in `dependencies`)
+
 ## 3.10.2
 
 ### Patch Changes
