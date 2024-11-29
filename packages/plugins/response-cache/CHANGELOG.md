@@ -1,5 +1,34 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.12.4
+
+### Patch Changes
+
+- [#3520](https://github.com/dotansimha/graphql-yoga/pull/3520)
+  [`944ecd5`](https://github.com/dotansimha/graphql-yoga/commit/944ecd55abb1b77e88950eb3396919939915feb7)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+
+  - Added dependency
+    [`@envelop/core@^5.0.2` ↗︎](https://www.npmjs.com/package/@envelop/core/v/5.0.2) (to
+    `dependencies`)
+
+- [#3520](https://github.com/dotansimha/graphql-yoga/pull/3520)
+  [`944ecd5`](https://github.com/dotansimha/graphql-yoga/commit/944ecd55abb1b77e88950eb3396919939915feb7)
+  Thanks [@ardatan](https://github.com/ardatan)! - Pass \`context\` to `session` and
+  `buildResponseCacheKey`
+
+  So now `session` can get the context to use the JWT token extracted by JWT Plugin for instance;
+
+  ```ts
+  useResponseCache({
+    session: (req, ctx) => ctx.jwt.token
+  })
+  ```
+
+- Updated dependencies
+  [[`944ecd5`](https://github.com/dotansimha/graphql-yoga/commit/944ecd55abb1b77e88950eb3396919939915feb7)]:
+  - graphql-yoga@5.10.4
+
 ## 3.12.3
 
 ### Patch Changes
