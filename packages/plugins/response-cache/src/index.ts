@@ -1,5 +1,6 @@
-import { ExecutionResult } from 'graphql';
+import { ExecutionResult, print } from 'graphql';
 import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
+import { getDocumentString } from '@envelop/core';
 import {
   defaultBuildResponseCacheKey,
   BuildResponseCacheKeyFunction as EnvelopBuildResponseCacheKeyFunction,
@@ -15,18 +16,18 @@ import {
 export { cacheControlDirective, hashSHA256 } from '@envelop/response-cache';
 
 export type BuildResponseCacheKeyFunction = (
-  params: Omit<Parameters<EnvelopBuildResponseCacheKeyFunction>[0], 'context'> & {
+  params: Parameters<EnvelopBuildResponseCacheKeyFunction>[0] & {
     request: Request;
   },
 ) => ReturnType<EnvelopBuildResponseCacheKeyFunction>;
 
-export type UseResponseCacheParameter = Omit<
+export type UseResponseCacheParameter<TContext = YogaInitialContext> = Omit<
   UseEnvelopResponseCacheParameter,
   'getDocumentString' | 'session' | 'cache' | 'enabled' | 'buildResponseCacheKey'
 > & {
   cache?: Cache;
-  session: (request: Request) => PromiseOrValue<Maybe<string>>;
-  enabled?: (request: Request) => boolean;
+  session: (request: Request, context: TContext) => PromiseOrValue<Maybe<string>>;
+  enabled?: (request: Request, context: TContext) => boolean;
   buildResponseCacheKey?: BuildResponseCacheKeyFunction;
 };
 
@@ -58,12 +59,7 @@ const cacheKeyFactoryForEnvelop: EnvelopBuildResponseCacheKeyFunction =
 
 const getDocumentStringForEnvelop: GetDocumentStringFunction = executionArgs => {
   const context = executionArgs.contextValue as YogaInitialContext;
-  if (context.params?.query == null) {
-    throw new Error(
-      '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
-    );
-  }
-  return context.params.query as string;
+  return context.params.query || getDocumentString(executionArgs.document, print);
 };
 
 export interface ResponseCachePluginExtensions {
@@ -82,7 +78,9 @@ export interface Cache extends EnvelopCache {
   >;
 }
 
-export function useResponseCache(options: UseResponseCacheParameter): Plugin {
+export function useResponseCache<TContext = YogaInitialContext>(
+  options: UseResponseCacheParameter<TContext>,
+): Plugin {
   const buildResponseCacheKey: BuildResponseCacheKeyFunction =
     options?.buildResponseCacheKey || defaultBuildResponseCacheKey;
   const cache = options.cache ?? createInMemoryCache();
@@ -96,9 +94,7 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
       addPlugin(
         useEnvelopResponseCache({
           ...options,
-          enabled({ request }) {
-            return enabled(request);
-          },
+          enabled: (context: YogaInitialContext) => enabled(context.request, context as TContext),
           cache,
           getDocumentString: getDocumentStringForEnvelop,
           session: sessionFactoryForEnvelop,
@@ -129,8 +125,8 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }),
       );
     },
-    async onRequest({ request, fetchAPI, endResponse }) {
-      if (enabled(request)) {
+    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
+      if (enabled(request, serverContext as TContext)) {
         const operationId = request.headers.get('If-None-Match');
         if (operationId) {
           const cachedResponse = await cache.get(operationId);
@@ -158,18 +154,19 @@ export function useResponseCache(options: UseResponseCacheParameter): Plugin {
         }
       }
     },
-    async onParams({ params, request, setResult }) {
-      const sessionId = await options.session(request);
+    async onParams({ params, request, context, setResult }) {
+      const sessionId = await options.session(request, context as TContext);
       const operationId = await buildResponseCacheKey({
         documentString: params.query || '',
         variableValues: params.variables,
         operationName: params.operationName,
         sessionId,
         request,
+        context,
       });
       operationIdByRequest.set(request, operationId);
       sessionByRequest.set(request, sessionId);
-      if (enabled(request)) {
+      if (enabled(request, context as TContext)) {
         const cachedResponse = await cache.get(operationId);
         if (cachedResponse) {
           const responseWithSymbol = {

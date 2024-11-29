@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   schema: 'src/schema/**/schema.graphql',
   generates: {
     'src/schema': defineConfig({
-      resolverGeneration: 'minimal',
+      resolverGeneration: 'disabled',
       typesPluginsConfig: {
         contextType: '../context#GraphQLContext',
       },

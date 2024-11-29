@@ -96,6 +96,16 @@ useResponseCache({
 })
 ```
 
+You can also get the session value from the [GraphQL Context](/docs/features/context) object. For
+example, you can use the JWT token from the context provided by [JWT Plugin](/docs/features/jwt).
+
+```ts filename="Response Cache configuration based on context"
+useResponseCache({
+  // cache based on the authentication header
+  session: ({ context }) => context.jwt.token
+})
+```
+
 ### Enforce session based caching
 
 In some cases, a type or a field should only be cached if their is a session. For this, you can use

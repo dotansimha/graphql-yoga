@@ -7,6 +7,10 @@ on:
     paths-ignore:
       - 'website/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   benchmarks:
     runs-on: ubuntu-latest
