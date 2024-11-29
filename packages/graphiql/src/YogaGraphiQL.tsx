@@ -105,6 +105,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       directiveIsRepeatable: true,
       ...props,
       headers: props.additionalHeaders || {},
+      fetch: (...args: Parameters<WindowOrWorkerGlobalScope['fetch']>) => globalThis.fetch(...args),
     });
     return function fetcher(graphQLParams: FetcherParams, opts?: FetcherOpts) {
       const document = getOperationWithFragments(
