@@ -12,7 +12,6 @@ import {
   useResponseCache as useEnvelopResponseCache,
   UseResponseCacheParameter as UseEnvelopResponseCacheParameter,
 } from '@envelop/response-cache';
-import { mapMaybePromise } from '@graphql-tools/utils';
 
 export { cacheControlDirective, hashSHA256 } from '@envelop/response-cache';
 
@@ -126,69 +125,62 @@ export function useResponseCache<TContext = YogaInitialContext>(
         }),
       );
     },
-    onRequest({ request, serverContext, fetchAPI, endResponse }): PromiseOrValue<void> {
+    async onRequest({ request, serverContext, fetchAPI, endResponse }) {
       if (enabled(request, serverContext as TContext)) {
         const operationId = request.headers.get('If-None-Match');
         if (operationId) {
-          return mapMaybePromise(cache.get(operationId), cachedResponse => {
-            if (cachedResponse) {
-              const lastModifiedFromClient = request.headers.get('If-Modified-Since');
-              const lastModifiedFromCache =
-                cachedResponse.extensions?.http?.headers?.['Last-Modified'];
-              if (
-                // This should be in the extensions already but we check it here to make sure
-                lastModifiedFromCache != null &&
-                // If the client doesn't send If-Modified-Since header, we assume the cache is valid
-                (lastModifiedFromClient == null ||
-                  new Date(lastModifiedFromClient).getTime() >=
-                    new Date(lastModifiedFromCache).getTime())
-              ) {
-                const okResponse = new fetchAPI.Response(null, {
-                  status: 304,
-                  headers: {
-                    ETag: operationId,
-                  },
-                });
-                endResponse(okResponse);
-              }
+          const cachedResponse = await cache.get(operationId);
+          if (cachedResponse) {
+            const lastModifiedFromClient = request.headers.get('If-Modified-Since');
+            const lastModifiedFromCache =
+              cachedResponse.extensions?.http?.headers?.['Last-Modified'];
+            if (
+              // This should be in the extensions already but we check it here to make sure
+              lastModifiedFromCache != null &&
+              // If the client doesn't send If-Modified-Since header, we assume the cache is valid
+              (lastModifiedFromClient == null ||
+                new Date(lastModifiedFromClient).getTime() >=
+                  new Date(lastModifiedFromCache).getTime())
+            ) {
+              const okResponse = new fetchAPI.Response(null, {
+                status: 304,
+                headers: {
+                  ETag: operationId,
+                },
+              });
+              endResponse(okResponse);
             }
-          }) as Promise<void>;
+          }
         }
       }
     },
-    onParams({ params, request, setResult, context }) {
-      return mapMaybePromise(options.session(request, context as TContext), sessionId =>
-        mapMaybePromise(
-          buildResponseCacheKey({
-            documentString: params.query || '',
-            variableValues: params.variables,
-            operationName: params.operationName,
-            sessionId,
-            request,
-            context,
-          }),
-          operationId => {
-            operationIdByRequest.set(request, operationId);
-            sessionByRequest.set(request, sessionId);
-            if (enabled(request, context as TContext)) {
-              return mapMaybePromise(cache.get(operationId), cachedResponse => {
-                if (cachedResponse) {
-                  const responseWithSymbol = {
-                    ...cachedResponse,
-                    [Symbol.for('servedFromResponseCache')]: true,
-                  };
-                  if (options.includeExtensionMetadata) {
-                    setResult(resultWithMetadata(responseWithSymbol, { hit: true }));
-                  } else {
-                    setResult(responseWithSymbol);
-                  }
-                  return;
-                }
-              });
-            }
-          },
-        ),
-      );
+    async onParams({ params, request, context, setResult }) {
+      const sessionId = await options.session(request, context as TContext);
+      const operationId = await buildResponseCacheKey({
+        documentString: params.query || '',
+        variableValues: params.variables,
+        operationName: params.operationName,
+        sessionId,
+        request,
+        context,
+      });
+      operationIdByRequest.set(request, operationId);
+      sessionByRequest.set(request, sessionId);
+      if (enabled(request, context as TContext)) {
+        const cachedResponse = await cache.get(operationId);
+        if (cachedResponse) {
+          const responseWithSymbol = {
+            ...cachedResponse,
+            [Symbol.for('servedFromResponseCache')]: true,
+          };
+          if (options.includeExtensionMetadata) {
+            setResult(resultWithMetadata(responseWithSymbol, { hit: true }));
+          } else {
+            setResult(responseWithSymbol);
+          }
+          return;
+        }
+      }
     },
   };
 }
