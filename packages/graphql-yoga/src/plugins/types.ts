@@ -7,7 +7,7 @@ import {
   RegisterContextErrorHandler,
   SetSchemaFn,
 } from '@envelop/core';
-import { ExecutionResult, MaybePromise } from '@graphql-tools/utils';
+import { ExecutionResult } from '@graphql-tools/utils';
 import { ServerAdapterPlugin, type ServerAdapterInitialContext } from '@whatwg-node/server';
 import { YogaServer } from '../server.js';
 import {
@@ -107,7 +107,7 @@ export interface OnRequestParseDoneEventPayload {
 
 export type OnParamsHook<TServerContext> = (
   payload: OnParamsEventPayload<TServerContext>,
-) => MaybePromise<void>;
+) => PromiseOrValue<void>;
 
 export interface OnParamsEventPayload<TServerContext = Record<string, unknown>> {
   params: GraphQLParams;
