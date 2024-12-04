@@ -2,7 +2,7 @@ import type { LinkResolvers } from '../../types.generated';
 
 export const Link: LinkResolvers = {
   comments: async (parent, _arg, context) => {
-    const comments = context.prisma.comment.findMany({
+    const comments = await context.prisma.comment.findMany({
       where: {
         linkId: parent.id,
       },
