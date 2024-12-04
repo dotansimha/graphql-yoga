@@ -410,7 +410,7 @@ const resolvers = {
   // ... other resolver maps ...
   Link: {
     // ... other field resolver functions
-    comments(parent: Link, args: {}, context: GraphQLContext) {
+    async comments(parent: Link, args: {}, context: GraphQLContext) {
       const comments = await context.prisma.comment.findMany({
         where: {
           linkId: parent.id
