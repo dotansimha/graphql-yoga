@@ -230,11 +230,15 @@ const resolvers = {
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
     comments(parent: Link, args: {}, context: GraphQLContext) {
-      return context.prisma.comment.findMany({
+      const comments = await context.prisma.comment.findMany({
         where: {
-          linkId: parent.id
-        }
-      })
+          linkId: parent.id,
+        },
+      });
+      if (comments.length === 0) {
+        return null;
+      }
+      return comments;
     }
   }
 }
@@ -298,11 +302,15 @@ import type { LinkResolvers } from './../../types.generated'
 
 export const Link: LinkResolvers = {
   comments: async (parent, _arg, context) => {
-    return context.prisma.comment.findMany({
+    const comments = await context.prisma.comment.findMany({
       where: {
         linkId: parent.id
       }
     })
+    if (comments.length === 0) {
+      return null
+    }
+    return comments
   }
 }
 ```
