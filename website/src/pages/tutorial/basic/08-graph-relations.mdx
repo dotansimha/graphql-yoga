@@ -61,6 +61,16 @@ If this is quite new to you, don't worry! We're going to be adding a few of thes
 and you'll get the hang of it as you go! For a deeper dive on relations with Prisma, check out these
 [docs](https://prisma.io/docs/reference/tools-and-interfaces/prisma-schema/relations).
 
+You might ask, Links might not have Comments, so why don't we annotate comments like this:
+
+```Prisma
+comments    Comment[]?
+```
+
+The reason is that Prisma does not support optional on lists. This is by design as they say it is a
+better practice to return an empty array in that case
+([reference](https://github.com/prisma/prisma/issues/847#issuecomment-546895663)).
+
 ## Updating Prisma Client
 
 This is a great time to refresh your memory on the workflow we described for your project at the end
@@ -376,7 +386,7 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]!
+  comments: [Comment!]
 }
 ```
 
@@ -456,7 +466,7 @@ As an additional exercise, you can gain more hands-on experience by implementing
 
 ```graphql
 type Comment {
-  link: Link
+  link: Link!
 }
 
 type Query {

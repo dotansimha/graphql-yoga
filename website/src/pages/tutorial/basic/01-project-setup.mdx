@@ -44,7 +44,7 @@ To add TypeScript supports for your NodeJS project, do the following:
 In your project directory, install the packages required to run a TypeScript project:
 
 ```sh npm2yarn
-npm i -D --save-exact typescript@5.7.2 @types/node@22.10.0 ts-node@10.9.2 ts-node-dev@2.0.0 cross-env@7.0.3
+npm i -D --save-exact typescript@5.7.2 @types/node@22.10.1 tsx@4.19.2 cross-env@7.0.3
 ```
 
 This will add the dependencies to your project under the `node_modules` folder, and update the
@@ -54,8 +54,8 @@ The command above installs the following libraries:
 
 - `typescript` is the basic TypeScript language support and compiler.
 - `@types/node` is a package that contains the basic TypeScript types for Node.js environment.
-- `ts-node` and `ts-node-dev` are libraries that allow you to run `.ts` files directly, without a
-  compilation step to JavaScript and automatically re-run your files after you apply file changes.
+- `tsx` is a library that allow you to run `.ts` files directly, without a compilation step to
+  JavaScript and automatically re-run your files after you apply file changes.
 - `cross-env` allows providing environment variables cross-platform (windows environment variables
   are different 🤷).
 
@@ -79,14 +79,13 @@ with the following:
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
-    "start": "ts-node src/main.ts"
+    "dev": "cross-env NODE_ENV=development tsx watch src/main.ts",
+    "start": "tsx src/main.ts"
   },
   "devDependencies": {
-    "@types/node": "22.10.0",
+    "@types/node": "22.10.1",
     "cross-env": "7.0.3",
-    "ts-node": "10.9.2",
-    "ts-node-dev": "2.0.0",
+    "tsx": "4.19.2",
     "typescript": "5.7.2"
   }
 }
@@ -130,5 +129,19 @@ rest of the code.
 
 Congratulations! You now have a ready-to-use project with NodeJS, TypeScript and development scripts
 configured.
+
+Let's add Prettier to our project, to make sure our files always look consistent:
+
+```sh npm2yarn
+npm i -D --save-exact prettier@3.4.2
+```
+
+and run it:
+
+```sh npm2yarn
+npx prettier . --write
+```
+
+Make sure to run that after each step.
 
 The next step will show you how to setup a basic GraphQL schema and a GraphQL server!

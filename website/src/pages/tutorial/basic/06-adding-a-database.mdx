@@ -56,7 +56,7 @@ First, let's install the Prisma CLI and Prisma Client by running the following c
 terminal:
 
 ```sh npm2yarn
-npm i -D --save-exact prisma @prisma/client
+npm i -D --save-exact prisma@6.0.1 @prisma/client@6.0.1
 ```
 
 Next, use the Prisma CLI to initialize Prisma in the project.
@@ -215,7 +215,7 @@ So now let's see things in action.
 Run your new code with the following command:
 
 ```sh
-npx ts-node src/script.ts
+npx tsx src/script.ts
 ```
 
 You successfully queried the database with Prisma Client! Of course, we got an empty array back

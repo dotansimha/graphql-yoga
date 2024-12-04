@@ -17,7 +17,7 @@ This adds strong typing automatically, and reduces runtime error for your applic
 First, let's install the required packages:
 
 ```sh npm2yarn
-npm i -D --save-exact @graphql-codegen/cli@5.0.2 @eddeee888/gcg-typescript-resolver-files@0.10.4
+npm i -D --save-exact @graphql-codegen/cli@5.0.3 @eddeee888/gcg-typescript-resolver-files@0.11.0
 ```
 
 - `@graphql-codegen/cli` is the main package for GraphQL Code Generator. It provides a CLI to
@@ -49,7 +49,7 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]!
+  comments: [Comment!]
 }
 
 type Comment {
@@ -385,3 +385,6 @@ your application!
 
 As an additional exercise, you can try migrating the rest of the resolvers and mappers to the new
 setup.
+
+You can find the full solution, with a commit for each step, in
+[this repository](https://github.com/Urigo/hackernews-node-ts).
