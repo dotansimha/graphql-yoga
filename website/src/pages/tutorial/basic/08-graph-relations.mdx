@@ -390,8 +390,18 @@ type Link {
 }
 ```
 
+On the Prisma schema, we chose to make comments mandatory because of their best practices. So in
+case there are no comments, it will return an empty string.
+
+On the GraphQL schema, we can choose to follow the same practice, or to make the comments array
+nullable.
+
+In our example, we've choosen the nullable option, as it single to the consumer of our API that they
+need to handle that case, when they will generate the types on their end.
+
 Up next, you implement the corresponding `Link.comments` resolver. For this, you need to touch the
-`Link` object types resolver map.
+`Link` object types resolver map. Because of the nullable type, we will first check if there are any
+comments and if there are none, we'll return null.
 
 Add the following `Link.resolvers` implementation:
 
@@ -401,11 +411,15 @@ const resolvers = {
   Link: {
     // ... other field resolver functions
     comments(parent: Link, args: {}, context: GraphQLContext) {
-      return context.prisma.comment.findMany({
+      const comments = context.prisma.comment.findMany({
         where: {
           linkId: parent.id
         }
       })
+      if (comments.length === 0) {
+        return null
+      }
+      return comments
     }
   }
   // ... other resolver maps ...
