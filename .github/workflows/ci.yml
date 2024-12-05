@@ -48,6 +48,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
 
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
+
       - name: Build Packages
         run: pnpm build
 
@@ -236,6 +239,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
 
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
+
       - name: Build Packages
         run: pnpm build
 
@@ -340,6 +346,7 @@ jobs:
   e2e:
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         plan:
           - 'cf-worker'
@@ -352,9 +359,6 @@ jobs:
 
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
-    concurrency:
-      group: e2e-${{ github.workflow }}
-      cancel-in-progress: false
     steps:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -378,6 +382,9 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
+
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
 
       - name: Build Packages
         run: pnpm build

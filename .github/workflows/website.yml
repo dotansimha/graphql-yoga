@@ -44,6 +44,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
 
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
+
       - uses: the-guild-org/shared-config/website-cf@main
         name: build and deploy website
         env:
