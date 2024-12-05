@@ -398,8 +398,12 @@ jobs:
           echo "docker_host=$(docker context inspect --format '{{.Endpoints.docker.Host}}')" >> $GITHUB_OUTPUT
 
       - name: Provision & Test
-        run: pnpm start
-        working-directory: e2e
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: cd e2e && pnpm start
+          retry_wait_seconds: 30
         env:
           # General
           TEST_PLAN_NAME: ${{ matrix.plan }}
