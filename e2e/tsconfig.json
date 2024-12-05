@@ -4,10 +4,11 @@
     "target": "es2016",
     "module": "commonjs",
     "moduleResolution": "node",
-    "declaration": true,
-    "sourceMap": true,
+    "declaration": false,
+    "sourceMap": false,
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "include": ["./**/*.ts"]
+  "files": ["index.ts"],
+  "exclude": ["node_modules"]
 }
