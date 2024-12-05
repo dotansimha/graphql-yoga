@@ -39,7 +39,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-

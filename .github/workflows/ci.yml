@@ -43,7 +43,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
@@ -92,7 +94,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -141,7 +145,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -190,7 +196,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -234,7 +242,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
@@ -269,7 +279,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -316,7 +328,9 @@ jobs:
   #     - name: Cache pnpm
   #       uses: actions/cache@v3
   #       with:
-  #         path: ${{ steps.pnpm-store.outputs.PATH }}
+  #         path: |
+  #         ${{ steps.pnpm-store.outputs.PATH }}
+  #         **/node_modules
   #         key: ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
   #         restore-keys: |
   #           ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
@@ -377,7 +391,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
@@ -401,7 +417,7 @@ jobs:
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
-          max_attempts: 3
+          max_attempts: 10
           command: cd e2e && pnpm start
           retry_wait_seconds: 30
         env:
