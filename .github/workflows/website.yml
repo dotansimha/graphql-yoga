@@ -24,10 +24,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: the-guild-org/shared-config/setup@v1
-        name: setup env
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
+          node-version-file: '.node-version'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.PATH }}
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v16-
 
       - uses: the-guild-org/shared-config/website-cf@main
         name: build and deploy website

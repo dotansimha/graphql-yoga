@@ -20,10 +20,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@v1
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
+          node-version-file: '.node-version'
 
       - name: Setup Bun Runtime
         uses: antongolub/action-setup-bun@v1
@@ -32,6 +32,21 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.PATH }}
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v16-
 
       - name: Build Packages
         run: pnpm build
@@ -201,10 +216,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@v1
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
+          node-version-file: '.node-version'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.PATH }}
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v16-
 
       - name: Build Packages
         run: pnpm build
@@ -323,16 +353,31 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     concurrency:
-      group: e2e-${{ github.workflow }}-${{ matrix.plan}}
+      group: e2e-${{ github.workflow }}
       cancel-in-progress: false
     steps:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@v1
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
+          node-version-file: '.node-version'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.PATH }}
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v16-
 
       - name: Build Packages
         run: pnpm build
