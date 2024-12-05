@@ -70,6 +70,7 @@ jobs:
     name: unit / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 2
       matrix:
         node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
@@ -119,6 +120,7 @@ jobs:
     name: integration / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 2
       matrix:
         node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
@@ -168,6 +170,7 @@ jobs:
     name: leaks / nodejs v${{ matrix.node-version }} / graphql v${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 2
       matrix:
         node-version: [18, 22]
         graphql-version: ['15.8.0', '16.6.0']
@@ -250,6 +253,7 @@ jobs:
 
   apollo-federation-compatibility:
     strategy:
+      max-parallel: 2
       matrix:
         node-version: [18, 20, 22]
         graphql-version: ['15.8.0', '16.6.0']
