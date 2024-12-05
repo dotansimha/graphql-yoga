@@ -29,7 +29,7 @@ async function main() {
 
   const stack = await LocalWorkspace.createOrSelectStack({
     projectName: 'yoga-e2e',
-    stackName: identifier,
+    stackName: 'fa8e379',
     program: testPlan.program,
   });
 
