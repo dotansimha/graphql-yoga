@@ -18,7 +18,7 @@ const AVAILABLE_TEST_PLANS = {
 };
 
 async function main() {
-  const commitId = await getCommitId();
+  const commitId = 'fa8e379' || (await getCommitId());
   const testPlaneName = env('TEST_PLAN_NAME');
   const identifier = `yoga-${testPlaneName}-e2e-${commitId}`;
   const testPlan: DeploymentConfiguration = AVAILABLE_TEST_PLANS[testPlaneName];
@@ -29,7 +29,7 @@ async function main() {
 
   const stack = await LocalWorkspace.createOrSelectStack({
     projectName: 'yoga-e2e',
-    stackName: 'fa8e379',
+    stackName: identifier,
     program: testPlan.program,
   });
 
