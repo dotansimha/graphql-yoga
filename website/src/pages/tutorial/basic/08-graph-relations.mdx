@@ -401,7 +401,7 @@ On the Prisma API level, the method call for loading will always return an array
 On the GraphQL schema, we could follow the same practice, and make the comments array
 non-nullable (`[Comment!]!`).
 
-In our example, we've choosen the nullable option, as it single to the consumer of our API that they
+In our example, we've choosen the nullable option, as it indicates the API the
 need to handle that case, when they will generate the types on their end.
 
 Up next, you implement the corresponding `Link.comments` resolver. For this, you need to touch the
