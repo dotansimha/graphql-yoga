@@ -396,8 +396,7 @@ type Link {
 }
 ```
 
-On the Prisma schema, we chose to make comments mandatory because of their best practices. So in
-case there are no comments, it will return an empty string.
+On the Prisma API level, the method call for loading will always return an array. It does not distinguish between an empty array and an array with comments.
 
 On the GraphQL schema, we can choose to follow the same practice, or to make the comments array
 nullable.
