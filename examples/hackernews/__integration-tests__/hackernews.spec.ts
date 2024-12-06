@@ -85,4 +85,41 @@ describe('hackernews example integration', () => {
       }
     `);
   });
+
+  it('should create a new comment on post', async () => {
+    const response = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        query: /* GraphQL */ `
+          mutation CreateComment {
+            postCommentOnLink(body: "Comment on post", linkId: "1") {
+              body
+              link {
+                description
+                id
+                url
+              }
+            }
+          }
+        `,
+      }),
+    });
+
+    const body = await response.json();
+    expect(body).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "postCommentOnLink": {
+            "body": "Comment on post",
+            "link": {
+              "description": "Prisma replaces traditional ORMs",
+              "id": "1",
+              "url": "https://www.prisma.io",
+            },
+          },
+        },
+      }
+    `);
+  });
 });

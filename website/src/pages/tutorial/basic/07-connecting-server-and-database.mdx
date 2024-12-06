@@ -47,7 +47,7 @@ Now, you'll need to import the `createContext` function and make sure you add it
 GraphQL execution process:
 
 ```typescript filename="src/main.ts" {3,7}
-import { createServer } from 'http'
+import { createServer } from 'node:http'
 import { createYoga } from 'graphql-yoga'
 import { createContext } from './context'
 import { schema } from './schema'
@@ -82,7 +82,7 @@ export type GraphQLContext = {
   prisma: PrismaClient
 }
 
-export function createContext(): GraphQLContext {
+export async function createContext(): Promise<GraphQLContext> {
   return { prisma }
 }
 ```
@@ -161,6 +161,24 @@ export const schema = createSchema({
 <Callout>
   Notice that the code is changed now, and the `Link` type is being imported from the Prisma client
   instead of being hand-written.
+  Make sure to remove the following:
+```
+// 1
+type Link = {
+  id: string
+  url: string
+  description: string
+}
+   
+// 2
+const links: Link[] = [
+  {
+    id: 'link-0',
+    url: 'https://graphql-yoga.com',
+    description: 'The easiest way of setting up a GraphQL server'
+  }
+]
+```  
 </Callout>
 
 Now let's understand how these new resolvers are working!

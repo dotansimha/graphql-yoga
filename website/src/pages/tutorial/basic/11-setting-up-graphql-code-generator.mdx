@@ -17,7 +17,7 @@ This adds strong typing automatically, and reduces runtime error for your applic
 First, let's install the required packages:
 
 ```sh npm2yarn
-npm i -D --save-exact @graphql-codegen/cli@5.0.2 @eddeee888/gcg-typescript-resolver-files@0.10.4
+npm i -D --save-exact @graphql-codegen/cli@5.0.3 @eddeee888/gcg-typescript-resolver-files@0.11.0
 ```
 
 - `@graphql-codegen/cli` is the main package for GraphQL Code Generator. It provides a CLI to
@@ -49,11 +49,12 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]!
+  comments: [Comment!]
 }
 
 type Comment {
   id: ID!
+  createdAt: String!
   body: String!
 }
 ```
@@ -229,12 +230,17 @@ const resolvers = {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
-    comments(parent: Link, args: {}, context: GraphQLContext) {
-      return context.prisma.comment.findMany({
+    async comments(parent: Link, args: {}, context: GraphQLContext) {
+      const comments = await context.prisma.comment.findMany({
+        orderBy: { createdAt: 'desc' },
         where: {
           linkId: parent.id
         }
       })
+      if (comments.length === 0) {
+        return null
+      }
+      return comments
     }
   }
 }
@@ -297,12 +303,17 @@ Now, you can simply remove the comments, and migrate the existing `comments` res
 import type { LinkResolvers } from './../../types.generated'
 
 export const Link: LinkResolvers = {
-  comments: async (parent, _arg, context) => {
-    return context.prisma.comment.findMany({
+  async comments: async (parent, _arg, context) => {
+    const comments = await context.prisma.comment.findMany({
+      orderBy: { createdAt: 'desc' },
       where: {
         linkId: parent.id
       }
     })
+    if (comments.length === 0) {
+      return null
+    }
+    return comments
   }
 }
 ```
@@ -385,3 +396,6 @@ your application!
 
 As an additional exercise, you can try migrating the rest of the resolvers and mappers to the new
 setup.
+
+You can find the full solution, with a commit for each step, in
+[this repository](https://github.com/Urigo/hackernews-node-ts).

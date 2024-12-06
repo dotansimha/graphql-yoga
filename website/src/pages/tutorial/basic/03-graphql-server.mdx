@@ -12,9 +12,10 @@ Now that you have a GraphQL schema, and you understand the concept of GraphQL sc
 query, it's time to create a real GraphQL server.
 
 You are going to use the HTTP protocol to serve the GraphQL server, but note that there are other
-options for serving GraphQL - you can use WebSocket, SSE (Server-Sent Events) and basically any
-network transport protocol that you wish! (You can find a list of transport implementations at the
-end of this page)
+options for serving GraphQL - you can use
+[WebSocket, SSE (Server-Sent Events)](https://the-guild.dev/graphql/yoga-server/docs/features/subscriptions)
+and basically any network transport protocol that you wish! (You can find a list of transport
+implementations at the end of this page)
 
 ## Creating a GraphQL HTTP Server with Yoga
 
@@ -31,7 +32,7 @@ You'll need the `graphql-yoga` package available in your project (if you have no
 the last step), so install it using the following command:
 
 ```sh npm2yarn
-npm i --save-exact graphql-yoga@5.x.x
+npm i --save-exact graphql-yoga@5.10.4
 ```
 
 Now, update `src/main.ts` to create a simple GraphQL HTTP server on port `4000`:

@@ -37,6 +37,7 @@ model Link {
 
 model Comment {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
   body      String
   link      Link     @relation(fields: [linkId], references: [id])
   linkId    Int
@@ -60,6 +61,16 @@ A `Link` has many comments. A `Comment` belongs to one `Link`.
 If this is quite new to you, don't worry! We're going to be adding a few of these relational fields,
 and you'll get the hang of it as you go! For a deeper dive on relations with Prisma, check out these
 [docs](https://prisma.io/docs/reference/tools-and-interfaces/prisma-schema/relations).
+
+You might ask, Links might not have Comments, so why don't we annotate comments like this:
+
+```Prisma
+comments    Comment[]?
+```
+
+The reason is that Prisma does not support optional on lists. This is by design as they say it is a
+better practice to return an empty array in that case
+([reference](https://github.com/prisma/prisma/issues/847#issuecomment-546895663)).
 
 ## Updating Prisma Client
 
@@ -115,6 +126,7 @@ type Link {
 
 type Comment {
   id: ID!
+  createdAt: String!
   body: String!
 }
 ```
@@ -181,6 +193,8 @@ You pass two arguments for creating the new comment to the `comment.create` call
    for IDs.
 2. **`body`** - this is the comment body, there is nothing special about it.
 
+> The createdAt field will be automatically created by Prisma
+
 You probably can't wait to try sending a mutation for creating your first comment.
 
 So let's do it!
@@ -194,6 +208,7 @@ Execute the following mutation operation:
 mutation postCommentOnLink {
   postCommentOnLink(linkId: "1", body: "This is my first comment!") {
     id
+    createdAt
     body
   }
 }
@@ -206,6 +221,7 @@ The response will look identical to this:
   "data": {
     "postCommentOnLink": {
       "id": "1",
+      "createdAt": "1733487844288",
       "body": "This is my first comment!"
     }
   }
@@ -376,12 +392,25 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]!
+  comments: [Comment!]
 }
 ```
 
+On the Prisma API level, the method call for loading will always return an array. It does not
+distinguish between an empty array and an array with comments.
+
+On the GraphQL schema, we could follow the same practice, and make the comments array non-nullable
+(`[Comment!]!`).
+
+In our example, we've choosen the nullable option, as it indicates the API the need to handle that
+case, when they will generate the types on their end.
+
 Up next, you implement the corresponding `Link.comments` resolver. For this, you need to touch the
-`Link` object types resolver map.
+`Link` object types resolver map. Because of the nullable type, we will first check if there are any
+comments and if there are none, we'll return null.
+
+As we also have the createdAt field on comments, let's sort the comments by that field when we
+return them to the user.
 
 Add the following `Link.resolvers` implementation:
 
@@ -390,12 +419,17 @@ const resolvers = {
   // ... other resolver maps ...
   Link: {
     // ... other field resolver functions
-    comments(parent: Link, args: {}, context: GraphQLContext) {
-      return context.prisma.comment.findMany({
+    async comments(parent: Link, args: {}, context: GraphQLContext) {
+      const comments = await context.prisma.comment.findMany({
+        orderBy: { createdAt: 'desc' },
         where: {
           linkId: parent.id
         }
       })
+      if (comments.length === 0) {
+        return null
+      }
+      return comments
     }
   }
   // ... other resolver maps ...
@@ -456,7 +490,7 @@ As an additional exercise, you can gain more hands-on experience by implementing
 
 ```graphql
 type Comment {
-  link: Link
+  link: Link!
 }
 
 type Query {
