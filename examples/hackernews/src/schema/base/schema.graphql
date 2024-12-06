@@ -19,6 +19,7 @@ type Link {
 
 type Comment {
   id: ID!
+  createdAt: String!
   body: String!
   link: Link!
 }

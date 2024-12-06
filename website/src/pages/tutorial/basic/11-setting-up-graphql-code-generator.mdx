@@ -54,6 +54,7 @@ type Link {
 
 type Comment {
   id: ID!
+  createdAt: String!
   body: String!
 }
 ```
@@ -231,6 +232,7 @@ const resolvers = {
     url: (parent: Link) => parent.url,
     async comments(parent: Link, args: {}, context: GraphQLContext) {
       const comments = await context.prisma.comment.findMany({
+        orderBy: { createdAt: 'desc' },
         where: {
           linkId: parent.id
         }
@@ -303,6 +305,7 @@ import type { LinkResolvers } from './../../types.generated'
 export const Link: LinkResolvers = {
   async comments: async (parent, _arg, context) => {
     const comments = await context.prisma.comment.findMany({
+      orderBy: { createdAt: 'desc' },
       where: {
         linkId: parent.id
       }

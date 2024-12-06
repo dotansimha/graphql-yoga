@@ -37,6 +37,7 @@ model Link {
 
 model Comment {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
   body      String
   link      Link     @relation(fields: [linkId], references: [id])
   linkId    Int
@@ -125,6 +126,7 @@ type Link {
 
 type Comment {
   id: ID!
+  createdAt: String!
   body: String!
 }
 ```
@@ -191,6 +193,8 @@ You pass two arguments for creating the new comment to the `comment.create` call
    for IDs.
 2. **`body`** - this is the comment body, there is nothing special about it.
 
+> The createdAt field will be automatically created by Prisma
+
 You probably can't wait to try sending a mutation for creating your first comment.
 
 So let's do it!
@@ -204,6 +208,7 @@ Execute the following mutation operation:
 mutation postCommentOnLink {
   postCommentOnLink(linkId: "1", body: "This is my first comment!") {
     id
+    createdAt
     body
   }
 }
@@ -216,6 +221,7 @@ The response will look identical to this:
   "data": {
     "postCommentOnLink": {
       "id": "1",
+      "createdAt": "1733487844288",
       "body": "This is my first comment!"
     }
   }
@@ -403,6 +409,9 @@ Up next, you implement the corresponding `Link.comments` resolver. For this, you
 `Link` object types resolver map. Because of the nullable type, we will first check if there are any
 comments and if there are none, we'll return null.
 
+As we also have the createdAt field on comments, let's sort the comments by that field when we
+return them to the user.
+
 Add the following `Link.resolvers` implementation:
 
 ```ts filename="src/schema.ts"
@@ -412,6 +421,7 @@ const resolvers = {
     // ... other field resolver functions
     async comments(parent: Link, args: {}, context: GraphQLContext) {
       const comments = await context.prisma.comment.findMany({
+        orderBy: { createdAt: 'desc' },
         where: {
           linkId: parent.id
         }
