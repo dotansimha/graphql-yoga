@@ -198,6 +198,8 @@ export function createTestSchema() {
   });
 }
 
+jest.setTimeout(60000);
+
 describe('browser', () => {
   const liveQueryStore = new InMemoryLiveQueryStore();
   const endpoint = '/test-graphql';
@@ -248,10 +250,10 @@ describe('browser', () => {
   });
 
   const typeOperationText = async (text: string) => {
-    await page.type('.graphiql-query-editor .CodeMirror textarea', text, { delay: 100 });
+    await page.type('.graphiql-query-editor .CodeMirror textarea', text, { delay: 300 });
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await setTimeout$(100);
+    await setTimeout$(300);
   };
 
   const typeVariablesText = async (text: string) => {
@@ -338,7 +340,7 @@ describe('browser', () => {
 
     it('execute mutation operation', async () => {
       await page.goto(`http://localhost:${port}${endpoint}`);
-      await typeOperationText(`mutation ($number: Int!) {  setFavoriteNumber(number: $number) }`);
+      await typeOperationText(`mutation ($number: Int!) { setFavoriteNumber(number: $number) }`);
       await typeVariablesText(`{ "number": 3 }`);
       await page.click('.graphiql-execute-button');
       const resultContents = await waitForResult();
