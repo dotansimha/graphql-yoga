@@ -1,20 +1,18 @@
-import type { Plugin } from 'graphql-yoga';
-import { createGraphQLError } from 'graphql-yoga';
+import { createGraphQLError, type Plugin } from 'graphql-yoga';
 import {
   FetchError,
   SupergraphSchemaManager,
-  SupergraphSchemaManagerOptions,
+  type SupergraphSchemaManagerFailureEvent,
+  type SupergraphSchemaManagerLogEvent,
+  type SupergraphSchemaManagerOptions,
+  type SupergraphSchemaManagerSchemaEvent,
 } from '@graphql-tools/federation';
+import { DisposableSymbols } from '@whatwg-node/disposablestack';
 
 export type ManagedFederationPluginOptions = (
-  | (SupergraphSchemaManagerOptions & { supergraphManager?: never })
-  | { supergraphManager: SupergraphSchemaManager }
+  | SupergraphSchemaManager
+  | SupergraphSchemaManagerOptions
 ) & {
-  /**
-   * The manager to be used for fetching the schema and keeping it up to date
-   * If not provided, on will be instantiated with the provided options
-   */
-  supergraphManager?: SupergraphSchemaManager | never;
   /**
    * Allow to customize how a schema loading failure is handled.
    * A failure happens when the manager failed to load the schema more than the provided max retries
@@ -27,64 +25,91 @@ export type ManagedFederationPluginOptions = (
 };
 
 export function useManagedFederation(options: ManagedFederationPluginOptions = {}): Plugin {
-  const {
-    supergraphManager = new SupergraphSchemaManager(options as SupergraphSchemaManagerOptions),
-  } = options;
+  let _supergraphManager: SupergraphSchemaManager;
+
+  function ensureSupergraphManager() {
+    if (_supergraphManager == null) {
+      if (options instanceof SupergraphSchemaManager) {
+        _supergraphManager = options;
+      } else {
+        _supergraphManager = new SupergraphSchemaManager(options);
+      }
+    }
+    return _supergraphManager;
+  }
 
   const plugin: Plugin = {
     onYogaInit({ yoga }) {
-      supergraphManager.on('log', ({ level, message, source }) => {
-        yoga.logger[level](
-          `[ManagedFederation]${source === 'uplink' ? ' <UPLINK>' : ''} ${message}`,
-        );
-      });
-
-      supergraphManager.on(
-        'failure',
-        options.onFailure ??
-          ((error, delayInSeconds) => {
-            const message = (error as { message: string })?.message ?? error;
-            yoga.logger.error(
-              `[ManagedFederation] Failed to load supergraph schema.${
-                message ? ` Last error: ${message}` : ''
-              }`,
-            );
-            yoga.logger.info(
-              `[ManagedFederation] No failure handler provided. Retrying in ${delayInSeconds}s.`,
-            );
-            supergraphManager.start(delayInSeconds);
-          }),
+      ensureSupergraphManager().addEventListener(
+        'log',
+        ({ detail: { level, message, source } }: SupergraphSchemaManagerLogEvent) => {
+          yoga.logger[level](
+            `[ManagedFederation]${source === 'uplink' ? ' <UPLINK>' : ''} ${message}`,
+          );
+        },
       );
 
-      supergraphManager.start();
+      ensureSupergraphManager().addEventListener(
+        'failure',
+        ({ detail: { error, delayInSeconds } }: SupergraphSchemaManagerFailureEvent) => {
+          if (options.onFailure) {
+            return options.onFailure(error, delayInSeconds);
+          }
+          const message = (error as { message: string })?.message ?? error;
+          yoga.logger.error(
+            `[ManagedFederation] Failed to load supergraph schema.${
+              message ? ` Last error: ${message}` : ''
+            }`,
+          );
+          yoga.logger.info(
+            `[ManagedFederation] No failure handler provided. Retrying in ${delayInSeconds}s.`,
+          );
+          ensureSupergraphManager().start(delayInSeconds);
+        },
+      );
+
+      ensureSupergraphManager().start();
     },
     onPluginInit({ setSchema }) {
-      if (supergraphManager.schema) {
-        setSchema(supergraphManager.schema);
+      if (ensureSupergraphManager().schema) {
+        setSchema(ensureSupergraphManager().schema);
       } else {
         // Wait for the first schema to be loaded before before allowing requests to be parsed
         // We can then remove the onRequestParse hook to avoid async cost on every request
-        const waitForInitialization = new Promise<void>((resolve, reject) => {
-          const onFailure = (err: unknown) => {
-            reject(
-              createGraphQLError('Supergraph failed to load', {
-                originalError: err instanceof Error ? err : null,
-              }),
+        let waitForInitialization: Promise<void> | undefined = new Promise<void>(
+          (resolve, reject) => {
+            const onFailure = (evt: SupergraphSchemaManagerFailureEvent) => {
+              reject(
+                createGraphQLError('Supergraph failed to load', {
+                  originalError: evt.detail.error instanceof Error ? evt.detail.error : undefined,
+                }),
+              );
+            };
+            ensureSupergraphManager().addEventListener('failure', onFailure, { once: true });
+            ensureSupergraphManager().addEventListener(
+              'schema',
+              (evt: SupergraphSchemaManagerSchemaEvent) => {
+                setSchema(evt.detail.schema);
+                ensureSupergraphManager().removeEventListener('failure', onFailure);
+                resolve();
+                plugin.onRequestParse = undefined;
+                waitForInitialization = undefined;
+              },
+              { once: true },
             );
-          };
-          supergraphManager.once('failure', onFailure);
-          supergraphManager.once('schema', schema => {
-            setSchema(schema);
-            supergraphManager.off('failure', onFailure);
-            resolve();
-            plugin.onRequestParse = undefined;
-          });
-        });
-        plugin.onRequestParse = async () => {
-          await waitForInitialization;
-        };
+          },
+        );
+        plugin.onRequestParse = () => waitForInitialization;
       }
-      supergraphManager.on('schema', setSchema);
+      ensureSupergraphManager().addEventListener(
+        'schema',
+        (evt: SupergraphSchemaManagerSchemaEvent) => {
+          setSchema(evt.detail.schema);
+        },
+      );
+    },
+    [DisposableSymbols.dispose]() {
+      return ensureSupergraphManager()[DisposableSymbols.dispose]();
     },
   };
 

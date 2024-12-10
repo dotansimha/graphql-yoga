@@ -11,15 +11,15 @@ export type TypedEventListenerOrEventListenerObject<TEvent extends CustomEvent> 
   | TypedEventListenerObject<TEvent>;
 
 export interface TypedEventTarget<TEvent extends CustomEvent> extends EventTarget {
-  addEventListener(
-    type: string,
-    callback: TypedEventListenerOrEventListenerObject<TEvent> | null,
+  addEventListener<TCurrEvent extends TEvent, TEventType extends TCurrEvent['type']>(
+    type: TEventType,
+    callback: TypedEventListenerOrEventListenerObject<TCurrEvent> | null,
     options?: AddEventListenerOptions | boolean,
   ): void;
   dispatchEvent(event: TEvent): boolean;
-  removeEventListener(
-    type: string,
-    callback: TypedEventListenerOrEventListenerObject<TEvent> | null,
+  removeEventListener<TCurrEvent extends TEvent, TEventType extends TCurrEvent['type']>(
+    type: TEventType,
+    callback: TypedEventListenerOrEventListenerObject<TCurrEvent> | null,
     options?: EventListenerOptions | boolean,
   ): void;
 }

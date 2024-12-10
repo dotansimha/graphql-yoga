@@ -23,7 +23,9 @@ const schema = createSchema({
           const spinnerFrames = ['\u25D4', '\u25D1', '\u25D5', '\u25D0'];
           while (counter < loadTime) {
             await setTimeout$(1000); // Wait for a second
-            yield { dynamicLoading: `Loading ${spinnerFrames[counter % spinnerFrames.length]}` };
+            yield {
+              dynamicLoading: `Loading ${spinnerFrames[counter % spinnerFrames.length]}`,
+            };
             counter++;
           }
           yield { dynamicLoading: 'Loaded \u2713' };
