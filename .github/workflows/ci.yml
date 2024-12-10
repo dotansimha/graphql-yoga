@@ -74,7 +74,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18, 20, 22]
-        graphql-version: ['15.8.0', '16.6.0']
+        graphql-version: ['15.8.0', '16.9.0']
     steps:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
