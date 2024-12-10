@@ -14,11 +14,12 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]!
+  comments: [Comment!]
 }
 
 type Comment {
   id: ID!
+  createdAt: String!
   body: String!
-  link: Link
+  link: Link!
 }

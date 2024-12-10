@@ -20,10 +20,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@v1
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
+          node-version-file: '.node-version'
 
       - name: Setup Bun Runtime
         uses: antongolub/action-setup-bun@v1
@@ -32,6 +32,26 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v16-
+
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
 
       - name: Build Packages
         run: pnpm build
@@ -74,7 +94,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -123,7 +145,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -172,7 +196,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -201,10 +227,30 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@v1
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
+          node-version-file: '.node-version'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v16-
+
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
 
       - name: Build Packages
         run: pnpm build
@@ -233,7 +279,9 @@ jobs:
       - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-store.outputs.PATH }}
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -280,7 +328,9 @@ jobs:
   #     - name: Cache pnpm
   #       uses: actions/cache@v3
   #       with:
-  #         path: ${{ steps.pnpm-store.outputs.PATH }}
+  #         path: |
+  #         ${{ steps.pnpm-store.outputs.PATH }}
+  #         **/node_modules
   #         key: ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
   #         restore-keys: |
   #           ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
@@ -309,6 +359,7 @@ jobs:
 
   e2e:
     strategy:
+      fail-fast: false
       matrix:
         plan:
           - 'cf-worker'
@@ -325,10 +376,30 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Setup env
-        uses: the-guild-org/shared-config/setup@v1
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
+          node-version-file: '.node-version'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.pnpm-store.outputs.PATH }}
+            **/node_modules
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-graphql-v16-
+
+      - name: Install Dependencies
+        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
 
       - name: Build Packages
         run: pnpm build
@@ -343,8 +414,12 @@ jobs:
           echo "docker_host=$(docker context inspect --format '{{.Endpoints.docker.Host}}')" >> $GITHUB_OUTPUT
 
       - name: Provision & Test
-        run: pnpm start
-        working-directory: e2e
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 10
+          command: cd e2e && pnpm start
+          retry_wait_seconds: 30
         env:
           # General
           TEST_PLAN_NAME: ${{ matrix.plan }}
