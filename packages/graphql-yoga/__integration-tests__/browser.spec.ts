@@ -198,7 +198,7 @@ export function createTestSchema() {
   });
 }
 
-jest.setTimeout(60000);
+jest.setTimeout(60_000);
 
 describe('browser', () => {
   const liveQueryStore = new InMemoryLiveQueryStore();
