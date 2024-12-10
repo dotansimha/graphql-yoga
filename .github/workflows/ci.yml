@@ -45,7 +45,6 @@ jobs:
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
-            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
@@ -96,7 +95,6 @@ jobs:
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
-            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -147,7 +145,6 @@ jobs:
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
-            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -198,7 +195,6 @@ jobs:
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
-            **/node_modules
           key:
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
             hashFiles('**/pnpm-lock.yaml') }}
@@ -244,7 +240,6 @@ jobs:
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
-            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
@@ -277,7 +272,6 @@ jobs:
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
-            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
@@ -339,7 +333,6 @@ jobs:
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
-            **/node_modules
           key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v16-
