@@ -15,7 +15,7 @@ import { renderGraphiQL } from '@graphql-yoga/render-graphiql';
 import { InMemoryLiveQueryStore } from '@n1ru4l/in-memory-live-query-store';
 import 'json-bigint-patch';
 import { createServer, Server } from 'node:http';
-import { AddressInfo } from 'node:net';
+import { AddressInfo, Socket } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
 import { fakePromise } from '@whatwg-node/server';
@@ -227,6 +227,14 @@ describe('browser', () => {
   let port: number;
   const server = createServer(yogaApp);
 
+  const sockets = new Set<Socket>();
+  server.on('connection', socket => {
+    sockets.add(socket);
+    socket.once('close', () => {
+      sockets.delete(socket);
+    });
+  });
+
   beforeAll(async () => {
     await new Promise<void>(resolve => server.listen(0, resolve));
     port = (server.address() as AddressInfo).port;
@@ -246,6 +254,10 @@ describe('browser', () => {
   });
   afterAll(async () => {
     await browser.close();
+    for (const socket of sockets) {
+      socket.destroy();
+    }
+    server.closeAllConnections();
     await new Promise(resolve => server.close(resolve));
   });
 
