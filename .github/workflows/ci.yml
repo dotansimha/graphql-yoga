@@ -117,13 +117,6 @@ jobs:
       - name: Build Packages
         run: pnpm build
 
-      - name: Run Tests
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          command: pnpm run test --ci
-
       - name: Run Unit Tests
         uses: nick-fields/retry@v3
         with:
