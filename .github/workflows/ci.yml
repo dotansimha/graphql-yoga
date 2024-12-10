@@ -259,10 +259,6 @@ jobs:
         run: pnpm --filter example-node-esm run test
 
   apollo-federation-compatibility:
-    strategy:
-      matrix:
-        node-version: [18, 20, 22]
-        graphql-version: ['15.8.0', '16.6.0']
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -270,7 +266,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: '.node-version'
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
       - name: Get pnpm store path
@@ -282,11 +278,9 @@ jobs:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}
             **/node_modules
-          key:
-            ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-${{
-            hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-store-graphql-v16-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
+            ${{ runner.os }}-pnpm-store-graphql-v16-
       - name: Install Dependencies
         run: pnpm i --no-frozen-lockfile
       - name: Build Packages
