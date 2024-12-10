@@ -2,6 +2,9 @@ module.exports = {
   root: true,
   extends: ['@theguild'],
   ignorePatterns: ['packages/render-graphiql/src/graphiql.ts'],
+  parserOptions: {
+    project: './tsconfig.json',
+  },
   overrides: [
     {
       files: ['packages/graphql-yoga/src/plugins/**/*.ts'],
