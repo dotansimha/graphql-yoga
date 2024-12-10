@@ -31,7 +31,7 @@ describe('logging', () => {
       const originalValue = process.env.DEBUG;
       try {
         process.env.DEBUG = '1';
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+
         jest.spyOn(console, 'debug').mockImplementationOnce(() => {});
         const logger = createLogger();
         logger.debug('TEST');

@@ -38,7 +38,7 @@ export async function parsePOSTMultipartRequest(request: Request): Promise<Graph
 
   try {
     operations = JSON.parse(operationsStr);
-  } catch (err) {
+  } catch {
     throw createGraphQLError('Multipart form field "operations" must be a valid JSON string');
   }
 
@@ -53,7 +53,7 @@ export async function parsePOSTMultipartRequest(request: Request): Promise<Graph
 
     try {
       map = JSON.parse(mapStr);
-    } catch (err) {
+    } catch {
       throw createGraphQLError('Multipart form field "map" must be a valid JSON string');
     }
     for (const fileIndex in map) {

@@ -57,6 +57,8 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+        env:
+          DEBUG: 'eslint:*'
 
       - name: Build Packages
         run: pnpm build

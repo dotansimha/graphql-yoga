@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { LRUCache as LRU } from 'lru-cache';
 
 const DEFAULT_MAX = 1024;
