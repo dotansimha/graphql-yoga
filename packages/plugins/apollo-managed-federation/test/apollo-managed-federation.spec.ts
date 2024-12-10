@@ -32,11 +32,11 @@ describe('Apollo Managed Federation', () => {
   it('should expose the managed federation schema from GraphOS', async () => {
     const yoga = createYoga({
       plugins: [
-        useManagedFederation({
-          supergraphManager: makeManager({
+        useManagedFederation(
+          makeManager({
             fetch: mockSDL,
           }),
-        }),
+        ),
       ],
       logging: false,
     });
@@ -61,14 +61,14 @@ describe('Apollo Managed Federation', () => {
   it('should wait for the schema before letting requests through', async () => {
     const yoga = createYoga({
       plugins: [
-        useManagedFederation({
-          supergraphManager: makeManager({
+        useManagedFederation(
+          makeManager({
             fetch: async () => {
               await setTimeout$(100);
               return mockSDL();
             },
           }),
-        }),
+        ),
       ],
       logging: false,
     });
@@ -93,11 +93,11 @@ describe('Apollo Managed Federation', () => {
   it('should respond with an error if the schema failed to load', async () => {
     const yoga = createYoga({
       plugins: [
-        useManagedFederation({
-          supergraphManager: makeManager({
+        useManagedFederation(
+          makeManager({
             fetch: mockFetchError,
           }),
-        }),
+        ),
       ],
       logging: false,
     });
@@ -117,17 +117,17 @@ describe('Apollo Managed Federation', () => {
   it('should restart polling by default on failure', async () => {
     const yoga = createYoga({
       plugins: [
-        useManagedFederation({
-          supergraphManager: makeManager({
+        useManagedFederation(
+          makeManager({
             fetch: mockFetchError,
           }),
-        }),
+        ),
       ],
       logging: false,
     });
 
     const failure = jest.fn();
-    manager.on('failure', failure);
+    manager.addEventListener('failure', failure);
 
     const response = await yoga.fetch('/graphql', {
       method: 'POST',

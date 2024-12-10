@@ -19,11 +19,11 @@ import {
 } from '../types.js';
 
 export type Plugin<
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   PluginContext extends Record<string, any> = {},
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   TServerContext extends Record<string, any> = {},
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   TUserContext = {},
 > = EnvelopPlugin<YogaInitialContext & PluginContext> &
   ServerAdapterPlugin<TServerContext> & {

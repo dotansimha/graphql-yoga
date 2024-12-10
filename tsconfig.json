@@ -12,7 +12,7 @@
     "lib": ["esnext"],
     "emitDecoratorMetadata": true,
     "sourceMap": false,
-    "declaration": true,
+    "declaration": false,
     "noImplicitThis": true,
     "strict": true,
     "alwaysStrict": true,
@@ -33,5 +33,13 @@
     "jsx": "preserve"
   },
   "include": ["packages"],
-  "exclude": ["**/dist", "**/temp", "**/.bob", "**/examples", "**/benchmark", "**/e2e"]
+  "exclude": [
+    "**/dist",
+    "**/node_modules",
+    "**/.bob",
+    "**/e2e",
+    "**/benchmark",
+    "**/website",
+    "**/examples"
+  ]
 }

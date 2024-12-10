@@ -13,7 +13,6 @@ export const createPushPullAsyncIterable = <T>(): {
 
   return {
     source: new Repeater<T>(async (push, stop) => {
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         if (terminated) {
           stop();

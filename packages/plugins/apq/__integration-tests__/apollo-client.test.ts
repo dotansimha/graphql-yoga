@@ -12,7 +12,6 @@ function sha256(input: string) {
 
 describe('Automatic Persisted Queries', () => {
   if (version.startsWith('15')) {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     it('noop', () => {});
     return;
   }

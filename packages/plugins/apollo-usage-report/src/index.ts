@@ -252,7 +252,7 @@ async function sendTrace(
       headers: {
         'content-type': 'application/protobuf',
         // The presence of the api key is already checked at Yoga initialization time
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         'x-api-key': apiKey!,
         accept: 'application/json',
       },

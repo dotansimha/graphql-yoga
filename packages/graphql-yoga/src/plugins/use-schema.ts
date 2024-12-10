@@ -12,9 +12,9 @@ export type YogaSchemaDefinition<TServerContext, TUserContext> =
     >);
 
 export const useSchema = <
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   TServerContext = {},
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   TUserContext = {},
 >(
   schemaDef?: YogaSchemaDefinition<TServerContext, TUserContext>,

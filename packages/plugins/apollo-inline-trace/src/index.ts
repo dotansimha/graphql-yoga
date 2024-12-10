@@ -290,7 +290,7 @@ function ensureParentTraceNode(
   const parentNode = ctx.nodes.get(responsePathToString(path.prev));
   if (parentNode) return parentNode;
   // path.prev isn't undefined because we set up the root path in ctx.nodes
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   return newTraceNode(ctx, path.prev!);
 }
 
