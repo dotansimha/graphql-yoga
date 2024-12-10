@@ -188,7 +188,7 @@ export function createTestSchema() {
           async *subscribe(_root, args) {
             for (let count = 1; count <= args.to; count++) {
               yield { count };
-              await new Promise(resolve => setTimeout(resolve, 200));
+              await setTimeout$(200);
             }
           },
         },
@@ -248,17 +248,17 @@ describe('browser', () => {
   });
 
   const typeOperationText = async (text: string) => {
-    await page.type('.graphiql-query-editor .CodeMirror textarea', text);
+    await page.type('.graphiql-query-editor .CodeMirror textarea', text, { delay: 100 });
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await setTimeout$(100);
   };
 
   const typeVariablesText = async (text: string) => {
-    await page.type('[aria-label="Variables"] .CodeMirror textarea', text);
+    await page.type('[aria-label="Variables"] .CodeMirror textarea', text, { delay: 100 });
     // TODO: figure out how we can avoid this wait
     // it is very likely that there is a delay from textarea -> react state update
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await setTimeout$(100);
   };
 
   const waitForResult = async (): Promise<object> => {
