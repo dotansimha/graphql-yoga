@@ -143,7 +143,7 @@ export type YogaServerOptions<TServerContext, TUserContext> = {
     | Array<
         | Plugin<TUserContext & TServerContext & YogaInitialContext>
         | Plugin
-        // eslint-disable-next-line @typescript-eslint/ban-types
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         | {}
       >
     | undefined;
@@ -241,8 +241,8 @@ export class YogaServer<
           ? createLogger()
           : createLogger('silent')
         : typeof logger === 'string'
-        ? createLogger(logger)
-        : logger;
+          ? createLogger(logger)
+          : logger;
 
     const maskErrorFn: MaskError =
       (typeof options?.maskedErrors === 'object' && options.maskedErrors.maskError) || maskError;
