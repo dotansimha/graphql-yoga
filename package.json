@@ -44,7 +44,9 @@
     "start:docs": "pnpm --filter=website dev",
     "test": "jest --detectOpenHandles",
     "test:integration": "cross-env INTEGRATION_TEST=true jest --forceExit",
-    "test:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks --logHeapUsage && cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks --logHeapUsage"
+    "test:integration:leaks": "cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks",
+    "test:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks && cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks",
+    "test:unit:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks"
   },
   "devDependencies": {
     "@babel/core": "7.22.1",
