@@ -58,7 +58,6 @@ jobs:
       - name: Lint
         run: pnpm lint
         env:
-          DEBUG: 'eslint:*'
           NODE_OPTIONS: '--max-old-space-size=8192'
           NODE_NO_WARNINGS: true
 
