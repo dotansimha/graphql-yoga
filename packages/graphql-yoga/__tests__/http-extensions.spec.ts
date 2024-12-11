@@ -631,7 +631,8 @@ describe('Result Extensions', () => {
         this.name = 'CustomError';
       }
 
-      override toJSON() {
+      // @ts-ignore - Only in graphql@^16 is `toJSON` a base method
+      /* override */ toJSON() {
         return {
           message: this.message,
           extensions: { name: this.name, foo: 'bar' },

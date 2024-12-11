@@ -164,8 +164,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-graphql-v${{ matrix.graphql-version }}-
 
-      # - name: Set GraphQL Version
-      #   run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
+      - name: Set GraphQL Version
+        run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
 
       - name: Install Dependencies
         run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
