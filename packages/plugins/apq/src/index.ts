@@ -81,7 +81,7 @@ export function useAPQ(options: APQOptions = {}): Plugin {
 
   return {
     async onParams({ params, setParams, fetchAPI }) {
-      const persistedQueryData = decodeAPQExtension(params.extensions?.persistedQuery);
+      const persistedQueryData = decodeAPQExtension(params.extensions?.['persistedQuery']);
 
       if (persistedQueryData === null) {
         return;

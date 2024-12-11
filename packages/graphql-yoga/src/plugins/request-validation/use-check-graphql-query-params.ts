@@ -59,7 +59,7 @@ export function checkGraphQLQueryParams(
 
   assertInvalidParams(params, extraParamNames);
 
-  if (params.query == null) {
+  if (params['query'] == null) {
     throw createGraphQLError('Must provide query string.', {
       extensions: {
         http: {
@@ -73,7 +73,7 @@ export function checkGraphQLQueryParams(
     });
   }
 
-  const queryType = extendedTypeof(params.query);
+  const queryType = extendedTypeof(params['query']);
   if (queryType !== 'string') {
     throw createGraphQLError(`Expected "query" param to be a string, but given ${queryType}.`, {
       extensions: {
@@ -87,7 +87,7 @@ export function checkGraphQLQueryParams(
     });
   }
 
-  const variablesParamType = extendedTypeof(params.variables);
+  const variablesParamType = extendedTypeof(params['variables']);
   if (!['object', 'null', 'undefined'].includes(variablesParamType)) {
     throw createGraphQLError(
       `Expected "variables" param to be empty or an object, but given ${variablesParamType}.`,
@@ -104,7 +104,7 @@ export function checkGraphQLQueryParams(
     );
   }
 
-  const extensionsParamType = extendedTypeof(params.extensions);
+  const extensionsParamType = extendedTypeof(params['extensions']);
   if (!['object', 'null', 'undefined'].includes(extensionsParamType)) {
     throw createGraphQLError(
       `Expected "extensions" param to be empty or an object, but given ${extensionsParamType}.`,

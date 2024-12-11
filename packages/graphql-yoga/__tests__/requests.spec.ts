@@ -19,7 +19,7 @@ describe('requests', () => {
         requestUrl: (_, __, ctx) => ctx.request.url,
       },
       Mutation: {
-        echo(root, args) {
+        echo(_, args) {
           return args.str;
         },
       },
@@ -534,7 +534,7 @@ describe('requests', () => {
     const firstResBody = await firstRes.json();
     expect(firstResBody.data.greetings).toBe('Hello world!');
     expect(onExecuteFn).toHaveBeenCalledTimes(1);
-    expect(onExecuteFn.mock.calls[0][0].args.contextValue.request).toBe(firstReq);
+    expect(onExecuteFn.mock.calls[0]?.[0].args.contextValue.request).toBe(firstReq);
     const secondReq = new Request('http://yoga/graphql', {
       method: 'POST',
       headers: {
@@ -547,9 +547,9 @@ describe('requests', () => {
     const secondResBody = await secondRes.json();
     expect(secondResBody.data.greetings).toBe('Hello world!');
     expect(onExecuteFn).toHaveBeenCalledTimes(2);
-    expect(onExecuteFn.mock.calls[1][0].args.contextValue.request).toBe(secondReq);
-    expect(onExecuteFn.mock.calls[1][0].args.contextValue).not.toBe(
-      onExecuteFn.mock.calls[0][0].args.contextValue,
+    expect(onExecuteFn.mock.calls[1]?.[0].args.contextValue.request).toBe(secondReq);
+    expect(onExecuteFn.mock.calls[1]?.[0].args.contextValue).not.toBe(
+      onExecuteFn.mock.calls[0]![0].args.contextValue,
     );
   });
 });

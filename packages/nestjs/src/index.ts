@@ -85,7 +85,8 @@ export abstract class AbstractYogaDriver<
       // disable error masking by default
       maskedErrors: options.maskedErrors == null ? false : options.maskedErrors,
       // disable graphiql in production
-      graphiql: options.graphiql == null ? process.env.NODE_ENV !== 'production' : options.graphiql,
+      graphiql:
+        options.graphiql == null ? process.env['NODE_ENV'] !== 'production' : options.graphiql,
     };
     if (platformName === 'express') {
       return this.registerExpress(options as YogaDriverConfig<'express'>);
@@ -209,7 +210,7 @@ export abstract class AbstractYogaDriver<
     return mergedSchema;
   }
 
-  public subscriptionWithFilter<TPayload, TVariables, TContext>(
+  public override subscriptionWithFilter<TPayload, TVariables, TContext>(
     instanceRef: unknown,
     filterFn: (
       payload: TPayload,
@@ -238,7 +239,7 @@ export class YogaDriver<
 > extends AbstractYogaDriver<Platform> {
   private subscriptionService?: GqlSubscriptionService;
 
-  public async start(options: YogaDriverConfig<Platform>) {
+  public override async start(options: YogaDriverConfig<Platform>) {
     if (options.definitions?.path) {
       if (!options.schema) {
         throw new Error('Schema is required when generating definitions');
@@ -386,7 +387,7 @@ export class YogaDriver<
     }
   }
 
-  public async stop() {
+  public override async stop() {
     await this.subscriptionService?.stop();
   }
 }

@@ -58,7 +58,7 @@ export async function parsePOSTMultipartRequest(request: Request): Promise<Graph
     }
     for (const fileIndex in map) {
       const file = requestBody.get(fileIndex);
-      const keys = map[fileIndex];
+      const keys = map[fileIndex]!;
       for (const key of keys) {
         dset(operations, key, file);
       }

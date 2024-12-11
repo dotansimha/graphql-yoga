@@ -555,18 +555,16 @@ describe('jwt plugin', () => {
           expect(payload.serverContext).toBeDefined();
           expect(payload.url).toBeDefined();
 
-          const t = payload.request.headers.get('Authorization');
+          const authorizationHeader = payload.request.headers.get('Authorization');
+          if (!authorizationHeader) return;
 
-          if (t) {
-            const parts = t.split(' ');
+          const [prefix, token] = authorizationHeader.split(' ');
+          if (!token) throw new Error(`Authentication header was set, but token is missing.`);
 
-            return {
-              token: parts[1],
-              prefix: parts[0],
-            };
-          }
-
-          return undefined;
+          return {
+            prefix,
+            token,
+          };
         },
       ],
     });
@@ -611,7 +609,7 @@ describe('jwt plugin', () => {
 const createTestServer = (options: JwtPluginOptions, initPlugins: Plugin[] = []) => {
   const yoga = createYoga({
     schema,
-    logging: !!process.env.DEBUG,
+    logging: !!process.env['DEBUG'],
     plugins: [...initPlugins, useJWT(options)],
   });
 

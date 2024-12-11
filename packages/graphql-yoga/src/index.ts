@@ -39,4 +39,7 @@ export {
 } from '@envelop/core';
 export { getSSEProcessor } from './plugins/result-processor/sse.js';
 export { useExecutionCancellation } from './plugins/use-execution-cancellation.js';
-export { LandingPageRenderer, LandingPageRendererOpts } from './plugins/use-unhandled-route.js';
+export {
+  type LandingPageRenderer,
+  type LandingPageRendererOpts,
+} from './plugins/use-unhandled-route.js';

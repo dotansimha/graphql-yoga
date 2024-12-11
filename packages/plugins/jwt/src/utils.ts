@@ -15,17 +15,15 @@ export function extractFromHeader(options: {
 
     if (!options.prefix) {
       const parts = header.split(' ').map(s => s.trim());
+      const [prefix, token] = parts.length === 1 ? [undefined, parts[0]] : parts;
 
-      if (parts.length === 1) {
-        return {
-          prefix: undefined,
-          token: parts[0],
-        };
+      if (!token) {
+        throw badRequestError(`Authentication header was set, but token is missing.`);
       }
 
       return {
-        prefix: parts[0],
-        token: parts[1],
+        prefix,
+        token,
       };
     }
 
@@ -40,8 +38,8 @@ export function extractFromHeader(options: {
     }
 
     return {
-      token,
       prefix,
+      token,
     };
   };
 }

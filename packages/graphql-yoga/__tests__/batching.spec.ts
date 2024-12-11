@@ -331,7 +331,7 @@ describe('Batching', () => {
 
     expect(contexts.length).toEqual(2);
     expect(contexts[0]).not.toBe(contexts[1]);
-    expect(contexts[0].i).toEqual(1);
-    expect(contexts[1].i).toEqual(2);
+    expect(contexts[0]!.i).toEqual(1);
+    expect(contexts[1]!.i).toEqual(2);
   });
 });

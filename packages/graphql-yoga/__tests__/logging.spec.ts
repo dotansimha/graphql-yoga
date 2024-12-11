@@ -28,9 +28,9 @@ describe('logging', () => {
       expect(console.debug).not.toHaveBeenCalled();
     });
     it(`prints debug messages if DEBUG env var is set`, () => {
-      const originalValue = process.env.DEBUG;
+      const originalValue = process.env['DEBUG'];
       try {
-        process.env.DEBUG = '1';
+        process.env['DEBUG'] = '1';
 
         jest.spyOn(console, 'debug').mockImplementationOnce(() => {});
         const logger = createLogger();
@@ -38,7 +38,7 @@ describe('logging', () => {
 
         expect(console.debug).toHaveBeenCalled();
       } finally {
-        process.env.DEBUG = originalValue;
+        process.env['DEBUG'] = originalValue;
       }
     });
   });

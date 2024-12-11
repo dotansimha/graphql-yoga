@@ -181,12 +181,12 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
             }
 
             tracesPerSchema[trace.schemaId] ||= {};
-            tracesPerSchema[trace.schemaId][trace.operationKey] ||= { trace: [] };
-            tracesPerSchema[trace.schemaId][trace.operationKey].trace?.push(trace.trace);
+            tracesPerSchema[trace.schemaId]![trace.operationKey] ||= { trace: [] };
+            tracesPerSchema[trace.schemaId]![trace.operationKey]!.trace?.push(trace.trace);
           }
 
           for (const schemaId in tracesPerSchema) {
-            const tracesPerQuery = tracesPerSchema[schemaId];
+            const tracesPerQuery = tracesPerSchema[schemaId]!;
             const agentVersion = options.agentVersion || `graphql-yoga@${yoga.version}`;
             serverContext.waitUntil(
               sendTrace(
@@ -273,5 +273,5 @@ function isDocumentNode(data: unknown): data is DocumentNode {
   const isObject = (data: unknown): data is Record<string, unknown> =>
     !!data && typeof data === 'object';
 
-  return isObject(data) && data.kind === Kind.DOCUMENT;
+  return isObject(data) && data['kind'] === Kind.DOCUMENT;
 }

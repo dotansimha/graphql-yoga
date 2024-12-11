@@ -20,19 +20,19 @@ import {
 } from '@envelop/prometheus';
 
 export {
-  CounterAndLabels,
+  type CounterAndLabels,
   createCounter,
   createHistogram,
   createSummary,
-  FillLabelsFnParams,
-  HistogramAndLabels,
-  SummaryAndLabels,
+  type FillLabelsFnParams,
+  type HistogramAndLabels,
+  type SummaryAndLabels,
   getHistogramFromConfig,
   getCounterFromConfig,
   getSummaryFromConfig,
-  HistogramMetricOption,
-  CounterMetricOption,
-  SummaryMetricOption,
+  type HistogramMetricOption,
+  type CounterMetricOption,
+  type SummaryMetricOption,
 };
 
 export type PrometheusTracingPluginConfig = Omit<

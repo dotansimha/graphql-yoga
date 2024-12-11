@@ -95,7 +95,7 @@ describe('Yoga Apollo Link', () => {
     let i = 0;
     await new Promise<void>(resolve => {
       const subscription = observable.subscribe((result: FetchResult) => {
-        collectedValues.push(result.data?.time);
+        collectedValues.push(result.data?.['time']);
         i++;
         if (i > 2) {
           subscription.unsubscribe();

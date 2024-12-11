@@ -118,19 +118,19 @@ describeIf(versionInfo.major >= 16)('Inline Trace - Yoga gateway', () => {
     expect(response.status).toBe(200);
     expect(result.errors).toMatchObject(expectedErrors);
     expect(result.data).toMatchObject(expectedData);
-    expect(result.extensions?.ftv1).toEqual(expect.any(String));
+    expect(result.extensions?.['ftv1']).toEqual(expect.any(String));
 
-    const ftv1 = result.extensions?.ftv1 as string;
+    const ftv1 = result.extensions?.['ftv1'] as string;
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);
 
-    const nullableFail = trace.root?.child?.[0].child?.[0] as Trace.INode;
+    const nullableFail = trace.root?.child?.[0]?.child?.[0] as Trace.INode;
 
     expectTraceNode(nullableFail, 'nullableFail', 'TestUser1', 'TestNestedField');
 
     expect(nullableFail.error).toHaveLength(1);
-    expect(JSON.parse(nullableFail.error![0].json!)).toMatchObject(expectedErrors[0]);
+    expect(JSON.parse(nullableFail.error![0]!.json!)).toMatchObject(expectedErrors[0]!);
   });
 
   it('nullableFail - simple federated query - should return result with expected data and errors', async () => {
@@ -173,19 +173,19 @@ describeIf(versionInfo.major >= 16)('Inline Trace - Yoga gateway', () => {
     expect(response.status).toBe(200);
     expect(result.errors).toMatchObject(expectedErrors);
     expect(result.data).toMatchObject(expectedData);
-    expect(result.extensions?.ftv1).toEqual(expect.any(String));
+    expect(result.extensions?.['ftv1']).toEqual(expect.any(String));
 
-    const ftv1 = result.extensions?.ftv1 as string;
+    const ftv1 = result.extensions?.['ftv1'] as string;
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);
 
-    const nullableFail = trace.root?.child?.[0].child?.[0] as Trace.INode;
+    const nullableFail = trace.root?.child?.[0]?.child?.[0] as Trace.INode;
 
     expectTraceNode(nullableFail, 'nullableFail', 'TestUser1', 'TestNestedField');
 
     expect(nullableFail.error).toHaveLength(1);
-    expect(JSON.parse(nullableFail.error![0].json!)).toMatchObject(expectedErrors[0]);
+    expect(JSON.parse(nullableFail.error![0]!.json!)).toMatchObject(expectedErrors[0]!);
   });
 
   it('nonNullableFail - multi federated query - should return result with expected data and errors', async () => {
@@ -236,19 +236,19 @@ describeIf(versionInfo.major >= 16)('Inline Trace - Yoga gateway', () => {
     expect(response.status).toBe(200);
     expect(result.errors).toMatchObject(expectedErrors);
     expect(result.data).toMatchObject(expectedData);
-    expect(result.extensions?.ftv1).toEqual(expect.any(String));
+    expect(result.extensions?.['ftv1']).toEqual(expect.any(String));
 
-    const ftv1 = result.extensions?.ftv1 as string;
+    const ftv1 = result.extensions?.['ftv1'] as string;
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);
 
-    const nonNullableFail = trace.root?.child?.[0].child?.[0] as Trace.INode;
+    const nonNullableFail = trace.root?.child?.[0]?.child?.[0] as Trace.INode;
 
     expectTraceNode(nonNullableFail, 'nonNullableFail', 'TestUser1!', 'TestNestedField');
 
     expect(nonNullableFail.error).toHaveLength(1);
-    expect(JSON.parse(nonNullableFail.error![0].json!)).toMatchObject(expectedErrors[0]);
+    expect(JSON.parse(nonNullableFail.error![0]!.json!)).toMatchObject(expectedErrors[0]!);
   });
 
   it('nonNullableFail - simple federated query - should return result with expected data and errors', async () => {
@@ -289,9 +289,9 @@ describeIf(versionInfo.major >= 16)('Inline Trace - Yoga gateway', () => {
     expect(response.status).toBe(200);
     expect(result.errors).toMatchObject(expectedErrors);
     expect(result.data).toMatchObject(expectedData);
-    expect(result.extensions?.ftv1).toEqual(expect.any(String));
+    expect(result.extensions?.['ftv1']).toEqual(expect.any(String));
 
-    const ftv1 = result.extensions?.ftv1 as string;
+    const ftv1 = result.extensions?.['ftv1'] as string;
     const trace = Trace.decode(Buffer.from(ftv1, 'base64'));
 
     expectTrace(trace);
@@ -305,6 +305,6 @@ describeIf(versionInfo.major >= 16)('Inline Trace - Yoga gateway', () => {
     expectTraceNode(testNestedField, 'testNestedField', 'TestNestedField', 'Query');
 
     expect(testNestedField.error).toHaveLength(1);
-    expect(JSON.parse(testNestedField.error![0].json!)).toMatchObject(expectedErrors[0]);
+    expect(JSON.parse(testNestedField.error![0]!.json!)).toMatchObject(expectedErrors[0]!);
   });
 });

@@ -41,7 +41,7 @@ export function isAbortError(error: unknown): error is DOMException {
   return (
     typeof error === 'object' &&
     error?.constructor?.name === 'DOMException' &&
-    (error as Record<string, unknown>).name === 'AbortError'
+    (error as DOMException).name === 'AbortError'
   );
 }
 
@@ -135,17 +135,20 @@ export function getResponseInitByRespectingErrors(
 
   if ('errors' in result && result.errors?.length) {
     for (const error of result.errors) {
-      if (error.extensions?.http) {
-        if (error.extensions.http.headers) {
-          Object.assign(headers, error.extensions.http.headers);
+      if (error.extensions?.['http']) {
+        if (error.extensions['http'].headers) {
+          Object.assign(headers, error.extensions['http'].headers);
         }
-        if (isApplicationJson && error.extensions.http.spec) {
+        if (isApplicationJson && error.extensions['http'].spec) {
           continue;
         }
-        if (error.extensions.http.status && (!status || error.extensions.http.status > status)) {
-          status = error.extensions.http.status;
+        if (
+          error.extensions['http'].status &&
+          (!status || error.extensions['http'].status > status)
+        ) {
+          status = error.extensions['http'].status;
         }
-      } else if (!isOriginalGraphQLError(error) || error.extensions?.unexpected) {
+      } else if (!isOriginalGraphQLError(error) || error.extensions?.['unexpected']) {
         unexpectedErrorExists = true;
       }
     }

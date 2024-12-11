@@ -1253,7 +1253,7 @@ it('gets the context in "session" and "buildResponseCacheKey"', async () => {
   expect(buildResponseCacheKey).toHaveBeenCalledTimes(1);
   expect(context).toBeDefined();
   expect(session).toHaveBeenCalledWith(request, context);
-  expect(buildResponseCacheKey.mock.calls[0][0]).toMatchObject({
+  expect(buildResponseCacheKey.mock.calls[0]?.[0]).toMatchObject({
     documentString: '{__typename}',
     variableValues: {},
     sessionId: null,

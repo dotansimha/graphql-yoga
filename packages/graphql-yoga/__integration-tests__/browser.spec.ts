@@ -75,7 +75,7 @@ export function createTestSchema() {
             },
           },
           type: GraphQLString,
-          resolve: (_root, args) => args.text,
+          resolve: (_root, args) => args['text'],
         },
         hello: {
           type: GraphQLString,
@@ -113,7 +113,7 @@ export function createTestSchema() {
           },
           type: GraphQLInt,
           resolve: (_root, args) => {
-            return args.number;
+            return args['number'];
           },
         },
       }),
@@ -188,7 +188,7 @@ export function createTestSchema() {
             },
           },
           async *subscribe(_root, args) {
-            for (let count = 1; count <= args.to; count++) {
+            for (let count = 1; count <= args['to']; count++) {
               yield { count };
               await setTimeout$(200);
             }
@@ -233,7 +233,7 @@ describe('browser', () => {
     await new Promise<void>(resolve => server.listen(0, resolve));
     port = (server.address() as AddressInfo).port;
     browser = await chromium.launch({
-      headless: process.env.PLAYWRIGHT_HEADLESS !== 'false',
+      headless: process.env['PLAYWRIGHT_HEADLESS'] !== 'false',
       args: ['--incognito', '--no-sandbox', '--disable-setuid-sandbox'],
     });
   });

@@ -488,7 +488,7 @@ export class YogaServer<
 
       if (result == null) {
         const additionalContext =
-          context.request === request
+          context['request'] === request
             ? {
                 params,
               }
