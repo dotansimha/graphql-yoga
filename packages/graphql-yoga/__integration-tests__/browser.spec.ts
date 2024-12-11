@@ -17,7 +17,7 @@ import 'json-bigint-patch';
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
-import { Browser, chromium, ElementHandle, Page } from 'playwright';
+import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
 import { fakePromise } from '@whatwg-node/server';
 import { CORSOptions, createYoga, Repeater } from '../src/index.js';
 
@@ -230,8 +230,10 @@ describe('browser', () => {
   beforeAll(async () => {
     await new Promise<void>(resolve => server.listen(0, resolve));
     port = (server.address() as AddressInfo).port;
-    browser = await chromium.launch({
-      headless: process.env.PLAYWRIGHT_HEADLESS !== 'false',
+    browser = await puppeteer.launch({
+      // If you wanna run tests with open browser
+      // set your PUPPETEER_HEADLESS env to "false"
+      headless: process.env.PUPPETEER_HEADLESS !== 'false',
       args: ['--incognito', '--no-sandbox', '--disable-setuid-sandbox'],
     });
   });
@@ -239,7 +241,7 @@ describe('browser', () => {
     if (page !== undefined) {
       await page.close();
     }
-    const context = await browser.newContext();
+    const context = await browser.createBrowserContext();
     const pages = await context.pages();
     page = pages[0] || (await context.newPage());
   });

@@ -1,5 +1,5 @@
 import { execSync, spawn } from 'node:child_process';
-import { Browser, chromium, ElementHandle, Page } from 'playwright';
+import puppeteer, { Browser, Page } from 'puppeteer';
 import { promises as fsPromises } from 'node:fs';
 import { join } from 'node:path';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
@@ -58,8 +58,11 @@ describe('SvelteKit integration', () => {
 		// Wait for sveltekit to start
 		await setTimeout$(timings.setup.waitAfterPreview);
 
-		browser = await chromium.launch({
-			headless: process.env.PLAYWRIGHT_HEADLESS !== 'false',
+		// Launch puppeteer
+		browser = await puppeteer.launch({
+			// If you wanna run tests with open browser
+			// set your PUPPETEER_HEADLESS env to "false"
+			headless: process.env.PUPPETEER_HEADLESS !== 'false',
 			args: ['--incognito', '--no-sandbox', '--disable-setuid-sandbox']
 		});
 
@@ -70,7 +73,7 @@ describe('SvelteKit integration', () => {
 		if (page !== undefined) {
 			await page.close();
 		}
-		const context = await browser.newContext();
+		const context = await browser.createBrowserContext();
 		page = await context.newPage();
 	});
 
