@@ -61,8 +61,8 @@ describe('SvelteKit integration', () => {
 		// Launch puppeteer
 		browser = await puppeteer.launch({
 			// If you wanna run tests with open browser
-			// set your PUPPETEER_HEADLESS env to "false"
-			headless: process.env.PUPPETEER_HEADLESS !== 'false',
+			// set your PLAYWRIGHT_HEADLESS env to "false"
+			headless: process.env.PLAYWRIGHT_HEADLESS !== 'false',
 			args: ['--incognito', '--no-sandbox', '--disable-setuid-sandbox']
 		});
 
