@@ -44,7 +44,7 @@ const yogaMap: Record<string, RequestListener> = {
     parserAndValidationCache: false,
     graphqlEndpoint: '/graphql-no-parse-validate-cache',
   }),
-  '/ping': (req, res) => {
+  '/ping': (_, res) => {
     res.writeHead(200);
     res.end();
   },
