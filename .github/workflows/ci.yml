@@ -146,11 +146,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install Playwright
-        uses: ./.github/actions/install-playwright
-        with:
-          browsers: chromium
-
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
 
@@ -175,6 +170,10 @@ jobs:
       - name: Install Dependencies
         run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
 
+      - name: Install Playwright
+        uses: ./.github/actions/install-playwright
+        with:
+          browsers: chromium
       - name: Build Packages
         run: pnpm build
 
