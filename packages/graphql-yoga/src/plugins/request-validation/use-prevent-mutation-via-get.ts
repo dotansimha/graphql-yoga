@@ -10,7 +10,7 @@ export function assertMutationViaGet(
   operationName?: string,
 ) {
   const operation: OperationDefinitionNode | undefined = document
-    ? getOperationAST(document, operationName) ?? undefined
+    ? (getOperationAST(document, operationName) ?? undefined)
     : undefined;
 
   if (!operation) {

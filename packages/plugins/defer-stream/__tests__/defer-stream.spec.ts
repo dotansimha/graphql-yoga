@@ -8,7 +8,7 @@ function multipartStream<TType = unknown>(source: ReadableStream<Uint8Array>) {
   return new Repeater<TType>(async (push, end) => {
     const cancel: Promise<{ done: true }> = end.then(() => ({ done: true }));
     const iterable = source[Symbol.asyncIterator]();
-    // eslint-disable-next-line no-constant-condition
+
     while (true) {
       const result = await Promise.race([cancel, iterable.next()]);
       if (result.done) {

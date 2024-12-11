@@ -109,8 +109,8 @@ export function normalizeConfig(input: JwtPluginOptions) {
     input.extendContext === false
       ? null
       : input.extendContext === undefined || input.extendContext === true
-      ? 'jwt'
-      : input.extendContext;
+        ? 'jwt'
+        : input.extendContext;
 
   const tokenLookupLocations: ExtractTokenFunction[] = input.tokenLookupLocations ?? [];
 

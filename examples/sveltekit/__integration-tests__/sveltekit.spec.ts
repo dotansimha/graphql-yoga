@@ -1,5 +1,5 @@
 import { execSync, spawn } from 'node:child_process';
-import puppeteer, { Browser, Page } from 'puppeteer';
+import { Browser, chromium, ElementHandle, Page } from 'playwright';
 import { promises as fsPromises } from 'node:fs';
 import { join } from 'node:path';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
@@ -59,7 +59,7 @@ describe('SvelteKit integration', () => {
 		await setTimeout$(timings.setup.waitAfterPreview);
 
 		// Launch puppeteer
-		browser = await puppeteer.launch({
+		browser = await chromium.launch({
 			// If you wanna run tests with open browser
 			// set your PLAYWRIGHT_HEADLESS env to "false"
 			headless: process.env.PLAYWRIGHT_HEADLESS !== 'false',
@@ -73,7 +73,7 @@ describe('SvelteKit integration', () => {
 		if (page !== undefined) {
 			await page.close();
 		}
-		const context = await browser.createIncognitoBrowserContext();
+		const context = await browser.newContext();
 		page = await context.newPage();
 	});
 
@@ -84,17 +84,18 @@ describe('SvelteKit integration', () => {
 
 	it('index page is showing h1', async () => {
 		await page.goto('http://localhost:3007/');
-		const element = await page.waitForSelector('h1', { timeout: timings.waitForSelector });
-		expect(await element?.evaluate((el) => el.textContent)).toBe(
-			'Welcome to SvelteKit - GraphQL Yoga'
-		);
+		return expect(
+			page
+				.waitForSelector('h1', { timeout: timings.waitForSelector })
+				.then((el) => el?.evaluate((el) => el.textContent))
+		).resolves.toBe('Welcome to SvelteKit - GraphQL Yoga');
 	});
 
-	it('GraphQL request', async () => {
-		const res = await fetch(
-			'http://localhost:3007/api/graphql?query=query+Hello+%7B%0A%09hello%0A%7D'
-		);
-		const data = await res.json();
-		expect(data).toEqual({ data: { hello: 'SvelteKit - GraphQL Yoga' } });
+	it('GraphQL request', () => {
+		return expect(
+			fetch('http://localhost:3007/api/graphql?query=query+Hello+%7B%0A%09hello%0A%7D').then(
+				(res) => res.json()
+			)
+		).resolves.toEqual({ data: { hello: 'SvelteKit - GraphQL Yoga' } });
 	});
 });

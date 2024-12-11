@@ -26,7 +26,6 @@ const logLevelScores: Record<LogLevel | 'silent', number> = {
   silent: 4,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 const consoleLog =

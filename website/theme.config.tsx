@@ -4,6 +4,7 @@ import { defineConfig, PRODUCTS } from '@theguild/components';
 
 const docsRepositoryBase = 'https://github.com/dotansimha/graphql-yoga/tree/main/website';
 
+// eslint-disable-next-line import/no-default-export
 export default defineConfig({
   chat: {
     link: 'https://discord.gg/94CDTmgmbs',

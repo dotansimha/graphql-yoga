@@ -901,7 +901,7 @@ it('should allow to create the cache outside of the plugin', async () => {
 });
 
 describe('shouldCacheResult', () => {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   let yoga: YogaServerInstance<{}, {}>;
   let shouldCacheResultFn: ShouldCacheResultFunction | undefined;
   const logging = {
