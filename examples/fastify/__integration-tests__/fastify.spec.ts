@@ -299,9 +299,9 @@ data"
 
       await slowFieldResolverInvoked.promise;
       abortController.abort();
-      await expect(response$).rejects.toMatchInlineSnapshot(`DOMException {}`);
-      const error = (await response$.catch(e => e)) as DOMException;
-      expect(error.message).toMatchInlineSnapshot(`"This operation was aborted"`);
+      await expect(response$).rejects.toMatchObject({
+        message: 'This operation was aborted',
+      });
       await slowFieldResolverCanceled.promise;
     } finally {
       app.log.info = info;
@@ -349,9 +349,9 @@ data"
       expect(next.value).toEqual({ data: { countdown: 10 } });
       abortController.abort();
       const promisedResult = iterator.next();
-      await expect(promisedResult).rejects.toMatchInlineSnapshot(`DOMException {}`);
-      const error = (await promisedResult.catch(e => e)) as DOMException;
-      expect(error.message).toMatchInlineSnapshot(`"This operation was aborted"`);
+      await expect(promisedResult).rejects.toMatchObject({
+        message: 'This operation was aborted',
+      });
       await cancelationIsLoggedPromise.promise;
     } finally {
       app.log.info = info;
