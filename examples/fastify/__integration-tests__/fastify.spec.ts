@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { createDeferred } from '@graphql-tools/utils';
-import { fetch } from '@whatwg-node/fetch';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
@@ -300,9 +299,9 @@ data"
 
       await slowFieldResolverInvoked.promise;
       abortController.abort();
-      await expect(response$).rejects.toMatchInlineSnapshot(
-        `[AbortError: The operation was aborted]`,
-      );
+      const result = (await response$.catch(e => e)) as DOMException;
+      expect(result.message).toMatchInlineSnapshot(`"This operation was aborted"`);
+      expect(result instanceof DOMException).toBe(true);
       await slowFieldResolverCanceled.promise;
     } finally {
       app.log.info = info;
@@ -349,9 +348,9 @@ data"
       const next = await iterator.next();
       expect(next.value).toEqual({ data: { countdown: 10 } });
       abortController.abort();
-      await expect(iterator.next()).rejects.toMatchInlineSnapshot(
-        `[AbortError: The operation was aborted]`,
-      );
+      const result = (await iterator.next().catch(e => e)) as DOMException;
+      expect(result.message).toMatchInlineSnapshot(`"This operation was aborted"`);
+      expect(result instanceof DOMException).toBe(true);
       await cancelationIsLoggedPromise.promise;
     } finally {
       app.log.info = info;
