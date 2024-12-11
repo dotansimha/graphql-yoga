@@ -168,7 +168,7 @@ jobs:
         run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
 
       - name: Install Playwright
-        uses: ./.github/actions/install-playwright/action.yml
+        uses: ./.github/actions/install-playwright
         with:
           browsers: chromium
 
