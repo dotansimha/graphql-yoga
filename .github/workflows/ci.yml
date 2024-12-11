@@ -172,8 +172,7 @@ jobs:
 
       - name: Install Playwright Binaries
         uses: ./.github/actions/install-playwright-binaries
-        with:
-          browsers: chromium
+
       - name: Build Packages
         run: pnpm build
 
