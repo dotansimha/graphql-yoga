@@ -36,7 +36,7 @@ if (process.env.LEAKS_TEST === 'true') {
     '!**/apollo-link.spec.ts',
     '!**/uwebsockets.test.ts',
     '!**/apollo-client.test.ts',
-    '!**/browser.spec.ts'
+    '!**/browser.spec.ts',
   );
 }
 
