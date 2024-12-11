@@ -43,6 +43,7 @@
     "check": "tsc --pretty --noEmit",
     "generate-graphiql-html": "node scripts/generate-graphiql-html.js",
     "inject-version": "node scripts/inject-version.js",
+    "postinstall": "playwright install --with-deps",
     "prepack": "bob prepack"
   },
   "peerDependencies": {
