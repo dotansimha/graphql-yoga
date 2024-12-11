@@ -170,6 +170,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions
 
+      - name: Install Playwright Binaries
+        uses: ./.github/actions/install-playwright-binaries
+
       - name: Build Packages
         run: pnpm build
 
