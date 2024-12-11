@@ -19,7 +19,7 @@ describe('requests', () => {
         requestUrl: (_, __, ctx) => ctx.request.url,
       },
       Mutation: {
-        echo(root, args) {
+        echo(_, args) {
           return args.str;
         },
       },
