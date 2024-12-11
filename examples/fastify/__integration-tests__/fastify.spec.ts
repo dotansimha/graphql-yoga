@@ -280,7 +280,7 @@ data"
 
     try {
       const abortController = new AbortController();
-      const response$ = fetch(`${address}/graphql`, {
+      const response = fetch(`${address}/graphql`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -299,7 +299,7 @@ data"
 
       await slowFieldResolverInvoked.promise;
       abortController.abort();
-      await expect(response$).rejects.toMatchObject({
+      await expect(response).rejects.toMatchObject({
         message: 'This operation was aborted',
       });
       await slowFieldResolverCanceled.promise;
@@ -344,12 +344,11 @@ data"
         signal: abortController.signal,
       });
 
-      const iterator = eventStream(response.body!);
-      const next = await iterator.next();
-      expect(next.value).toEqual({ data: { countdown: 10 } });
+      const bodyIterator = eventStream(response.body!);
+      const bodyIteratorNext = await bodyIterator.next();
+      expect(bodyIteratorNext.value).toEqual({ data: { countdown: 10 } });
       abortController.abort();
-      const promisedResult = iterator.next();
-      await expect(promisedResult).rejects.toMatchObject({
+      await expect(bodyIterator.next()).rejects.toMatchObject({
         message: 'This operation was aborted',
       });
       await cancelationIsLoggedPromise.promise;
