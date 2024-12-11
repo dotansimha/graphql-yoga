@@ -258,7 +258,15 @@ describe('browser', () => {
       socket.destroy();
     }
     server.closeAllConnections();
-    await new Promise(resolve => server.close(resolve));
+    await new Promise<void>((resolve, reject) =>
+      server.close(err => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      }),
+    );
   });
 
   const typeOperationText = async (text: string) => {
