@@ -146,6 +146,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install Playwright
+        uses: ./.github/actions/install-playwright
+        with:
+          browsers: chromium
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
 
@@ -166,11 +171,6 @@ jobs:
 
       - name: Set GraphQL Version
         run: node scripts/override-graphql-version.js ${{ matrix.graphql-version }}
-
-      - name: Install Playwright
-        uses: ./.github/actions/install-playwright
-        with:
-          browsers: chromium
 
       - name: Install Dependencies
         run: pnpm i --no-frozen-lockfile # no frozen-lockfile because we change the resolutions

@@ -31,7 +31,7 @@ runs:
           console.debug("Actual working directory:", process.cwd());
           let version = "";
           try {
-            version = require("@playwright/test/package.json").version;
+            version = require("playwright/package.json").version;
           } catch (error) {
             console.log(error.message);
           }
