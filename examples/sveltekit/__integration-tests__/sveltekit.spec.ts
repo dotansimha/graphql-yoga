@@ -58,7 +58,6 @@ describe('SvelteKit integration', () => {
 		// Wait for sveltekit to start
 		await setTimeout$(timings.setup.waitAfterPreview);
 
-		// Launch puppeteer
 		browser = await chromium.launch({
 			// If you wanna run tests with open browser
 			// set your PLAYWRIGHT_HEADLESS env to "false"
