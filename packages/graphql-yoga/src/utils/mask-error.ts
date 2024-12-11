@@ -6,7 +6,7 @@ import { MaskError } from '../types.js';
 export const maskError: MaskError = (
   error: unknown,
   message: string,
-  isDev = globalThis.process?.env?.NODE_ENV === 'development',
+  isDev = globalThis.process?.env?.['NODE_ENV'] === 'development',
 ) => {
   if (isGraphQLError(error)) {
     if (error.originalError) {
@@ -19,7 +19,7 @@ export const maskError: MaskError = (
         unexpected: true,
       };
       if (isDev) {
-        extensions.originalError = {
+        extensions['originalError'] = {
           message: error.originalError.message,
           stack: error.originalError.stack,
         };

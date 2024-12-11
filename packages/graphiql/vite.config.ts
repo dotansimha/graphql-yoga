@@ -21,7 +21,7 @@ export default defineConfig({
   },
   define:
     // Having this environment variable set in development will break the dev server
-    process.env.BUILD === 'true'
+    process.env['BUILD'] === 'true'
       ? {
           'process.env.NODE_ENV': '"production"',
         }

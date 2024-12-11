@@ -30,12 +30,12 @@ export const defaultExtractPersistedOperationId: ExtractPersistedOperationId = (
   if (
     params.extensions != null &&
     typeof params.extensions === 'object' &&
-    params.extensions?.persistedQuery != null &&
-    typeof params.extensions?.persistedQuery === 'object' &&
-    params.extensions?.persistedQuery.version === 1 &&
-    typeof params.extensions?.persistedQuery.sha256Hash === 'string'
+    params.extensions?.['persistedQuery'] != null &&
+    typeof params.extensions?.['persistedQuery'] === 'object' &&
+    params.extensions?.['persistedQuery']?.['version'] === 1 &&
+    typeof params.extensions?.['persistedQuery']?.['sha256Hash'] === 'string'
   ) {
-    return params.extensions?.persistedQuery.sha256Hash;
+    return params.extensions?.['persistedQuery']?.['sha256Hash'];
   }
   return null;
 };

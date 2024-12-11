@@ -325,7 +325,7 @@ function handleErrors(
      *
      * Reference: https://github.com/apollographql/apollo-server/blob/9389da785567a56e989430962564afc71e93bd7f/packages/apollo-server-core/src/plugin/traceTreeBuilder.ts#L133-L141
      */
-    if (err.extensions?.serviceName) {
+    if (err.extensions?.['serviceName']) {
       continue;
     }
 

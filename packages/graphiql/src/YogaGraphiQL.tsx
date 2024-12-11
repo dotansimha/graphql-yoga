@@ -133,7 +133,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
     false,
   );
 
-  const [query, setQuery] = useState(params.query?.toString());
+  const [query, setQuery] = useState(params['query']?.toString());
   const explorer = explorerPlugin({
     showAttribution: true,
   });

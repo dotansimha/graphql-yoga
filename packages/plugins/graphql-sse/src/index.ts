@@ -70,7 +70,7 @@ export function useGraphQLSSE(options: GraphQLSSEPluginOptions = {}): Plugin<Yog
     },
     async onRequest({ request, endResponse, serverContext }) {
       const [path, _search] = request.url.split('?');
-      if (path.endsWith(endpoint)) {
+      if (path?.endsWith(endpoint)) {
         ctxForReq.set(request, serverContext);
         endResponse(await handler(request));
       }

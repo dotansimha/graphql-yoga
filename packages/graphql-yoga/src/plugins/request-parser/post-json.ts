@@ -23,7 +23,7 @@ export async function parsePOSTJsonRequest(request: Request): Promise<GraphQLPar
       },
     };
     if (err instanceof Error) {
-      extensions.originalError = {
+      extensions['originalError'] = {
         name: err.name,
         message: err.message,
       };

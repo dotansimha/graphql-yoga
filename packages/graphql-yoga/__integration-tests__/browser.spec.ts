@@ -231,7 +231,7 @@ describe('browser', () => {
     await new Promise<void>(resolve => server.listen(0, resolve));
     port = (server.address() as AddressInfo).port;
     browser = await chromium.launch({
-      headless: process.env.PLAYWRIGHT_HEADLESS !== 'false',
+      headless: process.env['PLAYWRIGHT_HEADLESS'] !== 'false',
       args: ['--incognito', '--no-sandbox', '--disable-setuid-sandbox'],
     });
   });

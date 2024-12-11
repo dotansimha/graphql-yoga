@@ -631,7 +631,7 @@ describe('Result Extensions', () => {
         this.name = 'CustomError';
       }
 
-      toJSON() {
+      override toJSON() {
         return {
           message: this.message,
           extensions: { name: this.name, foo: 'bar' },

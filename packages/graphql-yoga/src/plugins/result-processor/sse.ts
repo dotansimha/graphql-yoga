@@ -11,7 +11,7 @@ export function getSSEProcessor(): ResultProcessor {
     let pingIntervalMs = 12_000;
 
     // for testing the pings, reduce the timeout
-    if (globalThis.process?.env?.NODE_ENV === 'test') {
+    if (globalThis.process?.env?.['NODE_ENV'] === 'test') {
       pingIntervalMs = 300;
     }
 

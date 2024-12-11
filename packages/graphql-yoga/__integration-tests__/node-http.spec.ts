@@ -267,7 +267,7 @@ describe('node-http', () => {
       expect(body).toHaveLength(3);
       for (const result of body) {
         expect(result.errors).toBeUndefined();
-        expect(result.data?.isNode).toBe(true);
+        expect(result.data?.['isNode']).toBe(true);
       }
     } finally {
       await new Promise<void>(resolve => server.close(() => resolve()));

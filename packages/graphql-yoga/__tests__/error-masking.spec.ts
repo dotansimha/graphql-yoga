@@ -111,10 +111,10 @@ describe('error masking', () => {
   });
 
   it('includes the original error in the extensions in dev mode (process.env.NODE_ENV=development)', async () => {
-    const initialEnv = process.env.NODE_ENV;
+    const initialEnv = process.env['NODE_ENV'];
 
     try {
-      process.env.NODE_ENV = 'development';
+      process.env['NODE_ENV'] = 'development';
 
       const yoga = createYoga({
         schema: createTestSchema(),
@@ -137,7 +137,7 @@ describe('error masking', () => {
         'Error: This error will get mask if you enable maskedError.',
       );
     } finally {
-      process.env.NODE_ENV = initialEnv;
+      process.env['NODE_ENV'] = initialEnv;
     }
   });
 

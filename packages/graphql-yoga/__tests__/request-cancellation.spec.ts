@@ -6,7 +6,7 @@ import { useExecutionCancellation } from '../src/plugins/use-execution-cancellat
 
 const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [['Ponyfill', undefined]];
 
-if (!process.env.LEAK_TESTS) {
+if (!process.env['LEAK_TESTS']) {
   variants.push([
     'Native',
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

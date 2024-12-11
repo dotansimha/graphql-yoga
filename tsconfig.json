@@ -1,8 +1,8 @@
 {
+  "extends": ["@tsconfig/strictest"],
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist",
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "experimentalDecorators": true,
@@ -14,12 +14,8 @@
     "sourceMap": false,
     "declaration": false,
     "noImplicitThis": true,
-    "strict": true,
     "alwaysStrict": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": false,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "paths": {
       "graphql-yoga": ["packages/graphql-yoga/src/index.ts"],
       "@graphql-yoga/subscription": ["packages/subscription/src/index.ts"],
@@ -30,7 +26,13 @@
       "@graphql-yoga/urql-exchange": ["packages/client/urql-exchange/src/index.ts"],
       "@graphql-yoga/*": ["packages/*/src/index.ts"]
     },
-    "jsx": "preserve"
+    "jsx": "preserve",
+    // TODO enable this, just need time to deal with the errors.
+    "exactOptionalPropertyTypes": false,
+    "isolatedModules": false,
+    // These are managed by ESLint
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": ["packages"],
   "exclude": [
