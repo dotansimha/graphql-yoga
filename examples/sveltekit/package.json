@@ -13,12 +13,13 @@
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
-		"postinstall": "node node_modules/puppeteer/install.mjs"
+		"postinstall": "playwright install --with-deps"
 	},
 	"devDependencies": {
+		"@playwright/browser-chromium": "^1.49.1",
 		"@sveltejs/adapter-auto": "3.2.2",
-		"@sveltejs/vite-plugin-svelte": "5.0.1",
 		"@sveltejs/kit": "2.10.1",
+		"@sveltejs/vite-plugin-svelte": "5.0.1",
 		"@types/jest": "^29.0.0",
 		"@typescript-eslint/eslint-plugin": "8.18.0",
 		"@typescript-eslint/parser": "8.18.0",
@@ -27,9 +28,9 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-svelte3": "4.0.0",
 		"jest": "^29.0.0",
+		"playwright": "^1.49.1",
 		"prettier": "3.4.2",
 		"prettier-plugin-svelte": "3.3.2",
-		"puppeteer": "23.10.3",
 		"svelte": "5.10.1",
 		"svelte-check": "4.1.1",
 		"svelte-preprocess": "6.0.3",
@@ -39,9 +40,9 @@
 	},
 	"dependencies": {
 		"@envelop/graphql-jit": "8.0.4",
-		"graphql-yoga": "workspace:*",
 		"@graphql-yoga/render-graphiql": "workspace:*",
-		"graphql": "16.9.0"
+		"graphql": "16.9.0",
+		"graphql-yoga": "workspace:*"
 	},
 	"type": "module"
 }
