@@ -59,8 +59,6 @@ describe('SvelteKit integration', () => {
 		await setTimeout$(timings.setup.waitAfterPreview);
 
 		browser = await chromium.launch({
-			// If you wanna run tests with open browser
-			// set your PLAYWRIGHT_HEADLESS env to "false"
 			headless: process.env.PLAYWRIGHT_HEADLESS !== 'false',
 			args: ['--incognito', '--no-sandbox', '--disable-setuid-sandbox']
 		});
