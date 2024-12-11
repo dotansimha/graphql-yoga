@@ -16,6 +16,10 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "resolveJsonModule": true,
+    "jsx": "preserve",
+    "exactOptionalPropertyTypes": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "paths": {
       "graphql-yoga": ["packages/graphql-yoga/src/index.ts"],
       "@graphql-yoga/subscription": ["packages/subscription/src/index.ts"],
@@ -25,11 +29,7 @@
       "@graphql-yoga/apollo-link": ["packages/client/apollo-link/src/index.ts"],
       "@graphql-yoga/urql-exchange": ["packages/client/urql-exchange/src/index.ts"],
       "@graphql-yoga/*": ["packages/*/src/index.ts"]
-    },
-    "jsx": "preserve",
-    "exactOptionalPropertyTypes": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
+    }
   },
   "include": ["packages"],
   "exclude": [
