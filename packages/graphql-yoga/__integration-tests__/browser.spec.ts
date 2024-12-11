@@ -241,8 +241,9 @@ describe('browser', () => {
     if (page !== undefined) {
       await page.close();
     }
-    const context = await browser.createIncognitoBrowserContext();
-    page = await context.newPage();
+    const context = await browser.createBrowserContext();
+    const pages = await context.pages();
+    page = pages[0] || (await context.newPage());
   });
   afterAll(async () => {
     await browser.close();
@@ -272,6 +273,7 @@ describe('browser', () => {
   };
 
   const waitForResult = async (): Promise<object> => {
+    await page.waitForSelector('.graphiql-response .CodeMirror-code');
     await page.waitForFunction(
       () =>
         !!window.document.querySelector('.graphiql-response .CodeMirror-code')?.textContent?.trim(),
@@ -309,12 +311,12 @@ describe('browser', () => {
       // Click to show sidebar
       await showGraphiQLSidebar();
 
-      const docsElement = await page.waitForSelector('.graphiql-markdown-description');
+      const docsElement$ = page.waitForSelector('.graphiql-markdown-description');
 
-      expect(docsElement).not.toBeNull();
-      const docs = await getElementText(docsElement!);
-
-      expect(docs).toBe('A GraphQL schema provides a root type for each kind of operation.');
+      await expect(docsElement$).resolves.not.toBeNull();
+      await expect(docsElement$.then(docsElement => getElementText(docsElement!))).resolves.toBe(
+        'A GraphQL schema provides a root type for each kind of operation.',
+      );
     });
 
     it('should show editor tools by default', async () => {
@@ -337,9 +339,7 @@ describe('browser', () => {
       await typeOperationText('{ alwaysTrue }');
 
       await page.click(playButtonSelector);
-      const resultContents = await waitForResult();
-
-      expect(resultContents).toEqual({
+      await expect(waitForResult()).resolves.toEqual({
         data: {
           alwaysTrue: true,
         },
@@ -351,9 +351,7 @@ describe('browser', () => {
       await typeOperationText(`mutation ($number: Int!) { setFavoriteNumber(number: $number) }`);
       await typeVariablesText(`{ "number": 3 }`);
       await page.click('.graphiql-execute-button');
-      const resultContents = await waitForResult();
-
-      expect(resultContents).toEqual({
+      await expect(waitForResult()).resolves.toEqual({
         data: {
           setFavoriteNumber: 3,
         },
@@ -367,19 +365,20 @@ describe('browser', () => {
       });
       await page.click('.graphiql-execute-button');
       await setTimeout$(900);
-      const resultContents = await waitForResult();
-      const isShowingStopButton = await page.evaluate(stopButtonSelector => {
-        return !!window.document.querySelector(stopButtonSelector);
-      }, stopButtonSelector);
-      expect(isShowingStopButton).toEqual(true);
-      expect(resultContents).toEqual({
+      function isShowingStopButton() {
+        return page.evaluate(stopButtonSelector => {
+          return !!window.document.querySelector(stopButtonSelector);
+        }, stopButtonSelector);
+      }
+      await expect(isShowingStopButton()).resolves.toBe(true);
+      await expect(waitForResult()).resolves.toEqual({
         data: {
           stream: ['A', 'B', 'C'],
         },
       });
       await page.click(stopButtonSelector);
       await returnPromise$;
-      expect(isShowingStopButton).toEqual(true);
+      await expect(isShowingStopButton()).resolves.toEqual(false);
     });
 
     test('execute SSE (subscription) operation', async () => {
@@ -416,9 +415,7 @@ describe('browser', () => {
       const query = '{ alwaysTrue }';
       await page.goto(`http://localhost:${port}${endpoint}?query=${encodeURIComponent(query)}`);
       await page.click('.graphiql-execute-button');
-      const resultContents = await waitForResult();
-
-      expect(resultContents).toEqual({
+      await expect(waitForResult()).resolves.toEqual({
         data: {
           alwaysTrue: true,
         },
@@ -429,9 +426,8 @@ describe('browser', () => {
       await page.goto(`http://localhost:${port}${endpoint}`);
       await typeOperationText(`{ bigint }`);
       await page.click('.graphiql-execute-button');
-      const resultContents = await waitForResult();
 
-      expect(resultContents).toMatchObject({
+      await expect(waitForResult()).resolves.toMatchObject({
         data: {
           bigint: BigInt('112345667891012345'),
         },
@@ -444,9 +440,7 @@ describe('browser', () => {
 
       await setTimeout$(50);
 
-      const resultJson = await waitForResult();
-
-      expect(resultJson).toEqual({
+      await expect(waitForResult()).resolves.toEqual({
         data: {
           liveCounter: 1,
         },
@@ -463,8 +457,7 @@ describe('browser', () => {
         return value?.includes('2');
       });
 
-      const resultJson1 = await waitForResult();
-      expect(resultJson1).toEqual({
+      await expect(waitForResult()).resolves.toEqual({
         data: {
           liveCounter: 2,
         },
@@ -506,21 +499,21 @@ describe('browser', () => {
     it('should show custom title', async () => {
       await page.goto(customGraphQLEndpoint);
 
-      const title = await page.evaluate(() => document.title);
-
-      expect(title).toBe('GraphiQL Custom title here');
+      return expect(page.evaluate(() => document.title)).resolves.toBe(
+        'GraphiQL Custom title here',
+      );
     });
 
     it('should show custom schema docs', async () => {
       await page.goto(customGraphQLEndpoint);
 
       await showGraphiQLSidebar();
-      const docsElement = await page.waitForSelector('.graphiql-markdown-description');
+      const docsElement$ = page.waitForSelector('.graphiql-markdown-description');
 
-      expect(docsElement).not.toBeNull();
-      const docs = await getElementText(docsElement!);
-
-      expect(docs).toBe(schemaWithDescription.description);
+      await expect(docsElement$).resolves.not.toBeNull();
+      await expect(docsElement$.then(docsElement => getElementText(docsElement!))).resolves.toBe(
+        schemaWithDescription.description,
+      );
     });
 
     it('should include default header', async () => {
@@ -533,14 +526,15 @@ describe('browser', () => {
         tabs.find(tab => tab.textContent === 'Headers')!.click();
       });
 
-      const headerContentEl = await page.waitForSelector(
+      const headerContentEl$ = page.waitForSelector(
         'section.graphiql-editor-tool .graphiql-editor:not(.hidden) pre.CodeMirror-line',
       );
 
-      expect(headerContentEl).not.toBeNull();
-      const headerContent = await getElementText(headerContentEl!);
+      await expect(headerContentEl$).resolves.not.toBeNull();
 
-      expect(headerContent).toBe(defaultHeader);
+      await expect(
+        headerContentEl$.then(headerContentEl => getElementText(headerContentEl!)),
+      ).resolves.toBe(defaultHeader);
     });
   });
 
@@ -605,11 +599,12 @@ describe('browser', () => {
         origin: [`http://localhost:${anotherOriginPort}`],
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
-      const result = await page.evaluate(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        return document.getElementById('result')?.innerHTML;
-      });
-      expect(result).toEqual(
+      await expect(
+        page.evaluate(async () => {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          return document.getElementById('result')?.innerHTML;
+        }),
+      ).resolves.toEqual(
         JSON.stringify({
           data: {
             alwaysTrue: true,
@@ -622,11 +617,12 @@ describe('browser', () => {
         origin: ['http://localhost:${port}'],
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
-      const result = await page.evaluate(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        return document.getElementById('result')?.innerHTML;
-      });
-      expect(result).toContain('Failed to fetch');
+      await expect(
+        page.evaluate(async () => {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          return document.getElementById('result')?.innerHTML;
+        }),
+      ).resolves.toContain('Failed to fetch');
     });
     test('send specific origin back to user if credentials are set true', async () => {
       cors = {
@@ -634,11 +630,12 @@ describe('browser', () => {
         credentials: true,
       };
       await page.goto(`http://localhost:${anotherOriginPort}`);
-      const result = await page.evaluate(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        return document.getElementById('result')?.innerHTML;
-      });
-      expect(result).toEqual(
+      await expect(
+        page.evaluate(async () => {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          return document.getElementById('result')?.innerHTML;
+        }),
+      ).resolves.toEqual(
         JSON.stringify({
           data: {
             alwaysTrue: true,
