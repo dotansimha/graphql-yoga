@@ -1,6 +1,6 @@
 # https://github.com/microsoft/playwright/issues/7249
 name: Install Playwright Binaries
-description: Install Playwright and dependencies with cache
+description: Install Playwright browsers with cache
 inputs:
   working-directory:
     description: Where to install Playwright
@@ -48,7 +48,7 @@ runs:
         path: ~/.cache/ms-playwright
         key: playwright-${{ env.PLAYWRIGHT_VERSION }}
 
-    - name: Install Playwright and its dependencies
+    - name: Install Playwright Browsers
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
       working-directory: ${{ inputs.working-directory }}
