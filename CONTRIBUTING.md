@@ -4,7 +4,7 @@
 >
 > This guide extends the
 > [core Guild contributing guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md).
-> If you haven't read it yet or in recently (e.g. past year), please read it first.
+> If you haven't read it yet or recently (e.g. past year), please read it first.
 
 ## Setup
 
