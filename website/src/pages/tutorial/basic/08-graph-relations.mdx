@@ -414,7 +414,7 @@ itself can be null. The Typescript return type of that resolver would be
 return an empty array. The client will have to deal with many cases.
 
 Option 2, `[Comment!]`, means each element of the array must be Comment, but the array can return
-empty or null. The Typescript return type of that resolver would be `Array<Comment> | null`. If the
+empty or null. The Typescript return type of that resolver would be `Array<Comment> | null`. if the
 backend returns null or an empty array [], they can both mean
 `there's no Comment related to the Link`. Meaning we have two ways to represent the same concept -
 which makes it harder for the client to handle that case.
