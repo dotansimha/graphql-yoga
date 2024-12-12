@@ -130,8 +130,10 @@ stateDiagram-v2
       onContextBuilding --> onExecute
       onContextBuilding --> onSubscribe
 
-      onExecute --> onResultProcess
-      onSubscribe --> onResultProcess
+      onExecute --> onExecutionResult
+      onSubscribe --> onExecutionResult
+
+      onExecutionResult --> onResultProcess
 
       onResultProcess --> [*]
     }
@@ -143,15 +145,24 @@ stateDiagram-v2
 
 ### `onRequest`
 
-This hook is invoked for ANY incoming HTTP request. Here you can manipulate the request, create a
-short circuit before Yoga handles the request or apply security measures such as checking for access
-tokens etc.
+This hook is invoked for ANY incoming HTTP request. Here you can manipulate the request or create a
+short circuit before Yoga handles the request.
+
+<Callout type="warning">
+
+Exceptions thrown by this hook are not caught. This means they will buble up to the HTTP server
+underlying implementation.
+
+For example, the `node:http` server crashes the entire process on uncaught exceptions.
+
+Prefer `onRequestParse` when possible, or wrap the hook code in a `try` block.
+
+</Callout>
 
 **Example actions in this hook:**
 
 - Manipulate the request
 - Short circuit before Yoga handles the request
-- Apply security measures
 
 #### API
 
@@ -271,6 +282,22 @@ You can hook into before and after the GraphQL subscription is executed.
 - Collect metrics about execution time
 - Error logging/reporting
 
+### `onExecutionResult`
+
+This hook is invoked for each result produced for GraphQL operation, before it is processed to be
+sent to client.
+
+In particular, it is useful to handle batched operations. If a request contains batched operations,
+this hook is called once of each operation, while `onResultProcess` will be only called once for the
+entire request.
+
+Here, you can modify the result, to add monitoring or instrumentation extensions for example.
+
+**Example actions in this hook:**
+
+- Add metadata to results
+- Collect errors
+
 ### `onResultProcess`
 
 This hook is invoked after a GraphQL request has been processed and before the response is forwarded
@@ -287,6 +314,17 @@ sending the result over the wire.
 This hook is invoked after a HTTP request (both GraphQL and NON GraphQL) has been processed and
 after the response has been forwarded to the client. Here you can perform any cleanup or logging
 operations, or you can manipulate the outgoing response object.
+
+<Callout type="warning">
+
+Exceptions thrown by this hook are not caught. This means they will buble up to the HTTP server
+underlying implementation.
+
+For example, the `node:http` server crashes the entire process on uncaught exceptions.
+
+Prefer `onRequestParse` when possible, or wrap the hook code in a `try` block.
+
+</Callout>
 
 **Example actions in this hook:**
 
