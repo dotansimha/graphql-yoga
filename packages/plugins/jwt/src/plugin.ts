@@ -6,8 +6,12 @@ import '@whatwg-node/server-plugin-cookies';
 import { GraphQLError } from 'graphql';
 import { badRequestError, unauthorizedError } from './utils.js';
 
-export type JWTExtendContextFields = {
-  payload: JwtPayload;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ExtendableJwtPayload<T extends Record<string, any> = Record<string, never>> = JwtPayload & T;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type JWTExtendContextFields<T extends Record<string, any> = Record<string, never>> = {
+  payload: ExtendableJwtPayload<T>;
   token: {
     value: string;
     prefix?: string;
