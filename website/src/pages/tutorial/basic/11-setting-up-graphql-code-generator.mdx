@@ -49,7 +49,7 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]
+  comments: [Comment!]!
 }
 
 type Comment {
@@ -230,17 +230,13 @@ const resolvers = {
     id: (parent: Link) => parent.id,
     description: (parent: Link) => parent.description,
     url: (parent: Link) => parent.url,
-    async comments(parent: Link, args: {}, context: GraphQLContext) {
-      const comments = await context.prisma.comment.findMany({
+    comments(parent: Link, args: {}, context: GraphQLContext) {
+      return context.prisma.comment.findMany({
         orderBy: { createdAt: 'desc' },
         where: {
           linkId: parent.id
         }
       })
-      if (comments.length === 0) {
-        return null
-      }
-      return comments
     }
   }
 }
@@ -303,17 +299,13 @@ Now, you can simply remove the comments, and migrate the existing `comments` res
 import type { LinkResolvers } from './../../types.generated'
 
 export const Link: LinkResolvers = {
-  async comments: async (parent, _arg, context) => {
-    const comments = await context.prisma.comment.findMany({
+  comments: async (parent, _arg, context) => {
+    return context.prisma.comment.findMany({
       orderBy: { createdAt: 'desc' },
       where: {
         linkId: parent.id
       }
     })
-    if (comments.length === 0) {
-      return null
-    }
-    return comments
   }
 }
 ```

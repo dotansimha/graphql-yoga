@@ -392,22 +392,42 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]
+  comments: [Comment!]!
 }
 ```
 
 On the Prisma API level, the method call for loading will always return an array. It does not
 distinguish between an empty array and an array with comments.
 
-On the GraphQL schema, we could follow the same practice, and make the comments array non-nullable
-(`[Comment!]!`).
+On the GraphQL schema, we have three options:
 
-In our example, we've choosen the nullable option, as it indicates the API the need to handle that
-case, when they will generate the types on their end.
+1. `comments: [Comment]`
+2. `comments: [Comment!]`
+3. `comments: [Comment!]!`
 
-Up next, you implement the corresponding `Link.comments` resolver. For this, you need to touch the
-`Link` object types resolver map. Because of the nullable type, we will first check if there are any
-comments and if there are none, we'll return null.
+Let's try to explain the differences between the options. We'll also describe the Typescript return
+value of each option (which will be automatically generated in the later Codegen chapter).
+
+Option 1, `[Comment]`, means that each element of the array can be Comment or null and the array
+itself can be null. The Typescript return type of that resolver would be
+`Array<Comment | null> | null`. It means there are too many ways and cases to describe when we
+return an empty array. The client will have to deal with many cases.
+
+Option 2, `[Comment!]`, means each element of the array must be Comment, but the array can return
+empty or null. The Typescript return type of that resolver would be `Array<Comment> | null`. if the
+backend returns null or an empty array [], they can both mean
+`there's no Comment related to the Link`. Meaning we have two ways to represent the same concept -
+which makes it harder for the client to handle that case.
+
+Option 3, `[Comment!]!`, means each element of the array must be Comment. The Typescript return type
+for of resolver would be `Array<Comment>`. With `[Comment!]!`, the server can only return an empty
+array `[]`. This means it's easier for the client to handle because there's only one way to
+represent the `there's no Comment related to the Link` concept.
+
+For the reasons above we'll chose option `3` for our implementation.
+
+Now let's implement the corresponding `Link.comments` resolver. For this, you need to touch the
+`Link` object types resolver map.
 
 As we also have the createdAt field on comments, let's sort the comments by that field when we
 return them to the user.
@@ -419,17 +439,13 @@ const resolvers = {
   // ... other resolver maps ...
   Link: {
     // ... other field resolver functions
-    async comments(parent: Link, args: {}, context: GraphQLContext) {
-      const comments = await context.prisma.comment.findMany({
+    comments(parent: Link, args: {}, context: GraphQLContext) {
+      return context.prisma.comment.findMany({
         orderBy: { createdAt: 'desc' },
         where: {
           linkId: parent.id
         }
       })
-      if (comments.length === 0) {
-        return null
-      }
-      return comments
     }
   }
   // ... other resolver maps ...

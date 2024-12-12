@@ -14,7 +14,7 @@ type Link {
   id: ID!
   description: String!
   url: String!
-  comments: [Comment!]
+  comments: [Comment!]!
 }
 
 type Comment {
