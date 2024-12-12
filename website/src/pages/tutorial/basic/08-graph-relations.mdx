@@ -399,32 +399,55 @@ type Link {
 On the Prisma API level, the method call for loading will always return an array. It does not
 distinguish between an empty array and an array with comments.
 
-On the GraphQL schema, we have three options:
+Now when we talk about the GraphQL schema, The main question is - how do we choose to represent the
+option of `no comments` in terms of types. What's the best way to represent
+`there's no Comment related to the Link` concept.
+
+We have a couple of options:
+
+First in terms of the array itself, we can define it as nullable or not. Then for the elements of
+the array, also there we can define them as nullable or not.
+
+Here are the 4 options, first two are for nullable array and the last two or for none nullable
+array:
 
 1. `comments: [Comment]`
 2. `comments: [Comment!]`
-3. `comments: [Comment!]!`
+3. `comments: [Comment]!`
+4. `comments: [Comment!]!`
 
 Let's try to explain the differences between the options. We'll also describe the Typescript return
 value of each option (which will be automatically generated in the later Codegen chapter).
 
-Option 1, `[Comment]`, means that each element of the array can be Comment or null and the array
-itself can be null. The Typescript return type of that resolver would be
-`Array<Comment | null> | null`. It means there are too many ways and cases to describe when we
-return an empty array. The client will have to deal with many cases.
+Option 1, `[Comment]`, means that the elements of the array can are nullable and the array itself is
+nullable. The Typescript return type of that resolver would be `Array<Comment | null> | null`.
+Representing `there's no Comment related to the Link` in that option can be applied in many
+different ways - an empty array, a null as array or an array with empty or null elements. That means
+that the client who consumes this will need to handle many cases.
 
-Option 2, `[Comment!]`, means each element of the array must be Comment, but the array can return
-empty or null. The Typescript return type of that resolver would be `Array<Comment> | null`. If the
-backend returns null or an empty array [], they can both mean
-`there's no Comment related to the Link`. Meaning we have two ways to represent the same concept -
-which makes it harder for the client to handle that case.
+Option 2, `[Comment!]`, means that the elements of the array are none nullable, but the array can
+return empty or null. The Typescript return type of that resolver would be `Array<Comment> | null`.
 
-Option 3, `[Comment!]!`, means each element of the array must be Comment. The Typescript return type
-for of resolver would be `Array<Comment>`. With `[Comment!]!`, the server can only return an empty
-array `[]`. This means it's easier for the client to handle because there's only one way to
-represent the `there's no Comment related to the Link` concept.
+Representing `there's no Comment related to the Link` in that option can be applied in many
+different ways - the array can be null or be empty, but at least the array can't have null elements.
+Here also the client needs to handle a couple of different possibilities.
 
-For the reasons above we'll chose option `3` for our implementation.
+Option 3, `[Comment]!`, means that the array is none nullable, but the elements can be null.
+
+Representing `there's no Comment related to the Link` in that option can be applied in many
+different ways - it can't be a null as array, but it can be an empty array or an array with empty or
+null elements. Here also the client needs to handle a couple of the different possibilities.
+
+Option 4, `[Comment!]!`, means that the elements of the array are none nullable and the array itself
+must return a value. The Typescript return type for of resolver would be `Array<Comment>`.
+
+With `[Comment!]!`, the only way for the server to represent
+`there's no Comment related to the Link` is to return an empty array `[]`.
+
+This means it's easier for the client to handle because there's **only one way** to represent the
+`there's no Comment related to the Link` concept.
+
+For the reasons above we've chose option `4` for our implementation.
 
 Now let's implement the corresponding `Link.comments` resolver. For this, you need to touch the
 `Link` object types resolver map.
