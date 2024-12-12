@@ -37,33 +37,46 @@ export type Plugin<
      */
     onSubscribe?: OnSubscribeHook<YogaInitialContext & PluginContext & TUserContext>;
     /**
-     * Invoked when a plugin is initialized.
+     * Invoked when a plugin is initialized. You can use this hook to add other plugin you may depend on.
      */
     onPluginInit?: OnPluginInitHook<YogaInitialContext & PluginContext & TUserContext>;
   } & {
     /**
-     * Use this hook with your own risk. It is still experimental and may change in the future.
-     * @internal
+     * This hook is invoked at Yoga Server initialization, before it starts.
+     * Here you can setup long running resources (like monitoring or caching clients)
+     * or customize the Yoga instance.
      */
     onYogaInit?: OnYogaInitHook<TServerContext>;
     /**
-     * Use this hook with your own risk. It is still experimental and may change in the future.
-     * @internal
+     * This hook is invoked for any incoming GraphQL HTTP request and is invoked before attempting
+     * to parse the GraphQL parameters. Here you can manipulate the request, set a custom request
+     * parser or apply security measures such as checking for access tokens etc.
      */
     onRequestParse?: OnRequestParseHook<TServerContext>;
     /**
-     * Use this hook with your own risk. It is still experimental and may change in the future.
-     * @internal
+     * This hook is invoked for an incoming GraphQL request after the GraphQL parameters
+     * (query, variables, extensions and operationName) have been ATTEMPTED to be parsed.
+     *
+     * Within this hook you can manipulate and customize the parameters or even implement a whole
+     * new way of parsing the parameters.
+     *
+     * In addition to that you could also short-circuit and skip the GraphQL execution.
      */
     onParams?: OnParamsHook<TServerContext>;
     /**
-     * Use this hook with your own risk. It is still experimental and may change in the future.
-     * @internal
+     * This hook is invoked for each result produced for GraphQL operation, before it is processed
+     * to be sent to client.
+     *
+     * In particular, if a request contains batched operations, this hook is called once of each
+     * operation.
+     *
+     * Here, you can modify the result, to add monitoring or instrumentation extensions for example.
      */
     onExecutionResult?: OnExecutionResultHook<TServerContext>;
     /**
-     * Use this hook with your own risk. It is still experimental and may change in the future.
-     * @internal
+     * This hook is invoked after a GraphQL request has been processed and before the response is
+     * forwarded to the client. Here you can customize what transport/response processor format
+     * should be used for sending the result over the wire.
      */
     onResultProcess?: OnResultProcess<TServerContext>;
   };
