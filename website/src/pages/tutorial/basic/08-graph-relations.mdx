@@ -439,7 +439,7 @@ const resolvers = {
   // ... other resolver maps ...
   Link: {
     // ... other field resolver functions
-    comments(parent: Link, args: {}, context: GraphQLContext) {
+    comments: (parent: Link, args: {}, context: GraphQLContext) => {
       return context.prisma.comment.findMany({
         orderBy: { createdAt: 'desc' },
         where: {
