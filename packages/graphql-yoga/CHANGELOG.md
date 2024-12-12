@@ -1,5 +1,16 @@
 # graphql-yoga
 
+## 5.10.5
+
+### Patch Changes
+
+- [#3546](https://github.com/dotansimha/graphql-yoga/pull/3546)
+  [`eca7cd1`](https://github.com/dotansimha/graphql-yoga/commit/eca7cd1163c58a5505ea371f745cb196f8bb20df)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Add documentation for Plugin hooks
+
+- Updated dependencies []:
+  - @graphql-yoga/subscription@5.0.2
+
 ## 5.10.4
 
 ### Patch Changes
