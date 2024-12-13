@@ -1,4 +1,4 @@
-import { createGraphQLError, type Plugin } from 'graphql-yoga';
+import { createGraphQLError, DisposableSymbols, type Plugin } from 'graphql-yoga';
 import {
   FetchError,
   SupergraphSchemaManager,
@@ -7,7 +7,6 @@ import {
   type SupergraphSchemaManagerOptions,
   type SupergraphSchemaManagerSchemaEvent,
 } from '@graphql-tools/federation';
-import { DisposableSymbols } from '@whatwg-node/disposablestack';
 
 export type ManagedFederationPluginOptions = (
   | SupergraphSchemaManager

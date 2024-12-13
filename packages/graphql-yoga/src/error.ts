@@ -4,8 +4,6 @@ import type { YogaLogger } from '@graphql-yoga/logger';
 import type { ResultProcessorInput } from './plugins/types.js';
 import type { GraphQLHTTPExtensions, YogaMaskedErrorOpts } from './types.js';
 
-export { createGraphQLError };
-
 declare module 'graphql' {
   interface GraphQLErrorExtensions {
     http?: GraphQLHTTPExtensions;

@@ -21,7 +21,8 @@ import {
   ValidationContext,
   ValueNode,
 } from 'graphql';
-import { createGraphQLError, inspect, Maybe } from '@graphql-tools/utils';
+import { createGraphQLError } from 'graphql-yoga';
+import { inspect, Maybe } from '@graphql-tools/utils';
 
 /**
  * Returns a number indicating whether a reference string comes before, or after,
