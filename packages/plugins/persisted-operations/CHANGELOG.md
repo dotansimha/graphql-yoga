@@ -1,5 +1,20 @@
 # @graphql-yoga/plugin-persisted-operations
 
+## 3.10.5
+
+### Patch Changes
+
+- [#3549](https://github.com/dotansimha/graphql-yoga/pull/3549)
+  [`05fe345`](https://github.com/dotansimha/graphql-yoga/commit/05fe34588fbeb28de847db9d7d58c5a6ae90e36b)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Removed dependency
+    [`@graphql-tools/utils@^10.6.1` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.6.1)
+    (from `peerDependencies`)
+- Updated dependencies
+  [[`eca7cd1`](https://github.com/dotansimha/graphql-yoga/commit/eca7cd1163c58a5505ea371f745cb196f8bb20df),
+  [`05fe345`](https://github.com/dotansimha/graphql-yoga/commit/05fe34588fbeb28de847db9d7d58c5a6ae90e36b)]:
+  - graphql-yoga@5.10.5
+
 ## 3.10.4
 
 ### Patch Changes

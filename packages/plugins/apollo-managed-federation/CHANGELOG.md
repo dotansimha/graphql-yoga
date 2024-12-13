@@ -1,5 +1,35 @@
 # @graphql-yoga/apollo-managed-federation
 
+## 0.8.0
+
+### Minor Changes
+
+- [#3532](https://github.com/dotansimha/graphql-yoga/pull/3532)
+  [`57e7701`](https://github.com/dotansimha/graphql-yoga/commit/57e7701dd62495cee224d71ad55f726740a38cdd)
+  Thanks [@ardatan](https://github.com/ardatan)! - `supergraphManager` option is not available
+  anymore, you can pass `SupergraphManager` directly to the plugin instead;
+
+  ```diff
+  - useManagedFederation({ supergraphManager })
+  + useManagedFederation(supergraphManager)
+  ```
+
+### Patch Changes
+
+- [#3532](https://github.com/dotansimha/graphql-yoga/pull/3532)
+  [`57e7701`](https://github.com/dotansimha/graphql-yoga/commit/57e7701dd62495cee224d71ad55f726740a38cdd)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/federation@^3.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/federation/v/3.0.0)
+    (from `2.1.0`, in `dependencies`)
+  - Added dependency
+    [`@whatwg-node/disposablestack@^0.0.5` ↗︎](https://www.npmjs.com/package/@whatwg-node/disposablestack/v/0.0.5)
+    (to `dependencies`)
+- Updated dependencies
+  [[`eca7cd1`](https://github.com/dotansimha/graphql-yoga/commit/eca7cd1163c58a5505ea371f745cb196f8bb20df),
+  [`05fe345`](https://github.com/dotansimha/graphql-yoga/commit/05fe34588fbeb28de847db9d7d58c5a6ae90e36b)]:
+  - graphql-yoga@5.10.5
+
 ## 0.7.4
 
 ### Patch Changes
