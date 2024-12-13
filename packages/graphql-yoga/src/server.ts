@@ -513,9 +513,8 @@ export class YogaServer<
       /** Ensure that error thrown from subscribe is sent to client */
       // TODO: this should probably be something people can customize via a hook?
       if (isAsyncIterable(result)) {
-        const iterator = result[Symbol.asyncIterator]();
         result = mapAsyncIterator(
-          iterator,
+          result,
           v => v,
           (err: Error) => {
             if (err.name === 'AbortError') {

@@ -1,4 +1,3 @@
-export { createGraphQLError } from './error.js';
 export * from '@graphql-yoga/logger';
 export { type Plugin } from './plugins/types.js';
 export { type GraphiQLOptions } from './plugins/use-graphiql.js';
@@ -37,9 +36,12 @@ export {
   useLogger,
   usePayloadFormatter,
 } from '@envelop/core';
+export { createGraphQLError, isPromise, mapMaybePromise } from '@graphql-tools/utils';
 export { getSSEProcessor } from './plugins/result-processor/sse.js';
+export { processRegularResult } from './plugins/result-processor/regular.js';
 export { useExecutionCancellation } from './plugins/use-execution-cancellation.js';
 export {
   type LandingPageRenderer,
   type LandingPageRendererOpts,
 } from './plugins/use-unhandled-route.js';
+export { DisposableSymbols } from '@whatwg-node/server';
