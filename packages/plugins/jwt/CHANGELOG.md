@@ -1,5 +1,20 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.4.5
+
+### Patch Changes
+
+- [#3532](https://github.com/dotansimha/graphql-yoga/pull/3532)
+  [`57e7701`](https://github.com/dotansimha/graphql-yoga/commit/57e7701dd62495cee224d71ad55f726740a38cdd)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`graphql@^15.2.0 || ^16.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/15.2.0) (from
+    `^16.5.0`, in `peerDependencies`)
+- Updated dependencies
+  [[`eca7cd1`](https://github.com/dotansimha/graphql-yoga/commit/eca7cd1163c58a5505ea371f745cb196f8bb20df),
+  [`05fe345`](https://github.com/dotansimha/graphql-yoga/commit/05fe34588fbeb28de847db9d7d58c5a6ae90e36b)]:
+  - graphql-yoga@5.10.5
+
 ## 3.4.4
 
 ### Patch Changes
