@@ -1,5 +1,7 @@
 # @graphql-yoga/urql-exchange
 
+## 3.10.6
+
 ## 3.10.5
 
 ## 3.10.4
