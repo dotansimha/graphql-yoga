@@ -1,5 +1,13 @@
 # graphql-yoga
 
+## 5.10.6
+
+### Patch Changes
+
+- [#3551](https://github.com/dotansimha/graphql-yoga/pull/3551)
+  [`121ccba`](https://github.com/dotansimha/graphql-yoga/commit/121ccbafcafb7e90d4ec6c210b62a439a040d41a)
+  Thanks [@bridges-wood](https://github.com/bridges-wood)! - Fix stylesheet reference in graphiql
+
 ## 5.10.5
 
 ### Patch Changes
