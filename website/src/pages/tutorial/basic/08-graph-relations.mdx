@@ -417,7 +417,7 @@ array:
 Let's try to explain the differences between the options. We'll also describe the Typescript return
 value of each option (which will be automatically generated in the later Codegen chapter).
 
-Option 1, `[Comment]`, means that the elements of the array can are nullable and the array itself is
+Option 1, `[Comment]`, means that the elements both the array and its elements are
 nullable. The Typescript return type of that resolver would be `Array<Comment | null> | null`.
 Representing `there's no Comment related to the Link` in that option can be applied in many
 different ways - an empty array, a null as array or an array with empty or null elements. That means
