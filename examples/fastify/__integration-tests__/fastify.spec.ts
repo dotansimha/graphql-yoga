@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { createDeferred } from '@graphql-tools/utils';
-import { fetch } from '@whatwg-node/fetch';
 import { eventStream } from '../../../packages/graphql-yoga/__tests__/utilities.js';
 import { buildApp } from '../src/app.js';
 
@@ -281,7 +280,7 @@ data"
 
     try {
       const abortController = new AbortController();
-      const response$ = fetch(`${address}/graphql`, {
+      const response = fetch(`${address}/graphql`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -300,9 +299,9 @@ data"
 
       await slowFieldResolverInvoked.promise;
       abortController.abort();
-      await expect(response$).rejects.toMatchInlineSnapshot(
-        `[AbortError: The operation was aborted]`,
-      );
+      await expect(response).rejects.toMatchObject({
+        message: 'This operation was aborted',
+      });
       await slowFieldResolverCanceled.promise;
     } finally {
       app.log.info = info;
@@ -345,13 +344,13 @@ data"
         signal: abortController.signal,
       });
 
-      const iterator = eventStream(response.body!);
-      const next = await iterator.next();
-      expect(next.value).toEqual({ data: { countdown: 10 } });
+      const bodyIterator = eventStream(response.body!);
+      const bodyIteratorNext = await bodyIterator.next();
+      expect(bodyIteratorNext.value).toEqual({ data: { countdown: 10 } });
       abortController.abort();
-      await expect(iterator.next()).rejects.toMatchInlineSnapshot(
-        `[AbortError: The operation was aborted]`,
-      );
+      await expect(bodyIterator.next()).rejects.toMatchObject({
+        message: 'This operation was aborted',
+      });
       await cancelationIsLoggedPromise.promise;
     } finally {
       app.log.info = info;
