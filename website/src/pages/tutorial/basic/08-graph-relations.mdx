@@ -399,15 +399,15 @@ type Link {
 On the Prisma API level, the method call for loading will always return an array. It does not
 distinguish between an empty array and an array with comments.
 
-As we design our GraphQL schema we need to consider how we will model the concept of a Link without comments.
+As we design our GraphQL schema we need to consider how we will model the concept of a Link without
+comments.
 
 We have a couple of options:
 
 First in terms of the array itself, we can define it as nullable or not. Then for the elements of
 the array, also there we can define them as nullable or not.
 
-Here are the 4 options, first two are for nullable array and the last two for none nullable
-array:
+Here are the 4 options, first two are for nullable array and the last two for none nullable array:
 
 1. `comments: [Comment]`
 2. `comments: [Comment!]`
@@ -417,14 +417,14 @@ array:
 Let's try to explain the differences between the options. We'll also describe the Typescript return
 value of each option (which will be automatically generated in the later Codegen chapter).
 
-Option 1, `[Comment]`, means that the elements both the array and its elements are
-nullable. The Typescript return type of that resolver would be `Array<Comment | null> | null`.
-Representing `there's no Comment related to the Link` in that option can be applied in many
-different ways - an empty array, a null as array or an array with null elements. That means
-that the client who consumes this will need to handle many cases.
+Option 1, `[Comment]`, means that the elements both the array and its elements are nullable. The
+Typescript return type of that resolver would be `Array<Comment | null> | null`. Representing
+`there's no Comment related to the Link` in that option can be applied in many different ways - an
+empty array, a null as array or an array with null elements. That means that the client who consumes
+this will need to handle many cases.
 
-Option 2, `[Comment!]`, means that the elements of the array are none nullable, but the array can
-be empty or null. The Typescript return type of that resolver would be `Array<Comment> | null`.
+Option 2, `[Comment!]`, means that the elements of the array are none nullable, but the array can be
+empty or null. The Typescript return type of that resolver would be `Array<Comment> | null`.
 
 Representing `there's no Comment related to the Link` in that option can be applied in many
 different ways - the array can be null or be empty, but at least the array can't have null elements.
@@ -433,8 +433,8 @@ Here also the client needs to handle a couple of different possibilities.
 Option 3, `[Comment]!`, means that the array is none nullable, but the elements can be null.
 
 Representing `there's no Comment related to the Link` in that option can be applied in many
-different ways - it can't be a null as array, but it can be an empty array or an array with
-null elements. Here also the client needs to handle a couple of the different possibilities.
+different ways - it can't be a null as array, but it can be an empty array or an array with null
+elements. Here also the client needs to handle a couple of the different possibilities.
 
 Option 4, `[Comment!]!`, means that the elements of the array are none nullable and the array itself
 must return a value. The Typescript return type for of resolver would be `Array<Comment>`.
