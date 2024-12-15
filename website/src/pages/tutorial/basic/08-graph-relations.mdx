@@ -420,7 +420,7 @@ value of each option (which will be automatically generated in the later Codegen
 Option 1, `[Comment]`, means that the elements both the array and its elements are
 nullable. The Typescript return type of that resolver would be `Array<Comment | null> | null`.
 Representing `there's no Comment related to the Link` in that option can be applied in many
-different ways - an empty array, a null as array or an array with empty or null elements. That means
+different ways - an empty array, a null as array or an array with null elements. That means
 that the client who consumes this will need to handle many cases.
 
 Option 2, `[Comment!]`, means that the elements of the array are none nullable, but the array can
