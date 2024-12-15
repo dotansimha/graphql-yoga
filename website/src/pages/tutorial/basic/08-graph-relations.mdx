@@ -399,9 +399,7 @@ type Link {
 On the Prisma API level, the method call for loading will always return an array. It does not
 distinguish between an empty array and an array with comments.
 
-Now when we talk about the GraphQL schema, The main question is - how do we choose to represent the
-option of `no comments` in terms of types. What's the best way to represent
-`there's no Comment related to the Link` concept.
+As we design our GraphQL schema we need to consider how we will model the concept of a Link without comments.
 
 We have a couple of options:
 
