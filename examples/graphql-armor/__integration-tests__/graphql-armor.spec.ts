@@ -31,7 +31,7 @@ describe('graphql-auth example integration', () => {
               "line": 1,
             },
           ],
-          "message": "Cannot query field "titlee" on type "Book". [Suggestion hidden]?",
+          "message": "Cannot query field "titlee" on type "Book". [Suggestion hidden]",
         },
       ]
     `);
