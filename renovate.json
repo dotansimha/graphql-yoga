@@ -12,32 +12,32 @@
   "packageRules": [
     {
       "groupName": "envelop",
-      "matchPackagePatterns": ["@envelop/*"]
+      "matchPackageNames": ["/@envelop/*/"]
     },
     {
       "groupName": "whatwg-node",
-      "matchPackagePatterns": ["@whatwg-node/*"]
+      "matchPackageNames": ["/@whatwg-node/*/"]
     },
     {
-      "excludePackagePatterns": [
-        "@changesets/*",
-        "typescript",
-        "typedoc*",
-        "^@theguild/",
-        "@graphql-inspector/core",
-        "next",
-        "@envelop/*",
-        "@whatwg-node/*",
-        "@graphql-yoga/*",
-        "graphql-yoga",
-        "lru-cache",
-        "sofa-api",
-        "husky"
-      ],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch"
+      "groupSlug": "all-minor-patch",
+      "matchPackageNames": [
+        "!/@changesets/*/",
+        "!/typescript/",
+        "!/typedoc*/",
+        "!/^@theguild//",
+        "!/@graphql-inspector/core/",
+        "!/next/",
+        "!/@envelop/*/",
+        "!/@whatwg-node/*/",
+        "!/@graphql-yoga/*/",
+        "!/graphql-yoga/",
+        "!/lru-cache/",
+        "!/sofa-api/",
+        "!/husky/",
+        "*"
+      ]
     }
   ],
   "ignoreDeps": ["@sveltejs/kit", "graphiql", "graphql-yoga"],
