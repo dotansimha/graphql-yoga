@@ -132,7 +132,7 @@ importers:
         version: 5.7.2
       wrangler:
         specifier: 3.95.0
-        version: 3.95.0(@cloudflare/workers-types@4.20241205.0)
+        version: 3.95.0(@cloudflare/workers-types@4.20241214.0)
 
   benchmark:
     dependencies:
@@ -385,8 +385,8 @@ importers:
         version: link:../../packages/graphql-yoga/dist
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: 4.20241205.0
-        version: 4.20241205.0
+        specifier: 4.20241214.0
+        version: 4.20241214.0
       '@whatwg-node/fetch':
         specifier: ^0.10.1
         version: 0.10.1
@@ -395,7 +395,7 @@ importers:
         version: 5.7.2
       wrangler:
         specifier: 3.95.0
-        version: 3.95.0(@cloudflare/workers-types@4.20241205.0)
+        version: 3.95.0(@cloudflare/workers-types@4.20241214.0)
 
   examples/cookies:
     dependencies:
@@ -1304,7 +1304,7 @@ importers:
         version: 5.7.2
       wrangler:
         specifier: 3.95.0
-        version: 3.95.0(@cloudflare/workers-types@4.20241205.0)
+        version: 3.95.0(@cloudflare/workers-types@4.20241214.0)
 
   examples/sofa:
     dependencies:
@@ -3819,6 +3819,9 @@ packages:
 
   '@cloudflare/workers-types@4.20241205.0':
     resolution: {integrity: sha512-pj1VKRHT/ScQbHOIMFODZaNAlJHQHdBSZXNIdr9ebJzwBff9Qz8VdqhbhggV7f+aUEh8WSbrsPIo4a+WtgjUvw==}
+
+  '@cloudflare/workers-types@4.20241214.0':
+    resolution: {integrity: sha512-QPDx/qXI+06rDOsgHkYgEjGAkrQsmazZMDaMHBxkwxdSJbh4MQEydLJ/ILwZj3Thb9fg0PyD+K/1Fcn90TeueA==}
 
   '@codemirror/language@6.0.0':
     resolution: {integrity: sha512-rtjk5ifyMzOna1c7PBu7J1VCt0PvA5wy3o8eMVnxMKb7z8KA7JFecvD04dSn14vj/bBaAbqRsGed5OjtofEnLA==}
@@ -18797,6 +18800,8 @@ snapshots:
       zod: 3.24.1
 
   '@cloudflare/workers-types@4.20241205.0': {}
+
+  '@cloudflare/workers-types@4.20241214.0': {}
 
   '@codemirror/language@6.0.0':
     dependencies:
@@ -34580,6 +34585,34 @@ snapshots:
       xxhash-wasm: 1.1.0
     optionalDependencies:
       '@cloudflare/workers-types': 4.20241205.0
+      fsevents: 2.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  wrangler@3.95.0(@cloudflare/workers-types@4.20241214.0):
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.3.4
+      '@cloudflare/workers-shared': 0.11.0
+      '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
+      '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
+      blake3-wasm: 2.1.5
+      chokidar: 4.0.1
+      date-fns: 4.1.0
+      esbuild: 0.17.19
+      itty-time: 1.0.6
+      miniflare: 3.20241205.0
+      nanoid: 3.3.8
+      path-to-regexp: 6.3.0
+      resolve: 1.22.9
+      selfsigned: 2.4.1
+      source-map: 0.6.1
+      unenv: unenv-nightly@2.0.0-20241204-140205-a5d5190
+      workerd: 1.20241205.0
+      xxhash-wasm: 1.1.0
+    optionalDependencies:
+      '@cloudflare/workers-types': 4.20241214.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
