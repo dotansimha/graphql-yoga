@@ -68,9 +68,9 @@ You might ask, Links might not have Comments, so why don't we annotate comments 
 comments    Comment[]?
 ```
 
-The reason is that Prisma does not support optional on lists. This is by design as they say it is a
-better practice to return an empty array in that case
-([reference](https://github.com/prisma/prisma/issues/847#issuecomment-546895663)).
+The reason is that Prisma does not support optional on lists. This is by design as when you execute
+SQL queries, you always get rows back, not null. In case there are no results, you will get an empty
+list of rows.
 
 ## Updating Prisma Client
 
