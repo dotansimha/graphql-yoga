@@ -112,7 +112,9 @@ export function useSofa(config: SofaPluginConfig): Plugin {
     async onRequest({ request, endResponse, serverContext, url }) {
       if (url.pathname.startsWith(config.basePath)) {
         const res = await sofaHandler.handleRequest(request, serverContext);
-        endResponse(res);
+        if (res) {
+          endResponse(res);
+        }
       }
     },
   };
