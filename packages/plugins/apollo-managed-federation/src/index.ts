@@ -1,4 +1,4 @@
-import { createGraphQLError, DisposableSymbols, type Plugin } from 'graphql-yoga';
+import { createGraphQLError, type Plugin } from 'graphql-yoga';
 import {
   FetchError,
   SupergraphSchemaManager,
@@ -107,8 +107,8 @@ export function useManagedFederation(options: ManagedFederationPluginOptions = {
         },
       );
     },
-    [DisposableSymbols.dispose]() {
-      return ensureSupergraphManager()[DisposableSymbols.dispose]();
+    onDispose() {
+      return _supergraphManager?.stop();
     },
   };
 

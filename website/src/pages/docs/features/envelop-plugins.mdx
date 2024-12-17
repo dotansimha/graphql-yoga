@@ -353,3 +353,22 @@ function useYogaSignature(): Plugin {
   }
 }
 ```
+
+### `onDispose`
+
+In order to clean up resources when GraphQL Yoga is shut down, you can use the `onDispose` hook.
+
+```ts
+export const useMyPlugin = () => {
+  return {
+    async [Symbol.asyncDispose]() {
+      // Clean up resources
+      await stopConnection()
+    }
+  }
+}
+```
+
+GraphQL Yoga supports
+[explicit resource management](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management),
+and you can [learn more here]() how to use that.
