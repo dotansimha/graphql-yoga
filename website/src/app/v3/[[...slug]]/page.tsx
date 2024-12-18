@@ -11,8 +11,8 @@ import {
 } from '@theguild/components/server';
 import json from '../../../../remote-files/v3.json';
 import { useMDXComponents } from '../../../mdx-components';
-import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
 import CodegenCallout from '../../codegen-callout.mdx';
+import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
 
 const { branch, docsPath, filePaths, repo, user } = json;
 
@@ -87,7 +87,7 @@ const { wrapper: Wrapper, ...components } = useMDXComponents({
   CodegenCallout,
   Callout,
   Tab: Tabs.Tab,
-  Tabs
+  Tabs,
 });
 
 export default async function Page(props: NextPageProps<'...slug'>) {

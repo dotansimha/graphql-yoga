@@ -24,9 +24,9 @@ const RootLayout: FC<{
       data: {
         // @ts-expect-error
         ...meta.data,
-        v2: { title: 'Yoga v2 Docs', type: 'page', },
-        v3: { title: 'Yoga v3 Docs', type: 'page', },
-        v4: { title: 'Yoga v4 Docs', type: 'page', },
+        v2: { title: 'Yoga v2 Docs', type: 'page' },
+        v3: { title: 'Yoga v3 Docs', type: 'page' },
+        v4: { title: 'Yoga v4 Docs', type: 'page' },
       },
     },
     ...pageMap,
