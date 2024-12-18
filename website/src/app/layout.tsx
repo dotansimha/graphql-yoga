@@ -1,7 +1,8 @@
-import { ComponentPropsWithoutRef, FC, ReactNode } from 'react';
-import { Banner, GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/components';
-import { getDefaultMetadata, GuildLayout } from '@theguild/components/server';
+import { FC, ReactNode } from 'react';
+import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/components';
+import { getDefaultMetadata, getPageMap, GuildLayout } from '@theguild/components/server';
 import '@theguild/components/style.css';
+import { pageMap as v2PageMap } from './v2/[[...slug]]/page';
 
 const description = PRODUCTS.YOGA.title;
 const websiteName = 'Yoga';
@@ -12,22 +13,28 @@ export const metadata = getDefaultMetadata({
   productName: 'YOGA',
 });
 
-const Anchor: FC<ComponentPropsWithoutRef<'a'>> = ({ children, ...props }) => {
-  return (
-    <a
-      target="_blank"
-      rel="noreferrer"
-      className="_text-primary-600 _underline _decoration-from-font [text-underline-position:from-font]"
-      {...props}
-    >
-      {children}
-    </a>
-  );
-};
-
 const RootLayout: FC<{
   children: ReactNode;
 }> = async ({ children }) => {
+  let [meta, ...pageMap] = await getPageMap();
+  pageMap = [
+    {
+      data: {
+        // @ts-expect-error
+        ...meta.data,
+        v2: {
+          title: 'Documentation v2',
+          type: 'page',
+        },
+      },
+    },
+    ...pageMap,
+    {
+      route: '/v2',
+      name: 'v2',
+      children: v2PageMap,
+    },
+  ];
   return (
     <GuildLayout
       websiteName={websiteName}
@@ -36,6 +43,7 @@ const RootLayout: FC<{
       layoutProps={{
         docsRepositoryBase: 'https://github.com/dotansimha/graphql-yoga/tree/main/website',
       }}
+      pageMap={pageMap}
       navbarProps={{
         navLinks: [],
         developerMenu: [
