@@ -1,5 +1,5 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
+import fs from 'node:fs';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { XMLParser } from 'fast-xml-parser';
 import config from '../next.config.js';
@@ -14,13 +14,13 @@ async function main() {
 
   const d = parser.parse(fs.readFileSync(sitemapPath, 'utf8'));
 
-  const routes = d.urlset.url.map(url =>
+  const routes = d.urlset.url.map((url: { loc: string }) =>
     url.loc.replace(process.env.SITE_URL || 'https://graphql-yoga.com', ''),
   );
 
   const redirectsPointingToNonExistingStuff = [];
 
-  const redirects = config.redirects();
+  const redirects = await config.redirects!();
 
   for (const redirect of redirects) {
     if (routes.includes(redirect.destination) === false) {

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks -- false positive, useMDXComponents are not react hooks */
 import { notFound } from 'next/navigation';
-import { Callout, LegacyPackageCmd, NextPageProps } from '@theguild/components';
+import { Callout, LegacyPackageCmd, NextPageProps, Tabs } from '@theguild/components';
 import { defaultNextraOptions } from '@theguild/components/next.config';
 import {
   compileMdx,
@@ -67,6 +67,8 @@ export const pageMap = normalizePageMap(yogaPageMap);
 const { wrapper: Wrapper, ...components } = useMDXComponents({
   Callout,
   PackageCmd: LegacyPackageCmd,
+  Tab: Tabs.Tab,
+  Tabs,
 });
 
 export default async function Page(props: NextPageProps<'...slug'>) {
