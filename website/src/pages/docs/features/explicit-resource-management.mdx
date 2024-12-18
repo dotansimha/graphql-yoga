@@ -14,7 +14,7 @@ GraphQL Yoga supports
 approach that allows you to dispose of resources when they are no longer needed. This can be done in
 two ways.
 
-<Tabs items={['`dispose` method', '`await using` syntax']}>
+<Tabs items={['`await using` syntax', '`dispose` method']}>
   <Tabs.Tab>
     ```ts
     console.log('Yoga is starting')
@@ -106,16 +106,30 @@ server.once('close', async () => {
 </Tabs.Tab>
 
 <Tabs.Tab>
+
+`disposeOnProcessTerminate` option will register an event listener for `process` termination in
+Node.js
+
 ```ts
-import { createYoga, createSchema } from 'graphql-yoga';
-import { createServer } from 'http';
+import { createServer } from 'http'
+import { createSchema, createYoga } from 'graphql-yoga'
 
-createServer( createYoga({ schema: createSchema({ typeDefs: /_ GraphQL _/
-`                 type Query {                     hello: String                 }             `,
-resolvers: { Query: { hello: () => 'world' } } }), disposeOnProcessTerminate: true }) )
-.listen(4000, () => { console.info('Server is running on http://localhost:4000/graphql') });
-
-````
+createServer(
+  createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hello: String
+        }
+      `,
+      resolvers: { Query: { hello: () => 'world' } }
+    }),
+    disposeOnProcessTerminate: true
+  })
+).listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+```
 
 </Tabs.Tab>
 
@@ -210,4 +224,7 @@ console.log(await res.json()) // { data: { greetings: "Hello, John" } }
 await yoga.dispose()
 // The fetch request will be awaited here
 ```
-````
+
+```
+
+```
