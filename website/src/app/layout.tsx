@@ -23,7 +23,7 @@ const RootLayout: FC<{
         // @ts-expect-error
         ...meta.data,
         v2: {
-          title: 'Documentation v2',
+          title: 'Yoga v2 Docs',
           type: 'page',
         },
       },
