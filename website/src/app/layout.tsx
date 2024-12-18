@@ -44,7 +44,7 @@ const RootLayout: FC<{
       }}
       pageMap={pageMap}
       navbarProps={{
-        navLinks: [],
+        navLinks: [{ href: '/tutorial', children: 'Tutorial' }],
         developerMenu: [
           {
             href: '/docs',
@@ -57,6 +57,11 @@ const RootLayout: FC<{
             icon: <GitHubIcon />,
             children: 'GitHub',
           },
+          {
+            href: '/changelog',
+            icon: null,
+            children: 'Changelog'
+          }
         ],
       }}
     >

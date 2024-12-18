@@ -163,7 +163,8 @@ export const schema = createSchema({
   Notice that the code is changed now, and the `Link` type is being imported from the Prisma client
   instead of being hand-written.
   Make sure to remove the following:
-```
+
+```ts
 // 1
 type Link = {
   id: string
@@ -180,6 +181,7 @@ const links: Link[] = [
   }
 ]
 ```
+
 </Callout>
 
 Now let's understand how these new resolvers are working!
