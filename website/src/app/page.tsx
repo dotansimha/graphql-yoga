@@ -10,9 +10,13 @@ import { MdCached, MdError } from 'react-icons/md';
 import { SiApollographql } from 'react-icons/si';
 import { TbPlugConnected } from 'react-icons/tb';
 import { Anchor, Image } from '@theguild/components';
-import ecosystemImage from '../public/assets/ecosystem.svg';
-import httpImage from '../public/assets/http.svg';
-import subscriptionsImage from '../public/assets/subscriptions.svg';
+import ecosystemImage from '../../public/assets/ecosystem.svg';
+import httpImage from '../../public/assets/http.svg';
+import subscriptionsImage from '../../public/assets/subscriptions.svg';
+
+export const metadata = {
+  title: 'Home'
+}
 
 const gradients: [string, string][] = [
   ['#8b5cf6', '#6d28d9'], // violet
@@ -35,7 +39,7 @@ function pickGradient(i: number) {
   return gradient;
 }
 
-export function IndexPage(): ReactElement {
+export default function IndexPage(): ReactElement {
   const router = useRouter();
   return (
     <>
