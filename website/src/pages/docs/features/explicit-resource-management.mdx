@@ -181,7 +181,7 @@ But for this kind of purposes, `waitUntil` can be a better choice.
 If you have background jobs that need to be completed before the environment is shut down.
 `waitUntil` is better choice than `onDispose`. In this case, those jobs will keep running in the
 background but in case of disposal, they will be awaited. `waitUntil` works so similar to
-[Cloudflare Workers' `waitUntil` function.](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/#parameters).
+[Cloudflare Workers' `waitUntil` function](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/#parameters).
 
 But GraphQL Yoga handles `waitUntil` even if it is not provided by the environment.
 
