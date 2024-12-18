@@ -12,11 +12,14 @@ shutting down.
 GraphQL Yoga supports
 [Explicit Resource Management](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management)
 approach that allows you to dispose of resources when they are no longer needed. This can be done in
-two ways.
+two ways shown below;
 
 <Tabs items={['`await using` syntax', '`dispose` method']}>
   <Tabs.Tab>
-    ```ts
+  We use the `await using` syntax to create a new instance of `yoga` and dispose
+of it when the block is exited. Notice that we are using a block to limit the scope of `yoga` within `{ }`.
+So resources will be disposed of when the block is exited.
+    ```ts {2,7}
     console.log('Yoga is starting')
     {
         await using yoga = createYoga({
@@ -38,6 +41,8 @@ two ways.
     ```
     </Tabs.Tab>
     <Tabs.Tab>
+    We create a new instance of `yoga` and
+dispose of it using the `dispose` method.
     ```ts
     console.log('Yoga is starting')
     const yoga = createYoga({
@@ -61,8 +66,7 @@ two ways.
 </Tabs>
 
 In the first example, we use the `await using` syntax to create a new instance of `yoga` and dispose
-of it when the block is exited. In the second example, we create a new instance of `yoga` and
-dispose of it using the `dispose` method.
+of it when the block is exited. In the second example,
 
 ### Dispose on Node.js
 
@@ -135,7 +139,7 @@ createServer(
 
 </Tabs>
 
-## Dispose Plugins
+## Disposable Plugins w/ `onDispose` hook
 
 If you have plugins that need some internal resources to be disposed of, you can use the `onDispose`
 hook to dispose of them. This hook will be invoked when the GraphQL Yoga instance is disposed like
@@ -224,4 +228,3 @@ console.log(await res.json()) // { data: { greetings: "Hello, John" } }
 await yoga.dispose()
 // The fetch request for \`analytics\` will be awaited here
 ```
-
