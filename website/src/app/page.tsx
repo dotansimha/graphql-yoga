@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { AiFillAppstore } from 'react-icons/ai';
 import { BsCheckCircle, BsFillPlayFill, BsFillSafeFill, BsFillStopwatchFill } from 'react-icons/bs';
@@ -40,7 +39,6 @@ function pickGradient(i: number) {
 }
 
 const IndexPage: FC = () => {
-  const router = useRouter();
   return (
     <>
       <FeatureWrapper>
@@ -141,21 +139,7 @@ const IndexPage: FC = () => {
                     link: '/docs/features/apollo-federation',
                     icon: <SiApollographql size={36} />,
                     title: 'Apollo Federation',
-                    description: (
-                      <>
-                        The{' '}
-                        <button
-                          className={classes.link}
-                          onClick={e => {
-                            e.preventDefault();
-                            router.push('/docs/comparison#compatibility-with-apollo-federation');
-                          }}
-                        >
-                          best supergraph and subgraph
-                        </button>{' '}
-                        for your GraphQL
-                      </>
-                    ),
+                    description: 'The best supergraph and subgraph for your GraphQL',
                   },
                   {
                     link: '/docs/features/persisted-operations',

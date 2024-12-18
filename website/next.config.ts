@@ -54,7 +54,7 @@ export default withGuildDocs({
     ignoreDuringBuilds: true,
   },
   env: {
-    SITE_URL: 'https://the-guild.dev/graphql/yoga',
+    SITE_URL: 'https://the-guild.dev/graphql/yoga-server',
   },
   output: 'export',
 });
