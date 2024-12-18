@@ -38,7 +38,7 @@ const RootLayout: FC<{
     <GuildLayout
       websiteName={websiteName}
       description={description}
-      logo={<PRODUCTS.YOGA.logo className="w-8" />}
+      logo={<PRODUCTS.YOGA.logo className="w-8 h-auto" />}
       layoutProps={{
         docsRepositoryBase: 'https://github.com/dotansimha/graphql-yoga/tree/main/website',
       }}
@@ -60,8 +60,8 @@ const RootLayout: FC<{
           {
             href: '/changelog',
             icon: null,
-            children: 'Changelog'
-          }
+            children: 'Changelog',
+          },
         ],
       }}
     >
