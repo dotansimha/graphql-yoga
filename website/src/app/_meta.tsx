@@ -45,15 +45,11 @@ export default {
     },
   },
   index: {
-    title: 'Home',
     type: 'page',
     display: 'hidden',
-    theme: {
-      layout: 'raw',
-    },
   },
   docs: {
-    title: 'v5 (latest)',
+    title: 'Documentation',
     type: 'page',
   },
   v4: {
@@ -82,10 +78,10 @@ export default {
     type: 'page',
   },
   changelog: {
-    type: 'page',
+    title: 'Changelog',
     theme: {
-      // Don't need comments in the changelog page
-      bottomContent: null,
-    },
+      sidebar: false,
+      timestamp: false,
+    }
   },
 };
