@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks -- false positive, useMDXComponents are not react hooks */
 import { notFound } from 'next/navigation';
 import { Callout, LegacyPackageCmd, NextPageProps } from '@theguild/components';
+import { defaultNextraOptions } from '@theguild/components/next.config';
 import {
   compileMdx,
   convertToPageMap,
@@ -80,7 +81,7 @@ export default async function Page(props: NextPageProps<'...slug'>) {
     `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${docsPath}${filePath}`,
   );
   const data = await response.text();
-  const rawJs = await compileMdx(data, { filePath });
+  const rawJs = await compileMdx(data, { filePath, ...defaultNextraOptions });
   const { default: MDXContent, toc, metadata } = evaluate(rawJs, components);
 
   return (
@@ -93,7 +94,7 @@ export default async function Page(props: NextPageProps<'...slug'>) {
 
 export function generateStaticParams() {
   const params = Object.keys(mdxPages).map(route => ({
-    slug: route.split('/')
-  }))
+    slug: route.split('/'),
+  }));
   return params;
 }
