@@ -11,7 +11,6 @@ import {
 } from '@theguild/components/server';
 import json from '../../../../remote-files/v2.json';
 import { useMDXComponents } from '../../../mdx-components';
-// @ts-expect-error -- add types for .mdx
 import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
 
 const { branch, docsPath, filePaths, repo, user } = json;
