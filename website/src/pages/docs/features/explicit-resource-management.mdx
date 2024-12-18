@@ -73,21 +73,36 @@ by listening `process` exit signals.
 <Tabs items={['Explicit disposal', 'Automatic disposal on process exit']}>
 
 <Tabs.Tab>
+
+We can dispose of the GraphQL Yoga instance when the server is closed like below.
+
 ```ts
-import { createYoga, createSchema } from 'graphql-yoga';
-import { createServer } from 'http';
+import { createServer } from 'http'
+import { createSchema, createYoga } from 'graphql-yoga'
 
-const yoga = createYoga({ schema: createSchema({ typeDefs: /_ GraphQL _/
-`             type Query {                 hello: String             }         `, resolvers: {
-Query: { hello: () => 'world' } } }) });
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
+      }
+    `,
+    resolvers: {
+      Query: { hello: () => 'world' }
+    }
+  })
+})
 
-const server = createServer(yoga); server.listen(4000, () => { console.info('Server is running on
-http://localhost:4000/graphql') }); server.once('close', async () => { await yoga.dispose();
-console.info('Server is disposed so is Yoga') });
+const server = createServer(yoga)
+server.listen(4000, () => {
+  console.info('Server is running on http://localhost:4000/graphql')
+})
+server.once('close', async () => {
+  await yoga.dispose()
+  console.info('Server is disposed so is Yoga')
+})
+```
 
-// Then when the server is shutting down, it will dispose of Yoga server.close();
-
-````
 </Tabs.Tab>
 
 <Tabs.Tab>
@@ -95,26 +110,11 @@ console.info('Server is disposed so is Yoga') });
 import { createYoga, createSchema } from 'graphql-yoga';
 import { createServer } from 'http';
 
-createServer(
-    createYoga({
-        schema: createSchema({
-            typeDefs: /* GraphQL */ `
-                type Query {
-                    hello: String
-                }
-            `,
-            resolvers: {
-                Query: {
-                    hello: () => 'world'
-                }
-            }
-        }),
-        disposeOnProcessTerminate: true
-    })
-)
-.listen(4000, () => {
-    console.info('Server is running on http://localhost:4000/graphql')
-});
+createServer( createYoga({ schema: createSchema({ typeDefs: /_ GraphQL _/
+`                 type Query {                     hello: String                 }             `,
+resolvers: { Query: { hello: () => 'world' } } }), disposeOnProcessTerminate: true }) )
+.listen(4000, () => { console.info('Server is running on http://localhost:4000/graphql') });
+
 ````
 
 </Tabs.Tab>
@@ -143,19 +143,21 @@ const plugin = {
 Or you can flush a queue of operations when the server is shutting down.
 
 ```ts
-const backgroundJobs: Promise<void>[] = [];
+const backgroundJobs: Promise<void>[] = []
 
 const plugin = {
-    onRequestParse() {
-        backgroundJobs.push(
-            backgroundJobs.push(sendAnalytics({ /* ... */ }));
-        )
-    },
-    onDispose: async () => {
-        // Flush the queue of background jobs
-        await Promise.all(backgroundJobs);
-    }
-};
+  onRequestParse() {
+    backgroundJobs.push(
+      sendAnalytics({
+        /* ... */
+      })
+    )
+  },
+  onDispose: async () => {
+    // Flush the queue of background jobs
+    await Promise.all(backgroundJobs)
+  }
+}
 ```
 
 But for this kind of purposes, `waitUntil` can be a better choice.
@@ -208,3 +210,4 @@ console.log(await res.json()) // { data: { greetings: "Hello, John" } }
 await yoga.dispose()
 // The fetch request will be awaited here
 ```
+````
