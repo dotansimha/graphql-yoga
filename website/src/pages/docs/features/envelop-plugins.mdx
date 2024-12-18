@@ -361,7 +361,7 @@ In order to clean up resources when GraphQL Yoga is shut down, you can use the `
 ```ts
 export const useMyPlugin = () => {
   return {
-    async [Symbol.asyncDispose]() {
+    async onDispose() {
       // Clean up resources
       await stopConnection()
     }
