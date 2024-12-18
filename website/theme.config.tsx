@@ -3,9 +3,6 @@ import { useRouter } from 'next/router';
 
 // eslint-disable-next-line import/no-default-export
 export default {
-  chat: {
-    link: 'https://discord.gg/94CDTmgmbs',
-  },
   // color: {
   //   hue: 293,
   //   saturation: 69,
