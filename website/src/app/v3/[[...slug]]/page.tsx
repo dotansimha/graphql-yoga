@@ -13,6 +13,8 @@ import json from '../../../../remote-files/v3.json';
 import { useMDXComponents } from '../../../mdx-components';
 // @ts-expect-error -- add types for .mdx
 import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
+// @ts-expect-error -- add types for .mdx
+import CodegenCallout from '../../codegen-callout.mdx';
 
 const { branch, docsPath, filePaths, repo, user } = json;
 
@@ -82,7 +84,13 @@ const yogaPageMap = mergeMetaWithPageMap(v3Pages, {
 
 export const pageMap = normalizePageMap(yogaPageMap);
 
-const { wrapper: Wrapper, ...components } = useMDXComponents({});
+const { wrapper: Wrapper, ...components } = useMDXComponents({
+  PackageCmd: LegacyPackageCmd,
+  CodegenCallout,
+  Callout,
+  Tab: Tabs.Tab,
+  Tabs
+});
 
 export default async function Page(props: NextPageProps<'...slug'>) {
   const params = await props.params;

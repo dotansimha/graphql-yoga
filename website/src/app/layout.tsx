@@ -3,6 +3,7 @@ import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/component
 import { getDefaultMetadata, getPageMap, GuildLayout } from '@theguild/components/server';
 import '@theguild/components/style.css';
 import { pageMap as v2PageMap } from './v2/[[...slug]]/page';
+import { pageMap as v3PageMap } from './v3/[[...slug]]/page';
 
 const description = PRODUCTS.YOGA.title;
 const websiteName = 'Yoga';
@@ -26,14 +27,15 @@ const RootLayout: FC<{
           title: 'Yoga v2 Docs',
           type: 'page',
         },
+        v3: {
+          title: 'Yoga v3 Docs',
+          type: 'page',
+        },
       },
     },
     ...pageMap,
-    {
-      route: '/v2',
-      name: 'v2',
-      children: v2PageMap,
-    },
+    { route: '/v2', name: 'v2', children: v2PageMap },
+    { route: '/v3', name: 'v3', children: v3PageMap },
   ];
   return (
     <GuildLayout
@@ -54,7 +56,7 @@ const RootLayout: FC<{
           },
           { href: 'https://the-guild.dev/blog', icon: <PencilIcon />, children: 'Blog' },
           {
-            href: 'https://github.com/dimaMachina/graphql-eslint',
+            href: 'https://github.com/dotansimha/graphql-yoga',
             icon: <GitHubIcon />,
             children: 'GitHub',
           },
