@@ -4,7 +4,6 @@ export default {
     display: 'children',
   },
   advanced: {
-    title: 'Advanced',
     display: 'hidden',
   },
 };

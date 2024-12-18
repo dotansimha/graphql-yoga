@@ -3,13 +3,13 @@ import { Banner, GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/c
 import { getDefaultMetadata, GuildLayout } from '@theguild/components/server';
 import '@theguild/components/style.css';
 
-const description = PRODUCTS.ESLINT.title;
-const websiteName = 'GraphQL-ESLint';
+const description = PRODUCTS.YOGA.title;
+const websiteName = 'Yoga';
 
 export const metadata = getDefaultMetadata({
   description,
   websiteName,
-  productName: 'ESLINT',
+  productName: 'YOGA',
 });
 
 const Anchor: FC<ComponentPropsWithoutRef<'a'>> = ({ children, ...props }) => {
@@ -32,21 +32,12 @@ const RootLayout: FC<{
     <GuildLayout
       websiteName={websiteName}
       description={description}
-      logo={<PRODUCTS.ESLINT.logo className="text-lg" />}
+      logo={<PRODUCTS.YOGA.logo className="w-8" />}
       layoutProps={{
-        banner: (
-          <Banner dismissible={false}>
-            This is documentation for v4 of the plugin. For v3 click{' '}
-            <Anchor href="https://074c6ee9.graphql-eslint.pages.dev/docs">here</Anchor>.
-          </Banner>
-        ),
         docsRepositoryBase: 'https://github.com/dimaMachina/graphql-eslint/tree/master/website',
       }}
       navbarProps={{
-        navLinks: [
-          { children: 'Rules', href: '/rules' },
-          { children: 'Playground', href: '/play' },
-        ],
+        navLinks: [],
         developerMenu: [
           {
             href: '/docs',

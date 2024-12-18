@@ -53,5 +53,8 @@ export default withGuildDocs({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  env: {
+    SITE_URL: 'https://the-guild.dev/graphql/yoga',
+  },
   output: 'export',
 });
