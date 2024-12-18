@@ -34,7 +34,7 @@ const RootLayout: FC<{
       description={description}
       logo={<PRODUCTS.YOGA.logo className="w-8" />}
       layoutProps={{
-        docsRepositoryBase: 'https://github.com/dimaMachina/graphql-eslint/tree/master/website',
+        docsRepositoryBase: 'https://github.com/dotansimha/graphql-yoga/tree/main/website',
       }}
       navbarProps={{
         navLinks: [],
