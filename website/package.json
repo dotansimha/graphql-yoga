@@ -9,11 +9,11 @@
     "check": "exit 0",
     "dev": "next --turbopack",
     "pagefind": "pagefind --site .next/server/app --output-path out/_pagefind",
-    "postbuild": "next-sitemap && node scripts/sitemap-ci.mjs && pnpm pagefind",
+    "postbuild": "next-sitemap && tsx scripts/sitemap-ci && pnpm pagefind",
     "start": "next start"
   },
   "dependencies": {
-    "@theguild/components": "8.1.3-alpha-20241218093634-b1f7b0e0135495aab7fa0bc97890c2d1744d73db",
+    "@theguild/components": "8.1.3-alpha-20241218102434-30b07f022935f333eb0a92cb1fb62d2638809cb3",
     "clsx": "2.1.1",
     "graphql": "16.10.0",
     "next": "15.1.1",
