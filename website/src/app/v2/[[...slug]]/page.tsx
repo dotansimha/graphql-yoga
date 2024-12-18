@@ -10,7 +10,7 @@ import {
 } from '@theguild/components/server';
 import json from '../../../../remote-files/v2.json';
 import { useMDXComponents } from '../../../mdx-components';
-// @ts-expect-error -- add types
+// @ts-expect-error -- add types for .mdx
 import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
 
 const { branch, docsPath, filePaths, repo, user } = json;
@@ -20,22 +20,22 @@ const { mdxPages, pageMap: _pageMap } = convertToPageMap({
   basePath: 'v2',
 });
 
-// @ts-expect-error -- fixme
+// @ts-expect-error -- ignore
 const v2Pages = _pageMap[0].children;
 
-const eslintPageMap = mergeMetaWithPageMap(v2Pages, {
+const yogaPageMap = mergeMetaWithPageMap(v2Pages, {
   index: 'Quick Start',
   features: {
     items: {
       graphiql: 'GraphiQL',
       context: 'GraphQL Context',
-      'error-masking': 'Error Masking',
-      subscriptions: 'Subscriptions',
-      'file-uploads': 'File Uploads',
-      'envelop-plugins': 'Envelop Plugins',
-      testing: 'Testing',
-      'apollo-federation': 'Apollo Federation',
-      cors: 'CORS',
+      'error-masking': '',
+      subscriptions: '',
+      'file-uploads': '',
+      'envelop-plugins': '',
+      testing: '',
+      'apollo-federation': '',
+      cors: '',
     },
   },
   integrations: {
@@ -61,7 +61,7 @@ const eslintPageMap = mergeMetaWithPageMap(v2Pages, {
   },
 });
 
-export const pageMap = normalizePageMap(eslintPageMap);
+export const pageMap = normalizePageMap(yogaPageMap);
 
 const { wrapper: Wrapper, ...components } = useMDXComponents({
   Callout,
@@ -92,11 +92,8 @@ export default async function Page(props: NextPageProps<'...slug'>) {
 }
 
 export function generateStaticParams() {
-  console.log(mdxPages);
-  // const params = Object.keys(mdxPages).map(route => ({
-  //   ...(route && { slug: route.split('/') })
-  // }))
-  // console.log(params)
-
-  return [{ slug: ['integrations', 'integration-with-aws-lambda'] }];
+  const params = Object.keys(mdxPages).map(route => ({
+    slug: route.split('/')
+  }))
+  return params;
 }
