@@ -1,5 +1,5 @@
-import { ReactElement, ReactNode } from 'react';
-import { useRouter } from 'next/router';
+import { FC, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { AiFillAppstore } from 'react-icons/ai';
 import { BsCheckCircle, BsFillPlayFill, BsFillSafeFill, BsFillStopwatchFill } from 'react-icons/bs';
@@ -9,14 +9,14 @@ import { GrGraphQl } from 'react-icons/gr';
 import { MdCached, MdError } from 'react-icons/md';
 import { SiApollographql } from 'react-icons/si';
 import { TbPlugConnected } from 'react-icons/tb';
-import { Anchor, Image } from '@theguild/components';
+import { Anchor, cn, Image } from '@theguild/components';
 import ecosystemImage from '../../public/assets/ecosystem.svg';
 import httpImage from '../../public/assets/http.svg';
 import subscriptionsImage from '../../public/assets/subscriptions.svg';
 
 export const metadata = {
-  title: 'Home'
-}
+  title: 'Home',
+};
 
 const gradients: [string, string][] = [
   ['#8b5cf6', '#6d28d9'], // violet
@@ -39,7 +39,7 @@ function pickGradient(i: number) {
   return gradient;
 }
 
-export default function IndexPage(): ReactElement {
+const IndexPage: FC = () => {
   const router = useRouter();
   return (
     <>
@@ -319,23 +319,23 @@ export default function IndexPage(): ReactElement {
       </Feature>
     </>
   );
-}
+};
 
-function FeatureWrapper({ children }: { children: ReactNode }): ReactElement {
+const FeatureWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div
-      className={`
-        w-full py-24
-        odd:bg-gray-50
-        odd:dark:bg-gray-900
-        even:bg-white
-        even:dark:bg-black
-      `}
+      className={cn(
+        'w-full py-24',
+        'odd:bg-gray-50',
+        'odd:dark:bg-gray-900',
+        'even:bg-white',
+        'even:dark:bg-black',
+      )}
     >
       {children}
     </div>
   );
-}
+};
 
 function Feature({
   title,
@@ -453,3 +453,5 @@ function FeatureHighlights({
     </>
   );
 }
+
+export default IndexPage;
