@@ -30,13 +30,7 @@ const yogaPageMap = mergeMetaWithPageMap(v4Pages);
 
 export const pageMap = normalizePageMap(yogaPageMap);
 
-const { wrapper: Wrapper, ...components } = useMDXComponents({
-  PackageCmd: LegacyPackageCmd,
-  CodegenCallout,
-  Callout,
-  Tab: Tabs.Tab,
-  Tabs
-});
+const { wrapper: Wrapper, ...components } = useMDXComponents();
 
 export default async function Page(props: NextPageProps<'...slug'>) {
   const params = await props.params;
