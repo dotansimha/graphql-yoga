@@ -401,7 +401,7 @@ importers:
     dependencies:
       '@whatwg-node/server-plugin-cookies':
         specifier: ^1.0.3
-        version: 1.0.3(@whatwg-node/server@0.9.63)
+        version: 1.0.3(@whatwg-node/server@0.9.64)
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1605,8 +1605,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.1
       '@whatwg-node/server':
-        specifier: ^0.9.63
-        version: 0.9.63
+        specifier: ^0.9.64
+        version: 0.9.64
       dset:
         specifier: ^3.1.1
         version: 3.1.4
@@ -1832,9 +1832,6 @@ importers:
       '@graphql-tools/federation':
         specifier: ^3.0.0
         version: 3.0.3(@types/node@22.10.2)(graphql@16.10.0)
-      '@whatwg-node/disposablestack':
-        specifier: ^0.0.5
-        version: 0.0.5
       tslib:
         specifier: ^2.5.0
         version: 2.8.1
@@ -1965,7 +1962,7 @@ importers:
     dependencies:
       '@whatwg-node/server-plugin-cookies':
         specifier: ^1.0.3
-        version: 1.0.3(@whatwg-node/server@0.9.63)
+        version: 1.0.3(@whatwg-node/server@0.9.64)
       jsonwebtoken:
         specifier: ^9.0.0
         version: 9.0.2
@@ -8158,6 +8155,10 @@ packages:
 
   '@whatwg-node/server@0.9.63':
     resolution: {integrity: sha512-rHBN2murCcuuhQru/AQjA13lA9SzQAH9k8ENy4iZrAmY+C0yFYPud3HiFgPUgzR1B2KYUpIYKwC1UAUlkzASOQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@whatwg-node/server@0.9.64':
+    resolution: {integrity: sha512-4HSOWOjFvPLY7F6zqs/kbSBHInHIxd50xnwtp3NXUrI+d92iOBLHKm9aIULwAn2ABPcnfXb55VQwb4bEV3g6KA==}
     engines: {node: '>=18.0.0'}
 
   '@wry/caches@1.0.1':
@@ -24054,13 +24055,19 @@ snapshots:
       fast-querystring: 1.1.2
       tslib: 2.8.1
 
-  '@whatwg-node/server-plugin-cookies@1.0.3(@whatwg-node/server@0.9.63)':
+  '@whatwg-node/server-plugin-cookies@1.0.3(@whatwg-node/server@0.9.64)':
     dependencies:
       '@whatwg-node/cookie-store': 0.2.2
-      '@whatwg-node/server': 0.9.63
+      '@whatwg-node/server': 0.9.64
       tslib: 2.8.1
 
   '@whatwg-node/server@0.9.63':
+    dependencies:
+      '@whatwg-node/disposablestack': 0.0.5
+      '@whatwg-node/fetch': 0.10.1
+      tslib: 2.8.1
+
+  '@whatwg-node/server@0.9.64':
     dependencies:
       '@whatwg-node/disposablestack': 0.0.5
       '@whatwg-node/fetch': 0.10.1
@@ -27308,7 +27315,7 @@ snapshots:
       '@sinclair/typebox': 0.34.11
       '@whatwg-node/cookie-store': 0.2.2
       '@whatwg-node/fetch': 0.10.1
-      '@whatwg-node/server': 0.9.63
+      '@whatwg-node/server': 0.9.64
       hotscript: 1.0.13
       json-schema-to-ts: 3.1.1
       qs: 6.13.1

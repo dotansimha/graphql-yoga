@@ -24,5 +24,6 @@ export default {
   jwt: 'JWT',
   'landing-page': 'Landing Page',
   'request-customization': 'Request Customization',
+  'explicit-resource-management': 'Explicit Resource Management',
   'envelop-plugins': 'Custom Plugins',
 };

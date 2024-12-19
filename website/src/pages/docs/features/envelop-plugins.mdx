@@ -353,3 +353,45 @@ function useYogaSignature(): Plugin {
   }
 }
 ```
+
+### `onDispose`
+
+If you have plugins that need some internal resources to be disposed of, you can use the `onDispose`
+hook to dispose of them. This hook will be invoked when the GraphQL Yoga instance is disposed like
+above.
+
+```ts
+let dbConnection: Connection
+const plugin = {
+  onPluginInit: async () => {
+    dbConnection = await createConnection()
+  },
+  onDispose: async () => {
+    // Dispose of resources
+    await dbConnection.close()
+  }
+}
+```
+
+Or you can flush a queue of operations when the server is shutting down.
+
+```ts
+const backgroundJobs: Promise<void>[] = []
+
+const plugin = {
+  onRequestParse() {
+    backgroundJobs.push(
+      sendAnalytics({
+        /* ... */
+      })
+    )
+  },
+  onDispose: async () => {
+    // Flush the queue of background jobs
+    await Promise.all(backgroundJobs)
+  }
+}
+```
+
+But for this kind of purposes, `waitUntil` can be a better choice.
+[Learn more about explicit resource management here](/docs/features/explicit-resource-management).
