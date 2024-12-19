@@ -18,6 +18,7 @@ import {
   ServerAdapter,
   ServerAdapterBaseObject,
   ServerAdapterInitialContext,
+  ServerAdapterOptions,
   ServerAdapterRequestHandler,
   useCORS,
   useErrorHandling,
@@ -75,7 +76,10 @@ import { maskError } from './utils/mask-error.js';
 /**
  * Configuration options for the server
  */
-export type YogaServerOptions<TServerContext, TUserContext> = {
+export type YogaServerOptions<TServerContext, TUserContext> = Omit<
+  ServerAdapterOptions<TServerContext>,
+  'plugins'
+> & {
   /**
    * Enable/disable logging or provide a custom logger.
    * @default true
