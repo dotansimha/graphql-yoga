@@ -1,7 +1,6 @@
 import { ExecutionArgs, ExecutionResult, SubscriptionArgs } from 'graphql';
-import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
+import { mapMaybePromise, Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
 import { useSofa as createSofaHandler } from 'sofa-api';
-import { isPromise } from '@graphql-tools/utils';
 import { SofaHandler } from './types.js';
 
 type SofaHandlerConfig = Parameters<typeof createSofaHandler>[0];
@@ -33,15 +32,10 @@ export function useSofa(config: SofaPluginConfig): Plugin {
         schema: onSchemaChangeEventPayload.schema,
         context(serverContext: YogaInitialContext) {
           const enveloped = getEnveloped(serverContext);
-          const contextValue$ = enveloped.contextFactory(serverContext);
-          if (isPromise(contextValue$)) {
-            return contextValue$.then(contextValue => {
-              envelopedByContext.set(contextValue, enveloped);
-              return contextValue;
-            });
-          }
-          envelopedByContext.set(contextValue$, enveloped);
-          return contextValue$;
+          return mapMaybePromise(enveloped.contextFactory(serverContext), contextValue$ => {
+            envelopedByContext.set(contextValue$, enveloped);
+            return contextValue$;
+          });
         },
         execute(
           ...args:
@@ -115,10 +109,12 @@ export function useSofa(config: SofaPluginConfig): Plugin {
         },
       });
     },
-    async onRequest({ request, serverContext, endResponse }) {
-      const response = await sofaHandler(request, serverContext as Record<string, unknown>);
-      if (response != null && response.status !== 404) {
-        endResponse(response);
+    async onRequest({ request, endResponse, serverContext, url }) {
+      if (url.pathname.startsWith(config.basePath)) {
+        const res = await sofaHandler.handleRequest(request, serverContext);
+        if (res) {
+          endResponse(res);
+        }
       }
     },
   };
