@@ -34,6 +34,7 @@ export default defineConfig({
       );
     },
   },
-  logo: PRODUCTS.YOGA.logo({ className: 'w-8' }),
   websiteName: 'Yoga',
+  // @ts-expect-error - TODO: fix types
+  logo: PRODUCTS.YOGA.logo({ className: 'w-8' }),
 });
