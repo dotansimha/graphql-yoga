@@ -27,20 +27,6 @@ export default {
     title: 'Documentation',
     type: 'page',
   },
-  // v4: {
-  //   title: 'v4',
-  //   type: 'page',
-  //   theme: {
-  //     topContent: LegacyDocsBanner,
-  //   },
-  // },
-  // v3: {
-  //   title: 'v3',
-  //   type: 'page',
-  //   theme: {
-  //     topContent: LegacyDocsBanner,
-  //   },
-  // },
   tutorial: {
     title: 'Tutorial',
     type: 'page',

@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import clsx from 'clsx';
 import { AiFillAppstore } from 'react-icons/ai';
 import { BsCheckCircle, BsFillPlayFill, BsFillSafeFill, BsFillStopwatchFill } from 'react-icons/bs';
 import { FiGithub, FiUpload } from 'react-icons/fi';
@@ -54,11 +53,11 @@ const IndexPage: FC = () => {
             <Anchor className={classes.button} href="/docs">
               Documentation
             </Anchor>
-            <Anchor className={clsx(classes.button, 'hidden lg:block')} href="/tutorial/basic">
+            <Anchor className={cn(classes.button, 'hidden lg:block')} href="/tutorial/basic">
               Tutorial
             </Anchor>
             <Anchor
-              className={clsx(classes.button, 'flex flex-row gap-2 items-center')}
+              className={cn(classes.button, 'flex flex-row gap-2 items-center')}
               href="https://github.com/dotansimha/graphql-yoga"
             >
               <FiGithub /> GitHub
@@ -347,19 +346,19 @@ function Feature({
     <FeatureWrapper>
       <div className="container box-border px-6 mx-auto flex flex-col gap-y-24">
         <div
-          className={clsx(
+          className={cn(
             'flex flex-col gap-24 md:gap-12 lg:gap-24 justify-center items-stretch',
             flipped ? 'md:flex-row-reverse' : 'md:flex-row',
           )}
         >
           <div
-            className={clsx(
+            className={cn(
               'flex flex-col gap-4 w-full md:w-3/5 lg:w-2/5 flex-shrink-0',
               !image && 'items-center',
             )}
           >
             <h2
-              className={clsx(
+              className={cn(
                 'font-semibold text-5xl bg-clip-text text-transparent dark:text-transparent leading-normal',
                 !image && 'text-center',
               )}
@@ -422,12 +421,12 @@ function FeatureHighlights({
             )}
             <div className="text-black dark:text-white">
               <h3
-                className={clsx('text-xl font-semibold', !icon && 'text-lg')}
+                className={cn('text-xl font-semibold', !icon && 'text-lg')}
                 style={textColor ? { color: textColor } : {}}
               >
                 {title}
               </h3>
-              <p className={clsx('text-gray-600 dark:text-gray-400', !icon && 'text-sm')}>
+              <p className={cn('text-gray-600 dark:text-gray-400', !icon && 'text-sm')}>
                 {description}
               </p>
             </div>
