@@ -1,12 +1,4 @@
-/* eslint sort-keys: error */
-import { useRouter } from 'next/router';
-
-// eslint-disable-next-line import/no-default-export
 export default {
-  // color: {
-  //   hue: 293,
-  //   saturation: 69,
-  // },
   editLink: {
     component({ children, className, filePath }) {
       const { asPath } = useRouter();

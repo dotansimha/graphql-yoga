@@ -18,6 +18,7 @@ export default withGuildDocs({
       '/v2/features/persisted-operations': '/v2',
       '/features/graphiql': '/docs/features/graphiql',
       '/examples/graphql-ws': '/docs/features/subscriptions',
+      '/changelog': '/changelogs/graphql-yoga',
     }).map(([from, to]) => ({
       source: from,
       destination: to,
