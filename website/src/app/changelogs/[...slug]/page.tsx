@@ -49,14 +49,19 @@ const changelogsPageMap = mergeMetaWithPageMap(changelogsPages, {
 export const pageMap = normalizePageMap(changelogsPageMap);
 
 export async function generateMetadata(props: NextPageProps<'...slug'>) {
-  // const params = await props.params;
-  // const { metadata } = await importPage(params.mdxPath);
-  return {};
+  const params = await props.params;
+  const { name: packageName } = JSON.parse(
+    await fs.readFile(`../packages/${params.slug.join('/')}/package.json`, 'utf8'),
+  );
+  return {
+    title: `Changelog for "${packageName}"`,
+    description: `Discover the latest updates, enhancements, and bug fixes for "${packageName}" package`,
+  };
 }
 
 const { wrapper: Wrapper, ...components } = useMDXComponents();
 
-const remarkRemoveUpdatedDependency = () => ast => {
+const remarkRemoveUpdatedDependency = () => (ast: any) => {
   visitParents(ast, 'text', (node, ancestors) => {
     if (
       node.value.startsWith('Updated dependencies') ||
@@ -75,9 +80,9 @@ const remarkRemoveUpdatedDependency = () => ast => {
 export default async function Page(props: NextPageProps<'...slug'>) {
   const params = await props.params;
   const filePath = `../packages/${params.slug.join('/')}/CHANGELOG.md`;
-  const content = await fs.readFile(filePath, 'utf8');
+  const rawMd = await fs.readFile(filePath, 'utf8');
 
-  const rawJs = await compileMdx(content, {
+  const rawJs = await compileMdx(rawMd, {
     filePath,
     ...defaultNextraOptions,
     mdxOptions: {

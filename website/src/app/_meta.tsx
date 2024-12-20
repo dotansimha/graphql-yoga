@@ -31,8 +31,4 @@ export default {
     title: 'Tutorial',
     type: 'page',
   },
-  changelog: {
-    title: 'Changelog',
-    type: 'page',
-  },
 };
