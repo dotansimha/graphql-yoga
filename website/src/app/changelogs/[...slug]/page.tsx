@@ -90,10 +90,17 @@ export default async function Page(props: NextPageProps<'...slug'>) {
       remarkPlugins: [remarkRemoveUpdatedDependency],
     },
   });
-
   const { default: MDXContent, toc, metadata } = evaluate(rawJs, components);
+
   return (
-    <Wrapper toc={toc} metadata={metadata}>
+    <Wrapper
+      toc={toc}
+      metadata={{
+        ...metadata,
+        // Do not index changelogs from search
+        searchable: false,
+      }}
+    >
       <MDXContent {...props} params={params} />
     </Wrapper>
   );

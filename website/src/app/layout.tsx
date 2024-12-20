@@ -25,10 +25,10 @@ const RootLayout: FC<{
       data: {
         // @ts-expect-error
         ...meta.data,
+        changelogs: { type: 'page', title: 'Changelogs' },
         v2: { type: 'page', title: 'Yoga v2 Docs' },
         v3: { type: 'page', title: 'Yoga v3 Docs' },
         v4: { type: 'page', title: 'Yoga v4 Docs' },
-        changelogs: { type: 'page', title: 'Changelogs' },
       },
     },
     ...pageMap,
