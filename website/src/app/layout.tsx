@@ -2,10 +2,10 @@ import { FC, ReactNode } from 'react';
 import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/components';
 import { getDefaultMetadata, getPageMap, GuildLayout } from '@theguild/components/server';
 import '@theguild/components/style.css';
+import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page';
 import { pageMap as v2PageMap } from './v2/[[...slug]]/page';
 import { pageMap as v3PageMap } from './v3/[[...slug]]/page';
 import { pageMap as v4PageMap } from './v4/[[...slug]]/page';
-import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page';
 
 const description = PRODUCTS.YOGA.title;
 const websiteName = 'Yoga';
@@ -25,7 +25,7 @@ const RootLayout: FC<{
       data: {
         // @ts-expect-error
         ...meta.data,
-        changelogs: { type: 'page', title: 'Changelogs' },
+        changelogs: { type: 'page', title: 'Changelogs', theme: { layout: 'full' } },
         v2: { type: 'page', title: 'Yoga v2 Docs' },
         v3: { type: 'page', title: 'Yoga v3 Docs' },
         v4: { type: 'page', title: 'Yoga v4 Docs' },
