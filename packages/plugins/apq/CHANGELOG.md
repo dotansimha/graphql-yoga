@@ -1,5 +1,20 @@
 # @graphql-yoga/plugin-apq
 
+## 3.10.7
+
+### Patch Changes
+
+- [#3547](https://github.com/dotansimha/graphql-yoga/pull/3547)
+  [`8fee214`](https://github.com/dotansimha/graphql-yoga/commit/8fee214eac4be3e9e18935502d32de69f0a1484e)
+  Thanks [@Urigo](https://github.com/Urigo)! - dependencies updates:
+  - Removed dependency
+    [`@graphql-tools/utils@^10.6.1` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.6.1)
+    (from `peerDependencies`)
+- Updated dependencies
+  [[`8fee214`](https://github.com/dotansimha/graphql-yoga/commit/8fee214eac4be3e9e18935502d32de69f0a1484e),
+  [`1df4912`](https://github.com/dotansimha/graphql-yoga/commit/1df4912693fad5efaf2fe99bf0433c9abc829004)]:
+  - graphql-yoga@5.10.7
+
 ## 3.10.6
 
 ### Patch Changes
