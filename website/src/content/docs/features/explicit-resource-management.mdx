@@ -19,33 +19,11 @@ two ways shown below;
   We use the `await using` syntax to create a new instance of `yoga` and dispose
 of it when the block is exited. Notice that we are using a block to limit the scope of `yoga` within `{ }`.
 So resources will be disposed of when the block is exited.
-    ```ts {2,7}
-    console.log('Yoga is starting')
-    {
-        await using yoga = createYoga({
-            schema: createSchema({
-                typeDefs: /* GraphQL */ `
-                    type Query {
-                        hello: String
-                    }
-                `,
-                resolvers: {
-                    Query: {
-                        hello: () => 'world'
-                    }
-                }
-            })
-        });
-    }
-    console.log('Yoga is disposed')
-    ```
-    </Tabs.Tab>
-    <Tabs.Tab>
-    We create a new instance of `yoga` and
-dispose of it using the `dispose` method.
-    ```ts
-    console.log('Yoga is starting')
-    const yoga = createYoga({
+
+```ts {2,7}
+console.log('Yoga is starting')
+{
+    await using yoga = createYoga({
         schema: createSchema({
             typeDefs: /* GraphQL */ `
                 type Query {
@@ -59,10 +37,38 @@ dispose of it using the `dispose` method.
             }
         })
     });
-    await yoga.dispose();
-    console.log('Yoga is disposed')
-    ```
+}
+console.log('Yoga is disposed')
+```
+
     </Tabs.Tab>
+    <Tabs.Tab>
+    We create a new instance of `yoga` and
+
+dispose of it using the `dispose` method.
+
+```ts
+console.log('Yoga is starting')
+const yoga = createYoga({
+  schema: createSchema({
+    typeDefs: /* GraphQL */ `
+      type Query {
+        hello: String
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: () => 'world'
+      }
+    }
+  })
+})
+await yoga.dispose()
+console.log('Yoga is disposed')
+```
+
+    </Tabs.Tab>
+
 </Tabs>
 
 In the first example, we use the `await using` syntax to create a new instance of `yoga` and dispose
