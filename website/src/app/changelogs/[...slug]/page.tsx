@@ -10,7 +10,7 @@ import {
   normalizePageMap,
 } from '@theguild/components/server';
 import { defaultNextraOptions } from '@theguild/components/server/next.config';
-import { useMDXComponents } from '../../../mdx-components';
+import { useMDXComponents } from '../../../mdx-components.js';
 
 async function getPackages() {
   const result = await fg(['../packages/**/package.json'], {
@@ -59,6 +59,7 @@ export async function generateMetadata(props: NextPageProps<'...slug'>) {
 
 const { wrapper: Wrapper, ...components } = useMDXComponents();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const remarkRemoveUpdatedDependency = () => (ast: any) => {
   visitParents(ast, 'text', (node, ancestors) => {
     if (

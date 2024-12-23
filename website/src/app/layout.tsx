@@ -6,7 +6,7 @@ import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page.js';
 import { pageMap as v2PageMap } from './v2/[[...slug]]/page.js';
 import { pageMap as v3PageMap } from './v3/[[...slug]]/page.js';
 import { pageMap as v4PageMap } from './v4/[[...slug]]/page.js';
-import { VersionedSearch } from './versioned-search';
+import { VersionedSearch } from './versioned-search.js';
 
 const description = PRODUCTS.YOGA.title;
 const websiteName = 'Yoga';
@@ -24,7 +24,7 @@ const RootLayout: FC<{
   pageMap = [
     {
       data: {
-        // @ts-expect-error
+        // @ts-expect-error -- ignore
         ...meta.data,
         changelogs: { type: 'page', title: 'Changelogs', theme: { layout: 'full' } },
         v2: { type: 'page', title: 'Yoga v2 Docs' },
