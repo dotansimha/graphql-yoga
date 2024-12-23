@@ -6,6 +6,7 @@ import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page';
 import { pageMap as v2PageMap } from './v2/[[...slug]]/page';
 import { pageMap as v3PageMap } from './v3/[[...slug]]/page';
 import { pageMap as v4PageMap } from './v4/[[...slug]]/page';
+import { VersionedSearch } from './versioned-search';
 
 const description = PRODUCTS.YOGA.title;
 const websiteName = 'Yoga';
@@ -67,6 +68,7 @@ const RootLayout: FC<{
           },
         ],
       }}
+      search={<VersionedSearch />}
     >
       {children}
     </GuildLayout>

@@ -106,7 +106,12 @@ export default async function Page(props: NextPageProps<'...slug'>) {
   const { default: MDXContent, toc, metadata } = evaluate(rawJs, components);
 
   return (
-    <Wrapper toc={toc} metadata={metadata}>
+    <Wrapper
+      toc={toc}
+      metadata={metadata}
+      data-version="v3"
+      data-pagefind-filter="version[data-version]"
+    >
       <LegacyDocsBanner yogaVersion={3} />
       <MDXContent />
     </Wrapper>
