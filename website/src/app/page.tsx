@@ -1,440 +1,112 @@
-import { FC, ReactNode } from 'react';
-import { AiFillAppstore } from 'react-icons/ai';
-import { BsCheckCircle, BsFillPlayFill, BsFillSafeFill, BsFillStopwatchFill } from 'react-icons/bs';
-import { FiGithub, FiUpload } from 'react-icons/fi';
-import { GiHealthNormal } from 'react-icons/gi';
-import { GrGraphQl } from 'react-icons/gr';
-import { MdCached, MdError } from 'react-icons/md';
-import { SiApollographql } from 'react-icons/si';
-import { TbPlugConnected } from 'react-icons/tb';
-import { Anchor, cn, Image } from '@theguild/components';
-import ecosystemImage from '../../public/assets/ecosystem.svg';
-import httpImage from '../../public/assets/http.svg';
-import subscriptionsImage from '../../public/assets/subscriptions.svg';
+import { ReactNode } from 'react';
+import {
+  CallToAction,
+  CheckIcon,
+  cn,
+  DecorationIsolation,
+  GitHubIcon,
+  Heading,
+  GetYourAPIGameRightSection,
+  YogaIcon
+} from '@theguild/components';
+import Image from 'next/image'
+import yogaHeroBadge from './yoga-badge.svg';
 
 export const metadata = {
   title: 'Home',
 };
 
-const gradients: [string, string][] = [
-  ['#8b5cf6', '#6d28d9'], // violet
-  ['#06b6d4', '#0e7490'], // cyan
-  ['#f59e0b', '#d97706'], // amber
-  ['#ec4899', '#db2777'], // pink
-];
-
-const classes = {
-  button:
-    'inline-block bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-gray-600 px-6 py-3 rounded-lg font-medium shadow-sm',
-  link: 'text-primary-500',
-};
-
-function pickGradient(i: number) {
-  const gradient = gradients[i % gradients.length];
-  if (!gradient) {
-    throw new Error('No gradient found');
-  }
-  return gradient;
-}
-
-const IndexPage: FC = () => {
-  return (
-    <>
-      <FeatureWrapper>
-        <div className="container py-20 sm:py-24 lg:py-32">
-          <h1 className="max-w-screen-md mx-auto font-extrabold text-5xl sm:text-5xl lg:text-6xl text-center bg-gradient-to-r from-purple-700 to-fuchsia-400 dark:from-purple-700 dark:to-fuchsia-400 bg-clip-text text-transparent !leading-tight">
-            GraphQL Yoga
-          </h1>
-          <p className="max-w-screen-sm mx-auto mt-6 text-2xl text-gray-600 text-center dark:text-gray-400">
-            The fully-featured GraphQL Server with focus on easy setup, performance and great
-            developer experience.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Anchor className={classes.button} href="/docs">
-              Documentation
-            </Anchor>
-            <Anchor className={cn(classes.button, 'hidden lg:block')} href="/tutorial/basic">
-              Tutorial
-            </Anchor>
-            <Anchor
-              className={cn(classes.button, 'flex flex-row gap-2 items-center')}
-              href="https://github.com/dotansimha/graphql-yoga"
-            >
-              <FiGithub /> GitHub
-            </Anchor>
-          </div>
-        </div>
-      </FeatureWrapper>
-
-      <Feature
-        gradient={3}
-        image={subscriptionsImage}
-        title="Great Defaults"
-        description={
-          <div className="flex flex-col gap-y-12">
-            <div>
-              <p>practice Yoga while working with GraphQL Yoga</p>
-            </div>
-            <div className="flex flex-col gap-y-12">
-              <FeatureHighlights
-                textColor={gradients[3][0]}
-                highlights={[
-                  {
-                    link: '/docs/features/parsing-and-validation-caching',
-                    icon: <AiFillAppstore size={36} />,
-                    title: 'Parse and validate cache',
-                    description: 'Fast requests by caching intensive operations',
-                  },
-                  {
-                    link: '/docs/features/error-masking',
-                    icon: <MdError size={36} />,
-                    title: 'Error masking',
-                    description: 'Never leak sensitive information through errors',
-                  },
-                  {
-                    link: '/docs/features/health-check',
-                    icon: <GiHealthNormal size={36} />,
-                    title: 'Health checks',
-                    description:
-                      'Ping the server for liveliness check and/or supply a custom readiness check',
-                  },
-                  {
-                    link: '/docs/features/graphiql',
-                    icon: <GrGraphQl size={36} />,
-                    title: 'GraphiQL',
-                    description: 'In-browser IDE for writing, validating, and testing operations',
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        }
-      />
-
-      <Feature
-        flipped
-        gradient={4}
-        image={httpImage}
-        title="Super Extendable"
-        description={
-          <div className="flex flex-col gap-y-12">
-            <div>
-              <p>
-                because GraphQL Yoga is powered by{' '}
-                <Anchor href="https://the-guild.dev/graphql/envelop" className={classes.link}>
-                  Envelop
-                </Anchor>{' '}
-                you can use{' '}
-                <Anchor href="/docs/features/envelop-plugins" className={classes.link}>
-                  any plugin
-                </Anchor>
-              </p>
-            </div>
-            <div className="flex flex-col gap-y-12">
-              <FeatureHighlights
-                textColor={gradients[0][0]}
-                highlights={[
-                  {
-                    link: '/docs/features/apollo-federation',
-                    icon: <SiApollographql size={36} />,
-                    title: 'Apollo Federation',
-                    description: 'The best supergraph and subgraph for your GraphQL',
-                  },
-                  {
-                    link: '/docs/features/persisted-operations',
-                    icon: <BsFillSafeFill size={36} />,
-                    title: 'Persisted operations',
-                    description: 'Prevent execution of arbitrary GraphQL operations',
-                  },
-                  {
-                    link: '/docs/features/response-caching',
-                    icon: <MdCached size={36} />,
-                    title: 'Response caching',
-                    description: 'Reducing server load by caching operation results',
-                  },
-                  {
-                    link: 'https://the-guild.dev/graphql/envelop/plugins/use-rate-limiter',
-                    title: 'Rate limiting',
-                    icon: <BsFillStopwatchFill size={36} />,
-                    description: 'Prevent denial of service attacks with ease',
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        }
-      />
-
-      <Feature
-        gradient={1}
-        image={ecosystemImage}
-        title="Everything HTTP"
-        description={
-          <div className="flex flex-col gap-y-12">
-            <div>
-              <p>
-                following the{' '}
-                <Anchor href="https://graphql.github.io/graphql-over-http" className={classes.link}>
-                  GraphQL over HTTP specification
-                </Anchor>
-              </p>
-            </div>
-            <div className="flex flex-col gap-y-12">
-              <FeatureHighlights
-                textColor={gradients[1][0]}
-                highlights={[
-                  {
-                    icon: <BsCheckCircle size={36} />,
-                    title: 'Passes all audits',
-                    description: (
-                      <>
-                        Tested using the graphql-http library.{' '}
-                        <Anchor
-                          href="https://github.com/enisdenjo/graphql-http/blob/master/implementations/graphql-yoga/README.md"
-                          className={classes.link}
-                        >
-                          See the report
-                        </Anchor>{' '}
-                        for more info.
-                      </>
-                    ),
-                  },
-                  {
-                    icon: <TbPlugConnected size={36} />,
-                    title: 'Subscriptions',
-                    description: (
-                      <>
-                        Built-in GraphQL{' '}
-                        <Anchor href="/docs/features/subscriptions" className={classes.link}>
-                          Subscriptions over Server-Sent Events
-                        </Anchor>
-                        .
-                      </>
-                    ),
-                  },
-                  {
-                    icon: <FiUpload size={36} />,
-                    title: 'File uploads',
-                    description: (
-                      <>
-                        Through GraphQL out-of-the box leveraging the{' '}
-                        <Anchor
-                          href="https://github.com/jaydenseric/graphql-multipart-request-spec"
-                          className={classes.link}
-                        >
-                          GraphQL multipart request specification
-                        </Anchor>
-                        .
-                      </>
-                    ),
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        }
-      />
-
-      <Feature title="Runs Everywhere" description="supports many environments" gradient={2}>
-        <div
-          className="flex justify-center max-w-screen-lg p-12 mx-auto rounded-3xl"
-          style={{
-            backgroundImage: `linear-gradient(70deg, ${pickGradient(2)[0]}, ${pickGradient(2)[1]})`,
-          }}
-        >
-          <div className="flex flex-wrap">
-            {[
-              {
-                name: 'AWS Lambda',
-                href: '/docs/integrations/integration-with-aws-lambda',
-              },
-              {
-                name: 'Cloudflare Workers',
-                href: '/docs/integrations/integration-with-cloudflare-workers',
-              },
-              {
-                name: 'Deno',
-                href: '/docs/integrations/integration-with-deno',
-              },
-              {
-                name: 'Express',
-                href: '/docs/integrations/integration-with-express',
-              },
-              {
-                name: 'Fastify',
-                href: '/docs/integrations/integration-with-fastify',
-              },
-              { name: 'Koa', href: '/docs/integrations/integration-with-koa' },
-              {
-                name: 'NestJS',
-                href: '/docs/integrations/integration-with-nestjs',
-              },
-              {
-                name: 'Next.js',
-                href: '/docs/integrations/integration-with-nextjs',
-              },
-              {
-                name: 'SvelteKit',
-                href: '/docs/integrations/integration-with-sveltekit',
-              },
-              { name: 'Bun', href: '/docs/integrations/integration-with-bun' },
-              {
-                name: '& more...',
-                href: '/docs/integrations/z-other-environments',
-              },
-            ].map(env => (
-              <div className="p-2 sm:w-1/2 md:w-1/3 w-full" key={env.name}>
-                <Anchor href={env.href}>
-                  <div className="bg-amber-100 dark:bg-amber-800 rounded flex p-4 h-full items-center gap-2">
-                    <BsFillPlayFill
-                      className="w-6 h-6 flex-shrink-0 mr-4"
-                      style={{ fill: pickGradient(2)[0] }}
-                    />
-                    <span className="title-font font-medium text-black dark:text-white">
-                      {env.name}
-                    </span>
-                  </div>
-                </Anchor>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Feature>
-    </>
-  );
-};
-
-const FeatureWrapper: FC<{ children: ReactNode }> = ({ children }) => {
+function Hero(props: { children: ReactNode; className?: string }) {
   return (
     <div
       className={cn(
-        'w-full py-24',
-        'odd:bg-gray-50',
-        'odd:dark:bg-gray-900',
-        'even:bg-white',
-        'even:dark:bg-black',
+        'relative isolate flex max-w-[90rem] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-blue-400 px-4 py-6 sm:py-12 md:gap-8 lg:py-24',
+        props.className,
       )}
     >
-      {children}
+      <DecorationIsolation className="-z-10">
+        <YogaIcon className={cn(
+          "absolute right-[-180px] top-[calc(50%-180px)] size-[360px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] md:hidden xl:block",
+          'lg:left-[-250px] lg:top-1/2 lg:-translate-y-1/2 lg:size-[500px]'
+        )} />
+        <YogaIcon className="absolute right-[-150px] top-2 size-[672px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] max-md:hidden" />
+        <svg>
+          <defs>
+            <linearGradient id="codegen-hero-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="11.66%" stopColor="rgba(255, 255, 255, 0.10)" />
+              <stop offset="74.87%" stopColor="rgba(255, 255, 255, 0.30)" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </DecorationIsolation>
+      <Image priority src={yogaHeroBadge.src} alt="" width="96" height="96" />
+      {props.children}
     </div>
   );
-};
+}
 
-function Feature({
-  title,
-  description,
-  children,
-  image,
-  gradient,
-  flipped,
-}: {
-  children?: ReactNode;
-  title: string;
-  description: ReactNode;
-  highlights?: {
-    title: string;
-    description: ReactNode;
-    icon?: ReactNode;
-  }[];
-  image?: string;
-  gradient: number;
-  flipped?: boolean;
-}) {
-  const [start, end] = pickGradient(gradient);
-
+function HeroLinks(props: { children: ReactNode }) {
   return (
-    <FeatureWrapper>
-      <div className="container box-border px-6 mx-auto flex flex-col gap-y-24">
-        <div
-          className={cn(
-            'flex flex-col gap-24 md:gap-12 lg:gap-24 justify-center items-stretch',
-            flipped ? 'md:flex-row-reverse' : 'md:flex-row',
-          )}
-        >
-          <div
-            className={cn(
-              'flex flex-col gap-4 w-full md:w-3/5 lg:w-2/5 flex-shrink-0',
-              !image && 'items-center',
-            )}
-          >
-            <h2
-              className={cn(
-                'font-semibold text-5xl bg-clip-text text-transparent dark:text-transparent leading-normal',
-                !image && 'text-center',
-              )}
-              style={{
-                backgroundImage: `linear-gradient(-70deg, ${end}, ${start})`,
-              }}
-            >
-              {title}
-            </h2>
-            <div className="text-lg text-gray-600 dark:text-gray-400 leading-7">{description}</div>
-          </div>
-          {image && (
-            <div
-              className="rounded-3xl overflow-hidden p-8 flex-grow flex flex-col justify-center items-stretch relative"
-              style={{
-                backgroundImage: `linear-gradient(70deg, ${start}, ${end})`,
-              }}
-            >
-              <Image src={image} className="rounded-xl mx-auto" placeholder="empty" alt={title} />
-            </div>
-          )}
-        </div>
-        {children}
-      </div>
-    </FeatureWrapper>
+    <div className="relative z-10 flex justify-center gap-2 px-0.5 max-sm:flex-col sm:gap-4">
+      {props.children}
+    </div>
   );
 }
 
-function FeatureHighlights({
-  highlights,
-  textColor,
-}: {
-  textColor?: string;
-  highlights?: {
-    title: string;
-    description: ReactNode;
-    icon?: ReactNode;
-    link?: string;
-  }[];
-}) {
-  if (!Array.isArray(highlights)) {
-    return null;
-  }
-
+function HeroFeatures(props: { children: ReactNode }) {
   return (
-    <>
-      {highlights.map(({ title, description, icon, link }) => {
-        const Comp = link ? Anchor : 'div';
-        return (
-          <Comp
-            key={title}
-            className="flex flex-row md:flex-col lg:flex-row flex-1 gap-4"
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {...(link && ({ href: link } as any))}
-          >
-            {icon && (
-              <div className="flex-shrink-0" style={textColor ? { color: textColor } : {}}>
-                {icon}
-              </div>
-            )}
-            <div className="text-black dark:text-white">
-              <h3
-                className={cn('text-xl font-semibold', !icon && 'text-lg')}
-                style={textColor ? { color: textColor } : {}}
-              >
-                {title}
-              </h3>
-              <p className={cn('text-gray-600 dark:text-gray-400', !icon && 'text-sm')}>
-                {description}
-              </p>
-            </div>
-          </Comp>
-        );
-      })}
-    </>
+    <ul className="mx-auto flex list-none gap-x-6 gap-y-2 text-sm font-medium max-md:flex-col [&>li]:flex [&>li]:items-center [&>li]:gap-2">
+      {props.children}
+    </ul>
   );
 }
 
-export default IndexPage;
+function Page(props: { children: ReactNode; className?: string }) {
+  return <div className={cn('flex h-full flex-col', props.className)}>{props.children}</div>;
+}
+
+export default function IndexPage() {
+  return (
+    <Page className='mx-auto max-w-[90rem]'>
+      <Hero className="mx-4 max-sm:mt-2 md:mx-6">
+        <Heading as="h1" size="xl" className="mx-auto max-w-3xl text-balance text-center">
+          Yoga — High-performance GraphQL Server
+        </Heading>
+        <p className="mx-auto w-[512px] max-w-[80%] text-center leading-6 text-green-800">
+          Fully-featured GraphQL server designed for effortless setup and optimal developer experience.
+        </p>
+        <HeroFeatures>
+          <li>
+            <CheckIcon className="text-green-800" />
+            Fully open source
+          </li>
+          <li>
+            <CheckIcon className="text-green-800" />
+            No vendor lock
+          </li>
+          <li>
+            <CheckIcon className="text-green-800" />
+            Can be self-hosted!
+          </li>
+        </HeroFeatures>
+        <HeroLinks>
+          <CallToAction variant="primary" href="/docs">
+            Get started
+          </CallToAction>
+          <CallToAction variant="secondary-inverted" href="/changelog">
+            Changelog
+          </CallToAction>
+          <CallToAction
+            variant="tertiary"
+            href="https://github.com/dotansimha/graphql-yoga"
+          >
+            <GitHubIcon className="size-6" />
+            GitHub
+          </CallToAction>
+        </HeroLinks>
+      </Hero>
+
+      <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
+    </Page>
+  );
+}
