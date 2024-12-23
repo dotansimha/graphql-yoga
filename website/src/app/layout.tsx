@@ -69,6 +69,7 @@ const RootLayout: FC<{
         ],
       }}
       search={<VersionedSearch />}
+      lightOnlyPages={['/']}
     >
       {children}
     </GuildLayout>

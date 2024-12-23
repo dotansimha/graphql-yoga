@@ -12,10 +12,20 @@ import {
   YogaIcon,
 } from '@theguild/components';
 import FAQ from './faq.mdx';
+import { metadata as rootMetadata } from './layout';
 import yogaHeroBadge from './yoga-badge.svg';
 
 export const metadata = {
   title: 'Home',
+  alternates: {
+    // to remove leading slash
+    canonical: '.',
+  },
+  openGraph: {
+    ...rootMetadata.openGraph,
+    // to remove leading slash
+    url: '.',
+  },
 };
 
 function Hero(props: { children: ReactNode; className?: string }) {
