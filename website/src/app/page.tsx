@@ -1,15 +1,17 @@
 import { ReactNode } from 'react';
+import Image from 'next/image';
 import {
   CallToAction,
   CheckIcon,
   cn,
   DecorationIsolation,
+  FrequentlyAskedQuestions,
+  GetYourAPIGameRightSection,
   GitHubIcon,
   Heading,
-  GetYourAPIGameRightSection,
-  YogaIcon
+  YogaIcon,
 } from '@theguild/components';
-import Image from 'next/image'
+import FAQ from './faq.mdx';
 import yogaHeroBadge from './yoga-badge.svg';
 
 export const metadata = {
@@ -25,10 +27,12 @@ function Hero(props: { children: ReactNode; className?: string }) {
       )}
     >
       <DecorationIsolation className="-z-10">
-        <YogaIcon className={cn(
-          "absolute right-[-180px] top-[calc(50%-180px)] size-[360px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] md:hidden xl:block",
-          'lg:left-[-250px] lg:top-1/2 lg:-translate-y-1/2 lg:size-[500px]'
-        )} />
+        <YogaIcon
+          className={cn(
+            'absolute right-[-180px] top-[calc(50%-180px)] size-[360px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] md:hidden xl:block',
+            'lg:left-[-250px] lg:top-1/2 lg:-translate-y-1/2 lg:size-[500px]',
+          )}
+        />
         <YogaIcon className="absolute right-[-150px] top-2 size-[672px] fill-[url(#codegen-hero-gradient)] stroke-white/10 stroke-[0.1px] max-md:hidden" />
         <svg>
           <defs>
@@ -67,13 +71,14 @@ function Page(props: { children: ReactNode; className?: string }) {
 
 export default function IndexPage() {
   return (
-    <Page className='mx-auto max-w-[90rem]'>
+    <Page className="mx-auto max-w-[90rem]">
       <Hero className="mx-4 max-sm:mt-2 md:mx-6">
         <Heading as="h1" size="xl" className="mx-auto max-w-3xl text-balance text-center">
           Yoga — High-performance GraphQL Server
         </Heading>
         <p className="mx-auto w-[512px] max-w-[80%] text-center leading-6 text-green-800">
-          Fully-featured GraphQL server designed for effortless setup and optimal developer experience.
+          Fully-featured GraphQL server designed for effortless setup and optimal developer
+          experience.
         </p>
         <HeroFeatures>
           <li>
@@ -96,16 +101,16 @@ export default function IndexPage() {
           <CallToAction variant="secondary-inverted" href="/changelog">
             Changelog
           </CallToAction>
-          <CallToAction
-            variant="tertiary"
-            href="https://github.com/dotansimha/graphql-yoga"
-          >
+          <CallToAction variant="tertiary" href="https://github.com/dotansimha/graphql-yoga">
             <GitHubIcon className="size-6" />
             GitHub
           </CallToAction>
         </HeroLinks>
       </Hero>
 
+      <FrequentlyAskedQuestions faqPages={['/']}>
+        <FAQ />
+      </FrequentlyAskedQuestions>
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
   );
