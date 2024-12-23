@@ -1,5 +1,20 @@
 # @graphql-yoga/apollo-managed-federation
 
+## 0.8.2
+
+### Patch Changes
+
+- [#3567](https://github.com/dotansimha/graphql-yoga/pull/3567)
+  [`1df4912`](https://github.com/dotansimha/graphql-yoga/commit/1df4912693fad5efaf2fe99bf0433c9abc829004)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Removed dependency
+    [`@whatwg-node/disposablestack@^0.0.5` ↗︎](https://www.npmjs.com/package/@whatwg-node/disposablestack/v/0.0.5)
+    (from `dependencies`)
+- Updated dependencies
+  [[`8fee214`](https://github.com/dotansimha/graphql-yoga/commit/8fee214eac4be3e9e18935502d32de69f0a1484e),
+  [`1df4912`](https://github.com/dotansimha/graphql-yoga/commit/1df4912693fad5efaf2fe99bf0433c9abc829004)]:
+  - graphql-yoga@5.10.7
+
 ## 0.8.1
 
 ### Patch Changes
