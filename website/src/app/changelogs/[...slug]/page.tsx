@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import fg from 'fast-glob';
 import { visitParents } from 'unist-util-visit-parents';
 import { NextPageProps } from '@theguild/components';
@@ -75,6 +75,7 @@ const remarkRemoveUpdatedDependency = () => (ast: any) => {
   });
 };
 
+// eslint-disable-next-line import/no-default-export
 export default async function Page(props: NextPageProps<'...slug'>) {
   const params = await props.params;
   const filePath = `../packages/${params.slug.join('/')}/CHANGELOG.md`;

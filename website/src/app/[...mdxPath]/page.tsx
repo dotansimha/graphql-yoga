@@ -1,8 +1,6 @@
-/* eslint-disable react-hooks/rules-of-hooks -- false positive, useMDXComponents are not react hooks */
-
 import { NextPageProps } from '@theguild/components';
 import { generateStaticParamsFor, importPage } from '@theguild/components/pages';
-import { useMDXComponents } from '../../mdx-components';
+import { useMDXComponents } from '../../mdx-components.js';
 
 export const generateStaticParams = generateStaticParamsFor('mdxPath');
 
@@ -14,6 +12,7 @@ export async function generateMetadata(props: NextPageProps<'...mdxPath'>) {
 
 const Wrapper = useMDXComponents().wrapper;
 
+// eslint-disable-next-line import/no-default-export
 export default async function Page(props: NextPageProps<'...mdxPath'>) {
   const params = await props.params;
   const result = await importPage(params.mdxPath);

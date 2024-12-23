@@ -91,6 +91,7 @@ const { wrapper: Wrapper, ...components } = useMDXComponents({
   Tabs,
 });
 
+// eslint-disable-next-line import/no-default-export
 export default async function Page(props: NextPageProps<'...slug'>) {
   const params = await props.params;
   const route = (params.slug || []).join('/');
