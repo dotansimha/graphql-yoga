@@ -23,20 +23,20 @@ So resources will be disposed of when the block is exited.
 ```ts {2,7}
 console.log('Yoga is starting')
 {
-    await using yoga = createYoga({
-        schema: createSchema({
-            typeDefs: /* GraphQL */ `
-                type Query {
-                    hello: String
-                }
-            `,
-            resolvers: {
-                Query: {
-                    hello: () => 'world'
-                }
-            }
-        })
-    });
+  await using yoga = createYoga({
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          hello: String
+        }
+      `,
+      resolvers: {
+        Query: {
+          hello: () => 'world'
+        }
+      }
+    })
+  })
 }
 console.log('Yoga is disposed')
 ```
