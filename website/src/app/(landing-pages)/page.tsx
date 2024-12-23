@@ -10,9 +10,11 @@ import {
   GitHubIcon,
   Heading,
   YogaIcon,
+  ToolsAndLibrariesCards,
+  InfoCard,
 } from '@theguild/components';
 import FAQ from './faq.mdx';
-import { metadata as rootMetadata } from './layout';
+import { metadata as rootMetadata } from '../layout';
 import yogaHeroBadge from './yoga-badge.svg';
 
 export const metadata = {
@@ -118,6 +120,9 @@ export default function IndexPage() {
         </HeroLinks>
       </Hero>
 
+      <EnterpriseFocusedCards/>
+
+      <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
       <FrequentlyAskedQuestions faqPages={['/']}>
         <FAQ />
       </FrequentlyAskedQuestions>
@@ -125,3 +130,45 @@ export default function IndexPage() {
     </Page>
   );
 }
+
+import arrowUpBade from './arrow-up-badge.svg'
+import checkBadge from './check-badge.svg'
+import puzzleBadge from './puzzle-badge.svg'
+
+function EnterpriseFocusedCards({ className }: { className?: string }) {
+  return (
+    <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-[120px]', className)}>
+      <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center">
+        Everything HTTP
+      </Heading>
+      <p className='text-green-800 text-center mt-4'>Complies with the latest GraphQL over HTTP specifications for full compatibility.</p>
+      <ul className="mt-6 flex flex-wrap justify-center gap-2 md:mt-16 md:gap-6">
+        <InfoCard
+          as="li"
+          heading="Fully audited"
+          icon={<Image src={checkBadge} alt='' />}
+          className="flex-1 rounded-2xl md:rounded-3xl"
+        >
+          Meets rigorous standards as confirmed by comprehensive graphql-http library audits.
+        </InfoCard>
+        <InfoCard
+          as="li"
+          heading="Subscriptions"
+          icon={<Image src={puzzleBadge} alt='' />}
+          className="flex-1 basis-full rounded-2xl md:basis-0 md:rounded-3xl"
+        >
+          Supports real-time communications with built-in GraphQL Subscriptions over Server-Sent Events.
+        </InfoCard>
+        <InfoCard
+          as="li"
+          heading="File Uploads"
+          icon={<Image src={arrowUpBade} alt='' />}
+          className="flex-1 basis-full rounded-2xl md:rounded-3xl lg:basis-0"
+        >
+          Facilitates file uploads directly through GraphQL using the multipart request specification.
+        </InfoCard>
+      </ul>
+    </section>
+  );
+}
+
