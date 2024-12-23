@@ -10,7 +10,7 @@ import {
   normalizePageMap,
 } from '@theguild/components/server';
 import { defaultNextraOptions } from '@theguild/components/server/next.config';
-import { useMDXComponents } from '../../../mdx-components.js';
+import { useMDXComponents } from '../../../mdx-components';
 
 async function getPackages() {
   const result = await fg(['../packages/**/package.json'], {
@@ -76,7 +76,6 @@ const remarkRemoveUpdatedDependency = () => (ast: any) => {
   });
 };
 
-// eslint-disable-next-line import/no-default-export
 export default async function Page(props: NextPageProps<'...slug'>) {
   const params = await props.params;
   const filePath = `../packages/${params.slug.join('/')}/CHANGELOG.md`;

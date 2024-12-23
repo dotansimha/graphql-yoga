@@ -9,7 +9,7 @@ import {
   normalizePageMap,
 } from '@theguild/components/server';
 import json from '../../../../remote-files/v3.json';
-import { useMDXComponents } from '../../../mdx-components.js';
+import { useMDXComponents } from '../../../mdx-components';
 import CodegenCallout from '../../codegen-callout.mdx';
 import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
 
@@ -89,7 +89,6 @@ const { wrapper: Wrapper, ...components } = useMDXComponents({
   Tabs,
 });
 
-// eslint-disable-next-line import/no-default-export
 export default async function Page(props: NextPageProps<'...slug'>) {
   const params = await props.params;
   const route = (params.slug || []).join('/');
