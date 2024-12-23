@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks -- false positive, useMDXComponents are not react hooks */
-
 import fs from 'fs/promises';
 import fg from 'fast-glob';
 import { visitParents } from 'unist-util-visit-parents';
@@ -38,7 +36,7 @@ const { pageMap: _pageMap } = convertToPageMap({
   basePath: 'changelogs',
 });
 
-// @ts-expect-error
+// @ts-expect-error -- ignore
 const changelogsPages = _pageMap[0].children;
 
 const changelogsPageMap = mergeMetaWithPageMap(changelogsPages, {

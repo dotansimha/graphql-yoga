@@ -2,10 +2,10 @@ import { FC, ReactNode } from 'react';
 import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/components';
 import { getDefaultMetadata, getPageMap, GuildLayout } from '@theguild/components/server';
 import '@theguild/components/style.css';
-import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page';
-import { pageMap as v2PageMap } from './v2/[[...slug]]/page';
-import { pageMap as v3PageMap } from './v3/[[...slug]]/page';
-import { pageMap as v4PageMap } from './v4/[[...slug]]/page';
+import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page.js';
+import { pageMap as v2PageMap } from './v2/[[...slug]]/page.js';
+import { pageMap as v3PageMap } from './v3/[[...slug]]/page.js';
+import { pageMap as v4PageMap } from './v4/[[...slug]]/page.js';
 import { VersionedSearch } from './versioned-search';
 
 const description = PRODUCTS.YOGA.title;

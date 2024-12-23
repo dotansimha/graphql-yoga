@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 // @ts-expect-error I have no idea for the reason of this error. I am just the guy that has to fix the broken eslint setup.
 import { buildDynamicMDX, buildDynamicMeta } from 'nextra/remote';
 // @ts-expect-error Comes from components

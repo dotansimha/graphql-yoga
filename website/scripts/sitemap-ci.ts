@@ -30,6 +30,7 @@ async function main() {
   }
 
   if (redirectsPointingToNonExistingStuff.length) {
+    // eslint-disable-next-line no-console
     console.error(
       `The following routes do not point to a route:\n\n` +
         redirectsPointingToNonExistingStuff.map(

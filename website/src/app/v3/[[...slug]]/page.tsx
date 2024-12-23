@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks -- false positive, useMDXComponents are not react hooks */
 import { notFound } from 'next/navigation';
 import { Callout, LegacyPackageCmd, NextPageProps, Tabs } from '@theguild/components';
 import { defaultNextraOptions } from '@theguild/components/next.config';
@@ -10,7 +9,7 @@ import {
   normalizePageMap,
 } from '@theguild/components/server';
 import json from '../../../../remote-files/v3.json';
-import { useMDXComponents } from '../../../mdx-components';
+import { useMDXComponents } from '../../../mdx-components.js';
 import CodegenCallout from '../../codegen-callout.mdx';
 import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
 
