@@ -647,9 +647,8 @@ describe('jwt plugin', () => {
 
     useServer(
       {
-         
         execute: (args: any) => args.execute(args),
-         
+
         subscribe: (args: any) => args.subscribe(args),
         onSubscribe: async (ctx, msg) => {
           const { schema, execute, subscribe, contextFactory, parse, validate } =
