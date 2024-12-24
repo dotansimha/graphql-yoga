@@ -3,7 +3,7 @@
 ---
 
 - Do not throw when \`request\` is not available in the context, it can be a WebSockets connection
-- Export helper `extractFromConnectionParams` to get the token from WebSocket `connectionParams` when GraphQL WS is used
+- Export helper `extractFromConnectionParams` to get the token from WebSocket `connectionParams` when GraphQL WS is used like [here](https://the-guild.dev/graphql/yoga-server/docs/features/subscriptions#graphql-over-websocket-protocol-via-graphql-ws)
 
 ```ts
 import { extractFromConnectionParams, extractFromHeader, useJWT } from '@graphql-yoga/plugin-jwt'
