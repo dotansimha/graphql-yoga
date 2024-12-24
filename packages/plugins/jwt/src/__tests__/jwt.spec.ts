@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHmac } from 'node:crypto';
-import { createServer } from 'node:http';
+import { createServer, Server } from 'node:http';
+import { AddressInfo } from 'node:net';
+import { createClient } from 'graphql-ws';
+import { useServer } from 'graphql-ws/lib/use/ws';
 import { createSchema, createYoga, Plugin } from 'graphql-yoga';
 import jwt, { Algorithm, SignOptions } from 'jsonwebtoken';
+import WebSocket from 'ws';
 import { useCookies } from '@whatwg-node/server-plugin-cookies';
 import { JwtPluginOptions } from '../config';
 import { useJWT } from '../plugin';
 import {
   createInlineSigningKeyProvider,
   createRemoteJwksSigningKeyProvider,
+  extractFromConnectionParams,
   extractFromCookie,
   extractFromHeader,
 } from '../utils';
@@ -43,6 +48,14 @@ I3OrgFkoqk03cpX4AL2GYC2ejytAqboL6pFTfmTgg2UtvKIeaTyF
 `;
 
 describe('jwt plugin', () => {
+  let server: Server | undefined;
+  afterEach(async () => {
+    if (server?.listening) {
+      await new Promise<void>((resolve, reject) => {
+        server?.close(err => (err ? reject(err) : resolve()));
+      });
+    }
+  });
   test('incoming http request is reject when auth token is not present', async () => {
     const test = createTestServer({
       signingKeyProviders: [createInlineSigningKeyProvider('topsecret')],
@@ -603,6 +616,103 @@ describe('jwt plugin', () => {
     // no token is passed
     response = await test.queryWithoutAuth();
     expect(response.status).toBe(401);
+  });
+
+  test('handles GraphQL WS requests', async () => {
+    expect.assertions(2);
+    const secret = 'topsecret';
+    const test = createTestServer({
+      signingKeyProviders: [createInlineSigningKeyProvider(secret)],
+      tokenLookupLocations: [
+        extractFromHeader({
+          name: 'Authorization',
+          prefix: 'Bearer',
+        }),
+        extractFromConnectionParams({
+          name: 'token',
+        }),
+      ],
+    });
+    const token = buildJWT({ sub: '123' }, { key: secret }, '');
+
+    // token in header is valid
+    const response = await test.queryWithAuth(`Bearer ${token}`);
+    expect(response.status).toBe(200);
+
+    server = createServer(test.yoga);
+    const wss = new WebSocket.Server({
+      server,
+      path: test.yoga.graphqlEndpoint,
+    });
+
+    useServer(
+      {
+        execute: (args: any) => args.execute(args),
+
+        subscribe: (args: any) => args.subscribe(args),
+        onSubscribe: async (ctx, msg) => {
+          const { schema, execute, subscribe, contextFactory, parse, validate } =
+            test.yoga.getEnveloped({
+              ...ctx,
+              req: ctx.extra.request,
+              socket: ctx.extra.socket,
+              params: msg.payload,
+            });
+
+          const args = {
+            schema,
+            operationName: msg.payload.operationName,
+            document: parse(msg.payload.query),
+            variableValues: msg.payload.variables,
+            contextValue: await contextFactory(),
+            execute,
+            subscribe,
+          };
+
+          const errors = validate(args.schema, args.document);
+          if (errors.length) return errors;
+          return args;
+        },
+      },
+      wss,
+    );
+
+    await new Promise<void>((resolve, reject) => {
+      server?.once('error', err => reject(err));
+      server?.listen(0, () => resolve());
+    });
+
+    const url = `ws://localhost:${(server.address() as AddressInfo).port}${test.yoga.graphqlEndpoint}`;
+
+    const client = createClient({
+      webSocketImpl: WebSocket,
+      url,
+      retryAttempts: 0,
+      connectionParams: {
+        token,
+      },
+    });
+
+    const iterator = client.iterate({
+      query: '{ ctx }',
+    });
+    for await (const result of iterator) {
+      expect(result).toMatchObject({
+        data: {
+          ctx: {
+            jwt: {
+              payload: {
+                sub: '123',
+              },
+              token: {
+                value: token,
+              },
+            },
+          },
+        },
+      });
+    }
+    await client.dispose();
   });
 });
 
