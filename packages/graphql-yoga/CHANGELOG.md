@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 5.10.8
+
+### Patch Changes
+
+- [#3588](https://github.com/dotansimha/graphql-yoga/pull/3588)
+  [`ed344ea`](https://github.com/dotansimha/graphql-yoga/commit/ed344ea7fed85163eba0c636b5b7f64c482ce150)
+  Thanks [@ardatan](https://github.com/ardatan)! - Mark `createLRUCache` utility as deprecated, and
+  export it as `_createLRUCache` marking it as an internal utility
+
 ## 5.10.7
 
 ### Patch Changes
