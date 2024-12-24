@@ -170,25 +170,19 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
         return;
       }
 
-      // Get the payload and inject it into the GraphQL context.
-      let result: PluginPayload | undefined;
-      if (context.request) {
-        result = payloadByRequest.get(context.request);
-      }
-      result ||= payloadByContext.get(context);
-      if (!result) {
-        // If it is not Yoga request(GraphQL WS connection), we need to lookup and validate the token still
-        await lookupAndValidate({
-          request: context.request,
-          get url() {
-            return new fetchAPI.URL(context.request.url);
-          },
-          serverContext: context,
-        });
-        result = context.request
-          ? payloadByRequest.get(context.request)
-          : payloadByContext.get(context);
-      }
+      // Ensure the request has been validated before extending the context.
+      await lookupAndValidate({
+        request: context.request,
+        get url() {
+          return new fetchAPI.URL(context.request.url);
+        },
+        serverContext: context,
+      });
+
+      // Then check the result
+      const result = context.request
+        ? payloadByRequest.get(context.request)
+        : payloadByContext.get(context);
 
       if (result && normalizedOptions.extendContextFieldName) {
         extendContext({
