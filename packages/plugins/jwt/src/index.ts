@@ -2,6 +2,7 @@ export type { JwtPluginOptions, ExtractTokenFunction, GetSigningKeyFunction } fr
 export {
   extractFromCookie,
   extractFromHeader,
+  extractFromConnectionParams,
   createInlineSigningKeyProvider,
   createRemoteJwksSigningKeyProvider,
 } from './utils.js';

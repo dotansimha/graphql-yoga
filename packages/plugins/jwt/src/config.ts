@@ -4,11 +4,15 @@ import { extractFromHeader } from './utils.js';
 
 type AtleastOneItem<T> = [T, ...T[]];
 
-export type ExtractTokenFunction = (params: {
+export type ExtractTokenFunctionParams = {
   request: Request;
-  serverContext: object | undefined;
+  serverContext: Record<string, unknown>;
   url: URL;
-}) => PromiseOrValue<undefined | { token: string; prefix?: string }>;
+};
+
+export type ExtractTokenFunction = (
+  params: ExtractTokenFunctionParams,
+) => PromiseOrValue<undefined | { token: string; prefix?: string }>;
 
 export type GetSigningKeyFunction = (kid?: string) => Promise<string> | string;
 
