@@ -37,7 +37,7 @@ export function buildApp() {
   });
 
   app.use(async ctx => {
-    const response = await yoga.handleNodeRequestAndResponse(ctx.req, ctx.res, ctx);
+    const response = await yoga.handleNodeRequestAndResponse(ctx.request, ctx.res, ctx);
 
     // Set status code
     ctx.status = response.status;
