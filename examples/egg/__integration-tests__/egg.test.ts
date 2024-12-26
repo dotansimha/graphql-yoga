@@ -1,13 +1,21 @@
+import { execSync } from 'node:child_process';
 import { join } from 'path';
 import { mock } from 'egg-mock/bootstrap';
 
 describe('Egg', () => {
-  const app = mock.app({
-    baseDir: join(__dirname, '..'),
-    clean: true,
-    cache: false,
+  const baseDir = join(__dirname, '..');
+  let app: ReturnType<typeof mock.app>;
+  beforeAll(() => {
+    execSync('tsc', {
+      cwd: baseDir,
+    });
+    app = mock.app({
+      baseDir,
+      clean: true,
+      cache: false,
+    });
+    return app.ready();
   });
-  beforeAll(() => app.ready());
   afterAll(() => app.close());
   it('should show GraphiQL', async () => {
     const response = await app.httpRequest().get('/graphql').set('Accept', 'text/html');
