@@ -25,9 +25,6 @@ jobs:
         with:
           node-version-file: '.node-version'
 
-      - name: Setup Bun Runtime
-        uses: antongolub/action-setup-bun@v1
-
       - name: Setup Deno Runtime
         uses: denoland/setup-deno@v1
         with:
