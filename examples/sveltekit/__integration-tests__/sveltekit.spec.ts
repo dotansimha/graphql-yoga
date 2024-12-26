@@ -19,12 +19,6 @@ const timings = {
 };
 
 describe('SvelteKit integration', () => {
-	if (process.env.LEAKS_TEST) {
-		it('dummy', () => {
-			return;
-		});
-		return;
-	}
 	beforeAll(async () => {
 		const tslibDirPath = join(__dirname, '../node_modules/tslib');
 		const tslibFilePath = join(tslibDirPath, 'tslib.js');
