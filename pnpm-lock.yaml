@@ -937,7 +937,7 @@ importers:
         version: 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@10.4.15)(@nestjs/platform-express@10.4.15)(@nestjs/websockets@10.4.15)(encoding@0.1.13)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/graphql':
         specifier: ^12.0.0
-        version: 12.2.2(@apollo/subgraph@2.9.3(graphql@16.10.0))(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)(ts-morph@24.0.0)
+        version: 12.2.2(@apollo/subgraph@2.9.3(graphql@16.10.0))(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)(ts-morph@25.0.0)
       '@nestjs/microservices':
         specifier: ^10.0.0
         version: 10.4.15(@grpc/grpc-js@1.12.5)(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(@nestjs/websockets@10.4.15)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.3.2)(ioredis@5.4.2)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.28.2)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -987,8 +987,8 @@ importers:
         specifier: ^7.8.0
         version: 7.8.1
       ts-morph:
-        specifier: ^24.0.0
-        version: 24.0.0
+        specifier: ^25.0.0
+        version: 25.0.0
       typescript:
         specifier: ^5.0.0
         version: 5.7.2
@@ -7553,6 +7553,9 @@ packages:
 
   '@ts-morph/common@0.25.0':
     resolution: {integrity: sha512-kMnZz+vGGHi4GoHnLmMhGNjm44kGtKUXGnOvrKmMwAuvNjM/PgKVGfUnL7IDvK7Jb2QQ82jq3Zmp04Gy+r3Dkg==}
+
+  '@ts-morph/common@0.26.0':
+    resolution: {integrity: sha512-/RmKAtctStXqM5nECMQ46duT74Hoig/DBzhWXGHcodlDNrgRbsbwwHqSKFNbca6z9Xt/CUWMeXOsC9QEN1+rqw==}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -16455,6 +16458,9 @@ packages:
   ts-morph@24.0.0:
     resolution: {integrity: sha512-2OAOg/Ob5yx9Et7ZX4CvTCc0UFoZHwLEJ+dpDPSUi5TgwwlTlX47w+iFRrEwzUZwYACjq83cgjS/Da50Ga37uw==}
 
+  ts-morph@25.0.0:
+    resolution: {integrity: sha512-ERPTUVO5qF8cEGJgAejGOsCVlbk8d0SDyiJsucKQT5XgqoZslv0Qml+gnui6Yy6o+uQqw5SestyW2HvlVtT/Sg==}
+
   ts-node-dev@2.0.0:
     resolution: {integrity: sha512-ywMrhCfH6M75yftYvrvNarLEY+SUXtUvU8/0Z6llrHQVBx12GiFk5sStF8UdfE/yfzk9IAq7O5EEbTQsxlBI8w==}
     engines: {node: '>=0.8.0'}
@@ -21803,6 +21809,35 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@nestjs/graphql@12.2.2(@apollo/subgraph@2.9.3(graphql@16.10.0))(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)(ts-morph@25.0.0)':
+    dependencies:
+      '@graphql-tools/merge': 9.0.11(graphql@16.10.0)
+      '@graphql-tools/schema': 10.0.10(graphql@16.10.0)
+      '@graphql-tools/utils': 10.6.1(graphql@16.10.0)
+      '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@10.4.15)(@nestjs/platform-express@10.4.15)(@nestjs/websockets@10.4.15)(encoding@0.1.13)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/mapped-types': 2.0.6(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+      chokidar: 4.0.1
+      fast-glob: 3.3.2
+      graphql: 16.10.0
+      graphql-tag: 2.12.6(graphql@16.10.0)
+      graphql-ws: 5.16.0(graphql@16.10.0)
+      lodash: 4.17.21
+      normalize-path: 3.0.0
+      reflect-metadata: 0.2.2
+      subscriptions-transport-ws: 0.11.0(graphql@16.10.0)
+      tslib: 2.8.1
+      uuid: 11.0.3
+      ws: 8.18.0
+    optionalDependencies:
+      '@apollo/subgraph': 2.9.3(graphql@16.10.0)
+      class-transformer: 0.5.1
+      class-validator: 0.14.1
+      ts-morph: 25.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@nestjs/mapped-types@2.0.6(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)':
     dependencies:
       '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -23876,6 +23911,13 @@ snapshots:
       minimatch: 9.0.5
       path-browserify: 1.0.1
       tinyglobby: 0.2.10
+    optional: true
+
+  '@ts-morph/common@0.26.0':
+    dependencies:
+      fast-glob: 3.3.2
+      minimatch: 9.0.5
+      path-browserify: 1.0.1
 
   '@tsconfig/node10@1.0.11': {}
 
@@ -27623,7 +27665,7 @@ snapshots:
       - bluebird
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.18.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.2))(eslint@9.17.0(jiti@2.4.2)))(eslint@9.17.0(jiti@2.4.2)))(eslint@9.17.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.18.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.17.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -27652,7 +27694,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.17.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.18.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.2))(eslint@9.17.0(jiti@2.4.2)))(eslint@9.17.0(jiti@2.4.2)))(eslint@9.17.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.18.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.17.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -35137,6 +35179,7 @@ snapshots:
     dependencies:
       fdir: 6.4.2(picomatch@4.0.2)
       picomatch: 4.0.2
+    optional: true
 
   title-case@3.0.3:
     dependencies:
@@ -35252,6 +35295,12 @@ snapshots:
   ts-morph@24.0.0:
     dependencies:
       '@ts-morph/common': 0.25.0
+      code-block-writer: 13.0.3
+    optional: true
+
+  ts-morph@25.0.0:
+    dependencies:
+      '@ts-morph/common': 0.26.0
       code-block-writer: 13.0.3
 
   ts-node-dev@2.0.0(@swc/core@1.10.4(@swc/helpers@0.5.15))(@types/node@22.10.2)(typescript@5.7.2):
