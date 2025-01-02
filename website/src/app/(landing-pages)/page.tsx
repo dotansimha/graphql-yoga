@@ -18,14 +18,15 @@ import { metadata as rootMetadata } from '../layout';
 import FAQ from './faq.mdx';
 import { ReachZenQuickerWithYoga } from './reach-zen-quicker-with-yoga';
 import { ListItemAnchor, RunAnywhereSection } from './runs-anywhere';
-import arrowUpBade from './arrow-up-badge.svg';
-import checkBadge from './check-badge.svg';
-import errorWarningBadge from './error-warning-badge.svg';
-import graphqlBadge from './graphql-badge.svg';
+import arrowUpBade from './icons/arrow-up-badge.svg';
+import checkBadge from './icons/check-badge.svg';
+import errorWarningBadge from './icons/error-warning-badge.svg';
+import graphqlBadge from './icons/graphql-badge.svg';
 import manInBlackClothingPracticingYoga from './man-in-black-clothing-practicing-yoga-minimalistic.png';
-import pulseLineBadge from './pulse-line-badge.svg';
-import puzzleBadge from './puzzle-badge.svg';
-import yogaHeroBadge from './yoga-badge.svg';
+import pulseLineBadge from './icons/pulse-line-badge.svg';
+import puzzleBadge from './icons/puzzle-badge.svg';
+import yogaHeroBadge from './icons/yoga-badge.svg';
+import {TrulyExtendableSection} from './truly-extendable'
 
 export const metadata = {
   title: 'Home',
@@ -102,7 +103,7 @@ export default function IndexPage() {
       <YogaIcon
         className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
         stroke="white"
-        stroke-width="0.2"
+        strokeWidth="0.2"
         fill="none"
       />
     </>
@@ -187,12 +188,8 @@ export default function IndexPage() {
         </div>
         <div className="basis-5/12 shrink-0 relative max-lg:hidden">{yogaMan}</div>
       </section>
-      <br />
-      <div className="bg-red-500 shrink-0">
-        TODO:
-        <br />
-        Truly extendable
-      </div>
+
+      <TrulyExtendableSection className='mt-24' />
 
       <EnterpriseFocusedCards />
 
