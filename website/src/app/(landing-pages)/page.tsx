@@ -5,16 +5,26 @@ import {
   CheckIcon,
   cn,
   DecorationIsolation,
+  ExploreMainProductCards,
   FrequentlyAskedQuestions,
   GetYourAPIGameRightSection,
   GitHubIcon,
   Heading,
-  YogaIcon,
-  ToolsAndLibrariesCards,
   InfoCard,
+  ToolsAndLibrariesCards,
+  YogaIcon,
 } from '@theguild/components';
-import FAQ from './faq.mdx';
 import { metadata as rootMetadata } from '../layout';
+import FAQ from './faq.mdx';
+import { ReachZenQuickerWithYoga } from './reach-zen-quicker-with-yoga';
+import { ListItemAnchor, RunAnywhereSection } from './runs-anywhere';
+import arrowUpBade from './arrow-up-badge.svg';
+import checkBadge from './check-badge.svg';
+import errorWarningBadge from './error-warning-badge.svg';
+import graphqlBadge from './graphql-badge.svg';
+import manInBlackClothingPracticingYoga from './man-in-black-clothing-practicing-yoga-minimalistic.png';
+import pulseLineBadge from './pulse-line-badge.svg';
+import puzzleBadge from './puzzle-badge.svg';
 import yogaHeroBadge from './yoga-badge.svg';
 
 export const metadata = {
@@ -120,7 +130,115 @@ export default function IndexPage() {
         </HeroLinks>
       </Hero>
 
-      <EnterpriseFocusedCards/>
+      <ExploreMainProductCards />
+
+      <section className="flex gap-6 lg:gap-24 px-4 xl:px-[120px]">
+        <div className="grow">
+          <Heading as="h2" size="md">
+            Practice Yoga while doing server-work
+          </Heading>
+          <p className="text-green-800 mt-4">
+            Yoga ensures optimal configuration out-of-the-box, enhancing performance and developer
+            workflow.
+          </p>
+          <div className="flex my-12 gap-8">
+            <InfoCard
+              heading="Error masking"
+              icon={<Image src={errorWarningBadge} alt="" />}
+              className="flex-1 md:p-0 bg-transparent"
+            >
+              Enhance security by masking errors to prevent sensitive data leaks.
+            </InfoCard>
+            <InfoCard
+              heading="Health checks"
+              icon={<Image src={pulseLineBadge} alt="" />}
+              className="flex-1 md:p-0 bg-transparent"
+            >
+              Built-in health checks to ensure server vitality and readiness.
+            </InfoCard>
+            <InfoCard
+              heading="GraphiQL Integration"
+              icon={<Image src={graphqlBadge} alt="" />}
+              className="flex-1 md:p-0 bg-transparent"
+            >
+              In-browser IDE for seamless writing, validation, and testing of GraphQL operations.
+            </InfoCard>
+          </div>
+          <CallToAction variant="primary" href="/docs">
+            Learn more
+          </CallToAction>
+        </div>
+        <div className="basis-5/12 shrink-0 relative">
+          <Image
+            src={manInBlackClothingPracticingYoga}
+            alt="Man in black clothing practicing yoga"
+            className="rounded-3xl h-full object-cover"
+          />
+          <YogaIcon
+            className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
+            stroke="white"
+            stroke-width="0.2"
+            fill="none"
+          />
+        </div>
+      </section>
+      <br />
+      <div className="bg-red-500 shrink-0">
+        TODO:
+        <br />
+        Truly extendable
+      </div>
+
+      <EnterpriseFocusedCards />
+
+      <RunAnywhereSection className="mx-4 md:mx-6">
+        {[
+          {
+            name: 'AWS Lambda',
+            href: '/docs/integrations/integration-with-aws-lambda',
+          },
+          {
+            name: 'Cloudflare Workers',
+            href: '/docs/integrations/integration-with-cloudflare-workers',
+          },
+          {
+            name: 'Deno',
+            href: '/docs/integrations/integration-with-deno',
+          },
+          {
+            name: 'Express',
+            href: '/docs/integrations/integration-with-express',
+          },
+          {
+            name: 'Fastify',
+            href: '/docs/integrations/integration-with-fastify',
+          },
+          { name: 'Koa', href: '/docs/integrations/integration-with-koa' },
+          {
+            name: 'NestJS',
+            href: '/docs/integrations/integration-with-nestjs',
+          },
+          {
+            name: 'Next.js',
+            href: '/docs/integrations/integration-with-nextjs',
+          },
+          {
+            name: 'SvelteKit',
+            href: '/docs/integrations/integration-with-sveltekit',
+          },
+          { name: 'Bun', href: '/docs/integrations/integration-with-bun' },
+          {
+            name: '& more...',
+            href: '/docs/integrations/z-other-environments',
+          },
+        ].map(({ name, href }) => (
+          <ListItemAnchor key={name} href={href}>
+            {name}
+          </ListItemAnchor>
+        ))}
+      </RunAnywhereSection>
+
+      <ReachZenQuickerWithYoga className="mt-28" />
 
       <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
       <FrequentlyAskedQuestions faqPages={['/']}>
@@ -131,22 +249,20 @@ export default function IndexPage() {
   );
 }
 
-import arrowUpBade from './arrow-up-badge.svg'
-import checkBadge from './check-badge.svg'
-import puzzleBadge from './puzzle-badge.svg'
-
 function EnterpriseFocusedCards({ className }: { className?: string }) {
   return (
     <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-[120px]', className)}>
       <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center">
         Everything HTTP
       </Heading>
-      <p className='text-green-800 text-center mt-4'>Complies with the latest GraphQL over HTTP specifications for full compatibility.</p>
+      <p className="text-green-800 text-center mt-4">
+        Complies with the latest GraphQL over HTTP specifications for full compatibility.
+      </p>
       <ul className="mt-6 flex flex-wrap justify-center gap-2 md:mt-16 md:gap-6">
         <InfoCard
           as="li"
           heading="Fully audited"
-          icon={<Image src={checkBadge} alt='' />}
+          icon={<Image src={checkBadge} alt="" />}
           className="flex-1 rounded-2xl md:rounded-3xl"
         >
           Meets rigorous standards as confirmed by comprehensive graphql-http library audits.
@@ -154,21 +270,22 @@ function EnterpriseFocusedCards({ className }: { className?: string }) {
         <InfoCard
           as="li"
           heading="Subscriptions"
-          icon={<Image src={puzzleBadge} alt='' />}
+          icon={<Image src={puzzleBadge} alt="" />}
           className="flex-1 basis-full rounded-2xl md:basis-0 md:rounded-3xl"
         >
-          Supports real-time communications with built-in GraphQL Subscriptions over Server-Sent Events.
+          Supports real-time communications with built-in GraphQL Subscriptions over Server-Sent
+          Events.
         </InfoCard>
         <InfoCard
           as="li"
           heading="File Uploads"
-          icon={<Image src={arrowUpBade} alt='' />}
+          icon={<Image src={arrowUpBade} alt="" />}
           className="flex-1 basis-full rounded-2xl md:rounded-3xl lg:basis-0"
         >
-          Facilitates file uploads directly through GraphQL using the multipart request specification.
+          Facilitates file uploads directly through GraphQL using the multipart request
+          specification.
         </InfoCard>
       </ul>
     </section>
   );
 }
-

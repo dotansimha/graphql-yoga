@@ -86,7 +86,7 @@ export default async function Page(props: NextPageProps<'...slug'>) {
     ...defaultNextraOptions,
     mdxOptions: {
       ...defaultNextraOptions.mdxOptions,
-      remarkPlugins: [remarkRemoveUpdatedDependency],
+      // remarkPlugins: [remarkRemoveUpdatedDependency],
     },
   });
   const { default: MDXContent, toc, metadata } = evaluate(rawJs, components);
