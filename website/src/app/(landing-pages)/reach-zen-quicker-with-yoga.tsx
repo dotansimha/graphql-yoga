@@ -1,9 +1,9 @@
-import { FC } from 'react';
+import { ComponentProps, FC } from 'react'
 import { Anchor, CallToAction, cn, ComparisonTable, Heading } from '@theguild/components';
 
-export const ReachZenQuickerWithYoga: FC = () => {
+export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = (props) => {
   return (
-    <div>
+    <section {...props}>
       <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center text-green-1000">
         Using Apollo Server? Reach zen quicker with Yoga.
       </Heading>
@@ -88,6 +88,6 @@ export const ReachZenQuickerWithYoga: FC = () => {
           </tbody>
         </ComparisonTable>
       </div>
-    </div>
+    </section>
   );
 };
