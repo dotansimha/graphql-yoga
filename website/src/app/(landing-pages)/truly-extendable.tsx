@@ -1,7 +1,10 @@
 import { ComponentProps, FC } from 'react';
 import Image from 'next/image';
 import { cn, Heading, InfoCard, CallToAction } from '@theguild/components';
-import errorWarningBadge from './icons/error-warning-badge.svg';
+import apolloBadge from './icons/apollo-badge.svg';
+import serverLineBadge from './icons/server-line-badge.svg';
+import timerLineBadge from './icons/timer-line-badge.svg';
+import safeLineBadge from './icons/safe-line-badge.svg';
 
 const classes = {
   card: cn('[&_h3]:text-white [&_p]:text-white/80 bg-green-900 rounded-2xl')
@@ -29,28 +32,28 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
           <div className='grid grid-cols-2 gap-6 my-12'>
             <InfoCard
               heading="Apollo Federation"
-              icon={<Image src={errorWarningBadge} alt="" />}
+              icon={<Image src={apolloBadge} alt="" />}
               className={classes.card}
             >
               Fully supports Apollo Federation for managing complex supergraphs and subgraphs.
             </InfoCard>
             <InfoCard
               heading="Persisted operations"
-              icon={<Image src={errorWarningBadge} alt="" />}
+              icon={<Image src={safeLineBadge} alt="" />}
               className={classes.card}
             >
               Mitigates the risk of arbitrary GraphQL operations with robust persistence capabilities.
             </InfoCard>
             <InfoCard
               heading="Response caching"
-              icon={<Image src={errorWarningBadge} alt="" />}
+              icon={<Image src={serverLineBadge} alt="" />}
               className={classes.card}
             >
               Optimizes server performance by caching responses, significantly reducing server load.
             </InfoCard>
             <InfoCard
               heading="Rate limiting"
-              icon={<Image src={errorWarningBadge} alt="" />}
+              icon={<Image src={timerLineBadge} alt="" />}
               className={classes.card}
             >
               Prevents denial of service attacks with advanced rate limiting.
