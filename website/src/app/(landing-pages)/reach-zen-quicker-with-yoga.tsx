@@ -16,7 +16,7 @@ export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = (props) =>
             Yoga demonstrates superior performance with lower latency and higher request rates than
             Apollo Server. Benchmarked.
           </p>
-          <CallToAction variant="tertiary" href="https://the-guild.dev/graphql/yoga-server/docs/comparison#graphql-yoga-and-apollo-server">
+          <CallToAction variant="tertiary" href="/docs/comparison#graphql-yoga-and-apollo-server">
             Detailed Apollo Server Comparison
           </CallToAction>
         </div>
@@ -36,7 +36,7 @@ export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = (props) =>
             {[
               {
                 name: 'GraphQL Yoga with Response Cache',
-                href: 'https://the-guild.dev/graphql/yoga-server/docs/features/response-caching',
+                href: '/docs/features/response-caching',
                 language: 'Node.js',
                 server: 'http',
                 latency: '46.54ms',
@@ -44,7 +44,7 @@ export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = (props) =>
               },
               {
                 name: 'GraphQL Yoga with JIT',
-                href: 'https://the-guild.dev/graphql/yoga-server/docs/features/envelop-plugins#envelop-plugin-example',
+                href: '/docs/features/envelop-plugins#envelop-plugin-example',
                 language: 'Node.js',
                 server: 'http',
                 latency: '764.83ms',

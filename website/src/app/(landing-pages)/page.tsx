@@ -92,6 +92,22 @@ function Page(props: { children: ReactNode; className?: string }) {
 }
 
 export default function IndexPage() {
+  const yogaMan = (
+    <>
+      <Image
+        src={manInBlackClothingPracticingYoga}
+        alt="Man in black clothing practicing yoga"
+        className="rounded-3xl h-96 lg:h-full object-cover"
+      />
+      <YogaIcon
+        className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
+        stroke="white"
+        stroke-width="0.2"
+        fill="none"
+      />
+    </>
+  );
+
   return (
     <Page className="mx-auto max-w-[90rem]">
       <Hero className="mx-4 max-sm:mt-2 md:mx-6">
@@ -132,7 +148,7 @@ export default function IndexPage() {
 
       <ExploreMainProductCards />
 
-      <section className="flex gap-6 lg:gap-24 px-4 xl:px-[120px]">
+      <section className="flex mt-6 max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]">
         <div className="grow">
           <Heading as="h2" size="md">
             Practice Yoga while doing server-work
@@ -141,25 +157,26 @@ export default function IndexPage() {
             Yoga ensures optimal configuration out-of-the-box, enhancing performance and developer
             workflow.
           </p>
-          <div className="flex my-12 gap-8">
+          <div className="relative lg:hidden mt-6">{yogaMan}</div>
+          <div className="flex my-12 gap-8 max-sm:flex-col">
             <InfoCard
               heading="Error masking"
               icon={<Image src={errorWarningBadge} alt="" />}
-              className="flex-1 md:p-0 bg-transparent"
+              className="flex-1 p-0 md:p-0 bg-transparent"
             >
               Enhance security by masking errors to prevent sensitive data leaks.
             </InfoCard>
             <InfoCard
               heading="Health checks"
               icon={<Image src={pulseLineBadge} alt="" />}
-              className="flex-1 md:p-0 bg-transparent"
+              className="flex-1 p-0 md:p-0 bg-transparent"
             >
               Built-in health checks to ensure server vitality and readiness.
             </InfoCard>
             <InfoCard
               heading="GraphiQL Integration"
               icon={<Image src={graphqlBadge} alt="" />}
-              className="flex-1 md:p-0 bg-transparent"
+              className="flex-1 p-0 md:p-0 bg-transparent"
             >
               In-browser IDE for seamless writing, validation, and testing of GraphQL operations.
             </InfoCard>
@@ -168,19 +185,7 @@ export default function IndexPage() {
             Learn more
           </CallToAction>
         </div>
-        <div className="basis-5/12 shrink-0 relative">
-          <Image
-            src={manInBlackClothingPracticingYoga}
-            alt="Man in black clothing practicing yoga"
-            className="rounded-3xl h-full object-cover"
-          />
-          <YogaIcon
-            className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
-            stroke="white"
-            stroke-width="0.2"
-            fill="none"
-          />
-        </div>
+        <div className="basis-5/12 shrink-0 relative max-lg:hidden">{yogaMan}</div>
       </section>
       <br />
       <div className="bg-red-500 shrink-0">
