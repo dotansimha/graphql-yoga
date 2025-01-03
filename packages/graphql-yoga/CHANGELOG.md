@@ -1,5 +1,42 @@
 # graphql-yoga
 
+## 5.10.8
+
+### Patch Changes
+
+- [#3588](https://github.com/dotansimha/graphql-yoga/pull/3588)
+  [`ed344ea`](https://github.com/dotansimha/graphql-yoga/commit/ed344ea7fed85163eba0c636b5b7f64c482ce150)
+  Thanks [@ardatan](https://github.com/ardatan)! - Mark `createLRUCache` utility as deprecated, and
+  export it as `_createLRUCache` marking it as an internal utility
+
+## 5.10.7
+
+### Patch Changes
+
+- [#3547](https://github.com/dotansimha/graphql-yoga/pull/3547)
+  [`8fee214`](https://github.com/dotansimha/graphql-yoga/commit/8fee214eac4be3e9e18935502d32de69f0a1484e)
+  Thanks [@Urigo](https://github.com/Urigo)! - dependencies updates:
+
+  - Updated dependency
+    [`@graphql-tools/executor@^1.3.7` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/1.3.7)
+    (from `^1.3.5`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/schema@^10.0.11` ↗︎](https://www.npmjs.com/package/@graphql-tools/schema/v/10.0.11)
+    (from `^10.0.10`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^10.6.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.6.2)
+    (from `^10.6.1`, in `dependencies`)
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.63` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.63)
+    (from `^0.9.60`, in `dependencies`)
+
+- [#3567](https://github.com/dotansimha/graphql-yoga/pull/3567)
+  [`1df4912`](https://github.com/dotansimha/graphql-yoga/commit/1df4912693fad5efaf2fe99bf0433c9abc829004)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@whatwg-node/server@^0.9.64` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.9.64)
+    (from `^0.9.63`, in `dependencies`)
+
 ## 5.10.6
 
 ### Patch Changes

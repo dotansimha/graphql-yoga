@@ -170,6 +170,47 @@ const yoga = createYoga({
 })
 ```
 
+#### WebSockets Connection Params
+
+You can configure the plugin to look for the token in the connection params of a WebSocket
+connection if you use `graphql-ws` as
+[here](https://the-guild.dev/graphql/yoga-server/docs/features/subscriptions#graphql-over-websocket-protocol-via-graphql-ws).
+
+```ts
+import { extractFromConnectionParams, useJWT } from '@graphql-yoga/plugin-jwt'
+
+const yoga = createYoga({
+  // ...
+  plugins: [
+    useJWT({
+      // So it will look for the token in the connectionParams.token field in case of a WebSockets connection
+      lookupLocations: [extractFromConnectionParams({ name: 'token' })]
+    })
+  ]
+})
+```
+
+##### Client-side example
+
+After setting up JWT Plugin and Yoga server with WebSocket support, you can pass `token` from the
+client like below with `graphql-ws` client.
+
+```ts
+import { createClient } from 'graphql-ws'
+import { getCurrentToken } from './my-auth'
+
+const client = createClient({
+  url: 'ws://localhost:4000/graphql',
+  // The object returned by this function will be passed to the server as `connectionParams` to be used by the JWT plugin
+  connectionParams: async () => {
+    return {
+      // the token is fetched from the storage
+      token: await getCurrentToken()
+    }
+  }
+})
+```
+
 #### Custom Function
 
 You can configure the plugin to use a custom function to look for the token:

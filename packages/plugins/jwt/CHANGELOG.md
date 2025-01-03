@@ -1,5 +1,53 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.4.9
+
+### Patch Changes
+
+- [#3590](https://github.com/dotansimha/graphql-yoga/pull/3590)
+  [`840c6ae`](https://github.com/dotansimha/graphql-yoga/commit/840c6ae0b8e52fd8ecdc4cca86e1ee30fa99a8c4)
+  Thanks [@ardatan](https://github.com/ardatan)! - - Do not throw when \`request\` is not available
+  in the context, it can be a WebSockets connection
+
+  - Export helper `extractFromConnectionParams` to get the token from WebSocket `connectionParams`
+    when GraphQL WS is used like
+    [here](https://the-guild.dev/graphql/yoga-server/docs/features/subscriptions#graphql-over-websocket-protocol-via-graphql-ws)
+
+  ```ts
+  import { extractFromConnectionParams, extractFromHeader, useJWT } from '@graphql-yoga/plugin-jwt'
+
+  const yoga = createYoga({
+    // ...
+    plugins: [
+      useJWT({
+        // So it will look for the token in the connectionParams.my-token field in case of a WebSockets connection
+        // It will check WS params and headers, and get the available one
+        lookupLocations: [
+          extractFromConnectionParams({ name: 'my-token' }),
+          extractFromHeader({ name: 'authorization', prefix: 'Bearer ' })
+        ]
+      })
+    ]
+  })
+  ```
+
+## 3.4.8
+
+### Patch Changes
+
+- Updated dependencies
+  [[`ed344ea`](https://github.com/dotansimha/graphql-yoga/commit/ed344ea7fed85163eba0c636b5b7f64c482ce150)]:
+  - graphql-yoga@5.10.8
+
+## 3.4.7
+
+### Patch Changes
+
+- Updated dependencies
+  [[`8fee214`](https://github.com/dotansimha/graphql-yoga/commit/8fee214eac4be3e9e18935502d32de69f0a1484e),
+  [`1df4912`](https://github.com/dotansimha/graphql-yoga/commit/1df4912693fad5efaf2fe99bf0433c9abc829004)]:
+  - graphql-yoga@5.10.7
+
 ## 3.4.6
 
 ### Patch Changes

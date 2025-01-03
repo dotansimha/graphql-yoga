@@ -37,6 +37,8 @@ if (process.env.LEAKS_TEST === 'true') {
     '!**/uwebsockets.test.ts',
     '!**/apollo-client.test.ts',
     '!**/browser.spec.ts',
+    '!**/egg.spec.ts',
+    '!**/sveltekit.spec.ts',
   );
 }
 

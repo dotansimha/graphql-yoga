@@ -21,18 +21,14 @@ describe('Bun integration', () => {
   let server: Server;
   let url: string;
   beforeEach(() => {
-    console.log('Starting server');
     server = Bun.serve({
       fetch: yoga,
-      port: 3000,
+      port: 0,
     });
     url = `http://${server.hostname}:${server.port}${yoga.graphqlEndpoint}`;
   });
 
-  afterEach(async () => {
-    server.stop();
-    console.log('Server stopped');
-  });
+  afterEach(() => server.stop());
 
   it('shows GraphiQL', async () => {
     const response = await fetch(url, {

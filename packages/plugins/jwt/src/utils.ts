@@ -7,6 +7,10 @@ export function extractFromHeader(options: {
   prefix?: string;
 }): ExtractTokenFunction {
   return ({ request }) => {
+    if (!request) {
+      return;
+    }
+
     const header = request.headers.get(options.name);
 
     if (header == null) {
@@ -46,6 +50,9 @@ export function extractFromHeader(options: {
 
 export function extractFromCookie(options: { name: string }): ExtractTokenFunction {
   return async ({ request }) => {
+    if (!request) {
+      return;
+    }
     const cookieStore = request.cookieStore;
 
     if (!cookieStore) {
@@ -64,6 +71,29 @@ export function extractFromCookie(options: { name: string }): ExtractTokenFuncti
       prefix: undefined,
       token: cookie.value,
     };
+  };
+}
+
+export function extractFromConnectionParams(options: { name: string }): ExtractTokenFunction {
+  return ({ serverContext }) => {
+    if (
+      typeof serverContext?.['connectionParams'] === 'object' &&
+      serverContext['connectionParams'] != null &&
+      options.name in serverContext['connectionParams'] &&
+      typeof serverContext['connectionParams'] === 'object' &&
+      serverContext['connectionParams'] != null &&
+      options.name in serverContext['connectionParams']
+    ) {
+      // @ts-expect-error - TS doesn't understand the type guard above
+      const token = serverContext['connectionParams'][options.name];
+      if (typeof token === 'string') {
+        return {
+          prefix: undefined,
+          token,
+        };
+      }
+    }
+    return;
   };
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-yoga/plugin-jwt",
-  "version": "3.4.6",
+  "version": "3.4.9",
   "type": "module",
   "description": "jwt plugin for GraphQL Yoga.",
   "repository": {
@@ -48,9 +48,12 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.0",
+    "@types/ws": "^8.5.13",
     "graphql": "16.10.0",
     "graphql-scalars": "^1.22.2",
-    "graphql-yoga": "workspace:*"
+    "graphql-ws": "5.16.0",
+    "graphql-yoga": "workspace:*",
+    "ws": "^8.18.0"
   },
   "publishConfig": {
     "directory": "dist",

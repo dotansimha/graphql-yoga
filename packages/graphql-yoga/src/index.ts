@@ -10,7 +10,7 @@ export * from './subscription.js';
 export * from './types.js';
 export { maskError } from './utils/mask-error.js';
 export { type OnParamsEventPayload } from './plugins/types.js';
-export { createLRUCache } from './utils/create-lru-cache.js';
+export { _createLRUCache, createLRUCache } from './utils/create-lru-cache.js';
 export { mergeSchemas } from '@graphql-tools/schema';
 export {
   // Handy type utils
