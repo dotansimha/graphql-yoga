@@ -138,18 +138,39 @@ const ENVELOP_PLUGINS = [
     title:'useExtendContext',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
   },
-  'useImmediateIntrospection',
-  'useLogger',
-  'usePayloadFormatter',
+  {
+    title: 'useImmediateIntrospection',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/immediate-introspection'
+  },
+  {
+    title: 'useLogger',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
+  {
+    title: 'usePayloadFormatter',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
   'useGraphQLJit',
   'useParserCache',
   'useValidationCache',
-  'useDataLoader',
-  'useApolloTracing',
-  'useApolloDataSources',
+  {
+    title: 'useDataLoader',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/dataloader'
+  },
+  {
+    title: 'useApolloTracing',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-tracing'
+  },
+  {
+    title: 'useApolloDataSources',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-datasources'
+  },
   'useOpenTelemetry',
   'useGenericAuth',
-  'useAuth0',
+  {
+    title: 'useAuth0',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/auth0'
+  },
   'useGraphQLModules',
   'useRateLimiter',
   'useDisableIntrospection',
@@ -160,14 +181,20 @@ const ENVELOP_PLUGINS = [
   'useNewRelic',
   'useLiveQuery',
   'useFragmentArguments',
-  'useApolloServerErrors',
+  {
+    title: 'useApolloServerErrors',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-server-errors'
+  },
   'useOperationFieldPermissions',
   'useExtendedValidation',
   'usePrometheus',
   'useContextValuePerExecuteSubscriptionEvent',
   'useResourceLimitations',
   'useResponseCache',
-  'useApolloFederation',
+  {
+    title: 'useApolloFederation',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-federation'
+  },
   'maxAliasesPlugin',
   'maxDepthPlugin',
   'maxDirectivesPlugin',
