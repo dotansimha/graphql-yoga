@@ -2,7 +2,7 @@ import { ReactElement, ReactNode } from 'react';
 import { cn } from '@theguild/components';
 
 const TimeToSeconds = {
-  fast: '5s',
+  fast: '20s',
   normal: '40s',
   slow: '80s',
 };
@@ -26,20 +26,17 @@ export function InfiniteMovingCards({
         '[mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]',
         className,
       )}
-      style={{
-        ['--animation-duration' as string]: TimeToSeconds[speed],
-        ['--animation-direction' as string]: direction === 'left' ? 'forwards' : 'reverse',
-      }}
     >
       <ul
         className={cn(
-          'flex gap-2 py-1 animate-scroll',
+          'flex gap-2 py-1 w-max animate-scroll',
           pauseOnHover && 'hover:[animation-play-state:paused]',
         )}
+        style={{
+          ['--animation-duration' as string]: TimeToSeconds[speed],
+          ['--animation-direction' as string]: direction === 'left' ? 'forwards' : 'reverse',
+        }}
       >
-        {children}
-        {children}
-        {children}
         {children}
         {children}
       </ul>

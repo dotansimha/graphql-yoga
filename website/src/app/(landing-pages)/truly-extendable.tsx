@@ -16,21 +16,21 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
     <section
       className={cn(
         'bg-green-1000 relative isolate overflow-hidden rounded-3xl text-white',
-        'p-8 pb-[160px] sm:pb-[112px] md:p-[72px] md:pb-[112px] lg:pb-[72px]',
+        'p-8 md:p-[72px]',
         className,
       )}
       {...props}
     >
-      <div className="relative flex gap-24">
-        <div className="basis-1/2">
-          <Heading as="h2" size="sm">
-            Truly extendable
-          </Heading>
-          <p className="mt-4">
-            Highly extendable through Envelop plugins, allowing customization to fit any development
-            needs.
-          </p>
-          <div className="grid grid-cols-2 gap-6 my-12">
+      <Heading as="h2" size="sm">
+        Truly extendable
+      </Heading>
+      <p className="mt-4">
+        Highly extendable through Envelop plugins, allowing customization to fit any
+        <br className="max-sm:hidden" /> development needs.
+      </p>
+      <div className="relative flex gap-6 xl:gap-24 my-6 xl:my-12 max-xl:flex-col">
+        <div className="xl:basis-1/2">
+          <div className="grid sm:grid-cols-2 gap-6">
             <InfoCard
               heading="Apollo Federation"
               icon={<Image src={apolloBadge} alt="" />}
@@ -61,12 +61,9 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
               Prevents denial of service attacks with advanced rate limiting.
             </InfoCard>
           </div>
-          <CallToAction variant="primary" href="/docs/features/envelop-plugins">
-            Learn more about Envelop Plugins
-          </CallToAction>
         </div>
-        <div className="basis-1/2 w-2/5 relative flex items-center">
-          <div className="w-full">
+        <div className="xl:w-2/5 max-xl:order-first">
+          <div className="w-full relative">
             {splitArray(
               ENVELOP_PLUGINS.sort((a, b) => a.title.localeCompare(b.title)),
               10,
@@ -75,34 +72,38 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
                 key={index}
                 direction={index % 2 ? 'left' : 'right'}
                 speed="fast"
+                pauseOnHover={false}
               >
                 {plugins.map(plugin => (
                   <div
                     key={plugin.title}
-                    className="bg-green-900 px-4 py-3 rounded-lg text-green-600"
+                    className="bg-green-900 px-4 py-3 rounded-lg text-green-600 select-none"
                   >
                     {plugin.title}
                   </div>
                 ))}
               </InfiniteMovingCards>
             ))}
+            <YogaIcon
+              className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
+              stroke="white"
+              strokeWidth="0.2"
+              fill="url(#myGradient)"
+            />
+            <svg className="h-0">
+              <defs>
+                <linearGradient id="myGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#86b6c1', stopOpacity: 0.8 }} />
+                  <stop offset="100%" style={{ stopColor: '#4f96a6', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
-          <YogaIcon
-            className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
-            stroke="white"
-            strokeWidth="0.2"
-            fill="url(#myGradient)"
-          />
-          <svg>
-            <defs>
-              <linearGradient id="myGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style={{ stopColor: '#86b6c1', stopOpacity: 0.8 }} />
-                <stop offset="100%" style={{ stopColor: '#4f96a6', stopOpacity: 1 }} />
-              </linearGradient>
-            </defs>
-          </svg>
         </div>
       </div>
+      <CallToAction variant="primary" href="/docs/features/envelop-plugins">
+        Learn more about Envelop Plugins
+      </CallToAction>
     </section>
   );
 };
