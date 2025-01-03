@@ -80,12 +80,19 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
         </div>
         <div className="basis-1/2 relative"></div>
       </div>
-      {splitArray(ENVELOP_PLUGINS, 5).map((plugins, index) => (
-        <InfiniteMovingCards key={index} direction="right" speed="slow" pauseOnHover={false}>
+      {splitArray(ENVELOP_PLUGINS, 7).map((plugins, index) => (
+        <InfiniteMovingCards key={index} direction="right" speed="slow">
           {plugins.map(plugin => (
-            <div key={plugin} className="bg-green-900 rounded-lg px-4 py-3 text-green-600">
-              {plugin}
-            </div>
+            <CallToAction
+              key={plugin.title}
+              href={plugin.href}
+              variant="secondary-inverted"
+              target="_blank"
+              rel="noreferrer"
+              className='opacity-60'
+            >
+              {plugin.title}
+            </CallToAction>
           ))}
         </InfiniteMovingCards>
       ))}
@@ -286,9 +293,9 @@ const ENVELOP_PLUGINS: { title: string; href: `https://${string}` }[] = [
     title: 'useOnResolve',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/on-resolve',
   },
-];
+].sort((a, b) => a.title.localeCompare(b.title));
 
-function splitArray(array: string[], parts: number) {
+function splitArray<T>(array: T[], parts: number): T[][] {
   const result = [];
   const partSize = Math.ceil(array.length / parts);
 
