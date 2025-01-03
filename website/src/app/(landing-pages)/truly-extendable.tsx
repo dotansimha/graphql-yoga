@@ -24,7 +24,7 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
       <Heading as="h2" size="sm">
         Truly extendable
       </Heading>
-      <p className="mt-4">
+      <p className="mt-4 text-white/80">
         Highly extendable through Envelop plugins, allowing customization to fit any
         <br className="max-sm:hidden" /> development needs.
       </p>

@@ -18,15 +18,15 @@ import { metadata as rootMetadata } from '../layout';
 import FAQ from './faq.mdx';
 import { ReachZenQuickerWithYoga } from './reach-zen-quicker-with-yoga';
 import { ListItemAnchor, RunAnywhereSection } from './runs-anywhere';
+import { TrulyExtendableSection } from './truly-extendable';
 import arrowUpBade from './icons/arrow-up-badge.svg';
 import checkBadge from './icons/check-badge.svg';
 import errorWarningBadge from './icons/error-warning-badge.svg';
 import graphqlBadge from './icons/graphql-badge.svg';
-import manInBlackClothingPracticingYoga from './man-in-black-clothing-practicing-yoga-minimalistic.png';
 import pulseLineBadge from './icons/pulse-line-badge.svg';
 import puzzleBadge from './icons/puzzle-badge.svg';
 import yogaHeroBadge from './icons/yoga-badge.svg';
-import {TrulyExtendableSection} from './truly-extendable'
+import manInBlackClothingPracticingYoga from './man-in-black-clothing-practicing-yoga-minimalistic.png';
 
 export const metadata = {
   title: 'Home',
@@ -112,7 +112,11 @@ export default function IndexPage() {
   return (
     <Page className="mx-auto max-w-[90rem]">
       <Hero className="mx-4 max-sm:mt-2 md:mx-6">
-        <Heading as="h1" size="xl" className="mx-auto max-w-3xl text-balance text-center">
+        <Heading
+          as="h1"
+          size="xl"
+          className="mx-auto max-w-3xl text-balance text-center text-green-1000"
+        >
           Yoga — High-performance GraphQL Server
         </Heading>
         <p className="mx-auto w-[512px] max-w-[80%] text-center leading-6 text-green-800">
@@ -151,7 +155,7 @@ export default function IndexPage() {
 
       <section className="flex mt-6 max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]">
         <div className="grow">
-          <Heading as="h2" size="md">
+          <Heading as="h2" size="md" className="text-green-1000">
             Practice Yoga while doing server-work
           </Heading>
           <p className="text-green-800 mt-4">
@@ -189,7 +193,7 @@ export default function IndexPage() {
         <div className="basis-5/12 shrink-0 relative max-lg:hidden">{yogaMan}</div>
       </section>
 
-      <TrulyExtendableSection className='mt-24' />
+      <TrulyExtendableSection className="mt-24" />
 
       <EnterpriseFocusedCards />
 
@@ -254,10 +258,10 @@ export default function IndexPage() {
 function EnterpriseFocusedCards({ className }: { className?: string }) {
   return (
     <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-[120px]', className)}>
-      <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center">
+      <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center text-green-1000">
         Everything HTTP
       </Heading>
-      <p className="text-green-800 text-center mt-4">
+      <p className="text-green-800 sm:text-center mt-4">
         Complies with the latest GraphQL over HTTP specifications for full compatibility.
       </p>
       <ul className="mt-6 flex flex-wrap justify-center gap-2 md:mt-16 md:gap-6">

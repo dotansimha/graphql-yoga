@@ -1,7 +1,11 @@
 import { ComponentProps, FC, ReactNode } from 'react';
 import { Anchor, ArrowIcon, cn, Heading } from '@theguild/components';
 
-export const RunAnywhereSection: FC<ComponentProps<'section'>> = ({ className, children, ...props }) => {
+export const RunAnywhereSection: FC<ComponentProps<'section'>> = ({
+  className,
+  children,
+  ...props
+}) => {
   return (
     <section
       className={cn(
