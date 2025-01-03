@@ -1,6 +1,7 @@
 import { ComponentProps, FC } from 'react';
 import Image from 'next/image';
 import { CallToAction, cn, Heading, InfoCard, YogaIcon } from '@theguild/components';
+import { InfiniteMovingCards } from './infinite-moving-cards';
 import apolloBadge from './icons/apollo-badge.svg';
 import safeLineBadge from './icons/safe-line-badge.svg';
 import serverLineBadge from './icons/server-line-badge.svg';
@@ -21,7 +22,7 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
       {...props}
     >
       <div className="relative flex gap-24">
-        <div className="basis-1/2">
+        <div className="w-1/2">
           <Heading as="h2" size="sm">
             Truly extendable
           </Heading>
@@ -63,8 +64,29 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
           <CallToAction variant="primary" href="/docs/features/envelop-plugins">
             Learn more about Envelop Plugins
           </CallToAction>
+        </div>
+        <div className="w-1/2 relative group">
+          {splitArray(
+            ENVELOP_PLUGINS.sort((a, b) => a.title.localeCompare(b.title)),
+            7,
+          ).map((plugins, index) => (
+            <InfiniteMovingCards key={index} direction="right">
+              {plugins.map(plugin => (
+                <CallToAction
+                  key={plugin.title}
+                  href={plugin.href}
+                  variant="secondary-inverted"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="opacity-60"
+                >
+                  {plugin.title}
+                </CallToAction>
+              ))}
+            </InfiniteMovingCards>
+          ))}
           <YogaIcon
-            className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
+            className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3 group-hover:opacity-0 transition-opacity duration-300 pointer-events-none"
             stroke="white"
             strokeWidth="0.2"
             fill="url(#myGradient)"
@@ -78,24 +100,7 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
             </defs>
           </svg>
         </div>
-        <div className="basis-1/2 relative"></div>
       </div>
-      {splitArray(ENVELOP_PLUGINS, 7).map((plugins, index) => (
-        <InfiniteMovingCards key={index} direction="right" speed="slow">
-          {plugins.map(plugin => (
-            <CallToAction
-              key={plugin.title}
-              href={plugin.href}
-              variant="secondary-inverted"
-              target="_blank"
-              rel="noreferrer"
-              className='opacity-60'
-            >
-              {plugin.title}
-            </CallToAction>
-          ))}
-        </InfiniteMovingCards>
-      ))}
     </section>
   );
 };
@@ -293,7 +298,7 @@ const ENVELOP_PLUGINS: { title: string; href: `https://${string}` }[] = [
     title: 'useOnResolve',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/on-resolve',
   },
-].sort((a, b) => a.title.localeCompare(b.title));
+];
 
 function splitArray<T>(array: T[], parts: number): T[][] {
   const result = [];

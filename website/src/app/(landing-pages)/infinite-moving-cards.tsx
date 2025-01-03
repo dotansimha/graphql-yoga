@@ -20,16 +20,12 @@ export function InfiniteMovingCards({
   pauseOnHover?: boolean;
   className?: string;
 }): ReactElement {
-  const content = Children.map(children, (child, index) => (
-    <li key={index} className="max-w-full shrink-0">
-      {child}
-    </li>
-  ));
+  const content = Children.map(children, (child, index) => <li key={index}>{child}</li>);
 
   return (
     <div
       className={cn(
-        'relative max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]',
+        '[mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]',
         className,
       )}
       style={{
@@ -39,8 +35,7 @@ export function InfiniteMovingCards({
     >
       <ul
         className={cn(
-          'flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap',
-          'animate-scroll',
+          'flex gap-2 py-1 animate-scroll',
           pauseOnHover && 'hover:[animation-play-state:paused]',
         )}
       >
