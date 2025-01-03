@@ -27,16 +27,16 @@ const RootLayout: FC<{
         // @ts-expect-error -- ignore
         ...meta.data,
         changelogs: { type: 'page', title: 'Changelogs', theme: { layout: 'full' } },
-        v2: { type: 'page', title: 'Yoga v2 Docs' },
-        v3: { type: 'page', title: 'Yoga v3 Docs' },
-        v4: { type: 'page', title: 'Yoga v4 Docs' },
+        v2: { type: 'page', title: 'Yoga 2 Docs' },
+        v3: { type: 'page', title: 'Yoga 3 Docs' },
+        v4: { type: 'page', title: 'Yoga 4 Docs' },
       },
     },
     ...pageMap,
     { route: '/changelogs', name: 'changelogs', children: changelogsPageMap },
-    { route: '/v2', name: 'v2', children: v2PageMap },
-    { route: '/v3', name: 'v3', children: v3PageMap },
     { route: '/v4', name: 'v4', children: v4PageMap },
+    { route: '/v3', name: 'v3', children: v3PageMap },
+    { route: '/v2', name: 'v2', children: v2PageMap },
   ];
   return (
     <GuildLayout
@@ -70,10 +70,12 @@ const RootLayout: FC<{
         children: (
           <VersionDropdown
             currentVersion="Version"
+            chevronPosition="right"
             versions={[
-              { label: 'Yoga v4 Docs', href: '/v4', value: '4' },
-              { label: 'Yoga v3 Docs', href: '/v3', value: '3' },
-              { label: 'Yoga v2 Docs', href: '/v2', value: '2' },
+              { label: 'Yoga 5 Docs (latest)', href: '/docs', value: '5' },
+              { label: 'Yoga 4 Docs', href: '/v4', value: '4' },
+              { label: 'Yoga 3 Docs', href: '/v3', value: '3' },
+              { label: 'Yoga 2 Docs', href: '/v2', value: '2' },
             ]}
           />
         ),
