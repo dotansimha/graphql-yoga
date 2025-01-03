@@ -93,159 +93,199 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
   );
 };
 
-const ENVELOP_PLUGINS = [
+const ENVELOP_PLUGINS: { title: string; href: `https://${string}` }[] = [
   {
     title: 'useSentry',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/sentry',
   },
   {
     title: 'useStatsD',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/statsd'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/statsd',
   },
   {
     title: 'useSchema',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'useSchemaByContext',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'useValidationRule',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'useErrorHandler',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'useMaskedErrors',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'useEngine',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
-    title:'useExtendContext',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    title: 'useExtendContext',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'useImmediateIntrospection',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/immediate-introspection'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/immediate-introspection',
   },
   {
     title: 'useLogger',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'usePayloadFormatter',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core',
   },
   {
     title: 'useGraphQLJit',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-jit'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-jit',
   },
-  'useParserCache',
-  'useValidationCache',
+  {
+    title: 'useParserCache',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/parser-cache',
+  },
+  {
+    title: 'useValidationCache',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/validation-cache',
+  },
   {
     title: 'useDataLoader',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/dataloader'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/dataloader',
   },
   {
     title: 'useApolloTracing',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-tracing'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-tracing',
   },
   {
     title: 'useApolloDataSources',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-datasources'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-datasources',
   },
-  'useOpenTelemetry',
+  {
+    title: 'useOpenTelemetry',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/opentelemetry',
+  },
   {
     title: 'useGenericAuth',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/generic-auth'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/generic-auth',
   },
   {
     title: 'useAuth0',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/auth0'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/auth0',
   },
   {
     title: 'useGraphQLModules',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-modules'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-modules',
   },
-  'useRateLimiter',
+  {
+    title: 'useRateLimiter',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/rate-limiter',
+  },
   {
     title: 'useDisableIntrospection',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/disable-introspection'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/disable-introspection',
   },
   {
     title: 'useFilterAllowedOperations',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/filter-operation-type'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/filter-operation-type',
   },
-  'usePreloadAssets',
-  'usePersistedOperations',
-  'useHive',
-  'useNewRelic',
+  {
+    title: 'usePreloadAssets',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/preload-assets',
+  },
+  {
+    title: 'usePersistedOperations',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/persisted-operations',
+  },
+  {
+    title: 'useHive',
+    href: 'https://the-guild.dev/graphql/hive/docs/other-integrations/envelop',
+  },
+  {
+    title: 'useNewRelic',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/newrelic',
+  },
   {
     title: 'useLiveQuery',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/live-query'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/live-query',
   },
   {
     title: 'useFragmentArguments',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/fragment-arguments'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/fragment-arguments',
   },
   {
     title: 'useApolloServerErrors',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-server-errors'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-server-errors',
   },
-  'useOperationFieldPermissions',
+  {
+    title: 'useOperationFieldPermissions',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/operation-field-permissions',
+  },
   {
     title: 'useExtendedValidation',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/extended-validation'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/extended-validation',
   },
-  'usePrometheus',
+  {
+    title: 'usePrometheus',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/prometheus',
+  },
   {
     title: 'useContextValuePerExecuteSubscriptionEvent',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/execute-subscription-event'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/execute-subscription-event',
   },
-  'useResourceLimitations',
-  'useResponseCache',
+  {
+    title: 'useResourceLimitations',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/resource-limitations',
+  },
+  {
+    title: 'useResponseCache',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/response-cache',
+  },
   {
     title: 'useApolloFederation',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-federation'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-federation',
   },
   {
     title: 'maxAliasesPlugin',
-    href: 'https://escape.tech/graphql-armor/docs/plugins/max-aliases'
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-aliases',
   },
   {
     title: 'maxDepthPlugin',
-    href: 'https://escape.tech/graphql-armor/docs/plugins/max-depth'
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-depth',
   },
   {
     title: 'maxDirectivesPlugin',
-    href: 'https://escape.tech/graphql-armor/docs/plugins/max-directives'
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-directives',
   },
   {
     title: 'maxTokensPlugin',
-    href: 'https://escape.tech/graphql-armor/docs/plugins/max-tokens'
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-tokens',
   },
   {
     title: 'blockFieldSuggestions',
-    href: 'https://escape.tech/graphql-armor/docs/plugins/block-field-suggestions'
+    href: 'https://escape.tech/graphql-armor/docs/plugins/block-field-suggestions',
   },
   {
     title: 'useInngest',
-    href: 'https://github.com/inngest/envelop-plugin-inngest'
+    href: 'https://github.com/inngest/envelop-plugin-inngest',
   },
   {
     title: 'useDepthLimit',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/depth-limit'
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/depth-limit',
   },
   {
     title: 'useGraphQLMiddleware',
-    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-middleware'
-  }
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-middleware',
+  },
+  {
+    title: 'useOnResolve',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/on-resolve',
+  },
 ];
 
 function splitArray(array: string[], parts: number) {
