@@ -21,14 +21,14 @@ export function InfiniteMovingCards({
   className?: string;
 }): ReactElement {
   const content = Children.map(children, (child, index) => (
-    <li key={index} className="w-[350px] max-w-full shrink-0 md:w-[450px]">
+    <li key={index} className="max-w-full shrink-0">
       {child}
     </li>
   ));
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'relative max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]',
         className,
       )}
@@ -38,7 +38,7 @@ export function InfiniteMovingCards({
       }}
     >
       <ul
-        className={clsx(
+        className={cn(
           'flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap',
           'animate-scroll',
           pauseOnHover && 'hover:[animation-play-state:paused]',

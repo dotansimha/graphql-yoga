@@ -80,6 +80,86 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
         </div>
         <div className="basis-1/2 relative"></div>
       </div>
+      {splitResult.map((plugins, index) => (
+        <InfiniteMovingCards
+          key={index}
+          direction="right"
+          speed="slow"
+          className="mx-auto"
+          pauseOnHover={false}
+        >
+          {plugins
+            .map(plugin => (
+              <div key={plugin} className="bg-green-900 rounded-lg px-4 py-3 text-green-600">
+                {plugin}
+              </div>
+            ))
+          }
+        </InfiniteMovingCards>
+      ))}
     </section>
   );
 };
+
+const ENVELOP_PLUGINS = [
+  'useSentry',
+  'useStatsD',
+  'useSchema',
+  'useSchemaByContext',
+  'useValidationRule',
+  'useErrorHandler',
+  'useMaskedErrors',
+  'useEngine',
+  'useExtendContext',
+  'useImmediateIntrospection',
+  'useLogger',
+  'usePayloadFormatter',
+  'useGraphQLJit',
+  'useParserCache',
+  'useValidationCache',
+  'useDataLoader',
+  'useApolloTracing',
+  'useApolloDataSources',
+  'useOpenTelemetry',
+  'useGenericAuth',
+  'useAuth0',
+  'useGraphQLModules',
+  'useRateLimiter',
+  'useDisableIntrospection',
+  'useFilterAllowedOperations',
+  'usePreloadAssets',
+  'usePersistedOperations',
+  'useHive',
+  'useNewRelic',
+  'useLiveQuery',
+  'useFragmentArguments',
+  'useApolloServerErrors',
+  'useOperationFieldPermissions',
+  'useExtendedValidation',
+  'usePrometheus',
+  'useContextValuePerExecuteSubscriptionEvent',
+  'useResourceLimitations',
+  'useResponseCache',
+  'useApolloFederation',
+  'maxAliasesPlugin',
+  'maxDepthPlugin',
+  'maxDirectivesPlugin',
+  'maxTokensPlugin',
+  'blockFieldSuggestions',
+  'useInngest',
+];
+function splitArray(array: unknown[], parts: number) {
+  const result = [];
+  const partSize = Math.ceil(array.length / parts);
+
+  for (let i = 0; i < array.length; i += partSize) {
+    result.push(array.slice(i, i + partSize));
+  }
+
+  return result;
+}
+
+const parts = 5;
+const splitResult = splitArray(ENVELOP_PLUGINS, parts);
+
+
