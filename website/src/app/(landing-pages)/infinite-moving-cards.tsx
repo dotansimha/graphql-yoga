@@ -1,8 +1,8 @@
-import { Children, ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { cn } from '@theguild/components';
 
 const TimeToSeconds = {
-  fast: '20s',
+  fast: '5s',
   normal: '40s',
   slow: '80s',
 };
@@ -20,8 +20,6 @@ export function InfiniteMovingCards({
   pauseOnHover?: boolean;
   className?: string;
 }): ReactElement {
-  const content = Children.map(children, (child, index) => <li key={index}>{child}</li>);
-
   return (
     <div
       className={cn(
@@ -39,8 +37,11 @@ export function InfiniteMovingCards({
           pauseOnHover && 'hover:[animation-play-state:paused]',
         )}
       >
-        {content}
-        {content}
+        {children}
+        {children}
+        {children}
+        {children}
+        {children}
       </ul>
     </div>
   );

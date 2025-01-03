@@ -22,7 +22,7 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
       {...props}
     >
       <div className="relative flex gap-24">
-        <div className="w-1/2">
+        <div className="basis-1/2">
           <Heading as="h2" size="sm">
             Truly extendable
           </Heading>
@@ -65,28 +65,30 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
             Learn more about Envelop Plugins
           </CallToAction>
         </div>
-        <div className="w-1/2 relative group">
-          {splitArray(
-            ENVELOP_PLUGINS.sort((a, b) => a.title.localeCompare(b.title)),
-            7,
-          ).map((plugins, index) => (
-            <InfiniteMovingCards key={index} direction="right">
-              {plugins.map(plugin => (
-                <CallToAction
-                  key={plugin.title}
-                  href={plugin.href}
-                  variant="secondary-inverted"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="opacity-60"
-                >
-                  {plugin.title}
-                </CallToAction>
-              ))}
-            </InfiniteMovingCards>
-          ))}
+        <div className="basis-1/2 w-2/5 relative flex items-center">
+          <div className="w-full">
+            {splitArray(
+              ENVELOP_PLUGINS.sort((a, b) => a.title.localeCompare(b.title)),
+              10,
+            ).map((plugins, index) => (
+              <InfiniteMovingCards
+                key={index}
+                direction={index % 2 ? 'left' : 'right'}
+                speed="fast"
+              >
+                {plugins.map(plugin => (
+                  <div
+                    key={plugin.title}
+                    className="bg-green-900 px-4 py-3 rounded-lg text-green-600"
+                  >
+                    {plugin.title}
+                  </div>
+                ))}
+              </InfiniteMovingCards>
+            ))}
+          </div>
           <YogaIcon
-            className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3 group-hover:opacity-0 transition-opacity duration-300 pointer-events-none"
+            className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
             stroke="white"
             strokeWidth="0.2"
             fill="url(#myGradient)"
