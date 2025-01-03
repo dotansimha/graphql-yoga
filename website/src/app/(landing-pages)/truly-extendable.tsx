@@ -165,8 +165,14 @@ const ENVELOP_PLUGINS = [
   },
   'useGraphQLModules',
   'useRateLimiter',
-  'useDisableIntrospection',
-  'useFilterAllowedOperations',
+  {
+    title: 'useDisableIntrospection',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/disable-introspection'
+  },
+  {
+    title: 'useFilterAllowedOperations',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/filter-operation-type'
+  },
   'usePreloadAssets',
   'usePersistedOperations',
   'useHive',
@@ -178,9 +184,15 @@ const ENVELOP_PLUGINS = [
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-server-errors'
   },
   'useOperationFieldPermissions',
-  'useExtendedValidation',
+  {
+    title: 'useExtendedValidation',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/extended-validation'
+  },
   'usePrometheus',
-  'useContextValuePerExecuteSubscriptionEvent',
+  {
+    title: 'useContextValuePerExecuteSubscriptionEvent',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/execute-subscription-event'
+  },
   'useResourceLimitations',
   'useResponseCache',
   {
@@ -203,8 +215,18 @@ const ENVELOP_PLUGINS = [
     title: 'maxTokensPlugin',
     href: 'https://escape.tech/graphql-armor/docs/plugins/max-tokens'
   },
-  'blockFieldSuggestions',
-  'useInngest',
+  {
+    title: 'blockFieldSuggestions',
+    href: 'https://escape.tech/graphql-armor/docs/plugins/block-field-suggestions'
+  },
+  {
+    title: 'useInngest',
+    href: 'https://github.com/inngest/envelop-plugin-inngest'
+  },
+  {
+    title: 'useDepthLimit',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/depth-limit'
+  }
 ];
 
 function splitArray(array: string[], parts: number) {
