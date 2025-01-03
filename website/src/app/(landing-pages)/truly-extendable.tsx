@@ -142,7 +142,10 @@ const ENVELOP_PLUGINS = [
     title: 'usePayloadFormatter',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
   },
-  'useGraphQLJit',
+  {
+    title: 'useGraphQLJit',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-jit'
+  },
   'useParserCache',
   'useValidationCache',
   {
@@ -158,12 +161,18 @@ const ENVELOP_PLUGINS = [
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-datasources'
   },
   'useOpenTelemetry',
-  'useGenericAuth',
+  {
+    title: 'useGenericAuth',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/generic-auth'
+  },
   {
     title: 'useAuth0',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/auth0'
   },
-  'useGraphQLModules',
+  {
+    title: 'useGraphQLModules',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-modules'
+  },
   'useRateLimiter',
   {
     title: 'useDisableIntrospection',
@@ -177,8 +186,14 @@ const ENVELOP_PLUGINS = [
   'usePersistedOperations',
   'useHive',
   'useNewRelic',
-  'useLiveQuery',
-  'useFragmentArguments',
+  {
+    title: 'useLiveQuery',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/live-query'
+  },
+  {
+    title: 'useFragmentArguments',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/fragment-arguments'
+  },
   {
     title: 'useApolloServerErrors',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-server-errors'
@@ -226,6 +241,10 @@ const ENVELOP_PLUGINS = [
   {
     title: 'useDepthLimit',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/depth-limit'
+  },
+  {
+    title: 'useGraphQLMiddleware',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/graphql-middleware'
   }
 ];
 
