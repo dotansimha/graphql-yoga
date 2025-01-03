@@ -102,15 +102,42 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
 };
 
 const ENVELOP_PLUGINS = [
-  'useSentry',
-  'useStatsD',
-  'useSchema',
-  'useSchemaByContext',
-  'useValidationRule',
-  'useErrorHandler',
-  'useMaskedErrors',
-  'useEngine',
-  'useExtendContext',
+  {
+    title: 'useSentry',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/sentry',
+  },
+  {
+    title: 'useStatsD',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/statsd'
+  },
+  {
+    title: 'useSchema',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
+  {
+    title: 'useSchemaByContext',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
+  {
+    title: 'useValidationRule',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
+  {
+    title: 'useErrorHandler',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
+  {
+    title: 'useMaskedErrors',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
+  {
+    title: 'useEngine',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
+  {
+    title:'useExtendContext',
+    href: 'https://github.com/n1ru4l/envelop/tree/main/packages/core'
+  },
   'useImmediateIntrospection',
   'useLogger',
   'usePayloadFormatter',
@@ -148,7 +175,8 @@ const ENVELOP_PLUGINS = [
   'blockFieldSuggestions',
   'useInngest',
 ];
-function splitArray(array: unknown[], parts: number) {
+
+function splitArray(array: string[], parts: number) {
   const result = [];
   const partSize = Math.ceil(array.length / parts);
 
@@ -158,8 +186,3 @@ function splitArray(array: unknown[], parts: number) {
 
   return result;
 }
-
-const parts = 5;
-const splitResult = splitArray(ENVELOP_PLUGINS, parts);
-
-
