@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/components';
+import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS, VersionDropdown } from '@theguild/components';
 import { getDefaultMetadata, getPageMap, GuildLayout } from '@theguild/components/server';
 import '@theguild/components/style.css';
 import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page';
@@ -67,6 +67,16 @@ const RootLayout: FC<{
             children: 'Changelog',
           },
         ],
+        children: (
+          <VersionDropdown
+            currentVersion="Version"
+            versions={[
+              { label: 'Yoga v4 Docs', href: '/v4', value: '4' },
+              { label: 'Yoga v3 Docs', href: '/v3', value: '3' },
+              { label: 'Yoga v2 Docs', href: '/v2', value: '2' },
+            ]}
+          />
+        ),
       }}
       search={<VersionedSearch />}
       lightOnlyPages={['/']}
