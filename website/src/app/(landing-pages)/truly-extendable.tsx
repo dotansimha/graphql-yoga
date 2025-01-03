@@ -80,21 +80,13 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
         </div>
         <div className="basis-1/2 relative"></div>
       </div>
-      {splitResult.map((plugins, index) => (
-        <InfiniteMovingCards
-          key={index}
-          direction="right"
-          speed="slow"
-          className="mx-auto"
-          pauseOnHover={false}
-        >
-          {plugins
-            .map(plugin => (
-              <div key={plugin} className="bg-green-900 rounded-lg px-4 py-3 text-green-600">
-                {plugin}
-              </div>
-            ))
-          }
+      {splitArray(ENVELOP_PLUGINS, 5).map((plugins, index) => (
+        <InfiniteMovingCards key={index} direction="right" speed="slow" pauseOnHover={false}>
+          {plugins.map(plugin => (
+            <div key={plugin} className="bg-green-900 rounded-lg px-4 py-3 text-green-600">
+              {plugin}
+            </div>
+          ))}
         </InfiniteMovingCards>
       ))}
     </section>
@@ -195,10 +187,22 @@ const ENVELOP_PLUGINS = [
     title: 'useApolloFederation',
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/apollo-federation'
   },
-  'maxAliasesPlugin',
-  'maxDepthPlugin',
-  'maxDirectivesPlugin',
-  'maxTokensPlugin',
+  {
+    title: 'maxAliasesPlugin',
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-aliases'
+  },
+  {
+    title: 'maxDepthPlugin',
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-depth'
+  },
+  {
+    title: 'maxDirectivesPlugin',
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-directives'
+  },
+  {
+    title: 'maxTokensPlugin',
+    href: 'https://escape.tech/graphql-armor/docs/plugins/max-tokens'
+  },
   'blockFieldSuggestions',
   'useInngest',
 ];
