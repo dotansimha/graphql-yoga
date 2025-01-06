@@ -1,5 +1,22 @@
 # graphql-yoga
 
+## 5.10.9
+
+### Patch Changes
+
+- [#3620](https://github.com/dotansimha/graphql-yoga/pull/3620)
+  [`d24c5d5`](https://github.com/dotansimha/graphql-yoga/commit/d24c5d58e05b6f3b59b7745a55ba9c8dc6fb3aa3)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - Bump dset dependency handling the
+  CVE-2024-21529
+
+  https://security.snyk.io/vuln/SNYK-JS-DSET-7116691
+
+- [#3620](https://github.com/dotansimha/graphql-yoga/pull/3620)
+  [`d24c5d5`](https://github.com/dotansimha/graphql-yoga/commit/d24c5d58e05b6f3b59b7745a55ba9c8dc6fb3aa3)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - dependencies updates:
+  - Updated dependency [`dset@^3.1.4` ↗︎](https://www.npmjs.com/package/dset/v/3.1.4) (from
+    `^3.1.1`, in `dependencies`)
+
 ## 5.10.8
 
 ### Patch Changes
