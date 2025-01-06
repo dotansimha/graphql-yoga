@@ -12,6 +12,7 @@ import json from '../../../../remote-files/v3.json';
 import { useMDXComponents } from '../../../mdx-components';
 import CodegenCallout from '../../codegen-callout.mdx';
 import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
+import { Giscus } from '../../giscus'
 
 const { branch, docsPath, filePaths, repo, user } = json;
 
@@ -111,6 +112,7 @@ export default async function Page(props: NextPageProps<'...slug'>) {
       data-version="v3"
       // https://pagefind.app/docs/filtering/#capturing-a-filter-value-from-an-attribute
       data-pagefind-filter="version[data-version]"
+      bottomContent={<Giscus />}
     >
       <LegacyDocsBanner yogaVersion={3} />
       <MDXContent />
