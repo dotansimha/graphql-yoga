@@ -112,11 +112,7 @@ export default function IndexPage() {
   return (
     <Page className="mx-auto max-w-[90rem]">
       <Hero className="mx-4 max-sm:mt-2 md:mx-6">
-        <Heading
-          as="h1"
-          size="xl"
-          className="mx-auto max-w-3xl text-balance text-center"
-        >
+        <Heading as="h1" size="xl" className="mx-auto max-w-3xl text-balance text-center">
           Yoga — High-performance GraphQL Server
         </Heading>
         <p className="mx-auto w-[512px] max-w-[80%] text-center leading-6 text-green-800">

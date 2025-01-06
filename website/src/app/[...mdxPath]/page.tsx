@@ -1,7 +1,7 @@
 import { NextPageProps } from '@theguild/components';
 import { generateStaticParamsFor, importPage } from '@theguild/components/pages';
 import { useMDXComponents } from '../../mdx-components';
-import { Giscus } from '../giscus'
+import { Giscus } from '../giscus';
 
 export const generateStaticParams = generateStaticParamsFor('mdxPath');
 

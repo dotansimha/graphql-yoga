@@ -7,18 +7,21 @@ import {
   evaluate,
   mergeMetaWithPageMap,
   normalizePageMap,
+  remarkLinkRewrite,
 } from '@theguild/components/server';
 import json from '../../../../remote-files/v4.json';
 import { useMDXComponents } from '../../../mdx-components';
 import CodegenCallout from '../../codegen-callout.mdx';
+import { Giscus } from '../../giscus';
 import LegacyDocsBanner from '../../legacy-docs-banner.mdx';
-import { Giscus } from '../../giscus'
 
 const { branch, docsPath, filePaths, repo, user } = json;
 
+const VERSION = 4;
+
 const { mdxPages, pageMap: _pageMap } = convertToPageMap({
   filePaths,
-  basePath: 'v4',
+  basePath: `v${VERSION}`,
 });
 
 // @ts-expect-error -- ignore
@@ -104,19 +107,29 @@ export default async function Page(props: NextPageProps<'...slug'>) {
     `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${docsPath}${filePath}`,
   );
   const data = await response.text();
-  const rawJs = await compileMdx(data, { filePath, ...defaultNextraOptions });
+  const rawJs = await compileMdx(data, {
+    filePath,
+    ...defaultNextraOptions,
+    mdxOptions: {
+      ...defaultNextraOptions.mdxOptions,
+      remarkPlugins: [
+        ...defaultNextraOptions.mdxOptions.remarkPlugins,
+        [remarkLinkRewrite, { pattern: /^\/docs(\/.*)?$/, replace: `/v${VERSION}$1` }],
+      ],
+    },
+  });
   const { default: MDXContent, toc, metadata } = evaluate(rawJs, components);
 
   return (
     <Wrapper
       toc={toc}
       metadata={metadata}
-      data-version="v4"
+      data-version={`v${VERSION}`}
       // https://pagefind.app/docs/filtering/#capturing-a-filter-value-from-an-attribute
       data-pagefind-filter="version[data-version]"
       bottomContent={<Giscus />}
     >
-      <LegacyDocsBanner yogaVersion={4} />
+      <LegacyDocsBanner yogaVersion={VERSION} />
       <MDXContent />
     </Wrapper>
   );
