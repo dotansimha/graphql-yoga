@@ -1,5 +1,6 @@
 import { ComponentProps, FC } from 'react';
-import { Anchor, CallToAction, cn, ComparisonTable, Heading } from '@theguild/components';
+import { CallToAction, Heading, ComparisonTable as Table } from '@theguild/components';
+import ComparisonTable from '../comparison-table.mdx';
 
 export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = props => {
   return (
@@ -21,69 +22,26 @@ export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = props => {
           </CallToAction>
         </div>
 
-        <ComparisonTable className={cn('grow')}>
-          <thead>
-            <ComparisonTable.Row>
-              {['Name', 'Language', 'Server', 'Latency avg', 'Requests'].map(header => (
-                <ComparisonTable.Header className="sm:w-1/4 whitespace-pre" key={header}>
-                  {header}
-                </ComparisonTable.Header>
-              ))}
-            </ComparisonTable.Row>
-          </thead>
-
-          <tbody>
-            {[
-              {
-                name: 'GraphQL Yoga with Response Cache',
-                href: '/docs/features/response-caching',
-                language: 'Node.js',
-                server: 'http',
-                latency: '46.54ms',
-                requests: '2.2kps',
-              },
-              {
-                name: 'GraphQL Yoga with JIT',
-                href: '/docs/features/envelop-plugins#envelop-plugin-example',
-                language: 'Node.js',
-                server: 'http',
-                latency: '764.83ms',
-                requests: '120ps',
-              },
-              {
-                name: 'GraphQL Yoga',
-                href: 'https://github.com/dotansimha/graphql-yoga',
-                language: 'Node.js',
-                server: 'http',
-                latency: '916.90ms',
-                requests: '100ps',
-              },
-              {
-                name: 'Apollo Server',
-                href: 'https://github.com/apollographql/apollo-server',
-                language: 'Node.js',
-                server: 'Express',
-                latency: '1,234.12ms',
-                requests: '64ps',
-              },
-            ].map(row => {
-              const isApollo = row.name === 'Apollo Server';
-              return (
-                <ComparisonTable.Row key={row.name} className={isApollo ? 'bg-beige-100' : ''}>
-                  <ComparisonTable.Cell className={isApollo ? '!bg-beige-100' : ''}>
-                    <Anchor href={row.href} className="underline font-medium">
-                      {row.name}
-                    </Anchor>
-                  </ComparisonTable.Cell>
-                  <ComparisonTable.Cell>{row.language}</ComparisonTable.Cell>
-                  <ComparisonTable.Cell>{row.server}</ComparisonTable.Cell>
-                  <ComparisonTable.Cell>{row.latency}</ComparisonTable.Cell>
-                  <ComparisonTable.Cell>{row.requests}</ComparisonTable.Cell>
-                </ComparisonTable.Row>
-              );
-            })}
-          </tbody>
-        </ComparisonTable>
+        <ComparisonTable
+          components={{
+            table(props: any) {
+              return <Table className="grow" {...props} />;
+            },
+            tr(props: any) {
+              const content = props.children[0].props.children.props?.children;
+              const isApollo = content === 'Apollo Server';
+              return <Table.Row className={isApollo ? 'bg-beige-100' : ''} {...props} />;
+            },
+            td(props: any) {
+              const content = props.children.props?.children;
+              const isApollo = content === 'Apollo Server';
+              return <Table.Cell className={isApollo ? '!bg-beige-100' : ''} {...props} />;
+            },
+            th(props: any) {
+              return <Table.Header className="sm:w-1/4 whitespace-pre" {...props} />;
+            },
+          }}
+        />
       </div>
     </section>
   );

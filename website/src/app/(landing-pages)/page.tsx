@@ -134,7 +134,7 @@ export default function IndexPage() {
           </li>
         </HeroFeatures>
         <HeroLinks>
-          <CallToAction variant="primary" href="/docs">
+          <CallToAction variant="primary-inverted" href="/docs">
             Get started
           </CallToAction>
           <CallToAction variant="secondary-inverted" href="/changelog">
