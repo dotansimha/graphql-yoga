@@ -113,7 +113,6 @@ export default async function Page(props: NextPageProps<'...slug'>) {
     mdxOptions: {
       ...defaultNextraOptions.mdxOptions,
       remarkPlugins: [
-        ...defaultNextraOptions.mdxOptions.remarkPlugins,
         [remarkLinkRewrite, { pattern: /^\/docs(\/.*)?$/, replace: `/v${VERSION}$1` }],
       ],
     },
