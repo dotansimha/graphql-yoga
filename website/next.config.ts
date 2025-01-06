@@ -1,6 +1,5 @@
 import { withGuildDocs } from '@theguild/components/next.config';
 
-// eslint-disable-next-line import/no-default-export
 export default withGuildDocs({
   redirects: async () =>
     Object.entries({

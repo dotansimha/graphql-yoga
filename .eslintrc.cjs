@@ -10,7 +10,7 @@ module.exports = {
       },
     },
     {
-      files: ['website/**/{_meta,page,layout}.{ts,js,tsx}'],
+      files: ['website/**/*.{ts,js,tsx}'],
       rules: {
         'import/no-default-export': 'off',
         'import/extensions': 'off',
