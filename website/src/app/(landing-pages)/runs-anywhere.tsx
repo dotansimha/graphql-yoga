@@ -9,7 +9,7 @@ export const RunAnywhereSection: FC<ComponentProps<'section'>> = ({
   return (
     <section
       className={cn(
-        'relative rounded-3xl bg-blue-400 text-green-1000 p-4 pt-6 sm:py-24 md:px-6 lg:px-12 2xl:px-24 md:py-[120px]',
+        'relative rounded-3xl bg-blue-400 p-4 pt-6 sm:py-24 md:px-6 lg:px-12 2xl:px-24 md:py-[120px]',
         className,
       )}
       {...props}

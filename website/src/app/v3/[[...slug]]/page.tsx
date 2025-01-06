@@ -109,6 +109,7 @@ export default async function Page(props: NextPageProps<'...slug'>) {
       toc={toc}
       metadata={metadata}
       data-version="v3"
+      // https://pagefind.app/docs/filtering/#capturing-a-filter-value-from-an-attribute
       data-pagefind-filter="version[data-version]"
     >
       <LegacyDocsBanner yogaVersion={3} />

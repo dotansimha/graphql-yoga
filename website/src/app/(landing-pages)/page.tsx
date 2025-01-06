@@ -115,7 +115,7 @@ export default function IndexPage() {
         <Heading
           as="h1"
           size="xl"
-          className="mx-auto max-w-3xl text-balance text-center text-green-1000"
+          className="mx-auto max-w-3xl text-balance text-center"
         >
           Yoga — High-performance GraphQL Server
         </Heading>
@@ -155,7 +155,7 @@ export default function IndexPage() {
 
       <section className="flex mt-6 max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]">
         <div className="grow">
-          <Heading as="h2" size="md" className="text-green-1000">
+          <Heading as="h2" size="md">
             Practice Yoga while doing server-work
           </Heading>
           <p className="text-green-800 mt-4">
@@ -258,7 +258,7 @@ export default function IndexPage() {
 function EnterpriseFocusedCards({ className }: { className?: string }) {
   return (
     <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-[120px]', className)}>
-      <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center text-green-1000">
+      <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center">
         Everything HTTP
       </Heading>
       <p className="text-green-800 sm:text-center mt-4">

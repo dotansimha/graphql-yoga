@@ -4,12 +4,12 @@ import { Anchor, CallToAction, cn, ComparisonTable, Heading } from '@theguild/co
 export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = props => {
   return (
     <section {...props}>
-      <Heading as="h2" size="md" className="text-balance sm:text-center text-green-1000 px-4">
+      <Heading as="h2" size="md" className="text-balance sm:text-center px-4">
         Using Apollo Server? Reach zen quicker with Yoga.
       </Heading>
       <div className="mx-4 flex max-lg:flex-col gap-6 lg:gap-24 mt-6 sm:mt-[64px]">
         <div className="basis-1/4">
-          <Heading as="h3" size="sm" className="text-green-1000 max-sm:text-2xl">
+          <Heading as="h3" size="sm" className="max-sm:text-2xl">
             Runtime&nbsp;Performance Champion
           </Heading>
           <p className="text-green-800 mt-4 mb-6">
@@ -71,7 +71,7 @@ export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = props => {
               return (
                 <ComparisonTable.Row key={row.name} className={isApollo ? 'bg-beige-100' : ''}>
                   <ComparisonTable.Cell className={isApollo ? '!bg-beige-100' : ''}>
-                    <Anchor href={row.href} className="text-green-1000 underline font-medium">
+                    <Anchor href={row.href} className="underline font-medium">
                       {row.name}
                     </Anchor>
                   </ComparisonTable.Cell>
