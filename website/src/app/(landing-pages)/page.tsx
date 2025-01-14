@@ -148,7 +148,7 @@ export default function IndexPage() {
       </Hero>
 
       <ExploreMainProductCards />
-
+      <EverythingHTTPSection />
       <TrulyExtendableSection className="mt-24" />
 
       <ReachZenQuickerWithYoga className="my-28" />
@@ -200,9 +200,7 @@ export default function IndexPage() {
         ))}
       </RunAnywhereSection>
 
-      <EverythingHTTPSection />
-
-      <section className="flex mt-6 max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]">
+      <section className="flex my-24 max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]">
         <div className="grow">
           <Heading as="h2" size="md">
             Practice Yoga while doing server-work
