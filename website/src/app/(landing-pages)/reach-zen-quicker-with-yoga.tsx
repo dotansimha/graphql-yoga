@@ -29,13 +29,13 @@ export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = props => {
             },
             tr(props: any) {
               const content = props.children[0].props.children.props?.children;
-              const isApollo = content === 'Apollo Server';
-              return <Table.Row className={isApollo ? 'bg-beige-100' : ''} {...props} />;
+              const isHighlight = content?.includes('Response Cache');
+              return <Table.Row highlight={isHighlight} {...props} />;
             },
             td(props: any) {
               const content = props.children.props?.children;
-              const isApollo = content === 'Apollo Server';
-              return <Table.Cell className={isApollo ? '!bg-beige-100' : ''} {...props} />;
+              const isHighlight = content?.includes('Response Cache');
+              return <Table.Cell className={isHighlight ? '!bg-green-100' : ''} {...props} />;
             },
             th(props: any) {
               return <Table.Header className="sm:w-1/4 whitespace-pre" {...props} />;
