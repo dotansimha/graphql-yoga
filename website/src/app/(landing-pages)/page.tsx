@@ -6,7 +6,7 @@ import {
   cn,
   DecorationIsolation,
   ExploreMainProductCards,
-  FrequentlyAskedQuestions,
+  // FrequentlyAskedQuestions,
   GetYourAPIGameRightSection,
   GitHubIcon,
   Heading,
@@ -15,7 +15,7 @@ import {
   YogaIcon,
 } from '@theguild/components';
 import { metadata as rootMetadata } from '../layout';
-import FAQ from './faq.mdx';
+// import FAQ from './faq.mdx';
 import { ReachZenQuickerWithYoga } from './reach-zen-quicker-with-yoga';
 import { ListItemAnchor, RunAnywhereSection } from './runs-anywhere';
 import { TrulyExtendableSection } from './truly-extendable';
@@ -149,49 +149,9 @@ export default function IndexPage() {
 
       <ExploreMainProductCards />
 
-      <section className="flex mt-6 max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]">
-        <div className="grow">
-          <Heading as="h2" size="md">
-            Practice Yoga while doing server-work
-          </Heading>
-          <p className="text-green-800 mt-4">
-            Yoga ensures optimal configuration out-of-the-box, enhancing performance and developer
-            workflow.
-          </p>
-          <div className="relative lg:hidden mt-6">{yogaMan}</div>
-          <div className="flex my-12 gap-8 max-sm:flex-col">
-            <InfoCard
-              heading="Error masking"
-              icon={<Image src={errorWarningBadge} alt="" />}
-              className="flex-1 p-0 md:p-0 bg-transparent"
-            >
-              Enhance security by masking errors to prevent sensitive data leaks.
-            </InfoCard>
-            <InfoCard
-              heading="Health checks"
-              icon={<Image src={pulseLineBadge} alt="" />}
-              className="flex-1 p-0 md:p-0 bg-transparent"
-            >
-              Built-in health checks to ensure server vitality and readiness.
-            </InfoCard>
-            <InfoCard
-              heading="GraphiQL Integration"
-              icon={<Image src={graphqlBadge} alt="" />}
-              className="flex-1 p-0 md:p-0 bg-transparent"
-            >
-              In-browser IDE for seamless writing, validation, and testing of GraphQL operations.
-            </InfoCard>
-          </div>
-          <CallToAction variant="primary" href="/docs">
-            Learn more
-          </CallToAction>
-        </div>
-        <div className="basis-5/12 shrink-0 relative max-lg:hidden">{yogaMan}</div>
-      </section>
-
       <TrulyExtendableSection className="mt-24" />
 
-      <EnterpriseFocusedCards />
+      <ReachZenQuickerWithYoga className="my-28" />
 
       <RunAnywhereSection className="mx-4 md:mx-6">
         {[
@@ -240,18 +200,59 @@ export default function IndexPage() {
         ))}
       </RunAnywhereSection>
 
-      <ReachZenQuickerWithYoga className="mt-28" />
+      <EverythingHTTPSection />
+
+      <section className="flex mt-6 max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]">
+        <div className="grow">
+          <Heading as="h2" size="md">
+            Practice Yoga while doing server-work
+          </Heading>
+          <p className="text-green-800 mt-4">
+            Yoga ensures optimal configuration out-of-the-box, enhancing performance and developer
+            workflow.
+          </p>
+          <div className="relative lg:hidden mt-6">{yogaMan}</div>
+          <div className="flex my-12 gap-8 max-sm:flex-col">
+            <InfoCard
+              heading="Error masking"
+              icon={<Image src={errorWarningBadge} alt="" />}
+              className="flex-1 p-0 md:p-0 bg-transparent"
+            >
+              Enhance security by masking errors to prevent sensitive data leaks.
+            </InfoCard>
+            <InfoCard
+              heading="Health checks"
+              icon={<Image src={pulseLineBadge} alt="" />}
+              className="flex-1 p-0 md:p-0 bg-transparent"
+            >
+              Built-in health checks to ensure server vitality and readiness.
+            </InfoCard>
+            <InfoCard
+              heading="GraphiQL Integration"
+              icon={<Image src={graphqlBadge} alt="" />}
+              className="flex-1 p-0 md:p-0 bg-transparent"
+            >
+              In-browser IDE for seamless writing, validation, and testing of GraphQL operations.
+            </InfoCard>
+          </div>
+          <CallToAction variant="primary" href="/docs">
+            Learn more
+          </CallToAction>
+        </div>
+        <div className="basis-5/12 shrink-0 relative max-lg:hidden">{yogaMan}</div>
+      </section>
 
       <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
-      <FrequentlyAskedQuestions faqPages={['/']}>
-        <FAQ />
-      </FrequentlyAskedQuestions>
+      {/* TODO: add later */}
+      {/*<FrequentlyAskedQuestions faqPages={['/']}>*/}
+      {/*  <FAQ />*/}
+      {/*</FrequentlyAskedQuestions>*/}
       <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
   );
 }
 
-function EnterpriseFocusedCards({ className }: { className?: string }) {
+function EverythingHTTPSection({ className }: { className?: string }) {
   return (
     <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-[120px]', className)}>
       <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center">
