@@ -80,7 +80,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
     WeakMap<Request, ApolloUsageReportRequestContext>,
   ];
 
-  let schemaId$: Promise<string>;
+  let schemaIdSet$: Promise<void> | undefined;
   let schemaId: string;
   let yoga: YogaServer<Record<string, unknown>, Record<string, unknown>>;
   const logger = Object.fromEntries(
@@ -122,16 +122,15 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
         },
         onSchemaChange({ schema }) {
           if (schema) {
-            schemaId$ = hashSHA256(printSchema(schema));
+            schemaIdSet$ = hashSHA256(printSchema(schema), yoga.fetchAPI).then(id => {
+              schemaId = id;
+              schemaIdSet$ = undefined;
+            });
           }
         },
 
         onRequestParse(): PromiseOrValue<void> {
-          if (!schemaId) {
-            return schemaId$.then(id => {
-              schemaId = id;
-            });
-          }
+          return schemaIdSet$;
         },
 
         onParse() {
