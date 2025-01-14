@@ -174,7 +174,8 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
 
           for (const trace of reqCtx.traces.values()) {
             if (!trace.schemaId || !trace.operationKey) {
-              throw new TypeError('Misformed trace, missing operation key or schema id');
+              logger.debug('Misformed trace, missing operation key or schema id');
+              continue;
             }
 
             const clientName = clientNameFactory(request);
