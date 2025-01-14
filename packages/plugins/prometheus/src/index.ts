@@ -183,17 +183,21 @@ export function usePrometheus(options: PrometheusTracingPluginConfig): Plugin {
     onRequest({ request }) {
       startByRequest.set(request, Date.now());
     },
-    onParse() {
-      return ({ result: document, context }) => {
-        const operationAST = getOperationAST(document, context.params.operationName);
-        const params = {
-          document,
-          operationName: operationAST?.name?.value,
-          operationType: operationAST?.operation,
-        };
+    onParse({ context }) {
+      // If only it is Yoga, we calculate HTTP request time
+      if (context.request) {
+        return ({ result: document, context }) => {
+          const operationAST = getOperationAST(document, context.params.operationName);
+          const params = {
+            document,
+            operationName: operationAST?.name?.value,
+            operationType: operationAST?.operation,
+          };
 
-        paramsByRequest.set(context.request, params);
-      };
+          paramsByRequest.set(context.request, params);
+        };
+      }
+      return undefined;
     },
     onResponse({ request, response, serverContext }) {
       const start = startByRequest.get(request);
