@@ -1,6 +1,5 @@
-import { createServer, type Server } from 'http';
-import { AddressInfo } from 'net';
-import { ExecutionResult } from 'graphql';
+import { createServer, type Server } from 'node:http';
+import { AddressInfo } from 'node:net';
 import { Client, createClient } from 'graphql-ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { createSchema, createYoga } from 'graphql-yoga';
