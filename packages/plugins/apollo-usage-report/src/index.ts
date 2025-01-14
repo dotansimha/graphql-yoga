@@ -1,12 +1,13 @@
 import { DocumentNode, getOperationAST, Kind, printSchema, stripIgnoredCharacters } from 'graphql';
 import {
   isAsyncIterable,
-  Maybe,
-  Plugin,
-  YogaInitialContext,
   YogaLogger,
   YogaServer,
   type FetchAPI,
+  type Maybe,
+  type Plugin,
+  type PromiseOrValue,
+  type YogaInitialContext,
 } from 'graphql-yoga';
 import { Report } from '@apollo/usage-reporting-protobuf';
 import {
@@ -79,6 +80,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
     WeakMap<Request, ApolloUsageReportRequestContext>,
   ];
 
+  let schemaId$: Promise<string>;
   let schemaId: string;
   let yoga: YogaServer<Record<string, unknown>, Record<string, unknown>>;
   const logger = Object.fromEntries(
@@ -120,7 +122,13 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
         },
         onSchemaChange({ schema }) {
           if (schema) {
-            hashSHA256(printSchema(schema)).then(id => {
+            schemaId$ = hashSHA256(printSchema(schema));
+          }
+        },
+
+        onRequestParse(): PromiseOrValue<void> {
+          if (!schemaId) {
+            return schemaId$.then(id => {
               schemaId = id;
             });
           }
@@ -209,7 +217,7 @@ export async function hashSHA256(
   str: string,
   api: {
     crypto: Crypto;
-    TextEncoder: (typeof globalThis)['TextEncoder'];
+    TextEncoder: typeof TextEncoder;
   } = globalThis,
 ) {
   const { crypto, TextEncoder } = api;
