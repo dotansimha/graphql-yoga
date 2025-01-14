@@ -217,7 +217,7 @@ export async function hashSHA256(
   str: string,
   api: {
     crypto: Crypto;
-    TextEncoder: typeof TextEncoder;
+    TextEncoder: (typeof globalThis)['TextEncoder'];
   } = globalThis,
 ) {
   const { crypto, TextEncoder } = api;
