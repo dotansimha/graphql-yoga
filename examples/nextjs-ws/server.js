@@ -3,7 +3,7 @@
 const { createServer } = require('node:http');
 const { WebSocketServer } = require('ws');
 const { createYoga, createSchema } = require('graphql-yoga');
-const { useServer } = require('graphql-ws/lib/use/ws');
+const { useServer } = require('graphql-ws/use/ws');
 const { parse } = require('node:url');
 const next = require('next');
 const { setTimeout: setTimeout$ } = require('node:timers/promises');
@@ -106,20 +106,20 @@ async function start(port, handle) {
       execute: args => args.rootValue.execute(args),
       /** @param {EnvelopedExecutionArgs} args */
       subscribe: args => args.rootValue.subscribe(args),
-      onSubscribe: async (ctx, msg) => {
+      onSubscribe: async (ctx, _id, params) => {
         const { schema, execute, subscribe, contextFactory, parse, validate } = yoga.getEnveloped({
           ...ctx,
           req: ctx.extra.request,
           socket: ctx.extra.socket,
-          params: msg.payload,
+          params,
         });
 
         /** @type EnvelopedExecutionArgs */
         const args = {
           schema,
-          operationName: msg.payload.operationName,
-          document: parse(msg.payload.query),
-          variableValues: msg.payload.variables,
+          operationName: params.operationName,
+          document: parse(params.query),
+          variableValues: params.variables,
           contextValue: await contextFactory(),
           rootValue: {
             execute,
