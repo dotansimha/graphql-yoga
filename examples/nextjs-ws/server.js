@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-env node */
-const { createServer } = require('node:http');
-const { WebSocketServer } = require('ws');
-const { createYoga, createSchema } = require('graphql-yoga');
-const { useServer } = require('graphql-ws/dist/use/ws.cjs');
-const { parse } = require('node:url');
-const next = require('next');
-const { setTimeout: setTimeout$ } = require('node:timers/promises');
+import { createServer } from 'node:http';
+import { setTimeout as setTimeout$ } from 'node:timers/promises';
+import { parse } from 'node:url';
+import next from 'next';
+import { useServer } from 'graphql-ws/use/ws';
+import { createSchema, createYoga } from 'graphql-yoga';
+import { WebSocketServer } from 'ws';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -156,4 +156,4 @@ if (process.env.NODE_ENV !== 'test') {
   })();
 }
 
-module.exports = { start };
+export default { start };
