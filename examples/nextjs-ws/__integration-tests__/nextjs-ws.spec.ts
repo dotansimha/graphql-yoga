@@ -1,13 +1,13 @@
 // import to start
 import { createClient } from 'graphql-ws';
 import WebSocket from 'ws';
-import { start } from '../server.js';
+import server from '../server.js';
 
 let stop = () => {
   // noop
 };
 beforeAll(async () => {
-  stop = await start(53_000);
+  stop = await server.start(53_000);
 });
 afterAll(() => stop());
 

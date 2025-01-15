@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { createClient } from 'graphql-ws';
-import { useServer } from 'graphql-ws/lib/use/ws';
+import { useServer } from 'graphql-ws/use/ws';
 import { createSchema, createYoga } from 'graphql-yoga';
 import WebSocket from 'ws';
 import { buildApp } from '../src/app.js';
@@ -122,15 +122,15 @@ describe('graphql-ws example integration', () => {
         execute: (args: any) => args.execute(args),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         subscribe: (args: any) => args.subscribe(args),
-        onSubscribe: async (_ctx, msg) => {
+        onSubscribe: async (_ctx, _id, params) => {
           const { schema, execute, subscribe, contextFactory, parse, validate } =
             yoga.getEnveloped(); // <- malformed/missing context
 
           const args = {
             schema,
-            operationName: msg.payload.operationName,
-            document: parse(msg.payload.query),
-            variableValues: msg.payload.variables,
+            operationName: params.operationName,
+            document: parse(params.query),
+            variableValues: params.variables,
             contextValue: await contextFactory(),
             execute,
             subscribe,
