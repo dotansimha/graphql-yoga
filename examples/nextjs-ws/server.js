@@ -3,7 +3,7 @@
 const { createServer } = require('node:http');
 const { WebSocketServer } = require('ws');
 const { createYoga, createSchema } = require('graphql-yoga');
-const { useServer } = require('graphql-ws/use/ws');
+const { useServer } = require('graphql-ws/dist/use/ws.cjs');
 const { parse } = require('node:url');
 const next = require('next');
 const { setTimeout: setTimeout$ } = require('node:timers/promises');

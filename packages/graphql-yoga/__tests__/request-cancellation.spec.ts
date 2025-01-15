@@ -4,16 +4,15 @@ import { createDeferredPromise, fakePromise } from '@whatwg-node/server';
 import { createLogger, createSchema, createYoga, FetchAPI } from '../src/index';
 import { useExecutionCancellation } from '../src/plugins/use-execution-cancellation';
 
-const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [['Ponyfill', undefined]];
-
-if (!process.env['LEAK_TESTS']) {
-  variants.push([
+const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [
+  ['Ponyfill', undefined],
+  [
     'Native',
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - URLPattern is not available in types
     globalThis,
-  ]);
-}
+  ]
+];
 
 function waitAFewMillisecondsToMakeSureGraphQLExecutionIsNotResumingInBackground() {
   return setTimeout$(5);
