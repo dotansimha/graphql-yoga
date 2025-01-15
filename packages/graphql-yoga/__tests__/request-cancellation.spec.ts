@@ -11,7 +11,7 @@ const variants: Array<[name: string, fetchAPI: undefined | FetchAPI]> = [
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - URLPattern is not available in types
     globalThis,
-  ]
+  ],
 ];
 
 function waitAFewMillisecondsToMakeSureGraphQLExecutionIsNotResumingInBackground() {
