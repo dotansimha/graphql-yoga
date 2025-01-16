@@ -741,8 +741,8 @@ importers:
         specifier: 16.10.0
         version: 16.10.0
       graphql-ws:
-        specifier: 6.0.0
-        version: 6.0.0(graphql@16.10.0)(uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/6609a88ffa9a16ac5158046761356ce03250a0df)(ws@8.18.0)
+        specifier: 6.0.1
+        version: 6.0.1(graphql@16.10.0)(ws@8.18.0)
       graphql-yoga:
         specifier: workspace:*
         version: link:../../packages/graphql-yoga/dist
@@ -1570,16 +1570,16 @@ importers:
     dependencies:
       '@graphiql/plugin-explorer':
         specifier: ^3.0.0
-        version: 3.2.5(@graphiql/react@0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 3.2.5(@graphiql/react@0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@graphiql/toolkit':
         specifier: 0.11.1
-        version: 0.11.1(@types/node@22.10.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)
+        version: 0.11.1(@types/node@22.10.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)
       '@graphql-tools/url-loader':
         specifier: ^8.0.15
         version: 8.0.24(@types/node@22.10.7)(graphql@16.10.0)
       graphiql:
         specifier: 3.1.1
-        version: 3.1.1(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 3.1.1(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -2017,8 +2017,8 @@ importers:
         specifier: ^1.22.2
         version: 1.24.0(graphql@16.10.0)
       graphql-ws:
-        specifier: 6.0.0
-        version: 6.0.0(graphql@16.10.0)(uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/6609a88ffa9a16ac5158046761356ce03250a0df)(ws@8.18.0)
+        specifier: 6.0.1
+        version: 6.0.1(graphql@16.10.0)(ws@8.18.0)
       graphql-yoga:
         specifier: workspace:*
         version: link:../../graphql-yoga/dist
@@ -11678,6 +11678,22 @@ packages:
       ws:
         optional: true
 
+  graphql-ws@6.0.1:
+    resolution: {integrity: sha512-ScU+lpgXMVH+BQecv+veIk6eqF8eNZgvRZU+UNaXGvQ1mGq1uEuQRzmrCvMnaZOW1IX+E5PKZvFNXO39LGZU2Q==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@fastify/websocket': ^10 || ^11
+      graphql: 16.10.0
+      uWebSockets.js: ^20
+      ws: ^8
+    peerDependenciesMeta:
+      '@fastify/websocket':
+        optional: true
+      uWebSockets.js:
+        optional: true
+      ws:
+        optional: true
+
   graphql@16.10.0:
     resolution: {integrity: sha512-AjqGKbDGUFRKIRCP9tCKiIGHyriz2oHEbPIbEtcSLSs4YjReZOIPQQWek4+6hjw62H9QShXHyaGivGiYVLeYFQ==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
@@ -20463,17 +20479,17 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@graphiql/plugin-explorer@3.2.5(@graphiql/react@0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@graphiql/plugin-explorer@3.2.5(@graphiql/react@0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@graphiql/react': 0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@graphiql/react': 0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       graphiql-explorer: 0.9.0(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       graphql: 16.10.0
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@graphiql/react@0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@graphiql/react@0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@graphiql/toolkit': 0.9.2(@types/node@22.10.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)
+      '@graphiql/toolkit': 0.9.2(@types/node@22.10.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)
       '@headlessui/react': 1.7.19(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-dialog': 1.1.4(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-dropdown-menu': 2.1.4(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -20498,23 +20514,23 @@ snapshots:
       - '@types/react-dom'
       - graphql-ws
 
-  '@graphiql/toolkit@0.11.1(@types/node@22.10.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)':
+  '@graphiql/toolkit@0.11.1(@types/node@22.10.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)':
     dependencies:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 16.10.0
       meros: 1.3.0(@types/node@22.10.7)
     optionalDependencies:
-      graphql-ws: 6.0.0(graphql@16.10.0)(uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/6609a88ffa9a16ac5158046761356ce03250a0df)(ws@8.18.0)
+      graphql-ws: 6.0.1(graphql@16.10.0)(ws@8.18.0)
     transitivePeerDependencies:
       - '@types/node'
 
-  '@graphiql/toolkit@0.9.2(@types/node@22.10.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)':
+  '@graphiql/toolkit@0.9.2(@types/node@22.10.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)':
     dependencies:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 16.10.0
       meros: 1.3.0(@types/node@22.10.7)
     optionalDependencies:
-      graphql-ws: 6.0.0(graphql@16.10.0)(uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/6609a88ffa9a16ac5158046761356ce03250a0df)(ws@8.18.0)
+      graphql-ws: 6.0.1(graphql@16.10.0)(ws@8.18.0)
     transitivePeerDependencies:
       - '@types/node'
 
@@ -23977,7 +23993,7 @@ snapshots:
       eslint: 9.18.0(jiti@2.4.2)
       eslint-config-prettier: 9.1.0(eslint@9.18.0(jiti@2.4.2))
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.18.0(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2))
       eslint-plugin-jsonc: 2.18.2(eslint@9.18.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.18.0(jiti@2.4.2))
       eslint-plugin-mdx: 3.1.5(eslint@9.18.0(jiti@2.4.2))
@@ -27802,7 +27818,7 @@ snapshots:
       eslint: 9.18.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.18.0(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.18.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.3(eslint@9.18.0(jiti@2.4.2))
       eslint-plugin-react-hooks: 5.1.0(eslint@9.18.0(jiti@2.4.2))
@@ -27841,7 +27857,7 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -27872,7 +27888,7 @@ snapshots:
       - bluebird
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -27890,7 +27906,7 @@ snapshots:
       eslint: 9.18.0(jiti@2.4.2)
       eslint-compat-utils: 0.5.1(eslint@9.18.0(jiti@2.4.2))
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -27901,7 +27917,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.18.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.19.1(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2)))(eslint@9.18.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -29199,10 +29215,10 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  graphiql@3.1.1(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  graphiql@3.1.1(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
-      '@graphiql/react': 0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@graphiql/toolkit': 0.9.2(@types/node@22.10.7)(graphql-ws@6.0.0(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)
+      '@graphiql/react': 0.20.4(patch_hash=qwxtultli6uefd732fbjgf3o34)(@codemirror/language@6.0.0)(@types/node@22.10.7)(@types/react-dom@19.0.3(@types/react@19.0.7))(@types/react@19.0.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@graphiql/toolkit': 0.9.2(@types/node@22.10.7)(graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0))(graphql@16.10.0)
       graphql: 16.10.0
       graphql-language-service: 5.3.0(graphql@16.10.0)
       markdown-it: 12.3.2
@@ -29299,6 +29315,12 @@ snapshots:
       graphql: 16.10.0
     optionalDependencies:
       uWebSockets.js: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/6609a88ffa9a16ac5158046761356ce03250a0df
+      ws: 8.18.0
+
+  graphql-ws@6.0.1(graphql@16.10.0)(ws@8.18.0):
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
       ws: 8.18.0
 
   graphql@16.10.0: {}
