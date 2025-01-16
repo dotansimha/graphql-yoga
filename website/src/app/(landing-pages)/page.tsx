@@ -8,7 +8,6 @@ import {
   DecorationIsolation,
   ExploreMainProductCards,
   // FrequentlyAskedQuestions,
-  GetYourAPIGameRightSection,
   GitHubIcon,
   Heading,
   InfoCard,
@@ -115,7 +114,7 @@ export default function IndexPage() {
     <Page className="mx-auto max-w-[90rem]">
       <Hero className="mx-4 max-sm:mt-2 md:mx-6">
         <Heading as="h1" size="xl" className="mx-auto max-w-3xl text-balance text-center">
-          Yoga — High-performance GraphQL Server
+          High-performance GraphQL Server
         </Heading>
         <p className="mx-auto w-[512px] max-w-[80%] text-center leading-6 text-green-800">
           Fully-featured GraphQL server designed for effortless setup and optimal developer
@@ -256,7 +255,6 @@ export default function IndexPage() {
       {/*<FrequentlyAskedQuestions faqPages={['/']}>*/}
       {/*  <FAQ />*/}
       {/*</FrequentlyAskedQuestions>*/}
-      <GetYourAPIGameRightSection className="mx-4 sm:mb-6 md:mx-6" />
     </Page>
   );
 }
