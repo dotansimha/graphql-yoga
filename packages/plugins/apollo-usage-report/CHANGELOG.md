@@ -1,5 +1,19 @@
 # @graphql-yoga/plugin-apollo-usage-report
 
+## 0.5.7
+
+### Patch Changes
+
+- [#3660](https://github.com/dotansimha/graphql-yoga/pull/3660)
+  [`d4cbae1`](https://github.com/dotansimha/graphql-yoga/commit/d4cbae12348a39a2f64d7048dc582ebbaac93a5b)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency [`tslib@^2.8.1` ↗︎](https://www.npmjs.com/package/tslib/v/2.8.1) (from
+    `^2.5.2`, in `dependencies`)
+- Updated dependencies
+  [[`d4cbae1`](https://github.com/dotansimha/graphql-yoga/commit/d4cbae12348a39a2f64d7048dc582ebbaac93a5b)]:
+  - @graphql-yoga/plugin-apollo-inline-trace@3.10.10
+  - graphql-yoga@5.10.10
+
 ## 0.5.6
 
 ### Patch Changes

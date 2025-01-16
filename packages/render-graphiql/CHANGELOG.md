@@ -1,5 +1,12 @@
 # @graphql-yoga/render-graphiql
 
+## 5.10.10
+
+### Patch Changes
+
+- Updated dependencies []:
+  - graphql-yoga@5.10.10
+
 ## 5.10.9
 
 ### Patch Changes

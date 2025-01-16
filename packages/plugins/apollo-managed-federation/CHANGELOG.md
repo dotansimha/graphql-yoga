@@ -1,5 +1,12 @@
 # @graphql-yoga/apollo-managed-federation
 
+## 0.8.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - graphql-yoga@5.10.10
+
 ## 0.8.4
 
 ### Patch Changes

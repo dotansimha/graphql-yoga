@@ -1,5 +1,15 @@
 # graphql-yoga
 
+## 5.10.10
+
+### Patch Changes
+
+- Updated dependencies
+  [[`d4cbae1`](https://github.com/dotansimha/graphql-yoga/commit/d4cbae12348a39a2f64d7048dc582ebbaac93a5b),
+  [`d4cbae1`](https://github.com/dotansimha/graphql-yoga/commit/d4cbae12348a39a2f64d7048dc582ebbaac93a5b)]:
+  - @graphql-yoga/logger@2.0.1
+  - @graphql-yoga/subscription@5.0.3
+
 ## 5.10.9
 
 ### Patch Changes
