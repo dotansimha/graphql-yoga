@@ -1,5 +1,12 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.4.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - graphql-yoga@5.10.10
+
 ## 3.4.10
 
 ### Patch Changes
