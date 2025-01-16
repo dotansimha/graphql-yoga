@@ -30,7 +30,7 @@ const yoga = createYoga<Koa.ParameterizedContext>()
 // Bind GraphQL Yoga to `/graphql` endpoint
 app.use(async ctx => {
   // Second parameter adds Koa's context into GraphQL Context
-  // If you use any body parsing middleware in your applicatino,
+  // If you use any body parsing middleware in your application,
   // Make sure it is `ctx.request` and not `ctx.req`
   const response = await yoga.handleNodeRequestAndResponse(ctx.request, ctx.res, ctx)
 
