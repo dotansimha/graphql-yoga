@@ -107,8 +107,8 @@ importers:
         specifier: 29.7.0
         version: 29.7.0(@types/node@22.10.7)(ts-node@10.9.2(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@22.10.7)(typescript@5.7.3))
       lint-staged:
-        specifier: 15.4.0
-        version: 15.4.0
+        specifier: 15.4.1
+        version: 15.4.1
       playwright:
         specifier: ^1.49.1
         version: 1.49.1
@@ -131,8 +131,8 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
       wrangler:
-        specifier: 3.103.0
-        version: 3.103.0(@cloudflare/workers-types@4.20250109.0)
+        specifier: 3.103.1
+        version: 3.103.1(@cloudflare/workers-types@4.20250109.0)
 
   benchmark:
     dependencies:
@@ -372,8 +372,8 @@ importers:
         specifier: 5.97.1
         version: 5.97.1(@swc/core@1.10.7(@swc/helpers@0.5.15))(esbuild@0.17.19)
       wrangler:
-        specifier: 3.103.0
-        version: 3.103.0(@cloudflare/workers-types@4.20250109.0)
+        specifier: 3.103.1
+        version: 3.103.1(@cloudflare/workers-types@4.20250109.0)
 
   examples/cloudflare-modules:
     dependencies:
@@ -394,8 +394,8 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
       wrangler:
-        specifier: 3.103.0
-        version: 3.103.0(@cloudflare/workers-types@4.20250109.0)
+        specifier: 3.103.1
+        version: 3.103.1(@cloudflare/workers-types@4.20250109.0)
 
   examples/cookies:
     dependencies:
@@ -1334,8 +1334,8 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
       wrangler:
-        specifier: 3.103.0
-        version: 3.103.0(@cloudflare/workers-types@4.20250109.0)
+        specifier: 3.103.1
+        version: 3.103.1(@cloudflare/workers-types@4.20250109.0)
 
   examples/sofa:
     dependencies:
@@ -3851,15 +3851,6 @@ packages:
   '@cloudflare/kv-asset-handler@0.3.4':
     resolution: {integrity: sha512-YLPHc8yASwjNkmcDMQMY35yiWjoKAKnhUbPRszBRS0YgH+IXtsMp61j+yTcnCE3oO2DgP0U3iejLC8FTtKDC8Q==}
     engines: {node: '>=16.13'}
-
-  '@cloudflare/unenv-preset@1.0.0':
-    resolution: {integrity: sha512-rnihjY4xUsBmlqp0eM2tQXm+40aj3C7WhdH4eGHkLaoBKr3+LwuENByYm5mf65WEeA5NE6BolTnjkiJUts3RuA==}
-    peerDependencies:
-      unenv: npm:unenv-nightly@*
-      workerd: ^1.20241230.0
-    peerDependenciesMeta:
-      workerd:
-        optional: true
 
   '@cloudflare/workerd-darwin-64@1.20241230.0':
     resolution: {integrity: sha512-BZHLg4bbhNQoaY1Uan81O3FV/zcmWueC55juhnaI7NAobiQth9RppadPNpxNAmS9fK2mR5z8xrwMQSQrHmztyQ==}
@@ -13128,8 +13119,8 @@ packages:
   linkify-it@3.0.3:
     resolution: {integrity: sha512-ynTsyrFSdE5oZ/O9GEf00kPngmOfVwazR5GKDq6EYfhlpFug3J2zybX56a2PRRpc9P+FuSoGNAwjlbDs9jJBPQ==}
 
-  lint-staged@15.4.0:
-    resolution: {integrity: sha512-UdODqEZiQimd7rCzZ2vqFuELRNUda3mdv7M93jhE4SmDiqAj/w/msvwKgagH23jv2iCPw6Q5m+ltX4VlHvp2LQ==}
+  lint-staged@15.4.1:
+    resolution: {integrity: sha512-P8yJuVRyLrm5KxCtFx+gjI5Bil+wO7wnTl7C3bXhvtTaAFGirzeB24++D0wGoUwxrUKecNiehemgCob9YL39NA==}
     engines: {node: '>=18.12.0'}
     hasBin: true
 
@@ -17483,8 +17474,8 @@ packages:
   workerpool@6.5.1:
     resolution: {integrity: sha512-Fs4dNYcsdpYSAfVxhnl1L5zTksjvOJxtC5hzMNl+1t9B8hTJTdKDyZ5ju7ztgPy+ft9tBFXoOlDNiOT9WUXZlA==}
 
-  wrangler@3.103.0:
-    resolution: {integrity: sha512-DK1wLHwiELI5jmHolf7ZCWji+CkSgSZdD/ccrCtDWr5r9vJSb6gpPG9Dc7E68Z/yMFub9+r2XuwKLHEABMLZWw==}
+  wrangler@3.103.1:
+    resolution: {integrity: sha512-IuPXxRY5IZ081m6TeL1UY4X1lUH873MbndT4Tn9A5qN5ePzxTvyOM3pUil76bV+2rXk/TiZyt9fYykrKQ4g6Xg==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     peerDependencies:
@@ -19787,12 +19778,6 @@ snapshots:
   '@cloudflare/kv-asset-handler@0.3.4':
     dependencies:
       mime: 3.0.0
-
-  '@cloudflare/unenv-preset@1.0.0(unenv-nightly@2.0.0-20250109-100802-88ad671)(workerd@1.20241230.0)':
-    dependencies:
-      unenv: unenv-nightly@2.0.0-20250109-100802-88ad671
-    optionalDependencies:
-      workerd: 1.20241230.0
 
   '@cloudflare/workerd-darwin-64@1.20241230.0':
     optional: true
@@ -31206,7 +31191,7 @@ snapshots:
     dependencies:
       uc.micro: 1.0.6
 
-  lint-staged@15.4.0:
+  lint-staged@15.4.1:
     dependencies:
       chalk: 5.4.1
       commander: 12.1.0
@@ -36816,10 +36801,9 @@ snapshots:
 
   workerpool@6.5.1: {}
 
-  wrangler@3.103.0(@cloudflare/workers-types@4.20250109.0):
+  wrangler@3.103.1(@cloudflare/workers-types@4.20250109.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
-      '@cloudflare/unenv-preset': 1.0.0(unenv-nightly@2.0.0-20250109-100802-88ad671)(workerd@1.20241230.0)
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
       '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
       blake3-wasm: 2.1.5
