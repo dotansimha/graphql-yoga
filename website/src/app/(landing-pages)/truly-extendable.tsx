@@ -1,5 +1,6 @@
 import { ComponentProps, FC } from 'react';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import { CallToAction, cn, Heading, InfoCard, YogaIcon } from '@theguild/components';
 import { InfiniteMovingCards } from './infinite-moving-cards';
 import apolloBadge from './icons/apollo-badge.svg';
@@ -8,7 +9,9 @@ import serverLineBadge from './icons/server-line-badge.svg';
 import timerLineBadge from './icons/timer-line-badge.svg';
 
 const classes = {
-  card: cn('[&_h3]:text-white [&_p]:text-white/80 bg-green-900 rounded-2xl'),
+  card: cn(
+    '[&_h3]:text-white [&_p]:text-white/80 bg-green-900 hover:bg-green-800 focus-visible:bg-green-800 duration-300 rounded-2xl hive-focus',
+  ),
 };
 
 export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ className, ...props }) => {
@@ -32,31 +35,43 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
         <div className="xl:basis-1/2">
           <div className="grid sm:grid-cols-2 gap-6">
             <InfoCard
+              // @ts-expect-error
+              as={NextLink}
               heading="Apollo Federation"
               icon={<Image src={apolloBadge} alt="" />}
               className={classes.card}
+              href="/docs/features/apollo-federation"
             >
               Fully supports Apollo Federation for managing complex supergraphs and subgraphs.
             </InfoCard>
             <InfoCard
+              // @ts-expect-error
+              as={NextLink}
               heading="Persisted operations"
               icon={<Image src={safeLineBadge} alt="" />}
               className={classes.card}
+              href="/features/persisted-operations"
             >
               Mitigates the risk of arbitrary GraphQL operations with robust persistence
               capabilities.
             </InfoCard>
             <InfoCard
+              // @ts-expect-error
+              as={NextLink}
               heading="Response caching"
               icon={<Image src={serverLineBadge} alt="" />}
               className={classes.card}
+              href="/docs/features/response-caching"
             >
               Optimizes server performance by caching responses, significantly reducing server load.
             </InfoCard>
             <InfoCard
+              // @ts-expect-error
+              as={NextLink}
               heading="Rate limiting"
               icon={<Image src={timerLineBadge} alt="" />}
               className={classes.card}
+              href="https://the-guild.dev/graphql/envelop/plugins/use-rate-limiter"
             >
               Prevents denial of service attacks with advanced rate limiting.
             </InfoCard>

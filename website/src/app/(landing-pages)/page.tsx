@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import {
   CallToAction,
   CheckIcon,
@@ -11,6 +12,7 @@ import {
   GitHubIcon,
   Heading,
   InfoCard,
+  TextLink,
   ToolsAndLibrariesCards,
   YogaIcon,
 } from '@theguild/components';
@@ -212,23 +214,32 @@ export default function IndexPage() {
           <div className="relative lg:hidden mt-6">{yogaMan}</div>
           <div className="flex my-12 gap-8 max-sm:flex-col">
             <InfoCard
+              // @ts-expect-error
+              as={NextLink}
               heading="Error masking"
               icon={<Image src={errorWarningBadge} alt="" />}
-              className="flex-1 p-0 md:p-0 bg-transparent"
+              className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
+              href="/docs/features/error-masking"
             >
               Enhance security by masking errors to prevent sensitive data leaks.
             </InfoCard>
             <InfoCard
+              // @ts-expect-error
+              as={NextLink}
               heading="Health checks"
               icon={<Image src={pulseLineBadge} alt="" />}
-              className="flex-1 p-0 md:p-0 bg-transparent"
+              className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
+              href="/docs/features/health-check"
             >
               Built-in health checks to ensure server vitality and readiness.
             </InfoCard>
             <InfoCard
+              // @ts-expect-error
+              as={NextLink}
               heading="GraphiQL Integration"
               icon={<Image src={graphqlBadge} alt="" />}
-              className="flex-1 p-0 md:p-0 bg-transparent"
+              className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
+              href="/docs/features/graphiql"
             >
               In-browser IDE for seamless writing, validation, and testing of GraphQL operations.
             </InfoCard>
@@ -266,7 +277,14 @@ function EverythingHTTPSection({ className }: { className?: string }) {
           icon={<Image src={checkBadge} alt="" />}
           className="flex-1 rounded-2xl md:rounded-3xl"
         >
-          Meets rigorous standards as confirmed by comprehensive graphql-http library audits.
+          Meets rigorous standards as confirmed by comprehensive <br />
+          <TextLink
+            href="https://github.com/enisdenjo/graphql-http/blob/master/implementations/graphql-yoga/README.md"
+            className="mt-4 text-green-800"
+          >
+            graphql-http library audits
+          </TextLink>
+          .
         </InfoCard>
         <InfoCard
           as="li"
@@ -274,8 +292,11 @@ function EverythingHTTPSection({ className }: { className?: string }) {
           icon={<Image src={puzzleBadge} alt="" />}
           className="flex-1 basis-full rounded-2xl md:basis-0 md:rounded-3xl"
         >
-          Supports real-time communications with built-in GraphQL Subscriptions over Server-Sent
-          Events.
+          Supports real-time communications with built-in GraphQL{' '}
+          <TextLink href="/docs/features/subscriptions" className="mt-4 text-green-800">
+            Subscriptions over Server-Sent Events
+          </TextLink>
+          .
         </InfoCard>
         <InfoCard
           as="li"
@@ -283,8 +304,14 @@ function EverythingHTTPSection({ className }: { className?: string }) {
           icon={<Image src={arrowUpBade} alt="" />}
           className="flex-1 basis-full rounded-2xl md:rounded-3xl lg:basis-0"
         >
-          Facilitates file uploads directly through GraphQL using the multipart request
-          specification.
+          Facilitates file uploads directly through GraphQL using <br />
+          <TextLink
+            href="https://github.com/jaydenseric/graphql-multipart-request-spec"
+            className="mt-4 text-green-800"
+          >
+            the multipart request specification
+          </TextLink>
+          .
         </InfoCard>
       </ul>
     </section>
