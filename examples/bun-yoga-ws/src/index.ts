@@ -1,6 +1,6 @@
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import Bun from 'bun';
-import { makeHandler } from 'graphql-ws/lib/use/bun';
+import { makeHandler } from 'graphql-ws/use/bun';
 import { createSchema, createYoga } from 'graphql-yoga';
 
 const schema = createSchema({
@@ -46,19 +46,19 @@ export const websocketHandler = makeHandler({
   schema,
   execute: args => args.rootValue.execute(args),
   subscribe: args => args.rootValue.subscribe(args),
-  onSubscribe: async (ctx, msg) => {
+  onSubscribe: async (ctx, _id, params) => {
     const { schema, execute, subscribe, contextFactory, parse, validate } = yoga.getEnveloped({
       ...ctx,
       req: ctx.extra.request,
       socket: ctx.extra.socket,
-      params: msg.payload,
+      params,
     });
 
     const args = {
       schema,
-      operationName: msg.payload.operationName,
-      document: parse(msg.payload.query),
-      variableValues: msg.payload.variables,
+      operationName: params.operationName,
+      document: parse(params.query),
+      variableValues: params.variables,
       contextValue: await contextFactory(),
       rootValue: {
         execute,

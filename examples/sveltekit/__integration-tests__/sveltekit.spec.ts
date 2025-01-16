@@ -1,7 +1,5 @@
 import { execSync, spawn } from 'node:child_process';
-import { Browser, chromium, ElementHandle, Page } from 'playwright';
-import { promises as fsPromises } from 'node:fs';
-import { join } from 'node:path';
+import { Browser, chromium, Page } from 'playwright';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { fetch } from '@whatwg-node/fetch';
 
@@ -20,23 +18,6 @@ const timings = {
 
 describe('SvelteKit integration', () => {
 	beforeAll(async () => {
-		const tslibDirPath = join(__dirname, '../node_modules/tslib');
-		const tslibFilePath = join(tslibDirPath, 'tslib.js');
-		const tslibFile = await fsPromises.readFile(tslibFilePath, 'utf8');
-		const tslibPackageJsonPath = join(tslibDirPath, 'package.json');
-		const tslibPackageJson = await fsPromises.readFile(tslibPackageJsonPath, 'utf8');
-		const tslibPackageJsonParsed = JSON.parse(tslibPackageJson);
-		tslibPackageJsonParsed.type = 'module';
-		tslibPackageJsonParsed.main = 'tslib.cjs';
-		if (tslibPackageJsonParsed.exports?.['.']?.default) {
-			tslibPackageJsonParsed.exports['.'].default = './tslib.cjs';
-		}
-		await fsPromises.writeFile(
-			tslibPackageJsonPath,
-			JSON.stringify(tslibPackageJsonParsed, null, 2)
-		);
-		await fsPromises.writeFile(tslibFilePath.replace('.js', '.cjs'), tslibFile);
-
 		// Kill the port if it's used!
 		try {
 			execSync('fuser -k 3007/tcp');

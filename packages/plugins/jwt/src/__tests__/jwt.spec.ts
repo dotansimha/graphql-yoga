@@ -3,7 +3,7 @@ import { createHmac } from 'node:crypto';
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { createClient } from 'graphql-ws';
-import { useServer } from 'graphql-ws/lib/use/ws';
+import { useServer } from 'graphql-ws/use/ws';
 import { createSchema, createYoga, Plugin } from 'graphql-yoga';
 import jwt, { Algorithm, SignOptions } from 'jsonwebtoken';
 import WebSocket from 'ws';
@@ -650,20 +650,20 @@ describe('jwt plugin', () => {
         execute: (args: any) => args.execute(args),
 
         subscribe: (args: any) => args.subscribe(args),
-        onSubscribe: async (ctx, msg) => {
+        onSubscribe: async (ctx, _id, params) => {
           const { schema, execute, subscribe, contextFactory, parse, validate } =
             test.yoga.getEnveloped({
               ...ctx,
               req: ctx.extra.request,
               socket: ctx.extra.socket,
-              params: msg.payload,
+              params,
             });
 
           const args = {
             schema,
-            operationName: msg.payload.operationName,
-            document: parse(msg.payload.query),
-            variableValues: msg.payload.variables,
+            operationName: params.operationName,
+            document: parse(params.query),
+            variableValues: params.variables,
             contextValue: await contextFactory(),
             execute,
             subscribe,

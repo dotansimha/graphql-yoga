@@ -1,5 +1,14 @@
 # @graphql-yoga/plugin-prometheus
 
+## 6.5.7
+
+### Patch Changes
+
+- [#3651](https://github.com/dotansimha/graphql-yoga/pull/3651)
+  [`690294a`](https://github.com/dotansimha/graphql-yoga/commit/690294a97fb57bad9ddb38d69d14fcb3cbf5c4ff)
+  Thanks [@ardatan](https://github.com/ardatan)! - `request` is missing when GraphQL WS is used as
+  expected, and as we don't need HTTP/Yoga specific metrics, this should be skipped
+
 ## 6.5.6
 
 ### Patch Changes

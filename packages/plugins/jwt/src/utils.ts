@@ -1,6 +1,7 @@
 import { createGraphQLError } from 'graphql-yoga';
 import { JwksClient, type Options as JwksClientOptions } from 'jwks-rsa';
 import { GetSigningKeyFunction, type ExtractTokenFunction } from './config.js';
+import '@whatwg-node/server-plugin-cookies';
 
 export function extractFromHeader(options: {
   name: string;
