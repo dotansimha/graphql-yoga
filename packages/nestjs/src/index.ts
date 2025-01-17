@@ -270,7 +270,7 @@ export class YogaDriver<
           `);
         }
 
-        config['graphql-ws'].onSubscribe = async (ctx, msg) => {
+        config['graphql-ws'].onSubscribe = async (ctx, _id, params) => {
           const { schema, execute, subscribe, contextFactory, parse, validate } =
             this.yoga.getEnveloped({
               ...ctx,
@@ -278,14 +278,14 @@ export class YogaDriver<
               req: ctx.extra.request,
               // @ts-expect-error context extra is from graphql-ws/lib/use/ws
               socket: ctx.extra.socket,
-              params: msg.payload,
+              params,
             });
 
           const args = {
             schema,
-            operationName: msg.payload.operationName,
-            document: parse(msg.payload.query),
-            variableValues: msg.payload.variables,
+            operationName: params.operationName,
+            document: parse(params.query),
+            variableValues: params.variables,
             contextValue: await contextFactory({ execute, subscribe }),
           };
 
