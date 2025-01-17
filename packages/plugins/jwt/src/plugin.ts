@@ -156,42 +156,71 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
     }
   };
 
+  async function ensureContext({
+    request,
+    url,
+    serverContext,
+    extendContext,
+  }: {
+    request: Request;
+    url: URL;
+    serverContext: Record<string, unknown>;
+    extendContext: (newContext: Record<string, unknown>) => void;
+  }) {
+    if (normalizedOptions.extendContextFieldName === null) {
+      return;
+    }
+
+    if (serverContext[normalizedOptions.extendContextFieldName]) {
+      return;
+    }
+
+    // Ensure the request has been validated before extending the context.
+    await lookupAndValidate({
+      request,
+      url,
+      serverContext,
+    });
+
+    // Then check the result
+    const result = request ? payloadByRequest.get(request) : payloadByContext.get(serverContext);
+
+    if (result && normalizedOptions.extendContextFieldName) {
+      extendContext({
+        [normalizedOptions.extendContextFieldName]: {
+          payload: result.payload,
+          token: result.token,
+        },
+      });
+    }
+  }
+
   let fetchAPI: FetchAPI;
   return {
     onYogaInit({ yoga }) {
       logger = yoga.logger;
       fetchAPI = yoga.fetchAPI;
     },
-    async onRequestParse(payload) {
-      await lookupAndValidate(payload);
+    onRequestParse({ request, url, serverContext }) {
+      return ensureContext({
+        request,
+        url,
+        serverContext,
+        extendContext: newContext => {
+          Object.assign(serverContext, newContext);
+        },
+      });
     },
-    async onContextBuilding({ context, extendContext }) {
-      if (normalizedOptions.extendContextFieldName === null) {
-        return;
-      }
-
-      // Ensure the request has been validated before extending the context.
-      await lookupAndValidate({
-        request: context.request,
+    onContextBuilding({ context, extendContext }) {
+      const request = context.request;
+      return ensureContext({
+        request,
         get url() {
-          return new fetchAPI.URL(context.request.url);
+          return request && new fetchAPI.URL(request.url);
         },
         serverContext: context,
+        extendContext,
       });
-
-      // Then check the result
-      const result = context.request
-        ? payloadByRequest.get(context.request)
-        : payloadByContext.get(context);
-
-      if (result && normalizedOptions.extendContextFieldName) {
-        extendContext({
-          [normalizedOptions.extendContextFieldName]: {
-            payload: result.payload,
-            token: result.token,
-          },
-        });
-      }
     },
   };
 }

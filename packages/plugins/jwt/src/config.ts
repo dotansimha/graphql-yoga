@@ -6,8 +6,8 @@ type AtleastOneItem<T> = [T, ...T[]];
 
 export type ExtractTokenFunctionParams = {
   request: Request;
-  serverContext: Record<string, unknown>;
   url: URL;
+  serverContext: Record<string, unknown>;
 };
 
 export type ExtractTokenFunction = (
