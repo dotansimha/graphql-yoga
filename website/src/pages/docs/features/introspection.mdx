@@ -76,11 +76,15 @@ via another auth plugin like [JWT Plugin](/docs/features/jwt).
 ```ts "Disabling GraphQL schema introspection based on the context" {7}
 import { createYoga } from 'graphql-yoga'
 import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
+import { useJWT } from '@graphql-yoga/plugin-jwt'
 
 // Provide your schema
 const yoga = createYoga({
   graphiql: false,
   plugins: [
+    useJWT({
+      /* .. */
+    }),
     useDisableIntrospection({
       isDisabled: (_req, ctx) => !ctx.jwt
     })

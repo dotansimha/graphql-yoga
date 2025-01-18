@@ -5,7 +5,9 @@ type UseDisableIntrospectionArgs = {
   isDisabled?: (request: Request, context: Record<string, unknown>) => PromiseOrValue<boolean>;
 };
 
-export const useDisableIntrospection = (props?: UseDisableIntrospectionArgs): Plugin => {
+export function useDisableIntrospection<TContext extends Record<string, unknown>>(
+  props?: UseDisableIntrospectionArgs,
+): Plugin<TContext> {
   const store = new WeakMap<Request, boolean>();
   return {
     async onRequestParse({ request, serverContext }) {
@@ -19,4 +21,4 @@ export const useDisableIntrospection = (props?: UseDisableIntrospectionArgs): Pl
       }
     },
   };
-};
+}
