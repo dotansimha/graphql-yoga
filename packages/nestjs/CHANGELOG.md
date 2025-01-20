@@ -1,5 +1,16 @@
 # @graphql-yoga/nestjs
 
+## 3.10.11
+
+### Patch Changes
+
+- [#3676](https://github.com/dotansimha/graphql-yoga/pull/3676)
+  [`c9b167b`](https://github.com/dotansimha/graphql-yoga/commit/c9b167bc8fdf8478649f6507426b336836098c11)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency
+    [`@nestjs/graphql@^13.0.0` ↗︎](https://www.npmjs.com/package/@nestjs/graphql/v/13.0.0) (from
+    `^12.0.0`, in `peerDependencies`)
+
 ## 3.10.10
 
 ### Patch Changes
