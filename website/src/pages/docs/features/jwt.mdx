@@ -404,3 +404,41 @@ const yoga = createYoga({
   ]
 })
 ```
+
+### Disable Introspection based on JWT
+
+If you disabled rejection on missing token and/or invalid token, you can disable introspection based
+on the validity of JWT token still. You can combine JWT plugin with
+[Disable Introspection plugin](/docs/features/introspection#disabling-introspection) in this case.
+
+```sh npm2yarn
+npm i @graphql-yoga/plugin-disable-introspection
+```
+
+Then you can use it like this:
+
+```ts
+import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
+import { useJWT } from '@graphql-yoga/plugin-jwt'
+
+const yoga = createYoga({
+  // ...
+  plugins: [
+    useJWT({
+      reject: {
+        missingToken: false,
+        invalidToken: false
+      }
+    }),
+    useDisableIntrospection({
+      disableIf(_req, ctx) {
+        // If there is no JWT token(unauthorized), disable introspection
+        if (!ctx.jwt) {
+          return true
+        }
+        return false
+      }
+    })
+  ]
+})
+```

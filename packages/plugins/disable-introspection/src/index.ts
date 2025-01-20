@@ -2,15 +2,16 @@ import { NoSchemaIntrospectionCustomRule } from 'graphql';
 import type { Plugin, PromiseOrValue } from 'graphql-yoga';
 
 type UseDisableIntrospectionArgs = {
-  isDisabled?: (request: Request) => PromiseOrValue<boolean>;
+  isDisabled?: (request: Request, context: Record<string, unknown>) => PromiseOrValue<boolean>;
 };
 
-const store = new WeakMap<Request, boolean>();
-
-export const useDisableIntrospection = (props?: UseDisableIntrospectionArgs): Plugin => {
+export function useDisableIntrospection<TContext extends Record<string, unknown>>(
+  props?: UseDisableIntrospectionArgs,
+): Plugin<TContext> {
+  const store = new WeakMap<Request, boolean>();
   return {
-    async onRequest({ request }) {
-      const isDisabled = props?.isDisabled ? await props.isDisabled(request) : true;
+    async onRequestParse({ request, serverContext }) {
+      const isDisabled = props?.isDisabled ? await props.isDisabled(request, serverContext) : true;
       store.set(request, isDisabled);
     },
     onValidate({ addValidationRule, context }) {
@@ -20,4 +21,4 @@ export const useDisableIntrospection = (props?: UseDisableIntrospectionArgs): Pl
       }
     },
   };
-};
+}
