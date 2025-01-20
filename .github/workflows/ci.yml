@@ -233,9 +233,10 @@ jobs:
 
   e2e:
     concurrency:
-      group: e2e
+      group: ${{ github.workflow }}-${{ matrix.plan }}
       cancel-in-progress: false
     strategy:
+      max-parallel: 1
       fail-fast: true
       matrix:
         plan:
