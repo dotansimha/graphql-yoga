@@ -112,6 +112,8 @@ export class YogaGatewayDriver<
 
     await super.start({
       ...serverOpts,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - There is a type mismatch here
       plugins: [...(serverOpts.plugins || []), useApolloFederation({ gateway })],
     });
   }

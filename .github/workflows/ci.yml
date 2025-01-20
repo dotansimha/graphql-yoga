@@ -75,8 +75,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18, 20, 22]
-        graphql-version: ['15.8.0', '16.10.0']
+        node-version: [18, 20, 22, 23]
+        graphql-version: ['15.10.1', '16.10.0']
     steps:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -132,8 +132,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18, 20, 22]
-        graphql-version: ['15.8.0', '16.6.0']
+        node-version: [18, 20, 22, 23]
+        graphql-version: ['15.10.1', '16.10.0']
     steps:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
