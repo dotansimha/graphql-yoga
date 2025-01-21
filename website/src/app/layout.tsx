@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS, VersionDropdown } from '@theguild/components';
+import { GitHubIcon, PaperIcon, PencilIcon, PRODUCTS } from '@theguild/components';
 import { getDefaultMetadata, getPageMap, GuildLayout } from '@theguild/components/server';
 import '@theguild/components/style.css';
 import { pageMap as changelogsPageMap } from './changelogs/[...slug]/page';
@@ -7,6 +7,7 @@ import { pageMap as v2PageMap } from './v2/[[...slug]]/page';
 import { pageMap as v3PageMap } from './v3/[[...slug]]/page';
 import { pageMap as v4PageMap } from './v4/[[...slug]]/page';
 import { VersionedSearch } from './versioned-search';
+import { VersionDropdown } from './version-dropdown.client';
 
 const description = PRODUCTS.YOGA.title;
 const websiteName = 'Yoga';
@@ -67,18 +68,7 @@ const RootLayout: FC<{
             children: 'Changelog',
           },
         ],
-        children: (
-          <VersionDropdown
-            currentVersion="Version"
-            chevronPosition="right"
-            versions={[
-              { label: 'Yoga 5 Docs (latest)', href: '/docs', value: '5' },
-              { label: 'Yoga 4 Docs', href: '/v4', value: '4' },
-              { label: 'Yoga 3 Docs', href: '/v3', value: '3' },
-              { label: 'Yoga 2 Docs', href: '/v2', value: '2' },
-            ]}
-          />
-        ),
+        children: <VersionDropdown />,
       }}
       search={<VersionedSearch />}
       lightOnlyPages={['/']}

@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { Search } from '@theguild/components';
 
-const VERSIONS = new Set(['v2', 'v3', 'v4']);
+export const VERSIONS = new Set(['v2', 'v3', 'v4']);
 
 const DEFAULT_FILTERS = {
   filters: {
