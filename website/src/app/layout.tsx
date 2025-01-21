@@ -41,6 +41,10 @@ const RootLayout: FC<{
   ];
   return (
     <GuildLayout
+      htmlProps={{
+        // Override nav width
+        className: '[&>.light_#h-navmenu-container]:max-w-[1392px]'
+      }}
       websiteName={websiteName}
       description={description}
       logo={<PRODUCTS.YOGA.logo className="w-8 h-auto" />}

@@ -62,7 +62,7 @@ export default function IndexPage() {
   );
 
   return (
-    <Page className="mx-auto max-w-[90rem]">
+    <Page className="mx-auto max-w-[90rem] overflow-hidden">
       <Hero
         heading="High-performance GraphQL Server"
         text="Fully-featured GraphQL server designed for effortless setup and optimal developer experience."
@@ -183,7 +183,7 @@ export default function IndexPage() {
         <div className="basis-5/12 shrink-0 relative max-lg:hidden">{yogaMan}</div>
       </section>
 
-      <ToolsAndLibrariesCards className="mx-4 mt-6 md:mx-6" />
+      <ToolsAndLibrariesCards />
       {/* TODO: add later */}
       {/*<FrequentlyAskedQuestions faqPages={['/']}>*/}
       {/*  <FAQ />*/}
