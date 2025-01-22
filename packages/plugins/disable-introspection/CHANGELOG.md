@@ -1,5 +1,41 @@
 # @graphql-yoga/plugin-disable-introspection
 
+## 2.11.0
+
+### Minor Changes
+
+- [#3677](https://github.com/dotansimha/graphql-yoga/pull/3677)
+  [`7419797`](https://github.com/dotansimha/graphql-yoga/commit/7419797246eb4e955337096b8e46cffa34c22aa1)
+  Thanks [@ardatan](https://github.com/ardatan)! - Expose the server context as the second
+  parameter, so introspection can be disabled based on the context
+
+  ```ts "Disabling GraphQL schema introspection based on the context" {7}
+  import { createYoga } from 'graphql-yoga'
+  import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
+
+  // Provide your schema
+  const yoga = createYoga({
+    graphiql: false,
+    plugins: [
+      useDisableIntrospection({
+        isDisabled: (_req, ctx) => !ctx.jwt
+      })
+    ]
+  })
+
+  const server = createServer(yoga)
+  server.listen(4000, () => {
+    console.info('Server is running on http://localhost:4000/graphql')
+  })
+  ```
+
+## 2.10.10
+
+### Patch Changes
+
+- Updated dependencies []:
+  - graphql-yoga@5.10.10
+
 ## 2.10.9
 
 ### Patch Changes

@@ -2,11 +2,13 @@
 import { createHmac } from 'node:crypto';
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
+import { buildClientSchema, getIntrospectionQuery, printSchema } from 'graphql';
 import { createClient } from 'graphql-ws';
 import { useServer } from 'graphql-ws/use/ws';
 import { createSchema, createYoga, Plugin } from 'graphql-yoga';
 import jwt, { Algorithm, SignOptions } from 'jsonwebtoken';
 import WebSocket from 'ws';
+import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection';
 import { useCookies } from '@whatwg-node/server-plugin-cookies';
 import { JwtPluginOptions } from '../config';
 import { useJWT } from '../plugin';
@@ -714,13 +716,66 @@ describe('jwt plugin', () => {
     }
     await client.dispose();
   });
+
+  test('handles introspection query in case of conditional rejections', async () => {
+    const secret = 'topsecret';
+    const test = createTestServer(
+      {
+        signingKeyProviders: [createInlineSigningKeyProvider(secret)],
+        tokenLookupLocations: [
+          extractFromHeader({
+            name: 'Authorization',
+            prefix: 'Bearer',
+          }),
+        ],
+        reject: {
+          missingToken: false,
+          invalidToken: false,
+        },
+        extendContext: 'jwt',
+      },
+      [],
+      [
+        useDisableIntrospection({
+          isDisabled(_request, context) {
+            if ('jwt' in context) {
+              return false;
+            }
+            return true;
+          },
+        }),
+      ],
+    );
+    const token = buildJWT({ sub: '123' }, { key: secret }, '');
+    const resSuccessful = await test.yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      body: JSON.stringify({
+        query: getIntrospectionQuery(),
+      }),
+      headers: {
+        'content-type': 'application/json',
+        accept: 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    });
+    expect(resSuccessful.status).toBe(200);
+    const introspectionQueryResult = await resSuccessful.json();
+    expect(introspectionQueryResult.errors).toBeUndefined();
+    const introspection = introspectionQueryResult.data;
+    const schemaFromIntrospection = buildClientSchema(introspection);
+    expect(printSchema(schemaFromIntrospection)).toBe(printSchema(schema));
+  });
 });
 
-const createTestServer = (options: JwtPluginOptions, initPlugins: Plugin[] = []) => {
+const createTestServer = (
+  options: JwtPluginOptions,
+  initPlugins: Plugin[] = [],
+  afterPlugins: Plugin[] = [],
+) => {
   const yoga = createYoga({
     schema,
     logging: !!process.env['DEBUG'],
-    plugins: [...initPlugins, useJWT(options)],
+    plugins: [...initPlugins, useJWT(options), ...afterPlugins],
   });
 
   return {

@@ -1,5 +1,21 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.4.12
+
+### Patch Changes
+
+- [#3677](https://github.com/dotansimha/graphql-yoga/pull/3677)
+  [`7419797`](https://github.com/dotansimha/graphql-yoga/commit/7419797246eb4e955337096b8e46cffa34c22aa1)
+  Thanks [@ardatan](https://github.com/ardatan)! - Ensure the JWT context has been added before any
+  GraphQL Execution hooks when the plugin is used via Yoga
+
+## 3.4.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - graphql-yoga@5.10.10
+
 ## 3.4.10
 
 ### Patch Changes
