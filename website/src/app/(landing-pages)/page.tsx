@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ReactNode } from 'react';
 import Image from 'next/image';
 import NextLink from 'next/link';
