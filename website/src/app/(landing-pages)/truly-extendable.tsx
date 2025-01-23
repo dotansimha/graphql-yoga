@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ComponentProps, FC } from 'react';
 import Image from 'next/image';
 import NextLink from 'next/link';
