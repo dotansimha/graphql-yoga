@@ -46,7 +46,7 @@
     "test:integration": "cross-env INTEGRATION_TEST=true jest --forceExit",
     "test:integration:leaks": "cross-env LEAKS_TEST=true pnpm run test:integration --detectLeaks",
     "test:unit": "jest --detectOpenHandles",
-    "test:unit:leaks": "cross-env LEAKS_TEST=true pnpm run test --detectLeaks"
+    "test:unit:leaks": "cross-env LEAKS_TEST=true pnpm run test:unit --detectLeaks"
   },
   "devDependencies": {
     "@babel/core": "7.26.0",
