@@ -89,6 +89,7 @@ describe('GraphQL WS & Prometheus integration', () => {
           return args;
         },
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - Typings are incorrect
       wss,
     );
