@@ -7,7 +7,7 @@ import { createClient } from 'graphql-ws';
 import { useServer } from 'graphql-ws/use/ws';
 import { createSchema, createYoga, Plugin } from 'graphql-yoga';
 import jwt, { Algorithm, SignOptions } from 'jsonwebtoken';
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection';
 import { useCookies } from '@whatwg-node/server-plugin-cookies';
 import { JwtPluginOptions } from '../config';
@@ -642,7 +642,7 @@ describe('jwt plugin', () => {
     expect(response.status).toBe(200);
 
     server = createServer(test.yoga);
-    const wss = new WebSocket.Server({
+    const wss = new WebSocketServer({
       server,
       path: test.yoga.graphqlEndpoint,
     });
@@ -676,6 +676,8 @@ describe('jwt plugin', () => {
           return args;
         },
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - Typings are wrong
       wss,
     );
 

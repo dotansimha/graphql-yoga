@@ -4,7 +4,7 @@ import { Client, createClient } from 'graphql-ws';
 import { useServer } from 'graphql-ws/use/ws';
 import { createSchema, createYoga } from 'graphql-yoga';
 import { register as registry } from 'prom-client';
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import { usePrometheus } from '../src';
 
 describe('GraphQL WS & Prometheus integration', () => {
@@ -53,7 +53,7 @@ describe('GraphQL WS & Prometheus integration', () => {
       });
       server?.once('error', reject);
     });
-    const wss = new WebSocket.WebSocketServer({
+    const wss = new WebSocketServer({
       server,
       path: yoga.graphqlEndpoint,
     });
@@ -89,6 +89,7 @@ describe('GraphQL WS & Prometheus integration', () => {
           return args;
         },
       },
+      // @ts-ignore - Typings are incorrect
       wss,
     );
 
