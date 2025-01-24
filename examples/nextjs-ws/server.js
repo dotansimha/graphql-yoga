@@ -4,9 +4,8 @@ import { createServer } from 'node:http';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { parse } from 'node:url';
 import next from 'next';
-import { useServer } from 'graphql-ws/use/ws';
+import { useServer, WebSocket } from 'graphql-ws/use/ws';
 import { createSchema, createYoga } from 'graphql-yoga';
-import { WebSocketServer } from 'ws';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -86,7 +85,7 @@ async function start(port, handle) {
   });
 
   // create websocket server
-  const wsServer = new WebSocketServer({ server, path: graphqlEndpoint });
+  const wsServer = new WebSocket.WebSocketServer({ server, path: graphqlEndpoint });
 
   // prepare graphql-ws
   /**
@@ -135,12 +134,27 @@ async function start(port, handle) {
     wsServer,
   );
 
+  const sockets = new Set();
+
+  server.on('connection', socket => {
+    sockets.add(socket);
+    socket.on('close', () => {
+      sockets.delete(socket);
+    });
+  });
+
   await new Promise((resolve, reject) =>
     server.listen(port, err => (err ? reject(err) : resolve())),
   );
 
   return () =>
-    new Promise((resolve, reject) => server.close(err => (err ? reject(err) : resolve())));
+    new Promise(resolve => {
+      for (const socket of sockets) {
+        socket.destroy();
+      }
+      server.closeAllConnections();
+      server.close(() => resolve());
+    });
 }
 
 // dont start the next.js app when testing the server

@@ -34,12 +34,10 @@ describe('Next.js WebSockets', () => {
           },
         );
       }),
-    ).resolves.toMatchInlineSnapshot(`
-      {
-        "data": {
-          "ping": "pong",
-        },
-      }
-    `);
+    ).resolves.toEqual({
+      data: {
+        ping: 'pong',
+      },
+    });
   });
 });
