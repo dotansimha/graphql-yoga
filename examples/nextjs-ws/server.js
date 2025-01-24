@@ -132,7 +132,6 @@ async function start(port, handle) {
         return args;
       },
     },
-    // @ts-expect-error - Typings are wrong
     wsServer,
   );
 
