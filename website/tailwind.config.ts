@@ -1,15 +1,22 @@
-import type { Config } from 'tailwindcss';
-import { fontFamily } from 'tailwindcss/defaultTheme';
 import baseConfig from '@theguild/tailwind-config';
 
-const config: Config = {
+export default {
   ...baseConfig,
   theme: {
     ...baseConfig.theme,
     extend: {
       ...baseConfig.theme.extend,
       fontFamily: {
-        sans: ['var(--font-sans, ui-sans-serif)', ...fontFamily.sans],
+        sans: [
+          'var(--font-sans, ui-sans-serif)',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
+          '"Segoe UI Symbol"',
+          '"Noto Color Emoji"',
+        ],
       },
       colors: {
         ...baseConfig.theme.extend.colors,
@@ -39,5 +46,3 @@ const config: Config = {
     },
   },
 };
-
-export default config;

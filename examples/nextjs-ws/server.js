@@ -132,15 +132,31 @@ async function start(port, handle) {
         return args;
       },
     },
+    // @ts-expect-error - Typings are wrong
     wsServer,
   );
+
+  const sockets = new Set();
+
+  server.on('connection', socket => {
+    sockets.add(socket);
+    socket.on('close', () => {
+      sockets.delete(socket);
+    });
+  });
 
   await new Promise((resolve, reject) =>
     server.listen(port, err => (err ? reject(err) : resolve())),
   );
 
   return () =>
-    new Promise((resolve, reject) => server.close(err => (err ? reject(err) : resolve())));
+    new Promise(resolve => {
+      for (const socket of sockets) {
+        socket.destroy();
+      }
+      server.closeAllConnections();
+      server.close(() => resolve());
+    });
 }
 
 // dont start the next.js app when testing the server
