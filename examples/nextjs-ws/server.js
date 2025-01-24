@@ -4,8 +4,9 @@ import { createServer } from 'node:http';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
 import { parse } from 'node:url';
 import next from 'next';
-import { useServer, WebSocket } from 'graphql-ws/use/ws';
+import { useServer } from 'graphql-ws/use/ws';
 import { createSchema, createYoga } from 'graphql-yoga';
+import { WebSocketServer } from 'ws';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
@@ -85,7 +86,7 @@ async function start(port, handle) {
   });
 
   // create websocket server
-  const wsServer = new WebSocket.WebSocketServer({ server, path: graphqlEndpoint });
+  const wsServer = new WebSocketServer({ server, path: graphqlEndpoint });
 
   // prepare graphql-ws
   /**
@@ -131,6 +132,7 @@ async function start(port, handle) {
         return args;
       },
     },
+    // @ts-expect-error - Typings are wrong
     wsServer,
   );
 
