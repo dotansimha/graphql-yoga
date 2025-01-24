@@ -118,7 +118,7 @@ jobs:
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: pnpm run test --ci
+          command: pnpm run test:unit --ci
 
       - name: Run Leak Tests
         uses: nick-fields/retry@v3
