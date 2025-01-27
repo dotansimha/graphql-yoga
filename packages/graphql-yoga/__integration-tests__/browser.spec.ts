@@ -1,6 +1,7 @@
 import {
   GraphQLBoolean,
   GraphQLFloat,
+  GraphQLInputObjectType,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
@@ -99,6 +100,25 @@ export function createTestSchema() {
             liveQueryCounter++;
             return liveQueryCounter;
           },
+        },
+        deprecatedField: {
+          type: GraphQLString,
+          deprecationReason: 'This is deprecated',
+          args: {
+            deprecatedArg: {
+              type: new GraphQLInputObjectType({
+                name: 'DeprecatedInput',
+                fields: {
+                  deprecatedInputField: {
+                    type: GraphQLString,
+                    deprecationReason: 'This is deprecated',
+                  },
+                },
+              }),
+              deprecationReason: 'This is deprecated',
+            },
+          },
+          resolve: (_root, args) => args['deprecatedArg']['deprecatedInputField'],
         },
       }),
     }),
@@ -535,6 +555,20 @@ describe('browser', () => {
       await expect(
         headerContentEl$.then(headerContentEl => getElementText(headerContentEl!)),
       ).resolves.toBe(defaultHeader);
+    });
+
+    it('supports input value deprecations', async () => {
+      await page.goto(`http://localhost:${port}${endpoint}`);
+      await page.click('.graphiql-un-styled[data-index="0"]');
+      await page.click('a.graphiql-doc-explorer-type-name');
+      await page.getByText('Show Deprecated Fields').click();
+      const deprecatedField = page.getByText('deprecatedField');
+      expect(await deprecatedField.count()).toBe(1);
+      await deprecatedField.click();
+      expect(await page.getByText('deprecatedArg').count()).toBe(1);
+      expect(await page.getByText('DeprecatedInput').count()).toBe(1);
+      await page.getByText('DeprecatedInput').click();
+      expect(await page.getByText('deprecatedInputField').count()).toBe(1);
     });
   });
 

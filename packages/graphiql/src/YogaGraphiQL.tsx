@@ -103,6 +103,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
       credentials: 'same-origin',
       specifiedByUrl: true,
       directiveIsRepeatable: true,
+      inputValueDeprecation: true,
       ...props,
       headers: props.additionalHeaders || {},
       fetch: (...args: Parameters<WindowOrWorkerGlobalScope['fetch']>) => globalThis.fetch(...args),
@@ -152,6 +153,7 @@ export function YogaGraphiQL(props: YogaGraphiQLProps): React.ReactElement {
         shouldPersistHeaders
         plugins={[explorer]}
         schemaDescription={true}
+        inputValueDeprecation={true}
         query={query}
         {...props}
         fetcher={fetcher}
