@@ -1,5 +1,14 @@
 # @graphql-yoga/graphiql
 
+## 4.3.5
+
+### Patch Changes
+
+- [#3712](https://github.com/dotansimha/graphql-yoga/pull/3712)
+  [`1c055f5`](https://github.com/dotansimha/graphql-yoga/commit/1c055f597b59a2c6c6ab8ae10b8e9b771c91c2c1)
+  Thanks [@ardatan](https://github.com/ardatan)! - Show deprecated input fields, arguments and all
+  other input values in GraphiQL
+
 ## 4.3.4
 
 ### Patch Changes

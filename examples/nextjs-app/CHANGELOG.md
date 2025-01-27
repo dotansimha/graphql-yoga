@@ -1,5 +1,13 @@
 # nextjs-app
 
+## 2.10.11
+
+### Patch Changes
+
+- Updated dependencies
+  [[`1c055f5`](https://github.com/dotansimha/graphql-yoga/commit/1c055f597b59a2c6c6ab8ae10b8e9b771c91c2c1)]:
+  - graphql-yoga@5.10.11
+
 ## 2.10.10
 
 ### Patch Changes
