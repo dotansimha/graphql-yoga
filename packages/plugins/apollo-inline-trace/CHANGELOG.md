@@ -1,5 +1,14 @@
 # @graphql-yoga/plugin-apollo-inline-trace
 
+## 3.10.12
+
+### Patch Changes
+
+- [#3647](https://github.com/dotansimha/graphql-yoga/pull/3647)
+  [`31b7754`](https://github.com/dotansimha/graphql-yoga/commit/31b7754fd93d74682576b4f4765385805e78cf17)
+  Thanks [@ardatan](https://github.com/ardatan)! - Wait for setting schemaId to prevent race
+  condition
+
 ## 3.10.11
 
 ### Patch Changes
