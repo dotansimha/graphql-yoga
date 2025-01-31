@@ -118,16 +118,19 @@ export type GraphiQLOptions = {
    * Retry attempts
    */
   retry?: number;
-};
-
-export type GraphiQLRendererOptions = {
   /**
-   * The endpoint requests should be sent. Defaults to `"/graphql"`.
+   * The endpoint requests should be sent.
+   * Defaults to the graphql endpoint ("/graphql" by default).
    */
   endpoint?: string;
-} & GraphiQLOptions;
+};
 
-export const renderGraphiQL = (opts: GraphiQLRendererOptions) =>
+/**
+ * @deprecated replaced by GraphiQLOptions
+ */
+export type GraphiQLRendererOptions = GraphiQLOptions;
+
+export const renderGraphiQL = (opts: GraphiQLOptions) =>
   graphiqlHTML
     .replace('__TITLE__', opts?.title || 'Yoga GraphiQL')
     .replace('__OPTS__', JSON.stringify(opts ?? {}));
@@ -148,7 +151,7 @@ export type GraphiQLOptionsOrFactory<TServerContext> =
 export interface GraphiQLPluginConfig<TServerContext> {
   graphqlEndpoint: string;
   options?: GraphiQLOptionsOrFactory<TServerContext>;
-  render?(options: GraphiQLRendererOptions): PromiseOrValue<BodyInit>;
+  render?(options: GraphiQLOptions): PromiseOrValue<BodyInit>;
   logger?: YogaLogger;
 }
 
