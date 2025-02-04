@@ -10,6 +10,8 @@ import {
   GitHubIcon,
   Heading,
   Hero,
+  HeroDecorationFromLogo,
+  HeroLogo,
   InfoCard,
   TextLink,
   ToolsAndLibrariesCards,
@@ -65,9 +67,14 @@ export default function IndexPage() {
   return (
     <Page className="mx-auto max-w-[90rem] overflow-hidden">
       <Hero
+        className="mx-4 md:mx-6"
         heading="High-performance GraphQL Server"
         text="Fully-featured GraphQL server designed for effortless setup and optimal developer experience."
-        logo={<YogaIcon />}
+        top={
+          <HeroLogo>
+            <YogaIcon />
+          </HeroLogo>
+        }
         checkmarks={['Fully open source', 'No vendor lock', 'Can be self-hosted!']}
       >
         <CallToAction variant="primary-inverted" href="/docs">
@@ -80,13 +87,14 @@ export default function IndexPage() {
           <GitHubIcon className="size-6" />
           GitHub
         </CallToAction>
+        {/* todo: this is not the same as in design, fix it when we have more time */}
+        <HeroDecorationFromLogo logo={<YogaIcon />} />
       </Hero>
 
       <ExploreMainProductCards />
       <EverythingHTTPSection />
-      <TrulyExtendableSection className="mt-24" />
-
-      <ReachZenQuickerWithYoga className="my-28" />
+      <TrulyExtendableSection className="mt-24 mx-4 md:mx-6" />
+      <ReachZenQuickerWithYoga />
 
       <RunAnywhereSection className="mx-4 md:mx-6">
         {[
