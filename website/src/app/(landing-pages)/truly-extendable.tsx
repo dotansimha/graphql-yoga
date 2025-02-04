@@ -34,8 +34,8 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
         <br className="max-sm:hidden" /> development needs.
       </p>
       <div className="relative flex gap-6 xl:gap-24 my-6 xl:my-12 max-xl:flex-col">
-        <div className="xl:basis-1/2">
-          <div className="grid sm:grid-cols-2 gap-6">
+        <div className="xl:basis-1/2 overflow-auto nextra-scrollbar -mx-8 px-8 -my-3 py-3">
+          <div className="flex gap-2 sm:grid sm:grid-cols-2 sm:gap-6">
             <InfoCardLink
               heading="Apollo Federation"
               icon={<Image src={apolloBadge} alt="" />}
@@ -74,7 +74,7 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
                 <Anchor
                   key={plugin.title}
                   href={plugin.href}
-                  className="hive-focus rounded-lg bg-green-900 px-4 py-3 text-green-600 transition hover:bg-green-800 hover:text-white"
+                  className="text-[10px] sm:text-sm hive-focus rounded-lg bg-green-900 px-2 sm:px-4 py-1.5 sm:py-3 text-green-600 transition hover:bg-green-800 hover:text-white"
                 >
                   {plugin.title}
                 </Anchor>
@@ -115,7 +115,7 @@ function InfoCardLink({ href, ...rest }: InfoCardLinkProps) {
         /* hack: InfoCard doesn't expect to be a link */
         ...({ as: NextLink, href } as any as { as: 'div' })
       }
-      className="[&_h3]:text-white [&_h3]:text-base [&_p]:text-sm [&_p]:text-white/80 bg-green-900 hover:bg-green-800 focus-visible:bg-green-800 duration-300 rounded-2xl hive-focus !p-6"
+      className="[&_h3]:text-white [&_h3]:text-base [&_p]:text-sm [&_p]:text-white/80 bg-green-900 hover:bg-green-800 focus-visible:bg-green-800 duration-300 rounded-2xl hive-focus !p-6 max-sm:w-[280px] shrink-0"
       {...rest}
     />
   );
@@ -315,14 +315,3 @@ const ENVELOP_PLUGINS: { title: string; href: `https://${string}` }[] = [
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/on-resolve',
   },
 ];
-
-function splitArray<T>(array: T[], parts: number): T[][] {
-  const result = [];
-  const partSize = Math.ceil(array.length / parts);
-
-  for (let i = 0; i < array.length; i += partSize) {
-    result.push(array.slice(i, i + partSize));
-  }
-
-  return result;
-}
