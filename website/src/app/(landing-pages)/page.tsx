@@ -217,7 +217,7 @@ function EverythingHTTPSection({ className }: { className?: string }) {
           icon={<Image src={checkBadge} alt="" />}
           className="flex-1 rounded-2xl md:rounded-3xl"
         >
-          Meets rigorous standards as confirmed by comprehensive <br />
+          Meets rigorous standards as confirmed by comprehensive{' '}
           <TextLink
             href="https://github.com/enisdenjo/graphql-http/blob/master/implementations/graphql-yoga/README.md"
             className="mt-4 text-green-800"
@@ -244,10 +244,10 @@ function EverythingHTTPSection({ className }: { className?: string }) {
           icon={<Image src={arrowUpBade} alt="" />}
           className="flex-1 basis-full rounded-2xl md:rounded-3xl lg:basis-0"
         >
-          Facilitates file uploads directly through GraphQL using <br />
+          Facilitates file uploads directly through GraphQL using{' '}
           <TextLink
             href="https://github.com/jaydenseric/graphql-multipart-request-spec"
-            className="mt-4 text-green-800"
+            className="mt-4 text-green-800 "
           >
             the multipart request specification
           </TextLink>
