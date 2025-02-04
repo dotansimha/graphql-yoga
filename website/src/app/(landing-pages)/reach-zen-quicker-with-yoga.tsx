@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentProps, FC } from 'react';
-import { CallToAction, Heading, ComparisonTable as Table } from '@theguild/components';
+import { CallToAction, cn, Heading, ComparisonTable as Table } from '@theguild/components';
 import ComparisonTable from '../comparison-table.mdx';
 
-export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = props => {
+export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = ({ className, ...rest }) => {
   return (
-    <section {...props}>
-      <Heading as="h2" size="md" className="text-balance sm:text-center px-4">
+    <section className={cn('py-6 md:py-[120px]', className)} {...rest}>
+      <Heading as="h2" size="md" className="text-balance sm:text-center px-4 md:px-6">
         Using Apollo Server? Reach zen quicker with Yoga.
       </Heading>
-      <div className="mx-4 flex max-lg:flex-col gap-6 lg:gap-24 mt-6 sm:mt-[64px]">
+      <div className="px-4 md:px-6 flex max-lg:flex-col gap-6 lg:gap-24 mt-6 sm:mt-[64px]">
         <div className="basis-1/4">
           <Heading as="h3" size="sm" className="max-sm:text-2xl">
             Runtime&nbsp;Performance Champion
