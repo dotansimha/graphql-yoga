@@ -52,6 +52,8 @@ import {
   Plugin,
   RequestParser,
   ResultProcessorInput,
+  type OnOperationHook,
+  type OperationHandler,
 } from './plugins/types.js';
 import { GraphiQLOptions, GraphiQLOptionsOrFactory, useGraphiQL } from './plugins/use-graphiql.js';
 import { useHealthCheck } from './plugins/use-health-check.js';
@@ -217,6 +219,7 @@ export class YogaServer<
   >;
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
   private onParamsHooks: OnParamsHook<TServerContext>[];
+  private onOperationHooks: OnOperationHook<TServerContext>[];
   private onExecutionResultHooks: OnExecutionResultHook<TServerContext>[];
   private onResultProcessHooks: OnResultProcess<TServerContext>[];
   private maskedErrorsOpts: YogaMaskedErrorOpts | null;
@@ -437,6 +440,7 @@ export class YogaServer<
 
     this.onRequestParseHooks = [];
     this.onParamsHooks = [];
+    this.onOperationHooks = [];
     this.onExecutionResultHooks = [];
     this.onResultProcessHooks = [];
     for (const plugin of this.plugins) {
@@ -452,6 +456,9 @@ export class YogaServer<
         if (plugin.onParams) {
           this.onParamsHooks.push(plugin.onParams);
         }
+        if (plugin.onOperation) {
+          this.onOperationHooks.push(plugin.onOperation);
+        }
         if (plugin.onExecutionResult) {
           this.onExecutionResultHooks.push(plugin.onExecutionResult);
         }
@@ -462,16 +469,7 @@ export class YogaServer<
     }
   }
 
-  async getResultForParams(
-    {
-      params,
-      request,
-    }: {
-      params: GraphQLParams;
-      request: Request;
-    },
-    context: TServerContext,
-  ) {
+  handleOperation: OperationHandler<TServerContext> = async ({ params, request, context }) => {
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
 
     try {
@@ -552,6 +550,33 @@ export class YogaServer<
       });
     }
     return result;
+  };
+
+  async getResultForParams(
+    {
+      params,
+      request,
+    }: {
+      params: GraphQLParams;
+      request: Request;
+    },
+    context: TServerContext,
+  ) {
+    let operationHandler = this.handleOperation;
+
+    for (const onOperationHook of this.onOperationHooks) {
+      await onOperationHook({
+        operationHandler,
+        setOperationHandler: newOperationHandler => {
+          operationHandler = newOperationHandler;
+        },
+        context,
+        params,
+        request,
+      });
+    }
+
+    return operationHandler({ params, request, context });
   }
 
   handle: ServerAdapterRequestHandler<TServerContext> = async (

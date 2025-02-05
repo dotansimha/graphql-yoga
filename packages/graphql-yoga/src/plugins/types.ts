@@ -79,6 +79,11 @@ export type Plugin<
      * should be used for sending the result over the wire.
      */
     onResultProcess?: OnResultProcess<TServerContext>;
+    /**
+     * This hook is invoked for each graphql operation.
+     * Here you can set graphql operation handler.
+     */
+    onOperation?: OnOperationHook<TServerContext>;
   };
 
 export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
@@ -203,3 +208,24 @@ export type OnPluginInitEventPayload<PluginContext extends Record<string, any>> 
 export type OnPluginInitHook<ContextType extends Record<string, any>> = (
   options: OnPluginInitEventPayload<ContextType>,
 ) => void;
+
+export type OperationHandler<TServerContext extends Record<string, any>> = (payload: {
+  params: GraphQLParams;
+  request: Request;
+  context: TServerContext;
+}) => PromiseOrValue<ExecutionResult | AsyncIterable<ExecutionResult> | undefined>;
+
+export type OnOperationHookPayload<TServerContext extends Record<string, any>> = {
+  context: TServerContext;
+  operationHandler: OperationHandler<TServerContext>;
+  setOperationHandler: (operationHandler: OperationHandler<TServerContext>) => void;
+  params: GraphQLParams;
+  request: Request;
+};
+
+/**
+ * Invoked for each GraphQL operation.
+ */
+export type OnOperationHook<TServerContext extends Record<string, any>> = (
+  payload: OnOperationHookPayload<TServerContext>,
+) => PromiseOrValue<void>;
