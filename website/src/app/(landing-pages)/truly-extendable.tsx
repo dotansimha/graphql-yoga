@@ -33,8 +33,8 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
         Highly extendable through Envelop plugins, allowing customization to fit any
         <br className="max-sm:hidden" /> development needs.
       </p>
-      <div className="relative flex gap-6 xl:gap-24 my-6 xl:my-12 max-xl:flex-col">
-        <div className="xl:basis-1/2 overflow-auto nextra-scrollbar -mx-8 px-8 -my-3 py-3">
+      <div className="relative flex gap-6 xl:gap-20 2xl:gap-24 my-6 xl:my-12 max-xl:flex-col">
+        <div className="xl:basis-1/2 shrink-0 overflow-auto nextra-scrollbar -mx-8 px-8 -my-3 py-3">
           <div className="flex gap-2 sm:grid sm:grid-cols-2 sm:gap-6">
             <InfoCardLink
               heading="Apollo Federation"
@@ -67,34 +67,32 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
             </InfoCardLink>
           </div>
         </div>
-        <div className="xl:w-2/5 max-xl:order-first">
-          <div className="w-full relative group">
-            <MarqueeRows rows={9} speed="slow" pauseOnHover>
-              {ENVELOP_PLUGINS.map(plugin => (
-                <Anchor
-                  key={plugin.title}
-                  href={plugin.href}
-                  className="text-[10px] sm:text-sm hive-focus rounded-lg bg-green-900 px-2 sm:px-4 py-1.5 sm:py-3 text-green-600 transition hover:bg-green-800 hover:text-white"
-                >
-                  {plugin.title}
-                </Anchor>
-              ))}
-            </MarqueeRows>
-            <YogaIcon
-              className="group-hover:opacity-0 aria-hidden absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3 transition duration-700 pointer-events-none"
-              stroke="white"
-              strokeWidth="0.2"
-              fill="url(#myGradient)"
-            />
-            <svg className="h-0">
-              <defs>
-                <linearGradient id="myGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: '#86b6c1', stopOpacity: 0.8 }} />
-                  <stop offset="100%" style={{ stopColor: '#4f96a6', stopOpacity: 1 }} />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
+        <div className="lg:basis-1/2 xl:w-1/2 shrink max-xl:order-first relative group">
+          <MarqueeRows rows={9} speed="slow" pauseOnHover>
+            {ENVELOP_PLUGINS.map(plugin => (
+              <Anchor
+                key={plugin.title}
+                href={plugin.href}
+                className="text-[10px] sm:text-sm hive-focus rounded-lg bg-green-900 px-2 sm:px-4 py-1.5 sm:py-3 text-green-600 transition hover:bg-green-800 hover:text-white"
+              >
+                {plugin.title}
+              </Anchor>
+            ))}
+          </MarqueeRows>
+          <YogaIcon
+            className="group-hover:opacity-0 aria-hidden absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3 transition duration-700 pointer-events-none"
+            stroke="white"
+            strokeWidth="0.2"
+            fill="url(#myGradient)"
+          />
+          <svg className="h-0">
+            <defs>
+              <linearGradient id="myGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{ stopColor: '#86b6c1', stopOpacity: 0.8 }} />
+                <stop offset="100%" style={{ stopColor: '#4f96a6', stopOpacity: 1 }} />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
       </div>
       <CallToAction variant="primary-inverted" href="/docs/features/envelop-plugins">
