@@ -546,10 +546,10 @@ export class YogaServer<
     }
 
     result ??= await paramsHandler({
-        request,
-        params,
-        context: context as TServerContext & YogaInitialContext,
-      });
+      request,
+      params,
+      context: context as TServerContext & YogaInitialContext,
+    });
 
     for (const onExecutionResult of this.onExecutionResultHooks) {
       await onExecutionResult({
