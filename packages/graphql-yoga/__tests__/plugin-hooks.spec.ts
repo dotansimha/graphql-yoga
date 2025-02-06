@@ -62,7 +62,7 @@ test('onParams -> setResult to event stream execution result', async () => {
 });
 
 test('onParams -> replaces the params handler correctly', async () => {
-  const paramsHandler = jest.fn((_payload: ParamsHandlerPayload<{}>) => ({
+  const paramsHandler = jest.fn((_payload: ParamsHandlerPayload<object>) => ({
     data: { hello: 'world' },
   }));
   const plugin: Plugin = {
