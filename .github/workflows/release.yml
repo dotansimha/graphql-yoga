@@ -13,7 +13,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@v1
+    uses: the-guild-org/shared-config/.github/workflows/release-stable.yml@v1-corepack
     if: ${{ github.event.pull_request.title != 'Upcoming Release Changes' }}
     with:
       releaseScript: release
