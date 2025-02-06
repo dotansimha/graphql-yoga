@@ -1,5 +1,5 @@
 import { createSchema, createYoga, type Plugin } from '../src';
-import { ParamsHandler, ParamsHandlerPayload } from '../src/plugins/types';
+import type { ParamsHandlerPayload } from '../src/plugins/types';
 import { eventStream } from './utilities';
 
 test('onParams -> setResult to single execution result', async () => {
