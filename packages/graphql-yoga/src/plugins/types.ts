@@ -123,13 +123,29 @@ export type OnParamsHook<TServerContext> = (
 ) => PromiseOrValue<void>;
 
 export interface OnParamsEventPayload<TServerContext = Record<string, unknown>> {
-  params: GraphQLParams;
   request: Request;
+
+  params: GraphQLParams;
   setParams: (params: GraphQLParams) => void;
+  paramsHandler: ParamsHandler<TServerContext>;
+
+  setParamsHandler: (handler: ParamsHandler<TServerContext>) => void;
+
   setResult: (result: ExecutionResult | AsyncIterable<ExecutionResult>) => void;
+
   fetchAPI: FetchAPI;
   context: TServerContext;
 }
+
+export interface ParamsHandlerPayload<TServerContext> {
+  request: Request;
+  params: GraphQLParams;
+  context: TServerContext & ServerAdapterInitialContext & YogaInitialContext;
+}
+
+export type ParamsHandler<TServerContext> = (
+  payload: ParamsHandlerPayload<TServerContext>,
+) => PromiseOrValue<ExecutionResult | AsyncIterable<ExecutionResult>>;
 
 export type OnResultProcess<TServerContext> = (
   payload: OnResultProcessEventPayload<TServerContext>,
