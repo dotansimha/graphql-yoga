@@ -741,7 +741,7 @@ describe('browser', () => {
       );
     }
   });
-  test('\`endpoint\` configures GraphiQL to point another server', async () => {
+  test('`endpoint` configures GraphiQL to point another server', async () => {
     const anotherYoga = createYoga({
       schema: createSchema({
         typeDefs: /* GraphQL */ `
