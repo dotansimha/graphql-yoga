@@ -49,6 +49,7 @@ import {
   OnRequestParseDoneHook,
   OnRequestParseHook,
   OnResultProcess,
+  ParamsHandler,
   Plugin,
   RequestParser,
   ResultProcessorInput,
@@ -462,6 +463,15 @@ export class YogaServer<
     }
   }
 
+  handleParams: ParamsHandler<TServerContext> = ({ context, params }) => {
+    const enveloped = this.getEnveloped(context);
+
+    return processGraphQLParams({
+      params,
+      enveloped,
+    });
+  };
+
   async getResultForParams(
     {
       params,
@@ -473,6 +483,7 @@ export class YogaServer<
     context: TServerContext,
   ) {
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
+    let paramsHandler = this.handleParams;
 
     try {
       for (const onParamsHook of this.onParamsHooks) {
@@ -481,6 +492,10 @@ export class YogaServer<
           request,
           setParams(newParams) {
             params = newParams;
+          },
+          paramsHandler,
+          setParamsHandler(newHandler) {
+            paramsHandler = newHandler;
           },
           setResult(newResult) {
             result = newResult;
@@ -503,12 +518,11 @@ export class YogaServer<
 
         Object.assign(context, additionalContext);
 
-        const enveloped = this.getEnveloped(context);
-
         this.logger.debug(`Processing GraphQL Parameters`);
-        result = await processGraphQLParams({
+
+        result = await paramsHandler({
           params,
-          enveloped,
+          context: context as TServerContext & YogaInitialContext,
         });
 
         this.logger.debug(`Processing GraphQL Parameters done.`);
