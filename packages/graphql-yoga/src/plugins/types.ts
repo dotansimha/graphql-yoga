@@ -138,6 +138,7 @@ export interface OnParamsEventPayload<TServerContext = Record<string, unknown>> 
 }
 
 export interface ParamsHandlerPayload<TServerContext> {
+  request: Request;
   params: GraphQLParams;
   context: TServerContext & ServerAdapterInitialContext & YogaInitialContext;
 }

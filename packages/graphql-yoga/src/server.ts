@@ -371,7 +371,7 @@ export class YogaServer<
       ...(options?.plugins ?? []),
       // To make sure those are called at the end
       {
-        onPluginInit({ addPlugin }) {
+        onPluginInit: ({ addPlugin }) => {
           if (options?.parserAndValidationCache !== false) {
             addPlugin(
               // @ts-expect-error Add plugins has context but this hook doesn't care
@@ -463,13 +463,54 @@ export class YogaServer<
     }
   }
 
-  handleParams: ParamsHandler<TServerContext> = ({ context, params }) => {
-    const enveloped = this.getEnveloped(context);
+  handleParams: ParamsHandler<TServerContext> = async ({ request, context, params }) => {
+    let result: ExecutionResult | AsyncIterable<ExecutionResult>;
+    try {
+      const additionalContext =
+        context['request'] === request
+          ? {
+              params,
+            }
+          : {
+              request,
+              params,
+            };
 
-    return processGraphQLParams({
-      params,
-      enveloped,
-    });
+      Object.assign(context, additionalContext);
+
+      const enveloped = this.getEnveloped(context);
+
+      this.logger.debug(`Processing GraphQL Parameters`);
+      result = await processGraphQLParams({
+        params,
+        enveloped,
+      });
+      this.logger.debug(`Processing GraphQL Parameters done.`);
+    } catch (error) {
+      const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+
+      result = {
+        errors,
+      };
+    }
+    if (isAsyncIterable(result)) {
+      result = mapAsyncIterator(
+        result,
+        v => v,
+        (error: Error) => {
+          if (error.name === 'AbortError') {
+            this.logger.debug(`Request aborted`);
+            throw error;
+          }
+
+          const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+          return {
+            errors,
+          };
+        },
+      );
+    }
+    return result;
   };
 
   async getResultForParams(
@@ -485,75 +526,30 @@ export class YogaServer<
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
     let paramsHandler = this.handleParams;
 
-    try {
-      for (const onParamsHook of this.onParamsHooks) {
-        await onParamsHook({
-          params,
-          request,
-          setParams(newParams) {
-            params = newParams;
-          },
-          paramsHandler,
-          setParamsHandler(newHandler) {
-            paramsHandler = newHandler;
-          },
-          setResult(newResult) {
-            result = newResult;
-          },
-          fetchAPI: this.fetchAPI,
-          context,
-        });
-      }
-
-      if (result == null) {
-        const additionalContext =
-          context['request'] === request
-            ? {
-                params,
-              }
-            : {
-                request,
-                params,
-              };
-
-        Object.assign(context, additionalContext);
-
-        this.logger.debug(`Processing GraphQL Parameters`);
-
-        result = await paramsHandler({
-          params,
-          context: context as TServerContext & YogaInitialContext,
-        });
-
-        this.logger.debug(`Processing GraphQL Parameters done.`);
-      }
-
-      /** Ensure that error thrown from subscribe is sent to client */
-      // TODO: this should probably be something people can customize via a hook?
-      if (isAsyncIterable(result)) {
-        result = mapAsyncIterator(
-          result,
-          v => v,
-          (err: Error) => {
-            if (err.name === 'AbortError') {
-              this.logger.debug(`Request aborted`);
-              throw err;
-            }
-
-            const errors = handleError(err, this.maskedErrorsOpts, this.logger);
-            return {
-              errors,
-            };
-          },
-        );
-      }
-    } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts, this.logger);
-
-      result = {
-        errors,
-      };
+    for (const onParamsHook of this.onParamsHooks) {
+      await onParamsHook({
+        params,
+        request,
+        setParams(newParams) {
+          params = newParams;
+        },
+        paramsHandler,
+        setParamsHandler(newHandler) {
+          paramsHandler = newHandler;
+        },
+        setResult(newResult) {
+          result = newResult;
+        },
+        fetchAPI: this.fetchAPI,
+        context,
+      });
     }
+
+    result ??= await paramsHandler({
+        request,
+        params,
+        context: context as TServerContext & YogaInitialContext,
+      });
 
     for (const onExecutionResult of this.onExecutionResultHooks) {
       await onExecutionResult({
@@ -565,6 +561,7 @@ export class YogaServer<
         context: context as TServerContext & YogaInitialContext,
       });
     }
+
     return result;
   }
 
