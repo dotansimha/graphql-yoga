@@ -940,7 +940,7 @@ importers:
         version: 13.0.2(@apollo/subgraph@2.9.3(graphql@16.10.0))(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)(ts-morph@25.0.1)
       '@nestjs/microservices':
         specifier: ^11.0.0
-        version: 11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.4.2)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+        version: 11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.5.0)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/platform-socket.io':
         specifier: ^11.0.0
         version: 11.0.8(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/websockets@11.0.8)(rxjs@7.8.1)
@@ -1007,7 +1007,7 @@ importers:
         version: 0.24.2
       netlify-cli:
         specifier: ^18.0.0
-        version: 18.0.4(@swc/core@1.10.14(@swc/helpers@0.5.15))(@types/express@4.17.21)(@types/node@22.13.1)(encoding@0.1.13)(ioredis@5.4.2)(picomatch@4.0.2)(rollup@4.34.4)
+        version: 18.0.4(@swc/core@1.10.14(@swc/helpers@0.5.15))(@types/express@4.17.21)(@types/node@22.13.1)(encoding@0.1.13)(ioredis@5.5.0)(picomatch@4.0.2)(rollup@4.34.4)
 
   examples/nextjs-app:
     dependencies:
@@ -1237,8 +1237,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/graphql-yoga/dist
       ioredis:
-        specifier: 5.4.2
-        version: 5.4.2
+        specifier: 5.5.0
+        version: 5.5.0
     devDependencies:
       '@types/node':
         specifier: 22.13.1
@@ -1546,11 +1546,11 @@ importers:
         specifier: 8.2.5
         version: 8.2.5
       ioredis:
-        specifier: 5.4.2
-        version: 5.4.2
+        specifier: 5.5.0
+        version: 5.5.0
       ioredis-mock:
         specifier: 8.9.0
-        version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.4.2)
+        version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.5.0)
     publishDirectory: dist
 
   packages/event-target/typed-event-target:
@@ -2133,7 +2133,7 @@ importers:
         version: 0.9.66
       ioredis-mock:
         specifier: 8.9.0
-        version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.4.2)
+        version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.5.0)
     publishDirectory: dist
 
   website:
@@ -12204,8 +12204,8 @@ packages:
       '@types/ioredis-mock': ^8
       ioredis: ^5
 
-  ioredis@5.4.2:
-    resolution: {integrity: sha512-0SZXGNGZ+WzISQ67QDyZ2x0+wVxjjUndtD8oSeik/4ajifeiRufed8fCb8QW8VMyi4MXcS+UO1k/0NGhvq1PAg==}
+  ioredis@5.5.0:
+    resolution: {integrity: sha512-7CutT89g23FfSa8MDoIFs2GYYa0PaNiW/OrT+nRyjRXHDZd17HmIgy+reOQ/yhh72NznNjGuS8kbCAcA4Ro4mw==}
     engines: {node: '>=12.22.0'}
 
   ip-address@9.0.5:
@@ -22640,7 +22640,7 @@ snapshots:
       tslib: 2.8.1
       uid: 2.0.2
     optionalDependencies:
-      '@nestjs/microservices': 11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.4.2)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/microservices': 11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.5.0)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/platform-express': 11.0.8(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)
       '@nestjs/websockets': 11.0.8(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/platform-socket.io@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
 
@@ -22682,7 +22682,7 @@ snapshots:
       class-transformer: 0.5.1
       class-validator: 0.14.1
 
-  '@nestjs/microservices@11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.4.2)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+  '@nestjs/microservices@11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.5.0)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 11.0.8(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@11.0.8)(@nestjs/platform-express@11.0.8)(@nestjs/websockets@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -22696,7 +22696,7 @@ snapshots:
       amqp-connection-manager: 4.1.14(amqplib@0.10.5)
       amqplib: 0.10.5
       cache-manager: 6.4.0
-      ioredis: 5.4.2
+      ioredis: 5.5.0
       kafkajs: 2.2.4
       mqtt: 5.10.3
       nats: 2.29.1
@@ -22754,7 +22754,7 @@ snapshots:
       '@nestjs/core': 11.0.8(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/microservices@11.0.8)(@nestjs/platform-express@11.0.8)(@nestjs/websockets@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       tslib: 2.8.1
     optionalDependencies:
-      '@nestjs/microservices': 11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.4.2)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/microservices': 11.0.8(@grpc/grpc-js@1.12.6)(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/websockets@11.0.8)(amqp-connection-manager@4.1.14(amqplib@0.10.5))(amqplib@0.10.5)(cache-manager@6.4.0)(ioredis@5.5.0)(kafkajs@2.2.4)(mqtt@5.10.3)(nats@2.29.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/platform-express': 11.0.8(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)
 
   '@nestjs/websockets@11.0.8(@nestjs/common@11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.8)(@nestjs/platform-socket.io@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
@@ -24753,7 +24753,7 @@ snapshots:
       eslint: 9.19.0(jiti@2.4.2)
       eslint-config-prettier: 9.1.0(eslint@9.19.0(jiti@2.4.2))
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2))
       eslint-plugin-jsonc: 2.18.2(eslint@9.19.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.19.0(jiti@2.4.2))
       eslint-plugin-mdx: 3.1.5(eslint@9.19.0(jiti@2.4.2))
@@ -25117,7 +25117,7 @@ snapshots:
   '@types/ioredis-mock@8.2.5':
     dependencies:
       '@types/node': 22.13.1
-      ioredis: 5.4.2
+      ioredis: 5.5.0
     transitivePeerDependencies:
       - supports-color
 
@@ -28513,7 +28513,7 @@ snapshots:
       eslint: 9.19.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.19.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.4(eslint@9.19.0(jiti@2.4.2))
       eslint-plugin-react-hooks: 5.1.0(eslint@9.19.0(jiti@2.4.2))
@@ -28552,7 +28552,7 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -28583,7 +28583,7 @@ snapshots:
       - bluebird
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -28601,7 +28601,7 @@ snapshots:
       eslint: 9.19.0(jiti@2.4.2)
       eslint-compat-utils: 0.5.1(eslint@9.19.0(jiti@2.4.2))
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -28612,7 +28612,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.19.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -30535,17 +30535,17 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  ioredis-mock@8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.4.2):
+  ioredis-mock@8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.5.0):
     dependencies:
       '@ioredis/as-callback': 3.0.0
       '@ioredis/commands': 1.2.0
       '@types/ioredis-mock': 8.2.5
       fengari: 0.1.4
       fengari-interop: 0.1.3(fengari@0.1.4)
-      ioredis: 5.4.2
+      ioredis: 5.5.0
       semver: 7.7.1
 
-  ioredis@5.4.2:
+  ioredis@5.5.0:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
@@ -30568,7 +30568,7 @@ snapshots:
 
   ipaddr.js@2.2.0: {}
 
-  ipx@2.1.0(@netlify/blobs@8.1.0)(ioredis@5.4.2):
+  ipx@2.1.0(@netlify/blobs@8.1.0)(ioredis@5.5.0):
     dependencies:
       '@fastify/accept-negotiator': 1.1.0
       citty: 0.1.6
@@ -30584,7 +30584,7 @@ snapshots:
       sharp: 0.32.6
       svgo: 3.3.2
       ufo: 1.5.4
-      unstorage: 1.14.4(@netlify/blobs@8.1.0)(ioredis@5.4.2)
+      unstorage: 1.14.4(@netlify/blobs@8.1.0)(ioredis@5.5.0)
       xss: 1.0.15
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -32963,7 +32963,7 @@ snapshots:
 
   nested-error-stacks@2.1.1: {}
 
-  netlify-cli@18.0.4(@swc/core@1.10.14(@swc/helpers@0.5.15))(@types/express@4.17.21)(@types/node@22.13.1)(encoding@0.1.13)(ioredis@5.4.2)(picomatch@4.0.2)(rollup@4.34.4):
+  netlify-cli@18.0.4(@swc/core@1.10.14(@swc/helpers@0.5.15))(@types/express@4.17.21)(@types/node@22.13.1)(encoding@0.1.13)(ioredis@5.5.0)(picomatch@4.0.2)(rollup@4.34.4):
     dependencies:
       '@bugsnag/js': 8.2.0
       '@fastify/static': 7.0.4
@@ -33022,7 +33022,7 @@ snapshots:
       https-proxy-agent: 7.0.6
       inquirer: 8.0.0
       inquirer-autocomplete-prompt: 1.4.0(inquirer@8.0.0)
-      ipx: 2.1.0(@netlify/blobs@8.1.0)(ioredis@5.4.2)
+      ipx: 2.1.0(@netlify/blobs@8.1.0)(ioredis@5.5.0)
       is-docker: 3.0.0
       is-stream: 4.0.1
       is-wsl: 3.1.0
@@ -36630,7 +36630,7 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  unstorage@1.14.4(@netlify/blobs@8.1.0)(ioredis@5.4.2):
+  unstorage@1.14.4(@netlify/blobs@8.1.0)(ioredis@5.5.0):
     dependencies:
       anymatch: 3.1.3
       chokidar: 3.6.0
@@ -36642,7 +36642,7 @@ snapshots:
       ufo: 1.5.4
     optionalDependencies:
       '@netlify/blobs': 8.1.0
-      ioredis: 5.4.2
+      ioredis: 5.5.0
 
   untildify@3.0.3: {}
 
