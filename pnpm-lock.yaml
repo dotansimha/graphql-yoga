@@ -46,6 +46,9 @@ importers:
       '@changesets/cli':
         specifier: 2.27.12
         version: 2.27.12
+      '@ianvs/prettier-plugin-sort-imports':
+        specifier: 4.4.1
+        version: 4.4.1(prettier@3.5.0)
       '@playwright/browser-chromium':
         specifier: ^1.49.1
         version: 1.50.1
@@ -118,6 +121,12 @@ importers:
       prettier:
         specifier: 3.5.0
         version: 3.5.0
+      prettier-plugin-pkg:
+        specifier: 0.18.1
+        version: 0.18.1(prettier@3.5.0)
+      prettier-plugin-sh:
+        specifier: 0.14.0
+        version: 0.14.0(prettier@3.5.0)
       rimraf:
         specifier: 6.0.1
         version: 6.0.1
@@ -5549,6 +5558,15 @@ packages:
 
   '@ianvs/prettier-plugin-sort-imports@4.4.0':
     resolution: {integrity: sha512-f4/e+/ANGk3tHuwRW0uh2YuBR50I4h1ZjGQ+5uD8sWfinHTivQsnieR5cz24t8M6Vx4rYvZ5v/IEKZhYpzQm9Q==}
+    peerDependencies:
+      '@vue/compiler-sfc': 2.7.x || 3.x
+      prettier: 2 || 3
+    peerDependenciesMeta:
+      '@vue/compiler-sfc':
+        optional: true
+
+  '@ianvs/prettier-plugin-sort-imports@4.4.1':
+    resolution: {integrity: sha512-F0/Hrcfpy8WuxlQyAWJTEren/uxKhYonOGY4OyWmwRdeTvkh9mMSCxowZLjNkhwi/2ipqCgtXwwOk7tW0mWXkA==}
     peerDependencies:
       '@vue/compiler-sfc': 2.7.x || 3.x
       prettier: 2 || 3
@@ -22134,6 +22152,17 @@ snapshots:
   '@humanwhocodes/retry@0.4.1': {}
 
   '@ianvs/prettier-plugin-sort-imports@4.4.0(prettier@3.5.0)':
+    dependencies:
+      '@babel/generator': 7.26.8
+      '@babel/parser': 7.26.8
+      '@babel/traverse': 7.26.8
+      '@babel/types': 7.26.8
+      prettier: 3.5.0
+      semver: 7.7.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@ianvs/prettier-plugin-sort-imports@4.4.1(prettier@3.5.0)':
     dependencies:
       '@babel/generator': 7.26.8
       '@babel/parser': 7.26.8
