@@ -1,5 +1,35 @@
 # graphql-yoga
 
+## 5.11.0
+
+### Minor Changes
+
+- [#3727](https://github.com/dotansimha/graphql-yoga/pull/3727)
+  [`5fd15b8`](https://github.com/dotansimha/graphql-yoga/commit/5fd15b851a0141839346ce918207a607c00ac205)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Allow to configure the endpoint used by
+  GraphiQL to send requests.
+
+- [#3736](https://github.com/dotansimha/graphql-yoga/pull/3736)
+  [`d13b8a4`](https://github.com/dotansimha/graphql-yoga/commit/d13b8a4a25f665e8484d64214b566e207de73514)
+  Thanks [@ardatan](https://github.com/ardatan)! - Now it is possible to replace or wrap the logic
+  how `GraphQLParams` handled;
+
+  By default Yoga calls Envelop to handle the parameters, but now you can replace it with your own
+  logic.
+
+  Example: Wrap the GraphQL handling pipeline in an `AsyncLocalStorage`
+
+  ```ts
+  function myPlugin(): Plugin {
+    const context = new AsyncLocalStorage();
+    return {
+      onParams({ paramsHandler, setParamsHandler }) {
+        const store = { foo: 'bar' }
+        setParamsHandler(payload => context.run(store, paramsHandler, payload))
+     }
+  }
+  ```
+
 ## 5.10.11
 
 ### Patch Changes

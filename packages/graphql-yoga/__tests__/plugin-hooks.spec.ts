@@ -1,4 +1,5 @@
 import { createSchema, createYoga, type Plugin } from '../src';
+import type { ParamsHandlerPayload } from '../src/plugins/types';
 import { eventStream } from './utilities';
 
 test('onParams -> setResult to single execution result', async () => {
@@ -58,6 +59,42 @@ test('onParams -> setResult to event stream execution result', async () => {
     }
   }
   expect(counter).toBe(2);
+});
+
+test('onParams -> replaces the params handler correctly', async () => {
+  const paramsHandler = jest.fn((_payload: ParamsHandlerPayload<object>) => ({
+    data: { hello: 'world' },
+  }));
+  const plugin: Plugin = {
+    async onParams({ setParamsHandler }) {
+      setParamsHandler(paramsHandler);
+    },
+  };
+
+  const yoga = createYoga({ plugins: [plugin] });
+
+  const params = {
+    query: '{ hello }',
+  };
+  const request = new yoga.fetchAPI.Request('http://yoga/graphql', {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const serverContext = {};
+
+  const result = await yoga.fetch(request, serverContext);
+
+  expect(result.status).toBe(200);
+  const body = await result.json();
+  expect(body).toEqual({ data: { hello: 'world' } });
+  expect(paramsHandler).toHaveBeenCalledTimes(1);
+  expect(paramsHandler).toHaveBeenCalledWith(
+    expect.objectContaining({ params, request, context: expect.objectContaining(serverContext) }),
+  );
 });
 
 test('context value identity stays the same in all hooks', async () => {

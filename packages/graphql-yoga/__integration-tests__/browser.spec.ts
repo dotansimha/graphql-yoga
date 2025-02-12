@@ -22,7 +22,7 @@ import { setTimeout as setTimeout$ } from 'node:timers/promises';
 // eslint-disable-next-line
 import { Browser, chromium, ElementHandle, Page } from 'playwright';
 import { fakePromise } from '@whatwg-node/server';
-import { CORSOptions, createYoga, Repeater } from '../src/index.js';
+import { CORSOptions, createSchema, createYoga, GraphiQLOptions, Repeater } from '../src/index.js';
 
 let resolveOnReturn: VoidFunction;
 const timeoutsSignal = new AbortController();
@@ -226,9 +226,11 @@ describe('browser', () => {
   const liveQueryStore = new InMemoryLiveQueryStore();
   const endpoint = '/test-graphql';
   let cors: CORSOptions = {};
+  let graphiqlOptions: GraphiQLOptions | undefined;
   const yogaApp = createYoga({
     schema: createTestSchema(),
     cors: () => cors,
+    graphiql: () => graphiqlOptions || true,
     logging: false,
     graphqlEndpoint: endpoint,
     plugins: [
@@ -722,6 +724,53 @@ describe('browser', () => {
           "{"data":{"countdown":0}}",
         ]
       `);
+    });
+  });
+
+  let anotherServer: Server;
+  afterAll(async () => {
+    if (anotherServer) {
+      await new Promise<void>((resolve, reject) =>
+        anotherServer.close(err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        }),
+      );
+    }
+  });
+  test('`endpoint` configures GraphiQL to point another server', async () => {
+    const anotherYoga = createYoga({
+      schema: createSchema({
+        typeDefs: /* GraphQL */ `
+          type Query {
+            greetings: String!
+          }
+        `,
+        resolvers: {
+          Query: {
+            greetings: () => 'Hello from another server',
+          },
+        },
+      }),
+    });
+    anotherServer = createServer(anotherYoga);
+    await new Promise<void>(resolve => anotherServer.listen(0, resolve));
+    const anotherPort = (anotherServer.address() as AddressInfo).port;
+    const anotherEndpoint = `http://localhost:${anotherPort}/graphql`;
+    graphiqlOptions = {
+      endpoint: anotherEndpoint,
+    };
+    await page.goto(`http://localhost:${port}${endpoint}`);
+    await page.waitForSelector('.graphiql-query-editor .CodeMirror textarea');
+    await typeOperationText('{ greetings }');
+    await page.click(playButtonSelector);
+    await expect(waitForResult()).resolves.toEqual({
+      data: {
+        greetings: 'Hello from another server',
+      },
     });
   });
 });
