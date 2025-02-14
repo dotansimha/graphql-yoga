@@ -1263,7 +1263,11 @@ it('gets the context in "session" and "buildResponseCacheKey"', async () => {
 });
 
 it('should work correctly with batching and async race conditions', async () => {
-  const store = new Map<string, any>();
+  const store = new Map<
+    string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    any
+  >();
   const yoga = createYoga({
     maskedErrors: false,
     schema: createSchema({
