@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ComponentProps, FC } from 'react';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { CallToAction, cn, Heading, InfoCard, YogaIcon } from '@theguild/components';
-import { InfiniteMovingCards } from './infinite-moving-cards';
+import {
+  Anchor,
+  CallToAction,
+  cn,
+  Heading,
+  InfoCard,
+  MarqueeRows,
+  YogaIcon,
+} from '@theguild/components';
 import apolloBadge from './icons/apollo-badge.svg';
 import safeLineBadge from './icons/safe-line-badge.svg';
 import serverLineBadge from './icons/server-line-badge.svg';
 import timerLineBadge from './icons/timer-line-badge.svg';
-
-const classes = {
-  card: cn(
-    '[&_h3]:text-white [&_p]:text-white/80 bg-green-900 hover:bg-green-800 focus-visible:bg-green-800 duration-300 rounded-2xl hive-focus',
-  ),
-};
 
 export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ className, ...props }) => {
   return (
@@ -25,104 +25,98 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
       )}
       {...props}
     >
-      <Heading as="h2" size="sm">
+      <Heading as="h2" size="md" className="max-sm:text-[32px]">
         Truly extendable
       </Heading>
       <p className="mt-4 text-white/80">
         Highly extendable through Envelop plugins, allowing customization to fit any
         <br className="max-sm:hidden" /> development needs.
       </p>
-      <div className="relative flex gap-6 xl:gap-24 my-6 xl:my-12 max-xl:flex-col">
-        <div className="xl:basis-1/2">
-          <div className="grid sm:grid-cols-2 gap-6">
-            <InfoCard
-              // @ts-expect-error
-              as={NextLink}
+      <div className="relative flex gap-6 xl:gap-20 2xl:gap-24 my-6 xl:my-12 max-xl:flex-col">
+        <div className="xl:basis-1/2 shrink-0 overflow-auto nextra-scrollbar -mx-8 px-8 -my-3 py-3">
+          <div className="flex gap-2 sm:grid sm:grid-cols-2 sm:gap-6">
+            <InfoCardLink
               heading="Apollo Federation"
               icon={<Image src={apolloBadge} alt="" />}
-              className={classes.card}
               href="/docs/features/apollo-federation"
             >
               Fully supports Apollo Federation for managing complex supergraphs and subgraphs.
-            </InfoCard>
-            <InfoCard
-              // @ts-expect-error
-              as={NextLink}
+            </InfoCardLink>
+            <InfoCardLink
               heading="Persisted operations"
               icon={<Image src={safeLineBadge} alt="" />}
-              className={classes.card}
               href="/features/persisted-operations"
             >
               Mitigates the risk of arbitrary GraphQL operations with robust persistence
               capabilities.
-            </InfoCard>
-            <InfoCard
-              // @ts-expect-error
-              as={NextLink}
+            </InfoCardLink>
+            <InfoCardLink
               heading="Response caching"
               icon={<Image src={serverLineBadge} alt="" />}
-              className={classes.card}
               href="/docs/features/response-caching"
             >
               Optimizes server performance by caching responses, significantly reducing server load.
-            </InfoCard>
-            <InfoCard
-              // @ts-expect-error
-              as={NextLink}
+            </InfoCardLink>
+            <InfoCardLink
               heading="Rate limiting"
               icon={<Image src={timerLineBadge} alt="" />}
-              className={classes.card}
               href="https://the-guild.dev/graphql/envelop/plugins/use-rate-limiter"
             >
               Prevents denial of service attacks with advanced rate limiting.
-            </InfoCard>
+            </InfoCardLink>
           </div>
         </div>
-        <div className="xl:w-2/5 max-xl:order-first">
-          <div className="w-full relative">
-            {splitArray(
-              ENVELOP_PLUGINS.sort((a, b) => a.title.localeCompare(b.title)),
-              10,
-            ).map((plugins, index) => (
-              <InfiniteMovingCards
-                key={index}
-                direction={index % 2 ? 'left' : 'right'}
-                speed="fast"
-                pauseOnHover={false}
+        <div className="lg:basis-1/2 xl:w-1/2 shrink max-xl:order-first relative group">
+          <MarqueeRows rows={9} speed="slow" pauseOnHover>
+            {ENVELOP_PLUGINS.map(plugin => (
+              <Anchor
+                key={plugin.title}
+                href={plugin.href}
+                className="text-[10px] sm:text-sm hive-focus rounded-lg bg-green-900 px-2 sm:px-4 py-1.5 sm:py-3 text-green-600 transition hover:bg-green-800 hover:text-white"
               >
-                {plugins.map(plugin => (
-                  <div
-                    key={plugin.title}
-                    className="bg-green-900 px-4 py-3 rounded-lg text-green-600 select-none"
-                  >
-                    {plugin.title}
-                  </div>
-                ))}
-              </InfiniteMovingCards>
+                {plugin.title}
+              </Anchor>
             ))}
-            <YogaIcon
-              className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3"
-              stroke="white"
-              strokeWidth="0.2"
-              fill="url(#myGradient)"
-            />
-            <svg className="h-0">
-              <defs>
-                <linearGradient id="myGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: '#86b6c1', stopOpacity: 0.8 }} />
-                  <stop offset="100%" style={{ stopColor: '#4f96a6', stopOpacity: 1 }} />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
+          </MarqueeRows>
+          <YogaIcon
+            className="group-hover:opacity-0 aria-hidden absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 size-2/3 transition duration-700 pointer-events-none"
+            stroke="white"
+            strokeWidth="0.2"
+            fill="url(#myGradient)"
+          />
+          <svg className="h-0">
+            <defs>
+              <linearGradient id="myGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{ stopColor: '#86b6c1', stopOpacity: 0.8 }} />
+                <stop offset="100%" style={{ stopColor: '#4f96a6', stopOpacity: 1 }} />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
       </div>
-      <CallToAction variant="primary" href="/docs/features/envelop-plugins">
+      <CallToAction variant="primary-inverted" href="/docs/features/envelop-plugins">
         Learn more about Envelop Plugins
       </CallToAction>
     </section>
   );
 };
+
+interface InfoCardLinkProps extends ComponentProps<typeof InfoCard> {
+  href: string;
+}
+
+function InfoCardLink({ href, ...rest }: InfoCardLinkProps) {
+  return (
+    <InfoCard
+      {
+        /* hack: InfoCard doesn't expect to be a link */
+        ...({ as: NextLink, href } as unknown as { as: 'div' })
+      }
+      className="[&_h3]:text-white [&_h3]:text-base [&_p]:text-sm [&_p]:text-white/80 bg-green-900 hover:bg-green-800 focus-visible:bg-green-800 duration-300 rounded-2xl hive-focus !p-6 max-sm:w-[280px] shrink-0"
+      {...rest}
+    />
+  );
+}
 
 const ENVELOP_PLUGINS: { title: string; href: `https://${string}` }[] = [
   {
@@ -318,14 +312,3 @@ const ENVELOP_PLUGINS: { title: string; href: `https://${string}` }[] = [
     href: 'https://github.com/n1ru4l/envelop/tree/main/packages/plugins/on-resolve',
   },
 ];
-
-function splitArray<T>(array: T[], parts: number): T[][] {
-  const result = [];
-  const partSize = Math.ceil(array.length / parts);
-
-  for (let i = 0; i < array.length; i += partSize) {
-    result.push(array.slice(i, i + partSize));
-  }
-
-  return result;
-}
