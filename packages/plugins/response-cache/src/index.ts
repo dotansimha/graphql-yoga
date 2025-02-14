@@ -1,12 +1,5 @@
 import { ExecutionResult, print } from 'graphql';
-import {
-  GraphQLParams,
-  Maybe,
-  Plugin,
-  PromiseOrValue,
-  YogaInitialContext,
-  YogaLogger,
-} from 'graphql-yoga';
+import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
 import { getDocumentString } from '@envelop/core';
 import {
   defaultBuildResponseCacheKey,
