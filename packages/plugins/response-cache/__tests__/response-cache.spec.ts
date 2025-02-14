@@ -1261,3 +1261,210 @@ it('gets the context in "session" and "buildResponseCacheKey"', async () => {
     context,
   });
 });
+
+it('should work correctly with batching and async race conditions', async () => {
+  const store = new Map<
+    string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    any
+  >();
+  const yoga = createYoga({
+    maskedErrors: false,
+    schema: createSchema({
+      typeDefs: /* GraphQL */ `
+        type Query {
+          a: String!
+          c: String!
+          e: String!
+        }
+      `,
+      resolvers: {
+        Query: {
+          a: () => 'b',
+          c: () => 'd',
+          e: () => 'f',
+        },
+      },
+    }),
+    batching: true,
+    plugins: [
+      useResponseCache({
+        session: () => null,
+        includeExtensionMetadata: true,
+        cache: {
+          get(key) {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                // resolve hit in the next tick creating an async race condition
+                resolve(store.get(key));
+              });
+            });
+          },
+          set(key, value) {
+            store.set(key, value);
+            return Promise.resolve();
+          },
+          invalidate() {
+            throw new Error('Unexpected cache invalidate');
+          },
+        },
+      }),
+    ],
+  });
+
+  async function execute() {
+    const res = await yoga.fetch('http://yoga/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify([
+        {
+          query: /* GraphQL */ `
+            {
+              a
+              e
+            }
+          `,
+        },
+        {
+          query: /* GraphQL */ `
+            {
+              a
+              c
+            }
+          `,
+        },
+        {
+          query: /* GraphQL */ `
+            {
+              e
+              c
+            }
+          `,
+        },
+      ]),
+    });
+    return res.json();
+  }
+
+  await expect(execute()).resolves.toMatchInlineSnapshot(`
+[
+  {
+    "data": {
+      "a": "b",
+      "e": "f",
+    },
+    "extensions": {
+      "responseCache": {
+        "didCache": true,
+        "hit": false,
+        "ttl": null,
+      },
+    },
+  },
+  {
+    "data": {
+      "a": "b",
+      "c": "d",
+    },
+    "extensions": {
+      "responseCache": {
+        "didCache": true,
+        "hit": false,
+        "ttl": null,
+      },
+    },
+  },
+  {
+    "data": {
+      "c": "d",
+      "e": "f",
+    },
+    "extensions": {
+      "responseCache": {
+        "didCache": true,
+        "hit": false,
+        "ttl": null,
+      },
+    },
+  },
+]
+`);
+
+  await expect(execute()).resolves.toMatchInlineSnapshot(`
+[
+  {
+    "data": {
+      "a": "b",
+      "e": "f",
+    },
+    "extensions": {
+      "responseCache": {
+        "hit": true,
+      },
+    },
+  },
+  {
+    "data": {
+      "a": "b",
+      "c": "d",
+    },
+    "extensions": {
+      "responseCache": {
+        "hit": true,
+      },
+    },
+  },
+  {
+    "data": {
+      "c": "d",
+      "e": "f",
+    },
+    "extensions": {
+      "responseCache": {
+        "hit": true,
+      },
+    },
+  },
+]
+`);
+
+  await expect(execute()).resolves.toMatchInlineSnapshot(`
+[
+  {
+    "data": {
+      "a": "b",
+      "e": "f",
+    },
+    "extensions": {
+      "responseCache": {
+        "hit": true,
+      },
+    },
+  },
+  {
+    "data": {
+      "a": "b",
+      "c": "d",
+    },
+    "extensions": {
+      "responseCache": {
+        "hit": true,
+      },
+    },
+  },
+  {
+    "data": {
+      "c": "d",
+      "e": "f",
+    },
+    "extensions": {
+      "responseCache": {
+        "hit": true,
+      },
+    },
+  },
+]
+`);
+});
