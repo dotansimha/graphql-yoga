@@ -1,5 +1,17 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.13.1
+
+### Patch Changes
+
+- [#3759](https://github.com/dotansimha/graphql-yoga/pull/3759)
+  [`bba7a83`](https://github.com/dotansimha/graphql-yoga/commit/bba7a834a177825939a3f1d6dbed7375455279ca)
+  Thanks [@enisdenjo](https://github.com/enisdenjo)! - Provide cache key per oparation in a batched
+  request
+
+  Instead of per request, which would give out the same cache key for every operation in a batched
+  request.
+
 ## 3.13.0
 
 ### Patch Changes
