@@ -38,7 +38,7 @@ export type UseResponseCacheParameter<TContext = YogaInitialContext> = Omit<
   buildResponseCacheKey?: BuildResponseCacheKeyFunction;
 };
 
-const operationIdByParams = new WeakMap<GraphQLParams, string>();
+const operationIdByContext = new WeakMap<YogaInitialContext, string>();
 const sessionByRequest = new WeakMap<Request, Maybe<string>>();
 
 function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
@@ -47,14 +47,7 @@ function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
 
 const cacheKeyFactoryForEnvelop: EnvelopBuildResponseCacheKeyFunction =
   async function cacheKeyFactoryForEnvelop({ context }) {
-    const params = (context as YogaInitialContext).params;
-    if (params == null) {
-      throw new Error(
-        '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
-      );
-    }
-
-    const operationId = operationIdByParams.get(params);
+    const operationId = operationIdByContext.get(context as YogaInitialContext);
     if (operationId == null) {
       throw new Error(
         '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
@@ -171,7 +164,7 @@ export function useResponseCache<TContext = YogaInitialContext>(
         request,
         context,
       });
-      operationIdByParams.set(params, operationId);
+      operationIdByContext.set(context as YogaInitialContext, operationId);
       sessionByRequest.set(request, sessionId);
       if (enabled(request, context as TContext)) {
         const cachedResponse = await cache.get(operationId);
