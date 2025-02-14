@@ -1,5 +1,12 @@
 import { ExecutionResult, print } from 'graphql';
-import { Maybe, Plugin, PromiseOrValue, YogaInitialContext, YogaLogger } from 'graphql-yoga';
+import {
+  GraphQLParams,
+  Maybe,
+  Plugin,
+  PromiseOrValue,
+  YogaInitialContext,
+  YogaLogger,
+} from 'graphql-yoga';
 import { getDocumentString } from '@envelop/core';
 import {
   defaultBuildResponseCacheKey,
@@ -31,7 +38,7 @@ export type UseResponseCacheParameter<TContext = YogaInitialContext> = Omit<
   buildResponseCacheKey?: BuildResponseCacheKeyFunction;
 };
 
-const operationIdByRequest = new WeakMap<Request, string>();
+const operationIdByParams = new WeakMap<GraphQLParams, string>();
 const sessionByRequest = new WeakMap<Request, Maybe<string>>();
 
 function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
@@ -40,14 +47,14 @@ function sessionFactoryForEnvelop({ request }: YogaInitialContext) {
 
 const cacheKeyFactoryForEnvelop: EnvelopBuildResponseCacheKeyFunction =
   async function cacheKeyFactoryForEnvelop({ context }) {
-    const request = (context as YogaInitialContext).request;
-    if (request == null) {
+    const params = (context as YogaInitialContext).params;
+    if (params == null) {
       throw new Error(
         '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
       );
     }
 
-    const operationId = operationIdByRequest.get(request);
+    const operationId = operationIdByParams.get(params);
     if (operationId == null) {
       throw new Error(
         '[useResponseCache] This plugin is not configured correctly. Make sure you use this plugin with GraphQL Yoga',
@@ -164,7 +171,7 @@ export function useResponseCache<TContext = YogaInitialContext>(
         request,
         context,
       });
-      operationIdByRequest.set(request, operationId);
+      operationIdByParams.set(params, operationId);
       sessionByRequest.set(request, sessionId);
       if (enabled(request, context as TContext)) {
         const cachedResponse = await cache.get(operationId);
