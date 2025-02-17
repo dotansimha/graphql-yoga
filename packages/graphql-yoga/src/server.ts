@@ -659,5 +659,6 @@ export function createYoga<
   return createServerAdapter<TServerContext, YogaServer<TServerContext, TUserContext>>(server, {
     fetchAPI: server.fetchAPI,
     plugins: server['plugins'],
+    disposeOnProcessTerminate: options.disposeOnProcessTerminate,
   });
 }
