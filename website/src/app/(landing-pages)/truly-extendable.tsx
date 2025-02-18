@@ -6,6 +6,7 @@ import {
   cn,
   Heading,
   InfoCard,
+  InfoCardProps,
   MarqueeRows,
   YogaIcon,
 } from '@theguild/components';
@@ -100,11 +101,7 @@ export const TrulyExtendableSection: FC<ComponentProps<'section'>> = ({ classNam
   );
 };
 
-interface InfoCardLinkProps extends ComponentProps<typeof InfoCard> {
-  href: string;
-}
-
-function InfoCardLink({ href, ...rest }: InfoCardLinkProps) {
+function InfoCardLink({ href, ...rest }: InfoCardProps.InfoCardLinkProps) {
   return (
     <InfoCard
       href={href}
