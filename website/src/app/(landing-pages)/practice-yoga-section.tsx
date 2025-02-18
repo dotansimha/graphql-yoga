@@ -33,11 +33,11 @@ export function PracticeYogaSection({ className }: { className?: string }) {
           workflow.
         </p>
         <div className="relative lg:hidden mt-6">{yogaMan}</div>
-        <div className="flex my-12 gap-8 max-sm:flex-col">
+        <div className="flex my-12 -m-4 max-sm:flex-col">
           <InfoCard
             heading="Error masking"
             icon={<Image src={errorWarningIcon} alt="" />}
-            className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
+            className="flex-1 p-4 md:p-4 bg-transparent hive-focus rounded-md"
             href="/docs/features/error-masking"
           >
             Enhance security by masking errors to prevent sensitive data leaks.
@@ -45,7 +45,7 @@ export function PracticeYogaSection({ className }: { className?: string }) {
           <InfoCard
             heading="Health checks"
             icon={<Image src={pulseLineIcon} alt="" />}
-            className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
+            className="flex-1 p-4 md:p-4 bg-transparent hive-focus rounded-md"
             href="/docs/features/health-check"
           >
             Built-in health checks to ensure server vitality and readiness.
@@ -53,7 +53,7 @@ export function PracticeYogaSection({ className }: { className?: string }) {
           <InfoCard
             heading="GraphiQL Integration"
             icon={<Image src={graphqlIcon} alt="" />}
-            className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
+            className="flex-1 p-4 md:p-4 bg-transparent hive-focus rounded-md"
             href="/docs/features/graphiql"
           >
             In-browser IDE for seamless writing, validation, and testing of GraphQL operations.
