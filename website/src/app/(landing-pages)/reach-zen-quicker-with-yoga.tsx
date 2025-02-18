@@ -25,20 +25,17 @@ export const ReachZenQuickerWithYoga: FC<ComponentProps<'section'>> = ({ classNa
 
         <ComparisonTable
           components={{
-            table(props: any) {
-              return <Table className="grow" {...props} />;
+            table(props: React.HTMLAttributes<HTMLTableElement>) {
+              return (
+                <Table
+                  className="grow [&_tbody_tr:last-child_td]:[--bg] [&_a]:text-green-1000 [&_a]:font-medium whitespace-pre"
+                  {...props}
+                />
+              );
             },
-            tr(props: any) {
-              const content = props.children[0].props.children.props?.children;
-              const isHighlight = content?.includes('Response Cache');
-              return <Table.Row highlight={isHighlight} {...props} />;
-            },
-            td(props: any) {
-              const content = props.children.props?.children;
-              const isHighlight = content?.includes('Response Cache');
-              return <Table.Cell className={isHighlight ? '!bg-green-100' : ''} {...props} />;
-            },
-            th(props: any) {
+            tr: Table.Row,
+            td: Table.Cell,
+            th(props: React.HTMLAttributes<HTMLTableCellElement>) {
               return <Table.Header className="sm:w-1/4 whitespace-pre" {...props} />;
             },
           }}

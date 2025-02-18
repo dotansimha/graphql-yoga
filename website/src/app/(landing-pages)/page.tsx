@@ -70,10 +70,9 @@ export default function IndexPage() {
         <HeroDecorationFromLogo logo={<YogaIcon />} />
       </Hero>
 
-      <PracticeYogaSection className="my-24" />
-      <EverythingHTTPSection />
+      <PracticeYogaSection className="mt-24" />
       <TrulyExtendableSection className="mt-24 mx-4 md:mx-6" />
-      <ReachZenQuickerWithYoga />
+      <EverythingHTTPSection />
 
       <RunAnywhereSection className="mx-4 md:mx-6">
         {[
@@ -122,6 +121,8 @@ export default function IndexPage() {
         ))}
       </RunAnywhereSection>
 
+      <ReachZenQuickerWithYoga />
+
       <ToolsAndLibrariesCards />
       {/* TODO: add later */}
       {/*<FrequentlyAskedQuestions faqPages={['/']}>*/}
@@ -133,7 +134,7 @@ export default function IndexPage() {
 
 function EverythingHTTPSection({ className }: { className?: string }) {
   return (
-    <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-24', className)}>
+    <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:p-24', className)}>
       <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center">
         Everything HTTP
       </Heading>
