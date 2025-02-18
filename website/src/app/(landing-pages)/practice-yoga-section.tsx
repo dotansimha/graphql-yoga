@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { CallToAction, cn, Heading, InfoCard, YogaIcon } from '@theguild/components';
-import errorWarningBadge from './icons/error-warning-badge.svg';
-import graphqlBadge from './icons/graphql-badge.svg';
-import pulseLineBadge from './icons/pulse-line-badge.svg';
+import errorWarningIcon from './icons/error-warning-icon.svg';
+import graphqlIcon from './icons/graphql-icon.svg';
+import pulseLineIcon from './icons/pulse-line-icon.svg';
 import manInBlackClothingPracticingYoga from './man-in-black-clothing-practicing-yoga-minimalistic.png';
 
 export function PracticeYogaSection({ className }: { className?: string }) {
@@ -23,7 +23,7 @@ export function PracticeYogaSection({ className }: { className?: string }) {
   );
 
   return (
-    <section className={cn('flex max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-[120px]', className)}>
+    <section className={cn('flex max-lg:flex-col gap-6 lg:gap-24 px-4 xl:px-24', className)}>
       <div className="grow">
         <Heading as="h2" size="md">
           Practice Yoga while doing server-work
@@ -36,7 +36,7 @@ export function PracticeYogaSection({ className }: { className?: string }) {
         <div className="flex my-12 gap-8 max-sm:flex-col">
           <InfoCard
             heading="Error masking"
-            icon={<Image src={errorWarningBadge} alt="" />}
+            icon={<Image src={errorWarningIcon} alt="" />}
             className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
             href="/docs/features/error-masking"
           >
@@ -44,7 +44,7 @@ export function PracticeYogaSection({ className }: { className?: string }) {
           </InfoCard>
           <InfoCard
             heading="Health checks"
-            icon={<Image src={pulseLineBadge} alt="" />}
+            icon={<Image src={pulseLineIcon} alt="" />}
             className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
             href="/docs/features/health-check"
           >
@@ -52,7 +52,7 @@ export function PracticeYogaSection({ className }: { className?: string }) {
           </InfoCard>
           <InfoCard
             heading="GraphiQL Integration"
-            icon={<Image src={graphqlBadge} alt="" />}
+            icon={<Image src={graphqlIcon} alt="" />}
             className="flex-1 p-0 md:p-0 bg-transparent hive-focus rounded-md"
             href="/docs/features/graphiql"
           >

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ReactNode } from 'react';
 import Image from 'next/image';
-import NextLink from 'next/link';
 import {
   CallToAction,
   cn,
@@ -18,6 +17,7 @@ import {
   YogaIcon,
 } from '@theguild/components';
 import { metadata as rootMetadata } from '../layout';
+import { PracticeYogaSection } from './practice-yoga-section';
 // import FAQ from './faq.mdx';
 import { ReachZenQuickerWithYoga } from './reach-zen-quicker-with-yoga';
 import { ListItemAnchor, RunAnywhereSection } from './runs-anywhere';
