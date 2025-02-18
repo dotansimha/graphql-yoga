@@ -133,7 +133,7 @@ export default function IndexPage() {
 
 function EverythingHTTPSection({ className }: { className?: string }) {
   return (
-    <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-[120px]', className)}>
+    <section className={cn('px-4 py-6 sm:py-12 md:px-6 lg:py-16 xl:px-24', className)}>
       <Heading as="h2" size="md" className="text-balance sm:px-6 sm:text-center">
         Everything HTTP
       </Heading>
