@@ -4,7 +4,6 @@ import Image from 'next/image';
 import {
   CallToAction,
   cn,
-  ExploreMainProductCards,
   // FrequentlyAskedQuestions,
   GitHubIcon,
   Heading,
@@ -72,7 +71,6 @@ export default function IndexPage() {
       </Hero>
 
       <PracticeYogaSection className="my-24" />
-      <ExploreMainProductCards />
       <EverythingHTTPSection />
       <TrulyExtendableSection className="mt-24 mx-4 md:mx-6" />
       <ReachZenQuickerWithYoga />
