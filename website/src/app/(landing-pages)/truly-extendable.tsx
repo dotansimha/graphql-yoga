@@ -109,7 +109,7 @@ function InfoCardLink({ href, ...rest }: InfoCardLinkProps) {
     <InfoCard
       href={href}
       scheme="green"
-      className="[&_p]:text-sm [&_h3]:text-base rounded-2xl !p-6 max-sm:w-[280px] shrink-0"
+      className="[&_div]:text-sm [&_h3]:text-base rounded-2xl !p-6 max-sm:w-[280px] shrink-0"
       {...rest}
     />
   );
