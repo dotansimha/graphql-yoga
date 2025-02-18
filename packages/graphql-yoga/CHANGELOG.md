@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 5.11.1
+
+### Patch Changes
+
+- [#3764](https://github.com/dotansimha/graphql-yoga/pull/3764)
+  [`96498ee`](https://github.com/dotansimha/graphql-yoga/commit/96498ee25fd310d781ce006b1fe7064c66e64fc3)
+  Thanks [@slagiewka](https://github.com/slagiewka)! - Pass through `disposeOnProcessTerminate` to
+  `createServerAdapter`
+
 ## 5.11.0
 
 ### Minor Changes

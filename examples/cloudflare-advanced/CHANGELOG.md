@@ -1,5 +1,13 @@
 # cloudflare-advanced
 
+## 3.11.1
+
+### Patch Changes
+
+- Updated dependencies
+  [[`96498ee`](https://github.com/dotansimha/graphql-yoga/commit/96498ee25fd310d781ce006b1fe7064c66e64fc3)]:
+  - graphql-yoga@5.11.1
+
 ## 3.11.0
 
 ### Patch Changes
