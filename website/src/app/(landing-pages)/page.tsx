@@ -22,13 +22,9 @@ import { metadata as rootMetadata } from '../layout';
 import { ReachZenQuickerWithYoga } from './reach-zen-quicker-with-yoga';
 import { ListItemAnchor, RunAnywhereSection } from './runs-anywhere';
 import { TrulyExtendableSection } from './truly-extendable';
-import arrowUpBade from './icons/arrow-up-badge.svg';
-import checkBadge from './icons/check-badge.svg';
-import errorWarningBadge from './icons/error-warning-badge.svg';
-import graphqlBadge from './icons/graphql-badge.svg';
-import pulseLineBadge from './icons/pulse-line-badge.svg';
-import puzzleBadge from './icons/puzzle-badge.svg';
-import manInBlackClothingPracticingYoga from './man-in-black-clothing-practicing-yoga-minimalistic.png';
+import arrowUpIcon from './icons/arrow-up-icon.svg';
+import checkIcon from './icons/check-icon.svg';
+import puzzleIcon from './icons/puzzle-icon.svg';
 
 export const metadata = {
   title: 'GraphQL Yoga',
@@ -214,7 +210,7 @@ function EverythingHTTPSection({ className }: { className?: string }) {
         <InfoCard
           as="li"
           heading="Fully audited"
-          icon={<Image src={checkBadge} alt="" />}
+          icon={<Image src={checkIcon} alt="" />}
           className="flex-1 rounded-2xl md:rounded-3xl"
         >
           Meets rigorous standards as confirmed by comprehensive{' '}
@@ -229,7 +225,7 @@ function EverythingHTTPSection({ className }: { className?: string }) {
         <InfoCard
           as="li"
           heading="Subscriptions"
-          icon={<Image src={puzzleBadge} alt="" />}
+          icon={<Image src={puzzleIcon} alt="" />}
           className="flex-1 basis-full rounded-2xl md:basis-0 md:rounded-3xl"
         >
           Supports real-time communications with built-in GraphQL{' '}
@@ -241,7 +237,7 @@ function EverythingHTTPSection({ className }: { className?: string }) {
         <InfoCard
           as="li"
           heading="File Uploads"
-          icon={<Image src={arrowUpBade} alt="" />}
+          icon={<Image src={arrowUpIcon} alt="" />}
           className="flex-1 basis-full rounded-2xl md:rounded-3xl lg:basis-0"
         >
           Facilitates file uploads directly through GraphQL using{' '}
