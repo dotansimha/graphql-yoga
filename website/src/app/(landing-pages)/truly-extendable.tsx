@@ -1,6 +1,5 @@
 import { ComponentProps, FC } from 'react';
 import Image from 'next/image';
-import NextLink from 'next/link';
 import {
   Anchor,
   CallToAction,
@@ -108,11 +107,9 @@ interface InfoCardLinkProps extends ComponentProps<typeof InfoCard> {
 function InfoCardLink({ href, ...rest }: InfoCardLinkProps) {
   return (
     <InfoCard
-      {
-        /* hack: InfoCard doesn't expect to be a link */
-        ...({ as: NextLink, href } as unknown as { as: 'div' })
-      }
-      className="[&_h3]:text-white [&_h3]:text-base [&_p]:text-sm [&_p]:text-white/80 bg-green-900 hover:bg-green-800 focus-visible:bg-green-800 duration-300 rounded-2xl hive-focus !p-6 max-sm:w-[280px] shrink-0"
+      href={href}
+      scheme="green"
+      className="[&_p]:text-sm [&_h3]:text-base rounded-2xl !p-6 max-sm:w-[280px] shrink-0"
       {...rest}
     />
   );
