@@ -12,9 +12,10 @@ describe('hackernews example integration', () => {
     yoga = createYoga({ schema, context: createContext });
 
     // migrate
-    await MigrateDev.new().parse([
-      `--schema=${path.resolve(__dirname, '..', 'prisma', 'schema.prisma')}`,
-    ]);
+    await MigrateDev.new().parse(
+      [`--schema=${path.resolve(__dirname, '..', 'prisma', 'schema.prisma')}`],
+      {},
+    );
 
     // seed
     const client = new PrismaClient();
@@ -29,11 +30,14 @@ describe('hackernews example integration', () => {
 
   afterAll(async () => {
     // drop
-    await DbDrop.new().parse([
-      `--schema=${path.resolve(__dirname, '..', 'prisma', 'schema.prisma')}`,
-      '--preview-feature', // DbDrop is an experimental feature
-      '--force',
-    ]);
+    await DbDrop.new().parse(
+      [
+        `--schema=${path.resolve(__dirname, '..', 'prisma', 'schema.prisma')}`,
+        '--preview-feature', // DbDrop is an experimental feature
+        '--force',
+      ],
+      {},
+    );
   });
 
   it('should get posts from feed', async () => {
