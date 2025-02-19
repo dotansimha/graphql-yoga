@@ -39,6 +39,7 @@ export function assertMutationViaGet(
             Allow: 'POST',
           },
         },
+        code: 'BAD_REQUEST',
       },
     });
   }
@@ -73,10 +74,9 @@ export function usePreventMutationViaGET(): Plugin<YogaInitialContext> {
             httpExtensions.spec ||= true;
             httpExtensions.status ||= 400;
           }
-          throw result;
+        } else {
+          assertMutationViaGet(request.method, result, operationName);
         }
-
-        assertMutationViaGet(request.method, result, operationName);
       };
     },
   };

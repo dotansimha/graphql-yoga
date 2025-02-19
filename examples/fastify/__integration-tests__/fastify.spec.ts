@@ -125,6 +125,9 @@ describe('fastify example integration', () => {
       errors: [
         {
           message: 'Can only perform a mutation operation from a POST request.',
+          extensions: {
+            code: 'BAD_REQUEST',
+          },
         },
       ],
     });
