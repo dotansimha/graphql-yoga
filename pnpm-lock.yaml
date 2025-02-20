@@ -685,8 +685,8 @@ importers:
         specifier: 22.13.4
         version: 22.13.4
       '@whatwg-node/fetch':
-        specifier: 0.10.3
-        version: 0.10.3
+        specifier: 0.10.4
+        version: 0.10.4
       cross-env:
         specifier: 7.0.3
         version: 7.0.3
@@ -1420,8 +1420,8 @@ importers:
         specifier: 8.24.1
         version: 8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
       '@whatwg-node/fetch':
-        specifier: 0.10.3
-        version: 0.10.3
+        specifier: 0.10.4
+        version: 0.10.4
       eslint:
         specifier: 9.20.1
         version: 9.20.1(jiti@2.4.2)
@@ -8453,6 +8453,14 @@ packages:
 
   '@whatwg-node/fetch@0.10.3':
     resolution: {integrity: sha512-jCTL/qYcIW2GihbBRHypQ/Us7saWMNZ5fsumsta+qPY0Pmi1ccba/KRQvgctmQsbP69FWemJSs8zVcFaNwdL0w==}
+    engines: {node: '>=18.0.0'}
+
+  '@whatwg-node/fetch@0.10.4':
+    resolution: {integrity: sha512-rCycAF+bNJFuyY2w9JdMOaIc/VIwnBFG+skXfKaF/I9u91LpQD7qMrI6ZiKByIiQFttwsAUDLtFGBHeZ6UHC3Q==}
+    engines: {node: '>=18.0.0'}
+
+  '@whatwg-node/node-fetch@0.7.10':
+    resolution: {integrity: sha512-Wibb7IQyMNhNc4GBepKWWDdAYyduU5UY2NOtiQMPZnUn7tMBJKugVIrGBBTZp5OqxtM+tccSO/LzNTH0S4c0qw==}
     engines: {node: '>=18.0.0'}
 
   '@whatwg-node/node-fetch@0.7.7':
@@ -20644,7 +20652,7 @@ snapshots:
     dependencies:
       '@envelop/core': 5.1.0
       '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       fast-json-stable-stringify: 2.1.0
       graphql: 16.10.0
       lru-cache: 10.4.3
@@ -21493,7 +21501,7 @@ snapshots:
   '@graphql-tools/apollo-engine-loader@8.0.13(graphql@16.10.0)':
     dependencies:
       '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       graphql: 16.10.0
       sync-fetch: 0.6.0-2
       tslib: 2.8.1
@@ -21576,7 +21584,7 @@ snapshots:
       '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
       '@repeaterjs/repeater': 3.0.6
       '@whatwg-node/disposablestack': 0.0.5
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       extract-files: 11.0.0
       graphql: 16.10.0
       meros: 1.3.0(@types/node@22.13.4)
@@ -21627,7 +21635,7 @@ snapshots:
       '@graphql-yoga/typed-event-target': 3.0.1
       '@whatwg-node/disposablestack': 0.0.5
       '@whatwg-node/events': 0.1.2
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       graphql: 16.10.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -21650,7 +21658,7 @@ snapshots:
       '@graphql-tools/executor-http': 1.2.4(@types/node@22.13.4)(graphql@16.10.0)
       '@graphql-tools/graphql-tag-pluck': 8.3.12(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       graphql: 16.10.0
       sync-fetch: 0.6.0-2
       tslib: 2.8.1
@@ -21727,7 +21735,7 @@ snapshots:
       '@graphql-tools/url-loader': 8.0.24(@types/node@22.13.4)(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
       '@types/js-yaml': 4.0.9
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       chalk: 4.1.2
       debug: 4.4.0(supports-color@9.4.0)
       dotenv: 16.4.7
@@ -21785,7 +21793,7 @@ snapshots:
       '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
       '@graphql-tools/wrap': 10.0.27(graphql@16.10.0)
       '@types/ws': 8.5.14
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       graphql: 16.10.0
       isomorphic-ws: 5.0.0(ws@8.18.0)
       sync-fetch: 0.6.0-2
@@ -25844,6 +25852,17 @@ snapshots:
       '@whatwg-node/node-fetch': 0.7.7
       urlpattern-polyfill: 10.0.0
 
+  '@whatwg-node/fetch@0.10.4':
+    dependencies:
+      '@whatwg-node/node-fetch': 0.7.10
+      urlpattern-polyfill: 10.0.0
+
+  '@whatwg-node/node-fetch@0.7.10':
+    dependencies:
+      '@whatwg-node/disposablestack': 0.0.5
+      busboy: 1.6.0
+      tslib: 2.8.1
+
   '@whatwg-node/node-fetch@0.7.7':
     dependencies:
       '@whatwg-node/disposablestack': 0.0.5
@@ -25859,7 +25878,7 @@ snapshots:
   '@whatwg-node/server@0.9.65':
     dependencies:
       '@whatwg-node/disposablestack': 0.0.5
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       tslib: 2.8.1
 
   '@wry/caches@1.0.1':
@@ -28700,7 +28719,7 @@ snapshots:
       '@typescript-eslint/parser': 8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.20.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.8.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint@9.20.1(jiti@2.4.2)))(eslint@9.20.1(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.8.0(eslint-plugin-import@2.31.0)(eslint@9.20.1(jiti@2.4.2))
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-typescript@3.8.0)(eslint@9.20.1(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.20.1(jiti@2.4.2))
       eslint-plugin-react: 7.37.3(eslint@9.20.1(jiti@2.4.2))
@@ -28744,7 +28763,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.8.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint@9.20.1(jiti@2.4.2)))(eslint@9.20.1(jiti@2.4.2)):
+  eslint-import-resolver-typescript@3.8.0(eslint-plugin-import@2.31.0)(eslint@9.20.1(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.0(supports-color@9.4.0)
@@ -28786,14 +28805,14 @@ snapshots:
       - bluebird
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint@9.20.1(jiti@2.4.2)))(eslint@9.20.1(jiti@2.4.2)))(eslint@9.20.1(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0)(eslint@9.20.1(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
       eslint: 9.20.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.8.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint@9.20.1(jiti@2.4.2)))(eslint@9.20.1(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.8.0(eslint-plugin-import@2.31.0)(eslint@9.20.1(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -28815,7 +28834,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.20.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint@9.20.1(jiti@2.4.2)))(eslint@9.20.1(jiti@2.4.2)))(eslint@9.20.1(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.1(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0)(eslint@9.20.1(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -29557,7 +29576,7 @@ snapshots:
     dependencies:
       '@sinclair/typebox': 0.34.13
       '@whatwg-node/cookie-store': 0.2.2
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       '@whatwg-node/server': 0.9.65
       hotscript: 1.0.13
       json-schema-to-ts: 3.1.1
@@ -35635,7 +35654,7 @@ snapshots:
   sofa-api@0.18.8(graphql@16.10.0):
     dependencies:
       '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
-      '@whatwg-node/fetch': 0.10.3
+      '@whatwg-node/fetch': 0.10.4
       ansi-colors: 4.1.3
       fets: 0.8.4
       graphql: 16.10.0
