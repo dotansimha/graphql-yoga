@@ -7,6 +7,7 @@ settings:
 overrides:
   graphql: 16.10.0
   '@envelop/core': 5.2.0
+  '@whatwg-node/server': 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
   '@changesets/assemble-release-plan': 5.2.3
   '@types/react': 19.0.10
 
@@ -1642,8 +1643,8 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
+        version: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
       dset:
         specifier: ^3.1.4
         version: 3.1.4
@@ -1860,8 +1861,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
+        version: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1883,8 +1884,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
+        version: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1958,8 +1959,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
+        version: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
       fetch-multipart-graphql:
         specifier: 3.2.1
         version: 3.2.1
@@ -2141,8 +2142,8 @@ importers:
         specifier: 8.2.5
         version: 8.2.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
+        version: 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
       ioredis-mock:
         specifier: 8.9.0
         version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.5.0)
@@ -2441,7 +2442,6 @@ packages:
     deprecated: |-
       AWS CDK v1 has reached End-of-Support on 2023-06-01.
       This package is no longer being updated, and users should migrate to AWS CDK v2.
-
       For more information on how to migrate, see https://docs.aws.amazon.com/cdk/v2/guide/migrating-v2.html
     peerDependencies:
       '@aws-cdk/aws-certificatemanager': 1.204.0
@@ -2718,7 +2718,6 @@ packages:
     deprecated: |-
       AWS CDK v1 has reached End-of-Support on 2023-06-01.
       This package is no longer being updated, and users should migrate to AWS CDK v2.
-
       For more information on how to migrate, see https://docs.aws.amazon.com/cdk/v2/guide/migrating-v2.html
     peerDependencies:
       '@aws-cdk/aws-applicationautoscaling': 1.204.0
@@ -2905,7 +2904,6 @@ packages:
     deprecated: |-
       AWS CDK v1 has reached End-of-Support on 2023-06-01.
       This package is no longer being updated, and users should migrate to AWS CDK v2.
-
       For more information on how to migrate, see https://docs.aws.amazon.com/cdk/v2/guide/migrating-v2.html
     peerDependencies:
       '@aws-cdk/cloud-assembly-schema': 1.204.0
@@ -8368,8 +8366,8 @@ packages:
     resolution: {integrity: sha512-h07dkk8buLxtYawM9Nf3aVK+gyrAt16YWT/UVtvKy9ZpeBPwgYbhd+PhyGYHg7op6zd51B9uL6oUR4duZYc1YQ==}
     engines: {node: '>=18.0.0'}
 
-  '@whatwg-node/server@0.9.71':
-    resolution: {integrity: sha512-ueFCcIPaMgtuYDS9u0qlUoEvj6GiSsKrwnOLPp9SshqjtcRaR1IEHRjoReq3sXNydsF5i0ZnmuYgXq9dV53t0g==}
+  '@whatwg-node/server@0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93':
+    resolution: {integrity: sha512-qpL/O2mb/VjEzn1D6dykAid1szaxat7/2Hww9aHhVo/WWD8gqV73SXJ9koOCJPAksFbVIwH9GGlr6pcmYuMEFg==}
     engines: {node: '>=18.0.0'}
 
   '@wry/caches@1.0.1':
@@ -20436,7 +20434,7 @@ snapshots:
   '@envelop/response-cache@7.0.1(@envelop/core@5.2.0)(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.0
-      '@graphql-tools/utils': 10.8.4(graphql@16.10.0)
+      '@graphql-tools/utils': 10.8.3(graphql@16.10.0)
       '@whatwg-node/fetch': 0.10.5
       fast-json-stable-stringify: 2.1.0
       graphql: 16.10.0
@@ -25765,14 +25763,13 @@ snapshots:
   '@whatwg-node/server-plugin-cookies@1.0.4':
     dependencies:
       '@whatwg-node/cookie-store': 0.2.3
-      '@whatwg-node/server': 0.9.71
+      '@whatwg-node/server': 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
       tslib: 2.8.1
 
-  '@whatwg-node/server@0.9.71':
+  '@whatwg-node/server@0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93':
     dependencies:
-      '@whatwg-node/disposablestack': 0.0.6
+      '@whatwg-node/disposablestack': 0.0.5
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/promise-helpers': 1.2.2
       tslib: 2.8.1
 
   '@wry/caches@1.0.1':
@@ -29405,7 +29402,7 @@ snapshots:
       '@sinclair/typebox': 0.34.28
       '@whatwg-node/cookie-store': 0.2.3
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/server': 0.9.71
+      '@whatwg-node/server': 0.10.0-alpha-20250218194158-de7e6d1454b125b67766395ce9bc8509d8900f93
       hotscript: 1.0.13
       json-schema-to-ts: 3.1.1
       qs: 6.14.0
