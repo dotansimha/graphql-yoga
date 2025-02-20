@@ -1,6 +1,7 @@
 import { GraphQLError, ResponsePath } from 'graphql';
 import {
   createGraphQLError,
+  FetchAPI,
   isAsyncIterable,
   mapMaybePromise,
   Plugin,
@@ -9,7 +10,6 @@ import {
 } from 'graphql-yoga';
 import { google, Trace } from '@apollo/usage-reporting-protobuf';
 import { useOnResolve } from '@envelop/on-resolve';
-import { btoa } from '@whatwg-node/fetch';
 
 export interface ApolloInlineRequestTraceContext {
   startHrTime: [number, number];
@@ -66,7 +66,12 @@ export function useApolloInlineTrace(
     ...options,
   });
 
+  let fetchAPI: FetchAPI;
+
   return {
+    onYogaInit({ yoga }) {
+      fetchAPI = yoga.fetchAPI;
+    },
     onPluginInit({ addPlugin }) {
       addPlugin(instrumentation);
       addPlugin({
@@ -91,7 +96,7 @@ export function useApolloInlineTrace(
           }
 
           const encodedUint8Array = Trace.encode(ctx.trace).finish();
-          const base64 = btoa(String.fromCharCode(...encodedUint8Array));
+          const base64 = fetchAPI.btoa(String.fromCharCode(...encodedUint8Array));
           setResult({
             ...result,
             extensions: {
