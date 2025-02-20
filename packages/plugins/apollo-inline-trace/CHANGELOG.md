@@ -1,5 +1,35 @@
 # @graphql-yoga/plugin-apollo-inline-trace
 
+## 3.12.1
+
+### Patch Changes
+
+- [#3790](https://github.com/dotansimha/graphql-yoga/pull/3790)
+  [`1d438ce`](https://github.com/dotansimha/graphql-yoga/commit/1d438ce455b6fbee78dc4e9d33c72a4e74384a44)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Removed dependency
+    [`@graphql-tools/utils@^10.6.1` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/10.6.1)
+    (from `peerDependencies`)
+  - Removed dependency
+    [`@whatwg-node/fetch@^0.10.1` ↗︎](https://www.npmjs.com/package/@whatwg-node/fetch/v/0.10.1)
+    (from `peerDependencies`)
+
+## 3.12.0
+
+### Patch Changes
+
+- [#3780](https://github.com/dotansimha/graphql-yoga/pull/3780)
+  [`ea63828`](https://github.com/dotansimha/graphql-yoga/commit/ea6382820673b63b80885d5a317900a677bbc29a)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency
+    [`@envelop/on-resolve@^5.0.0` ↗︎](https://www.npmjs.com/package/@envelop/on-resolve/v/5.0.0)
+    (from `^4.1.1`, in `dependencies`)
+- Updated dependencies
+  [[`96498ee`](https://github.com/dotansimha/graphql-yoga/commit/96498ee25fd310d781ce006b1fe7064c66e64fc3),
+  [`5150146`](https://github.com/dotansimha/graphql-yoga/commit/5150146a2d0b8f444a3527950d7163126a0fe24b),
+  [`5150146`](https://github.com/dotansimha/graphql-yoga/commit/5150146a2d0b8f444a3527950d7163126a0fe24b)]:
+  - graphql-yoga@5.12.0
+
 ## 3.11.0
 
 ### Patch Changes

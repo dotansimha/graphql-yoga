@@ -1,4 +1,3 @@
-import { GraphQLErrorExtensions } from 'graphql';
 import { createGraphQLError } from '@graphql-tools/utils';
 import { isGraphQLError } from '../error.js';
 import { MaskError } from '../types.js';
@@ -13,23 +12,24 @@ export const maskError: MaskError = (
       if (error.originalError.name === 'GraphQLError') {
         return error;
       }
-      // Original error should be removed
-      const extensions: GraphQLErrorExtensions = {
-        ...error.extensions,
-        unexpected: true,
-      };
-      if (isDev) {
-        extensions['originalError'] = {
-          message: error.originalError.message,
-          stack: error.originalError.stack,
-        };
-      }
       return createGraphQLError(message, {
         nodes: error.nodes,
         source: error.source,
         positions: error.positions,
         path: error.path,
-        extensions,
+        extensions: {
+          code: 'INTERNAL_SERVER_ERROR',
+          ...error.extensions,
+          unexpected: true,
+          ...(isDev
+            ? {
+                originalError: {
+                  message: error.originalError.message,
+                  stack: error.originalError.stack,
+                },
+              }
+            : {}),
+        },
       });
     }
     return error;
@@ -37,6 +37,7 @@ export const maskError: MaskError = (
 
   return createGraphQLError(message, {
     extensions: {
+      code: 'INTERNAL_SERVER_ERROR',
       unexpected: true,
       originalError: isDev
         ? error instanceof Error

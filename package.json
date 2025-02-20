@@ -37,7 +37,7 @@
     "check:types": "tsc --pretty --noEmit",
     "lint": "cross-env \"ESLINT_USE_FLAT_CONFIG=false\" eslint --ext ts,js,tsx,jsx .",
     "postchangeset": "pnpm install --no-frozen-lockfile",
-    "postinstall": "husky install",
+    "postinstall": "husky",
     "prebuild": "rimraf packages/*/dist",
     "prettier": "prettier --ignore-path .prettierignore --write --list-different .",
     "prettier:check": "prettier --ignore-path .prettierignore --check .",
@@ -82,12 +82,12 @@
     "postinstall-postinstall": "2.1.0",
     "prettier": "3.5.1",
     "prettier-plugin-pkg": "0.18.1",
-    "prettier-plugin-sh": "0.14.0",
+    "prettier-plugin-sh": "0.15.0",
     "rimraf": "6.0.1",
     "supertest": "7.0.0",
     "ts-jest": "29.2.5",
     "typescript": "5.7.3",
-    "wrangler": "3.109.1"
+    "wrangler": "3.109.2"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
@@ -105,7 +105,7 @@
     },
     "overrides": {
       "graphql": "16.10.0",
-      "@envelop/core": "5.0.3",
+      "@envelop/core": "5.1.0",
       "@changesets/assemble-release-plan": "5.2.3",
       "@types/react": "19.0.10"
     }

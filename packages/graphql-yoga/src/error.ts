@@ -39,7 +39,8 @@ export function isAbortError(error: unknown): error is DOMException {
   return (
     typeof error === 'object' &&
     error?.constructor?.name === 'DOMException' &&
-    (error as DOMException).name === 'AbortError'
+    ((error as DOMException).name === 'AbortError' ||
+      (error as DOMException).name === 'TimeoutError')
   );
 }
 
@@ -88,6 +89,7 @@ export function handleError(
     errors.add(
       createGraphQLError(error, {
         extensions: {
+          code: 'INTERNAL_SERVER_ERROR',
           unexpected: true,
         },
       }),
@@ -96,6 +98,7 @@ export function handleError(
     errors.add(
       createGraphQLError(error.toString(), {
         extensions: {
+          code: 'INTERNAL_SERVER_ERROR',
           unexpected: true,
         },
       }),

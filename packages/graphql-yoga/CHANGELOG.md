@@ -1,5 +1,27 @@
 # graphql-yoga
 
+## 5.12.0
+
+### Minor Changes
+
+- [#3672](https://github.com/dotansimha/graphql-yoga/pull/3672)
+  [`5150146`](https://github.com/dotansimha/graphql-yoga/commit/5150146a2d0b8f444a3527950d7163126a0fe24b)
+  Thanks [@ardatan](https://github.com/ardatan)! - `extensions.code` usage for specific errors
+
+### Patch Changes
+
+- [#3764](https://github.com/dotansimha/graphql-yoga/pull/3764)
+  [`96498ee`](https://github.com/dotansimha/graphql-yoga/commit/96498ee25fd310d781ce006b1fe7064c66e64fc3)
+  Thanks [@slagiewka](https://github.com/slagiewka)! - Pass through `disposeOnProcessTerminate` to
+  `createServerAdapter`
+
+- [#3672](https://github.com/dotansimha/graphql-yoga/pull/3672)
+  [`5150146`](https://github.com/dotansimha/graphql-yoga/commit/5150146a2d0b8f444a3527950d7163126a0fe24b)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/executor@^1.4.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/executor/v/1.4.0)
+    (from `^1.3.7`, in `dependencies`)
+
 ## 5.11.0
 
 ### Minor Changes
