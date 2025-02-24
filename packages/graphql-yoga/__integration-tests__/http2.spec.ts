@@ -4,7 +4,6 @@ import {
   constants,
   createSecureServer,
   Http2SecureServer,
-  ServerHttp2Session,
 } from 'node:http2';
 import { AddressInfo } from 'node:net';
 import { createSchema, createYoga } from 'graphql-yoga';
@@ -22,12 +21,7 @@ describe('HTTP2', () => {
           selfSigned: true,
           days: 1,
         },
-        (err, result) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(result);
-        },
+        (err, result) => (err ? reject(err) : resolve(result)),
       );
     });
     const yoga = createYoga({
