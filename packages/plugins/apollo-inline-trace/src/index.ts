@@ -174,7 +174,6 @@ export function useApolloInstrumentation(options: ApolloInlineTracePluginOptions
     },
     onRequest({ request }): void | Promise<void> {
       if (options.ignoreRequest) {
-        // @ts-expect-error - Types are not aligned
         return mapMaybePromise(options.ignoreRequest(request), shouldIgnore => {
           if (!shouldIgnore) {
             setNewContext(request);
