@@ -1624,6 +1624,9 @@ importers:
       '@envelop/core':
         specifier: 5.2.0
         version: 5.2.0
+      '@envelop/instruments':
+        specifier: 1.0.0-alpha-20250227122402-42e2fa806ec3b7c2936e612924b153a20c8662c3
+        version: 1.0.0-alpha-20250227122402-42e2fa806ec3b7c2936e612924b153a20c8662c3
       '@graphql-tools/executor':
         specifier: ^1.4.0
         version: 1.4.2(graphql@16.10.0)
@@ -4028,6 +4031,10 @@ packages:
 
   '@envelop/instruments@1.0.0':
     resolution: {integrity: sha512-f4lHoti7QgUIluIGTM0mG9Wf9/w6zc1mosYmyFkrApeHSP2PIUC6a8fMoqkdk6pgVOps39kLdIhOPF8pIKS8/A==}
+    engines: {node: '>=18.0.0'}
+
+  '@envelop/instruments@1.0.0-alpha-20250227122402-42e2fa806ec3b7c2936e612924b153a20c8662c3':
+    resolution: {integrity: sha512-wQMnsTP7QNetaBoScS1Uz7sGnX6MCULZuYub5uB05hnLcwGv/ByylWuIpoD7iEMXM1zvK/hPKCbP31NOzw2p+A==}
     engines: {node: '>=18.0.0'}
 
   '@envelop/live-query@8.1.0':
@@ -8356,6 +8363,10 @@ packages:
 
   '@whatwg-node/node-fetch@0.7.12':
     resolution: {integrity: sha512-ec9ZPDImceXD9gShv0VTc6q0waZ7ccpiYXNbAeGMjGQAZ8hkAeAYOXoiJsfaHO5Pt0UR+SbNVTJGP2aeFMYz0Q==}
+    engines: {node: '>=18.0.0'}
+
+  '@whatwg-node/promise-helpers@1.2.1':
+    resolution: {integrity: sha512-+faGtJlS4U8NSaSzRVN37xAprPdhoobYzUSUo4DgH8APtfFyizmNxp0ckwKcURoL8cy2B+bKxOWU/VIH2nFeLg==}
     engines: {node: '>=18.0.0'}
 
   '@whatwg-node/promise-helpers@1.2.2':
@@ -20407,6 +20418,11 @@ snapshots:
       '@whatwg-node/promise-helpers': 1.2.2
       tslib: 2.8.1
 
+  '@envelop/instruments@1.0.0-alpha-20250227122402-42e2fa806ec3b7c2936e612924b153a20c8662c3':
+    dependencies:
+      '@whatwg-node/promise-helpers': 1.2.1
+      tslib: 2.8.1
+
   '@envelop/live-query@8.1.0(@envelop/core@5.2.0)(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.0
@@ -25754,6 +25770,10 @@ snapshots:
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/promise-helpers': 1.2.2
       busboy: 1.6.0
+      tslib: 2.8.1
+
+  '@whatwg-node/promise-helpers@1.2.1':
+    dependencies:
       tslib: 2.8.1
 
   '@whatwg-node/promise-helpers@1.2.2':

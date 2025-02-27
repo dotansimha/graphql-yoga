@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  Instruments as EnvelopInstruments,
   Plugin as EnvelopPlugin,
-  Tracer as EnvelopTracer,
   OnExecuteHook,
   OnSubscribeHook,
   PromiseOrValue,
@@ -12,7 +12,7 @@ import { ExecutionResult } from '@graphql-tools/utils';
 import {
   ServerAdapterPlugin,
   type ServerAdapterInitialContext,
-  type Tracer as ServerAdapterTracer,
+  type Instruments as ServerAdapterInstruments,
 } from '@whatwg-node/server';
 import { YogaServer } from '../server.js';
 import {
@@ -50,7 +50,7 @@ export type Plugin<
      * A Tracer instance that will wrap each phases of the request pipeline.
      * This should be used primarly as an observability tool (for monitoring, tracing, etc...).
      */
-    tracer?: Tracer<YogaInitialContext & PluginContext & TUserContext>;
+    instruments?: Instruments<YogaInitialContext & PluginContext & TUserContext>;
     /**
      * This hook is invoked at Yoga Server initialization, before it starts.
      * Here you can setup long running resources (like monitoring or caching clients)
@@ -91,8 +91,8 @@ export type Plugin<
     onResultProcess?: OnResultProcess<TServerContext>;
   };
 
-export type Tracer<TContext extends Record<string, any>> = EnvelopTracer<TContext> &
-  ServerAdapterTracer & {
+export type Instruments<TContext extends Record<string, any>> = EnvelopInstruments<TContext> &
+  ServerAdapterInstruments & {
     operation?: (
       payload: { request: Request; context: TContext },
       wrapped: () => PromiseOrValue<void>,
