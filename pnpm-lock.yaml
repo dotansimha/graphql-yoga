@@ -149,8 +149,8 @@ importers:
         specifier: 9.0.1
         version: 9.0.1(@envelop/core@5.1.1)(graphql@16.10.0)
       '@faker-js/faker':
-        specifier: 9.5.0
-        version: 9.5.0
+        specifier: 9.5.1
+        version: 9.5.1
       '@graphql-yoga/plugin-response-cache':
         specifier: workspace:*
         version: link:../packages/plugins/response-cache/dist
@@ -308,7 +308,7 @@ importers:
     devDependencies:
       '@aws-cdk/assert':
         specifier: 2.68.0
-        version: 2.68.0(aws-cdk-lib@2.181.0(constructs@3.4.344))(constructs@3.4.344)(jest@29.7.0(@types/node@22.13.5)(ts-node@10.9.2(@swc/core@1.11.1(@swc/helpers@0.5.15))(@types/node@22.13.5)(typescript@5.7.3)))
+        version: 2.68.0(aws-cdk-lib@2.181.1(constructs@3.4.344))(constructs@3.4.344)(jest@29.7.0(@types/node@22.13.5)(ts-node@10.9.2(@swc/core@1.11.1(@swc/helpers@0.5.15))(@types/node@22.13.5)(typescript@5.7.3)))
       '@types/aws-lambda':
         specifier: 8.10.147
         version: 8.10.147
@@ -319,8 +319,8 @@ importers:
         specifier: 2.1001.0
         version: 2.1001.0
       aws-cdk-lib:
-        specifier: 2.181.0
-        version: 2.181.0(constructs@3.4.344)
+        specifier: 2.181.1
+        version: 2.181.1(constructs@3.4.344)
       esbuild:
         specifier: 0.25.0
         version: 0.25.0
@@ -4689,8 +4689,8 @@ packages:
     resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@faker-js/faker@9.5.0':
-    resolution: {integrity: sha512-3qbjLv+fzuuCg3umxc9/7YjrEXNaKwHgmig949nfyaTx8eL4FAsvFbu+1JcFUj1YAXofhaDn6JdEUBTYuk0Ssw==}
+  '@faker-js/faker@9.5.1':
+    resolution: {integrity: sha512-0fzMEDxkExR2cn731kpDaCCnBGBUOIXEi2S1N5l8Hltp6aPf4soTMJ+g4k8r2sI5oB+rpwIW8Uy/6jkwGpnWPg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@fastify/accept-negotiator@1.1.0':
@@ -8721,8 +8721,8 @@ packages:
     resolution: {integrity: sha512-SK20HicVu6lXvNM0nS1flurrs4/1NdhvccvEn52Gf+vpERZnnkKBnJvAQDsYkzJnsHs1bRNNKEiobEet7a/0TA==}
     engines: {node: '>= 6.0.0'}
 
-  aws-cdk-lib@2.181.0:
-    resolution: {integrity: sha512-W95HRgahebHQdXwGTIvJydc33JG4NBIKpzoNFS17pmfX3nauxa7o4YPTJHHjQwv7A5LNQotuF7QilpN5PlQFzg==}
+  aws-cdk-lib@2.181.1:
+    resolution: {integrity: sha512-PDxYiqzet17tigJ8icjzoZIzmcdusQfKNnwpRzcGu5//n3YqlKf/vGEkQuU0xcgt4lBMX4Yjuqfsl8wYidCESw==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
@@ -17804,10 +17804,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@aws-cdk/assert@2.68.0(aws-cdk-lib@2.181.0(constructs@3.4.344))(constructs@3.4.344)(jest@29.7.0(@types/node@22.13.5)(ts-node@10.9.2(@swc/core@1.11.1(@swc/helpers@0.5.15))(@types/node@22.13.5)(typescript@5.7.3)))':
+  '@aws-cdk/assert@2.68.0(aws-cdk-lib@2.181.1(constructs@3.4.344))(constructs@3.4.344)(jest@29.7.0(@types/node@22.13.5)(ts-node@10.9.2(@swc/core@1.11.1(@swc/helpers@0.5.15))(@types/node@22.13.5)(typescript@5.7.3)))':
     dependencies:
       '@aws-cdk/cloudformation-diff': 2.68.0
-      aws-cdk-lib: 2.181.0(constructs@3.4.344)
+      aws-cdk-lib: 2.181.1(constructs@3.4.344)
       constructs: 3.4.344
       jest: 29.7.0(@types/node@22.13.5)(ts-node@10.9.2(@swc/core@1.11.1(@swc/helpers@0.5.15))(@types/node@22.13.5)(typescript@5.7.3))
 
@@ -20725,7 +20725,7 @@ snapshots:
       '@eslint/core': 0.12.0
       levn: 0.4.1
 
-  '@faker-js/faker@9.5.0': {}
+  '@faker-js/faker@9.5.1': {}
 
   '@fastify/accept-negotiator@1.1.0': {}
 
@@ -26011,7 +26011,7 @@ snapshots:
     dependencies:
       ee-first: 1.1.1
 
-  aws-cdk-lib@2.181.0(constructs@3.4.344):
+  aws-cdk-lib@2.181.1(constructs@3.4.344):
     dependencies:
       '@aws-cdk/asset-awscli-v1': 2.2.225
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.0
