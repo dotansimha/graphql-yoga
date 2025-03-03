@@ -95,7 +95,7 @@ export type Plugin<
 export type Instruments<TContext extends Record<string, any>> = EnvelopInstruments<TContext> &
   ServerAdapterInstruments & {
     operation?: (
-      payload: { request: Request; context: TContext },
+      payload: { context: TContext },
       wrapped: () => PromiseOrValue<void>,
     ) => PromiseOrValue<void>;
     requestParse?: (
