@@ -9,6 +9,7 @@ import {
   SetSchemaFn,
 } from '@envelop/core';
 import { ExecutionResult } from '@graphql-tools/utils';
+import { MaybePromise } from '@whatwg-node/promise-helpers';
 import {
   ServerAdapterPlugin,
   type ServerAdapterInitialContext,
@@ -97,8 +98,14 @@ export type Instruments<TContext extends Record<string, any>> = EnvelopInstrumen
       payload: { request: Request; context: TContext },
       wrapped: () => PromiseOrValue<void>,
     ) => PromiseOrValue<void>;
-    requestParse?: (payload: { request: Request }, wrapped: () => void) => void;
-    resultProcess?: (payload: { request: Request }, wrapped: () => void) => void;
+    requestParse?: (
+      payload: { request: Request },
+      wrapped: () => MaybePromise<void>,
+    ) => MaybePromise<void>;
+    resultProcess?: (
+      payload: { request: Request },
+      wrapped: () => MaybePromise<void>,
+    ) => MaybePromise<void>;
   };
 
 export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
