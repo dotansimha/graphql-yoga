@@ -68,14 +68,14 @@ describe('instruments', () => {
           await w();
           result.push(`post-operation-${name}`);
         },
-        requestParse: (_, w) => {
+        requestParse: async (_, w) => {
           result.push(`pre-request-parse-${name}`);
-          w();
+          await w();
           result.push(`post-request-parse-${name}`);
         },
-        resultProcess: (_, w) => {
+        resultProcess: async (_, w) => {
           result.push(`pre-result-process-${name}`);
-          w();
+          await w();
           result.push(`post-result-process-${name}`);
         },
       },
