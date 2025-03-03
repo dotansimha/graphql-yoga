@@ -1642,8 +1642,8 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.69
-        version: 0.9.70
+        specifier: ^0.9.71
+        version: 0.9.71
       dset:
         specifier: ^3.1.4
         version: 3.1.4
@@ -1860,8 +1860,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.60
-        version: 0.9.70
+        specifier: ^0.9.71
+        version: 0.9.71
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1883,8 +1883,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.60
-        version: 0.9.70
+        specifier: ^0.9.71
+        version: 0.9.71
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1958,8 +1958,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.60
-        version: 0.9.70
+        specifier: ^0.9.71
+        version: 0.9.71
       fetch-multipart-graphql:
         specifier: 3.2.1
         version: 3.2.1
@@ -2141,8 +2141,8 @@ importers:
         specifier: 8.2.5
         version: 8.2.5
       '@whatwg-node/server':
-        specifier: ^0.9.60
-        version: 0.9.70
+        specifier: ^0.9.71
+        version: 0.9.71
       ioredis-mock:
         specifier: 8.9.0
         version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.5.0)
@@ -8294,12 +8294,20 @@ packages:
     resolution: {integrity: sha512-+faGtJlS4U8NSaSzRVN37xAprPdhoobYzUSUo4DgH8APtfFyizmNxp0ckwKcURoL8cy2B+bKxOWU/VIH2nFeLg==}
     engines: {node: '>=18.0.0'}
 
+  '@whatwg-node/promise-helpers@1.2.2':
+    resolution: {integrity: sha512-aPVTGCs/QEYkSTnYcLKE1wyYZykbGjaXsEwXHc0FKbSlojIpdw72BQMJx9aJXzkCs6qy9WfDV0jhV9C2qIYYOA==}
+    engines: {node: '>=16.0.0'}
+
   '@whatwg-node/server-plugin-cookies@1.0.4':
     resolution: {integrity: sha512-h07dkk8buLxtYawM9Nf3aVK+gyrAt16YWT/UVtvKy9ZpeBPwgYbhd+PhyGYHg7op6zd51B9uL6oUR4duZYc1YQ==}
     engines: {node: '>=18.0.0'}
 
   '@whatwg-node/server@0.9.70':
     resolution: {integrity: sha512-YjZgF5E29R8QwtYo5WWIERXA0Hn7TSmrpVsIGYZpJDSQNE0gFpcsijmzxpviYtSm69Ayu8B9xOg+EFVk+sVtgA==}
+    engines: {node: '>=18.0.0'}
+
+  '@whatwg-node/server@0.9.71':
+    resolution: {integrity: sha512-ueFCcIPaMgtuYDS9u0qlUoEvj6GiSsKrwnOLPp9SshqjtcRaR1IEHRjoReq3sXNydsF5i0ZnmuYgXq9dV53t0g==}
     engines: {node: '>=18.0.0'}
 
   '@wry/caches@1.0.1':
@@ -25587,6 +25595,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@whatwg-node/promise-helpers@1.2.2':
+    dependencies:
+      tslib: 2.8.1
+
   '@whatwg-node/server-plugin-cookies@1.0.4':
     dependencies:
       '@whatwg-node/cookie-store': 0.2.3
@@ -25598,6 +25610,13 @@ snapshots:
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/fetch': 0.10.5
       '@whatwg-node/promise-helpers': 1.2.1
+      tslib: 2.8.1
+
+  '@whatwg-node/server@0.9.71':
+    dependencies:
+      '@whatwg-node/disposablestack': 0.0.6
+      '@whatwg-node/fetch': 0.10.5
+      '@whatwg-node/promise-helpers': 1.2.2
       tslib: 2.8.1
 
   '@wry/caches@1.0.1':
@@ -28343,7 +28362,7 @@ snapshots:
       eslint: 9.21.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3)(eslint@9.21.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.21.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.4(eslint@9.21.0(jiti@2.4.2))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.21.0(jiti@2.4.2))
@@ -28397,7 +28416,7 @@ snapshots:
       stable-hash: 0.0.4
       tinyglobby: 0.2.12
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3)(eslint@9.21.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -28446,7 +28465,7 @@ snapshots:
       eslint: 9.21.0(jiti@2.4.2)
       eslint-compat-utils: 0.5.1(eslint@9.21.0(jiti@2.4.2))
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3)(eslint@9.21.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -29220,7 +29239,7 @@ snapshots:
       '@sinclair/typebox': 0.34.28
       '@whatwg-node/cookie-store': 0.2.3
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/server': 0.9.70
+      '@whatwg-node/server': 0.9.71
       hotscript: 1.0.13
       json-schema-to-ts: 3.1.1
       qs: 6.14.0
