@@ -15,6 +15,12 @@ import { mapAsyncIterator } from '@graphql-tools/utils';
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
 import * as defaultFetchAPI from '@whatwg-node/fetch';
 import {
+  handleMaybePromise,
+  iterateAsync,
+  iterateAsyncVoid,
+  MaybePromise,
+} from '@whatwg-node/promise-helpers';
+import {
   createServerAdapter,
   ServerAdapter,
   ServerAdapterBaseObject,
@@ -573,10 +579,10 @@ export class YogaServer<
     return result;
   };
 
-  parseRequest = async (
+  parseRequest = (
     request: Request,
     serverContext: TServerContext & ServerAdapterInitialContext,
-  ): Promise<
+  ): MaybePromise<
     | {
         requestParserResult:
           | GraphQLParams<Record<string, any>, Record<string, any>>
@@ -594,44 +600,56 @@ export class YogaServer<
 
     let requestParser: RequestParser | undefined;
     const onRequestParseDoneList: OnRequestParseDoneHook[] = [];
-    for (const onRequestParse of this.onRequestParseHooks) {
-      const onRequestParseResult = await onRequestParse({
-        request,
-        url,
-        requestParser,
-        serverContext,
-        setRequestParser(parser: RequestParser) {
-          requestParser = parser;
-        },
-      });
-      if (onRequestParseResult?.onRequestParseDone != null) {
-        onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone);
-      }
-    }
 
-    this.logger.debug(`Parsing request to extract GraphQL parameters`);
+    return handleMaybePromise(
+      () =>
+        iterateAsync(
+          this.onRequestParseHooks,
+          onRequestParse =>
+            handleMaybePromise(
+              () =>
+                onRequestParse({
+                  request,
+                  url,
+                  requestParser,
+                  serverContext,
+                  setRequestParser(parser: RequestParser) {
+                    requestParser = parser;
+                  },
+                }),
+              requestParseHookResult => requestParseHookResult?.onRequestParseDone,
+            ),
+          onRequestParseDoneList,
+        ),
+      () => {
+        this.logger.debug(`Parsing request to extract GraphQL parameters`);
 
-    if (!requestParser) {
-      return {
-        response: new this.fetchAPI.Response(null, {
-          status: 415,
-          statusText: 'Unsupported Media Type',
-        }),
-      };
-    }
+        if (!requestParser) {
+          return {
+            response: new this.fetchAPI.Response(null, {
+              status: 415,
+              statusText: 'Unsupported Media Type',
+            }),
+          };
+        }
 
-    let requestParserResult = await requestParser(request);
+        return handleMaybePromise(
+          () => requestParser!(request),
+          requestParserResult => {
+            iterateAsyncVoid(onRequestParseDoneList, onRequestParseDone =>
+              onRequestParseDone({
+                requestParserResult,
+                setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+                  requestParserResult = newParams;
+                },
+              }),
+            );
 
-    for (const onRequestParseDone of onRequestParseDoneList) {
-      await onRequestParseDone({
-        requestParserResult,
-        setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
-          requestParserResult = newParams;
-        },
-      });
-    }
-
-    return { requestParserResult };
+            return { requestParserResult };
+          },
+        );
+      },
+    );
   };
 
   handle: ServerAdapterRequestHandler<TServerContext> = async (
