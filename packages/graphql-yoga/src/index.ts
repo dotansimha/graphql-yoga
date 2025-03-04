@@ -45,3 +45,4 @@ export {
   type LandingPageRendererOpts,
 } from './plugins/use-unhandled-route.js';
 export { DisposableSymbols } from '@whatwg-node/server';
+export * from '@envelop/instruments';
