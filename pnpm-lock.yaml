@@ -1172,8 +1172,8 @@ importers:
         specifier: 22.13.9
         version: 22.13.9
       '@types/ws':
-        specifier: 8.5.14
-        version: 8.5.14
+        specifier: 8.18.0
+        version: 8.18.0
       eslint:
         specifier: 9.21.0
         version: 9.21.0(jiti@2.4.2)
@@ -1484,8 +1484,8 @@ importers:
         version: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/6609a88ffa9a16ac5158046761356ce03250a0df
     devDependencies:
       '@types/ws':
-        specifier: 8.5.14
-        version: 8.5.14
+        specifier: 8.18.0
+        version: 8.18.0
       '@whatwg-node/fetch':
         specifier: ^0.10.1
         version: 0.10.5
@@ -8085,6 +8085,9 @@ packages:
 
   '@types/validator@13.12.2':
     resolution: {integrity: sha512-6SlHBzUW8Jhf3liqrGGXyTJSIFe4nqlJ5A5KaMZ2l/vbM3Wh3KSybots/wfWVzNLK4D1NZluDlSQIbIEPx6oyA==}
+
+  '@types/ws@8.18.0':
+    resolution: {integrity: sha512-8svvI3hMyvN0kKCJMvTJP/x6Y/EoQbepff882wL+Sn5QsXb3etnamgrJq4isrBxSJj5L2AuXcI0+bgkoAXGUJw==}
 
   '@types/ws@8.5.14':
     resolution: {integrity: sha512-bd/YFLW+URhBzMXurx7lWByOu+xzU9+kb3RboOteXYDfW+tr+JZa99OyNmPINEGB/ahzKrEuc8rcv4gnpJmxTw==}
@@ -21280,7 +21283,7 @@ snapshots:
   '@graphql-tools/executor-legacy-ws@1.1.14(graphql@16.10.0)':
     dependencies:
       '@graphql-tools/utils': 10.8.4(graphql@16.10.0)
-      '@types/ws': 8.5.14
+      '@types/ws': 8.18.0
       graphql: 16.10.0
       isomorphic-ws: 5.0.0(ws@8.18.1)
       tslib: 2.8.1
@@ -21490,7 +21493,7 @@ snapshots:
       '@graphql-tools/executor-legacy-ws': 1.1.14(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.4(graphql@16.10.0)
       '@graphql-tools/wrap': 10.0.31(graphql@16.10.0)
-      '@types/ws': 8.5.14
+      '@types/ws': 8.18.0
       '@whatwg-node/fetch': 0.10.5
       '@whatwg-node/promise-helpers': 1.2.2
       graphql: 16.10.0
@@ -25300,6 +25303,10 @@ snapshots:
   '@types/uuid@9.0.8': {}
 
   '@types/validator@13.12.2': {}
+
+  '@types/ws@8.18.0':
+    dependencies:
+      '@types/node': 22.13.9
 
   '@types/ws@8.5.14':
     dependencies:
