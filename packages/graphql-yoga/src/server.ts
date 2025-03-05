@@ -9,10 +9,17 @@ import {
   useExtendContext,
   useMaskedErrors,
 } from '@envelop/core';
+import { chain, getInstrumented } from '@envelop/instruments';
 import { normalizedExecutor } from '@graphql-tools/executor';
 import { mapAsyncIterator } from '@graphql-tools/utils';
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
 import * as defaultFetchAPI from '@whatwg-node/fetch';
+import {
+  handleMaybePromise,
+  iterateAsync,
+  iterateAsyncVoid,
+  MaybePromise,
+} from '@whatwg-node/promise-helpers';
 import {
   createServerAdapter,
   ServerAdapter,
@@ -44,6 +51,7 @@ import { useHTTPValidationError } from './plugins/request-validation/use-http-va
 import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js';
 import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js';
 import {
+  Instruments,
   OnExecutionResultHook,
   OnParamsHook,
   OnRequestParseDoneHook,
@@ -216,6 +224,7 @@ export class YogaServer<
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext, TUserContext>
   >;
+  private instruments: Instruments<TUserContext & TServerContext & YogaInitialContext> | undefined;
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
   private onParamsHooks: OnParamsHook<TServerContext>[];
   private onExecutionResultHooks: OnExecutionResultHook<TServerContext>[];
@@ -459,61 +468,71 @@ export class YogaServer<
         if (plugin.onResultProcess) {
           this.onResultProcessHooks.push(plugin.onResultProcess);
         }
+        if (plugin.instruments) {
+          this.instruments = this.instruments
+            ? chain(this.instruments, plugin.instruments)
+            : plugin.instruments;
+        }
       }
     }
   }
 
-  handleParams: ParamsHandler<TServerContext> = async ({ request, context, params }) => {
-    let result: ExecutionResult | AsyncIterable<ExecutionResult>;
-    try {
-      const additionalContext =
-        context['request'] === request
-          ? {
-              params,
-            }
-          : {
-              request,
-              params,
-            };
-
-      Object.assign(context, additionalContext);
-
-      const enveloped = this.getEnveloped(context);
-
-      this.logger.debug(`Processing GraphQL Parameters`);
-      result = await processGraphQLParams({
-        params,
-        enveloped,
-      });
-      this.logger.debug(`Processing GraphQL Parameters done.`);
-    } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts, this.logger);
-
-      result = {
-        errors,
-      };
-    }
-    if (isAsyncIterable(result)) {
-      result = mapAsyncIterator(
-        result,
-        v => v,
-        (error: Error) => {
-          if (error.name === 'AbortError') {
-            this.logger.debug(`Request aborted`);
-            throw error;
+  handleParams: ParamsHandler<TServerContext> = ({ request, context, params }) => {
+    const additionalContext =
+      context['request'] === request
+        ? {
+            params,
           }
-
-          const errors = handleError(error, this.maskedErrorsOpts, this.logger);
-          return {
-            errors,
+        : {
+            request,
+            params,
           };
-        },
-      );
-    }
-    return result;
+
+    Object.assign(context, additionalContext);
+
+    const enveloped = this.getEnveloped(context);
+
+    this.logger.debug(`Processing GraphQL Parameters`);
+    return handleMaybePromise(
+      () =>
+        handleMaybePromise(
+          () => processGraphQLParams({ params, enveloped }),
+          result => {
+            this.logger.debug(`Processing GraphQL Parameters done.`);
+            return result;
+          },
+          error => {
+            const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+
+            return {
+              errors,
+            };
+          },
+        ),
+      result => {
+        if (isAsyncIterable(result)) {
+          result = mapAsyncIterator(
+            result,
+            v => v,
+            (error: Error) => {
+              if (error.name === 'AbortError') {
+                this.logger.debug(`Request aborted`);
+                throw error;
+              }
+
+              const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+              return {
+                errors,
+              };
+            },
+          );
+        }
+        return result;
+      },
+    );
   };
 
-  async getResultForParams(
+  getResultForParams = (
     {
       params,
       request,
@@ -522,53 +541,70 @@ export class YogaServer<
       request: Request;
     },
     context: TServerContext,
-  ) {
+  ) => {
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
     let paramsHandler = this.handleParams;
 
-    for (const onParamsHook of this.onParamsHooks) {
-      await onParamsHook({
-        params,
-        request,
-        setParams(newParams) {
-          params = newParams;
-        },
-        paramsHandler,
-        setParamsHandler(newHandler) {
-          paramsHandler = newHandler;
-        },
-        setResult(newResult) {
-          result = newResult;
-        },
-        fetchAPI: this.fetchAPI,
-        context,
-      });
-    }
+    return handleMaybePromise(
+      () =>
+        iterateAsync(this.onParamsHooks, onParamsHook =>
+          onParamsHook({
+            params,
+            request,
+            setParams(newParams) {
+              params = newParams;
+            },
+            paramsHandler,
+            setParamsHandler(newHandler) {
+              paramsHandler = newHandler;
+            },
+            setResult(newResult) {
+              result = newResult;
+            },
+            fetchAPI: this.fetchAPI,
+            context,
+          }),
+        ),
+      () =>
+        handleMaybePromise(
+          () =>
+            result ||
+            paramsHandler({
+              request,
+              params,
+              context: context as TServerContext & YogaInitialContext,
+            }),
+          result =>
+            handleMaybePromise(
+              () =>
+                iterateAsync(this.onExecutionResultHooks, onExecutionResult =>
+                  onExecutionResult({
+                    result,
+                    setResult(newResult) {
+                      result = newResult;
+                    },
+                    request,
+                    context: context as TServerContext & YogaInitialContext,
+                  }),
+                ),
+              () => result,
+            ),
+        ),
+    );
+  };
 
-    result ??= await paramsHandler({
-      request,
-      params,
-      context: context as TServerContext & YogaInitialContext,
-    });
-
-    for (const onExecutionResult of this.onExecutionResultHooks) {
-      await onExecutionResult({
-        result,
-        setResult(newResult) {
-          result = newResult;
-        },
-        request,
-        context: context as TServerContext & YogaInitialContext,
-      });
-    }
-
-    return result;
-  }
-
-  handle: ServerAdapterRequestHandler<TServerContext> = async (
+  parseRequest = (
     request: Request,
     serverContext: TServerContext & ServerAdapterInitialContext,
-  ) => {
+  ): MaybePromise<
+    | {
+        requestParserResult:
+          | GraphQLParams<Record<string, any>, Record<string, any>>
+          | GraphQLParams<Record<string, any>, Record<string, any>>[];
+        response?: never;
+      }
+    | { requestParserResult?: never; response: Response }
+  > => {
     let url = new Proxy({} as URL, {
       get: (_target, prop, _receiver) => {
         url = new this.fetchAPI.URL(request.url, 'http://localhost');
@@ -578,68 +614,125 @@ export class YogaServer<
 
     let requestParser: RequestParser | undefined;
     const onRequestParseDoneList: OnRequestParseDoneHook[] = [];
-    for (const onRequestParse of this.onRequestParseHooks) {
-      const onRequestParseResult = await onRequestParse({
-        request,
-        url,
-        requestParser,
-        serverContext,
-        setRequestParser(parser: RequestParser) {
-          requestParser = parser;
-        },
-      });
-      if (onRequestParseResult?.onRequestParseDone != null) {
-        onRequestParseDoneList.push(onRequestParseResult.onRequestParseDone);
-      }
-    }
 
-    this.logger.debug(`Parsing request to extract GraphQL parameters`);
-
-    if (!requestParser) {
-      return new this.fetchAPI.Response(null, {
-        status: 415,
-        statusText: 'Unsupported Media Type',
-      });
-    }
-
-    let requestParserResult = await requestParser(request);
-
-    for (const onRequestParseDone of onRequestParseDoneList) {
-      await onRequestParseDone({
-        requestParserResult,
-        setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
-          requestParserResult = newParams;
-        },
-      });
-    }
-
-    const result = (await (Array.isArray(requestParserResult)
-      ? Promise.all(
-          requestParserResult.map(params =>
-            this.getResultForParams(
-              {
-                params,
-                request,
-              },
-              Object.create(serverContext),
+    return handleMaybePromise(
+      () =>
+        iterateAsync(
+          this.onRequestParseHooks,
+          onRequestParse =>
+            handleMaybePromise(
+              () =>
+                onRequestParse({
+                  request,
+                  url,
+                  requestParser,
+                  serverContext,
+                  setRequestParser(parser: RequestParser) {
+                    requestParser = parser;
+                  },
+                }),
+              requestParseHookResult => requestParseHookResult?.onRequestParseDone,
             ),
-          ),
-        )
-      : this.getResultForParams(
-          {
-            params: requestParserResult,
-            request,
-          },
-          serverContext,
-        ))) as ResultProcessorInput;
+          onRequestParseDoneList,
+        ),
+      () => {
+        this.logger.debug(`Parsing request to extract GraphQL parameters`);
 
-    return processResult({
-      request,
-      result,
-      fetchAPI: this.fetchAPI,
-      onResultProcessHooks: this.onResultProcessHooks,
-      serverContext,
-    });
+        if (!requestParser) {
+          return {
+            response: new this.fetchAPI.Response(null, {
+              status: 415,
+              statusText: 'Unsupported Media Type',
+            }),
+          };
+        }
+
+        return handleMaybePromise(
+          () => requestParser!(request),
+          requestParserResult => {
+            return handleMaybePromise(
+              () =>
+                iterateAsyncVoid(onRequestParseDoneList, onRequestParseDone =>
+                  onRequestParseDone({
+                    requestParserResult,
+                    setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+                      requestParserResult = newParams;
+                    },
+                  }),
+                ),
+              () => ({
+                requestParserResult,
+              }),
+            );
+          },
+        );
+      },
+    );
+  };
+
+  handle: ServerAdapterRequestHandler<TServerContext> = (
+    request: Request,
+    serverContext: TServerContext & ServerAdapterInitialContext,
+  ) => {
+    const instrumented = this.instruments && getInstrumented({ request });
+
+    const parseRequest = this.instruments?.requestParse
+      ? instrumented!.asyncFn(this.instruments?.requestParse, this.parseRequest)
+      : this.parseRequest;
+
+    return handleMaybePromise(
+      () => parseRequest(request, serverContext),
+      ({ response, requestParserResult }) => {
+        if (response) {
+          return response;
+        }
+        const getResultForParams = this.instruments?.operation
+          ? (payload: { request: Request; params: GraphQLParams }, context: any) => {
+              const instrumented = getInstrumented({ context });
+              const tracedHandler = instrumented.asyncFn(
+                this.instruments?.operation,
+                this.getResultForParams,
+              );
+              return tracedHandler(payload, context);
+            }
+          : this.getResultForParams;
+        return handleMaybePromise(
+          () =>
+            (Array.isArray(requestParserResult)
+              ? Promise.all(
+                  requestParserResult.map(params =>
+                    getResultForParams(
+                      {
+                        params,
+                        request,
+                      },
+                      Object.create(serverContext),
+                    ),
+                  ),
+                )
+              : getResultForParams(
+                  {
+                    params: requestParserResult,
+                    request,
+                  },
+                  serverContext,
+                )) as ResultProcessorInput,
+          result => {
+            const tracedProcessResult = this.instruments?.resultProcess
+              ? instrumented!.asyncFn(this.instruments.resultProcess, processResult<TServerContext>)
+              : processResult<TServerContext>;
+
+            return tracedProcessResult({
+              request,
+              result,
+              fetchAPI: this.fetchAPI,
+              onResultProcessHooks: this.onResultProcessHooks,
+              serverContext,
+            });
+          },
+        );
+      },
+    );
   };
 }
 

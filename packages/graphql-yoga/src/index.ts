@@ -1,5 +1,4 @@
 export * from '@graphql-yoga/logger';
-export { type Plugin } from './plugins/types.js';
 export { type GraphiQLOptions } from './plugins/use-graphiql.js';
 export { renderGraphiQL, shouldRenderGraphiQL } from './plugins/use-graphiql.js';
 export { useReadinessCheck } from './plugins/use-readiness-check.js';
@@ -9,7 +8,7 @@ export * from './server.js';
 export * from './subscription.js';
 export * from './types.js';
 export { maskError } from './utils/mask-error.js';
-export { type OnParamsEventPayload } from './plugins/types.js';
+export { type OnParamsEventPayload, type Plugin, type Instruments } from './plugins/types.js';
 export { _createLRUCache, createLRUCache } from './utils/create-lru-cache.js';
 export { mergeSchemas } from '@graphql-tools/schema';
 export {
@@ -36,6 +35,7 @@ export {
   useLogger,
   usePayloadFormatter,
 } from '@envelop/core';
+export { getInstrumentsAndPlugins, chain, composeInstruments } from '@envelop/instruments';
 export { createGraphQLError, isPromise, mapMaybePromise } from '@graphql-tools/utils';
 export { getSSEProcessor } from './plugins/result-processor/sse.js';
 export { processRegularResult } from './plugins/result-processor/regular.js';
@@ -45,3 +45,4 @@ export {
   type LandingPageRendererOpts,
 } from './plugins/use-unhandled-route.js';
 export { DisposableSymbols } from '@whatwg-node/server';
+export * from '@envelop/instruments';
