@@ -1642,8 +1642,8 @@ importers:
         specifier: ^0.10.5
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: ^0.10.0
+        version: 0.10.0
       dset:
         specifier: ^3.1.4
         version: 3.1.4
@@ -1860,8 +1860,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: ^0.10.0
+        version: 0.10.0
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1883,8 +1883,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: ^0.10.0
+        version: 0.10.0
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1958,8 +1958,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: ^0.10.0
+        version: 0.10.0
       fetch-multipart-graphql:
         specifier: 3.2.1
         version: 3.2.1
@@ -2141,8 +2141,8 @@ importers:
         specifier: 8.2.5
         version: 8.2.5
       '@whatwg-node/server':
-        specifier: ^0.9.71
-        version: 0.9.71
+        specifier: ^0.10.0
+        version: 0.10.0
       ioredis-mock:
         specifier: 8.9.0
         version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.5.0)
@@ -8378,6 +8378,10 @@ packages:
 
   '@whatwg-node/server-plugin-cookies@1.0.4':
     resolution: {integrity: sha512-h07dkk8buLxtYawM9Nf3aVK+gyrAt16YWT/UVtvKy9ZpeBPwgYbhd+PhyGYHg7op6zd51B9uL6oUR4duZYc1YQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@whatwg-node/server@0.10.0':
+    resolution: {integrity: sha512-o+FrEtUgozt6d2Dw4WB5t8I4gx6wAmhsznYcg6UAOy1FUutJcs4+KCLKhUv/L2bt+A9On9jPAtLtrvj3hAj+iQ==}
     engines: {node: '>=18.0.0'}
 
   '@whatwg-node/server@0.9.71':
@@ -25786,6 +25790,14 @@ snapshots:
     dependencies:
       '@whatwg-node/cookie-store': 0.2.3
       '@whatwg-node/server': 0.9.71
+      tslib: 2.8.1
+
+  '@whatwg-node/server@0.10.0':
+    dependencies:
+      '@envelop/instruments': 1.0.0
+      '@whatwg-node/disposablestack': 0.0.6
+      '@whatwg-node/fetch': 0.10.5
+      '@whatwg-node/promise-helpers': 1.2.3
       tslib: 2.8.1
 
   '@whatwg-node/server@0.9.71':
