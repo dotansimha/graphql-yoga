@@ -58,14 +58,6 @@
   })
   ```
 
-  ```mermaid
-  sequenceDiagram
-    Sentry->>Opentelemetry: ;
-    Opentelemetry->>Server Adapter: ;
-    Server Adapter->>Opentelemetry: ;
-    Opentelemetry->>Sentry: ;
-  ```
-
   ### Custom instruments ordering
 
   If the default composition ordering doesn't suite your need, you can manually compose instruments.
@@ -83,14 +75,6 @@
     schema,
     plugins: [{ instruments }, useSentry(), useOpentelemetry()]
   })
-  ```
-
-  ```mermaid
-  sequenceDiagram
-    Opentelemetry->>Sentry: ;
-    Sentry->>Server Adapter: ;
-    Server Adapter->>Sentry: ;
-    Sentry->>Opentelemetry: ;
   ```
 
 ### Patch Changes
