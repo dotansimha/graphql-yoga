@@ -1,5 +1,121 @@
 # graphql-yoga
 
+## 5.13.0
+
+### Minor Changes
+
+- [#3793](https://github.com/dotansimha/graphql-yoga/pull/3793)
+  [`63b78d5`](https://github.com/dotansimha/graphql-yoga/commit/63b78d5a7f6f7fd1d5939e92ede2574fda9d08dd)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Add new Instruments API
+
+  Introduction of a new API allowing to instrument the graphql pipeline.
+
+  This new API differs from already existing Hooks by not having access to input/output of phases.
+  The goal of `Instruments` is to run allow running code before, after or around the **whole process
+  of a phase**, including plugins hooks executions.
+
+  The main use case of this new API is observability (monitoring, tracing, etc...).
+
+  ### Basic usage
+
+  ```ts
+  import { createYoga } from 'graphql-yoga'
+  import Sentry from '@sentry/node'
+  import schema from './schema'
+
+  const server = createYoga({
+    schema,
+    plugins: [
+      {
+        instruments: {
+          request: ({ request }, wrapped) =>
+            Sentry.startSpan({ name: 'Graphql Operation' }, async () => {
+              try {
+                await wrapped()
+              } catch (err) {
+                Sentry.captureException(err)
+              }
+            })
+        }
+      }
+    ]
+  })
+  ```
+
+  ### Multiple instruments plugins
+
+  It is possible to have multiple instruments plugins (Prometheus and Sentry for example), they will
+  be automatically composed by envelop in the same order than the plugin array (first is outermost,
+  last is inner most).
+
+  ```ts
+  import { createYoga } from 'graphql-yoga'
+  import schema from './schema'
+
+  const server = createYoga({
+    schema,
+    plugins: [useSentry(), useOpentelemetry()]
+  })
+  ```
+
+  ```mermaid
+  sequenceDiagram
+    Sentry->>Opentelemetry: ;
+    Opentelemetry->>Server Adapter: ;
+    Server Adapter->>Opentelemetry: ;
+    Opentelemetry->>Sentry: ;
+  ```
+
+  ### Custom instruments ordering
+
+  If the default composition ordering doesn't suite your need, you can manually compose instruments.
+  This allows to have a different execution order of hooks and instruments.
+
+  ```ts
+  import { composeInstruments, createYoga } from 'graphql-yoga'
+  import schema from './schema'
+
+  const { instruments: sentryInstruments, ...sentryPlugin } = useSentry()
+  const { instruments: otelInstruments, ...otelPlugin } = useOpentelemetry()
+  const instruments = composeInstruments([otelInstruments, sentryInstruments])
+
+  const server = createYoga({
+    schema,
+    plugins: [{ instruments }, useSentry(), useOpentelemetry()]
+  })
+  ```
+
+  ```mermaid
+  sequenceDiagram
+    Opentelemetry->>Sentry: ;
+    Sentry->>Server Adapter: ;
+    Server Adapter->>Sentry: ;
+    Sentry->>Opentelemetry: ;
+  ```
+
+### Patch Changes
+
+- [#3793](https://github.com/dotansimha/graphql-yoga/pull/3793)
+  [`63b78d5`](https://github.com/dotansimha/graphql-yoga/commit/63b78d5a7f6f7fd1d5939e92ede2574fda9d08dd)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+
+  - Updated dependency
+    [`@envelop/core@^5.2.1` ↗︎](https://www.npmjs.com/package/@envelop/core/v/5.2.1) (from
+    `^5.0.2`, in `dependencies`)
+  - Added dependency
+    [`@envelop/instruments@^1.0.0` ↗︎](https://www.npmjs.com/package/@envelop/instruments/v/1.0.0)
+    (to `dependencies`)
+  - Added dependency
+    [`@whatwg-node/promise-helpers@^1.2.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/promise-helpers/v/1.2.4)
+    (to `dependencies`)
+
+- [#3855](https://github.com/dotansimha/graphql-yoga/pull/3855)
+  [`6ed67e8`](https://github.com/dotansimha/graphql-yoga/commit/6ed67e8cd7e5fe6f982096a3056d3336f4a29752)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Updated dependency
+    [`@whatwg-node/server@^0.10.0` ↗︎](https://www.npmjs.com/package/@whatwg-node/server/v/0.10.0)
+    (from `^0.9.71`, in `dependencies`)
+
 ## 5.12.2
 
 ### Patch Changes
