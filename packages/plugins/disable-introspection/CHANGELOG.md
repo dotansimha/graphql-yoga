@@ -1,5 +1,21 @@
 # @graphql-yoga/plugin-disable-introspection
 
+## 2.14.0
+
+### Patch Changes
+
+- [#3793](https://github.com/dotansimha/graphql-yoga/pull/3793)
+  [`63b78d5`](https://github.com/dotansimha/graphql-yoga/commit/63b78d5a7f6f7fd1d5939e92ede2574fda9d08dd)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - dependencies updates:
+  - Added dependency
+    [`@whatwg-node/promise-helpers@^1.2.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/promise-helpers/v/1.2.4)
+    (to `dependencies`)
+- Updated dependencies
+  [[`63b78d5`](https://github.com/dotansimha/graphql-yoga/commit/63b78d5a7f6f7fd1d5939e92ede2574fda9d08dd),
+  [`63b78d5`](https://github.com/dotansimha/graphql-yoga/commit/63b78d5a7f6f7fd1d5939e92ede2574fda9d08dd),
+  [`6ed67e8`](https://github.com/dotansimha/graphql-yoga/commit/6ed67e8cd7e5fe6f982096a3056d3336f4a29752)]:
+  - graphql-yoga@5.13.0
+
 ## 2.13.2
 
 ### Patch Changes
