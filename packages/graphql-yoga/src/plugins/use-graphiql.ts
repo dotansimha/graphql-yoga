@@ -1,5 +1,6 @@
 import { PromiseOrValue } from '@envelop/core';
 import { YogaLogger } from '@graphql-yoga/logger';
+import { handleMaybePromise } from '@whatwg-node/promise-helpers';
 import graphiqlHTML from '../graphiql-html.js';
 import { FetchAPI } from '../types.js';
 import { Plugin } from './types.js';
@@ -181,7 +182,7 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
     return urlPattern;
   };
   return {
-    async onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
+    onRequest({ request, serverContext, fetchAPI, endResponse, url }) {
       if (
         shouldRenderGraphiQL(request) &&
         (request.url.endsWith(config.graphqlEndpoint) ||
@@ -191,24 +192,28 @@ export function useGraphiQL<TServerContext extends Record<string, any>>(
           getUrlPattern(fetchAPI).test(url))
       ) {
         logger.debug(`Rendering GraphiQL`);
-        const graphiqlOptions = await graphiqlOptionsFactory(
-          request,
-          serverContext as TServerContext,
+        return handleMaybePromise(
+          () => graphiqlOptionsFactory(request, serverContext as TServerContext),
+          graphiqlOptions => {
+            if (graphiqlOptions) {
+              return handleMaybePromise(
+                () =>
+                  renderer({
+                    ...(graphiqlOptions === true ? {} : graphiqlOptions),
+                  }),
+                graphiqlBody => {
+                  const response = new fetchAPI.Response(graphiqlBody, {
+                    headers: {
+                      'Content-Type': 'text/html',
+                    },
+                    status: 200,
+                  });
+                  endResponse(response);
+                },
+              );
+            }
+          },
         );
-
-        if (graphiqlOptions) {
-          const graphiQLBody = await renderer({
-            ...(graphiqlOptions === true ? {} : graphiqlOptions),
-          });
-
-          const response = new fetchAPI.Response(graphiQLBody, {
-            headers: {
-              'Content-Type': 'text/html',
-            },
-            status: 200,
-          });
-          endResponse(response);
-        }
       }
     },
   };

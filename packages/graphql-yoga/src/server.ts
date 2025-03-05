@@ -477,57 +477,62 @@ export class YogaServer<
     }
   }
 
-  handleParams: ParamsHandler<TServerContext> = async ({ request, context, params }) => {
-    let result: ExecutionResult | AsyncIterable<ExecutionResult>;
-    try {
-      const additionalContext =
-        context['request'] === request
-          ? {
-              params,
-            }
-          : {
-              request,
-              params,
-            };
-
-      Object.assign(context, additionalContext);
-
-      const enveloped = this.getEnveloped(context);
-
-      this.logger.debug(`Processing GraphQL Parameters`);
-      result = await processGraphQLParams({
-        params,
-        enveloped,
-      });
-      this.logger.debug(`Processing GraphQL Parameters done.`);
-    } catch (error) {
-      const errors = handleError(error, this.maskedErrorsOpts, this.logger);
-
-      result = {
-        errors,
-      };
-    }
-    if (isAsyncIterable(result)) {
-      result = mapAsyncIterator(
-        result,
-        v => v,
-        (error: Error) => {
-          if (error.name === 'AbortError') {
-            this.logger.debug(`Request aborted`);
-            throw error;
+  handleParams: ParamsHandler<TServerContext> = ({ request, context, params }) => {
+    const additionalContext =
+      context['request'] === request
+        ? {
+            params,
           }
-
-          const errors = handleError(error, this.maskedErrorsOpts, this.logger);
-          return {
-            errors,
+        : {
+            request,
+            params,
           };
-        },
-      );
-    }
-    return result;
+
+    Object.assign(context, additionalContext);
+
+    const enveloped = this.getEnveloped(context);
+
+    this.logger.debug(`Processing GraphQL Parameters`);
+    return handleMaybePromise(
+      () =>
+        handleMaybePromise(
+          () => processGraphQLParams({ params, enveloped }),
+          result => {
+            this.logger.debug(`Processing GraphQL Parameters done.`);
+            return result;
+          },
+          error => {
+            const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+
+            return {
+              errors,
+            };
+          },
+        ),
+      result => {
+        if (isAsyncIterable(result)) {
+          result = mapAsyncIterator(
+            result,
+            v => v,
+            (error: Error) => {
+              if (error.name === 'AbortError') {
+                this.logger.debug(`Request aborted`);
+                throw error;
+              }
+
+              const errors = handleError(error, this.maskedErrorsOpts, this.logger);
+              return {
+                errors,
+              };
+            },
+          );
+        }
+        return result;
+      },
+    );
   };
 
-  getResultForParams = async (
+  getResultForParams = (
     {
       params,
       request,
@@ -540,43 +545,52 @@ export class YogaServer<
     let result: ExecutionResult | AsyncIterable<ExecutionResult> | undefined;
     let paramsHandler = this.handleParams;
 
-    for (const onParamsHook of this.onParamsHooks) {
-      await onParamsHook({
-        params,
-        request,
-        setParams(newParams) {
-          params = newParams;
-        },
-        paramsHandler,
-        setParamsHandler(newHandler) {
-          paramsHandler = newHandler;
-        },
-        setResult(newResult) {
-          result = newResult;
-        },
-        fetchAPI: this.fetchAPI,
-        context,
-      });
-    }
-
-    result ??= await paramsHandler({
-      request,
-      params,
-      context: context as TServerContext & YogaInitialContext,
-    });
-
-    for (const onExecutionResult of this.onExecutionResultHooks) {
-      await onExecutionResult({
-        result,
-        setResult(newResult) {
-          result = newResult;
-        },
-        request,
-        context: context as TServerContext & YogaInitialContext,
-      });
-    }
-
-    return result;
+    return handleMaybePromise(
+      () =>
+        iterateAsync(this.onParamsHooks, onParamsHook =>
+          onParamsHook({
+            params,
+            request,
+            setParams(newParams) {
+              params = newParams;
+            },
+            paramsHandler,
+            setParamsHandler(newHandler) {
+              paramsHandler = newHandler;
+            },
+            setResult(newResult) {
+              result = newResult;
+            },
+            fetchAPI: this.fetchAPI,
+            context,
+          }),
+        ),
+      () =>
+        handleMaybePromise(
+          () =>
+            result ||
+            paramsHandler({
+              request,
+              params,
+              context: context as TServerContext & YogaInitialContext,
+            }),
+          result =>
+            handleMaybePromise(
+              () =>
+                iterateAsync(this.onExecutionResultHooks, onExecutionResult =>
+                  onExecutionResult({
+                    result,
+                    setResult(newResult) {
+                      result = newResult;
+                    },
+                    request,
+                    context: context as TServerContext & YogaInitialContext,
+                  }),
+                ),
+              () => result,
+            ),
+        ),
+    );
   };
 
   parseRequest = (
@@ -636,23 +650,27 @@ export class YogaServer<
         return handleMaybePromise(
           () => requestParser!(request),
           requestParserResult => {
-            iterateAsyncVoid(onRequestParseDoneList, onRequestParseDone =>
-              onRequestParseDone({
+            return handleMaybePromise(
+              () =>
+                iterateAsyncVoid(onRequestParseDoneList, onRequestParseDone =>
+                  onRequestParseDone({
+                    requestParserResult,
+                    setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
+                      requestParserResult = newParams;
+                    },
+                  }),
+                ),
+              () => ({
                 requestParserResult,
-                setRequestParserResult(newParams: GraphQLParams | GraphQLParams[]) {
-                  requestParserResult = newParams;
-                },
               }),
             );
-
-            return { requestParserResult };
           },
         );
       },
     );
   };
 
-  handle: ServerAdapterRequestHandler<TServerContext> = async (
+  handle: ServerAdapterRequestHandler<TServerContext> = (
     request: Request,
     serverContext: TServerContext & ServerAdapterInitialContext,
   ) => {
@@ -661,54 +679,60 @@ export class YogaServer<
     const parseRequest = this.instruments?.requestParse
       ? instrumented!.asyncFn(this.instruments?.requestParse, this.parseRequest)
       : this.parseRequest;
-    const { response, requestParserResult } = await parseRequest(request, serverContext);
 
-    if (response) {
-      return response;
-    }
-
-    const getResultForParams = this.instruments?.operation
-      ? (payload: { request: Request; params: GraphQLParams }, context: any) => {
-          const instrumented = getInstrumented({ context });
-          const tracedHandler = instrumented.asyncFn(
-            this.instruments?.operation,
-            this.getResultForParams,
-          );
-          return tracedHandler(payload, context);
+    return handleMaybePromise(
+      () => parseRequest(request, serverContext),
+      ({ response, requestParserResult }) => {
+        if (response) {
+          return response;
         }
-      : this.getResultForParams;
+        const getResultForParams = this.instruments?.operation
+          ? (payload: { request: Request; params: GraphQLParams }, context: any) => {
+              const instrumented = getInstrumented({ context });
+              const tracedHandler = instrumented.asyncFn(
+                this.instruments?.operation,
+                this.getResultForParams,
+              );
+              return tracedHandler(payload, context);
+            }
+          : this.getResultForParams;
+        return handleMaybePromise(
+          () =>
+            (Array.isArray(requestParserResult)
+              ? Promise.all(
+                  requestParserResult.map(params =>
+                    getResultForParams(
+                      {
+                        params,
+                        request,
+                      },
+                      Object.create(serverContext),
+                    ),
+                  ),
+                )
+              : getResultForParams(
+                  {
+                    params: requestParserResult,
+                    request,
+                  },
+                  serverContext,
+                )) as ResultProcessorInput,
+          result => {
+            const tracedProcessResult = this.instruments?.resultProcess
+              ? instrumented!.asyncFn(this.instruments.resultProcess, processResult<TServerContext>)
+              : processResult<TServerContext>;
 
-    const result = (await (Array.isArray(requestParserResult)
-      ? Promise.all(
-          requestParserResult.map(params =>
-            getResultForParams(
-              {
-                params,
-                request,
-              },
-              Object.create(serverContext),
-            ),
-          ),
-        )
-      : getResultForParams(
-          {
-            params: requestParserResult,
-            request,
+            return tracedProcessResult({
+              request,
+              result,
+              fetchAPI: this.fetchAPI,
+              onResultProcessHooks: this.onResultProcessHooks,
+              serverContext,
+            });
           },
-          serverContext,
-        ))) as ResultProcessorInput;
-
-    const tracedProcessResult = this.instruments?.resultProcess
-      ? instrumented!.asyncFn(this.instruments.resultProcess, processResult<TServerContext>)
-      : processResult<TServerContext>;
-
-    return tracedProcessResult({
-      request,
-      result,
-      fetchAPI: this.fetchAPI,
-      onResultProcessHooks: this.onResultProcessHooks,
-      serverContext,
-    });
+        );
+      },
+    );
   };
 }
 
