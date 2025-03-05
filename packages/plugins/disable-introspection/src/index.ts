@@ -9,18 +9,20 @@ type UseDisableIntrospectionArgs = {
 export function useDisableIntrospection<TContext extends Record<string, unknown>>(
   props?: UseDisableIntrospectionArgs,
 ): Plugin<TContext> {
-  const store = new WeakMap<Request, boolean>();
+  const disabledIntrospection = new WeakSet<Request>();
   return {
     onRequestParse({ request, serverContext }) {
       return handleMaybePromise(
         () => (props?.isDisabled ? props.isDisabled(request, serverContext) : true),
-        () => {
-          store.set(request, true);
+        result => {
+          if (result) {
+            disabledIntrospection.add(request);
+          }
         },
       );
     },
     onValidate({ addValidationRule, context }) {
-      const isDisabled = store.get(context.request) ?? true;
+      const isDisabled = disabledIntrospection.has(context.request);
       if (isDisabled) {
         addValidationRule(NoSchemaIntrospectionCustomRule);
       }
