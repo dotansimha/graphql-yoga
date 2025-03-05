@@ -50,7 +50,7 @@ describe('SvelteKit integration', () => {
 	});
 
 	afterAll(async () => {
-		await browser.close();
+		await browser?.close();
 		sveltekitProcess.kill();
 	});
 
