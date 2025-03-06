@@ -1,6 +1,7 @@
 import { ExecutionArgs, ExecutionResult, SubscriptionArgs } from 'graphql';
-import { mapMaybePromise, Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
+import { Plugin, YogaInitialContext, YogaServerInstance } from 'graphql-yoga';
 import { useSofa as createSofaHandler } from 'sofa-api';
+import { handleMaybePromise } from '@whatwg-node/promise-helpers';
 import { SofaHandler } from './types.js';
 
 type SofaHandlerConfig = Parameters<typeof createSofaHandler>[0];
@@ -32,10 +33,13 @@ export function useSofa(config: SofaPluginConfig): Plugin {
         schema: onSchemaChangeEventPayload.schema,
         context(serverContext: YogaInitialContext) {
           const enveloped = getEnveloped(serverContext);
-          return mapMaybePromise(enveloped.contextFactory(serverContext), contextValue$ => {
-            envelopedByContext.set(contextValue$, enveloped);
-            return contextValue$;
-          });
+          return handleMaybePromise(
+            () => enveloped.contextFactory(serverContext),
+            contextValue$ => {
+              envelopedByContext.set(contextValue$, enveloped);
+              return contextValue$;
+            },
+          );
         },
         execute(
           ...args:
@@ -109,12 +113,16 @@ export function useSofa(config: SofaPluginConfig): Plugin {
         },
       });
     },
-    async onRequest({ request, endResponse, serverContext, url }) {
+    onRequest({ request, endResponse, serverContext, url }) {
       if (url.pathname.startsWith(config.basePath)) {
-        const res = await sofaHandler.handleRequest(request, serverContext);
-        if (res) {
-          endResponse(res);
-        }
+        return handleMaybePromise(
+          () => sofaHandler.handleRequest(request, serverContext),
+          res => {
+            if (res) {
+              endResponse(res);
+            }
+          },
+        );
       }
     },
   };

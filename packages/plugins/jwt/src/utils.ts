@@ -2,6 +2,7 @@ import { createGraphQLError } from 'graphql-yoga';
 import { JwksClient, type Options as JwksClientOptions } from 'jwks-rsa';
 import { GetSigningKeyFunction, type ExtractTokenFunction } from './config.js';
 import '@whatwg-node/server-plugin-cookies';
+import { handleMaybePromise } from '@whatwg-node/promise-helpers';
 
 export function extractFromHeader(options: {
   name: string;
@@ -50,7 +51,7 @@ export function extractFromHeader(options: {
 }
 
 export function extractFromCookie(options: { name: string }): ExtractTokenFunction {
-  return async ({ request }) => {
+  return ({ request }) => {
     if (!request) {
       return;
     }
@@ -62,16 +63,19 @@ export function extractFromCookie(options: { name: string }): ExtractTokenFuncti
       );
     }
 
-    const cookie = await cookieStore.get(options.name);
+    return handleMaybePromise(
+      () => cookieStore.get(options.name),
+      cookie => {
+        if (!cookie) {
+          return;
+        }
 
-    if (!cookie) {
-      return undefined;
-    }
-
-    return {
-      prefix: undefined,
-      token: cookie.value,
-    };
+        return {
+          prefix: undefined,
+          token: cookie.value,
+        };
+      },
+    );
   };
 }
 

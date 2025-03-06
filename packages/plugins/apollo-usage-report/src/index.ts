@@ -16,6 +16,7 @@ import {
   ApolloInlineTracePluginOptions,
   useApolloInstrumentation,
 } from '@graphql-yoga/plugin-apollo-inline-trace';
+import { handleMaybePromise, MaybePromise } from '@whatwg-node/promise-helpers';
 
 type ApolloUsageReportOptions = ApolloInlineTracePluginOptions & {
   /**
@@ -80,7 +81,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
     WeakMap<Request, ApolloUsageReportRequestContext>,
   ];
 
-  let schemaIdSet$: Promise<void> | undefined;
+  let schemaIdSet$: MaybePromise<void> | undefined;
   let schemaId: string;
   let yoga: YogaServer<Record<string, unknown>, Record<string, unknown>>;
   const logger = Object.fromEntries(
@@ -122,10 +123,13 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
         },
         onSchemaChange({ schema }) {
           if (schema) {
-            schemaIdSet$ = hashSHA256(printSchema(schema), yoga.fetchAPI).then(id => {
-              schemaId = id;
-              schemaIdSet$ = undefined;
-            });
+            schemaIdSet$ = handleMaybePromise(
+              () => hashSHA256(printSchema(schema), yoga.fetchAPI),
+              id => {
+                schemaId = id;
+                schemaIdSet$ = undefined;
+              },
+            );
           }
         },
 
@@ -213,25 +217,31 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
   };
 }
 
-export async function hashSHA256(
-  str: string,
+export function hashSHA256(
+  text: string,
   api: {
     crypto: Crypto;
     TextEncoder: (typeof globalThis)['TextEncoder'];
   } = globalThis,
 ) {
-  const { crypto, TextEncoder } = api;
-  const textEncoder = new TextEncoder();
-  const utf8 = textEncoder.encode(str);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
-  let hashHex = '';
-  for (const bytes of new Uint8Array(hashBuffer)) {
-    hashHex += bytes.toString(16).padStart(2, '0');
-  }
-  return hashHex;
+  const inputUint8Array = new api.TextEncoder().encode(text);
+  return handleMaybePromise(
+    () => api.crypto.subtle.digest({ name: 'SHA-256' }, inputUint8Array),
+    arrayBuf => {
+      const outputUint8Array = new Uint8Array(arrayBuf);
+
+      let hash = '';
+      for (const byte of outputUint8Array) {
+        const hex = byte.toString(16);
+        hash += '00'.slice(0, Math.max(0, 2 - hex.length)) + hex;
+      }
+
+      return hash;
+    },
+  );
 }
 
-async function sendTrace(
+function sendTrace(
   options: ApolloUsageReportOptions,
   logger: YogaLogger,
   fetch: FetchAPI['fetch'],
@@ -245,36 +255,43 @@ async function sendTrace(
     endpoint = DEFAULT_REPORTING_ENDPOINT,
   } = options;
 
-  try {
-    const body = Report.encode({
-      header: {
-        agentVersion,
-        graphRef,
-        executableSchemaId: schemaId,
-      },
-      operationCount: 1,
-      tracesPerQuery,
-    }).finish();
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/protobuf',
-        // The presence of the api key is already checked at Yoga initialization time
+  const body = Report.encode({
+    header: {
+      agentVersion,
+      graphRef,
+      executableSchemaId: schemaId,
+    },
+    operationCount: 1,
+    tracesPerQuery,
+  }).finish();
+  return handleMaybePromise(
+    () =>
+      fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/protobuf',
+          // The presence of the api key is already checked at Yoga initialization time
 
-        'x-api-key': apiKey!,
-        accept: 'application/json',
-      },
-      body,
-    });
-    const responseText = await response.text();
-    if (response.ok) {
-      logger.debug('Traces sent:', responseText);
-    } else {
-      logger.error('Failed to send trace:', responseText);
-    }
-  } catch (err) {
-    logger.error('Failed to send trace:', err);
-  }
+          'x-api-key': apiKey!,
+          accept: 'application/json',
+        },
+        body,
+      }),
+    response =>
+      handleMaybePromise(
+        () => response.text(),
+        responseText => {
+          if (response.ok) {
+            logger.debug('Traces sent:', responseText);
+          } else {
+            logger.error('Failed to send trace:', responseText);
+          }
+        },
+      ),
+    err => {
+      logger.error('Failed to send trace:', err);
+    },
+  );
 }
 
 function isDocumentNode(data: unknown): data is DocumentNode {
