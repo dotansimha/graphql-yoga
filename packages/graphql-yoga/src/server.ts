@@ -9,7 +9,7 @@ import {
   useExtendContext,
   useMaskedErrors,
 } from '@envelop/core';
-import { chain, getInstrumented } from '@envelop/instruments';
+import { chain, getInstrumented } from '@envelop/instrumentation';
 import { normalizedExecutor } from '@graphql-tools/executor';
 import { mapAsyncIterator } from '@graphql-tools/utils';
 import { createLogger, LogLevel, YogaLogger } from '@graphql-yoga/logger';
@@ -51,7 +51,7 @@ import { useHTTPValidationError } from './plugins/request-validation/use-http-va
 import { useLimitBatching } from './plugins/request-validation/use-limit-batching.js';
 import { usePreventMutationViaGET } from './plugins/request-validation/use-prevent-mutation-via-get.js';
 import {
-  Instruments,
+  Instrumentation,
   OnExecutionResultHook,
   OnParamsHook,
   OnRequestParseDoneHook,
@@ -224,7 +224,9 @@ export class YogaServer<
   protected plugins: Array<
     Plugin<TUserContext & TServerContext & YogaInitialContext, TServerContext, TUserContext>
   >;
-  private instruments: Instruments<TUserContext & TServerContext & YogaInitialContext> | undefined;
+  private instrumentation:
+    | Instrumentation<TUserContext & TServerContext & YogaInitialContext>
+    | undefined;
   private onRequestParseHooks: OnRequestParseHook<TServerContext>[];
   private onParamsHooks: OnParamsHook<TServerContext>[];
   private onExecutionResultHooks: OnExecutionResultHook<TServerContext>[];
@@ -468,10 +470,10 @@ export class YogaServer<
         if (plugin.onResultProcess) {
           this.onResultProcessHooks.push(plugin.onResultProcess);
         }
-        if (plugin.instruments) {
-          this.instruments = this.instruments
-            ? chain(this.instruments, plugin.instruments)
-            : plugin.instruments;
+        if (plugin.instrumentation) {
+          this.instrumentation = this.instrumentation
+            ? chain(this.instrumentation, plugin.instrumentation)
+            : plugin.instrumentation;
         }
       }
     }
@@ -674,10 +676,10 @@ export class YogaServer<
     request: Request,
     serverContext: TServerContext & ServerAdapterInitialContext,
   ) => {
-    const instrumented = this.instruments && getInstrumented({ request });
+    const instrumented = this.instrumentation && getInstrumented({ request });
 
-    const parseRequest = this.instruments?.requestParse
-      ? instrumented!.asyncFn(this.instruments?.requestParse, this.parseRequest)
+    const parseRequest = this.instrumentation?.requestParse
+      ? instrumented!.asyncFn(this.instrumentation?.requestParse, this.parseRequest)
       : this.parseRequest;
 
     return handleMaybePromise(
@@ -686,11 +688,11 @@ export class YogaServer<
         if (response) {
           return response;
         }
-        const getResultForParams = this.instruments?.operation
+        const getResultForParams = this.instrumentation?.operation
           ? (payload: { request: Request; params: GraphQLParams }, context: any) => {
               const instrumented = getInstrumented({ context });
               const tracedHandler = instrumented.asyncFn(
-                this.instruments?.operation,
+                this.instrumentation?.operation,
                 this.getResultForParams,
               );
               return tracedHandler(payload, context);
@@ -718,8 +720,11 @@ export class YogaServer<
                   serverContext,
                 )) as ResultProcessorInput,
           result => {
-            const tracedProcessResult = this.instruments?.resultProcess
-              ? instrumented!.asyncFn(this.instruments.resultProcess, processResult<TServerContext>)
+            const tracedProcessResult = this.instrumentation?.resultProcess
+              ? instrumented!.asyncFn(
+                  this.instrumentation.resultProcess,
+                  processResult<TServerContext>,
+                )
               : processResult<TServerContext>;
 
             return tracedProcessResult({

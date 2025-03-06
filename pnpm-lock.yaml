@@ -1622,7 +1622,7 @@ importers:
       '@envelop/core':
         specifier: ^5.2.1
         version: 5.2.1
-      '@envelop/instruments':
+      '@envelop/instrumentation':
         specifier: ^1.0.0
         version: 1.0.0
       '@graphql-tools/executor':
@@ -4054,7 +4054,7 @@ packages:
       graphql: 16.10.0
       graphql-modules: ^1 || ^2.0.0 || ^3.0.0
 
-  '@envelop/instruments@1.0.0':
+  '@envelop/instrumentation@1.0.0':
     resolution: {integrity: sha512-f4lHoti7QgUIluIGTM0mG9Wf9/w6zc1mosYmyFkrApeHSP2PIUC6a8fMoqkdk6pgVOps39kLdIhOPF8pIKS8/A==}
     engines: {node: '>=18.0.0'}
 
@@ -20319,7 +20319,7 @@ snapshots:
 
   '@envelop/core@5.2.1':
     dependencies:
-      '@envelop/instruments': 1.0.0
+      '@envelop/instrumentation': 1.0.0
       '@envelop/types': 5.2.0
       '@whatwg-node/promise-helpers': 1.2.4
       tslib: 2.8.1
@@ -20362,7 +20362,7 @@ snapshots:
       graphql-modules: 3.0.0(graphql@16.10.0)
       tslib: 2.8.1
 
-  '@envelop/instruments@1.0.0':
+  '@envelop/instrumentation@1.0.0':
     dependencies:
       '@whatwg-node/promise-helpers': 1.2.4
       tslib: 2.8.1
@@ -25641,7 +25641,7 @@ snapshots:
 
   '@whatwg-node/server@0.10.0':
     dependencies:
-      '@envelop/instruments': 1.0.0
+      '@envelop/instrumentation': 1.0.0
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/fetch': 0.10.5
       '@whatwg-node/promise-helpers': 1.2.4
