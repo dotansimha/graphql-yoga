@@ -1,5 +1,16 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.7.1
+
+### Patch Changes
+
+- [#3860](https://github.com/dotansimha/graphql-yoga/pull/3860)
+  [`9599d45`](https://github.com/dotansimha/graphql-yoga/commit/9599d459a0076edea53e447080da857be7059b7a)
+  Thanks [@renovate](https://github.com/apps/renovate)! - dependencies updates:
+  - Added dependency
+    [`@whatwg-node/promise-helpers@^1.2.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/promise-helpers/v/1.2.4)
+    (to `dependencies`)
+
 ## 3.7.0
 
 ### Patch Changes
