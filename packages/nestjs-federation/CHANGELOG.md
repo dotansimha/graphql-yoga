@@ -1,5 +1,23 @@
 # @graphql-yoga/nestjs-federation
 
+## 3.13.1
+
+### Patch Changes
+
+- [#3865](https://github.com/dotansimha/graphql-yoga/pull/3865)
+  [`dee7995`](https://github.com/dotansimha/graphql-yoga/commit/dee79952919d001bdd4f5b3d802be1bc62051565)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@envelop/apollo-federation@^6.1.3` ↗︎](https://www.npmjs.com/package/@envelop/apollo-federation/v/6.1.3)
+    (from `^6.1.1`, in `dependencies`)
+  - Updated dependency
+    [`@envelop/core@^5.2.3` ↗︎](https://www.npmjs.com/package/@envelop/core/v/5.2.3) (from
+    `^5.2.1`, in `dependencies`)
+- Updated dependencies
+  [[`dee7995`](https://github.com/dotansimha/graphql-yoga/commit/dee79952919d001bdd4f5b3d802be1bc62051565)]:
+  - @graphql-yoga/plugin-apollo-inline-trace@3.13.1
+  - @graphql-yoga/nestjs@3.13.1
+
 ## 3.13.0
 
 ### Patch Changes
