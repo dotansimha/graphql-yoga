@@ -396,18 +396,18 @@ const plugin = {
 But for this kind of purposes, `waitUntil` can be a better choice.
 [Learn more about explicit resource management here](/docs/features/explicit-resource-management).
 
-### `instruments`
+### `instrumentation`
 
-An optional `instruments` instance can be present in the plugin.
+An optional `instrumentation` instance can be present in the plugin.
 
-This `Instruments` instance allows to wrap an entire phase execution (including all plugin hooks),
-meaning running code just before, just after and around the execution of the phase.
+This `Instrumentation` instance allows to wrap an entire phase execution (including all plugin
+hooks), meaning running code just before, just after and around the execution of the phase.
 
-Instruments doesn't have access to input/output of a phase, use hooks to have access to those data.
-If needed, we recommend to share data between instruments and hooks with a `WeakMap` and the given
-`context` as the key.
+Instrumentation doesn't have access to input/output of a phase, use hooks to have access to those
+data. If needed, we recommend to share data between instrumentation and hooks with a `WeakMap` and
+the given `context` as the key.
 
-All instruments takes 2 parameters:
+All instrumentation takes 2 parameters:
 
 - `payload`: an object containing the graphql context or the http request depending on the
   instrument.
@@ -416,21 +416,21 @@ All instruments takes 2 parameters:
   called**. If this function returns a `Promise`, the instrument should return a `Promise` resolving
   after it.
 
-#### Instruments composition
+#### Instrumentation composition
 
-If multiple plugins have `instruments`, they are composed in the same order they are defined the
+If multiple plugins have `instrumentation`, they are composed in the same order they are defined the
 plugin array (the first is outtermost call, the last is inner most call).
 
 It is possible to customize this composition if it doesn't suite your need (ie. you need hooks and
-instruments to have a different oreder of execution).
+instrumentation to have a different oreder of execution).
 
 ```ts
-import { composeInstruments, envelop } from '@envelop/core'
+import { composeInstrumentation, envelop } from '@envelop/core'
 
-const { instruments: instruments1, ...plugin1 } = usePlugin1()
-const { instruments: instruments2, ...plugin2 } = usePlugin2()
+const { instrumentation: instrumentation1, ...plugin1 } = usePlugin1()
+const { instrumentation: instrumentation2, ...plugin2 } = usePlugin2()
 
-const instruments = composeInstruments([instruments2, instruments1])
+const instrumentation = composeInstrumentation([instrumentation2, instrumentation1])
 
 const getEnveloped = envelop({
   plugin: [{ insturments }, plugin1, plugin2]
@@ -466,7 +466,7 @@ Wraps the envelop (the call to `envelop` function) initialisation.
 
 This includes all the plugins `onEnveloped` hooks, and the creation of the Envelop Orchestrator.
 
-This instruments must be synchrone, the wrapped function is always synchrone.
+This instrumentation must be synchrone, the wrapped function is always synchrone.
 
 #### `parse`
 
@@ -510,5 +510,5 @@ Note that `wrapped` is not guaranted to return a promise.
 
 Wraps the context result processing phase. This includes all the plugins `onResultProcess` hooks.
 
-This instruments can be asynchrone, the wrapped function **can be** asynchronous. Be sure to return
-a `Promise` if `wrapped()` returns a `Promise`.
+This instrumentation can be asynchrone, the wrapped function **can be** asynchronous. Be sure to
+return a `Promise` if `wrapped()` returns a `Promise`.

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Instruments as EnvelopInstruments,
+  Instrumentation as EnvelopInstrumentation,
   Plugin as EnvelopPlugin,
   OnExecuteHook,
   OnSubscribeHook,
@@ -13,7 +13,7 @@ import { MaybePromise } from '@whatwg-node/promise-helpers';
 import {
   ServerAdapterPlugin,
   type ServerAdapterInitialContext,
-  type Instruments as ServerAdapterInstruments,
+  type Instrumentation as ServerAdapterInstrumentation,
 } from '@whatwg-node/server';
 import { YogaServer } from '../server.js';
 import {
@@ -51,7 +51,7 @@ export type Plugin<
      * A Tracer instance that will wrap each phases of the request pipeline.
      * This should be used primarly as an observability tool (for monitoring, tracing, etc...).
      */
-    instruments?: Instruments<YogaInitialContext & PluginContext & TUserContext>;
+    instrumentation?: Instrumentation<YogaInitialContext & PluginContext & TUserContext>;
     /**
      * This hook is invoked at Yoga Server initialization, before it starts.
      * Here you can setup long running resources (like monitoring or caching clients)
@@ -92,21 +92,22 @@ export type Plugin<
     onResultProcess?: OnResultProcess<TServerContext>;
   };
 
-export type Instruments<TContext extends Record<string, any>> = EnvelopInstruments<TContext> &
-  ServerAdapterInstruments & {
-    operation?: (
-      payload: { context: TContext },
-      wrapped: () => PromiseOrValue<void>,
-    ) => PromiseOrValue<void>;
-    requestParse?: (
-      payload: { request: Request },
-      wrapped: () => MaybePromise<void>,
-    ) => MaybePromise<void>;
-    resultProcess?: (
-      payload: { request: Request },
-      wrapped: () => MaybePromise<void>,
-    ) => MaybePromise<void>;
-  };
+export type Instrumentation<TContext extends Record<string, any>> =
+  EnvelopInstrumentation<TContext> &
+    ServerAdapterInstrumentation & {
+      operation?: (
+        payload: { context: TContext },
+        wrapped: () => PromiseOrValue<void>,
+      ) => PromiseOrValue<void>;
+      requestParse?: (
+        payload: { request: Request },
+        wrapped: () => MaybePromise<void>,
+      ) => MaybePromise<void>;
+      resultProcess?: (
+        payload: { request: Request },
+        wrapped: () => MaybePromise<void>,
+      ) => MaybePromise<void>;
+    };
 
 export type OnYogaInitHook<TServerContext extends Record<string, any>> = (
   payload: OnYogaInitEventPayload<TServerContext>,

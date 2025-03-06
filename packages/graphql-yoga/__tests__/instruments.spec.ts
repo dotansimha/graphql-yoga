@@ -1,6 +1,6 @@
 import { createSchema, createYoga, Plugin } from '../src';
 
-describe('instruments', () => {
+describe('instrumentation', () => {
   const schema = createSchema({
     typeDefs: /* GraphQL */ `
       type Query {
@@ -27,7 +27,7 @@ describe('instruments', () => {
   it('should wrap all the phases with the default composition order', async () => {
     const result: string[] = [];
     const make = (name: string): Plugin => ({
-      instruments: {
+      instrumentation: {
         context: (_, w) => {
           result.push(`pre-context-${name}`);
           w();

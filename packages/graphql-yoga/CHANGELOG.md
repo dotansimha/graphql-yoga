@@ -6,13 +6,13 @@
 
 - [#3793](https://github.com/dotansimha/graphql-yoga/pull/3793)
   [`63b78d5`](https://github.com/dotansimha/graphql-yoga/commit/63b78d5a7f6f7fd1d5939e92ede2574fda9d08dd)
-  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Add new Instruments API
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Add new Instrumentation API
 
   Introduction of a new API allowing to instrument the graphql pipeline.
 
   This new API differs from already existing Hooks by not having access to input/output of phases.
-  The goal of `Instruments` is to run allow running code before, after or around the **whole process
-  of a phase**, including plugins hooks executions.
+  The goal of `Instrumentation` is to run allow running code before, after or around the **whole
+  process of a phase**, including plugins hooks executions.
 
   The main use case of this new API is observability (monitoring, tracing, etc...).
 
@@ -27,7 +27,7 @@
     schema,
     plugins: [
       {
-        instruments: {
+        instrumentation: {
           request: ({ request }, wrapped) =>
             Sentry.startSpan({ name: 'Graphql Operation' }, async () => {
               try {
@@ -42,11 +42,11 @@
   })
   ```
 
-  ### Multiple instruments plugins
+  ### Multiple instrumentation plugins
 
-  It is possible to have multiple instruments plugins (Prometheus and Sentry for example), they will
-  be automatically composed by envelop in the same order than the plugin array (first is outermost,
-  last is inner most).
+  It is possible to have multiple instrumentation plugins (Prometheus and Sentry for example), they
+  will be automatically composed by envelop in the same order than the plugin array (first is
+  outermost, last is inner most).
 
   ```ts
   import { createYoga } from 'graphql-yoga'
@@ -58,22 +58,22 @@
   })
   ```
 
-  ### Custom instruments ordering
+  ### Custom instrumentation ordering
 
-  If the default composition ordering doesn't suite your need, you can manually compose instruments.
-  This allows to have a different execution order of hooks and instruments.
+  If the default composition ordering doesn't suite your need, you can manually compose
+  instrumentation. This allows to have a different execution order of hooks and instrumentation.
 
   ```ts
-  import { composeInstruments, createYoga } from 'graphql-yoga'
+  import { composeInstrumentation, createYoga } from 'graphql-yoga'
   import schema from './schema'
 
-  const { instruments: sentryInstruments, ...sentryPlugin } = useSentry()
-  const { instruments: otelInstruments, ...otelPlugin } = useOpentelemetry()
-  const instruments = composeInstruments([otelInstruments, sentryInstruments])
+  const { instrumentation: sentryInstrumentation, ...sentryPlugin } = useSentry()
+  const { instrumentation: otelInstrumentation, ...otelPlugin } = useOpentelemetry()
+  const instrumentation = composeInstrumentation([otelInstrumentation, sentryInstrumentation])
 
   const server = createYoga({
     schema,
-    plugins: [{ instruments }, useSentry(), useOpentelemetry()]
+    plugins: [{ instrumentation }, useSentry(), useOpentelemetry()]
   })
   ```
 
@@ -87,7 +87,7 @@
     [`@envelop/core@^5.2.1` ↗︎](https://www.npmjs.com/package/@envelop/core/v/5.2.1) (from
     `^5.0.2`, in `dependencies`)
   - Added dependency
-    [`@envelop/instruments@^1.0.0` ↗︎](https://www.npmjs.com/package/@envelop/instruments/v/1.0.0)
+    [`@envelop/instrumentation@^1.0.0` ↗︎](https://www.npmjs.com/package/@envelop/instrumentation/v/1.0.0)
     (to `dependencies`)
   - Added dependency
     [`@whatwg-node/promise-helpers@^1.2.4` ↗︎](https://www.npmjs.com/package/@whatwg-node/promise-helpers/v/1.2.4)
