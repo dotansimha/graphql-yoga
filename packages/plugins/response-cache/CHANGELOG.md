@@ -1,5 +1,22 @@
 # @graphql-yoga/plugin-response-cache
 
+## 3.15.2
+
+### Patch Changes
+
+- [#3865](https://github.com/dotansimha/graphql-yoga/pull/3865)
+  [`dee7995`](https://github.com/dotansimha/graphql-yoga/commit/dee79952919d001bdd4f5b3d802be1bc62051565)
+  Thanks [@ardatan](https://github.com/ardatan)! - dependencies updates:
+  - Updated dependency
+    [`@envelop/core@^5.2.3` ↗︎](https://www.npmjs.com/package/@envelop/core/v/5.2.3) (from
+    `^5.2.1`, in `dependencies`)
+  - Updated dependency
+    [`@envelop/response-cache@^7.1.3` ↗︎](https://www.npmjs.com/package/@envelop/response-cache/v/7.1.3)
+    (from `^7.1.1`, in `dependencies`)
+- Updated dependencies
+  [[`dee7995`](https://github.com/dotansimha/graphql-yoga/commit/dee79952919d001bdd4f5b3d802be1bc62051565)]:
+  - graphql-yoga@5.13.1
+
 ## 3.15.1
 
 ### Patch Changes
