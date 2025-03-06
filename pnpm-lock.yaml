@@ -250,8 +250,8 @@ importers:
         specifier: 2.10.0
         version: 2.10.0(encoding@0.1.13)(graphql@16.10.0)
       '@envelop/apollo-federation':
-        specifier: 6.1.1
-        version: 6.1.1(@envelop/core@5.2.1)(graphql@16.10.0)
+        specifier: 6.1.2
+        version: 6.1.2(@envelop/core@5.2.1)(graphql@16.10.0)
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -568,8 +568,8 @@ importers:
   examples/fastify-modules:
     dependencies:
       '@envelop/graphql-modules':
-        specifier: 7.1.1
-        version: 7.1.1(@envelop/core@5.2.1)(graphql-modules@3.0.0(graphql@16.10.0))(graphql@16.10.0)
+        specifier: 7.1.2
+        version: 7.1.2(@envelop/core@5.2.1)(graphql-modules@3.0.0(graphql@16.10.0))(graphql@16.10.0)
       '@graphql-tools/load-files':
         specifier: 7.0.1
         version: 7.0.1(graphql@16.10.0)
@@ -671,8 +671,8 @@ importers:
   examples/generic-auth:
     dependencies:
       '@envelop/generic-auth':
-        specifier: 9.1.1
-        version: 9.1.1(@envelop/core@5.2.1)(graphql@16.10.0)
+        specifier: 9.1.2
+        version: 9.1.2(@envelop/core@5.2.1)(graphql@16.10.0)
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -898,8 +898,8 @@ importers:
   examples/live-query:
     dependencies:
       '@envelop/live-query':
-        specifier: 8.1.1
-        version: 8.1.1(@envelop/core@5.2.1)(graphql@16.10.0)
+        specifier: 8.1.2
+        version: 8.1.2(@envelop/core@5.2.1)(graphql@16.10.0)
       '@graphql-tools/utils':
         specifier: 10.8.4
         version: 10.8.4(graphql@16.10.0)
@@ -1666,8 +1666,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2(@envelop/core@5.2.1)(graphql@16.10.0)
       '@envelop/live-query':
-        specifier: 8.1.1
-        version: 8.1.1(@envelop/core@5.2.1)(graphql@16.10.0)
+        specifier: 8.1.2
+        version: 8.1.2(@envelop/core@5.2.1)(graphql@16.10.0)
       '@graphql-yoga/render-graphiql':
         specifier: workspace:*
         version: link:../render-graphiql/dist
@@ -4007,6 +4007,13 @@ packages:
       '@envelop/core': ^5.2.1
       graphql: 16.10.0
 
+  '@envelop/apollo-federation@6.1.2':
+    resolution: {integrity: sha512-3E37krvphFxkKV0CWU4ra1kOoIWhSwSe47TyI4jLh5bpYMtCG53Um9EAxCewNm8elZElBLDtjr7eVywUuOpQQQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@envelop/core': ^5.2.2
+      graphql: 16.10.0
+
   '@envelop/core@5.2.1':
     resolution: {integrity: sha512-iH/GUc7WNEukD2TKszx+e5MWuCpUuVfc1eS4mSvDpQ2ROA2lCJGqac6PxAC3A171bLqNk7IWlNOXxJ4qUPU1WA==}
     engines: {node: '>=18.0.0'}
@@ -4018,18 +4025,18 @@ packages:
       '@envelop/core': ^5.2.2
       graphql: 16.10.0
 
-  '@envelop/extended-validation@5.1.1':
-    resolution: {integrity: sha512-AjVzgLOZn5xSC9+y5du8K0p/GYrPPnrtlCJN3dDJapbdKjf8AuWylZwg9/+OAiN3/UPC9+8wcbwkvXsMr8zViA==}
+  '@envelop/extended-validation@5.1.2':
+    resolution: {integrity: sha512-c/ojZhTkrCbl+Zn8fixfn22/4ff8qqkCuiSeVbeIOfi/FGUU3isPjDU4VMsZPVVXUrtHeD7FS66/FhhQf78UOw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@envelop/core': ^5.2.1
+      '@envelop/core': ^5.2.2
       graphql: 16.10.0
 
-  '@envelop/generic-auth@9.1.1':
-    resolution: {integrity: sha512-ikx8SbiomiBdYWPAX4aQV4pC3BzcOHzr6TRIKCkW+CGj9z688akqsgmkUsTCZMowhCKpd2YBR8YlccoQlDr15Q==}
+  '@envelop/generic-auth@9.1.2':
+    resolution: {integrity: sha512-PMXwX6O9+CvRt6/yj7tEt2R9RWTvLXxL5xJDi3M8sMDg5Xf1bUSMS+HRUnFK23UFif7DZhmA5dvaBNwqBsxihw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@envelop/core': ^5.2.1
+      '@envelop/core': ^5.2.2
       graphql: 16.10.0
 
   '@envelop/graphql-jit@9.1.2':
@@ -4039,11 +4046,11 @@ packages:
       '@envelop/core': ^5.2.2
       graphql: 16.10.0
 
-  '@envelop/graphql-modules@7.1.1':
-    resolution: {integrity: sha512-rjRpL71PQ7YFsQWVLj3CzhWqrIL7jR1eCFby20enicblMNywn/wwqmTqLfzerzHgKJFS7RwUyOAKhjHpC9FcoQ==}
+  '@envelop/graphql-modules@7.1.2':
+    resolution: {integrity: sha512-l0ZPS2tqrtE8Nn5Ja/2eI3xVkeTaIKj1XHq2XCxtuit27OfDgGCIQtvtvQ3UJ1J54lyYSs/ftXS2uwspFG3GQw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@envelop/core': ^5.2.1
+      '@envelop/core': ^5.2.2
       graphql: 16.10.0
       graphql-modules: ^1 || ^2.0.0 || ^3.0.0
 
@@ -4051,11 +4058,11 @@ packages:
     resolution: {integrity: sha512-f4lHoti7QgUIluIGTM0mG9Wf9/w6zc1mosYmyFkrApeHSP2PIUC6a8fMoqkdk6pgVOps39kLdIhOPF8pIKS8/A==}
     engines: {node: '>=18.0.0'}
 
-  '@envelop/live-query@8.1.1':
-    resolution: {integrity: sha512-XViuCZvWXJ5DkJx7xaehUaf7geH2DQnBcaIkdxOTX3A0cpuKRgifo3oO/POwOgBIX4yxCKW1ZzqQEJCVFk183Q==}
+  '@envelop/live-query@8.1.2':
+    resolution: {integrity: sha512-7iXA7Q+VP3C7/qgLjCgZ6C3eEEv2ayiN+jQQtpHqmNASvyzPGjmInqWnmViDfmpH5/ye3Rc7l8LklqJlGbOYRg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@envelop/core': ^5.2.1
+      '@envelop/core': ^5.2.2
       graphql: 16.10.0
 
   '@envelop/on-resolve@5.1.1':
@@ -20303,6 +20310,13 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
 
+  '@envelop/apollo-federation@6.1.2(@envelop/core@5.2.1)(graphql@16.10.0)':
+    dependencies:
+      '@apollo/utils.keyvaluecache': 3.1.0
+      '@envelop/core': 5.2.1
+      graphql: 16.10.0
+      tslib: 2.8.1
+
   '@envelop/core@5.2.1':
     dependencies:
       '@envelop/instruments': 1.0.0
@@ -20316,17 +20330,17 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
 
-  '@envelop/extended-validation@5.1.1(@envelop/core@5.2.1)(graphql@16.10.0)':
+  '@envelop/extended-validation@5.1.2(@envelop/core@5.2.1)(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.1
       '@graphql-tools/utils': 10.8.4(graphql@16.10.0)
       graphql: 16.10.0
       tslib: 2.8.1
 
-  '@envelop/generic-auth@9.1.1(@envelop/core@5.2.1)(graphql@16.10.0)':
+  '@envelop/generic-auth@9.1.2(@envelop/core@5.2.1)(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.1
-      '@envelop/extended-validation': 5.1.1(@envelop/core@5.2.1)(graphql@16.10.0)
+      '@envelop/extended-validation': 5.1.2(@envelop/core@5.2.1)(graphql@16.10.0)
       '@graphql-tools/executor': 1.4.2(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.4(graphql@16.10.0)
       '@whatwg-node/promise-helpers': 1.2.4
@@ -20341,7 +20355,7 @@ snapshots:
       graphql-jit: 0.8.7(graphql@16.10.0)
       tslib: 2.8.1
 
-  '@envelop/graphql-modules@7.1.1(@envelop/core@5.2.1)(graphql-modules@3.0.0(graphql@16.10.0))(graphql@16.10.0)':
+  '@envelop/graphql-modules@7.1.2(@envelop/core@5.2.1)(graphql-modules@3.0.0(graphql@16.10.0))(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.1
       graphql: 16.10.0
@@ -20353,7 +20367,7 @@ snapshots:
       '@whatwg-node/promise-helpers': 1.2.4
       tslib: 2.8.1
 
-  '@envelop/live-query@8.1.1(@envelop/core@5.2.1)(graphql@16.10.0)':
+  '@envelop/live-query@8.1.2(@envelop/core@5.2.1)(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.1
       '@graphql-tools/utils': 10.8.4(graphql@16.10.0)
@@ -28379,7 +28393,7 @@ snapshots:
       eslint: 9.21.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3)(eslint@9.21.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.21.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.4(eslint@9.21.0(jiti@2.4.2))
       eslint-plugin-react-hooks: 5.1.0(eslint@9.21.0(jiti@2.4.2))
@@ -28433,7 +28447,7 @@ snapshots:
       stable-hash: 0.0.4
       tinyglobby: 0.2.12
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3)(eslint@9.21.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -28482,7 +28496,7 @@ snapshots:
       eslint: 9.21.0(jiti@2.4.2)
       eslint-compat-utils: 0.5.1(eslint@9.21.0(jiti@2.4.2))
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3)(eslint@9.21.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.8.3(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
