@@ -36,7 +36,7 @@ export {
   usePayloadFormatter,
 } from '@envelop/core';
 export {
-  getInstrumentationAndPlugins,
+  getInstrumentationAndPlugin,
   chain,
   composeInstrumentation,
 } from '@envelop/instrumentation';
