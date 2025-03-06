@@ -7,6 +7,7 @@ import {
   PromiseOrValue,
   type OnParamsEventPayload,
 } from 'graphql-yoga';
+import { handleMaybePromise } from '@whatwg-node/promise-helpers';
 
 // GraphQLErrorOptions interface does not exist in graphql-js v15
 export interface GraphQLErrorOptions {
@@ -117,16 +118,22 @@ export function usePersistedOperations<
   );
 
   return {
-    async onParams(payload) {
+    onParams(payload) {
       const { request, params, setParams } = payload;
 
       if (params.query) {
-        if (
-          (typeof allowArbitraryOperations === 'boolean'
-            ? allowArbitraryOperations
-            : await allowArbitraryOperations(request)) === false
-        ) {
+        if (allowArbitraryOperations === false) {
           throw persistentQueryOnlyErrorFactory(payload);
+        }
+        if (typeof allowArbitraryOperations === 'function') {
+          return handleMaybePromise(
+            () => allowArbitraryOperations(request),
+            result => {
+              if (!result) {
+                throw persistentQueryOnlyErrorFactory(payload);
+              }
+            },
+          );
         }
         return;
       }
@@ -137,33 +144,33 @@ export function usePersistedOperations<
         throw keyNotFoundErrorFactory(payload);
       }
 
-      const persistedQuery = await getPersistedOperation(
-        persistedOperationKey,
-        request,
-        payload.context as TPluginContext,
+      return handleMaybePromise(
+        () =>
+          getPersistedOperation(persistedOperationKey, request, payload.context as TPluginContext),
+        persistedQuery => {
+          if (persistedQuery == null) {
+            throw notFoundErrorFactory(payload);
+          }
+
+          if (typeof persistedQuery === 'object') {
+            setParams({
+              query: `__PERSISTED_OPERATION_${persistedOperationKey}__`,
+              operationName: params.operationName,
+              variables: params.variables,
+              extensions: params.extensions,
+            });
+            operationASTByRequest.set(request, persistedQuery);
+          } else {
+            setParams({
+              query: persistedQuery,
+              operationName: params.operationName,
+              variables: params.variables,
+              extensions: params.extensions,
+            });
+          }
+          persistedOperationRequest.add(request);
+        },
       );
-
-      if (persistedQuery == null) {
-        throw notFoundErrorFactory(payload);
-      }
-
-      if (typeof persistedQuery === 'object') {
-        setParams({
-          query: `__PERSISTED_OPERATION_${persistedOperationKey}__`,
-          operationName: params.operationName,
-          variables: params.variables,
-          extensions: params.extensions,
-        });
-        operationASTByRequest.set(request, persistedQuery);
-      } else {
-        setParams({
-          query: persistedQuery,
-          operationName: params.operationName,
-          variables: params.variables,
-          extensions: params.extensions,
-        });
-      }
-      persistedOperationRequest.add(request);
     },
     onValidate({ setResult, context: { request } }) {
       if (skipDocumentValidation && persistedOperationRequest.has(request)) {

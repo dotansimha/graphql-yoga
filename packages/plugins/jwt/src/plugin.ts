@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql';
 import type { FetchAPI, Plugin, YogaLogger } from 'graphql-yoga';
 import jsonwebtoken, { type Jwt, type JwtPayload, type VerifyOptions } from 'jsonwebtoken';
+import { handleMaybePromise, MaybePromise } from '@whatwg-node/promise-helpers';
 import { ExtractTokenFunctionParams, normalizeConfig, type JwtPluginOptions } from './config.js';
 import { badRequestError, unauthorizedError } from './utils.js';
 
@@ -28,35 +29,75 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
   const payloadByContext = new WeakMap<object, PluginPayload>();
   const payloadByRequest = new WeakMap<Request, PluginPayload>();
   const validatedRequestAndContextSet = new WeakSet<object>();
-  const lookupToken = async (payload: ExtractTokenFunctionParams) => {
-    for (const lookupLocation of normalizedOptions.tokenLookupLocations) {
-      const token = await lookupLocation(payload);
-
-      if (token) {
-        return token;
+  const lookupToken = (payload: ExtractTokenFunctionParams) => {
+    const iterator = normalizedOptions.tokenLookupLocations[Symbol.iterator]();
+    function iterate(): MaybePromise<{
+      token: string;
+      prefix?: string;
+    } | null> {
+      const { done, value } = iterator.next();
+      if (done) {
+        return null;
       }
+      if (!value) {
+        return iterate();
+      }
+      return handleMaybePromise(
+        () => value(payload),
+        result => {
+          if (result?.token) {
+            return result;
+          }
+          return iterate();
+        },
+      );
     }
-
-    return null;
+    return iterate();
   };
 
-  const getSigningKey = async (kid?: string) => {
-    for (const provider of normalizedOptions.signingKeyProviders) {
-      try {
-        const key = await provider(kid);
-
-        if (key) {
-          return key;
-        }
-      } catch (e) {
-        logger.error(`Failed to fetch signing key from signing provided:`, e);
+  const getSigningKey = (kid?: string) => {
+    const iterator = normalizedOptions.signingKeyProviders[Symbol.iterator]();
+    function iterate(): MaybePromise<string | null> {
+      const { done, value } = iterator.next();
+      if (done) {
+        return null;
       }
+      if (!value) {
+        return iterate();
+      }
+      return handleMaybePromise(
+        () => value(kid),
+        key => {
+          if (key) {
+            return key;
+          }
+          return iterate();
+        },
+        e => {
+          logger.error(`Failed to fetch signing key from signing provided:`, e);
+          return iterate();
+        },
+      );
     }
-
-    return null;
+    return iterate();
   };
 
-  const lookupAndValidate = async (payload: ExtractTokenFunctionParams) => {
+  function handleError(e: unknown) {
+    // User-facing errors should be handled based on the configuration.
+    // These errors are handled based on the value of "reject.invalidToken" config.
+    if (e instanceof GraphQLError) {
+      if (normalizedOptions.reject.invalidToken) {
+        throw e;
+      }
+
+      return;
+    }
+
+    // Server/internal errors should be thrown, so they can be handled by the error handler and be masked.
+    throw e;
+  }
+
+  const lookupAndValidate = (payload: ExtractTokenFunctionParams) => {
     // Mark the context and request as validated, so we don't process them again.
     if (payload.serverContext) {
       if (validatedRequestAndContextSet.has(payload.serverContext)) {
@@ -70,93 +111,87 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
       }
       validatedRequestAndContextSet.add(payload.request);
     }
+
     // Try to find token in request, and reject the request if needed.
-    const lookupResult = await lookupToken(payload);
+    return handleMaybePromise(
+      () => lookupToken(payload),
+      lookupResult => {
+        if (!lookupResult) {
+          // If token is missing, we can reject the request based on the configuration.
+          if (normalizedOptions.reject.missingToken) {
+            logger.debug(`Token is missing in incoming HTTP request, JWT plugin failed to locate.`);
+            throw unauthorizedError(`Unauthenticated`);
+          }
 
-    if (!lookupResult) {
-      // If token is missing, we can reject the request based on the configuration.
-      if (normalizedOptions.reject.missingToken) {
-        logger.debug(`Token is missing in incoming HTTP request, JWT plugin failed to locate.`);
-        throw unauthorizedError(`Unauthenticated`);
-      }
+          return;
+        }
 
-      return;
-    }
+        // Decode the token first, in order to get the key id to use.
+        let decodedToken: Jwt | null;
+        try {
+          decodedToken = jsonwebtoken.decode(lookupResult.token, { complete: true });
+        } catch (e) {
+          logger.warn(`Failed to decode JWT authentication token: `, e);
+          throw badRequestError(`Invalid authentication token provided`);
+        }
 
-    try {
-      // Decode the token first, in order to get the key id to use.
-      let decodedToken: Jwt | null;
-      try {
-        decodedToken = jsonwebtoken.decode(lookupResult.token, { complete: true });
-      } catch (e) {
-        logger.warn(`Failed to decode JWT authentication token: `, e);
-        throw badRequestError(`Invalid authentication token provided`);
-      }
+        if (!decodedToken) {
+          logger.warn(
+            `Failed to extract payload from incoming token, please make sure the token is a valid JWT.`,
+          );
 
-      if (!decodedToken) {
-        logger.warn(
-          `Failed to extract payload from incoming token, please make sure the token is a valid JWT.`,
-        );
+          throw badRequestError(`Invalid authentication token provided`);
+        }
 
-        throw badRequestError(`Invalid authentication token provided`);
-      }
+        // Fetch the signing key based on the key id.
+        return handleMaybePromise(
+          () => getSigningKey(decodedToken?.header.kid),
+          signingKey => {
+            if (!signingKey) {
+              logger.warn(
+                `Signing key is not available for the key id: ${decodedToken?.header.kid}. Please make sure signing key providers are configured correctly.`,
+              );
 
-      // Fetch the signing key based on the key id.
-      const signingKey = await getSigningKey(decodedToken?.header.kid);
+              throw Error(`Authentication is not available at the moment.`);
+            }
 
-      if (!signingKey) {
-        logger.warn(
-          `Signing key is not available for the key id: ${decodedToken?.header.kid}. Please make sure signing key providers are configured correctly.`,
-        );
+            // Verify the token with the signing key.
+            return handleMaybePromise(
+              () =>
+                verify(logger, lookupResult.token, signingKey, normalizedOptions.tokenVerification),
+              verified => {
+                if (!verified) {
+                  logger.debug(`Token failed to verify, JWT plugin failed to authenticate.`);
+                  throw unauthorizedError(`Unauthenticated`);
+                }
 
-        throw Error(`Authentication is not available at the moment.`);
-      }
-
-      // Verify the token with the signing key.
-      const verified = await verify(
-        logger,
-        lookupResult.token,
-        signingKey,
-        normalizedOptions.tokenVerification,
-      );
-
-      if (!verified) {
-        logger.debug(`Token failed to verify, JWT plugin failed to authenticate.`);
-        throw unauthorizedError(`Unauthenticated`);
-      }
-
-      if (verified) {
-        // Link the verified payload with the request (see `onContextBuilding` for the reading part)
-        const pluginPayload: PluginPayload = {
-          payload: verified,
-          token: {
-            value: lookupResult.token,
-            prefix: lookupResult.prefix,
+                if (verified) {
+                  // Link the verified payload with the request (see `onContextBuilding` for the reading part)
+                  const pluginPayload: PluginPayload = {
+                    payload: verified,
+                    token: {
+                      value: lookupResult.token,
+                      prefix: lookupResult.prefix,
+                    },
+                  };
+                  if (payload.request) {
+                    payloadByRequest.set(payload.request, pluginPayload);
+                  } else {
+                    payloadByContext.set(payload.serverContext, pluginPayload);
+                  }
+                }
+              },
+              handleError,
+            );
           },
-        };
-        if (payload.request) {
-          payloadByRequest.set(payload.request, pluginPayload);
-        } else {
-          payloadByContext.set(payload.serverContext, pluginPayload);
-        }
-      }
-    } catch (e) {
-      // User-facing errors should be handled based on the configuration.
-      // These errors are handled based on the value of "reject.invalidToken" config.
-      if (e instanceof GraphQLError) {
-        if (normalizedOptions.reject.invalidToken) {
-          throw e;
-        }
-
-        return;
-      }
-
-      // Server/internal errors should be thrown, so they can be handled by the error handler and be masked.
-      throw e;
-    }
+          handleError,
+        );
+      },
+      handleError,
+    );
   };
 
-  async function ensureContext({
+  function ensureContext({
     request,
     url,
     serverContext,
@@ -176,23 +211,29 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
     }
 
     // Ensure the request has been validated before extending the context.
-    await lookupAndValidate({
-      request,
-      url,
-      serverContext,
-    });
+    return handleMaybePromise(
+      () =>
+        lookupAndValidate({
+          request,
+          url,
+          serverContext,
+        }),
+      () => {
+        // Then check the result
+        const result = request
+          ? payloadByRequest.get(request)
+          : payloadByContext.get(serverContext);
 
-    // Then check the result
-    const result = request ? payloadByRequest.get(request) : payloadByContext.get(serverContext);
-
-    if (result && normalizedOptions.extendContextFieldName) {
-      extendContext({
-        [normalizedOptions.extendContextFieldName]: {
-          payload: result.payload,
-          token: result.token,
-        },
-      });
-    }
+        if (result && normalizedOptions.extendContextFieldName) {
+          extendContext({
+            [normalizedOptions.extendContextFieldName]: {
+              payload: result.payload,
+              token: result.token,
+            },
+          });
+        }
+      },
+    );
   }
 
   let fetchAPI: FetchAPI;
