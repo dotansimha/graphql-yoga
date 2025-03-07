@@ -16,22 +16,23 @@ We will use `graphql-yoga` which has an agnostic HTTP handler using
 
 ## Example
 
-Create a `deno.json` file.
-[Learn more about import maps](https://deno.land/manual/basics/import_maps)
+Create a Deno project:
+
+```bash
+deno init my-project
+cd my-project
+```
+
+Add `graphql-yoga` to the project:
+
+```bash
+deno add npm:graphql-yoga
+```
 
 Create a `deno-yoga.ts` file:
 
-```json filename="deno.json" {3}
-{
-  "imports": {
-    "graphql-yoga": "npm:graphql-yoga@^3.7.3"
-  }
-}
-```
-
 ```ts filename="deno-yoga.ts"
 import { createSchema, createYoga } from 'graphql-yoga'
-import { serve } from 'https://deno.land/std@0.157.0/http/server.ts'
 
 const yoga = createYoga({
   schema: createSchema({
@@ -48,11 +49,7 @@ const yoga = createYoga({
   })
 })
 
-serve(yoga, {
-  onListen({ hostname, port }) {
-    console.log(`Listening on http://${hostname}:${port}/${yoga.graphqlEndpoint}`)
-  }
-})
+Deno.serve({ port: 4000 }, yoga)
 ```
 
 And run it:
