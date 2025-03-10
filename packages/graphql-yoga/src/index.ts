@@ -17,6 +17,7 @@ export {
   type Optional,
   type PromiseOrValue,
   type Spread,
+  type AsyncIterableIteratorOrValue,
   // useful for anyone creating a new envelop instance
   envelop,
   errorAsyncIterator,
