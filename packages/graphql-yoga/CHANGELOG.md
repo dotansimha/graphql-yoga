@@ -1,5 +1,14 @@
 # graphql-yoga
 
+## 5.13.2
+
+### Patch Changes
+
+- [#3876](https://github.com/dotansimha/graphql-yoga/pull/3876)
+  [`abe91bd`](https://github.com/dotansimha/graphql-yoga/commit/abe91bd9039376f50b81babae61bcfb8f7e01a36)
+  Thanks [@EmrysMyrddin](https://github.com/EmrysMyrddin)! - Re-export the utility type
+  `AsyncIterableIteratorOrValue` from `@envelop/core`.
+
 ## 5.13.1
 
 ### Patch Changes
