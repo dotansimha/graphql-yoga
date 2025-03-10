@@ -1,5 +1,13 @@
 # @graphql-yoga/plugin-jwt
 
+## 3.7.3
+
+### Patch Changes
+
+- Updated dependencies
+  [[`abe91bd`](https://github.com/dotansimha/graphql-yoga/commit/abe91bd9039376f50b81babae61bcfb8f7e01a36)]:
+  - graphql-yoga@5.13.2
+
 ## 3.7.2
 
 ### Patch Changes
