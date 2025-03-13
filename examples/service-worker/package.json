@@ -3,7 +3,7 @@
   "version": "0.12.3",
   "private": true,
   "scripts": {
-    "build": "wrangler publish --dry-run --outdir=dist",
+    "build": "wrangler deploy --dry-run --outdir=dist",
     "check": "tsc --pretty --noEmit",
     "start": "wrangler dev",
     "test": "jest"
@@ -15,6 +15,6 @@
   "devDependencies": {
     "@whatwg-node/fetch": "^0.10.1",
     "typescript": "5.8.2",
-    "wrangler": "3.114.1"
+    "wrangler": "4.0.0"
   }
 }
