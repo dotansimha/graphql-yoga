@@ -3,7 +3,7 @@
   "version": "0.12.3",
   "private": true,
   "scripts": {
-    "build": "wrangler publish --dry-run --outdir=dist",
+    "build": "wrangler deploy --dry-run --outdir=dist",
     "check": "tsc --pretty --noEmit",
     "start": "wrangler dev",
     "test": "jest"
