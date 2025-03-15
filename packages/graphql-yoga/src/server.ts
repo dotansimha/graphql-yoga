@@ -690,7 +690,7 @@ export class YogaServer<
         }
         const getResultForParams = this.instrumentation?.operation
           ? (payload: { request: Request; params: GraphQLParams }, context: any) => {
-              const instrumented = getInstrumented({ context });
+              const instrumented = getInstrumented({ context, request: payload.request });
               const tracedHandler = instrumented.asyncFn(
                 this.instrumentation?.operation,
                 this.getResultForParams,
