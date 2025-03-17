@@ -96,7 +96,7 @@ export type Instrumentation<TContext extends Record<string, any>> =
   EnvelopInstrumentation<TContext> &
     ServerAdapterInstrumentation & {
       operation?: (
-        payload: { context: TContext },
+        payload: { context: TContext; request: Request },
         wrapped: () => PromiseOrValue<void>,
       ) => PromiseOrValue<void>;
       requestParse?: (
