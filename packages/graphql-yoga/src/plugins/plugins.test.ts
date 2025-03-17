@@ -2,6 +2,7 @@ import { AfterValidateHook } from '@envelop/core';
 import { createGraphQLError } from '@graphql-tools/utils';
 import { createSchema } from '../schema.js';
 import { createYoga } from '../server.js';
+import { maskError } from '../utils/mask-error.js';
 import { Plugin } from './types.js';
 
 const schema = createSchema({
@@ -52,6 +53,40 @@ describe('Yoga Plugins', () => {
           message: 'My Error',
         },
       ],
+    });
+  });
+
+  describe('onValidate', () => {
+    it('should mask errors', async () => {
+      const onValidatePlugin: Plugin = {
+        onValidate({ setResult }) {
+          setResult([
+            createGraphQLError('UNMASKED ERROR', { extensions: { code: 'VALIDATION_ERROR' } }),
+          ]);
+        },
+      };
+      const yoga = createYoga({
+        plugins: [onValidatePlugin],
+        schema,
+        maskedErrors: {
+          maskError(error) {
+            return maskError(error, 'MASKED ERROR');
+          },
+        },
+      });
+      const response = await yoga.fetch('http://localhost:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: '{hello}',
+        }),
+      });
+      const result = await response.json();
+      expect(result).toMatchObject({
+        errors: [{ message: 'MASKED ERROR' }],
+      });
     });
   });
 });
