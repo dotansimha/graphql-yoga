@@ -25,19 +25,19 @@ jobs:
           fetch-depth: 0
 
       - name: Install Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
         with:
           node-version-file: '.node-version'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4.1.0
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
 
       - name: Get pnpm store path
         id: pnpm-store
         run: echo "PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Cache pnpm
-        uses: actions/cache@v4
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
         with:
           path: |
             ${{ steps.pnpm-store.outputs.PATH }}

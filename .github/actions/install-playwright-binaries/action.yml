@@ -19,7 +19,7 @@ runs:
   using: composite
   steps:
     - name: Get Playwright version
-      uses: actions/github-script@v7
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
       id: version
       with:
         script: |
@@ -43,7 +43,7 @@ runs:
 
     - name: Cache Playwright
       id: cache
-      uses: actions/cache@v4
+      uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
       with:
         path: ~/.cache/ms-playwright
         key: playwright-${{ env.PLAYWRIGHT_VERSION }}
