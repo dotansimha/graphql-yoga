@@ -43,7 +43,7 @@ jobs:
 
       - name: Publish a message
         if: always() && contains(steps.diff_result.outputs.result, 'diff')
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2
         with:
           message: |
             ```diff
