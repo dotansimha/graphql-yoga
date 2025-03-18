@@ -41,7 +41,7 @@ export function createCFDeployment(
     },
     program: async () => {
       const stackName = pulumi.getStack();
-      const workerUrl = `e2e.graphql-yoga.com/${stackName}`;
+      const workerUrl = `e2e.graphql.yoga/${stackName}`;
 
       // Deploy CF script as Worker
       const workerScript = new cf.WorkerScript('worker', {
