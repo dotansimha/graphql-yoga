@@ -220,7 +220,7 @@ jobs:
       - name: Add Rover to PATH
         run: echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Apollo Federation Subgraph Compatibility
-        uses: apollographql/federation-subgraph-compatibility@v2
+        uses: apollographql/federation-subgraph-compatibility@e92e69ea3a847b5136152c2d1525168c906ddb88 # v2
         with:
           workingDirectory: examples/apollo-federation-compatibility
           compose: docker-compose.yaml
