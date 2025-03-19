@@ -139,8 +139,8 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
       wrangler:
-        specifier: 4.1.0
-        version: 4.1.0(@cloudflare/workers-types@4.20250317.0)
+        specifier: 4.2.0
+        version: 4.2.0(@cloudflare/workers-types@4.20250317.0)
 
   benchmark:
     dependencies:
@@ -315,8 +315,8 @@ importers:
         specifier: 22.13.10
         version: 22.13.10
       aws-cdk:
-        specifier: 2.1004.0
-        version: 2.1004.0
+        specifier: 2.1005.0
+        version: 2.1005.0
       aws-cdk-lib:
         specifier: 2.184.1
         version: 2.184.1(constructs@3.4.344)
@@ -380,8 +380,8 @@ importers:
         specifier: 5.98.0
         version: 5.98.0(@swc/core@1.11.9(@swc/helpers@0.5.15))
       wrangler:
-        specifier: 4.1.0
-        version: 4.1.0(@cloudflare/workers-types@4.20250313.0)
+        specifier: 4.2.0
+        version: 4.2.0(@cloudflare/workers-types@4.20250313.0)
 
   examples/cloudflare-modules:
     dependencies:
@@ -402,8 +402,8 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
       wrangler:
-        specifier: 4.1.0
-        version: 4.1.0(@cloudflare/workers-types@4.20250317.0)
+        specifier: 4.2.0
+        version: 4.2.0(@cloudflare/workers-types@4.20250317.0)
 
   examples/cookies:
     dependencies:
@@ -1339,8 +1339,8 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
       wrangler:
-        specifier: 4.1.0
-        version: 4.1.0(@cloudflare/workers-types@4.20250317.0)
+        specifier: 4.2.0
+        version: 4.2.0(@cloudflare/workers-types@4.20250317.0)
 
   examples/sofa:
     dependencies:
@@ -8855,8 +8855,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1004.0:
-    resolution: {integrity: sha512-3E5ICmSc7ZCZCwLX7NY+HFmmdUYgRaL+67h/BDoDQmkhx9StC8wG4xgzHFY9k8WQS0+ib/MP28f2d9yzHtQLlQ==}
+  aws-cdk@2.1005.0:
+    resolution: {integrity: sha512-4ejfGGrGCEl0pg1xcqkxK0lpBEZqNI48wtrXhk6dYOFYPYMZtqn1kdla29ONN+eO2unewkNF4nLP1lPYhlf9Pg==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
 
@@ -13679,8 +13679,8 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
-  miniflare@4.20250317.0:
-    resolution: {integrity: sha512-fCyFTa3G41Vyo24QUZD5xgdm+6RMKT6VC3vk9Usmr+Pwf/15HcH1AVLPVgzmJaJosWVb8r4S0HQ9a/+bmmZx0Q==}
+  miniflare@4.20250317.1:
+    resolution: {integrity: sha512-FFReRGco05fkgAB/x9VmxTuQ3KXW4JcpKkpuMZJn+JoZ2dd8hY5J1W9HBI4tSwfQ+hVyd9X7oXbn4BimoD3i8A==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -17353,8 +17353,8 @@ packages:
   workerpool@6.5.1:
     resolution: {integrity: sha512-Fs4dNYcsdpYSAfVxhnl1L5zTksjvOJxtC5hzMNl+1t9B8hTJTdKDyZ5ju7ztgPy+ft9tBFXoOlDNiOT9WUXZlA==}
 
-  wrangler@4.1.0:
-    resolution: {integrity: sha512-HcQZ2YappySGipEDEdbjMq01g3v+mv+xZYZSzwPTmRsoTfnbL5yteObshcK1JX9jdx7Qw23Ywd/4BPa1JyKIUQ==}
+  wrangler@4.2.0:
+    resolution: {integrity: sha512-wY+jq6tsaBVrxCesJ9NF9R63T+96W6Ht9xEkAdw9JnkstUWM6lGywMOeupYP8Ji8x4roNa98XrT0Gw8qu+QRNQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
@@ -26121,7 +26121,7 @@ snapshots:
       '@aws-cdk/cloud-assembly-schema': 40.7.0
       constructs: 3.4.344
 
-  aws-cdk@2.1004.0:
+  aws-cdk@2.1005.0:
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -32570,7 +32570,7 @@ snapshots:
 
   min-indent@1.0.1: {}
 
-  miniflare@4.20250317.0:
+  miniflare@4.20250317.1:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       acorn: 8.14.0
@@ -37067,13 +37067,13 @@ snapshots:
 
   workerpool@6.5.1: {}
 
-  wrangler@4.1.0(@cloudflare/workers-types@4.20250313.0):
+  wrangler@4.2.0(@cloudflare/workers-types@4.20250313.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@cloudflare/unenv-preset': 2.0.2(unenv@2.0.0-rc.14)(workerd@1.20250317.0)
       blake3-wasm: 2.1.5
       esbuild: 0.24.2
-      miniflare: 4.20250317.0
+      miniflare: 4.20250317.1
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.14
       workerd: 1.20250317.0
@@ -37085,13 +37085,13 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  wrangler@4.1.0(@cloudflare/workers-types@4.20250317.0):
+  wrangler@4.2.0(@cloudflare/workers-types@4.20250317.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@cloudflare/unenv-preset': 2.0.2(unenv@2.0.0-rc.14)(workerd@1.20250317.0)
       blake3-wasm: 2.1.5
       esbuild: 0.24.2
-      miniflare: 4.20250317.0
+      miniflare: 4.20250317.1
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.14
       workerd: 1.20250317.0
