@@ -1696,8 +1696,8 @@ importers:
         specifier: ^1.18.0
         version: 1.22.4(graphql@16.10.0)
       graphql-scalars:
-        specifier: 1.24.1
-        version: 1.24.1(graphql@16.10.0)
+        specifier: 1.24.2
+        version: 1.24.2(graphql@16.10.0)
       graphql-sse:
         specifier: 2.5.4
         version: 2.5.4(graphql@16.10.0)
@@ -11692,6 +11692,12 @@ packages:
 
   graphql-scalars@1.24.1:
     resolution: {integrity: sha512-3L553TMPh3YpHQM4x9G4tXcyD+AX8QQOYA6tUn1nrNiWEXE0JfAnWdjoe3WGxRuGjnZrzvHDz62q8S+sSGXXwA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: 16.10.0
+
+  graphql-scalars@1.24.2:
+    resolution: {integrity: sha512-FoZ11yxIauEnH0E5rCUkhDXHVn/A6BBfovJdimRZCQlFCl+h7aVvarKmI15zG4VtQunmCDdqdtNs6ixThy3uAg==}
     engines: {node: '>=10'}
     peerDependencies:
       graphql: 16.10.0
@@ -29870,6 +29876,11 @@ snapshots:
       - encoding
 
   graphql-scalars@1.24.1(graphql@16.10.0):
+    dependencies:
+      graphql: 16.10.0
+      tslib: 2.8.1
+
+  graphql-scalars@1.24.2(graphql@16.10.0):
     dependencies:
       graphql: 16.10.0
       tslib: 2.8.1
