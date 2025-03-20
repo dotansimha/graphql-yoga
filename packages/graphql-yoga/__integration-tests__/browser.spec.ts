@@ -18,7 +18,7 @@ import 'json-bigint-patch';
 import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { setTimeout as setTimeout$ } from 'node:timers/promises';
-// @see https://github.com/dotansimha/graphql-yoga/pull/3543#issuecomment-2537035739
+// @see https://github.com/graphql-hive/graphql-yoga/pull/3543#issuecomment-2537035739
 // eslint-disable-next-line
 import { Browser, chromium, ElementHandle, Page } from 'playwright';
 import { fakePromise } from '@whatwg-node/server';

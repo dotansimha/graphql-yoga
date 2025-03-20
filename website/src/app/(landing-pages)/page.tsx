@@ -61,7 +61,7 @@ export default function IndexPage() {
         <CallToAction variant="secondary-inverted" href="/changelog">
           Changelog
         </CallToAction>
-        <CallToAction variant="tertiary" href="https://github.com/dotansimha/graphql-yoga">
+        <CallToAction variant="tertiary" href="https://github.com/graphql-hive/graphql-yoga">
           <GitHubIcon className="size-6" />
           GitHub
         </CallToAction>

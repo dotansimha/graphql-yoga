@@ -49,7 +49,7 @@ const RootLayout: FC<{
       description={description}
       logo={<PRODUCTS.YOGA.logo className="w-8 h-auto" />}
       layoutProps={{
-        docsRepositoryBase: 'https://github.com/dotansimha/graphql-yoga/tree/main/website',
+        docsRepositoryBase: 'https://github.com/graphql-hive/graphql-yoga/tree/main/website',
       }}
       pageMap={pageMap}
       navbarProps={{
@@ -62,7 +62,7 @@ const RootLayout: FC<{
           },
           { href: 'https://the-guild.dev/blog', icon: <PencilIcon />, children: 'Blog' },
           {
-            href: 'https://github.com/dotansimha/graphql-yoga',
+            href: 'https://github.com/graphql-hive/graphql-yoga',
             icon: <GitHubIcon />,
             children: 'GitHub',
           },

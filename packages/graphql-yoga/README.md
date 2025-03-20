@@ -14,7 +14,7 @@
 ![bundlephobia minified size](https://badgen.net/bundlephobia/min/graphql-yoga)
 ![bundlephobia minified+zipped size](https://badgen.net/bundlephobia/minzip/graphql-yoga)
 ![bundlephobia treeshaking](https://badgen.net/bundlephobia/tree-shaking/graphql-yoga)
-![license](https://badgen.net/github/license/dotansimha/graphql-yoga)
+![license](https://badgen.net/github/license/graphql-hive/graphql-yoga)
 
 </div>
 
@@ -95,11 +95,11 @@ server.listen(4000, () => {
 Our [documentation website](https://www.the-guild.dev/graphql/yoga-server/docs) will help you get
 started.
 
-## [Examples](https://github.com/dotansimha/graphql-yoga/tree/main/examples)
+## [Examples](https://github.com/graphql-hive/graphql-yoga/tree/main/examples)
 
 We've made sure developers can quickly start with GraphQL Yoga by providing a comprehensive set of
 examples.
-[See all of them in the `examples/` folder.](https://github.com/dotansimha/graphql-yoga/tree/main/examples)
+[See all of them in the `examples/` folder.](https://github.com/graphql-hive/graphql-yoga/tree/main/examples)
 
 ## [Comparison](https://www.the-guild.dev/graphql/yoga-server/docs/comparison)
 
