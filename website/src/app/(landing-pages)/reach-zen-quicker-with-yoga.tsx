@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentProps, FC } from 'react';
 import { CallToAction, cn, Heading, ComparisonTable as Table } from '@theguild/components';
 import ComparisonTable from '../comparison-table.mdx';
