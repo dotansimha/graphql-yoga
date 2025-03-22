@@ -1,9 +1,9 @@
-<div align="center"><img src="./website/public/cover.png" width="720" /></div>
+<div align="center"><img src="/website/public/cover.png" width="720" /></div>
 
 <div align="center">
   <h3>GraphQL Yoga</h3>
   <h6>Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience</h6>
-  <a href="https://www.the-guild.dev/graphql/yoga-server/docs"><b>Go to documenation</b></a>
+  <a href="https://www.the-guild.dev/graphql/yoga-server/docs"><b>Go to documentation</b></a>
 </div>
 
 <br />
