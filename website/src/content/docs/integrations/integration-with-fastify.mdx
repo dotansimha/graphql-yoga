@@ -50,22 +50,11 @@ app.route({
   // Bind to the Yoga's endpoint to avoid rendering on any path
   url: yoga.graphqlEndpoint,
   method: ['GET', 'POST', 'OPTIONS'],
-  handler: async (req, reply) => {
-    // Second parameter adds Fastify's `req` and `reply` to the GraphQL Context
-    const response = await yoga.handleNodeRequestAndResponse(req, reply, {
+  handler: (req, reply) =>
+    yoga.handleNodeRequestAndResponse(req, reply, {
       req,
       reply
     })
-    response.headers.forEach((value, key) => {
-      reply.header(key, value)
-    })
-
-    reply.status(response.status)
-
-    reply.send(response.body)
-
-    return reply
-  }
 })
 
 app.listen({ port: 4000 })
