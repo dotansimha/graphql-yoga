@@ -1650,8 +1650,8 @@ importers:
         specifier: ^1.2.4
         version: 1.2.4
       '@whatwg-node/server':
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.2
+        version: 0.10.3
       dset:
         specifier: ^3.1.4
         version: 3.1.4
@@ -1868,8 +1868,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.2
+        version: 0.10.3
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1891,8 +1891,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.2
+        version: 0.10.3
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1973,8 +1973,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       '@whatwg-node/server':
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.2
+        version: 0.10.3
       fetch-multipart-graphql:
         specifier: 3.2.2
         version: 3.2.2
@@ -2176,8 +2176,8 @@ importers:
         specifier: 8.2.5
         version: 8.2.5
       '@whatwg-node/server':
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.2
+        version: 0.10.3
       ioredis-mock:
         specifier: 8.9.0
         version: 8.9.0(@types/ioredis-mock@8.2.5)(ioredis@5.6.0)
@@ -7890,12 +7890,16 @@ packages:
     resolution: {integrity: sha512-+yFJU3hmXPAHJULwx0VzCIsvr/H0lvbPvbOH3areOH3NAuCxCwaJsQ8w6/MwwMcvEWIynSsmAxoyaH04KeosPg==}
     engines: {node: '>=18.0.0'}
 
-  '@whatwg-node/node-fetch@0.7.12':
-    resolution: {integrity: sha512-ec9ZPDImceXD9gShv0VTc6q0waZ7ccpiYXNbAeGMjGQAZ8hkAeAYOXoiJsfaHO5Pt0UR+SbNVTJGP2aeFMYz0Q==}
+  '@whatwg-node/node-fetch@0.7.15':
+    resolution: {integrity: sha512-5Y2Xx488m6rxPD9f+E0N5yLrQTXEmq/Zzy6hR2lV8UteDzfjCMiGXSTWO+EJ3b3M87MZm2T41/BeGQZLFAoR3Q==}
     engines: {node: '>=18.0.0'}
 
   '@whatwg-node/promise-helpers@1.2.4':
     resolution: {integrity: sha512-daEUfaHbaMuAcor+FPAVK+pOCSzsAYhK6LN1y81EcakdqQEPQvjm74PTmfwfv8POg8pw4RyCv9LXB1e+mQDwqg==}
+    engines: {node: '>=16.0.0'}
+
+  '@whatwg-node/promise-helpers@1.3.0':
+    resolution: {integrity: sha512-486CouizxHXucj8Ky153DDragfkMcHtVEToF5Pn/fInhUUSiCmt9Q4JVBa6UK5q4RammFBtGQ4C9qhGlXU9YbA==}
     engines: {node: '>=16.0.0'}
 
   '@whatwg-node/server-plugin-cookies@1.0.5':
@@ -7904,6 +7908,10 @@ packages:
 
   '@whatwg-node/server@0.10.1':
     resolution: {integrity: sha512-SKZjZAhQe8o34pDHUDFn5PV5Otq/gaj/A6AlQ6Sa4+A12YBO0znKKwfoCwGxv/BSRRx0zUqLdI8fZ0ui+EyUlw==}
+    engines: {node: '>=18.0.0'}
+
+  '@whatwg-node/server@0.10.3':
+    resolution: {integrity: sha512-2Dnfey57vWR+hDUMjPhNzJQc9z116BBzSQwR9eD0vhnzYmN2rJXuY0QuMaHDCCqEZRmFHg2bo8iJ+/1uHOlxpg==}
     engines: {node: '>=18.0.0'}
 
   '@wry/caches@1.0.1':
@@ -24179,17 +24187,21 @@ snapshots:
 
   '@whatwg-node/fetch@0.10.5':
     dependencies:
-      '@whatwg-node/node-fetch': 0.7.12
+      '@whatwg-node/node-fetch': 0.7.15
       urlpattern-polyfill: 10.0.0
 
-  '@whatwg-node/node-fetch@0.7.12':
+  '@whatwg-node/node-fetch@0.7.15':
     dependencies:
       '@whatwg-node/disposablestack': 0.0.6
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       busboy: 1.6.0
       tslib: 2.8.1
 
   '@whatwg-node/promise-helpers@1.2.4':
+    dependencies:
+      tslib: 2.8.1
+
+  '@whatwg-node/promise-helpers@1.3.0':
     dependencies:
       tslib: 2.8.1
 
@@ -24205,6 +24217,14 @@ snapshots:
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/fetch': 0.10.5
       '@whatwg-node/promise-helpers': 1.2.4
+      tslib: 2.8.1
+
+  '@whatwg-node/server@0.10.3':
+    dependencies:
+      '@envelop/instrumentation': 1.0.0
+      '@whatwg-node/disposablestack': 0.0.6
+      '@whatwg-node/fetch': 0.10.5
+      '@whatwg-node/promise-helpers': 1.3.0
       tslib: 2.8.1
 
   '@wry/caches@1.0.1':
@@ -27652,7 +27672,7 @@ snapshots:
       '@sinclair/typebox': 0.34.30
       '@whatwg-node/cookie-store': 0.2.3
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/server': 0.10.1
+      '@whatwg-node/server': 0.10.3
       hotscript: 1.0.13
       json-schema-to-ts: 3.1.1
       qs: 6.14.0
