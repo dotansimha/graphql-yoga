@@ -318,8 +318,8 @@ importers:
         specifier: 22.13.13
         version: 22.13.13
       aws-cdk:
-        specifier: 2.1005.0
-        version: 2.1005.0
+        specifier: 2.1006.0
+        version: 2.1006.0
       aws-cdk-lib:
         specifier: 2.185.0
         version: 2.185.0(constructs@3.4.344)
@@ -549,8 +549,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.5
       fastify:
-        specifier: 5.2.1
-        version: 5.2.1
+        specifier: 5.2.2
+        version: 5.2.2
       graphql-yoga:
         specifier: workspace:*
         version: link:../../packages/graphql-yoga/dist
@@ -577,8 +577,8 @@ importers:
         specifier: 7.0.1
         version: 7.0.1(graphql@16.10.0)
       fastify:
-        specifier: 5.2.1
-        version: 5.2.1
+        specifier: 5.2.2
+        version: 5.2.2
       graphql-modules:
         specifier: 3.0.0
         version: 3.0.0(graphql@16.10.0)
@@ -615,8 +615,8 @@ importers:
   examples/file-upload-nextjs-pothos:
     dependencies:
       '@pothos/core':
-        specifier: 4.5.0
-        version: 4.5.0(graphql@16.10.0)
+        specifier: 4.5.1
+        version: 4.5.1(graphql@16.10.0)
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1217,8 +1217,8 @@ importers:
   examples/pothos:
     dependencies:
       '@pothos/core':
-        specifier: 4.5.0
-        version: 4.5.0(graphql@16.10.0)
+        specifier: 4.5.1
+        version: 4.5.1(graphql@16.10.0)
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -6129,8 +6129,8 @@ packages:
   '@polka/url@1.0.0-next.28':
     resolution: {integrity: sha512-8LduaNlMZGwdZ6qWrKlfa+2M4gahzFkprZiAt2TF8uS0qQgBizKXpXURqvTJ4WtmupWxaLqjRb2UCTe72mu+Aw==}
 
-  '@pothos/core@4.5.0':
-    resolution: {integrity: sha512-OBktnbaTkcS3pZMGCC2375tNSypsvVRP2SJSjN0VW9MXlJFP9+2lZTNeKyGFndTH5QLbxoLUe3nUSVdkBHMLzA==}
+  '@pothos/core@4.5.1':
+    resolution: {integrity: sha512-zGjgeKy9IWMtqW5lmYuRmxHJegM+O545cSVrcfLEj1i3eRX9ee8ae/2JQGjyN1N2Dd57MVoelr/aN/wjJcW/GA==}
     peerDependencies:
       graphql: 16.10.0
 
@@ -8323,8 +8323,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1005.0:
-    resolution: {integrity: sha512-4ejfGGrGCEl0pg1xcqkxK0lpBEZqNI48wtrXhk6dYOFYPYMZtqn1kdla29ONN+eO2unewkNF4nLP1lPYhlf9Pg==}
+  aws-cdk@2.1006.0:
+    resolution: {integrity: sha512-6qYnCt4mBN+3i/5F+FC2yMETkDHY/IL7gt3EuqKVPcaAO4jU7oXfVSlR60CYRkZWL4fnAurUV14RkJuJyVG/IA==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
 
@@ -10539,6 +10539,9 @@ packages:
 
   fastify@5.2.1:
     resolution: {integrity: sha512-rslrNBF67eg8/Gyn7P2URV8/6pz8kSAscFL4EThZJ8JBMaXacVdVE4hmUcnPNKERl5o/xTiBSLfdowBRhVF1WA==}
+
+  fastify@5.2.2:
+    resolution: {integrity: sha512-22T/PnhquWozuFXg3Ish4md5ipsF1Nx1mJ9ulLdZPXSk14WFj/wMlyNB/yll9sQOojKRgOIxT2inK3Xpjg5hyw==}
 
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
@@ -21914,7 +21917,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.28': {}
 
-  '@pothos/core@4.5.0(graphql@16.10.0)':
+  '@pothos/core@4.5.1(graphql@16.10.0)':
     dependencies:
       graphql: 16.10.0
 
@@ -24525,7 +24528,7 @@ snapshots:
       '@aws-cdk/cloud-assembly-schema': 40.7.0
       constructs: 3.4.344
 
-  aws-cdk@2.1005.0:
+  aws-cdk@2.1006.0:
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -27408,6 +27411,24 @@ snapshots:
       toad-cache: 3.7.0
 
   fastify@5.2.1:
+    dependencies:
+      '@fastify/ajv-compiler': 4.0.2
+      '@fastify/error': 4.1.0
+      '@fastify/fast-json-stringify-compiler': 5.0.2
+      '@fastify/proxy-addr': 5.0.0
+      abstract-logging: 2.0.1
+      avvio: 9.1.0
+      fast-json-stringify: 6.0.1
+      find-my-way: 9.3.0
+      light-my-request: 6.6.0
+      pino: 9.6.0
+      process-warning: 4.0.1
+      rfdc: 1.4.1
+      secure-json-parse: 3.0.2
+      semver: 7.7.1
+      toad-cache: 3.7.0
+
+  fastify@5.2.2:
     dependencies:
       '@fastify/ajv-compiler': 4.0.2
       '@fastify/error': 4.1.0
