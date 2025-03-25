@@ -80,10 +80,10 @@ importers:
         version: 6.0.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.18.0
-        version: 8.26.1(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+        version: 8.27.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
       '@typescript-eslint/parser':
         specifier: ^8.18.0
-        version: 8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+        version: 8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
       babel-jest:
         specifier: ^29.0.0
         version: 29.7.0(@babel/core@7.26.10)
@@ -365,7 +365,7 @@ importers:
     dependencies:
       '@cloudflare/workers-types':
         specifier: ^4.0.0
-        version: 4.20250319.0
+        version: 4.20250321.0
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -384,7 +384,7 @@ importers:
         version: 5.98.0(@swc/core@1.11.9(@swc/helpers@0.5.15))
       wrangler:
         specifier: 4.4.0
-        version: 4.4.0(@cloudflare/workers-types@4.20250319.0)
+        version: 4.4.0(@cloudflare/workers-types@4.20250321.0)
 
   examples/cloudflare-modules:
     dependencies:
@@ -1465,7 +1465,7 @@ importers:
     dependencies:
       '@types/node':
         specifier: ^22.0.0
-        version: 22.13.10
+        version: 22.13.11
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -1477,7 +1477,7 @@ importers:
         version: link:../../packages/graphql-yoga/dist
       ts-node-dev:
         specifier: ^2.0.0
-        version: 2.0.0(@swc/core@1.11.9(@swc/helpers@0.5.15))(@types/node@22.13.10)(typescript@5.8.2)
+        version: 2.0.0(@swc/core@1.11.9(@swc/helpers@0.5.15))(@types/node@22.13.11)(typescript@5.8.2)
       typescript:
         specifier: ^5.0.0
         version: 5.8.2
@@ -1648,7 +1648,7 @@ importers:
         version: 0.10.5
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
       '@whatwg-node/server':
         specifier: ^0.10.2
         version: 0.10.3
@@ -1914,7 +1914,7 @@ importers:
         version: link:../apollo-inline-trace/dist
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -1937,7 +1937,7 @@ importers:
     dependencies:
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
     devDependencies:
       '@apollo/client':
         specifier: 3.13.5
@@ -1993,7 +1993,7 @@ importers:
     dependencies:
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
     devDependencies:
       graphql:
         specifier: 16.10.0
@@ -2007,7 +2007,7 @@ importers:
     dependencies:
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -2027,7 +2027,7 @@ importers:
     dependencies:
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
       '@whatwg-node/server-plugin-cookies':
         specifier: ^1.0.3
         version: 1.0.5
@@ -2068,7 +2068,7 @@ importers:
     dependencies:
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
     devDependencies:
       graphql:
         specifier: 16.10.0
@@ -2114,7 +2114,7 @@ importers:
         version: 7.1.3(@envelop/core@5.2.3)(graphql@16.10.0)
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
     devDependencies:
       graphql:
         specifier: 16.10.0
@@ -2134,7 +2134,7 @@ importers:
         version: 10.8.6(graphql@16.10.0)
       '@whatwg-node/promise-helpers':
         specifier: ^1.2.4
-        version: 1.2.4
+        version: 1.3.0
       graphql:
         specifier: 16.10.0
         version: 16.10.0
@@ -3880,9 +3880,6 @@ packages:
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
-
-  '@cloudflare/workers-types@4.20250319.0':
-    resolution: {integrity: sha512-TTg1WZZuWJomzU3g1TvqE/WWI3zpTu1K+RsJvk6zxEgjhONN2PzqUUqKVYOQBk4/p7d+v7h6wz2gX3Ke7Arm7g==}
 
   '@cloudflare/workers-types@4.20250321.0':
     resolution: {integrity: sha512-jPwtZJC7tVFOwFazuwq96be8haTnY9qik8hJ+oLFi50d9LTWPPrnrNHC4OxZmJTEcPIAy0y1WFZHe8C/b7xFXQ==}
@@ -7534,9 +7531,6 @@ packages:
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
-  '@types/node@22.13.10':
-    resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
-
   '@types/node@22.13.11':
     resolution: {integrity: sha512-iEUCUJoU0i3VnrCmgoWCXttklWcvoCIx4jzcP22fioIVSdTmjgoEvmAO/QPw6TcS9k5FrNgn4w7q5lGOd1CT5g==}
 
@@ -7890,13 +7884,9 @@ packages:
     resolution: {integrity: sha512-+yFJU3hmXPAHJULwx0VzCIsvr/H0lvbPvbOH3areOH3NAuCxCwaJsQ8w6/MwwMcvEWIynSsmAxoyaH04KeosPg==}
     engines: {node: '>=18.0.0'}
 
-  '@whatwg-node/node-fetch@0.7.15':
-    resolution: {integrity: sha512-5Y2Xx488m6rxPD9f+E0N5yLrQTXEmq/Zzy6hR2lV8UteDzfjCMiGXSTWO+EJ3b3M87MZm2T41/BeGQZLFAoR3Q==}
+  '@whatwg-node/node-fetch@0.7.16':
+    resolution: {integrity: sha512-zetssGROWTcIFsErXiFZAclwracSffbcbbpYbdpBG0pjgUkQ54TjtrB7PsaHrLnF/mxJp0KIPgczpKzk68QMsg==}
     engines: {node: '>=18.0.0'}
-
-  '@whatwg-node/promise-helpers@1.2.4':
-    resolution: {integrity: sha512-daEUfaHbaMuAcor+FPAVK+pOCSzsAYhK6LN1y81EcakdqQEPQvjm74PTmfwfv8POg8pw4RyCv9LXB1e+mQDwqg==}
-    engines: {node: '>=16.0.0'}
 
   '@whatwg-node/promise-helpers@1.3.0':
     resolution: {integrity: sha512-486CouizxHXucj8Ky153DDragfkMcHtVEToF5Pn/fInhUUSiCmt9Q4JVBa6UK5q4RammFBtGQ4C9qhGlXU9YbA==}
@@ -7904,10 +7894,6 @@ packages:
 
   '@whatwg-node/server-plugin-cookies@1.0.5':
     resolution: {integrity: sha512-9WLknXeFzN5fNtpaY6fEAGs4IVYxZWKnSOSWtoTkZ3/CWZL+h34VL9QRzhV71YPc8MQ9Y1/5now1NbZVepKjWg==}
-    engines: {node: '>=18.0.0'}
-
-  '@whatwg-node/server@0.10.1':
-    resolution: {integrity: sha512-SKZjZAhQe8o34pDHUDFn5PV5Otq/gaj/A6AlQ6Sa4+A12YBO0znKKwfoCwGxv/BSRRx0zUqLdI8fZ0ui+EyUlw==}
     engines: {node: '>=18.0.0'}
 
   '@whatwg-node/server@0.10.3':
@@ -18975,8 +18961,6 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20250320.0':
     optional: true
 
-  '@cloudflare/workers-types@4.20250319.0': {}
-
   '@cloudflare/workers-types@4.20250321.0': {}
 
   '@codemirror/language@6.0.0':
@@ -19101,7 +19085,7 @@ snapshots:
     dependencies:
       '@envelop/instrumentation': 1.0.0
       '@envelop/types': 5.2.1
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       tslib: 2.8.1
 
   '@envelop/disable-introspection@7.1.3(@envelop/core@5.2.3)(graphql@16.10.0)':
@@ -19123,14 +19107,14 @@ snapshots:
       '@envelop/extended-validation': 5.1.3(@envelop/core@5.2.3)(graphql@16.10.0)
       '@graphql-tools/executor': 1.4.6(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       tslib: 2.8.1
 
   '@envelop/graphql-jit@9.1.3(@envelop/core@5.2.3)(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.3
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       graphql-jit: 0.8.7(graphql@16.10.0)
       tslib: 2.8.1
@@ -19144,7 +19128,7 @@ snapshots:
 
   '@envelop/instrumentation@1.0.0':
     dependencies:
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       tslib: 2.8.1
 
   '@envelop/live-query@8.1.3(@envelop/core@5.2.3)(graphql@16.10.0)':
@@ -19160,7 +19144,7 @@ snapshots:
   '@envelop/on-resolve@5.1.3(@envelop/core@5.2.3)(graphql@16.10.0)':
     dependencies:
       '@envelop/core': 5.2.3
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
 
   '@envelop/prometheus@12.1.3(@envelop/core@5.2.3)(graphql@16.10.0)(prom-client@15.1.3)':
@@ -19176,7 +19160,7 @@ snapshots:
       '@envelop/core': 5.2.3
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       fast-json-stable-stringify: 2.1.0
       graphql: 16.10.0
       lru-cache: 10.4.3
@@ -19184,7 +19168,7 @@ snapshots:
 
   '@envelop/types@5.2.1':
     dependencies:
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       tslib: 2.8.1
 
   '@esbuild/aix-ppc64@0.25.1':
@@ -19720,7 +19704,7 @@ snapshots:
     dependencies:
       '@graphql-tools/delegate': 10.2.14(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       dataloader: 2.2.3
       graphql: 16.10.0
       tslib: 2.8.1
@@ -19728,7 +19712,7 @@ snapshots:
   '@graphql-tools/batch-execute@9.0.13(graphql@16.10.0)':
     dependencies:
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       dataloader: 2.2.3
       graphql: 16.10.0
       tslib: 2.8.1
@@ -19751,7 +19735,7 @@ snapshots:
       '@graphql-tools/schema': 10.0.23(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
       '@repeaterjs/repeater': 3.0.6
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       dataloader: 2.2.3
       dset: 3.1.4
       graphql: 16.10.0
@@ -19799,7 +19783,7 @@ snapshots:
       '@repeaterjs/repeater': 3.0.6
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       meros: 1.3.0(@types/node@22.13.11)
       tslib: 2.8.1
@@ -19822,7 +19806,7 @@ snapshots:
     dependencies:
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
       '@urql/core': 5.1.1(graphql@16.10.0)
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       tslib: 2.8.1
       wonka: 6.3.5
@@ -19833,7 +19817,7 @@ snapshots:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.10.0)
       '@repeaterjs/repeater': 3.0.6
       '@whatwg-node/disposablestack': 0.0.6
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       tslib: 2.8.1
 
@@ -19850,7 +19834,7 @@ snapshots:
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/events': 0.1.2
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -19874,7 +19858,7 @@ snapshots:
       '@graphql-tools/graphql-tag-pluck': 8.3.19(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       sync-fetch: 0.6.0-2
       tslib: 2.8.1
@@ -20011,7 +19995,7 @@ snapshots:
       '@graphql-tools/schema': 10.0.23(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
       '@graphql-tools/wrap': 10.0.32(graphql@16.10.0)
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       tslib: 2.8.1
 
@@ -20024,7 +20008,7 @@ snapshots:
       '@graphql-tools/wrap': 10.0.32(graphql@16.10.0)
       '@types/ws': 8.18.0
       '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       isomorphic-ws: 5.0.0(ws@8.18.1)
       sync-fetch: 0.6.0-2
@@ -20048,7 +20032,7 @@ snapshots:
   '@graphql-tools/utils@10.8.6(graphql@16.10.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.10.0)
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       cross-inspect: 1.0.1
       dset: 3.1.4
       graphql: 16.10.0
@@ -20064,7 +20048,7 @@ snapshots:
       '@graphql-tools/delegate': 10.2.14(graphql@16.10.0)
       '@graphql-tools/schema': 10.0.23(graphql@16.10.0)
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       graphql: 16.10.0
       tslib: 2.8.1
 
@@ -23236,7 +23220,7 @@ snapshots:
       eslint: 9.23.0(jiti@2.4.2)
       eslint-config-prettier: 10.1.1(eslint@9.23.0(jiti@2.4.2))
       eslint-import-resolver-typescript: 4.2.1(eslint-plugin-import@2.31.0)(eslint@9.23.0(jiti@2.4.2))(is-bun-module@1.3.0)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-jsonc: 2.19.1(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-mdx: 3.2.0(eslint@9.23.0(jiti@2.4.2))
@@ -23692,10 +23676,6 @@ snapshots:
       form-data: 4.0.2
 
   '@types/node@12.20.55': {}
-
-  '@types/node@22.13.10':
-    dependencies:
-      undici-types: 6.20.0
 
   '@types/node@22.13.11':
     dependencies:
@@ -24173,12 +24153,12 @@ snapshots:
 
   '@whatwg-node/cookie-store@0.2.3':
     dependencies:
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       tslib: 2.8.1
 
   '@whatwg-node/disposablestack@0.0.6':
     dependencies:
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/promise-helpers': 1.3.0
       tslib: 2.8.1
 
   '@whatwg-node/events@0.1.2':
@@ -24187,18 +24167,14 @@ snapshots:
 
   '@whatwg-node/fetch@0.10.5':
     dependencies:
-      '@whatwg-node/node-fetch': 0.7.15
+      '@whatwg-node/node-fetch': 0.7.16
       urlpattern-polyfill: 10.0.0
 
-  '@whatwg-node/node-fetch@0.7.15':
+  '@whatwg-node/node-fetch@0.7.16':
     dependencies:
       '@whatwg-node/disposablestack': 0.0.6
       '@whatwg-node/promise-helpers': 1.3.0
       busboy: 1.6.0
-      tslib: 2.8.1
-
-  '@whatwg-node/promise-helpers@1.2.4':
-    dependencies:
       tslib: 2.8.1
 
   '@whatwg-node/promise-helpers@1.3.0':
@@ -24208,15 +24184,7 @@ snapshots:
   '@whatwg-node/server-plugin-cookies@1.0.5':
     dependencies:
       '@whatwg-node/cookie-store': 0.2.3
-      '@whatwg-node/server': 0.10.1
-      tslib: 2.8.1
-
-  '@whatwg-node/server@0.10.1':
-    dependencies:
-      '@envelop/instrumentation': 1.0.0
-      '@whatwg-node/disposablestack': 0.0.6
-      '@whatwg-node/fetch': 0.10.5
-      '@whatwg-node/promise-helpers': 1.2.4
+      '@whatwg-node/server': 0.10.3
       tslib: 2.8.1
 
   '@whatwg-node/server@0.10.3':
@@ -26839,12 +26807,12 @@ snapshots:
     dependencies:
       '@next/eslint-plugin-next': 15.2.3
       '@rushstack/eslint-patch': 1.11.0
-      '@typescript-eslint/eslint-plugin': 8.26.1(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
-      '@typescript-eslint/parser': 8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+      '@typescript-eslint/eslint-plugin': 8.27.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+      '@typescript-eslint/parser': 8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
       eslint: 9.23.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.4(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.23.0(jiti@2.4.2))
@@ -26867,7 +26835,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)):
+  eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.0
@@ -26878,7 +26846,7 @@ snapshots:
       stable-hash: 0.0.5
       tinyglobby: 0.2.12
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -26891,7 +26859,7 @@ snapshots:
       stable-hash: 0.0.5
       tinyglobby: 0.2.12
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2))
       is-bun-module: 1.3.0
     transitivePeerDependencies:
       - supports-color
@@ -26923,14 +26891,14 @@ snapshots:
       - bluebird
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      '@typescript-eslint/parser': 8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+      '@typescript-eslint/parser': 8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
       eslint: 9.23.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -26941,7 +26909,7 @@ snapshots:
       eslint: 9.23.0(jiti@2.4.2)
       eslint-compat-utils: 0.5.1(eslint@9.23.0(jiti@2.4.2))
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -26952,7 +26920,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.23.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -26964,13 +26932,13 @@ snapshots:
       string.prototype.trimend: 1.0.9
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+      '@typescript-eslint/parser': 8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -26981,7 +26949,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.23.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2)))(eslint@9.23.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -26993,7 +26961,7 @@ snapshots:
       string.prototype.trimend: 1.0.9
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 8.26.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+      '@typescript-eslint/parser': 8.27.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -34486,24 +34454,6 @@ snapshots:
       '@ts-morph/common': 0.26.1
       code-block-writer: 13.0.3
 
-  ts-node-dev@2.0.0(@swc/core@1.11.9(@swc/helpers@0.5.15))(@types/node@22.13.10)(typescript@5.8.2):
-    dependencies:
-      chokidar: 3.6.0
-      dynamic-dedupe: 0.3.0
-      minimist: 1.2.8
-      mkdirp: 1.0.4
-      resolve: 1.22.10
-      rimraf: 2.7.1
-      source-map-support: 0.5.21
-      tree-kill: 1.2.2
-      ts-node: 10.9.2(@swc/core@1.11.9(@swc/helpers@0.5.15))(@types/node@22.13.10)(typescript@5.8.2)
-      tsconfig: 7.0.0
-      typescript: 5.8.2
-    transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
-      - '@types/node'
-
   ts-node-dev@2.0.0(@swc/core@1.11.9(@swc/helpers@0.5.15))(@types/node@22.13.11)(typescript@5.8.2):
     dependencies:
       chokidar: 3.6.0
@@ -34521,26 +34471,6 @@ snapshots:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
-
-  ts-node@10.9.2(@swc/core@1.11.9(@swc/helpers@0.5.15))(@types/node@22.13.10)(typescript@5.8.2):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 22.13.10
-      acorn: 8.14.1
-      acorn-walk: 8.3.4
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.8.2
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.11.9(@swc/helpers@0.5.15)
 
   ts-node@10.9.2(@swc/core@1.11.9(@swc/helpers@0.5.15))(@types/node@22.13.11)(typescript@5.8.2):
     dependencies:
@@ -35430,24 +35360,6 @@ snapshots:
       '@cloudflare/workerd-windows-64': 1.20250320.0
 
   workerpool@6.5.1: {}
-
-  wrangler@4.4.0(@cloudflare/workers-types@4.20250319.0):
-    dependencies:
-      '@cloudflare/kv-asset-handler': 0.4.0
-      '@cloudflare/unenv-preset': 2.3.0(unenv@2.0.0-rc.15)(workerd@1.20250320.0)
-      blake3-wasm: 2.1.5
-      esbuild: 0.25.1
-      miniflare: 4.20250320.0
-      path-to-regexp: 6.3.0
-      unenv: 2.0.0-rc.15
-      workerd: 1.20250320.0
-    optionalDependencies:
-      '@cloudflare/workers-types': 4.20250319.0
-      fsevents: 2.3.3
-      sharp: 0.33.5
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
 
   wrangler@4.4.0(@cloudflare/workers-types@4.20250321.0):
     dependencies:

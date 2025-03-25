@@ -45,6 +45,7 @@ if (process.env.LEAKS_TEST === 'true') {
 testMatch.push('!**/dist/**', '!**/.bob/**');
 
 module.exports = {
+  prettierPath: null,
   testEnvironment: 'node',
   rootDir: ROOT_DIR,
   restoreMocks: true,

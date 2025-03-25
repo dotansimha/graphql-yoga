@@ -149,9 +149,14 @@ Content-Length: 44
 {"data":{"stream":["A","B"]},"hasNext":true}
 ---
 Content-Type: application/json; charset=utf-8
-Content-Length: 69
+Content-Length: 68
 
-{"incremental":[{"items":["C"],"path":["stream",2]}],"hasNext":false}
+{"incremental":[{"items":["C"],"path":["stream",2]}],"hasNext":true}
+---
+Content-Type: application/json; charset=utf-8
+Content-Length: 17
+
+{"hasNext":false}
 -----
 "
 `);
