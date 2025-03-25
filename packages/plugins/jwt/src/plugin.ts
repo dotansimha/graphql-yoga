@@ -29,6 +29,22 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
   const payloadByContext = new WeakMap<object, PluginPayload>();
   const payloadByRequest = new WeakMap<Request, PluginPayload>();
   const validatedRequestAndContextSet = new WeakSet<object>();
+
+  function handleError(e: unknown) {
+    // User-facing errors should be handled based on the configuration.
+    // These errors are handled based on the value of "reject.invalidToken" config.
+    if (e instanceof GraphQLError) {
+      if (normalizedOptions.reject.invalidToken) {
+        throw e;
+      }
+
+      return null;
+    }
+
+    // Server/internal errors should be thrown, so they can be handled by the error handler and be masked.
+    throw e;
+  }
+
   const lookupToken = (payload: ExtractTokenFunctionParams) => {
     const iterator = normalizedOptions.tokenLookupLocations[Symbol.iterator]();
     function iterate(): MaybePromise<{
@@ -50,6 +66,7 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
           }
           return iterate();
         },
+        handleError,
       );
     }
     return iterate();
@@ -81,21 +98,6 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
     }
     return iterate();
   };
-
-  function handleError(e: unknown) {
-    // User-facing errors should be handled based on the configuration.
-    // These errors are handled based on the value of "reject.invalidToken" config.
-    if (e instanceof GraphQLError) {
-      if (normalizedOptions.reject.invalidToken) {
-        throw e;
-      }
-
-      return;
-    }
-
-    // Server/internal errors should be thrown, so they can be handled by the error handler and be masked.
-    throw e;
-  }
 
   const lookupAndValidate = (payload: ExtractTokenFunctionParams) => {
     // Mark the context and request as validated, so we don't process them again.
@@ -132,15 +134,20 @@ export function useJWT(options: JwtPluginOptions): Plugin<{
           decodedToken = jsonwebtoken.decode(lookupResult.token, { complete: true });
         } catch (e) {
           logger.warn(`Failed to decode JWT authentication token: `, e);
-          throw badRequestError(`Invalid authentication token provided`);
+          if (normalizedOptions.reject.invalidToken) {
+            throw badRequestError(`Invalid authentication token provided`);
+          }
+          return null;
         }
 
         if (!decodedToken) {
           logger.warn(
             `Failed to extract payload from incoming token, please make sure the token is a valid JWT.`,
           );
-
-          throw badRequestError(`Invalid authentication token provided`);
+          if (normalizedOptions.reject.invalidToken) {
+            throw badRequestError(`Invalid authentication token provided`);
+          }
+          return null;
         }
 
         // Fetch the signing key based on the key id.
