@@ -1,5 +1,3 @@
-import { createServer } from 'node:http';
-import { AddressInfo } from 'node:net';
 import { join } from 'node:path';
 import {
   getAvailablePort,
@@ -14,9 +12,9 @@ describe('Bun Pothos', () => {
     return proc?.kill();
   });
   it('handles cookies correctly', async () => {
-    const signal = AbortSignal.timeout(30_000);
+    const signal = AbortSignal.timeout(10_000);
     const port = await getAvailablePort();
-    proc = await spawn('bun', [join(__dirname, '..', 'src', 'index.ts')], {
+    proc = await spawn('pnpm', ['bun', join(__dirname, '..', 'src', 'index.ts')], {
       env: {
         PORT: String(port),
       },
@@ -69,5 +67,5 @@ describe('Bun Pothos', () => {
         get: 'test 123456',
       },
     });
-  });
+  }, 15_000);
 });
