@@ -7,6 +7,7 @@ import { setTimeout } from 'node:timers/promises';
 export interface Proc {
   waitForExit: Promise<void>;
   kill(): Promise<void>;
+  stdboth: string;
 }
 
 export function spawn(
@@ -57,6 +58,9 @@ export function spawn(
         kill() {
           proc.kill();
           return waitForExit;
+        },
+        get stdboth() {
+          return stdboth;
         },
       }),
     );

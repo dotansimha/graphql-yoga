@@ -20,6 +20,7 @@ if (process.env.INTEGRATION_TEST === 'true') {
     testMatch.push('!**/examples/sveltekit/**', '!**/examples/fastify*/**');
   }
   testMatch.push('!**/examples/bun*/**');
+  testMatch.push('**/examples/bun-pothos/__integration-tests__/bun-pothos.spec.ts');
 } else {
   testMatch.push(
     '<rootDir>/packages/**/?(*.)+(spec|test).[jt]s?(x)',
