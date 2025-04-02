@@ -613,7 +613,7 @@ describe('Persisted Operations', () => {
             },
             allowArbitraryOperations: true,
           }),
-          useExtendContext(() => ({ a: 121212 })),
+          useExtendContext(() => ({ a: 69 })),
         ],
         schema: createSchema({
           typeDefs: /* GraphQL */ `
