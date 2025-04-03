@@ -21,7 +21,7 @@ import { handleMaybePromise, MaybePromise } from '@whatwg-node/promise-helpers';
 type ApolloUsageReportOptions = ApolloInlineTracePluginOptions & {
   /**
    * The graph ref of the managed federation graph.
-   * It is composed of the graph ID and the variant `<YOUR_GRAPH_ID>@<VARIANT>`).
+   * It is composed of the graph ID and the variant (`<YOUR_GRAPH_ID>@<VARIANT>`).
    *
    * If not provided, `APOLLO_GRAPH_REF` environment variable is used.
    *
