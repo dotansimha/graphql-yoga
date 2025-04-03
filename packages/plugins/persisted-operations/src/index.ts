@@ -94,17 +94,17 @@ export type CustomPersistedQueryErrors = {
   keyNotFound?: CustomErrorFactory;
 };
 
-const isPersistedOperationContextSymbol = Symbol.for('hive_is_persisted_operation_context');
+const isPersistedOperationContextSymbolReferenceMap = new WeakMap<object, boolean>();
 
 /**
  * Helper function for determining whether the execution is using a persisted document.
  */
 export function isPersistedOperationContext<TContext extends object>(context: TContext): boolean {
-  return isPersistedOperationContextSymbol in context;
+  return isPersistedOperationContextSymbolReferenceMap.get(context) ?? false;
 }
 
-function markContextAsPersistedOperationContext<TContext extends object>(context: TContext) {
-  (context as Record<string | symbol, unknown>)[isPersistedOperationContextSymbol] = true;
+function markContextAsPersistedOperationContext<TContext extends object>(context: TContext): void {
+  isPersistedOperationContextSymbolReferenceMap.set(context, true);
 }
 
 export function usePersistedOperations<
