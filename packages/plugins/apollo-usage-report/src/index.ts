@@ -21,7 +21,7 @@ import { handleMaybePromise, MaybePromise } from '@whatwg-node/promise-helpers';
 type ApolloUsageReportOptions = ApolloInlineTracePluginOptions & {
   /**
    * The graph ref of the managed federation graph.
-   * It is composed of the graph ID and the variant (`<YOUR_GRAPH_ID>@<VARIANT>`).
+   * It is composed of the graph ID and the variant `<YOUR_GRAPH_ID>@<VARIANT>`).
    *
    * If not provided, `APOLLO_GRAPH_REF` environment variable is used.
    *
@@ -84,12 +84,9 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
   let schemaIdSet$: MaybePromise<void> | undefined;
   let schemaId: string;
   let yoga: YogaServer<Record<string, unknown>, Record<string, unknown>>;
-  const logger = Object.fromEntries(
-    (['error', 'warn', 'info', 'debug'] as const).map(level => [
-      level,
-      (...messages: unknown[]) => yoga.logger[level]('[ApolloUsageReport]', ...messages),
-    ]),
-  ) as YogaLogger;
+  // eslint-disable-next-line
+  let pendingSchemaChange: { schema: any } | null = null;
+  let logger: YogaLogger;
 
   let clientNameFactory: StringFromRequestFn = req => req.headers.get('apollographql-client-name');
   if (typeof options.clientName === 'function') {
@@ -102,12 +99,32 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
     clientVersionFactory = options.clientVersion;
   }
 
+  // eslint-disable-next-line
+  const processSchemaChange = (schema: any) => {
+    if (schema && yoga) {
+      schemaIdSet$ = handleMaybePromise(
+        () => hashSHA256(printSchema(schema), yoga.fetchAPI),
+        id => {
+          schemaId = id;
+          schemaIdSet$ = undefined;
+        },
+      );
+    }
+  };
+
   return {
     onPluginInit({ addPlugin }) {
       addPlugin(instrumentation);
       addPlugin({
         onYogaInit(args) {
           yoga = args.yoga;
+
+          logger = Object.fromEntries(
+            (['error', 'warn', 'info', 'debug'] as const).map(level => [
+              level,
+              (...messages: unknown[]) => yoga.logger[level]('[ApolloUsageReport]', ...messages),
+            ]),
+          ) as YogaLogger;
 
           if (!getEnvVar('APOLLO_KEY', options.apiKey)) {
             throw new Error(
@@ -120,16 +137,18 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
               `[ApolloUsageReport] Missing Graph Ref. Please provide one in plugin options or with 'APOLLO_GRAPH_REF' environment variable.`,
             );
           }
+
+          if (pendingSchemaChange) {
+            processSchemaChange(pendingSchemaChange.schema);
+            pendingSchemaChange = null;
+          }
         },
+
         onSchemaChange({ schema }) {
-          if (schema) {
-            schemaIdSet$ = handleMaybePromise(
-              () => hashSHA256(printSchema(schema), yoga.fetchAPI),
-              id => {
-                schemaId = id;
-                schemaIdSet$ = undefined;
-              },
-            );
+          if (yoga) {
+            processSchemaChange(schema);
+          } else {
+            pendingSchemaChange = { schema };
           }
         },
 
@@ -141,9 +160,11 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           return function onParseEnd({ result, context }) {
             const ctx = ctxForReq.get(context.request)?.traces.get(context);
             if (!ctx) {
-              logger.debug(
-                'operation tracing context not found, this operation will not be traced.',
-              );
+              if (logger) {
+                logger.debug(
+                  'operation tracing context not found, this operation will not be traced.',
+                );
+              }
               return;
             }
 
@@ -200,6 +221,7 @@ export function useApolloUsageReport(options: ApolloUsageReportOptions = {}): Pl
           for (const schemaId in tracesPerSchema) {
             const tracesPerQuery = tracesPerSchema[schemaId]!;
             const agentVersion = options.agentVersion || `graphql-yoga@${yoga.version}`;
+
             serverContext.waitUntil(
               sendTrace(
                 options,
@@ -225,17 +247,16 @@ export function hashSHA256(
   } = globalThis,
 ) {
   const inputUint8Array = new api.TextEncoder().encode(text);
+
   return handleMaybePromise(
     () => api.crypto.subtle.digest({ name: 'SHA-256' }, inputUint8Array),
     arrayBuf => {
       const outputUint8Array = new Uint8Array(arrayBuf);
-
       let hash = '';
       for (const byte of outputUint8Array) {
         const hex = byte.toString(16);
         hash += '00'.slice(0, Math.max(0, 2 - hex.length)) + hex;
       }
-
       return hash;
     },
   );
@@ -264,6 +285,7 @@ function sendTrace(
     operationCount: 1,
     tracesPerQuery,
   }).finish();
+
   return handleMaybePromise(
     () =>
       fetch(endpoint, {
@@ -271,7 +293,6 @@ function sendTrace(
         headers: {
           'content-type': 'application/protobuf',
           // The presence of the api key is already checked at Yoga initialization time
-
           'x-api-key': apiKey!,
           accept: 'application/json',
         },
@@ -297,6 +318,5 @@ function sendTrace(
 function isDocumentNode(data: unknown): data is DocumentNode {
   const isObject = (data: unknown): data is Record<string, unknown> =>
     !!data && typeof data === 'object';
-
   return isObject(data) && data['kind'] === Kind.DOCUMENT;
 }
