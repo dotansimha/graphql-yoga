@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import { versionInfo } from 'graphql';
 import {
   getAvailablePort,
   Proc,
@@ -6,7 +7,8 @@ import {
   waitForAvailable,
 } from '../../nextjs-app/__integration-tests__/utils';
 
-describe('Bun Pothos', () => {
+const skipIf = (condition: boolean) => (condition ? describe.skip : describe);
+skipIf(versionInfo.major < 16)('Bun Pothos', () => {
   let proc: Proc;
   afterAll(() => {
     return proc?.kill();
